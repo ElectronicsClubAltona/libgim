@@ -1,0 +1,209 @@
+/*
+ * This file is part of waif.
+ *
+ * Waif is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Waif is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with waif.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2010 Danny Robson <danny@blubinc.net>
+ */
+
+#ifndef __UTIL_JSON_HPP
+#define __UTIL_JSON_HPP
+
+#include <map>
+#include <string>
+#include <iostream>
+#include <vector>
+
+#include <boost/filesystem.hpp>
+
+
+namespace json {
+    class node;
+    class object;
+    class array;
+    class string;
+    class number;
+    class boolean;
+    class null;
+
+    extern node* parse (const boost::filesystem::path &path);
+    extern node* parse (const char *start, const char *stop);
+    extern node* parse (const char *start);
+
+    class node {
+        public:
+            virtual ~node () { ; }
+
+            virtual const object&  to_object  (void) const;
+            virtual const array&   to_array   (void) const;
+            virtual const string&  to_string  (void) const;
+            virtual const number&  to_number  (void) const;
+            virtual const boolean& to_boolean (void) const;
+
+            virtual bool    is_object  (void) const { return false; }
+            virtual bool    is_array   (void) const { return false; }
+            virtual bool    is_string  (void) const { return false; }
+            virtual bool    is_number  (void) const { return false; }
+            virtual bool    is_boolean (void) const { return false; } 
+            virtual bool    is_null    (void) const { return false; }
+
+            virtual bool operator==(const node &rhs) const = 0;
+            virtual bool operator!=(const node &rhs) const;
+            virtual bool operator==(const object  &) const { return false; }
+            virtual bool operator==(const array   &) const { return false; }
+            virtual bool operator==(const string  &) const { return false; }
+            virtual bool operator==(const number  &) const { return false; }
+            virtual bool operator==(const boolean &) const { return false; }
+            virtual bool operator==(const null    &) const { return false; }
+
+            virtual std::ostream& print (std::ostream &os) const = 0;
+
+    };                                          
+
+
+    class object : public node {
+        protected:
+            std::map<std::string, node*> m_values;
+
+        public:
+            object () { ; }
+            virtual ~object ();
+
+            virtual const object& to_object  (void) const { return *this; }
+            virtual bool          is_object  (void) const { return  true; }
+            virtual bool operator==(const object &rhs) const;
+            virtual bool operator==(const node   &rhs) const
+                { return rhs == *this; }
+
+            virtual void insert (const std::string _key, node* value);
+            virtual const node& operator[](const std::string &key) const;
+
+            virtual std::ostream& print (std::ostream &os) const;
+
+    };
+
+
+    class array : public node {
+        protected:
+            std::vector<node*> m_values;
+
+            typedef std::vector<node*>::iterator       array_iterator;
+            typedef std::vector<node*>::const_iterator const_array_iterator;
+
+        public:
+            virtual ~array();
+
+            virtual const array&  to_array   (void) const { return *this; }
+            virtual bool          is_array   (void) const { return  true; }
+            virtual bool operator==(const array &rhs) const;
+            virtual bool operator==(const node   &rhs) const
+                { return rhs == *this; }
+
+            virtual size_t size (void) const
+                { return m_values.size (); } 
+            virtual node& operator [](unsigned int idx)
+                { return *m_values[idx]; }
+            virtual const node& operator [](unsigned int idx) const
+                { return *m_values[idx]; }
+
+            virtual const_array_iterator begin (void) const   { return m_values.begin (); }
+            virtual const_array_iterator end   (void) const   { return m_values.end (); }
+
+            virtual void insert (json::node *_value);
+
+            virtual std::ostream& print (std::ostream &os) const;
+    };
+
+
+    class string : public node {
+        protected:
+            std::string m_value;
+
+        public:
+            string (const std::string &_value): m_value (_value) { ; }
+            string (const char        *_value): m_value (_value) { ; }
+
+            virtual const string& to_string  (void) const { return *this; }
+            virtual bool          is_string  (void) const { return  true; }
+            virtual bool operator==(const string &rhs) const;
+            virtual bool operator==(const node   &rhs) const
+                { return rhs == *this; }
+
+            operator const std::string&(void) const { return m_value; }
+
+            virtual std::ostream& print (std::ostream &os) const;
+    };
+
+
+    class number : public node {
+        protected:
+            double m_value;
+
+        public:
+            number (double _value): m_value (_value) { ; }
+            number (int _value):    m_value (_value) { ; }
+
+            virtual const number& to_number  (void) const { return *this; }
+            virtual bool          is_number  (void) const { return  true; }
+            virtual bool operator==(const number &rhs) const;
+            virtual bool operator==(const node   &rhs) const
+                { return rhs == *this; }
+
+            operator double(void) const { return m_value; }
+
+            virtual std::ostream& print (std::ostream &os) const;
+    };
+
+
+    class boolean : public node {
+        protected:
+            bool m_value;
+
+        public:
+            boolean (bool _value): m_value (_value) { ; }
+
+            virtual const boolean& to_boolean (void) const { return *this; }
+            virtual bool           is_boolean (void) const { return  true; }
+            virtual bool operator==(const boolean &rhs) const;
+            virtual bool operator==(const node   &rhs) const
+                { return rhs == *this; }
+
+            virtual std::ostream& print (std::ostream &os) const;
+    };
+
+
+    class null : public node {
+        public:
+            virtual bool is_null (void) const { return  true; }
+            virtual std::ostream& print (std::ostream &os) const;
+            virtual bool operator==(const null&) const { return true; }
+            virtual bool operator==(const node   &rhs) const
+                { return rhs == *this; }
+    };
+
+
+    class error : public std::runtime_error {
+        public:
+            error (const std::string &_what):
+                std::runtime_error (_what)
+            { ; }
+    };
+}
+
+
+std::ostream&
+operator <<(std::ostream &os, const json::node &n);
+
+#endif
+
