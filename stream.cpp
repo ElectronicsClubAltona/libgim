@@ -1,7 +1,7 @@
 #include "stream.hpp"
 
 std::ostream&
-nullstream::put (char c)
+nullstream::put (char)
     { return *this; }
 
 
