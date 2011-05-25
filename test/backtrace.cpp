@@ -5,7 +5,7 @@ using namespace std;
 
 
 int
-main (int argc, char **argv) {
+main (int, char **) {
     cout << debug::backtrace() << endl;
 
     return EXIT_SUCCESS;
