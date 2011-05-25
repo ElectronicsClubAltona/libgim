@@ -18,6 +18,7 @@
  */
 
 #include "except.hpp"
+#include "debug.hpp"
 
 #include <cstring>
 #include <cerrno>
@@ -34,4 +35,18 @@ errno_error::errno_error (int _errno):
 errno_error::errno_error ():
     runtime_error (strerror (errno)),
     id            (errno)
-{ ; }
+{
+    check_hard (errno != 0);
+}
+
+
+void
+errno_error::try_code ()
+    { try_code (errno); }
+
+
+void
+errno_error::try_code(int code) {
+    if (code != 0)
+        throw errno_error(code);
+}

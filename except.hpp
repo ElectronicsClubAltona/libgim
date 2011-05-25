@@ -45,6 +45,9 @@ class errno_error : public std::runtime_error {
         int id;
         errno_error (int _errno);
         errno_error ();
+
+        void try_code (void);
+        void try_code (int code);
 };
 
 
