@@ -13,25 +13,62 @@
 
 using namespace std;
 
+//----------------------------------------------------------------------------
+uint8_t *
+slurp (boost::filesystem::path& path)  {
+    fd_ref fd(open (path.c_str(), O_RDONLY | O_CLOEXEC));
+    
+    // Calculate the total file size
+    off_t size = lseek (fd, 0, SEEK_END);
+    if (size == (off_t)-1)
+        throw errno_error();
 
+    if (lseek (fd, 0, SEEK_SET) == (off_t)-1)
+        throw errno_error ();
+
+    // Allocate a buffer, and keep reading until it's full. We provide a null
+    // padding at the tail as a 'just in case' measure for string manipulation.
+    unique_ptr <uint8_t[]> buffer (new uint8_t[size + 1]);
+    buffer.get()[size] = '\0';
+
+    check_hard (size >= 0);
+    size_t remaining = (size_t)size;
+    uint8_t *cursor = buffer.get();
+
+    while (remaining) {
+        ssize_t consumed = read (fd, cursor, remaining);
+        if (consumed == -1)
+            throw errno_error();
+        check_hard (        consumed >= 0);
+        check_hard ((size_t)consumed <= remaining);
+
+        remaining -= (size_t)consumed;
+        cursor    += consumed;
+    }
+
+    return buffer.release();
+}
+
+//----------------------------------------------------------------------------
 fd_ref::fd_ref (int _fd):
-    m_fd (_fd)
+    fd (_fd)
 {
-    if (m_fd < 0)
+    if (fd < 0) 
         throw invalid_argument ("invalid file descriptor");
 }
 
 
 fd_ref::~fd_ref () {
-    check (m_fd >= 0);
-    close (m_fd);
+    check (fd >= 0);
+    close (fd);
 }
 
 
 fd_ref::operator int (void) const
-    { return m_fd; }
+    { return fd; }
 
 
+//----------------------------------------------------------------------------
 mapped_file::mapped_file (const char *_path):
     m_fd (open (_path, O_RDONLY))
 { load_fd (); } 

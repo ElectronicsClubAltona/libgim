@@ -20,12 +20,14 @@
 #ifndef __UTIL_IO_HPP
 #define __UTIL_IO_HPP
 
+#include "annotations.hpp"
+
 #include <cstdio>
 #include <cstdint>
 #include <memory>
 #include <boost/filesystem.hpp>
 
-
+/// Specifies bitwise combinations of IO access rights.
 enum access_t {
     ACCESS_READ      = 1 << 0,
     ACCESS_WRITE     = 1 << 1,
@@ -33,21 +35,15 @@ enum access_t {
 };
 
 
-struct FILE_destructor {
-    void operator ()(FILE *f) { fclose (f); }
-};
+/// Reads an entire file into memory. Caller frees the result. Guarantees a
+/// null trailing byte.
+uint8_t *
+slurp (boost::filesystem::path&) mustuse;
 
-typedef std::unique_ptr <FILE, FILE_destructor> FILE_ref;
-
-
-struct fd_destructor {
-    void operator ()(int fd) { close (fd); }
-};
-
+/// A simple RAII wrapper for file descriptors
 struct fd_ref {
     public:
-        int m_fd;
-
+        int fd;
 
         fd_ref  (int _fd);
         ~fd_ref ();
@@ -56,6 +52,7 @@ struct fd_ref {
 };
 
 
+/// Wraps a mechanism to map a file into memory. Read only.
 class mapped_file {
     protected:
         fd_ref   m_fd;
