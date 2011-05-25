@@ -14,22 +14,22 @@ EXTRA_DIST = json.pl
 
 backtrace_SOURCES  = backtrace.cpp
 backtrace_CPPFLAGS = $(COMMON_CXXFLAGS)
-backtrace_LDADD    = $(top_builddir)/libutil.la $(BOOST_SYSTEM_LIB)
+backtrace_LDADD    = $(builddir)/../libutil.la $(BOOST_SYSTEM_LIB)
 
 float_SOURCES      = float.cpp
-float_LDADD        = $(top_builddir)/libutil.la $(BOOST_SYSTEM_LIB)
+float_LDADD        = $(builddir)/../libutil.la $(BOOST_SYSTEM_LIB)
 
 range_SOURCES 	   = range.cpp
-range_LDADD        = $(top_builddir)/libutil.la $(BOOST_SYSTEM_LIB)
+range_LDADD        = $(builddir)/../libutil.la $(BOOST_SYSTEM_LIB)
 
 maths_SOURCES      = maths.cpp
-maths_LDADD        = $(top_builddir)/libutil.la $(BOOST_SYSTEM_LIB)
+maths_LDADD        = $(builddir)/../libutil.la $(BOOST_SYSTEM_LIB)
 
 matrix_SOURCES     = matrix.cpp
-matrix_LDADD       = $(top_builddir)/libutil.la $(BOOST_SYSTEM_LIB)
+matrix_LDADD       = $(builddir)/../libutil.la $(BOOST_SYSTEM_LIB)
 
 version_SOURCES    = version.cpp
-version_LDADD      = $(top_builddir)/libutil.la $(BOOST_SYSTEM_LIB)
+version_LDADD      = $(builddir)/../libutil.la $(BOOST_SYSTEM_LIB)
 
 json_check_SOURCES = json-check.cpp
-json_check_LDADD   = $(top_builddir)/libutil.la $(BOOST_FILESYSTEM_LIB)
+json_check_LDADD   = $(builddir)/../libutil.la $(BOOST_FILESYSTEM_LIB)
