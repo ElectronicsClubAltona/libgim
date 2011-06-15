@@ -108,7 +108,6 @@ range<T>::UNLIMITED (numeric_limits <T>::is_integer ?  numeric_limits <T>::min (
                      numeric_limits <T>::is_integer ?  numeric_limits <T>::max () :
                                                        numeric_limits <T>::infinity ());
 
-
 template <typename T>
 const range<T>
 range<T>::UNIT (0.0, 1.0);
@@ -118,3 +117,4 @@ template struct range<double>;
 template struct range<float>;
 template struct range<uint8_t>;
 template struct range<uint16_t>;
+template struct range<size_t>;
