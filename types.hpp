@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <string>
+#include <limits>
 
 template <int BITS>
 struct bits_type;
@@ -51,6 +52,45 @@ struct sized_type : public bits_type<sizeof(T) * 8>
 
 template <typename T>
 std::string type_to_string (void);
+
+
+template <typename T>
+struct sign_types;
+
+
+template <> struct sign_types <signed int> {
+    typedef   signed int with_sign;
+    typedef unsigned int without_sign;
+};
+
+
+template <> struct sign_types <unsigned int> {
+    typedef   signed int with_sign;
+    typedef unsigned int without_sign;
+};
+
+
+/// Safely cast a numeric type to its signed comparison, aborting if the
+/// result is not representable.
+template <typename T>
+typename sign_types<T>::with_sign
+sign_cast (const typename sign_types<T>::without_sign v)
+{
+    check_hard (v <= std::numeric_limits<typename sign_types<T>::without_sign>::max () >> 1);
+    return static_cast <typename sign_types<T>::with_sign> (v);
+}
+
+
+/// Safely cast a numeric type to its unsigned comparison, aborting if the
+/// result is not representable.
+template <typename T>
+typename sign_types<T>::without_sign
+sign_cast (const typename sign_types<T>::with_sign v)
+{
+    check_hard (v >= 0);
+    return static_cast <typename sign_types<T>::without_sign> (v);
+}
+
 
 
 #endif // __TYPES_HPP
