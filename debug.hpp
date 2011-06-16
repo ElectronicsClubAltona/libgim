@@ -22,6 +22,7 @@
 
 
 #include "annotations.hpp"
+#include "maths.hpp"
 
 #include <stdexcept>
 #include <iostream>
