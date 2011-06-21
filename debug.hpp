@@ -63,33 +63,35 @@
 #define check_soft(C) _check_meta((C), { ; }, {         ; })
 
 
-#define check_eq(A,B) do {                  \
-    const auto __a = (A);                   \
-    const auto __b = (B);                   \
-    _check_meta (almost_equal (__a, __b),   \
-                 { ; },                     \
-                 {                          \
-        std::ostringstream os;              \
-        os << "expected equality.\n"        \
-           << #A << '(' << __a << ")"       \
-           << "\n != \n"                    \
-           << #B << '(' << __b << ")";      \
-        panic (os.str ());                  \
-    });                                     \
+#define check_eq(A,B) do {                           \
+    const auto __a = (A);                            \
+    const auto __b = (B);                            \
+    _check_meta (almost_equal (__a, __b),            \
+                 { ; },                              \
+                 {                                   \
+        std::ostringstream os;                       \
+        os << "expected equality.\n"                 \
+           << "__a: " << #A << " is " << __a << ")"  \
+           << "\n != \n"                             \
+           << "__b: " << #B << " is " << __b << ")"; \
+        panic (os.str ());                           \
+    });                                              \
 } while (0)
 
 
-#define check_neq(A,B) do {                 \
-    const auto __a = (A);                   \
-    const auto __b = (B);                   \
-    _check_meta (!almost_equal (__a, __b),  \
-                 { ; },                     \
-                 {                          \
-        std::ostringstream os;              \
-        os << "unexepected equality.\n"     \
-           << __a << "\n ==\n" << __b;      \
-        panic (os.str ());                  \
-    });                                     \
+#define check_neq(A,B) do {                          \
+    const auto __a = (A);                            \
+    const auto __b = (B);                            \
+    _check_meta (!almost_equal (__a, __b),           \
+                 { ; },                              \
+                 {                                   \
+        std::ostringstream os;                       \
+        os << "unexpected equality.\n"               \
+           << "__a: " << #A << " is " << __a << ")"  \
+           << "\n == \n"                             \
+           << "__b: " << #B << " is " << __b << ")"; \
+        panic (os.str ());                           \
+    });                                              \
 } while (0)
 
 
