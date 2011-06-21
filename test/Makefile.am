@@ -7,7 +7,7 @@ AM_CPPFLAGS =                   \
 
 AM_LDFLAGS  = $(COMMON_LDFLAGS)
 
-TEST_BIN = backtrace float range maths matrix version ip
+TEST_BIN = backtrace float range maths matrix version ip hton
 TESTS = $(TEST_BIN) json.pl
 check_PROGRAMS = $(TEST_BIN) json-check
 EXTRA_DIST = json.pl
@@ -33,6 +33,9 @@ version_LDADD      = $(builddir)/../libutil.la $(BOOST_SYSTEM_LIB)
 
 ip_SOURCES         = ip.cpp
 ip_LDADD      	   = $(builddir)/../libutil.la $(BOOST_SYSTEM_LIB)
+
+hton_SOURCES	   = hton.cpp
+hton_LDADD	   = $(builddir)/../libutil.la $(BOOST_SYSTEM_LIB)
 
 json_check_SOURCES = json-check.cpp
 json_check_LDADD   = $(builddir)/../libutil.la $(BOOST_FILESYSTEM_LIB)

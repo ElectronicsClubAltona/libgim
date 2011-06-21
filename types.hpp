@@ -97,4 +97,12 @@ template <typename T, size_t N>
 size_t elems(T (&)[N])
     { return N; }
 
+
+template <typename T>
+T hton (T);
+
+
+template <typename T>
+T ntoh (T);
+
 #endif // __TYPES_HPP

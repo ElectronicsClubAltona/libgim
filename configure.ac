@@ -63,6 +63,10 @@ AC_C_RESTRICT
 AC_C_INLINE
 
 ##
+## Architecture features
+AC_C_BIGENDIAN
+
+##
 ## stdlib features
 AC_FUNC_MMAP
 
