@@ -8,6 +8,7 @@
 .dirstamp
 /Doxyfile
 /install-sh
+/ip.cpp
 /json.cpp
 /libgim-*.tar.*
 .libs

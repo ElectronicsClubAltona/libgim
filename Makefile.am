@@ -13,6 +13,7 @@ UTIL_INCLUDE =  \
     except.hpp  \
     float.hpp	\
     io.hpp	\
+    ip.hpp	\
     json.hpp	\
     maths.hpp	\
     matrix.hpp	\
@@ -30,6 +31,7 @@ UTIL_FILES   =	\
     except.cpp  \
     float.cpp	\
     io.cpp	\
+    ip.cpp	\
     json.cpp	\
     maths.cpp	\
     matrix.cpp	\
@@ -40,8 +42,8 @@ UTIL_FILES   =	\
     vector.cpp  \
     version.cpp
 
-CLEANFILES = json.cpp version.cpp
-EXTRA_DIST = json.cpp.rl version.cpp.rl
+CLEANFILES = json.cpp version.cpp ip.cpp
+EXTRA_DIST = json.cpp.rl version.cpp.rl ip.cpp.rl
 
 RAGELFLAGS      = -F1
 SUFFIXES = .cpp .cpp.rl

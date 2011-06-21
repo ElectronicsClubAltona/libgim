@@ -1,7 +1,8 @@
 /backtrace
 /float
-/range
+/ip
+/json-check
 /maths
 /matrix
+/range
 /version
-/json-check
