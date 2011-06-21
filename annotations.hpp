@@ -1,5 +1,5 @@
 /*
- * This file is part of waif.
+ * This file is part of libgim.
  *
  * Waif is free software: you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
@@ -12,7 +12,7 @@
  * details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with waif.  If not, see <http://www.gnu.org/licenses/>.
+ * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright 2010 Danny Robson <danny@blubinc.net>
  */
