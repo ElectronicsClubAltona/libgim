@@ -92,5 +92,9 @@ sign_cast (const typename sign_types<T>::with_sign v)
 }
 
 
+/// Returns the number of elements of a statically allocated array
+template <typename T, size_t N>  
+size_t elems(T (&)[N])
+    { return N; }
 
 #endif // __TYPES_HPP

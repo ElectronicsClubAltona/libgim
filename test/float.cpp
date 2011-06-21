@@ -1,11 +1,11 @@
 #include "../float.hpp"
 
 #include "../debug.hpp"
+#include "../types.hpp"
+
 #include <limits>
 
 using namespace std;
-
-#define elems(x) (sizeof(x) / sizeof(0[x]))
 
 
 void
