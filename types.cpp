@@ -12,6 +12,16 @@ template <> std::string type_to_string <const T> (void) { return "const " #T; }
 do_type_to_string (float)
 do_type_to_string (double)
 
+do_type_to_string (  int8_t)
+do_type_to_string ( int16_t)
+do_type_to_string ( int32_t)
+do_type_to_string ( int64_t)
+
+do_type_to_string ( uint8_t)
+do_type_to_string (uint16_t)
+do_type_to_string (uint32_t)
+do_type_to_string (uint64_t)
+
 #ifdef WORDS_BIGENDIAN
 /* Big endian doesn't need swapping */
 template <typename T>
