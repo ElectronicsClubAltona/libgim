@@ -70,6 +70,18 @@ template <> struct sign_types <unsigned int> {
 };
 
 
+template <> struct sign_types <ssize_t> {
+    typedef ssize_t with_sign;
+    typedef size_t  without_sign;
+};
+
+
+template <> struct sign_types <size_t> {
+    typedef ssize_t with_sign;
+    typedef size_t  without_sign;
+};
+
+
 /// Safely cast a numeric type to its signed comparison, aborting if the
 /// result is not representable.
 template <typename T>
