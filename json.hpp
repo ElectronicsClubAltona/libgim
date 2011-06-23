@@ -41,6 +41,7 @@ namespace json {
     extern node* parse (const char *start, const char *stop);
     extern node* parse (const char *start);
 
+    /// Abstract base for all JSON values
     class node {
         public:
             virtual ~node () { ; }
@@ -72,6 +73,7 @@ namespace json {
     };                                          
 
 
+    /// Represents a JSON object, and contains its children.
     class object : public node {
         protected:
             std::map<std::string, node*> m_values;
@@ -94,6 +96,7 @@ namespace json {
     };
 
 
+    /// Represents a JSON array, and contains its children.
     class array : public node {
         protected:
             std::vector<node*> m_values;
@@ -126,6 +129,7 @@ namespace json {
     };
 
 
+    /// Represents a JSON string literal.
     class string : public node {
         protected:
             std::string m_value;
@@ -146,6 +150,7 @@ namespace json {
     };
 
 
+    /// Represents a JSON integer/float literal.
     class number : public node {
         protected:
             double m_value;
@@ -166,6 +171,7 @@ namespace json {
     };
 
 
+    /// Represents a JSON boolean literal.
     class boolean : public node {
         protected:
             bool m_value;
@@ -183,6 +189,7 @@ namespace json {
     };
 
 
+    /// Represents a JSON null value.
     class null : public node {
         public:
             virtual bool is_null (void) const { return  true; }
@@ -193,6 +200,7 @@ namespace json {
     };
 
 
+    /// The base class for all exceptions throw directly by the json namespace.
     class error : public std::runtime_error {
         public:
             error (const std::string &_what):

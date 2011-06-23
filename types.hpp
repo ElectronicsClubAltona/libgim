@@ -98,10 +98,12 @@ size_t elems(T (&)[N])
     { return N; }
 
 
+/// Convert a scalar from host byte order to network byte order
 template <typename T>
 T hton (T);
 
 
+/// Convert a scalar from network byte order to host byte order
 template <typename T>
 T ntoh (T);
 

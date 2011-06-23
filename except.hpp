@@ -40,6 +40,7 @@ class unavailable_error : public std::runtime_error {
 };
 
 
+/// An exception class used for reporting errors signalled by errno.
 class errno_error : public std::runtime_error {
     public:
         int id;

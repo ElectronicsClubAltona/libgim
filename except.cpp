@@ -26,12 +26,18 @@
 using namespace std;
 
 
+/// Construct an errno_error from a given error value. The error value MUST signal an error at
+/// construction time.
 errno_error::errno_error (int _errno):
     runtime_error (strerror (_errno)),
     id            (_errno)
-{ ; }
+{
+    check_hard (_errno != 0);
+}
 
 
+/// Construct an errno_error from the current value of errno. errno MUST signal an error at
+/// construction time.
 errno_error::errno_error ():
     runtime_error (strerror (errno)),
     id            (errno)
@@ -40,11 +46,13 @@ errno_error::errno_error ():
 }
 
 
+/// Throw an errno_error exception if errno currently signals an error.
 void
 errno_error::try_code ()
     { try_code (errno); }
 
 
+/// Throw an errno_error exception if 'code' represents an error.
 void
 errno_error::try_code(int code) {
     if (code != 0)
