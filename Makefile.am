@@ -18,6 +18,7 @@ UTIL_INCLUDE =  \
     maths.hpp	\
     matrix.hpp	\
     nocopy.hpp	\
+    point.hpp	\
     range.hpp	\
     region.hpp	\
     stream.hpp	\
@@ -35,6 +36,7 @@ UTIL_FILES   =	\
     json.cpp	\
     maths.cpp	\
     matrix.cpp	\
+    point.cpp	\
     range.cpp	\
     region.cpp	\
     stream.cpp	\
