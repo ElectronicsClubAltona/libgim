@@ -34,6 +34,9 @@ namespace ipv4 {
         bool operator == (const ip &) const; 
 
         static ip parse (const std::string &);
+
+        static const ip LOOPBACK;
+        static const ip ANY;
     };
 
     

@@ -27,6 +27,10 @@
 using namespace std;
 
 
+const ipv4::ip ipv4::ip::LOOPBACK ({ 127, 0, 0, 1 });
+const ipv4::ip ipv4::ip::ANY      ({   0, 0, 0, 0 });
+
+
 ipv4::ip::ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d):
     m_octets ({ a, b, c, d })
 { ; }
