@@ -26,7 +26,10 @@
 
 namespace ipv4 {
     struct ip {
-        uint8_t m_octets[4];
+        union {
+            uint8_t  m_octets[4];
+            uint32_t m_integer;
+        };
 
         ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d);
 
