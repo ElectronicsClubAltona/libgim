@@ -67,8 +67,12 @@ AC_C_INLINE
 AC_C_BIGENDIAN
 
 ##
-## stdlib features
+## platform features
 AC_FUNC_MMAP
+
+AC_CHECK_HEADER([execinfo.h], [break], [AC_MSG_ERROR([Missing backtrace support])])
+
+AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
 
 
 ##

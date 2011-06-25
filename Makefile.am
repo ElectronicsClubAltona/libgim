@@ -27,7 +27,6 @@ UTIL_INCLUDE =  \
     version.hpp
 
 UTIL_FILES   =	\
-    backtrace.cpp \
     debug.cpp   \
     except.cpp  \
     float.cpp	\
@@ -43,6 +42,12 @@ UTIL_FILES   =	\
     types.cpp	\
     vector.cpp  \
     version.cpp
+
+
+if HAVE_EXECINFO
+UTIL_FILES += backtrace_execinfo.cpp
+endif
+
 
 CLEANFILES = json.cpp version.cpp ip.cpp
 EXTRA_DIST = json.cpp.rl version.cpp.rl ip.cpp.rl
