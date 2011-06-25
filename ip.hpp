@@ -34,7 +34,9 @@ namespace ipv4 {
         ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d);
 
         ip&  operator  = (const ip &);
-        bool operator == (const ip &) const; 
+        bool operator == (const ip &) const;
+
+        explicit operator uint32_t (void);
 
         static ip parse (const std::string &);
 
@@ -43,7 +45,7 @@ namespace ipv4 {
     };
 
     
-    typedef uint16_t port_t;
+    typedef uint16_t port;
 }
 
 
