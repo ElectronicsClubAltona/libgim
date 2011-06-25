@@ -1,6 +1,6 @@
 AC_INIT([libgim], [0.1.0], [danny@nerdcruft.net])
 
-AC_CANONICAL_TARGET
+AC_CANONICAL_HOST
 
 ## We remove CXXFLAGS as autotools inserts them /AFTER/ our own CXXFLAGS,
 ## thus overriding any variables that both set (specifically we're concerned
