@@ -21,6 +21,7 @@ UTIL_INCLUDE =  \
     point.hpp	\
     range.hpp	\
     region.hpp	\
+    signal.hpp	\
     stream.hpp	\
     types.hpp	\
     vector.hpp  \
@@ -38,6 +39,7 @@ UTIL_FILES   =	\
     point.cpp	\
     range.cpp	\
     region.cpp	\
+    signal.cpp	\
     stream.cpp	\
     types.cpp	\
     vector.cpp  \
