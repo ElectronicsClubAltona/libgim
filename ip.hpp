@@ -20,6 +20,8 @@
 #ifndef __UTIL_IP_HPP
 #define __UTIL_IP_HPP
 
+#include "range.hpp"
+
 #include <cstdint>
 #include <string>
 
@@ -47,6 +49,11 @@ namespace ipv4 {
 
     
     typedef uint16_t port;
+    typedef uint32_t mask;
+
+    extern const range<port> WELL_KNOWN_PORT,
+                             REGISTERED_PORT,
+                             PRIVATE_PORT;
 }
 
 
