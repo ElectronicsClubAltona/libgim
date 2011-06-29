@@ -88,7 +88,7 @@ namespace json {
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
 
-            virtual void insert (const std::string _key, node* value);
+            virtual void insert (const std::string &_key, node *value);
             virtual const node& operator[](const std::string &key) const;
 
             virtual std::ostream& print (std::ostream &os) const;

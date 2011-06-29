@@ -331,7 +331,7 @@ json::object::operator ==(const json::object &rhs) const {
 
 
 void
-json::object::insert (const std::string _key, json::node* value)
+json::object::insert (const std::string &_key, json::node* value)
         { m_values[_key] = value; }
 
 
