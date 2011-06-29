@@ -50,4 +50,21 @@ namespace ipv4 {
 }
 
 
+namespace ipv6 {
+    struct ip {
+        uint32_t m_quads[4];
+
+        ip (const std::string&) { ; }
+    };
+
+    typedef uint16_t port;
+
+    struct mask {
+        uint32_t m_quads[4];
+
+        mask (uint32_t) { ; }
+    };
+}
+
+
 #endif // __UTIL_IP_HPP
