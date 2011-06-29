@@ -27,8 +27,12 @@
 using namespace std;
 
 
-const ipv4::ip ipv4::ip::LOOPBACK ({ 127, 0, 0, 1 });
-const ipv4::ip ipv4::ip::ANY      ({   0, 0, 0, 0 });
+const ipv4::ip ipv4::ip::LOOPBACK (127, 0, 0, 1);
+const ipv4::ip ipv4::ip::ANY      (  0, 0, 0, 0);
+
+const range<ipv4::port> ipv4::WELL_KNOWN_PORT (    0,  1023),
+                        ipv4::REGISTERED_PORT ( 1024, 49151),
+                        ipv4::PRIVATE_PORT    (49152, 65535);
 
 
 ipv4::ip::ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d):
@@ -86,8 +90,7 @@ ipv4::ip::operator == (const ipv4::ip &rhs) const {
 %%write data;
 
 
-ipv4::ip
-ipv4::ip::parse (const string &data) {
+ipv4::ip::ip (const std::string &data) {
     bool __success = true;
     uint8_t __octets[4];
     const char *octetstart, *octetend;
@@ -104,8 +107,14 @@ ipv4::ip::parse (const string &data) {
     if (!__success)
         throw invalid_argument(data);
 
-    return ipv4::ip(__octets[0],
-                    __octets[1],
-                    __octets[2],
-                    __octets[3]);
+    m_octets[0] = __octets[0];
+    m_octets[1] = __octets[1];
+    m_octets[2] = __octets[2];
+    m_octets[3] = __octets[3];
 }
+
+
+ipv4::ip
+ipv4::ip::parse (const string &data)
+    { return ipv4::ip (data); }
+

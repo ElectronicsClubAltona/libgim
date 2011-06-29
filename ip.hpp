@@ -31,6 +31,7 @@ namespace ipv4 {
             uint32_t m_integer;
         };
 
+        ip (const std::string &);
         ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d);
 
         ip&  operator  = (const ip &);
