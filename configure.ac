@@ -16,6 +16,15 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE 
 AM_CONFIG_HEADER(config.h)
 
+AC_ARG_ENABLE([debugging],
+              [AS_HELP_STRING([--enable-debugging],
+                              [enables developer debugging support])],
+              [ case "${enableval}" in
+                    yes) cv_debugging=yes ;;
+                     no) cv_debugging=no ;;
+                      *) AC_MSG_ERROR([bad value for --enable-debugging=[yes|no]]) ;;
+              esac ],
+              [cv_debugging=no])
 
 ##
 ## Warnings
@@ -80,6 +89,14 @@ AC_CHECK_HEADER([execinfo.h], [break], [AC_MSG_ERROR([Missing backtrace support]
 
 AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
 
+##
+## Debug features
+if test "x$cv_debugging" = "xyes"; then
+    COMMON_CFLAGS="$COMMON_CFLAGS -O0 -D_GLIBCXX_DEBUG"
+else
+    COMMON_CFLAGS="$COMMON_CFLAGS -O2 -flto"
+    COMMON_LDFLAGS="-flto"
+fi
 
 ##
 ## Documentation
@@ -103,12 +120,13 @@ AX_BOOST_SYSTEM
 
 ## Output
 
-COMMON_CXXFLAGS="-O0 -g -std=c++0x -include config.h $WARNING_FLAGS $COMMON_CFLAGS"
-COMMON_CFLAGS="-O0 -g -std=c99   -include config.h $WARNING_FLAGS $COMMON_CFLAGS"
-COMMON_LDFLAGS=""
+COMMON_CXXFLAGS="-g -std=c++0x -pipe -include config.h $WARNING_FLAGS $COMMON_CFLAGS"
+COMMON_CFLAGS="-g -std=c99 -pipe -include config.h $WARNING_FLAGS $COMMON_CFLAGS"
+COMMON_LDFLAGS="$COMMON_LDFLAGS "
 
 AC_SUBST(COMMON_CFLAGS)
 AC_SUBST(COMMON_CXXFLAGS)
+AC_SUBST(COMMON_LDFLAGS)
 
 AC_OUTPUT([
     Doxyfile
