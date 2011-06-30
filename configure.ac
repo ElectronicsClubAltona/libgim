@@ -21,40 +21,40 @@ AM_CONFIG_HEADER(config.h)
 ## Warnings
 WARNING_FLAGS=""
 
-AS_COMPILER_FLAG([-Wall], 		[WARNING_FLAGS="$WARNING_FLAGS -Wall"])
-AS_COMPILER_FLAG([-Wextra], 		[WARNING_FLAGS="$WARNING_FLAGS -Wextra"])
-AS_COMPILER_FLAG([-Wno-parentheses],    [WARNING_FLAGS="$WARNING_FLAGS -Wno-parentheses"])
+AS_CXX_COMPILER_FLAG([-Wall], 		[WARNING_FLAGS="$WARNING_FLAGS -Wall"])
+AS_CXX_COMPILER_FLAG([-Wextra], 		[WARNING_FLAGS="$WARNING_FLAGS -Wextra"])
+AS_CXX_COMPILER_FLAG([-Wno-parentheses],    [WARNING_FLAGS="$WARNING_FLAGS -Wno-parentheses"])
 
-AS_COMPILER_FLAG([-Wpointer-arith],	[WARNING_FLAGS="$WARNING_FLAGS -Wpointer-arith"])
-AS_COMPILER_FLAG([-Wcast-qual],         [WARNING_FLAGS="$WARNING_FLAGS -Wcast-qual"])
-AS_COMPILER_FLAG([-Wcast-align],        [WARNING_FLAGS="$WARNING_FLAGS -Wcast-align"])
+AS_CXX_COMPILER_FLAG([-Wpointer-arith],	[WARNING_FLAGS="$WARNING_FLAGS -Wpointer-arith"])
+AS_CXX_COMPILER_FLAG([-Wcast-qual],         [WARNING_FLAGS="$WARNING_FLAGS -Wcast-qual"])
+AS_CXX_COMPILER_FLAG([-Wcast-align],        [WARNING_FLAGS="$WARNING_FLAGS -Wcast-align"])
 
-AS_COMPILER_FLAG([-Wsign-compare],      [WARNING_FLAGS="$WARNING_FLAGS -Wsign-compare"])
-AS_COMPILER_FLAG([-Wsign-conversion],   [WARNING_FLAGS="$WARNING_FLAGS -Wsign-conversion"])
-AS_COMPILER_FLAG([-Wtype-limits],       [WARNING_FLAGS="$WARNING_FLAGS -Wtype-limits"])
-AS_COMPILER_FLAG([-Wfloat-equal],       [WARNING_FLAGS="$WARNING_FLAGS -Wfloat-equal"])
+AS_CXX_COMPILER_FLAG([-Wsign-compare],      [WARNING_FLAGS="$WARNING_FLAGS -Wsign-compare"])
+AS_CXX_COMPILER_FLAG([-Wsign-conversion],   [WARNING_FLAGS="$WARNING_FLAGS -Wsign-conversion"])
+AS_CXX_COMPILER_FLAG([-Wtype-limits],       [WARNING_FLAGS="$WARNING_FLAGS -Wtype-limits"])
+AS_CXX_COMPILER_FLAG([-Wfloat-equal],       [WARNING_FLAGS="$WARNING_FLAGS -Wfloat-equal"])
 
-#AS_COMPILER_FLAG([-Wswitch-default],    [COMMON_CFLAGS="$COMMON_CFLAGS -Wswitch-default"])
-AS_COMPILER_FLAG([-Wswitch-enum],       [COMMON_CFLAGS="$COMMON_CFLAGS -Wswitch-enum"])
+#AS_CXX_COMPILER_FLAG([-Wswitch-default],    [COMMON_CFLAGS="$COMMON_CFLAGS -Wswitch-default"])
+AS_CXX_COMPILER_FLAG([-Wswitch-enum],       [COMMON_CFLAGS="$COMMON_CFLAGS -Wswitch-enum"])
 
-AS_COMPILER_FLAG([-Wunsafe-loop-optimizations],
+AS_CXX_COMPILER_FLAG([-Wunsafe-loop-optimizations],
                  [WARNING_FLAGS="$WARNING_FLAGS -Wunsafe-loop-optimizations"])
 
-AS_COMPILER_FLAG([-Wunused-parameter],  [WARNING_FLAGS="$WARNING_FLAGS -Wunused-parameter"])
-AS_COMPILER_FLAG([-Wunused-but-set-variable],    [WARNING_FLAGS="$WARNING_FLAGS -Wunused-parameter"])
-AS_COMPILER_FLAG([-Wshadow],            [WARNING_FLAGS="$WARNING_FLAGS -Wshadow"])
-AS_COMPILER_FLAG([-Wredundant-decls],   [WARNING_FLAGS="$WARNING_FLAGS -Wredundant-decls"])
+AS_CXX_COMPILER_FLAG([-Wunused-parameter],  [WARNING_FLAGS="$WARNING_FLAGS -Wunused-parameter"])
+AS_CXX_COMPILER_FLAG([-Wunused-but-set-variable],    [WARNING_FLAGS="$WARNING_FLAGS -Wunused-parameter"])
+AS_CXX_COMPILER_FLAG([-Wshadow],            [WARNING_FLAGS="$WARNING_FLAGS -Wshadow"])
+AS_CXX_COMPILER_FLAG([-Wredundant-decls],   [WARNING_FLAGS="$WARNING_FLAGS -Wredundant-decls"])
 
-AS_COMPILER_FLAG([-pedantic],           [COMMON_CFLAGS="$COMMON_CFLAGS -pedantic"])
+AS_CXX_COMPILER_FLAG([-pedantic],           [COMMON_CFLAGS="$COMMON_CFLAGS -pedantic"])
 
 ##
 ## Compilation
-AS_COMPILER_FLAG([-fno-common ],        [COMMON_CFLAGS="$COMMON_CFLAGS -fno-common "])
-AS_COMPILER_FLAG([-fno-nonansi-builtins],
+AS_CXX_COMPILER_FLAG([-fno-common ],        [COMMON_CFLAGS="$COMMON_CFLAGS -fno-common "])
+AS_CXX_COMPILER_FLAG([-fno-nonansi-builtins],
                  [COMMON_CFLAGS="$COMMON_CFLAGS -fno-nonansi-builtins"])
-AS_COMPILER_FLAG([-fno-rtti],           [COMMON_CFLAGS="$COMMON_CFLAGS -fno-rtti"])
+AS_CXX_COMPILER_FLAG([-fno-rtti],           [COMMON_CFLAGS="$COMMON_CFLAGS -fno-rtti"])
 
-AS_COMPILER_FLAG([-ggdb],               [COMMON_CFLAGS="$COMMON_CFLAGS -ggdb"])
+AS_CXX_COMPILER_FLAG([-ggdb],               [COMMON_CFLAGS="$COMMON_CFLAGS -ggdb"])
 
 ##
 ## Compiler features
