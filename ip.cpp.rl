@@ -35,6 +35,11 @@ const range<ipv4::port> ipv4::WELL_KNOWN_PORT (    0,  1023),
                         ipv4::PRIVATE_PORT    (49152, 65535);
 
 
+ipv4::ip::ip (uint32_t _integer):
+    m_integer (_integer)
+{ ; }
+
+
 ipv4::ip::ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d):
     m_octets ({ a, b, c, d })
 { ; }
