@@ -86,7 +86,8 @@ AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
 
 ##
 ## Required packages
-CHECK_RAGEL
+CHECK_RAGEL([test/ragel.c.rl])
+
 
 AX_BOOST_BASE([1.46])
 AX_BOOST_FILESYSTEM
