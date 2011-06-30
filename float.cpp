@@ -61,8 +61,15 @@ ieee_float<E, S>::operator==(floating_t _floating) const {
     // representative native floating point type. But I'm sick of
     // C++'s template bullshit for tonight.
     check_hard (bits_type<TOTAL_BITS>::has_floating);
-    
-    return m_bits == *(const uint_t*)&_floating;
+
+    union {
+        floating_t _floating;
+        uint_t     _uint;
+    } convertor;
+
+    convertor._floating = _floating;
+
+    return m_bits == convertor._uint;
 }
 
 
