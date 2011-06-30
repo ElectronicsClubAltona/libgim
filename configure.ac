@@ -89,8 +89,14 @@ AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
 CHECK_RAGEL([test/ragel.c.rl])
 
 
-AX_BOOST_BASE([1.46])
+AX_BOOST_BASE([1.42], [], [AC_MSG_ERROR([Boost version >= 1.42 required])])
 AX_BOOST_FILESYSTEM
+if test "x$ax_cv_boost_filesystem" != "xyes"; then
+    AC_MSG_ERROR("boost-filesystem is a hard requirement")
+fi
+
+# boost-system isn't a hard requirement, it's only really used to fulfill
+# some other dependency I've since forgotten about...
 AX_BOOST_SYSTEM
 
 ## Optional packages
