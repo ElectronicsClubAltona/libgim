@@ -88,8 +88,9 @@ class pool : public nocopy {
 
 
         void release (T *data) {
+            data->~T();
             node *newnode = (node *)data;
-            
+
             newnode->_chain = m_next;
             m_next = newnode;
         }
