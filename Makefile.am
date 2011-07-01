@@ -19,6 +19,7 @@ UTIL_INCLUDE =  \
     matrix.hpp	\
     nocopy.hpp	\
     point.hpp	\
+    pool.hpp	\
     range.hpp	\
     region.hpp	\
     signal.hpp	\
@@ -37,6 +38,7 @@ UTIL_FILES   =	\
     maths.cpp	\
     matrix.cpp	\
     point.cpp	\
+    pool.cpp	\
     range.cpp	\
     region.cpp	\
     signal.cpp	\

@@ -14,6 +14,7 @@ TEST_BIN = 		\
 	ip 		\
 	maths 		\
 	matrix 		\
+	pool		\
 	range 		\
 	signal		\
 	version
@@ -43,6 +44,9 @@ maths_SOURCES      = maths.cpp
 
 matrix_LDADD       = $(builddir)/../libutil.la
 matrix_SOURCES     = matrix.cpp
+
+pool_LDADD         = $(builddir)/../libutil.la
+pool_SOURCES	   = pool.cpp
 
 range_LDADD        = $(builddir)/../libutil.la
 range_SOURCES 	   = range.cpp
