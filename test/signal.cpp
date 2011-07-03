@@ -40,6 +40,13 @@ test_double (void) {
 }
 
 
+void
+test_linking_pointers (void) {
+    signal<void, const char*> ptr_signal;
+    ptr_signal (NULL);
+}
+
+
 int
 main (int, char **) {
     test_null   ();
