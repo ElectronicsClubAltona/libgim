@@ -58,27 +58,51 @@ template <typename T>
 struct sign_types;
 
 
-template <> struct sign_types <signed int> {
-    typedef   signed int with_sign;
-    typedef unsigned int without_sign;
+template <> struct sign_types <int8_t> {
+    typedef  int8_t with_sign;
+    typedef uint8_t without_sign;
 };
 
 
-template <> struct sign_types <unsigned int> {
-    typedef   signed int with_sign;
-    typedef unsigned int without_sign;
+template <> struct sign_types <uint8_t> {
+    typedef  int8_t with_sign;
+    typedef uint8_t without_sign;
 };
 
 
-template <> struct sign_types <ssize_t> {
-    typedef ssize_t with_sign;
-    typedef size_t  without_sign;
+template <> struct sign_types <int16_t> {
+    typedef  int16_t with_sign;
+    typedef uint16_t without_sign;
 };
 
 
-template <> struct sign_types <size_t> {
-    typedef ssize_t with_sign;
-    typedef size_t  without_sign;
+template <> struct sign_types <uint16_t> {
+    typedef  int16_t with_sign;
+    typedef uint16_t without_sign;
+};
+
+
+template <> struct sign_types <int32_t> {
+    typedef  int32_t with_sign;
+    typedef uint32_t without_sign;
+};
+
+
+template <> struct sign_types <uint32_t> {
+    typedef  int32_t with_sign;
+    typedef uint32_t without_sign;
+};
+
+
+template <> struct sign_types <int64_t> {
+    typedef   signed long with_sign;
+    typedef unsigned long without_sign;
+};
+
+
+template <> struct sign_types <uint64_t> {
+    typedef   signed long with_sign;
+    typedef unsigned long without_sign;
 };
 
 
