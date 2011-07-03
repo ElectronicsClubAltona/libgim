@@ -45,16 +45,16 @@ class signal {
             { m_children.push_back (_cb); }
 
         /// Remove all instances of callback `cb'
-        void disconnect (callback_function _cb)
-            { disconnect (callback_object (_cb)); }
+        //void disconnect (callback_function _cb)
+        //    { disconnect (callback_object (_cb)); }
 
         /// Remove all instances of callback `cb'
-        void disconnect (callback_object _cb) {
+        /*void disconnect (callback_object _cb) {
             m_children.erase (std::remove (m_children.begin (),
                                            m_children.end   (),
                                            _cb),
                               m_children.end ());
-        }
+        }*/
 
         /// Remove all callbacks
         void clear (void)
