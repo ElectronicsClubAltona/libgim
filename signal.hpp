@@ -39,8 +39,10 @@ class signal {
             { m_children.reserve (16); }
 
         /// Add a callback to list.
-        void connect (callback_object _cb)
+        void connect (callback_object   _cb)
             { m_children.push_back (_cb); }
+
+        /// Add a callback to the list.
         void connect (callback_function _cb)
             { m_children.push_back (_cb); }
 
@@ -56,7 +58,7 @@ class signal {
                               m_children.end ());
         }*/
 
-        /// Remove all callbacks
+        /// Disconnect all callbacks
         void clear (void)
             { m_children.clear (); }
 
