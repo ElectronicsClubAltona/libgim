@@ -6,7 +6,6 @@
 #include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -68,6 +67,9 @@ fd_ref::operator int (void) const
     { return fd; }
 
 
+#if defined(HAVE_MMAP)
+#include <sys/mman.h>
+
 //----------------------------------------------------------------------------
 mapped_file::mapped_file (const char *_path):
     m_fd (open (_path, O_RDONLY))
@@ -119,6 +121,6 @@ mapped_file::data (void) const {
 
     return m_data;
 }
-
+#endif
 
 
