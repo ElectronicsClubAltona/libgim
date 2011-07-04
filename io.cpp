@@ -15,8 +15,8 @@ using namespace std;
 
 //----------------------------------------------------------------------------
 uint8_t *
-slurp (boost::filesystem::path& path)  {
-    fd_ref fd(open (path.c_str(), O_RDONLY | O_CLOEXEC));
+slurp (const boost::filesystem::path& path)  {
+    fd_ref fd(open (path.string ().c_str (), O_RDONLY)); // | O_CLOEXEC));
     
     // Calculate the total file size
     off_t size = lseek (fd, 0, SEEK_END);
