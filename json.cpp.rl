@@ -29,7 +29,6 @@
 #include <algorithm>
 #include <sstream>
 
-#include <sys/mman.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -236,12 +235,13 @@ struct parse_context {
 
 namespace json {
     json::node *
-    parse (const boost::filesystem::path &path) {
-        mapped_file file(path);
-        return parse ((const char *)file.data (),
-                      (const char *)file.data () + file.size ());
-    }
+    parse (const boost::filesystem::path &path)
+        { return parse ((const char *)slurp (path)); }
 
+
+    json::node *
+    parse (const std::string &path)
+        { return parse (path.c_str (), path.c_str () + path.size ()); }
 
     node *
     parse (const char *start,
