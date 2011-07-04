@@ -22,11 +22,11 @@ AC_ARG_ENABLE([debugging],
               [AS_HELP_STRING([--enable-debugging],
                               [enables developer debugging support])],
               [ case "${enableval}" in
-                    yes) cv_debugging=yes ;;
-                     no) cv_debugging=no ;;
+                    yes) ac_cv_debugging=yes ;;
+                     no) ac_cv_debugging=no ;;
                       *) AC_MSG_ERROR([bad value for --enable-debugging=[yes|no]]) ;;
               esac ],
-              [cv_debugging=no])
+              [ac_cv_debugging=no])
 
 ##
 ## Warnings
@@ -100,11 +100,18 @@ AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
 
 ##
 ## Debug features
-if test "x$cv_debugging" = "xyes"; then
+if test "x$ac_cv_debugging" = "xyes"; then
     COMMON_CFLAGS="$COMMON_CFLAGS -O0 -D_GLIBCXX_DEBUG"
 else
-    COMMON_CFLAGS="$COMMON_CFLAGS -O2 -flto"
-    COMMON_LDFLAGS="-flto"
+    AS_CXX_COMPILER_FLAG([-flto], [ac_cv_flto=yes])
+
+
+    if test "x$ac_cv_flto" = "xyes"; then
+        COMMON_CFLAGS="$COMMON_CFLAGS -flto"
+        COMMON_LDFLAGS="-flto"
+    fi
+
+    COMMON_CFLAGS="$COMMON_CFLAGS -O2"
 fi
 
 ##
