@@ -85,11 +85,13 @@ AC_C_BIGENDIAN
 
 ##
 ## platform features
+COMMON_CFLAGS="$COMMON_CFLAGS -D_GNU_SOURCE"
+
 AC_FUNC_MMAP
 
-AC_CHECK_HEADER([execinfo.h], [break], [AC_MSG_ERROR([Missing backtrace support])])
-
+AC_CHECK_HEADER([execinfo.h], [break])
 AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
+
 
 ##
 ## Debug features

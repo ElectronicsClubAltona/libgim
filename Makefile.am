@@ -51,8 +51,9 @@ UTIL_FILES   =	\
 
 if HAVE_EXECINFO
 UTIL_FILES += backtrace_execinfo.cpp
+else
+UTIL_FILES += backtrace_null.cpp
 endif
-
 
 CLEANFILES = json.cpp version.cpp ip.cpp
 EXTRA_DIST = json.cpp.rl version.cpp.rl ip.cpp.rl
