@@ -84,6 +84,11 @@ AC_C_INLINE
 AC_C_BIGENDIAN
 
 ##
+## Useful headers or platform features
+AC_TYPE_SIZE_T
+AC_TYPE_SSIZE_T
+
+##
 ## platform features
 COMMON_CFLAGS="$COMMON_CFLAGS -D_GNU_SOURCE"
 
