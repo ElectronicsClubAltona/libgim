@@ -1,6 +1,8 @@
 #ifndef __TYPES_HPP
 #define __TYPES_HPP
 
+#include "enable_if.hpp"
+
 #include <cstdint>
 #include <string>
 #include <limits>
@@ -106,26 +108,36 @@ template <> struct sign_types <uint64_t> {
 };
 
 
-/// Safely cast a numeric type to its signed comparison, aborting if the
-/// result is not representable.
-template <typename T>
-typename sign_types<T>::with_sign
-sign_cast (const typename sign_types<T>::without_sign v)
-{
-    check_hard (v <= std::numeric_limits<typename sign_types<T>::without_sign>::max () >> 1);
-    return static_cast <typename sign_types<T>::with_sign> (v);
-}
+namespace detail {
+    template <typename T, typename V>
+    T
+    _sign_cast (typename enable_if<sizeof(T) == sizeof(V)     &&
+                                   std::is_unsigned<T>::value &&
+                                   std::is_signed<V>::value, V>::type v)
+    {
+        check_hard (v >= 0);
+        return static_cast<T> (v);
+    }
 
 
-/// Safely cast a numeric type to its unsigned comparison, aborting if the
-/// result is not representable.
-template <typename T>
-typename sign_types<T>::without_sign
-sign_cast (const typename sign_types<T>::with_sign v)
-{
-    check_hard (v >= 0);
-    return static_cast <typename sign_types<T>::without_sign> (v);
+    template <typename T, typename V>
+    T
+    _sign_cast (typename enable_if<sizeof(T) == sizeof(V)   &&
+                                   std::is_signed<T>::value &&
+                                   std::is_unsigned<V>::value, V>::type v)
+    {
+        check_hard (v < std::numeric_limits<V>::max () / 2);
+        return static_cast<T> (v);
+    }
 }
+
+/// Safely cast a numeric type to its (un)signed counterpart, aborting if the
+/// dynamically checked result is not representable. May be optimised out if
+/// NDEBUG is defined.
+template <typename T, typename V>
+T
+sign_cast (V v)
+    { return detail::_sign_cast<T,V>(v); }
 
 
 /// Returns the number of elements of a statically allocated array
