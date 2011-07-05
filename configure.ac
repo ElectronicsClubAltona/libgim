@@ -109,7 +109,12 @@ CHECK_RAGEL([test/ragel.c.rl])
 
 
 AX_BOOST_BASE([1.42], [], [AC_MSG_ERROR([Boost version >= 1.42 required])])
+AC_SUBST(BOOST_CPPFLAGS)
+AC_SUBST(BOOST_LDFLAGS)
+
 AX_BOOST_FILESYSTEM
+AC_SUBST(BOOST_FILESYSTEM_LIB)
+
 if test "x$ax_cv_boost_filesystem" != "xyes"; then
     AC_MSG_ERROR("boost-filesystem is a hard requirement")
 fi
