@@ -10,6 +10,7 @@ UTIL_INCLUDE =  \
     annotations.hpp \
     backtrace.hpp   \
     debug.hpp   \
+    enable_if.hpp   \
     except.hpp  \
     float.hpp	\
     io.hpp	\
