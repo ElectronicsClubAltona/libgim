@@ -59,9 +59,9 @@ std::string type_to_string (void);
 namespace detail {
     template <typename T, typename V>
     T
-    _sign_cast (typename enable_if<sizeof(T) == sizeof(V)     &&
-                                   std::is_unsigned<T>::value &&
-                                   std::is_signed<V>::value, V>::type v)
+    _sign_cast (const typename enable_if<sizeof(T) == sizeof(V)     &&
+                                         std::is_unsigned<T>::value &&
+                                         std::is_signed<V>::value, V>::type v)
     {
         check_hard (v >= 0);
         return static_cast<T> (v);
@@ -70,9 +70,9 @@ namespace detail {
 
     template <typename T, typename V>
     T
-    _sign_cast (typename enable_if<sizeof(T) == sizeof(V)   &&
-                                   std::is_signed<T>::value &&
-                                   std::is_unsigned<V>::value, V>::type v)
+    _sign_cast (const typename enable_if<sizeof(T) == sizeof(V)   &&
+                                         std::is_signed<T>::value &&
+                                         std::is_unsigned<V>::value, V>::type v)
     {
         check_hard (v < std::numeric_limits<V>::max () / 2);
         return static_cast<T> (v);
@@ -84,8 +84,35 @@ namespace detail {
 /// NDEBUG is defined.
 template <typename T, typename V>
 T
-sign_cast (V v)
+sign_cast (const V v)
     { return detail::_sign_cast<T,V>(v); }
+
+
+namespace detail {
+    // Same sign, no possibility of truncation with larger target type
+    template <typename T, typename V>
+    T
+    _trunc_cast (const typename enable_if<sizeof (T) >= sizeof (V) &&
+                                          std::is_signed<T>::value == std::is_signed<V>::value, V>::type v)
+        { return v; }
+
+
+    template <typename T, typename V>
+    T
+    _trunc_cast (const typename enable_if<sizeof (T) < sizeof (V) &&
+                                          std::is_signed<T>::value == std::is_signed<V>::value, V>::type v) {
+        check_hard (v <= std::numeric_limits<T>::max ());
+        checK_hard (v >= std::numeric_limits<T>::min ());
+
+        return static_cast<T> (v);
+    }
+}
+
+
+template <typename T, typename V>
+T
+trunc_cast (V v)
+    { return detail::_trunc_cast<T, V> (v); }
 
 
 /// Returns the number of elements of a statically allocated array
