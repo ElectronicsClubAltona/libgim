@@ -40,6 +40,7 @@ namespace json {
     extern node* parse (const boost::filesystem::path &path);
     extern node* parse (const char *start, const char *stop);
     extern node* parse (const char *start);
+    extern node* parse (const std::string&);
 
     /// Abstract base for all JSON values
     class node {

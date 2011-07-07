@@ -38,7 +38,7 @@ enum access_t {
 /// Reads an entire file into memory. Caller frees the result. Guarantees a
 /// null trailing byte.
 uint8_t *
-slurp (boost::filesystem::path&) mustuse;
+slurp (const boost::filesystem::path&) mustuse;
 
 /// A simple RAII wrapper for file descriptors
 struct fd_ref {
@@ -52,6 +52,7 @@ struct fd_ref {
 };
 
 
+#if defined(HAVE_MMAP)
 /// Wraps a mechanism to map a file into memory. Read only.
 class mapped_file {
     protected:
@@ -74,6 +75,7 @@ class mapped_file {
         const uint8_t* data (void) const;
         size_t         size (void) const;
 };
+#endif
 
 
 #endif

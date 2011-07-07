@@ -42,7 +42,7 @@ panic (void)
 void
 breakpoint (void) {
     if (getenv ("DEBUG")) {
-#if defined (__x86_64)
+#if defined (__x86_64) || defined (__i386)
         __asm__ ("int $3;");
 #else
         raise (SIGINT);

@@ -6,7 +6,6 @@
 #include <cstdio>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -15,8 +14,8 @@ using namespace std;
 
 //----------------------------------------------------------------------------
 uint8_t *
-slurp (boost::filesystem::path& path)  {
-    fd_ref fd(open (path.c_str(), O_RDONLY | O_CLOEXEC));
+slurp (const boost::filesystem::path& path)  {
+    fd_ref fd(open (path.string ().c_str (), O_RDONLY)); // | O_CLOEXEC));
     
     // Calculate the total file size
     off_t size = lseek (fd, 0, SEEK_END);
@@ -67,6 +66,9 @@ fd_ref::~fd_ref () {
 fd_ref::operator int (void) const
     { return fd; }
 
+
+#if defined(HAVE_MMAP)
+#include <sys/mman.h>
 
 //----------------------------------------------------------------------------
 mapped_file::mapped_file (const char *_path):
@@ -119,6 +121,6 @@ mapped_file::data (void) const {
 
     return m_data;
 }
-
+#endif
 
 

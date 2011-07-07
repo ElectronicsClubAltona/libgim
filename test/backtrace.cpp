@@ -1,5 +1,6 @@
 #include "../backtrace.hpp"
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
