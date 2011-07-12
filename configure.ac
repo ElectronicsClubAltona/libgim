@@ -28,6 +28,16 @@ AC_ARG_ENABLE([debugging],
               esac ],
               [ac_cv_debugging=no])
 
+AC_ARG_ENABLE([mudflap],
+              [AS_HELP_STRING([--enable-mudflap],
+                              [enable mudflap runtime debugging])],
+              [ case "${enableval}" in
+                    yes) ac_cv_mudflap=yes ;;
+                     no) ac_cv_mudflap=no ;;
+                      *) AC_MSG_ERROR([bad value for --enable-mudflap[yes|no]]) ;;
+              esac ],
+              [ac_cv_mudflap=no])
+
 ##
 ## Warnings
 WARNING_FLAGS=""
@@ -102,10 +112,17 @@ AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
 ## Debug features
 if test "x$ac_cv_debugging" = "xyes"; then
     COMMON_CFLAGS="$COMMON_CFLAGS -O0 -D_GLIBCXX_DEBUG"
+
+    if test "x$ac_cv_mudflap" = "xyes"; then
+        AS_CXX_COMPILER_FLAG([-fmudflapth], [
+            COMMON_CFLAGS="$COMMON_CFLAGS -fmudflapth";
+            COMMON_LDFLAGS="$COMMON_LDFLAGS -lmudflapth"
+        ])
+    fi
+
+    COMMON_CFLAGS="$COMMON_CFLAGS -D_FORTIFY_SOURCE=2"
 else
     AS_CXX_COMPILER_FLAG([-flto], [ac_cv_flto=yes])
-
-
     if test "x$ac_cv_flto" = "xyes"; then
         COMMON_CFLAGS="$COMMON_CFLAGS -flto"
         COMMON_LDFLAGS="-flto"
