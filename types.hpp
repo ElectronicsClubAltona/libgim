@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <string>
 #include <limits>
+#include <memory>
 
 template <int BITS>
 struct bits_type;
@@ -129,5 +130,12 @@ T hton (T);
 /// Convert a scalar from network byte order to host byte order
 template <typename T>
 T ntoh (T);
+
+
+template <typename T, typename ...Args>
+std::unique_ptr<T>
+make_unique (const Args &...args)
+    { return std::unique_ptr<T> (new T (args...)); }
+
 
 #endif // __TYPES_HPP
