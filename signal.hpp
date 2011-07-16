@@ -24,53 +24,54 @@
 #include <vector>
 #include <functional>
 
+namespace util {
+    template <typename Ret, typename ...Args>
+    class signal {
+        public:
+            typedef Ret (*callback_function)(Args...);
+            typedef std::function<Ret(Args...)> callback_object;
 
-template <typename Ret, typename ...Args>
-class signal {
-    public:
-        typedef Ret (*callback_function)(Args...);
-        typedef std::function<Ret(Args...)> callback_object;
+        protected:
+            std::vector<callback_object> m_children;
 
-    protected:
-        std::vector<callback_object> m_children;
+        public:
+            signal ()
+                { m_children.reserve (16); }
 
-    public:
-        signal ()
-            { m_children.reserve (16); }
+            /// Add a callback to list.
+            void connect (callback_object   _cb)
+                { m_children.push_back (_cb); }
 
-        /// Add a callback to list.
-        void connect (callback_object   _cb)
-            { m_children.push_back (_cb); }
+            /// Add a callback to the list.
+            void connect (callback_function _cb)
+                { m_children.push_back (_cb); }
 
-        /// Add a callback to the list.
-        void connect (callback_function _cb)
-            { m_children.push_back (_cb); }
+            /// Remove all instances of callback `cb'
+            //void disconnect (callback_function _cb)
+            //    { disconnect (callback_object (_cb)); }
 
-        /// Remove all instances of callback `cb'
-        //void disconnect (callback_function _cb)
-        //    { disconnect (callback_object (_cb)); }
+            /// Remove all instances of callback `cb'
+            /*void disconnect (callback_object _cb) {
+                m_children.erase (std::remove (m_children.begin (),
+                                               m_children.end   (),
+                                               _cb),
+                                  m_children.end ());
+            }*/
 
-        /// Remove all instances of callback `cb'
-        /*void disconnect (callback_object _cb) {
-            m_children.erase (std::remove (m_children.begin (),
-                                           m_children.end   (),
-                                           _cb),
-                              m_children.end ());
-        }*/
+            /// Disconnect all callbacks
+            void clear (void)
+                { m_children.clear (); }
 
-        /// Disconnect all callbacks
-        void clear (void)
-            { m_children.clear (); }
+            /// Returns the number of callbacks connected.
+            unsigned int size (void) const
+                { return m_children.size (); }
 
-        /// Returns the number of callbacks connected.
-        unsigned int size (void) const
-            { return m_children.size (); }
-
-        /// Execute all callbacks, ignoring the return parameters. Does not combine results.
-        void operator () (Args... tail) {
-            for (auto i = m_children.begin (), end = m_children.end (); i != end; ++i)
-                (*i)(tail...);
-        }
-};
+            /// Execute all callbacks, ignoring the return parameters. Does not combine results.
+            void operator () (Args... tail) {
+                for (auto i = m_children.begin (), end = m_children.end (); i != end; ++i)
+                    (*i)(tail...);
+            }
+    };
+}
 
 #endif // __SIGNAL_HPP
