@@ -27,7 +27,7 @@
 template <typename T>
 T 
 pow2 (T value)
-{ return value * value; }
+    { return value * value; }
 
 template double pow2(double);
 template    int pow2(   int);
@@ -36,7 +36,7 @@ template    int pow2(   int);
 template <typename T>
 double
 rootsquare (T a, T b)
-{ return sqrt (pow2 (a) + pow2 (b)); }
+    { return sqrt (pow2 (a) + pow2 (b)); }
 
 template double rootsquare (double, double);
 template double rootsquare (   int,    int);
@@ -44,13 +44,13 @@ template double rootsquare (   int,    int);
 
 template <>
 bool
-almost_equal (float a, float b)
+almost_equal (const float &a, const float &b)
     { return ieee_single::almost_equal (a, b); }
 
 
 template <>
 bool
-almost_equal (double a, double b)
+almost_equal (const double &a, const double &b)
     { return ieee_double::almost_equal (a, b); }
 
 

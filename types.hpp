@@ -1,6 +1,7 @@
 #ifndef __TYPES_HPP
 #define __TYPES_HPP
 
+#include "annotations.hpp"
 #include "enable_if.hpp"
 
 #include <cstdint>
@@ -124,12 +125,12 @@ size_t elems(T (&)[N])
 
 /// Convert a scalar from host byte order to network byte order
 template <typename T>
-T hton (T);
+T hton (T) pure;
 
 
 /// Convert a scalar from network byte order to host byte order
 template <typename T>
-T ntoh (T);
+T ntoh (T) pure;
 
 
 template <typename T, typename ...Args>

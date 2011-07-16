@@ -20,15 +20,17 @@
 #ifndef __MATHS_HPP
 #define __MATHS_HPP
 
+#include "annotations.hpp"
+
 
 template <typename T>
 T 
-pow2 (T value);
+pow2 (T value) pure;
 
 
 template <typename T>
 double
-rootsquare (T a, T b);
+rootsquare (T a, T b) pure;
 
 
 /**
@@ -40,13 +42,13 @@ rootsquare (T a, T b);
 
 template <typename T>
 bool
-almost_equal (T a, T b)
+almost_equal (const T &a, const T &b)
     { return a == b; }
 
 
 template <typename Ta, typename Tb>
 bool
-almost_equal (Ta a, Tb b) {
+almost_equal (const Ta &a, const Tb &b) {
     return almost_equal <decltype(a + b)> (static_cast<decltype(a + b)>(a),
                                            static_cast<decltype(a + b)>(b));
 }
@@ -54,19 +56,19 @@ almost_equal (Ta a, Tb b) {
 
 template <>
 bool
-almost_equal (float a, float b);
+almost_equal (const float &a, const float &b);
 
 
 template <>
 bool
-almost_equal (double a, double b);
+almost_equal (const double &a, const double &b);
 
 
 /// Variadic minimum
 template <typename T>
 const T&
 min (const T &a)
-    { return a ; }
+    { return a; }
 
 
 template <typename T, typename ...Args>
@@ -79,14 +81,13 @@ min (const T &a , const T &b , const Args &...args )
 template <typename T>
 const T&
 max (const T &a)
-    { return a ; }
+    { return a; }
 
 
 template <typename T, typename ...Args>
 const T&
 max (const T &a , const T &b , const Args &...args )
     { return max ( b > a ? b : a, args...); }
-
 
 
 #endif // __MATHS_HPP
