@@ -28,6 +28,11 @@
 #include <iostream>
 #include <sstream>
 
+#define trace {                                                 \
+    std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << std::endl;  \
+}
+
+
 #define verify_soft(C, COND) ({     \
     const auto value = (C);         \
     check_soft(value COND);         \
