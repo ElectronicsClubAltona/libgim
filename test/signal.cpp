@@ -10,7 +10,7 @@ increment_uint (unsigned int &val)
 
 void
 test_null (void) {
-    signal<void> void_signal;
+    util::signal<void> void_signal;
     void_signal ();
 }
 
@@ -18,7 +18,7 @@ test_null (void) {
 void
 test_single (void) {
     unsigned int val = 0;
-    signal<void, unsigned int&> void_signal;
+    util::signal<void, unsigned int&> void_signal;
 
     void_signal.connect (increment_uint);
     void_signal (val);
@@ -30,7 +30,7 @@ test_single (void) {
 void
 test_double (void) {
     unsigned int val = 0;
-    signal<void, unsigned int&> void_signal;
+    util::signal<void, unsigned int&> void_signal;
 
     void_signal.connect (increment_uint);
     void_signal.connect (increment_uint);
@@ -42,7 +42,7 @@ test_double (void) {
 
 void
 test_linking_pointers (void) {
-    signal<void, const char*> ptr_signal;
+    util::signal<void, const char*> ptr_signal;
     ptr_signal (NULL);
 }
 
