@@ -37,9 +37,11 @@ struct range {
     range (T _min, T _max);
 
     /// Check whether value falls within this range (inclusive)
-    bool includes (T val) const;
+    bool contains (T val) const;
     /// Check whether a range falls completely within (inclusive) this range
-    bool includes (const range <T> &r) const;
+    bool contains (const range <T> &r) const;
+    /// Check whether a range falls partially within (inclusive) this range
+    //bool includes (const range <T> &r) const;
 
     /// Return the closest number that falls within the range.
     T clamp (T val) const;

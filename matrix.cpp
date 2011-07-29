@@ -249,8 +249,8 @@ matrix::is_magic (void) const {
         unsigned int sum1 = 0, sum2 = 0;
 
         for (unsigned int j = 0; j < m_columns; ++j) {
-            if (!numbers.includes ((*this)[i][j]) ||
-                !numbers.includes ((*this)[j][i]))
+            if (!numbers.contains ((*this)[i][j]) ||
+                !numbers.contains ((*this)[j][i]))
                 return false;
 
             sum1 += (*this)[i][j];

@@ -43,13 +43,13 @@ range<T>::range (T _min, T _max):
 
 template <typename T>
 bool
-range<T>::includes (T val) const
+range<T>::contains (T val) const
     { return val >= min && val <= max; }
 
 
 template <typename T>
 bool
-range<T>::includes (const range <T> &r) const
+range<T>::contains (const range <T> &r) const
     { return r.min >= min && r.max <= max; }
 
 
