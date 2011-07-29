@@ -21,6 +21,7 @@
 #define __TYPES_HPP
 
 #include "annotations.hpp"
+#include "debug.hpp"
 #include "enable_if.hpp"
 
 #include <cstdint>
