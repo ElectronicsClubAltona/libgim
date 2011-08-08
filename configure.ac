@@ -78,12 +78,6 @@ AS_CXX_COMPILER_FLAG([-fno-rtti],           [COMMON_CFLAGS="$COMMON_CFLAGS -fno-
 AS_CXX_COMPILER_FLAG([-ggdb],               [COMMON_CFLAGS="$COMMON_CFLAGS -ggdb"])
 
 ##
-## Assistance
-AS_CXX_COMPILER_FLAG([-Wsuggest-attribute=pure],   [COMMON_CFLAGS="$COMMON_CFLAGS -Wsuggest-attribute=pure"])
-AS_CXX_COMPILER_FLAG([-Wsuggest-attribute=const],  [COMMON_CFLAGS="$COMMON_CFLAGS -Wsuggest-attribute=const"])
-AS_CXX_COMPILER_FLAG([-Wsuggest-attribute=return], [COMMON_CFLAGS="$COMMON_CFLAGS -Wsuggest-attribute=return"])
-
-##
 ## Compiler features
 AC_C_CONST
 AC_C_RESTRICT
