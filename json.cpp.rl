@@ -248,8 +248,8 @@ namespace json {
            const char *stop) {
         bool __success = true;
         json::node *__root = NULL;
-        int cs, top = 0;
-        deque <int> fsmstack;
+        size_t cs, top = 0;
+        deque <size_t> fsmstack;
         deque <parse_context> nodestack;
 
         const char *p   = start,

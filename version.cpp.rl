@@ -99,7 +99,7 @@ void
 version::parse (const string& str) {
     unsigned int current;
 
-    int         cs;
+    size_t      cs;
     const char *p   = str.data (),
                *pe  = str.data () + str.size (),
                *eof = pe;
