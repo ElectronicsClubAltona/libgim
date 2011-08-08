@@ -12,6 +12,7 @@ UTIL_INCLUDE =  \
     debug.hpp   \
     enable_if.hpp   \
     except.hpp  \
+    fixed.hpp	\
     float.hpp	\
     io.hpp	\
     ip.hpp	\
@@ -32,6 +33,7 @@ UTIL_INCLUDE =  \
 UTIL_FILES   =	\
     debug.cpp   \
     except.cpp  \
+    fixed.cpp	\
     float.cpp	\
     io.cpp	\
     ip.cpp	\
