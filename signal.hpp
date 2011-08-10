@@ -66,6 +66,11 @@ namespace util {
             unsigned int size (void) const
                 { return m_children.size (); }
 
+
+            bool empty (void) const
+                { return m_children.empty (); }
+
+
             /// Execute all callbacks, ignoring the return parameters. Does not combine results.
             void operator () (Args... tail) {
                 for (auto i = m_children.begin (), end = m_children.end (); i != end; ++i)
