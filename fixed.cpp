@@ -30,6 +30,8 @@ fixed<INT, FRAC>::fixed (integral_type val):
 {
     static_assert (INT  > 0, "must use positive integer bits");
     static_assert (FRAC > 0, "must use positive fractional bits");
+    static_assert (INT + FRAC == sizeof (m_value) * 8,
+                   "underlying storage must be exactly int:frac sized");
 }
 
 
