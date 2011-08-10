@@ -20,8 +20,11 @@
 #ifndef __SIGNAL_HPP
 #define __SIGNAL_HPP
 
+#include "debug.hpp"
+#include "nocopy.hpp"
+
 #include <algorithm>
-#include <vector>
+#include <list>
 #include <functional>
 
 namespace util {
@@ -32,35 +35,59 @@ namespace util {
             typedef std::function<Ret(Args...)> callback_object;
 
         protected:
-            std::vector<callback_object> m_children;
+            typedef std::list<callback_object> group;
+            group m_children;
+
+        public:
+            typedef typename group::iterator cookie;
+            struct scoped_cookie : public nocopy {
+                cookie                m_cookie;
+                signal<Ret, Args...>& m_parent;
+
+                scoped_cookie (cookie _cookie,
+                               signal<Ret, Args...> &_parent):
+                    m_cookie (_cookie),
+                    m_parent (_parent)
+                { ; }
+
+                scoped_cookie (scoped_cookie &&rhs):
+                    m_cookie (rhs.m_cookie),
+                    m_parent (rhs.m_parent)
+                {
+                    rhs.m_cookie = rhs.m_parent.m_children.end ();
+                }
+
+                ~scoped_cookie () {
+                    if (m_parent.m_children.end () != m_cookie)
+                        m_parent.disconnect (m_cookie);
+                }
+            };
 
         public:
             signal ()
-                { m_children.reserve (16); }
+                { /*m_children.reserve (16);*/ }
+
 
             /// Add a callback to list.
-            void connect (callback_object   _cb)
-                { m_children.push_back (_cb); }
+            const cookie
+            connect (const callback_object &_cb)
+                { return m_children.insert (m_children.end (), _cb); }
+
 
             /// Add a callback to the list.
-            void connect (callback_function _cb)
-                { m_children.push_back (_cb); }
+            const cookie
+            connect (const callback_function &_cb)
+                { return m_children.insert (m_children.end (), _cb); }
 
-            /// Remove all instances of callback `cb'
-            //void disconnect (callback_function _cb)
-            //    { disconnect (callback_object (_cb)); }
 
-            /// Remove all instances of callback `cb'
-            /*void disconnect (callback_object _cb) {
-                m_children.erase (std::remove (m_children.begin (),
-                                               m_children.end   (),
-                                               _cb),
-                                  m_children.end ());
-            }*/
+            void disconnect (const cookie _cb)
+                { m_children.erase (_cb); }
+
 
             /// Disconnect all callbacks
-            void clear (void)
+            void clear (void) 
                 { m_children.clear (); }
+
 
             /// Returns the number of callbacks connected.
             unsigned int size (void) const
