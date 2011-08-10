@@ -73,7 +73,7 @@ namespace util {
 
             /// Execute all callbacks, ignoring the return parameters. Does not combine results.
             void operator () (Args... tail) {
-                for (auto i = m_children.begin (), end = m_children.end (); i != end; ++i)
+                for (auto i = m_children.cbegin (); i != m_children.cend (); ++i)
                     (*i)(tail...);
             }
     };
