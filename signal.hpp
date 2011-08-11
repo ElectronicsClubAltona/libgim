@@ -61,6 +61,9 @@ namespace util {
                     if (m_parent.m_children.end () != m_cookie)
                         m_parent.disconnect (m_cookie);
                 }
+
+                void renew (callback_object &&cb)
+                    { *m_cookie = std::move (cb); }
             };
 
         public:
