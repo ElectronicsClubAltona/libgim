@@ -26,6 +26,7 @@ UTIL_INCLUDE =  \
     region.hpp	\
     signal.hpp	\
     stream.hpp	\
+    string.hpp	\
     types.hpp	\
     vector.hpp  \
     version.hpp
@@ -46,6 +47,7 @@ UTIL_FILES   =	\
     region.cpp	\
     signal.cpp	\
     stream.cpp	\
+    string.cpp	\
     types.cpp	\
     vector.cpp  \
     version.cpp
