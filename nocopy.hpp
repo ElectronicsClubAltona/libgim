@@ -27,8 +27,8 @@ class nocopy {
         nocopy () { ; }
 
     private:
-        nocopy            (const nocopy &) {                             ; }
-        nocopy& operator =(const nocopy &) { unreachable (); return *this; }
+        nocopy            (const nocopy &) = delete;
+        nocopy& operator =(const nocopy &) = delete;
 };
 
 #endif
