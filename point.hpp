@@ -20,15 +20,17 @@
 #ifndef __UTIL_POINT_HPP
 #define __UTIL_POINT_HPP
 
-/// A two dimensional position in space
-struct point {
-    double x, y;
+namespace util {
+    /// A two dimensional position in space
+    struct point {
+        double x, y;
 
-    point (double x, double y);
+        point (double x, double y);
 
-    double distance  (const point &) const;
-    double manhattan (const point &) const;
-};
+        double distance  (const point &) const;
+        double manhattan (const point &) const;
+    };
+}
 
 
 #endif // __UTIL_POINT_HPP

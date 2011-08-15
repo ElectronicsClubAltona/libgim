@@ -22,6 +22,7 @@
 #include <cmath>
 
 using namespace std;
+using namespace util;
 
 
 point::point (double _x, double _y):
