@@ -21,48 +21,48 @@
 #ifndef __UTIL_REGION_HPP
 #define __UTIL_REGION_HPP
 
-/**
- * A pure two-dimensional size, without positioning
- */
-template <typename T>
-struct _rect {
-    T width, height;
+namespace util {
+    /**
+     * A pure two-dimensional size, without positioning
+     */
+    template <typename T>
+    struct extent {
+        T width, height;
 
-    _rect (const T  _width, const T  _height);
+        extent (const T  _width, const T  _height);
 
-    T    area  (void) const;
-    bool empty (void) const;
+        T    area  (void) const;
+        bool empty (void) const;
 
-    bool operator ==(const _rect& rhs) const;
-    bool operator !=(const _rect& rhs) const
-        { return !(*this == rhs); }
+        bool operator ==(const extent& rhs) const;
+        bool operator !=(const extent& rhs) const
+            { return !(*this == rhs); }
 
-    void sanity (void) const;
-};
-
-typedef _rect<unsigned int> rect;
+        void sanity (void) const;
+    };
 
 
-/**
- * A two-dimensional rectangle, with size and position.
- */
-template <typename T>
-struct _region {
-    T     x,      y;
-    T width, height;
+    /**
+     * A two-dimensional rectangle, with size and position.
+     */
+    template <typename T>
+    struct _region {
+        T     x,      y;
+        T width, height;
 
-    _region (T _x, T _y, T _width, T _height);
+        _region (T _x, T _y, T _width, T _height);
 
-    T    area  (void) const;
-    bool empty (void) const;
+        T    area  (void) const;
+        bool empty (void) const;
 
-    bool operator ==(const _region<T>& rhs) const;
-    bool operator !=(const _region<T>& rhs) const
-        { return !(*this == rhs); }
+        bool operator ==(const _region<T>& rhs) const;
+        bool operator !=(const _region<T>& rhs) const
+            { return !(*this == rhs); }
 
-    void sanity (void) const;
-};
+        void sanity (void) const;
+    };
 
-typedef _region<unsigned int> region;
+    typedef _region<unsigned int> region;
+}
 
 #endif 

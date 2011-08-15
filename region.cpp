@@ -20,14 +20,18 @@
 
 #include "region.hpp"
 
+#include "enable_if.hpp"
 #include "debug.hpp"
 
+#include <type_traits>
+
+using namespace util;
 
 /*
  * Rect
  */
 template <typename T>
-_rect<T>::_rect (const T  _width, const T  _height):
+extent<T>::extent (const T  _width, const T  _height):
         width (_width),
         height (_height)
     { ; }
@@ -35,37 +39,40 @@ _rect<T>::_rect (const T  _width, const T  _height):
 
 template <typename T>
 T
-_rect<T>::area (void) const
+extent<T>::area (void) const
     { return width * height; }
 
 
 template <typename T>
 bool
-_rect<T>::empty (void) const
-    { return area() == 0; }
+extent<T>::empty (void) const
+    { return almost_equal (area(), 0); }
 
 
 template <typename T>
 bool
-_rect<T>::operator ==(const _rect& rhs) const
-    { return width == rhs.width && height == rhs.height; }
+extent<T>::operator ==(const extent& rhs) const {
+    return almost_equal (width,  rhs.width) &&
+           almost_equal (height, rhs.height);
+}
 
 
 template <typename T>
 void
-_rect<T>::sanity (void) const
+extent<T>::sanity (void) const
     { check (width >= 0 && height >= 0); }
 
 
-// Replace the check, as unsigned types do not ever go negative. This would
-// trigger a compile warning if left.
-template <>
-void
-_rect<unsigned int>::sanity (void) const
-    { check (true); }
+namespace util {
+    template <>
+    void
+    extent<unsigned int>::sanity (void) const
+        { return; }
+}
 
 
-template struct _rect<unsigned int>;
+template struct extent<unsigned int>;
+template struct extent<double>;
 
 /*
  * Region
