@@ -52,7 +52,7 @@ namespace ipv4 {
     typedef uint16_t port;
     typedef uint32_t mask;
 
-    extern const range<port> WELL_KNOWN_PORT,
+    extern const util::range<port> WELL_KNOWN_PORT,
                              REGISTERED_PORT,
                              PRIVATE_PORT;
 }

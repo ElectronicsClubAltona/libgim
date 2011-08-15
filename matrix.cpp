@@ -25,8 +25,8 @@
 
 #include <algorithm>
 
+using namespace util;
 using namespace maths;
-
 
 matrix::matrix (size_t _rows, size_t _columns):
         m_rows    (_rows),

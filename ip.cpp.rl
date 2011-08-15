@@ -30,9 +30,9 @@ using namespace std;
 const ipv4::ip ipv4::ip::LOOPBACK (127, 0, 0, 1);
 const ipv4::ip ipv4::ip::ANY      (  0, 0, 0, 0);
 
-const range<ipv4::port> ipv4::WELL_KNOWN_PORT (    0,  1023),
-                        ipv4::REGISTERED_PORT ( 1024, 49151),
-                        ipv4::PRIVATE_PORT    (49152, 65535);
+const util::range<ipv4::port> ipv4::WELL_KNOWN_PORT (    0,  1023),
+                              ipv4::REGISTERED_PORT ( 1024, 49151),
+                              ipv4::PRIVATE_PORT    (49152, 65535);
 
 
 ipv4::ip::ip (uint32_t _integer):

@@ -8,6 +8,7 @@
 
 
 using namespace std;
+using namespace util;
 
 
 /*
@@ -81,18 +82,20 @@ range<T>::rand (void) const {
 }
 
 
-template <>
-bool
-range<float>::operator ==(const range<float> &rhs) const
-    { return almost_equal (min, rhs.min) &&
-             almost_equal (max, rhs.max); }
+namespace util {
+    template <>
+    bool
+    range<float>::operator ==(const range<float> &rhs) const
+        { return almost_equal (min, rhs.min) &&
+                 almost_equal (max, rhs.max); }
 
 
-template <>
-bool
-range<double>::operator ==(const range<double> &rhs) const
-    { return almost_equal (min, rhs.min) &&
-             almost_equal (max, rhs.max); }
+    template <>
+    bool
+    range<double>::operator ==(const range<double> &rhs) const
+        { return almost_equal (min, rhs.min) &&
+                 almost_equal (max, rhs.max); }
+}
 
 
 template <typename T>
