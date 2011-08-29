@@ -29,6 +29,7 @@ UTIL_INCLUDE =  \
     signal.hpp		\
     stream.hpp		\
     string.hpp		\
+    si.hpp		\
     types.hpp		\
     vector.hpp  	\
     version.hpp
@@ -52,6 +53,7 @@ UTIL_FILES   =		\
     signal.cpp		\
     stream.cpp		\
     string.cpp		\
+    si.cpp		\
     types.cpp		\
     vector.cpp  	\
     version.cpp
