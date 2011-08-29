@@ -34,28 +34,28 @@
 
 
 #define verify_soft(C, COND) ({     \
-    const auto value = (C);         \
-    check_soft(value COND);         \
-    value;                          \
+    const auto __DEBUG_value = (C); \
+    check_soft(__DEBUG_value COND); \
+    __DEBUG_value;                  \
 })
 
 
-#define verify_hard(C, COND) ({   \
-    const auto value = (C);       \
-    check_hard(value COND);       \
-    value;                        \
+#define verify_hard(C, COND) ({     \
+    const auto __DEBUG_value = (C); \
+    check_hard(__DEBUG_value COND); \
+    __DEBUG_value;                  \
 })
 
 
 #define _check_meta(C, SUCCESS, FAILURE) do {                       \
-    const auto value = (C);                                         \
-    if (unlikely (!value)) {                                        \
+    const auto __DEBUG_value = (C);                                 \
+    if (unlikely (!__DEBUG_value)) {                                \
         std::cerr <<  PACKAGE << ": "                               \
                   << __FILE__ << ":"                                \
                   << __LINE__ << ": "                               \
                   << __FUNCTION__                                   \
                   << ". Assertion '" << #C                          \
-                  << "' failed with: " << value << std::endl;       \
+                  << "' failed: "    << __DEBUG_value << std::endl; \
                                                                     \
         { FAILURE }                                                 \
     } else {                                                        \
