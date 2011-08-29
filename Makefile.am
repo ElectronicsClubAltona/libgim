@@ -31,6 +31,7 @@ UTIL_INCLUDE =  \
     stream.hpp		\
     string.hpp		\
     si.hpp		\
+    time.hpp		\
     types.hpp		\
     vector.hpp  	\
     version.hpp
@@ -56,6 +57,7 @@ UTIL_FILES   =		\
     stream.cpp		\
     string.cpp		\
     si.cpp		\
+    time.cpp		\
     types.cpp		\
     vector.cpp  	\
     version.cpp
