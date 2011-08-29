@@ -29,8 +29,23 @@ pow2 (T value) pure;
 
 
 template <typename T>
+bool
+is_pow2 (T value) pure;
+
+
+template <typename T>
 double
 rootsquare (T a, T b) pure;
+
+
+template <typename T>
+T
+round_up (T value, T align) pure;
+
+
+template <typename T>
+T
+round_pow2 (T value) pure;
 
 
 /**

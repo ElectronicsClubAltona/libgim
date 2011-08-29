@@ -19,9 +19,11 @@
 
 #include "maths.hpp"
 
+#include "enable_if.hpp"
 #include "float.hpp"
 
 #include <cmath>
+#include <type_traits>
 
 
 template <typename T>
@@ -31,6 +33,19 @@ pow2 (T value)
 
 template double pow2(double);
 template    int pow2(   int);
+
+
+template <typename T>
+bool
+is_pow2 (T value) {
+    typedef typename enable_if<std::is_integral<T>::value, bool>::type return_type;
+    return (return_type)(value && !(value & (value - 1)));
+}
+
+template bool is_pow2 (uint8_t);
+template bool is_pow2 (uint16_t);
+template bool is_pow2 (uint32_t);
+template bool is_pow2 (uint64_t);
 
 
 template <typename T>
@@ -54,3 +69,31 @@ almost_equal (const double &a, const double &b)
     { return ieee_double::almost_equal (a, b); }
 
 
+template <typename T>
+typename enable_if<std::is_integral<T>::value, T>::type
+round_up (T value, T align) {
+    check_hard (align > 1);
+    return (value + align - 1) / align;
+}
+
+
+template <typename T>
+T
+round_pow2 (T value) {
+    typedef typename enable_if<std::is_integral<T>::value, T>::type return_type;
+
+    --value;
+
+    for (unsigned i = 1; i < sizeof (T) * 8; i <<= 1) {
+        value |= value >> i;
+    }
+
+    ++value;
+    return (return_type)value;
+}
+
+
+template uint8_t  round_pow2 (uint8_t);
+template uint16_t round_pow2 (uint16_t);
+template uint32_t round_pow2 (uint32_t);
+template uint64_t round_pow2 (uint64_t);
