@@ -9,6 +9,7 @@ SUBDIRS = test
 UTIL_INCLUDE =  \
     annotations.hpp 	\
     backtrace.hpp   	\
+    bitwise.hpp		\
     debug.hpp   	\
     enable_if.hpp  	\
     endian.hpp		\
@@ -35,6 +36,7 @@ UTIL_INCLUDE =  \
     version.hpp
 
 UTIL_FILES   =		\
+    bitwise.cpp		\
     debug.cpp   	\
     endian.cpp		\
     except.cpp  	\
