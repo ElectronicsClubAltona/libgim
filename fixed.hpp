@@ -41,25 +41,25 @@ class fixed {
         float         to_float    (void) const;
         integral_type to_integral (void) const;
 
-        fixed<INT,FRAC>& operator +=(const fixed<INT,FRAC>);
-        fixed<INT,FRAC>& operator -=(const fixed<INT,FRAC>);
-        fixed<INT,FRAC>& operator *=(const fixed<INT,FRAC>);
-        fixed<INT,FRAC>& operator /=(const fixed<INT,FRAC>);
+        fixed<INT, FRAC>& operator +=(const fixed<INT, FRAC>);
+        fixed<INT, FRAC>& operator -=(const fixed<INT, FRAC>);
+        fixed<INT, FRAC>& operator *=(const fixed<INT, FRAC>);
+        fixed<INT, FRAC>& operator /=(const fixed<INT, FRAC>);
 
-        fixed<INT,FRAC>  operator +(const fixed<INT,FRAC>) const;
-        fixed<INT,FRAC>  operator -(const fixed<INT,FRAC>) const;
-        fixed<INT,FRAC>  operator *(const fixed<INT,FRAC>) const;
-        fixed<INT,FRAC>  operator /(const fixed<INT,FRAC>) const;
+        fixed<INT, FRAC>  operator +(const fixed<INT, FRAC>) const;
+        fixed<INT, FRAC>  operator -(const fixed<INT, FRAC>) const;
+        fixed<INT, FRAC>  operator *(const fixed<INT, FRAC>) const;
+        fixed<INT, FRAC>  operator /(const fixed<INT, FRAC>) const;
 
-        fixed<INT,FRAC>& operator +=(integral_type);
-        fixed<INT,FRAC>& operator -=(integral_type);
-        fixed<INT,FRAC>& operator *=(integral_type);
-        fixed<INT,FRAC>& operator /=(integral_type);
+        fixed<INT, FRAC>& operator +=(integral_type);
+        fixed<INT, FRAC>& operator -=(integral_type);
+        fixed<INT, FRAC>& operator *=(integral_type);
+        fixed<INT, FRAC>& operator /=(integral_type);
 
-        fixed<INT,FRAC>  operator +(integral_type) const;
-        fixed<INT,FRAC>  operator -(integral_type) const;
-        fixed<INT,FRAC>  operator *(integral_type) const;
-        fixed<INT,FRAC>  operator /(integral_type) const;
+        fixed<INT, FRAC>  operator +(integral_type) const;
+        fixed<INT, FRAC>  operator -(integral_type) const;
+        fixed<INT, FRAC>  operator *(integral_type) const;
+        fixed<INT, FRAC>  operator /(integral_type) const;
 };
 
 #endif // __UTIL_FIXED_HPP 
