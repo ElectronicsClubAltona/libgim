@@ -5,6 +5,7 @@
 #include "../range.hpp"
 
 using namespace std;
+using namespace util;
 
 int
 main (int, char **) {
