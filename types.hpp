@@ -143,20 +143,28 @@ size_t elems(T (&)[N])
     { return N; }
 
 
-/// Convert a scalar from host byte order to network byte order
-template <typename T>
-T hton (T) pure;
-
-
-/// Convert a scalar from network byte order to host byte order
-template <typename T>
-T ntoh (T) pure;
-
-
 template <typename T, typename ...Args>
 std::unique_ptr<T>
 make_unique (const Args &...args)
     { return std::unique_ptr<T> (new T (args...)); }
+
+
+struct fourcc {
+    uint8_t data[4];
+
+    static fourcc from_str(const char[4]);
+    static fourcc from_chars(uint8_t, uint8_t, uint8_t, uint8_t);
+
+    bool operator== (const char[4]) const;
+    operator uint32_t (void) const;
+};
+
+std::ostream& operator<< (std::ostream&, fourcc);
+
+
+inline double sign (double x) { return x >= 0 ? 1.0 : -1.0; }
+inline float  sign (float  x) { return x >= 0 ? 1.0 : -1.0; }
+inline int    sign (int    x) { return x >= 0 ? 1   : -1  ; }
 
 
 #endif // __TYPES_HPP
