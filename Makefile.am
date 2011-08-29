@@ -15,6 +15,7 @@ UTIL_INCLUDE =  \
     except.hpp  	\
     fixed.hpp		\
     float.hpp		\
+    guid.hpp		\
     io.hpp		\
     ip.hpp		\
     json.hpp		\
@@ -38,6 +39,7 @@ UTIL_FILES   =		\
     except.cpp  	\
     fixed.cpp		\
     float.cpp		\
+    guid.cpp		\
     io.cpp		\
     ip.cpp		\
     json.cpp		\
