@@ -70,7 +70,6 @@ namespace util {
         { return; }
 }
 
-
 template struct extent<unsigned int>;
 template struct extent<double>;
 
@@ -79,7 +78,7 @@ template struct extent<double>;
  */
 
 template <typename T>
-_region<T>::_region (T _x, T _y, T _width, T _height):
+region<T>::region (T _x, T _y, T _width, T _height):
     x      (_x),
     y      (_y),
     width  (_width),
@@ -89,25 +88,37 @@ _region<T>::_region (T _x, T _y, T _width, T _height):
 
 template <typename T>
 T 
-_region<T>::area (void) const
+region<T>::area (void) const
     { return width * height; }
 
 
 template <typename T>
 bool 
-_region<T>::empty (void) const
-    { return area () == 0; }
+region<T>::empty (void) const
+    { return almost_equal (area (), 0); }
 
 
 template <typename T>
 bool
-_region<T>::operator ==(const _region& rhs) const
-    { return x      == rhs.x       &&
-             y      == rhs.y       &&
-             width  == rhs.width   &&
-             height == rhs.height; }
+region<T>::operator ==(const region& rhs) const
+    { return almost_equal (x,      rhs.x)     &&
+             almost_equal (y,      rhs.y)     &&
+             almost_equal (width,  rhs.width) &&
+             almost_equal (height, rhs.height); }
 
 
 template <typename T>
-void _region<T>::sanity (void) const
+void region<T>::sanity (void) const
     { check (width >= 0 && height >= 0); }
+
+
+namespace util {
+    template <>
+    void region<unsigned int>::sanity (void) const
+        { return; }
+}
+
+
+template struct region<unsigned int>;
+template struct region<double>;
+

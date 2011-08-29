@@ -46,23 +46,21 @@ namespace util {
      * A two-dimensional rectangle, with size and position.
      */
     template <typename T>
-    struct _region {
+    struct region {
         T     x,      y;
         T width, height;
 
-        _region (T _x, T _y, T _width, T _height);
+        region (T _x, T _y, T _width, T _height);
 
         T    area  (void) const;
         bool empty (void) const;
 
-        bool operator ==(const _region<T>& rhs) const;
-        bool operator !=(const _region<T>& rhs) const
+        bool operator ==(const region<T>& rhs) const;
+        bool operator !=(const region<T>& rhs) const
             { return !(*this == rhs); }
 
         void sanity (void) const;
     };
-
-    typedef _region<unsigned int> region;
 }
 
 #endif 

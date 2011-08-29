@@ -77,5 +77,5 @@ SUFFIXES = .cpp .cpp.rl
 
 lib_LTLIBRARIES  = libutil.la
 libutil_la_SOURCES  = $(UTIL_INCLUDE) $(UTIL_FILES)
-libutil_la_CXXFLAGS = -fPIC $(AM_CXXFLAGS)
+libutil_la_CXXFLAGS = -fPIC $(AM_CXXFLAGS) -lrt
 libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB)
