@@ -5,7 +5,7 @@ AC_CANONICAL_HOST
 ## We remove CXXFLAGS as autotools inserts them /AFTER/ our own CXXFLAGS,
 ## thus overriding any variables that both set (specifically we're concerned
 ## about optimisation flags).
-CXXFLAGS=""
+CXXFLAGS="-g"
 AC_PROG_CXX
 AC_LANG([C++])
 AC_PROG_LIBTOOL
