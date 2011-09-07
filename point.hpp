@@ -29,6 +29,8 @@ namespace util {
 
         double distance  (const point &) const;
         double manhattan (const point &) const;
+
+        point& operator+= (const point&);
     };
 }
 

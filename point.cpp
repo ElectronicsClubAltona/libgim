@@ -43,3 +43,12 @@ point::manhattan (const point &other) const {
     return fabs (x - other.x) + 
            fabs (y - other.y);
 }
+
+
+point&
+point::operator+= (const point &rhs) {
+    x += rhs.x;
+    y += rhs.y;
+
+    return *this;
+}
