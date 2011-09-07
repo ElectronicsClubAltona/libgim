@@ -29,5 +29,5 @@ util::nanoseconds (void) {
     struct timespec t;
     clock_gettime (CLOCK_REALTIME, &t);
 
-    return t.tv_sec * 1000000000 + t.tv_nsec;
+    return t.tv_sec * 1000000000ULL + t.tv_nsec;
 }
