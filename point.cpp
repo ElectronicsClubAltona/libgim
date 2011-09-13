@@ -59,6 +59,11 @@ point::operator+= (const point &rhs) {
 }
 
 
+point
+point::operator- (const point &rhs) const
+    { return point (x - rhs.x, y - rhs.y); }
+
+
 std::ostream&
 operator<< (std::ostream &os, const point &p) {
     os << "point(" << p.x << ", " << p.y << ", " << p.z << ")";

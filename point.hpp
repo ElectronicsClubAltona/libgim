@@ -33,6 +33,7 @@ namespace util {
         double manhattan (const point &) const;
 
         point& operator+= (const point&);
+        point  operator-  (const point&) const;
     };
 }
 
