@@ -21,11 +21,11 @@
 #define __UTIL_POINT_HPP
 
 namespace util {
-    /// A two dimensional position in space
+    /// A three dimensional position in space.
     struct point {
-        double x, y;
+        double x, y, z;
 
-        point (double x, double y);
+        point (double x, double y, double z = 0.0);
 
         double distance  (const point &) const;
         double manhattan (const point &) const;

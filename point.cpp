@@ -25,23 +25,28 @@ using namespace std;
 using namespace util;
 
 
-point::point (double _x, double _y):
+// Unused components are zeroed so that higher dimensional operations can
+// operate without fear of triggering NaNs or other such complications.
+point::point (double _x, double _y, double _z):
     x (_x),
-    y (_y)
+    y (_y),
+    z (_z)
 { ; }
 
 
 double
 point::distance (const point &other) const {
     return sqrt ((x - other.x) * (x - other.x) +
-                 (y - other.y) * (y - other.y));
+                 (y - other.y) * (y - other.y) +
+                 (z - other.z) * (z - other.z));
 }
 
 
 double
 point::manhattan (const point &other) const {
     return fabs (x - other.x) + 
-           fabs (y - other.y);
+           fabs (y - other.y) +
+           fabs (z - other.z);
 }
 
 
