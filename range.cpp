@@ -120,4 +120,5 @@ template struct range<double>;
 template struct range<float>;
 template struct range<uint8_t>;
 template struct range<uint16_t>;
-template struct range<size_t>;
+template struct range<uint32_t>;
+template struct range<uint64_t>;
