@@ -25,6 +25,7 @@ UTIL_INCLUDE =  \
     nocopy.hpp		\
     point.hpp		\
     pool.hpp		\
+    random.hpp		\
     range.hpp		\
     region.hpp		\
     signal.hpp		\
@@ -51,6 +52,7 @@ UTIL_FILES   =		\
     matrix.cpp		\
     point.cpp		\
     pool.cpp		\
+    random.cpp		\
     range.cpp		\
     region.cpp		\
     signal.cpp		\
