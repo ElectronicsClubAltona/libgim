@@ -57,3 +57,10 @@ point::operator+= (const point &rhs) {
 
     return *this;
 }
+
+
+std::ostream&
+operator<< (std::ostream &os, const point &p) {
+    os << "point(" << p.x << ", " << p.y << ", " << p.z << ")";
+    return os;
+}

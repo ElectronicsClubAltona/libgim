@@ -20,6 +20,8 @@
 #ifndef __UTIL_POINT_HPP
 #define __UTIL_POINT_HPP
 
+#include <iostream>
+
 namespace util {
     /// A three dimensional position in space.
     struct point {
@@ -33,6 +35,8 @@ namespace util {
         point& operator+= (const point&);
     };
 }
+
+std::ostream& operator<< (std::ostream&, const util::point&);
 
 
 #endif // __UTIL_POINT_HPP
