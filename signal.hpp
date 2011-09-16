@@ -64,6 +64,9 @@ namespace util {
 
                 void renew (callback_object &&cb)
                     { *m_cookie = std::move (cb); }
+
+                void release (void)
+                    { m_cookie = m_parent.m_children.end (); }
             };
 
         public:
