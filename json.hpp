@@ -69,8 +69,10 @@ namespace json {
             virtual bool operator==(const boolean &) const { return false; }
             virtual bool operator==(const null    &) const { return false; }
 
-            virtual std::ostream& print (std::ostream &os) const = 0;
+            virtual const node& operator[] (const std::string&) const;
+            virtual const node& operator[] (unsigned int) const;
 
+            virtual std::ostream& print (std::ostream &os) const = 0;
     };                                          
 
 
@@ -146,6 +148,7 @@ namespace json {
                 { return rhs == *this; }
 
             operator const std::string&(void) const { return m_value; }
+            const std::string& native (void) const  { return m_value; }
 
             virtual std::ostream& print (std::ostream &os) const;
     };
@@ -167,6 +170,7 @@ namespace json {
                 { return rhs == *this; }
 
             operator double(void) const { return m_value; }
+            double native (void) const  { return m_value; }
 
             virtual std::ostream& print (std::ostream &os) const;
     };
@@ -185,6 +189,8 @@ namespace json {
             virtual bool operator==(const boolean &rhs) const;
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
+
+            bool native (void) const { return m_value; }
 
             virtual std::ostream& print (std::ostream &os) const;
     };

@@ -304,6 +304,15 @@ json::node::operator!=(const node &rhs) const
     { return !(*this == rhs); }
 
 
+const json::node&
+json::node::operator[] (const std::string &key) const
+    { return to_object ()[key]; }
+
+
+const json::node&
+json::node::operator[] (unsigned int idx) const
+    { return to_array()[idx]; }
+
 /*
  * Object
  */
