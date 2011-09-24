@@ -65,7 +65,7 @@
 
 
 #define check_hard(C) _check_meta((C), { ; }, { panic (); })
-#define check_soft(C) _check_meta((C), { ; }, {         ; })
+#define check_soft(C) _check_meta((C), { ; }, { breakpoint (); })
 
 
 #define check_eq(A,B) do {                           \
