@@ -21,10 +21,24 @@
 
 #include "debug.hpp"
 
-#include <ctime>
 
 using namespace util;
 
+#ifdef __WIN32
+
+#include <windows.h>
+
+uint64_t
+util::nanoseconds (void) {
+    LARGE_INTEGER freq, count;
+    QueryPerformanceFrequency (&freq);
+    QueryPerformanceCounter   (&count); 
+
+    return ((double)count.QuadPart / freq.QuadPart) * 1000000000UL;
+}
+#else
+
+#include <ctime>
 
 uint64_t
 util::nanoseconds (void) {
@@ -36,3 +50,4 @@ util::nanoseconds (void) {
 
     return static_cast<uint64_t> (t.tv_sec) * 1000000000ULL + static_cast<uint64_t> (t.tv_nsec);
 }
+#endif
