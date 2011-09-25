@@ -116,12 +116,6 @@ if test "x$ac_cv_debugging" = "xyes"; then
 
     COMMON_CFLAGS="$COMMON_CFLAGS -D_FORTIFY_SOURCE=2"
 else
-    AS_CXX_COMPILER_FLAG([-flto], [ac_cv_flto=yes])
-    if test "x$ac_cv_flto" = "xyes"; then
-        COMMON_CFLAGS="$COMMON_CFLAGS -flto"
-        COMMON_LDFLAGS="-flto"
-    fi
-
     COMMON_CFLAGS="$COMMON_CFLAGS -O2"
 fi
 
