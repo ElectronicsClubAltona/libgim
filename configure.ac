@@ -131,16 +131,16 @@ AX_BOOST_BASE([1.42], [], [AC_MSG_ERROR([Boost version >= 1.42 required])])
 AC_SUBST(BOOST_CPPFLAGS)
 AC_SUBST(BOOST_LDFLAGS)
 
+# boost-system isn't a hard requirement, it's only really used to fulfill
+# some other dependency I've since forgotten about...
+AX_BOOST_SYSTEM
+
 AX_BOOST_FILESYSTEM
 AC_SUBST(BOOST_FILESYSTEM_LIB)
 
 if test "x$ax_cv_boost_filesystem" != "xyes"; then
     AC_MSG_ERROR("boost-filesystem is a hard requirement")
 fi
-
-# boost-system isn't a hard requirement, it's only really used to fulfill
-# some other dependency I've since forgotten about...
-AX_BOOST_SYSTEM
 
 ## Optional packages
 
