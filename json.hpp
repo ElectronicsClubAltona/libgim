@@ -190,6 +190,7 @@ namespace json {
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
 
+            operator bool (void) const { return m_value; }
             bool native (void) const { return m_value; }
 
             virtual std::ostream& print (std::ostream &os) const;
