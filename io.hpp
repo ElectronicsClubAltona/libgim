@@ -25,57 +25,59 @@
 #include <cstdio>
 #include <cstdint>
 #include <memory>
-#include <boost/filesystem.hpp>
-
-/// Specifies bitwise combinations of IO access rights.
-enum access_t {
-    ACCESS_READ      = 1 << 0,
-    ACCESS_WRITE     = 1 << 1,
-    ACCESS_READWRITE = ACCESS_READ | ACCESS_WRITE
-};
+#include <boost/filesystem/path.hpp>
 
 
-/// Reads an entire file into memory. Caller frees the result. Guarantees a
-/// null trailing byte.
-uint8_t *
-slurp (const boost::filesystem::path&) mustuse;
+namespace util {
+    /// Specifies bitwise combinations of IO access rights.
+    enum access_t {
+        ACCESS_READ      = 1 << 0,
+        ACCESS_WRITE     = 1 << 1,
+        ACCESS_READWRITE = ACCESS_READ | ACCESS_WRITE
+    };
 
-/// A simple RAII wrapper for file descriptors
-struct fd_ref {
-    public:
-        int fd;
 
-        fd_ref  (int _fd);
-        ~fd_ref ();
+    /// Reads an entire file into memory. Caller frees the result. Guarantees a
+    /// null trailing byte.
+    uint8_t *
+    slurp (const boost::filesystem::path&) mustuse;
 
-        operator int (void) const;
-};
+    /// A simple RAII wrapper for file descriptors
+    struct fd_ref {
+        public:
+            int fd;
+
+            fd_ref  (int _fd);
+            ~fd_ref ();
+
+            operator int (void) const;
+    };
 
 
 #if defined(HAVE_MMAP)
-/// Wraps a mechanism to map a file into memory. Read only.
-class mapped_file {
-    protected:
-        fd_ref   m_fd;
-        uint8_t *m_data;
-        size_t   m_size;
+    /// Wraps a mechanism to map a file into memory. Read only.
+    class mapped_file {
+        protected:
+            fd_ref   m_fd;
+            uint8_t *m_data;
+            size_t   m_size;
 
-        void load_fd (void);
+            void load_fd (void);
 
-    public:
-        mapped_file (const char                    *path);
-        mapped_file (const std::string             &path);
-        mapped_file (const boost::filesystem::path &path);
+        public:
+            mapped_file (const char                    *path);
+            mapped_file (const std::string             &path);
+            mapped_file (const boost::filesystem::path &path);
 
-        mapped_file (const mapped_file             &rhs);
-        mapped_file& operator =(const mapped_file  &rhs);
+            mapped_file (const mapped_file             &rhs);
+            mapped_file& operator =(const mapped_file  &rhs);
 
-        ~mapped_file ();
+            ~mapped_file ();
 
-        const uint8_t* data (void) const;
-        size_t         size (void) const;
-};
+            const uint8_t* data (void) const;
+            size_t         size (void) const;
+    };
 #endif
-
+}
 
 #endif

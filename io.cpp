@@ -11,10 +11,11 @@
 
 
 using namespace std;
+using namespace util;
 
 //----------------------------------------------------------------------------
 uint8_t *
-slurp (const boost::filesystem::path& path)  {
+util::slurp (const boost::filesystem::path& path)  {
     fd_ref fd(open (path.string ().c_str (), O_RDONLY)); // | O_CLOEXEC));
     
     // Calculate the total file size
