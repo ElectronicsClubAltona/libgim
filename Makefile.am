@@ -6,7 +6,7 @@ AM_LDFLAGS  = $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(COM
 
 SUBDIRS = test
 
-UTIL_INCLUDE =  \
+UTIL_INCLUDE =  	\
     annotations.hpp 	\
     backtrace.hpp   	\
     bitwise.hpp		\
@@ -17,6 +17,7 @@ UTIL_INCLUDE =  \
     except.hpp  	\
     fixed.hpp		\
     float.hpp		\
+    fwd.hpp		\
     guid.hpp		\
     io.hpp		\
     ip.hpp		\
