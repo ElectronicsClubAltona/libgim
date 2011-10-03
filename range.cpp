@@ -76,7 +76,7 @@ range<T>::normalise (T val) const {
 
 template <typename T>
 T
-range<T>::rand (void) const {
+range<T>::random (void) const {
     double pos = ::rand () / (double)(RAND_MAX);
     return (max - min) * pos;
 }

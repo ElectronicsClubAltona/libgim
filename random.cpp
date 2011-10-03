@@ -28,7 +28,7 @@ namespace util {
     template <typename T>
     T
     random (void)
-        { return range<T>::UNLIMITED.rand (); }
+        { return range<T>::UNLIMITED.random (); }
 
     template <typename T>
     T&

@@ -35,10 +35,10 @@ namespace util {
     template<>
     colour
     random (void) {
-        return colour (range<double>::UNIT.rand (),
-                       range<double>::UNIT.rand (),
-                       range<double>::UNIT.rand (),
-                       range<double>::UNIT.rand ());
+        return colour (range<double>::UNIT.random (),
+                       range<double>::UNIT.random (),
+                       range<double>::UNIT.random (),
+                       range<double>::UNIT.random ());
     }
 
     template <>
