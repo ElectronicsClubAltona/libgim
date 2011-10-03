@@ -78,7 +78,7 @@ template <typename T>
 T
 range<T>::random (void) const {
     double pos = ::rand () / (double)(RAND_MAX);
-    return (max - min) * pos;
+    return (max - min) * pos + min;
 }
 
 
