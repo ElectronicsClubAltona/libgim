@@ -22,79 +22,79 @@
 
 #include "nocopy.hpp"
 
-
+namespace util {
 template <typename T>
-class pool : public nocopy {
-    protected:
-        union node {
-            char  _data[sizeof (T)];
-            node *_chain;
-        };
+    class pool : public nocopy {
+        protected:
+            union node {
+                char  _data[sizeof (T)];
+                node *_chain;
+            };
 
-        node         *m_head;
-        node         *m_next;
-        unsigned int  m_capacity;
+            node         *m_head;
+            node         *m_next;
+            unsigned int  m_capacity;
 
-    public:
-        pool (unsigned int _capacity):
-            m_capacity (_capacity)
-        {
-            static_assert (sizeof (T) >= sizeof (uintptr_t),
-                           "pool<T>'s chained block system requires that T be at least pointer sized");
+        public:
+            pool (unsigned int _capacity):
+                m_capacity (_capacity)
+            {
+                static_assert (sizeof (T) >= sizeof (uintptr_t),
+                               "pool<T>'s chained block system requires that T be at least pointer sized");
 
-            m_head = (node *)operator new (sizeof (T) * m_capacity);
-            m_next = m_head;
+                m_head = (node *)operator new (sizeof (T) * m_capacity);
+                m_next = m_head;
 
-            for (unsigned int i = 0; i < m_capacity - 1; ++i)
-                m_next[i]._chain = &m_next[i + 1];
-            m_next[m_capacity - 1]._chain = NULL;
-        }
-
-
-        ~pool () {
-            check (m_next != NULL);
-
-            unsigned int doomed_count = 0;
-            for (node *cursor = m_next; cursor != NULL; cursor = cursor->_chain)
-                ++doomed_count;
-
-            check_eq (doomed_count, m_capacity);
-            operator delete (m_head);
-        }
-        
-
-        unsigned int capacity (void) const
-            { return m_capacity; }
-
-
-        template <typename ...Args>
-        T*   acquire (Args&... args) {
-            if (!m_next)
-                throw std::bad_alloc ();
-
-            node *newnext = m_next->_chain;
-            T *data = (T*)&m_next->_data;
-            
-            try {
-                new (data) T (args...);
-            } catch (...) {
-                m_next->_chain = newnext;
-                throw;
+                for (unsigned int i = 0; i < m_capacity - 1; ++i)
+                    m_next[i]._chain = &m_next[i + 1];
+                m_next[m_capacity - 1]._chain = NULL;
             }
 
-            m_next  = newnext;
-            return data;
-        }
+
+            ~pool () {
+                check (m_next != NULL);
+
+                unsigned int doomed_count = 0;
+                for (node *cursor = m_next; cursor != NULL; cursor = cursor->_chain)
+                    ++doomed_count;
+
+                check_eq (doomed_count, m_capacity);
+                operator delete (m_head);
+            }
+            
+
+            unsigned int capacity (void) const
+                { return m_capacity; }
 
 
-        void release (T *data) {
-            data->~T();
-            node *newnode = (node *)data;
+            template <typename ...Args>
+            T*   acquire (Args&... args) {
+                if (!m_next)
+                    throw std::bad_alloc ();
 
-            newnode->_chain = m_next;
-            m_next = newnode;
-        }
-};
+                node *newnext = m_next->_chain;
+                T *data = (T*)&m_next->_data;
+                
+                try {
+                    new (data) T (args...);
+                } catch (...) {
+                    m_next->_chain = newnext;
+                    throw;
+                }
 
+                m_next  = newnext;
+                return data;
+            }
+
+
+            void release (T *data) {
+                data->~T();
+                node *newnode = (node *)data;
+
+                newnode->_chain = m_next;
+                m_next = newnode;
+            }
+    };
+}
 
 #endif // __UTIL_POOL_HPP

@@ -20,12 +20,14 @@
 
 #include "version.hpp"
 
+#include <cstring>
 #include <stdexcept>
 
 #include "debug.hpp"
 
 
 using namespace std;
+using namespace util;
 
 
 version::version (unsigned int _major,
@@ -38,6 +40,14 @@ version::version (unsigned int _major,
 
 
 version::version (const string& str):
+        m_values  (NUM_OFFSETS, 0),
+        m_release (RELEASE_PRODUCTION) {
+    m_values.clear ();
+    parse (str);
+}
+
+
+version::version (const char *str):
         m_values  (NUM_OFFSETS, 0),
         m_release (RELEASE_PRODUCTION) {
     m_values.clear ();
@@ -109,6 +119,20 @@ version::parse (const string& str) {
 }
 
 
+void
+version::parse (const char *str) {
+    unsigned int current;
+
+    size_t      cs;
+    const char *p   = str,
+               *pe  = str + strlen (str),
+               *eof = pe;
+
+    %%write init;
+    %%write exec;
+}
+
+
 static string
 release_string (const version::release_t r) {
     switch (r) {
@@ -140,15 +164,17 @@ version::operator > (const version &rhs) const {
 }
 
 
-ostream&
-operator <<(ostream& os, const version& rhs) {
-    auto i = rhs.m_values.begin();
-    os << *i; ++i;
+namespace util {
+    ostream&
+    operator <<(ostream& os, const util::version& rhs) {
+        auto i = rhs.m_values.begin();
+        os << *i; ++i;
 
-    for (; i != rhs.m_values.end(); ++i)
-        os << '.' << *i;
+        for (; i != rhs.m_values.end(); ++i)
+            os << '.' << *i;
 
-    os << release_string (rhs.m_release);
-    return os;
+        os << release_string (rhs.m_release);
+        return os;
+    }
 }
 

@@ -25,62 +25,64 @@
 #include <iostream>
 
 
-class version {
-    public:
-        enum release_t {
-            RELEASE_ALPHA,
-            RELEASE_BETA,
-            RELEASE_GAMMA,
-            RELEASE_PRODUCTION
-        };
+namespace util {
+    class version {
+        public:
+            enum release_t {
+                RELEASE_ALPHA,
+                RELEASE_BETA,
+                RELEASE_GAMMA,
+                RELEASE_PRODUCTION
+            };
 
-        version (unsigned int _major,
-                 unsigned int _minor);
-        version (const std::string& str);
-        virtual ~version () { ; }
+            version (unsigned int _major,
+                     unsigned int _minor);
+            version (const std::string& str);
+            version (const char *str);
 
-        virtual void sanity (void) const;
+            virtual ~version () { ; }
 
-    protected:
-        enum {
-            OFFSET_MAJOR = 0,
-            OFFSET_MINOR = 1,
-            OFFSET_POINT = 2,
-            OFFSET_BUILD = 3,
+            virtual void sanity (void) const;
 
-            NUM_OFFSETS
-        };
+        protected:
+            enum {
+                OFFSET_MAJOR = 0,
+                OFFSET_MINOR = 1,
+                OFFSET_POINT = 2,
+                OFFSET_BUILD = 3,
 
-        std::vector <unsigned int>  m_values;
-        release_t                   m_release;
+                NUM_OFFSETS
+            };
 
-        void parse (const std::string&);
+            std::vector <unsigned int>  m_values;
+            release_t                   m_release;
 
-    public:
+            void parse (const std::string&);
+            void parse (const char*);
 
-        unsigned int major (void) const
-            { return m_values[OFFSET_MAJOR]; }
-        unsigned int minor (void) const
-            { return m_values[OFFSET_MINOR]; }
-        unsigned int point (void) const
-            { return m_values[OFFSET_POINT]; }
-        unsigned int build (void) const
-            { return m_values[OFFSET_BUILD]; }
+        public:
 
-        bool operator <  (const version& rhs) const;
-        bool operator >  (const version& rhs) const;
-        bool operator >= (const version& rhs) const;
-        bool operator <= (const version& rhs) const;
-        bool operator == (const version& rhs) const
-            { return m_values  == rhs.m_values &&
-                     m_release == rhs.m_release; }
+            unsigned int major (void) const
+                { return m_values[OFFSET_MAJOR]; }
+            unsigned int minor (void) const
+                { return m_values[OFFSET_MINOR]; }
+            unsigned int point (void) const
+                { return m_values[OFFSET_POINT]; }
+            unsigned int build (void) const
+                { return m_values[OFFSET_BUILD]; }
 
-        friend std::ostream&
-        operator <<(std::ostream& os, const version& rhs);
-};
+            bool operator <  (const version& rhs) const;
+            bool operator >  (const version& rhs) const;
+            bool operator >= (const version& rhs) const;
+            bool operator <= (const version& rhs) const;
+            bool operator == (const version& rhs) const
+                { return m_values  == rhs.m_values &&
+                         m_release == rhs.m_release; }
 
+            friend std::ostream&
+            operator <<(std::ostream& os, const version& rhs);
+    };
+}
 
-std::ostream&
-operator <<(std::ostream& os, const version& rhs);
 
 #endif // __VERSION_HPP

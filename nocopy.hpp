@@ -22,13 +22,15 @@
 
 #include "debug.hpp"
 
-class nocopy {
-    public:
-        nocopy () { ; }
+namespace util {
+    class nocopy {
+        public:
+            nocopy () { ; }
 
-    private:
-        nocopy            (const nocopy &) = delete;
-        nocopy& operator =(const nocopy &) = delete;
-};
+        private:
+            nocopy            (const nocopy &) = delete;
+            nocopy& operator =(const nocopy &) = delete;
+    };
+}
 
 #endif

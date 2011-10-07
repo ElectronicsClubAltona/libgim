@@ -22,4 +22,4 @@
 
 
 // Explicitly instance a possibly useful specialisation so that we can more easily catch linker errors.
-template class pool<std::string>;
+template class util::pool<std::string>;
