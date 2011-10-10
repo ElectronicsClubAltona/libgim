@@ -100,6 +100,15 @@ region<T>::empty (void) const
 
 template <typename T>
 bool
+region<T>::overlaps (const region<T> &rhs) const {
+    return x < rhs.x + rhs.width && 
+           x + width > rhs.x &&
+           y < rhs.y + rhs.height &&
+           y + height > rhs.y;
+}
+
+template <typename T>
+bool
 region<T>::operator ==(const region& rhs) const
     { return almost_equal (x,      rhs.x)     &&
              almost_equal (y,      rhs.y)     &&

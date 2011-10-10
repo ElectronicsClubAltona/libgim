@@ -54,6 +54,7 @@ namespace util {
 
         T    area  (void) const;
         bool empty (void) const;
+        bool overlaps (const region<T>&) const;
 
         bool operator ==(const region<T>& rhs) const;
         bool operator !=(const region<T>& rhs) const
