@@ -20,8 +20,8 @@
 #ifndef __UTIL_FWD_HPP
 #define __UTIL_FWD_HPP
 
-#define DEFINE_STRUCT(x) struct x;
-#define DEFINE_CLASS(x)  class  x;
+#define DECLARE_STRUCT(x) struct x
+#define DECLARE_CLASS(x)  class  x
 
 #endif
 
