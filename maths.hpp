@@ -79,6 +79,15 @@ bool
 almost_equal (const double &a, const double &b);
 
 
+// Useful for explictly ignore equality warnings
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+template <typename T>
+bool
+exact_equal (const T &a, const T &b) 
+    { return a == b; }
+#pragma GCC diagnostic pop
+
 /// Variadic minimum
 template <typename T>
 const T&
