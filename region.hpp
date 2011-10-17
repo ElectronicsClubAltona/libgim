@@ -21,6 +21,8 @@
 #ifndef __UTIL_REGION_HPP
 #define __UTIL_REGION_HPP
 
+#include "point.hpp"
+
 namespace util {
     /**
      * A pure two-dimensional size, without positioning
@@ -54,6 +56,8 @@ namespace util {
 
         T    area  (void) const;
         bool empty (void) const;
+
+        bool includes (const point&) const;
         bool overlaps (const region<T>&) const;
 
         bool operator ==(const region<T>& rhs) const;
