@@ -1,80 +1,153 @@
+/*
+ * This file is part of libgim.
+ *
+ * libgim is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * libgim is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2011 Danny Robson <danny@blubinc.net>
+ */
+
 #include "vector.hpp"
 
 #include "debug.hpp"
+#include "maths.hpp"
 
+#include <algorithm>
+#include <cmath>
+#include <limits>
 #include <numeric>
 
 
-using namespace maths;
+using namespace util;
 
-
-/* Constructors */
-
-vector::vector (const std::initializer_list<double> &_data):
-    m_data (_data)
-{ ; }
-
-
-vector::vector (unsigned int           _size):
-    m_data (_size)
-{ ; }
-
-
-vector::vector (const double *restrict _data,
-                unsigned int           _size):
-    m_data (_size)
-{ std::copy (_data, _data + _size, m_data.begin ()); }
-
-
-vector::vector (const vector &rhs):
-    m_data (rhs.m_data)
-{ ; }
-
-
-vector::vector (const vector &&rhs):
-    m_data (std::move (rhs.m_data))
-{ ; }
-
-
-vector::~vector (void)
-{ ; }
-
-
-/* element accessors */
-
-const double*
-vector::data (void) const 
-    { return &m_data[0]; }
-
-
-double &
-vector::operator[] (unsigned int offset)
-    { return m_data[offset]; }
-
-
-const double&
-vector::operator[] (unsigned int offset) const
-    { return m_data[offset]; }
-
-
-unsigned int
-vector::size (void) const
-    { return m_data.size (); }
-
-
-/* dot and cross products */
-
-double vector::dot (const double *restrict A,
-                    const double *restrict B,
-                    unsigned int size)
-{ return std::inner_product(A, A + size, B, 0.0); }
-
-
-vector vector::cross (const double *restrict A,
-                      const double *restrict B,
-                      unsigned int size) { 
-    check_hard (size == 3);
-    return vector ({ A[1] * B[2] - A[2] * B[1],
-                     A[2] * B[0] - A[0] * B[2],
-                     A[0] * B[1] - A[1] * B[0] });
+util::vector
+util::vector::operator* (double rhs) const {
+    return { rhs * x, rhs * y, rhs * z };
 }
+
+
+vector&
+vector::operator*= (double rhs) {
+    x *= rhs;
+    y *= rhs;
+    z *= rhs;
+
+    return *this;
+}
+
+
+vector
+vector::operator+ (const vector &rhs) const {
+    return { x + rhs.x, y + rhs.y, z + rhs.z };
+}
+
+
+vector
+vector::operator- (const vector &rhs) const
+    { return { x - rhs.x, y - rhs.y, z - rhs.z }; }
+
+
+vector&
+vector::operator-= (const vector &rhs) {
+    x -= rhs.x;
+    y -= rhs.y;
+    z -= rhs.z;
+
+    return *this;
+}
+
+
+vector&
+vector::operator+= (const vector &rhs) {
+    x += rhs.x;
+    y += rhs.y;
+    z += rhs.z;
+
+    return *this;
+}
+
+
+vector&
+vector::operator= (const vector &rhs) {
+    x = rhs.x;
+    y = rhs.y;
+    z = rhs.z;
+
+    return *this;
+}
+
+
+double
+vector::magnitude (void) const {
+    return sqrt (x * x + y * y + z * z);
+}
+
+
+double
+vector::magnitude2 (void) const {
+    return x * x + y * y + z * z;
+}
+
+
+double
+vector::dot (const vector &rhs) const {
+    return x * rhs.x + y * rhs.y + z * rhs.z;
+}
+
+
+vector
+vector::cross (const vector &rhs) const { 
+    return { y * rhs.z - z * rhs.y,
+             z * rhs.x - x * rhs.z,
+             x * rhs.y - y * rhs.x };
+}
+
+
+vector&
+vector::normalise (void) {
+    double mag = magnitude ();
+
+    x /= mag;
+    y /= mag;
+    z /= mag;
+
+    return *this;
+}
+
+
+vector
+vector::normalised (void) const {
+    double mag = magnitude ();
+    return { x / mag, y / mag, z / mag };
+}
+
+
+void
+vector::sanity (void) const {
+    check_soft (!std::isnan (x));
+    check_soft (!std::isnan (y));
+    check_soft (!std::isnan (z));
+}
+
+
+util::vector
+operator* (double a, const util::vector &b)
+    { return b * a; }
+
+
+std::ostream&
+operator<< (std::ostream &os, const util::vector &v) {
+    os << "vec(" << v.x << ", " << v.y << ", " << v.z << ")";
+    return os;
+}
+

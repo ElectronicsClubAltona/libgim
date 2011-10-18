@@ -20,42 +20,38 @@
 #ifndef __UTIL_VECTOR_HPP
 #define __UTIL_VECTOR_HPP
 
-#include <vector>
-#include <initializer_list>
+#include <iostream>
 
-namespace maths {
-    class vector {
-        protected:
-            std::vector<double> m_data;
+namespace util {
+    struct vector {
+        double x, y, z;
 
-        public:
-            vector (const std::initializer_list<double> &_data);
-            explicit
-            vector (unsigned int                         _size);
-            vector (const double *restrict               _data,
-                    unsigned int                         _size);
+        vector  operator* (double) const;
+        vector& operator*=(double);
 
-            vector (const vector  &rhs);
-            vector (const vector &&rhs);
+        vector  operator+ (const vector&) const;
+        vector& operator+=(const vector&);
 
-            ~vector (void);
+        vector  operator- (const vector&) const;
+        vector& operator-=(const vector&);
 
-            const double* data (void) const;
-            double&       operator[] (unsigned int);
-            const double& operator[] (unsigned int) const;
+        vector& operator =(const vector &);
 
-            unsigned int size (void) const;
+        double magnitude  (void) const;
+        double magnitude2 (void) const;
 
+        double dot   (const vector&) const;
+        vector cross (const vector&) const;
 
-            static double dot (const double *restrict A,
-                               const double *restrict B,
-                               unsigned int size);
+        vector& normalise  (void);
+        vector  normalised (void) const;
 
-            static vector cross (const double *restrict A,
-                                 const double *restrict B,
-                                 unsigned int size);
+        void sanity (void) const;
     };
 }
 
+util::vector operator* (double, const util::vector&);
 
+std::ostream& operator<< (std::ostream&, const util::vector&);
 #endif
+

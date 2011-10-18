@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS = dist-bzip2 dist-xz foreign
+AUTOMAKE_OPTIONS = dist-bzip2 dist-xz foreign subdir-objects
 ACLOCAL_AMFLAGS = -I m4
 
 AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(COMMON_CXXFLAGS)
@@ -23,6 +23,8 @@ UTIL_INCLUDE =  	\
     ip.hpp		\
     json.hpp		\
     maths.hpp		\
+    maths/matrix.hpp	\
+    maths/vector.hpp  	\
     matrix.hpp		\
     nocopy.hpp		\
     point.hpp		\
@@ -31,12 +33,11 @@ UTIL_INCLUDE =  	\
     range.hpp		\
     region.hpp		\
     signal.hpp		\
+    si.hpp		\
     stream.hpp		\
     string.hpp		\
-    si.hpp		\
     time.hpp		\
     types.hpp		\
-    vector.hpp  	\
     version.hpp
 
 UTIL_FILES   =		\
@@ -52,19 +53,21 @@ UTIL_FILES   =		\
     ip.cpp		\
     json.cpp		\
     maths.cpp		\
+    maths/matrix.cpp	\
+    maths/vector.cpp  	\
     matrix.cpp		\
     point.cpp		\
     pool.cpp		\
     random.cpp		\
     range.cpp		\
     region.cpp		\
+    si.cpp		\
     signal.cpp		\
     stream.cpp		\
     string.cpp		\
-    si.cpp		\
     time.cpp		\
     types.cpp		\
-    vector.cpp  	\
+    vector.cpp		\
     version.cpp
 
 

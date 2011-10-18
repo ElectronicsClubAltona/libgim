@@ -19,19 +19,12 @@
 
 #include "point.hpp"
 
+#include "debug.hpp"
+
 #include <cmath>
 
 using namespace std;
 using namespace util;
-
-
-// Unused components are zeroed so that higher dimensional operations can
-// operate without fear of triggering NaNs or other such complications.
-point::point (double _x, double _y, double _z):
-    x (_x),
-    y (_y),
-    z (_z)
-{ ; }
 
 
 double
@@ -51,17 +44,49 @@ point::manhattan (const point &other) const {
 
 
 point&
-point::operator+= (const point &rhs) {
-    x += rhs.x;
-    y += rhs.y;
+point::operator*= (double f) {
+    x *= f;
+    y *= f;
+    z *= f;
 
     return *this;
 }
 
 
 point
-point::operator- (const point &rhs) const
-    { return point (x - rhs.x, y - rhs.y); }
+point::operator* (double f) const {
+    return { x * f, y * f, z * f };
+}
+
+
+point
+point::operator+ (const vector &rhs) const {
+    return { x + rhs.x, y + rhs.y, z + rhs.z };
+}
+
+
+point&
+point::operator+= (const vector &rhs) {
+    x += rhs.x;
+    y += rhs.y;
+    z += rhs.z;
+
+    return *this;
+}
+
+
+util::vector
+point::operator- (const point &rhs) const {
+    return { x - rhs.x, y - rhs.y, z - rhs.z };
+}
+
+
+void
+point::sanity (void) const {
+    check_soft (!std::isnan (x));
+    check_soft (!std::isnan (y));
+    check_soft (!std::isnan (z));
+}
 
 
 std::ostream&

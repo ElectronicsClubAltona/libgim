@@ -22,18 +22,24 @@
 
 #include <iostream>
 
+#include "vector.hpp"
+
 namespace util {
     /// A three dimensional position in space.
     struct point {
         double x, y, z;
 
-        point (double x, double y, double z = 0.0);
-
         double distance  (const point &) const;
         double manhattan (const point &) const;
 
-        point& operator+= (const point&);
-        point  operator-  (const point&) const;
+        point& operator*= (double);
+        point  operator*  (double) const;
+
+        point  operator+  (const vector&) const;
+        point& operator+= (const vector&);
+        vector operator-  (const point&) const;
+
+        void sanity (void) const;
     };
 }
 
