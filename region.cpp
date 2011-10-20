@@ -110,6 +110,16 @@ region<T>::includes (const point &p) const {
 
 template <typename T>
 bool
+region<T>::contains (const point& p) const {
+    return p.x > x &&
+           p.y > y &&
+           p.x < x + width &&
+           p.y < y + height;
+}
+
+
+template <typename T>
+bool
 region<T>::overlaps (const region<T> &rhs) const {
     return x < rhs.x + rhs.width && 
            x + width > rhs.x &&
