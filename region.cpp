@@ -158,6 +158,17 @@ namespace util {
 }
 
 
+template <typename T>
+std::ostream&
+operator<< (std::ostream &os, const region<T> &rhs) {
+    os << "region(" << rhs.x << ", " << rhs.y << ", " << rhs.width << ", " << rhs.height << ")";
+    return os;
+}
+
+
 template struct region<unsigned int>;
 template struct region<double>;
+
+template std::ostream& operator<< (std::ostream&, const region<unsigned int>&);
+template std::ostream& operator<< (std::ostream&, const region<double>&);
 
