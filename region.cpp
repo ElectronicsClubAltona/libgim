@@ -99,6 +99,16 @@ region<T>::empty (void) const
 
 
 template <typename T>
+point
+region<T>::centre (void) const {
+    double cx = x + static_cast<T>(width  / 2.0),
+           cy = y + static_cast<T>(height / 2.0);
+
+    return { cx, cy, 0.0 };
+}
+
+
+template <typename T>
 bool
 region<T>::includes (const point &p) const {
     return p.x >= x &&

@@ -56,6 +56,7 @@ namespace util {
 
         T    area  (void) const;
         bool empty (void) const;
+        point centre (void) const;
 
         bool includes (const point&) const; // inclusive of borders
         bool contains (const point&) const; // exclusive of borders
