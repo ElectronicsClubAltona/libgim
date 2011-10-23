@@ -115,9 +115,7 @@ matrix::to_local (const util::point &p) const {
 
 util::point
 matrix::to_global (const util::point &p) const {
-    matrix m = *this;
-    m.invert ();
-    return m.to_local (p);
+    return inverse ().to_local (p);
 }
 
 
