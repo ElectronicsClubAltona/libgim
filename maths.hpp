@@ -84,7 +84,7 @@ almost_equal (const double &a, const double &b);
 #pragma GCC diagnostic ignored "-Wfloat-equal"
 template <typename T>
 bool
-exact_equal (const T &a, const T &b) 
+exactly_equal (const T &a, const T &b) 
     { return a == b; }
 #pragma GCC diagnostic pop
 

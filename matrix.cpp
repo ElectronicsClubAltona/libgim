@@ -124,10 +124,10 @@ matrix::to_global (const util::point &p) const {
 
 bool
 matrix::is_affine (void) const {
-    return exact_equal (values[3][0], 0.0) &&
-           exact_equal (values[3][1], 0.0) &&
-           exact_equal (values[3][2], 0.0) &&
-           exact_equal (values[3][3], 1.0);
+    return exactly_equal (values[3][0], 0.0) &&
+           exactly_equal (values[3][1], 0.0) &&
+           exactly_equal (values[3][2], 0.0) &&
+           exactly_equal (values[3][3], 1.0);
 }
 
 
