@@ -23,6 +23,7 @@
 #include "enable_if.hpp"
 #include "debug.hpp"
 
+#include <cmath>
 #include <type_traits>
 
 using namespace util;
@@ -35,6 +36,13 @@ extent<T>::extent (const T  _width, const T  _height):
         width (_width),
         height (_height)
     { ; }
+
+
+template <typename T>
+T
+extent<T>::diameter (void) const {
+    return (T)sqrt (width * width + height * height);
+}
 
 
 template <typename T>
@@ -90,6 +98,13 @@ template <typename T>
 T 
 region<T>::area (void) const
     { return width * height; }
+
+
+template <typename T>
+T 
+region<T>::diameter (void) const {
+    return (T)sqrt (width * width + height * height);
+}
 
 
 template <typename T>

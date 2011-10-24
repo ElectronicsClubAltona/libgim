@@ -34,6 +34,8 @@ namespace util {
         extent (const T  _width, const T  _height);
 
         T    area  (void) const;
+        T diameter (void) const;
+
         bool empty (void) const;
 
         bool operator ==(const extent& rhs) const;
@@ -54,8 +56,11 @@ namespace util {
 
         region (T _x, T _y, T _width, T _height);
 
-        T    area  (void) const;
+        T area     (void) const;
+        T diameter (void) const;
+
         bool empty (void) const;
+
         point centre (void) const;
 
         bool includes (const point&) const; // inclusive of borders
