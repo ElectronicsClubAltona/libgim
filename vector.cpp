@@ -46,9 +46,31 @@ vector::operator*= (double rhs) {
 }
 
 
+util::vector
+util::vector::operator* (const vector &rhs) const {
+    return { x * rhs.x, y * rhs.y, z * rhs.z };
+}
+
+
+util::vector&
+util::vector::operator*= (const vector &rhs) {
+    x *= rhs.x;
+    y *= rhs.y;
+    z *= rhs.z;
+
+    return *this;
+}
+
+
 vector
 vector::operator+ (const vector &rhs) const {
     return { x + rhs.x, y + rhs.y, z + rhs.z };
+}
+
+
+vector
+vector::operator- (void) const {
+    return { -x, -y, -z };
 }
 
 

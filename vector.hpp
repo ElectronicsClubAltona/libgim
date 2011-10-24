@@ -28,10 +28,13 @@ namespace util {
 
         vector  operator* (double) const;
         vector& operator*=(double);
+        vector  operator* (const vector&) const;
+        vector& operator*=(const vector&);
 
         vector  operator+ (const vector&) const;
         vector& operator+=(const vector&);
 
+        vector  operator- (void) const;
         vector  operator- (const vector&) const;
         vector& operator-=(const vector&);
 
