@@ -29,10 +29,10 @@ namespace util {
      */
     template <typename T>
     struct region {
-        T     x,      y;
-        T width, height;
+        T x, y;
+        T w, h;
 
-        region (T _x, T _y, T _width, T _height);
+        region (T _x, T _y, T _w, T _h);
 
         region& operator +=(const vector& rhs);
 

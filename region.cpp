@@ -30,11 +30,11 @@ using namespace util;
 
 
 template <typename T>
-region<T>::region (T _x, T _y, T _width, T _height):
-    x      (_x),
-    y      (_y),
-    width  (_width),
-    height (_height)
+region<T>::region (T _x, T _y, T _w, T _h):
+    x (_x),
+    y (_y),
+    w (_w),
+    h (_h)
 { ; }
 
 
@@ -51,13 +51,13 @@ region<T>::operator+= (const vector &rhs) {
 template <typename T>
 T 
 region<T>::area (void) const
-    { return width * height; }
+    { return w * h; }
 
 
 template <typename T>
 T 
 region<T>::diameter (void) const {
-    return (T)sqrt (width * width + height * height);
+    return (T)sqrt (w * w + h * h);
 }
 
 
@@ -77,8 +77,8 @@ region<T>::base (void) const {
 template <typename T>
 point
 region<T>::centre (void) const {
-    double cx = x + static_cast<T>(width  / 2.0),
-           cy = y + static_cast<T>(height / 2.0);
+    double cx = x + static_cast<T>(w  / 2.0),
+           cy = y + static_cast<T>(h / 2.0);
 
     return { cx, cy, 0.0 };
 }
@@ -89,8 +89,8 @@ bool
 region<T>::includes (const point &p) const {
     return p.x >= x &&
            p.y >= y &&
-           p.x <= x + width &&
-           p.y <= y + height;
+           p.x <= x + w &&
+           p.y <= y + h;
 }
 
 
@@ -99,32 +99,32 @@ bool
 region<T>::contains (const point& p) const {
     return p.x > x &&
            p.y > y &&
-           p.x < x + width &&
-           p.y < y + height;
+           p.x < x + w &&
+           p.y < y + h;
 }
 
 
 template <typename T>
 bool
 region<T>::overlaps (const region<T> &rhs) const {
-    return x < rhs.x + rhs.width && 
-           x + width > rhs.x &&
-           y < rhs.y + rhs.height &&
-           y + height > rhs.y;
+    return x     < rhs.x + rhs.w && 
+           x + w > rhs.x &&
+           y     < rhs.y + rhs.h &&
+           y + h > rhs.y;
 }
 
 template <typename T>
 bool
 region<T>::operator ==(const region& rhs) const
-    { return almost_equal (x,      rhs.x)     &&
-             almost_equal (y,      rhs.y)     &&
-             almost_equal (width,  rhs.width) &&
-             almost_equal (height, rhs.height); }
+    { return almost_equal (x, rhs.x) &&
+             almost_equal (y, rhs.y) &&
+             almost_equal (w, rhs.w) &&
+             almost_equal (h, rhs.h); }
 
 
 template <typename T>
 void region<T>::sanity (void) const
-    { check (width >= 0 && height >= 0); }
+    { check (w >= 0 && h >= 0); }
 
 
 namespace util {
@@ -137,7 +137,7 @@ namespace util {
 template <typename T>
 std::ostream&
 operator<< (std::ostream &os, const region<T> &rhs) {
-    os << "region(" << rhs.x << ", " << rhs.y << ", " << rhs.width << ", " << rhs.height << ")";
+    os << "region(" << rhs.x << ", " << rhs.y << ", " << rhs.w << ", " << rhs.h << ")";
     return os;
 }
 
