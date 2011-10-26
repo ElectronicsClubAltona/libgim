@@ -15,6 +15,7 @@ UTIL_INCLUDE =  	\
     enable_if.hpp  	\
     endian.hpp		\
     except.hpp  	\
+    extent.hpp		\
     fixed.hpp		\
     float.hpp		\
     fwd.hpp		\
@@ -46,6 +47,7 @@ UTIL_FILES   =		\
     debug.cpp   	\
     endian.cpp		\
     except.cpp  	\
+    extent.cpp		\
     fixed.cpp		\
     float.cpp		\
     guid.cpp		\

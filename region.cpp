@@ -28,62 +28,6 @@
 
 using namespace util;
 
-/*
- * Rect
- */
-template <typename T>
-extent<T>::extent (const T  _width, const T  _height):
-        width (_width),
-        height (_height)
-    { ; }
-
-
-template <typename T>
-T
-extent<T>::diameter (void) const {
-    return (T)sqrt (width * width + height * height);
-}
-
-
-template <typename T>
-T
-extent<T>::area (void) const
-    { return width * height; }
-
-
-template <typename T>
-bool
-extent<T>::empty (void) const
-    { return almost_equal (area(), 0); }
-
-
-template <typename T>
-bool
-extent<T>::operator ==(const extent& rhs) const {
-    return almost_equal (width,  rhs.width) &&
-           almost_equal (height, rhs.height);
-}
-
-
-template <typename T>
-void
-extent<T>::sanity (void) const
-    { check (width >= 0 && height >= 0); }
-
-
-namespace util {
-    template <>
-    void
-    extent<unsigned int>::sanity (void) const
-        { return; }
-}
-
-template struct extent<unsigned int>;
-template struct extent<double>;
-
-/*
- * Region
- */
 
 template <typename T>
 region<T>::region (T _x, T _y, T _width, T _height):

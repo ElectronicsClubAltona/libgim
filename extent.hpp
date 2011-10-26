@@ -17,44 +17,31 @@
  * Copyright 2010 Danny Robson <danny@blubinc.net>
  */
 
-
-#ifndef __UTIL_REGION_HPP
-#define __UTIL_REGION_HPP
-
-#include "point.hpp"
+#ifndef __UTIL_EXTENT_HPP
+#define __UTIL_EXTENT_HPP
 
 namespace util {
     /**
-     * A two-dimensional rectangle, with size and position.
+     * A pure two-dimensional size, without positioning
      */
     template <typename T>
-    struct region {
-        T     x,      y;
+    struct extent {
         T width, height;
 
-        region (T _x, T _y, T _width, T _height);
+        extent (const T  _width, const T  _height);
 
-        T area     (void) const;
+        T    area  (void) const;
         T diameter (void) const;
 
         bool empty (void) const;
 
-        point centre (void) const;
-
-        bool includes (const point&) const; // inclusive of borders
-        bool contains (const point&) const; // exclusive of borders
-        bool overlaps (const region<T>&) const;
-
-        bool operator ==(const region<T>& rhs) const;
-        bool operator !=(const region<T>& rhs) const
+        bool operator ==(const extent& rhs) const;
+        bool operator !=(const extent& rhs) const
             { return !(*this == rhs); }
 
         void sanity (void) const;
     };
 }
 
-template <typename T>
-std::ostream&
-operator<< (std::ostream&, const util::region<T>&);
+#endif
 
-#endif 
