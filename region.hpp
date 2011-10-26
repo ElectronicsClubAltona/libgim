@@ -34,11 +34,14 @@ namespace util {
 
         region (T _x, T _y, T _width, T _height);
 
+        region& operator +=(const vector& rhs);
+
         T area     (void) const;
         T diameter (void) const;
 
         bool empty (void) const;
 
+        point base   (void) const;
         point centre (void) const;
 
         bool includes (const point&) const; // inclusive of borders

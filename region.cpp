@@ -39,6 +39,16 @@ region<T>::region (T _x, T _y, T _width, T _height):
 
 
 template <typename T>
+region<T>&
+region<T>::operator+= (const vector &rhs) {
+    x += rhs.x;
+    y += rhs.y;
+
+    return *this;
+}
+
+
+template <typename T>
 T 
 region<T>::area (void) const
     { return width * height; }
@@ -55,6 +65,13 @@ template <typename T>
 bool 
 region<T>::empty (void) const
     { return almost_equal (area (), 0); }
+
+
+template <typename T>
+point
+region<T>::base (void) const {
+    return { static_cast<double> (x), static_cast<double> (y), 0.0 };
+}
 
 
 template <typename T>
