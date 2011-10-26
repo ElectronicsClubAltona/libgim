@@ -6,71 +6,69 @@ AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(COMMON_CXXFLAGS)
 
 SUBDIRS = test
 
-UTIL_INCLUDE =  	\
+UTIL_FILES   =		\
     annotations.hpp 	\
     backtrace.hpp   	\
+    bitwise.cpp		\
     bitwise.hpp		\
+    colour.cpp		\
     colour.hpp		\
+    debug.cpp   	\
     debug.hpp   	\
     enable_if.hpp  	\
+    endian.cpp		\
     endian.hpp		\
+    except.cpp  	\
     except.hpp  	\
+    extent.cpp		\
     extent.hpp		\
+    fixed.cpp		\
     fixed.hpp		\
+    float.cpp		\
     float.hpp		\
     fwd.hpp		\
+    guid.cpp		\
     guid.hpp		\
+    io.cpp		\
     io.hpp		\
+    ip.cpp		\
     ip.hpp		\
+    json.cpp		\
     json.hpp		\
+    maths.cpp		\
     maths.hpp		\
+    maths/matrix.cpp	\
     maths/matrix.hpp	\
+    maths/vector.cpp  	\
     maths/vector.hpp  	\
+    matrix.cpp		\
     matrix.hpp		\
     nocopy.hpp		\
-    point.hpp		\
-    pool.hpp		\
-    random.hpp		\
-    range.hpp		\
-    region.hpp		\
-    signal.hpp		\
-    si.hpp		\
-    stream.hpp		\
-    string.hpp		\
-    time.hpp		\
-    types.hpp		\
-    version.hpp
-
-UTIL_FILES   =		\
-    bitwise.cpp		\
-    colour.cpp		\
-    debug.cpp   	\
-    endian.cpp		\
-    except.cpp  	\
-    extent.cpp		\
-    fixed.cpp		\
-    float.cpp		\
-    guid.cpp		\
-    io.cpp		\
-    ip.cpp		\
-    json.cpp		\
-    maths.cpp		\
-    maths/matrix.cpp	\
-    maths/vector.cpp  	\
-    matrix.cpp		\
     point.cpp		\
+    point.hpp		\
     pool.cpp		\
+    pool.hpp		\
     random.cpp		\
+    random.hpp		\
     range.cpp		\
+    range.hpp		\
     region.cpp		\
+    region.hpp		\
     si.cpp		\
     signal.cpp		\
+    signal.hpp		\
+    si.hpp		\
     stream.cpp		\
+    stream.hpp		\
     string.cpp		\
+    string.hpp		\
     time.cpp		\
+    time.hpp		\
     types.cpp		\
+    types.hpp		\
     vector.cpp		\
-    version.cpp
+    version.cpp		\
+    version.hpp
 
 
 if HAVE_EXECINFO
@@ -88,6 +86,6 @@ SUFFIXES = .cpp .cpp.rl
 	$(RAGEL) $(RAGELFLAGS) -C $< -o $(builddir)/$@
 
 lib_LTLIBRARIES  = libutil.la
-libutil_la_SOURCES  = $(UTIL_INCLUDE) $(UTIL_FILES)
+libutil_la_SOURCES  = $(UTIL_FILES)
 libutil_la_CXXFLAGS = $(AM_CXXFLAGS)
 libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB)
