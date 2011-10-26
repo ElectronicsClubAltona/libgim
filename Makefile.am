@@ -29,6 +29,8 @@ UTIL_FILES   =		\
     fwd.hpp		\
     guid.cpp		\
     guid.hpp		\
+    hash.cpp		\
+    hash.hpp		\
     io.cpp		\
     io.hpp		\
     ip.cpp		\
