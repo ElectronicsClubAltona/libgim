@@ -21,9 +21,24 @@
 #define __UTIL_HASH_HPP
 
 #include <cstdint>
+#include <cstdlib>
 
-uint32_t hash (uint32_t key);
-uint64_t hash (uint64_t key);
-uintptr_t hash (void * const);
+// All hashes are unsuitable for cryptographic operations nnless noted.
+namespace util {
+    // Fast integer mixing operations by Thomas Wang.
+    uint32_t  wang32 (uint32_t key);
+    uint64_t  wang64 (uint64_t key);
+
+    // General hashes for when you really just don't care about implementation
+    inline uint32_t  hash (uint32_t key)    { return wang32 (key); }
+    inline uint64_t  hash (uint64_t key)    { return wang64 (key); }
+    inline uintptr_t hash (const void *key) {
+        return sizeof (uintptr_t) == 32 ? wang32 (reinterpret_cast<uintptr_t> (key)) :
+                                          wang64 (reinterpret_cast<uintptr_t> (key));
+    }
+}
+
+
+
 
 #endif

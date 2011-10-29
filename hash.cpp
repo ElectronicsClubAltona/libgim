@@ -20,9 +20,8 @@
 #include "hash.hpp"
 
 
-// Thomas Wang's 32 bit mixing function
 uint32_t
-hash (uint32_t key) {
+util::wang32 (uint32_t key) {
   uint32_t c2 = 0x27d4eb2d; // a prime or an odd constant
   key = (key ^ 61) ^ (key >> 16);
   key = key + (key << 3);
@@ -33,9 +32,8 @@ hash (uint32_t key) {
 }
 
 
-// Thomas Wang's 64 bit mixing function
 uint64_t
-hash (uint64_t key) {
+util::wang64 (uint64_t key) {
   key = (~key) + (key << 21); // key = (key << 21) - key - 1;
   key = key ^ (key >> 24);
   key = (key + (key << 3)) + (key << 8); // key * 265
@@ -48,6 +46,3 @@ hash (uint64_t key) {
 }
 
 
-uintptr_t
-hash (void *const key)
-    { return hash ((uintptr_t)key); }
