@@ -109,6 +109,14 @@ vector::operator= (const vector &rhs) {
 }
 
 
+bool
+vector::operator== (const vector &rhs) const {
+    return almost_equal (x, rhs.x) &&
+           almost_equal (y, rhs.y) &&
+           almost_equal (z, rhs.z);
+}
+
+
 double
 vector::magnitude (void) const {
     return sqrt (x * x + y * y + z * z);

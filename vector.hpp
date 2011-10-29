@@ -40,6 +40,8 @@ namespace util {
 
         vector& operator =(const vector &);
 
+        bool operator== (const vector &) const;
+
         double magnitude  (void) const;
         double magnitude2 (void) const;
 
