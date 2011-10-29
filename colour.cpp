@@ -23,22 +23,32 @@
 using namespace util;
 
 
-colour::colour (double _red, double _green, double _blue, double _alpha):
-    red   (_red),
-    green (_green),
-    blue  (_blue),
-    alpha (_alpha)
-{ ; }
+
+
+const json::node&
+operator>> (const json::node &node, colour &c) {
+    c.red   = node[0].to_number ();
+    c.green = node[1].to_number ();
+    c.blue  = node[2].to_number ();
+
+    try {
+        c.alpha = node[3].to_number ();
+    } catch (...) {
+        c.alpha = 1.0;
+    }
+
+    return node;
+}
 
 
 namespace util {
     template<>
     colour
     random (void) {
-        return colour (range<double>::UNIT.random (),
-                       range<double>::UNIT.random (),
-                       range<double>::UNIT.random (),
-                       range<double>::UNIT.random ());
+        return colour ({ range<double>::UNIT.random (),
+                         range<double>::UNIT.random (),
+                         range<double>::UNIT.random (),
+                         range<double>::UNIT.random () });
     }
 
     template <>

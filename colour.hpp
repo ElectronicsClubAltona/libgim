@@ -20,13 +20,13 @@
 #ifndef __UTIL_COLOUR_HPP
 #define __UTIL_COLOUR_HPP
 
+#include "json.hpp"
 #include "random.hpp"
 
 #include <iostream>
 
 namespace util {
     struct colour {
-        colour (double red, double green, double blue, double alpha = 1.0);
 
         double red;
         double green;
@@ -39,5 +39,6 @@ namespace util {
 }
 
 std::ostream& operator<< (std::ostream&, const util::colour&);
+const json::node& operator>> (const json::node&, util::colour&);
 
 #endif
