@@ -101,11 +101,12 @@ namespace json {
 
     /// Represents a JSON array, and contains its children.
     class array : public node {
-        protected:
-            std::vector<node*> m_values;
-
+        public:
             typedef std::vector<node*>::iterator       array_iterator;
             typedef std::vector<node*>::const_iterator const_array_iterator;
+
+        protected:
+            std::vector<node*> m_values;
 
         public:
             virtual ~array();
