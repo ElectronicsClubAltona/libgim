@@ -46,3 +46,44 @@ util::wang64 (uint64_t key) {
 }
 
 
+
+//   32: 2^ 24 + 2^8 + 0x93
+//   64: 2^ 40 + 2^8 + 0xb3
+//  128: 2^ 88 + 2^8 + 0x3B
+//  256: 2^168 + 2^8 + 0x63
+//  512: 2^344 + 2^8 + 0x57
+// 1024: 2^680 + 2^8 + 0x8D
+static const uint32_t FNV_1a_32_PRIME =      16777619U;
+static const uint64_t FNV_1a_64_PRIME = 1099511628211U;
+
+// Bias is the FNV-0 hash of "chongo <Landon Curt Noll> /\\../\\"
+static const uint32_t FNV_1a_32_BIAS  =           2166136261U;
+static const uint64_t FNV_1a_64_BIAS  = 14695981039346656037U;
+
+
+uint32_t
+util::fnv1a32 (const void *_data, size_t size) {
+    const uint8_t *data = static_cast<const uint8_t*> (_data);
+    uint32_t result = FNV_1a_32_BIAS;
+
+    for (size_t i = 0; i < size; ++i) {
+        result ^= data[i];
+        result *= FNV_1a_32_PRIME;
+    }
+
+    return result;
+}
+
+
+uint64_t
+util::fnv1a64 (const void *_data, size_t size) {
+    const uint8_t *data = static_cast<const uint8_t*> (_data);
+    uint64_t result = FNV_1a_64_BIAS;
+
+    for (size_t i = 0; i < size; ++i) {
+        result ^= data[i];
+        result *= FNV_1a_64_PRIME;
+    }
+
+    return result;
+}

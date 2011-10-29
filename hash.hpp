@@ -29,6 +29,10 @@ namespace util {
     uint32_t  wang32 (uint32_t key);
     uint64_t  wang64 (uint64_t key);
 
+    // Fast and general hashing using FNV-1a
+    uint32_t fnv1a32 (const void *, size_t);
+    uint64_t fnv1a64 (const void *, size_t);
+
     // General hashes for when you really just don't care about implementation
     inline uint32_t  hash (uint32_t key)    { return wang32 (key); }
     inline uint64_t  hash (uint64_t key)    { return wang64 (key); }
