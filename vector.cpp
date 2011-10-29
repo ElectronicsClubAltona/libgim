@@ -162,6 +162,28 @@ vector::normalised (void) const {
 }
 
 
+vector
+vector::spherical_to_cartesian (const vector &s) {
+    return {
+        s.x * sin (s.y) * cos (s.z),
+        s.x * sin (s.y) * sin (s.z),
+        s.x * cos (s.y),
+    };
+}
+
+
+vector
+vector::cartesian_to_spherical (const vector &c) {
+    double mag = c.magnitude ();
+
+    return {
+        mag,
+        acos  (c.z / mag),
+        atan2 (c.y, c.x)
+    };
+}
+
+
 void
 vector::sanity (void) const {
     check_soft (!std::isnan (x));

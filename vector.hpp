@@ -53,6 +53,9 @@ namespace util {
         vector& normalise  (void);
         vector  normalised (void) const;
 
+        static vector spherical_to_cartesian (const vector &);
+        static vector cartesian_to_spherical (const vector &);
+
         void sanity (void) const;
     };
 }
