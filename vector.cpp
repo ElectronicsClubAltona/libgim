@@ -181,3 +181,12 @@ operator<< (std::ostream &os, const util::vector &v) {
     return os;
 }
 
+
+const json::node&
+operator>> (const json::node &node, util::vector &v) {
+    v.x = node[0].to_number ();
+    v.y = node[1].to_number ();
+    v.z = node[2].to_number ();
+
+    return node;
+}

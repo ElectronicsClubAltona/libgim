@@ -20,6 +20,8 @@
 #ifndef __UTIL_VECTOR_HPP
 #define __UTIL_VECTOR_HPP
 
+#include "json.hpp"
+
 #include <iostream>
 
 namespace util {
@@ -58,5 +60,6 @@ namespace util {
 util::vector operator* (double, const util::vector&);
 
 std::ostream& operator<< (std::ostream&, const util::vector&);
+const json::node& operator>> (const json::node&, util::vector&);
 #endif
 
