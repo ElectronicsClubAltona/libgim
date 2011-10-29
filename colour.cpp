@@ -23,6 +23,15 @@
 using namespace util;
 
 
+colour&
+colour::operator*= (double v) {
+    red   *= v;
+    green *= v;
+    blue  *= v;
+    alpha *= v;
+
+    return *this;
+}
 
 
 const json::node&
