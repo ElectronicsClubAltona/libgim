@@ -27,8 +27,8 @@ range<T>::range (const json::node &node) {
         min = UNLIMITED.min;
         max = UNLIMITED.max;
     } else {
-        min = node.to_array ()[0].to_number ();
-        max = node.to_array ()[0].to_number ();
+        min = node[0].to_number ();
+        max = node[1].to_number ();
     }
 
     sanity ();
