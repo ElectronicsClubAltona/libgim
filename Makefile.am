@@ -7,12 +7,18 @@ AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(COMMON_CXXFLAGS)
 SUBDIRS = test
 
 UTIL_FILES   =		\
+    adler.hpp		\
+    adler.cpp		\
     annotations.hpp 	\
     backtrace.hpp   	\
     bitwise.cpp		\
     bitwise.hpp		\
+    bsdsum.hpp		\
+    bsdsum.cpp		\
     colour.cpp		\
     colour.hpp		\
+    crc.cpp		\
+    crc.hpp		\
     debug.cpp   	\
     debug.hpp   	\
     enable_if.hpp  	\
@@ -24,6 +30,7 @@ UTIL_FILES   =		\
     extent.hpp		\
     fixed.cpp		\
     fixed.hpp		\
+    fletcher.hpp	\
     float.cpp		\
     float.hpp		\
     fwd.hpp		\
