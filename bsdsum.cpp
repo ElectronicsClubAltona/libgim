@@ -22,7 +22,7 @@
 
 uint16_t
 bsdsum (const void *restrict _data, size_t size) {
-    const uint8_t *restrict data = static_cast<const uint8_t*> (data);
+    const uint8_t *restrict data = static_cast<const uint8_t*> (_data);
     uint16_t accum = 0;
 
     for (size_t i = 0; i < size; ++i) {
