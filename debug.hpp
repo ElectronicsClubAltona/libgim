@@ -33,6 +33,13 @@
 }
 
 
+#define warn_if(C, MSG) do {                                                                    \
+    if (C) {                                                                                    \
+        std::cerr << __FILE__ << ":" << __func__ << ":" __LINE__ << ", " << (MSG) << std::endl; \
+    }                                                                                           \
+} while (0)
+
+
 #define verify_soft(C, COND) ({     \
     const auto __DEBUG_value = (C); \
     check_soft(__DEBUG_value COND); \
