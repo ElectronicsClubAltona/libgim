@@ -1,5 +1,6 @@
-/adler
+/adler*
 /backtrace*
+/checksum*
 /float*
 /hton*
 /ip*

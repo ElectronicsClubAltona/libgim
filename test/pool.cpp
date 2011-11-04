@@ -7,7 +7,7 @@
 #include <algorithm>
 
 using namespace std;
-
+using namespace util;
 
 void
 check_single (void) {

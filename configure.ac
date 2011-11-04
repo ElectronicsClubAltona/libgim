@@ -101,6 +101,11 @@ AC_FUNC_MMAP
 AC_CHECK_HEADER([execinfo.h], [break])
 AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
 
+AC_SEARCH_LIBS([clock_gettime], [rt])
+if [[ "x$ac_cv_search_clock_gettime" == "x-*" ]]; then
+    COMMON_LDFLAGS="$COMMON_LDFLAGS $ac_cv_search_clock_gettime"
+fi
+    
 
 ##
 ## Debug features

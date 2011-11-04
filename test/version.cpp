@@ -2,11 +2,11 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
-
 #include "../version.hpp"
 #include "../debug.hpp"
+
+using namespace std;
+using namespace util;
 
 
 struct parsed_version {

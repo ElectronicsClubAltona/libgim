@@ -1,5 +1,5 @@
 #include "../debug.hpp"
-#include "../matrix.hpp"
+#include "../maths/matrix.hpp"
 #include "../maths.hpp"
 
 #include <iostream>
