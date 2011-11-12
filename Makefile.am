@@ -53,6 +53,8 @@ UTIL_FILES   =		\
     matrix.cpp		\
     matrix.hpp		\
     nocopy.hpp		\
+    perlin.cpp		\
+    perlin.hpp		\
     point.cpp		\
     point.hpp		\
     pool.cpp		\
