@@ -142,11 +142,10 @@ template <typename T, size_t N>
 size_t elems(T (&)[N])
     { return N; }
 
-
-template <typename T, typename ...Args>
-std::unique_ptr<T>
-make_unique (const Args &...args)
-    { return std::unique_ptr<T> (new T (args...)); }
+template<class T, class...Args>
+std::unique_ptr<T> make_unique(Args&&... args) {
+    return std::unique_ptr<T> (new T(std::forward<Args>(args)...));
+}
 
 
 struct fourcc {
