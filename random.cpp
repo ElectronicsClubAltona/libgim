@@ -39,4 +39,5 @@ namespace util {
 template double   util::random (void);
 template float    util::random (void);
 template uint64_t util::random (void);
-
+template uint32_t util::random (void);
+template uint16_t util::random (void);
