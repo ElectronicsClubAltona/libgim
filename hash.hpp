@@ -34,8 +34,12 @@ namespace util {
     uint64_t fnv1a64 (const void *, size_t);
 
     // General hashes for when you really just don't care about implementation
-    inline uint32_t  hash (uint32_t key)    { return wang32 (key); }
-    inline uint64_t  hash (uint64_t key)    { return wang64 (key); }
+    inline  uint32_t hash (uint32_t key)    { return wang32 (key); }
+    inline   int32_t hash ( int32_t key)    { return (int32_t) hash ((uint32_t)key); }
+
+    inline  uint64_t hash (uint64_t key)    { return wang64 (key); }
+    inline   int64_t hash ( int64_t key)    { return (int64_t) hash ((uint64_t)key); }
+
     inline uintptr_t hash (const void *key) {
         return sizeof (uintptr_t) == 32 ? wang32 (reinterpret_cast<uintptr_t> (key)) :
                                           wang64 (reinterpret_cast<uintptr_t> (key));
