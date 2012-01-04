@@ -20,9 +20,10 @@
 #ifndef __UTIL_JSON_HPP
 #define __UTIL_JSON_HPP
 
-#include <map>
-#include <string>
 #include <iostream>
+#include <map>
+#include <memory>
+#include <string>
 #include <vector>
 
 #include <boost/filesystem.hpp>
@@ -37,10 +38,10 @@ namespace json {
     class boolean;
     class null;
 
-    extern node* parse (const boost::filesystem::path &path);
-    extern node* parse (const char *start, const char *stop);
-    extern node* parse (const char *start);
-    extern node* parse (const std::string&);
+    extern std::unique_ptr<node> parse (const boost::filesystem::path &path);
+    extern std::unique_ptr<node> parse (const char *start, const char *stop);
+    extern std::unique_ptr<node> parse (const char *start);
+    extern std::unique_ptr<node> parse (const std::string&);
 
     /// Abstract base for all JSON values
     class node {
@@ -68,6 +69,9 @@ namespace json {
             virtual bool operator==(const number  &) const { return false; }
             virtual bool operator==(const boolean &) const { return false; }
             virtual bool operator==(const null    &) const { return false; }
+
+            virtual bool operator==(const char *rhs) const;
+            virtual bool operator!=(const char *rhs) const { return !(*this == rhs); }
 
             virtual const node& operator[] (const std::string&) const;
             virtual const node& operator[] (unsigned int) const;

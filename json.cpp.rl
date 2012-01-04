@@ -235,16 +235,16 @@ struct parse_context {
  */
 
 namespace json {
-    json::node *
+    std::unique_ptr<json::node>
     parse (const boost::filesystem::path &path)
         { return parse ((const char *)slurp (path)); }
 
 
-    json::node *
+    std::unique_ptr<json::node>
     parse (const std::string &path)
         { return parse (path.c_str (), path.c_str () + path.size ()); }
 
-    node *
+    std::unique_ptr<json::node>
     parse (const char *start,
            const char *stop) {
         bool __success = true;
@@ -265,11 +265,11 @@ namespace json {
 
         //__root->print (cout) << endl;
         assert (*__root == *__root);
-        return __root;
+        return std::unique_ptr<json::node> (__root);
     }
 
 
-    node*
+    std::unique_ptr<json::node>
     parse (const char *start)
         { return parse (start, start + strlen (start)); }
 }
@@ -303,6 +303,10 @@ json::node::to_boolean (void) const
 bool
 json::node::operator!=(const node &rhs) const
     { return !(*this == rhs); }
+
+
+bool json::node::operator==(const char *rhs) const
+    { return to_string () == rhs; }
 
 
 const json::node&
