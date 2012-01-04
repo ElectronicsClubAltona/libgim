@@ -22,6 +22,8 @@
 
 #include <cstdint>
 
+#include "debug.hpp"
+
 const uint8_t BITMASK_1BITS = 0x01;
 const uint8_t BITMASK_2BITS = 0x03;
 const uint8_t BITMASK_3BITS = 0x07;
@@ -31,6 +33,13 @@ const uint8_t BITMASK_6BITS = 0x3F;
 const uint8_t BITMASK_7BITS = 0x7F;
 const uint8_t BITMASK_8BITS = 0xFF;
 
+
+template <typename T>
+T rotate (const T &value, int magnitude) {
+    check_hard (magnitude <  sizeof (value) * 8 &&
+                magnitude > -sizeof (value) * 8);
+    return (value << magnitude) | (value >> sizeof (value) * 8 - magnitude);
+}
 
 
 #endif 
