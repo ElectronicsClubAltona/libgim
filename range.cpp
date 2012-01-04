@@ -60,6 +60,17 @@ range<T>::sanity (void) const
     { check (min <= max); }
 
 
+namespace util {
+    template <>
+    void
+    range<double>::sanity (void) const {
+        if (std::isnan (min) || std::isnan (max))
+            return;
+        check (min <= max);
+    }
+}
+
+
 template <typename T>
 T
 range<T>::clamp (T val) const
@@ -74,11 +85,26 @@ range<T>::normalise (T val) const {
 }
 
 
+namespace util {
+    template <>
+    double
+    range<double>::random (void) const {
+        double pos = ::rand () / (double)(RAND_MAX);
+        return (max - min) * pos + min;
+    } 
+
+    template <>
+    float
+    range<float>::random (void) const {
+        float pos = ::rand () / (float)(RAND_MAX);
+        return (max - min) * pos + min;
+    }
+}
+
 template <typename T>
 T
 range<T>::random (void) const {
-    double pos = ::rand () / (double)(RAND_MAX);
-    return (max - min) * pos + min;
+    return min + (T)::rand () % (max - min);
 }
 
 
