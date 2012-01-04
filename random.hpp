@@ -20,12 +20,33 @@
 #ifndef __UTIL_RANDOM_HPP
 #define __UTIL_RANDOM_HPP
 
+#include <iterator>
+
 namespace util {
     template <typename T>
     T& randomise (T &);
 
     template <typename T>
     T random (void);
+
+    template <typename T>
+    typename T::value_type&
+    choose (T &container) {
+        typename T::iterator  cursor = container.begin ();
+        typename T::size_type size   = container.size ();
+        typename T::size_type offset = random<typename T::size_type> () % size;
+        
+        std::advance (cursor, offset);
+        return *cursor;
+    }
+
+    template <typename T>
+    typename T::value_type&
+    choose (T begin, T end) {
+        typename T::difference_type size = std::distance (begin, end);
+        std::advance (begin, random<T::size_type> () % size);
+        return *begin;
+    }
 }
 
 #endif
