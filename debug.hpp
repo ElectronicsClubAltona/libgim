@@ -33,6 +33,11 @@
 }
 
 
+#define warn(MSG) do {                                                                      \
+   std::cerr << __FILE__ << ":" << __func__ << ":" __LINE__ << ", " << (MSG) << std::endl;  \
+} while (0)
+
+
 #define warn_if(C, MSG) do {                                                                    \
     if (C) {                                                                                    \
         std::cerr << __FILE__ << ":" << __func__ << ":" __LINE__ << ", " << (MSG) << std::endl; \
