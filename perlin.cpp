@@ -1,29 +1,11 @@
 #include "perlin.hpp"
 
+#include "lerp.hpp"
 #include "debug.hpp"
 #include "maths.hpp"
 
 #include <cmath>
 #include <limits>
-
-
-namespace lerp {
-    double
-    linear (double a, double b, double weight) {
-        check (weight >= 0 && weight <= 1.0);
-        return (1.0 - weight) * a + weight * b;
-    }
-
-
-    double
-    cosine (double a, double b, double weight) {
-        check (weight >= 0 && weight <= 1.0);
-        double ft = weight * PI;
-        double f  = (1.0 - cos (ft)) * 0.5;
-
-        return a * (1.0 - f) + b * f;
-    }
-}
 
 
 // Just a random generator [-1.0, 1.0]
