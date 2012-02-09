@@ -131,6 +131,11 @@ namespace util {
     template <>
     void region<unsigned int>::sanity (void) const
         { return; }
+
+
+    template <>
+    void region<unsigned long>::sanity (void) const
+        { return; }
 }
 
 
@@ -143,6 +148,7 @@ operator<< (std::ostream &os, const region<T> &rhs) {
 
 
 template struct region<unsigned int>;
+template struct region<unsigned long>;
 template struct region<double>;
 
 template std::ostream& operator<< (std::ostream&, const region<unsigned int>&);

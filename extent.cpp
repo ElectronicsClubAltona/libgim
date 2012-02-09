@@ -72,8 +72,14 @@ namespace util {
     void
     extent<unsigned int>::sanity (void) const
         { return; }
+
+    template <>
+    void
+    extent<unsigned long>::sanity (void) const
+        { return; }
 }
 
 template struct extent<unsigned int>;
+template struct extent<unsigned long>;
 template struct extent<double>;
 
