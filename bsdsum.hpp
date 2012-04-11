@@ -18,7 +18,7 @@
  */
 
 #ifndef __UTIL_BSDSUM_HPP
-#define __UTIL_BSDSUMP_HPP
+#define __UTIL_BSDSUM_HPP
 
 #include <cstdint>
 #include <cstdlib>
