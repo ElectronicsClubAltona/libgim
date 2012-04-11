@@ -226,7 +226,7 @@ struct parse_context {
             %success
             >{ __success = false; };
 
-	write data;
+    write data;
 }%%
     
 
@@ -249,8 +249,9 @@ namespace json {
            const char *stop) {
         bool __success = true;
         json::node *__root = NULL;
-        size_t cs, top = 0;
-        deque <size_t> fsmstack;
+        size_t top = 0;
+        int cs;
+        deque <int> fsmstack;
         deque <parse_context> nodestack;
 
         const char *p   = start,
