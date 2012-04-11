@@ -23,6 +23,7 @@
 #include <cstdint>
 #include <cstdlib>
 
+
 void perlin2d (uint8_t *restrict pixels, size_t width, size_t height);
 
 #endif
