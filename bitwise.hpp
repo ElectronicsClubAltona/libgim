@@ -35,12 +35,10 @@ const uint8_t BITMASK_8BITS = 0xFF;
 
 
 template <typename T>
-T rotate (const T &value, int magnitude) {
-    check_hard (magnitude <  sizeof (value) * 8 &&
-                magnitude > -sizeof (value) * 8);
+T rotate_left (const T &value, size_t magnitude) {
+    magnitude %= sizeof (T) * 8;
     return (value << magnitude) | (value >> sizeof (value) * 8 - magnitude);
 }
-
 
 #endif 
 
