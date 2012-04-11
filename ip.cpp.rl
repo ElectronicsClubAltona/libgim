@@ -97,8 +97,9 @@ ipv4::ip::operator == (const ipv4::ip &rhs) const {
 
 ipv4::ip::ip (const std::string &data) {
     bool __success = true;
-    uint8_t __octets[4];
-    const char *octetstart, *octetend;
+    uint8_t __octets[4] = { 0, 0, 0, 0 };
+    const char *octetstart = nullptr,
+               *octetend   = nullptr;
     uint8_t __octet;
 
     int cs = 0;
