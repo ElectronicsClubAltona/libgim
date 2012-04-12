@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@blubinc.net>
+ * Copyright 2010-2012 Danny Robson <danny@blubinc.net>
  */
 
 
 #include "json.hpp"
-#include "maths.hpp"
-#include "io.hpp"
 
-#include <cassert>
+#include "debug.hpp"
+#include "io.hpp"
+#include "maths.hpp"
+
 #include <deque>
 #include <stdexcept>
 #include <cstdlib>
@@ -79,9 +80,9 @@ struct parse_context {
     action new_array  { nodestack.push_back (parse_context(new json::array));  }
 
     action new_object_value {
-        assert (nodestack.back ().root->is_object ());
-        assert (nodestack.back ().key);
-        assert (nodestack.back ().value);
+        check_hard (nodestack.back ().root->is_object ());
+        check      (nodestack.back ().key);
+        check      (nodestack.back ().value);
 
         if (!nodestack.back ().key->is_string ())
             throw parse_error ("object keys must be strings");
@@ -94,8 +95,8 @@ struct parse_context {
     }
 
     action new_array_value {
-        assert (nodestack.back ().root->is_array ());
-        assert (nodestack.back ().value);
+        check_hard (nodestack.back ().root->is_array ());
+        check      (nodestack.back ().value);
 
         json::array *array = (json::array *)nodestack.back ().root;
         array->insert (nodestack.back ().value);
@@ -103,8 +104,8 @@ struct parse_context {
     }
 
     action new_string  {
-        assert (!nodestack.empty ());
-        assert (!nodestack.back ().value);
+        check_hard (!nodestack.empty ());
+        check      (!nodestack.back ().value);
 
         std::string value (std::string (nodestack.back ().start,
                                         nodestack.back ().stop));
@@ -112,15 +113,15 @@ struct parse_context {
     }
 
     action new_boolean {
-        assert (!nodestack.empty ());
-        assert (!nodestack.back ().value);
+        check_hard (!nodestack.empty ());
+        check      (!nodestack.back ().value);
 
         throw parse_error ("unable to parse boolean");
     }
 
     action new_number  {
-        assert (!nodestack.empty ());
-        assert (!nodestack.back ().value);
+        check_hard (!nodestack.empty ());
+        check      (!nodestack.back ().value);
         
         errno = 0;
         double value = strtod (nodestack.back ().start, NULL);
@@ -130,17 +131,17 @@ struct parse_context {
     }
 
     action new_null    {
-        assert (!nodestack.empty ());
-        assert (!nodestack.back ().value);
+        check_hard (!nodestack.empty ());
+        check      (!nodestack.back ().value);
 
         nodestack.back().value = new json::null ();
     }
 
     action new_object_key {
-        assert (!nodestack.empty ());
-        assert (nodestack.back ().root->is_object ());
-        assert (nodestack.back ().value);
-        assert (!nodestack.back ().key);
+        check_hard (!nodestack.empty ());
+        check_hard (nodestack.back ().root->is_object ());
+        check      (nodestack.back ().value);
+        check      (!nodestack.back ().key);
 
         nodestack.back ().key   = nodestack.back ().value;
         nodestack.back ().value = NULL;
@@ -264,7 +265,7 @@ json::parse (const char *start,
         throw parse_error ("unable to parse json");
 
     //__root->print (cout) << endl;
-    assert (*__root == *__root);
+    check (*__root == *__root);
     return std::unique_ptr<json::node> (__root);
 }
 
