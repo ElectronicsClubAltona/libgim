@@ -102,3 +102,13 @@ lib_LTLIBRARIES  = libutil.la
 libutil_la_SOURCES  = $(UTIL_FILES)
 libutil_la_CXXFLAGS = $(AM_CXXFLAGS)
 libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB)
+
+bin_PROGRAMS = 		\
+    json-clean
+
+json_clean_SOURCES    = json/clean.cpp
+json_clean_DEPENDENCIES = $(top_builddir)/.libs/libutil.la
+json_clean_LDFLAGS    = 		\
+    $(BOOST_LDFLAGS)  			\
+    $(BOOST_FILESYSTEM_LIB) 		\
+    $(top_builddir)/.libs/libutil.a
