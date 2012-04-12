@@ -36,12 +36,12 @@ colour::operator*= (double v) {
 
 const json::node&
 operator>> (const json::node &node, colour &c) {
-    c.red   = node[0].to_number ();
-    c.green = node[1].to_number ();
-    c.blue  = node[2].to_number ();
+    c.red   = node[0].as_number ();
+    c.green = node[1].as_number ();
+    c.blue  = node[2].as_number ();
 
     try {
-        c.alpha = node[3].to_number ();
+        c.alpha = node[3].as_number ();
     } catch (...) {
         c.alpha = 1.0;
     }

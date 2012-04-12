@@ -50,11 +50,11 @@ namespace json {
         public:
             virtual ~node () { ; }
 
-            virtual const object&  to_object  (void) const;
-            virtual const array&   to_array   (void) const;
-            virtual const string&  to_string  (void) const;
-            virtual const number&  to_number  (void) const;
-            virtual const boolean& to_boolean (void) const;
+            virtual const object&  as_object  (void) const;
+            virtual const array&   as_array   (void) const;
+            virtual const string&  as_string  (void) const;
+            virtual const number&  as_number  (void) const;
+            virtual const boolean& as_boolean (void) const;
 
             virtual bool is_object  (void) const { return false; }
             virtual bool is_array   (void) const { return false; }
@@ -91,7 +91,7 @@ namespace json {
             object () { ; }
             virtual ~object ();
 
-            virtual const object& to_object  (void) const { return *this; }
+            virtual const object& as_object  (void) const { return *this; }
             virtual bool          is_object  (void) const { return  true; }
             virtual bool operator==(const object &rhs) const;
             virtual bool operator==(const node   &rhs) const
@@ -116,7 +116,7 @@ namespace json {
         public:
             virtual ~array();
 
-            virtual const array&  to_array   (void) const { return *this; }
+            virtual const array&  as_array   (void) const { return *this; }
             virtual bool          is_array   (void) const { return  true; }
             virtual bool operator==(const array &rhs) const;
             virtual bool operator==(const node   &rhs) const
@@ -147,7 +147,7 @@ namespace json {
             string (const std::string &_value): m_value (_value) { ; }
             string (const char        *_value): m_value (_value) { ; }
 
-            virtual const string& to_string  (void) const { return *this; }
+            virtual const string& as_string  (void) const { return *this; }
             virtual bool          is_string  (void) const { return  true; }
             virtual bool operator==(const string &rhs) const;
             virtual bool operator==(const node   &rhs) const
@@ -169,7 +169,7 @@ namespace json {
             number (double _value): m_value (_value) { ; }
             number (int _value):    m_value (_value) { ; }
 
-            virtual const number& to_number  (void) const { return *this; }
+            virtual const number& as_number  (void) const { return *this; }
             virtual bool          is_number  (void) const { return  true; }
             virtual bool operator==(const number &rhs) const;
             virtual bool operator==(const node   &rhs) const
@@ -190,7 +190,7 @@ namespace json {
         public:
             boolean (bool _value): m_value (_value) { ; }
 
-            virtual const boolean& to_boolean (void) const { return *this; }
+            virtual const boolean& as_boolean (void) const { return *this; }
             virtual bool           is_boolean (void) const { return  true; }
             virtual bool operator==(const boolean &rhs) const;
             virtual bool operator==(const node   &rhs) const

@@ -281,27 +281,27 @@ json::write (const json::node &node, std::ostream &os)
 
 
 const json::object&
-json::node::to_object  (void) const
+json::node::as_object  (void) const
         { throw parse_error ("node is not an object"); }
 
 
 const json::array&
-json::node::to_array   (void) const
+json::node::as_array   (void) const
         { throw parse_error ("node is not an array"); }
 
 
 const json::string&
-json::node::to_string  (void) const
+json::node::as_string  (void) const
         { throw parse_error ("node is not a string"); }
 
 
 const json::number&
-json::node::to_number  (void) const
+json::node::as_number  (void) const
         { throw parse_error ("node is not a number"); }
 
 
 const json::boolean&
-json::node::to_boolean (void) const
+json::node::as_boolean (void) const
         { throw parse_error ("node is not a boolean"); }
 
 
@@ -311,17 +311,17 @@ json::node::operator!=(const node &rhs) const
 
 
 bool json::node::operator==(const char *rhs) const
-    { return to_string () == rhs; }
+    { return as_string () == rhs; }
 
 
 const json::node&
 json::node::operator[] (const std::string &key) const
-    { return to_object ()[key]; }
+    { return as_object ()[key]; }
 
 
 const json::node&
 json::node::operator[] (unsigned int idx) const
-    { return to_array()[idx]; }
+    { return as_array()[idx]; }
 
 /*
  * Object
