@@ -27,6 +27,7 @@
 #define nonnull  __attribute__ ((nonnull))
 
 #define mustuse  __attribute__ ((warn_unused_result))
+#define unused   __attribute__ ((unused))
 
 #define pure     __attribute__ ((pure))
 
