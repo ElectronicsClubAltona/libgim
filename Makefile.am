@@ -104,11 +104,20 @@ libutil_la_CXXFLAGS = $(AM_CXXFLAGS)
 libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB)
 
 bin_PROGRAMS = 		\
-    json-clean
+    json-clean		\
+    json-validate
 
 json_clean_SOURCES    = json/clean.cpp
 json_clean_DEPENDENCIES = $(top_builddir)/.libs/libutil.la
 json_clean_LDFLAGS    = 		\
+    $(BOOST_LDFLAGS)  			\
+    $(BOOST_FILESYSTEM_LIB) 		\
+    $(top_builddir)/.libs/libutil.a
+
+
+json_validate_SOURCES = json/validate.cpp
+json_validate_DEPENDENCIES = $(top_builddir)/.libs/libutil.la
+json_validate_LDFLAGS    = 		\
     $(BOOST_LDFLAGS)  			\
     $(BOOST_FILESYSTEM_LIB) 		\
     $(top_builddir)/.libs/libutil.a
