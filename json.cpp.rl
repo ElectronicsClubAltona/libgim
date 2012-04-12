@@ -87,9 +87,9 @@ struct parse_context {
         if (!nodestack.back ().key->is_string ())
             throw parse_error ("object keys must be strings");
 
-        json::object *object = (json::object *)nodestack.back ().root;
-        object->insert (nodestack.back ().key->to_string (),
-                        nodestack.back ().value);
+        json::object *object = (json::object*)nodestack.back ().root;
+        object->insert (nodestack.back ().key->as_string (),
+                        unique_ptr<json::node> (nodestack.back ().value));
         nodestack.back ().key   = NULL;
         nodestack.back ().value = NULL;
     }
@@ -99,7 +99,7 @@ struct parse_context {
         check      (nodestack.back ().value);
 
         json::array *array = (json::array *)nodestack.back ().root;
-        array->insert (nodestack.back ().value);
+        array->insert (unique_ptr<json::node> (nodestack.back ().value));
         nodestack.back ().value = NULL;
     }
 
@@ -327,10 +327,8 @@ json::node::operator[] (unsigned int idx) const
  * Object
  */
 
-json::object::~object () {
-    for (auto i = m_values.begin (); i != m_values.end (); ++i)
-        delete i->second;
-}
+json::object::~object ()
+    { ; }
 
 
 bool
@@ -350,8 +348,8 @@ json::object::operator ==(const json::object &rhs) const {
 
 
 void
-json::object::insert (const std::string &_key, json::node* value)
-        { m_values[_key] = value; }
+json::object::insert (const std::string &_key, unique_ptr<json::node> &&value)
+        { m_values[_key] = move(value); }
 
 
 const json::node&
@@ -390,15 +388,13 @@ json::object::write (std::ostream &os) const {
  * Array
  */
 
-json::array::~array() {
-    for (auto i = m_values.begin(); i != m_values.end (); ++i)
-        delete *i;
-}
+json::array::~array()
+    { ; }
 
 
 void
-json::array::insert (json::node *_value)
-        { m_values.push_back (_value); }
+json::array::insert (unique_ptr<json::node> &&_value)
+        { m_values.push_back (move (_value)); }
 
 
 bool

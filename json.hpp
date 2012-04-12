@@ -85,7 +85,7 @@ namespace json {
     /// Represents a JSON object, and contains its children.
     class object : public node {
         protected:
-            std::map<std::string, node*> m_values;
+            std::map<std::string, std::unique_ptr<node>> m_values;
 
         public:
             object () { ; }
@@ -97,7 +97,7 @@ namespace json {
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
 
-            virtual void insert (const std::string &_key, node *value);
+            virtual void insert (const std::string &_key, std::unique_ptr<node>&& value);
             virtual const node& operator[](const std::string &key) const;
 
             virtual std::ostream& write (std::ostream &os) const;
@@ -107,11 +107,11 @@ namespace json {
     /// Represents a JSON array, and contains its children.
     class array : public node {
         public:
-            typedef std::vector<node*>::iterator       array_iterator;
-            typedef std::vector<node*>::const_iterator const_array_iterator;
+            typedef std::vector<std::unique_ptr<node>>::iterator       array_iterator;
+            typedef std::vector<std::unique_ptr<node>>::const_iterator const_array_iterator;
 
         protected:
-            std::vector<node*> m_values;
+            std::vector<std::unique_ptr<node>> m_values;
 
         public:
             virtual ~array();
@@ -132,7 +132,7 @@ namespace json {
             virtual const_array_iterator begin (void) const   { return m_values.begin (); }
             virtual const_array_iterator end   (void) const   { return m_values.end (); }
 
-            virtual void insert (json::node *_value);
+            virtual void insert (std::unique_ptr<json::node> &&_value);
 
             virtual std::ostream& write (std::ostream &os) const;
     };
