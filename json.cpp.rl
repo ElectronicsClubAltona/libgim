@@ -234,46 +234,44 @@ struct parse_context {
  * Node
  */
 
-namespace json {
-    std::unique_ptr<json::node>
-    parse (const boost::filesystem::path &path)
-        { return parse ((const char *)slurp (path)); }
+std::unique_ptr<json::node>
+json::parse (const boost::filesystem::path &path)
+    { return parse ((const char *)slurp (path)); }
 
 
-    std::unique_ptr<json::node>
-    parse (const std::string &path)
-        { return parse (path.c_str (), path.c_str () + path.size ()); }
+std::unique_ptr<json::node>
+json::parse (const std::string &path)
+    { return parse (path.c_str (), path.c_str () + path.size ()); }
 
-    std::unique_ptr<json::node>
-    parse (const char *start,
-           const char *stop) {
-        bool __success = true;
-        json::node *__root = NULL;
-        size_t top = 0;
-        int cs;
-        deque <int> fsmstack;
-        deque <parse_context> nodestack;
+std::unique_ptr<json::node>
+json::parse (const char *start,
+             const char *stop) {
+    bool __success = true;
+    json::node *__root = NULL;
+    size_t top = 0;
+    int cs;
+    deque <int> fsmstack;
+    deque <parse_context> nodestack;
 
-        const char *p   = start,
-                   *pe  = stop,
-                   *eof = stop;
+    const char *p   = start,
+               *pe  = stop,
+               *eof = stop;
 
-        %%write init;
-        %%write exec;
+    %%write init;
+    %%write exec;
 
-        if (!__success) 
-            throw error ("unable to parse json");
+    if (!__success) 
+        throw error ("unable to parse json");
 
-        //__root->print (cout) << endl;
-        assert (*__root == *__root);
-        return std::unique_ptr<json::node> (__root);
-    }
-
-
-    std::unique_ptr<json::node>
-    parse (const char *start)
-        { return parse (start, start + strlen (start)); }
+    //__root->print (cout) << endl;
+    assert (*__root == *__root);
+    return std::unique_ptr<json::node> (__root);
 }
+
+
+std::unique_ptr<json::node>
+json::parse (const char *start)
+    { return parse (start, start + strlen (start)); }
 
 
 const json::object&
