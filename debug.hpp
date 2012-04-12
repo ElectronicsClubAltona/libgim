@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@blubinc.net>
+ * Copyright 2010-2012 Danny Robson <danny@blubinc.net>
  */
 
 #ifndef __DEBUG_HPP
@@ -27,6 +27,10 @@
 #include <stdexcept>
 #include <iostream>
 #include <sstream>
+
+#define CONCATENATE_DETAIL(x, y) x##y
+#define CONCATENATE(x, y) CONCATENATE_DETAIL(x, y)
+#define raii CONCATENATE(unique, __COUNTER__)
 
 #define trace {                                                 \
     std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << std::endl;  \
