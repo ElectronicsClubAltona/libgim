@@ -68,10 +68,48 @@ fd_ref::operator int (void) const
     { return fd; }
 
 
+
+//----------------------------------------------------------------------------
+int
+indenter::overflow (int ch) {
+    if (m_line_start && ch != '\n')
+        m_dest->sputn (m_indent.data (), sign_cast<std::streamsize> (m_indent.size ()));
+
+    m_line_start = ch == '\n';
+    return m_dest->sputc (ch);
+}
+
+
+indenter::indenter (std::streambuf* _dest, size_t _indent)
+    : m_dest       (_dest)
+    , m_line_start (true)
+    , m_indent     (_indent, ' ')
+    , m_owner      (NULL)
+{ ; }
+
+
+indenter::indenter (std::ostream& _dest, size_t _indent)
+    : m_dest       (_dest.rdbuf())
+    , m_line_start (true)
+    , m_indent     (_indent, ' ')
+    , m_owner      (&_dest)
+{
+    m_owner->rdbuf (this);
+}
+
+
+indenter::~indenter ()
+{
+    if (m_owner != NULL)
+        m_owner->rdbuf (m_dest);
+}
+
+
+//----------------------------------------------------------------------------
 #if defined(HAVE_MMAP)
 #include <sys/mman.h>
 
-//----------------------------------------------------------------------------
+
 mapped_file::mapped_file (const char *_path):
     m_fd (open (_path, O_RDONLY))
 { load_fd (); } 

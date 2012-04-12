@@ -21,6 +21,7 @@
 #define __UTIL_IO_HPP
 
 #include "annotations.hpp"
+#include "types.hpp"
 
 #include <cstdio>
 #include <cstdint>
@@ -52,6 +53,26 @@ namespace util {
 
             operator int (void) const;
     };
+
+
+    class indenter : public std::streambuf
+    {
+    protected:
+        std::streambuf* m_dest;
+        bool            m_line_start;
+        std::string     m_indent;
+        std::ostream*   m_owner;
+
+    protected:
+        virtual int overflow (int ch);
+
+    public:
+        explicit indenter (std::streambuf* _dest, size_t _indent = 4);
+        explicit indenter (std::ostream&   _dest, size_t _indent = 4);
+
+        virtual ~indenter ();
+    };
+
 
 
 #if defined(HAVE_MMAP)
