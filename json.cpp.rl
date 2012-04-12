@@ -274,6 +274,11 @@ json::parse (const char *start)
     { return parse (start, start + strlen (start)); }
 
 
+void
+json::write (const json::node &node, std::ostream &os)
+    { node.write (os); }
+
+
 const json::object&
 json::node::to_object  (void) const
         { throw error ("node is not an object"); }
