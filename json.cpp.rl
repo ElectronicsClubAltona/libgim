@@ -84,7 +84,7 @@ struct parse_context {
         assert (nodestack.back ().value);
 
         if (!nodestack.back ().key->is_string ())
-            throw error ("object keys must be strings");
+            throw parse_error ("object keys must be strings");
 
         json::object *object = (json::object *)nodestack.back ().root;
         object->insert (nodestack.back ().key->to_string (),
@@ -115,7 +115,7 @@ struct parse_context {
         assert (!nodestack.empty ());
         assert (!nodestack.back ().value);
 
-        throw error ("unable to parse boolean");
+        throw parse_error ("unable to parse boolean");
     }
 
     action new_number  {
@@ -125,7 +125,7 @@ struct parse_context {
         errno = 0;
         double value = strtod (nodestack.back ().start, NULL);
         if (errno)
-            throw error ("unable to parse number");
+            throw parse_error ("unable to parse number");
         nodestack.back ().value = new json::number (value);
     }
 
@@ -261,7 +261,7 @@ json::parse (const char *start,
     %%write exec;
 
     if (!__success) 
-        throw error ("unable to parse json");
+        throw parse_error ("unable to parse json");
 
     //__root->print (cout) << endl;
     assert (*__root == *__root);
@@ -281,27 +281,27 @@ json::write (const json::node &node, std::ostream &os)
 
 const json::object&
 json::node::to_object  (void) const
-        { throw error ("node is not an object"); }
+        { throw parse_error ("node is not an object"); }
 
 
 const json::array&
 json::node::to_array   (void) const
-        { throw error ("node is not an array"); }
+        { throw parse_error ("node is not an array"); }
 
 
 const json::string&
 json::node::to_string  (void) const
-        { throw error ("node is not a string"); }
+        { throw parse_error ("node is not a string"); }
 
 
 const json::number&
 json::node::to_number  (void) const
-        { throw error ("node is not a number"); }
+        { throw parse_error ("node is not a number"); }
 
 
 const json::boolean&
 json::node::to_boolean (void) const
-        { throw error ("node is not a boolean"); }
+        { throw parse_error ("node is not a boolean"); }
 
 
 bool
@@ -359,7 +359,7 @@ json::object::operator[](const std::string &key) const {
     if (value == m_values.end ()) {
         ostringstream ss;
         ss << "no key: " << key;
-        throw json::error (ss.str());
+        throw json::parse_error (ss.str());
     }
 
     return *value->second;

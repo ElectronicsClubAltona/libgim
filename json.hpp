@@ -222,6 +222,22 @@ namespace json {
                 std::runtime_error (_what)
             { ; }
     };
+
+    /// Base class for errors thrown during parsing
+    class parse_error : public error {
+        public:
+            parse_error (const std::string &_what):
+                error (_what)
+            { ; }
+    };
+
+    /// Base class for errors thrown during schema validation
+    class schema_error : public error {
+        public:
+            schema_error (const std::string &_what):
+                error (_what)
+            { ; }
+    };
 }
 
 
