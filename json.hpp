@@ -43,6 +43,8 @@ namespace json {
     extern std::unique_ptr<node> parse (const char *start);
     extern std::unique_ptr<node> parse (const std::string&);
 
+    extern void write (const json::node&, std::ostream&);
+
     /// Abstract base for all JSON values
     class node {
         public:
@@ -54,12 +56,12 @@ namespace json {
             virtual const number&  to_number  (void) const;
             virtual const boolean& to_boolean (void) const;
 
-            virtual bool    is_object  (void) const { return false; }
-            virtual bool    is_array   (void) const { return false; }
-            virtual bool    is_string  (void) const { return false; }
-            virtual bool    is_number  (void) const { return false; }
-            virtual bool    is_boolean (void) const { return false; } 
-            virtual bool    is_null    (void) const { return false; }
+            virtual bool is_object  (void) const { return false; }
+            virtual bool is_array   (void) const { return false; }
+            virtual bool is_string  (void) const { return false; }
+            virtual bool is_number  (void) const { return false; }
+            virtual bool is_boolean (void) const { return false; } 
+            virtual bool is_null    (void) const { return false; }
 
             virtual bool operator==(const node &rhs) const = 0;
             virtual bool operator!=(const node &rhs) const;
@@ -76,7 +78,7 @@ namespace json {
             virtual const node& operator[] (const std::string&) const;
             virtual const node& operator[] (unsigned int) const;
 
-            virtual std::ostream& print (std::ostream &os) const = 0;
+            virtual std::ostream& write (std::ostream &os) const = 0;
     };                                          
 
 
@@ -98,8 +100,7 @@ namespace json {
             virtual void insert (const std::string &_key, node *value);
             virtual const node& operator[](const std::string &key) const;
 
-            virtual std::ostream& print (std::ostream &os) const;
-
+            virtual std::ostream& write (std::ostream &os) const;
     };
 
 
@@ -133,7 +134,7 @@ namespace json {
 
             virtual void insert (json::node *_value);
 
-            virtual std::ostream& print (std::ostream &os) const;
+            virtual std::ostream& write (std::ostream &os) const;
     };
 
 
@@ -155,7 +156,7 @@ namespace json {
             operator const std::string&(void) const { return m_value; }
             const std::string& native (void) const  { return m_value; }
 
-            virtual std::ostream& print (std::ostream &os) const;
+            virtual std::ostream& write (std::ostream &os) const;
     };
 
 
@@ -177,7 +178,7 @@ namespace json {
             operator double(void) const { return m_value; }
             double native (void) const  { return m_value; }
 
-            virtual std::ostream& print (std::ostream &os) const;
+            virtual std::ostream& write (std::ostream &os) const;
     };
 
 
@@ -198,7 +199,7 @@ namespace json {
             operator bool (void) const { return m_value; }
             bool native (void) const { return m_value; }
 
-            virtual std::ostream& print (std::ostream &os) const;
+            virtual std::ostream& write (std::ostream &os) const;
     };
 
 
@@ -206,10 +207,11 @@ namespace json {
     class null : public node {
         public:
             virtual bool is_null (void) const { return  true; }
-            virtual std::ostream& print (std::ostream &os) const;
             virtual bool operator==(const null&) const { return true; }
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
+
+            virtual std::ostream& write (std::ostream &os) const;
     };
 
 

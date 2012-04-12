@@ -362,17 +362,20 @@ json::object::operator[](const std::string &key) const {
 
 
 std::ostream&
-json::object::print (std::ostream &os) const {
-    os << "{";
+json::object::write (std::ostream &os) const {
+    os << "{\n";
+    {
+        indenter raii(os);
 
-    for (auto i = m_values.begin (); i != m_values.end ();) {
-        os << '"' << i->first << "\" : " << *i->second;
+        for (auto i = m_values.begin (); i != m_values.end ();) {
+            os << '"' << i->first << "\" : " << *i->second;
 
-        if (++i != m_values.end ())
-            os << ",\n";
+            if (++i != m_values.end ())
+                os << ",\n";
+        }
     }
 
-    os << "}";
+    os << "\n}";
     return os;
 }
 
@@ -404,17 +407,19 @@ json::array::operator ==(const json::array &rhs) const {
 
 
 std::ostream&
-json::array::print (std::ostream &os) const {
-    os << "[ ";
+json::array::write (std::ostream &os) const {
+    os << "[\n"; 
+    {
+        indenter raii(os); 
 
-    for (auto i = m_values.begin (); i != m_values.end (); ++i) {
-        os << (*i)->print (os);
+        for (auto i = m_values.begin (); i != m_values.end (); ++i) {
+            (*i)->write (os);
 
-        if (i != m_values.end () - 1)
-            os << ", ";
+            if (i != m_values.end () - 1)
+                os << ",\n";
+        }
     }
-
-    os << "]";
+    os << "\n]";
     return os;
 }
 
@@ -424,7 +429,7 @@ json::array::print (std::ostream &os) const {
  */
 
 std::ostream&
-json::string::print (std::ostream &os) const {
+json::string::write (std::ostream &os) const {
     os << '"' << m_value << '"';
     return os;
 }
@@ -440,8 +445,8 @@ json::string::operator ==(const json::string &rhs) const
  */
 
 std::ostream&
-json::number::print (std::ostream &os) const {
-    os << '"' << m_value << '"';
+json::number::write (std::ostream &os) const {
+    os << m_value;
     return os;
 }
 
@@ -456,8 +461,8 @@ json::number::operator ==(const json::number &rhs) const
  */
 
 std::ostream&
-json::boolean::print (std::ostream &os) const {
-    os << '"' << (m_value ? "true" : "false") << '"';
+json::boolean::write (std::ostream &os) const {
+    os << (m_value ? "true" : "false");
     return os;
 }
 
@@ -471,11 +476,11 @@ json::boolean::operator ==(const json::boolean &rhs) const
  */ 
 
 std::ostream&
-json::null::print (std::ostream &os) const {
+json::null::write (std::ostream &os) const {
     os << "null";
     return os;
 }
 
 ostream&
 operator <<(ostream &os, const json::node &n)
-    { return n.print (os); }
+    { return n.write (os); }
