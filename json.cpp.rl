@@ -282,32 +282,32 @@ json::write (const json::node &node, std::ostream &os)
 
 const json::object&
 json::node::as_object  (void) const
-        { throw parse_error ("node is not an object"); }
+        { throw type_error ("node is not an object"); }
 
 
 const json::array&
 json::node::as_array   (void) const
-        { throw parse_error ("node is not an array"); }
+        { throw type_error ("node is not an array"); }
 
 
 const json::string&
 json::node::as_string  (void) const
-        { throw parse_error ("node is not a string"); }
+        { throw type_error ("node is not a string"); }
 
 
 const json::number&
 json::node::as_number  (void) const
-        { throw parse_error ("node is not a number"); }
+        { throw type_error ("node is not a number"); }
 
 
 const json::boolean&
 json::node::as_boolean (void) const
-        { throw parse_error ("node is not a boolean"); }
+        { throw type_error ("node is not a boolean"); }
 
 
 const json::null&
 json::node::as_null (void) const
-        { throw parse_error ("node is not a null"); }
+        { throw type_error ("node is not a null"); }
 
 
 bool
@@ -363,7 +363,7 @@ json::object::operator[](const std::string &key) const {
     if (value == m_values.end ()) {
         ostringstream ss;
         ss << "no key: " << key;
-        throw json::parse_error (ss.str());
+        throw json::error (ss.str());
     }
 
     return *value->second;

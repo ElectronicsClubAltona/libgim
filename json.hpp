@@ -226,6 +226,14 @@ namespace json {
             { ; }
     };
 
+    /// Base class for all type conversion errors
+    class type_error : public error {
+        public:
+            type_error (const std::string &_what):
+                error (_what)
+            { ; }
+    };
+
     /// Base class for errors thrown during parsing
     class parse_error : public error {
         public:
