@@ -75,7 +75,8 @@ struct sized_type : public bits_type<sizeof(T) * 8>
 
 
 template <typename T>
-std::string type_to_string (void);
+std::string
+type_to_string (void);
 
 
 namespace detail {
@@ -142,6 +143,7 @@ template <typename T, size_t N>
 size_t elems(T (&)[N])
     { return N; }
 
+
 template<class T, class...Args>
 std::unique_ptr<T> make_unique(Args&&... args) {
     return std::unique_ptr<T> (new T(std::forward<Args>(args)...));
@@ -161,6 +163,25 @@ struct fourcc {
 std::ostream& operator<< (std::ostream&, fourcc);
 
 
+template <typename T> struct is_dereferencable     : std::false_type { };
+template <typename T> struct is_dereferencable<T*> : std::true_type  { };
+template <typename T> struct is_dereferencable<std::unique_ptr<T>> : std::true_type { };
+template <typename T> struct is_dereferencable<std::shared_ptr<T>> : std::true_type { };
+template <typename T> struct is_dereferencable<std::weak_ptr<T>>   : std::true_type { };
+template <typename T> struct is_dereferencable<std::auto_ptr<T>>   : std::true_type { };
+
+
+template <typename T> struct dereferenced_type {
+    typedef typename std::enable_if<
+        std::is_pointer<T>::value,
+        std::remove_pointer<T>
+    >::type type;
+};
+
+template <typename T> struct dereferenced_type<std::unique_ptr<T>> { typedef T type; };
+template <typename T> struct dereferenced_type<std::shared_ptr<T>> { typedef T type; };
+template <typename T> struct dereferenced_type<std::weak_ptr<T>>   { typedef T type; };
+template <typename T> struct dereferenced_type<std::auto_ptr<T>>   { typedef T type; };
 
 
 #endif // __TYPES_HPP
