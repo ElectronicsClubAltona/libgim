@@ -28,6 +28,7 @@
 
 #include <boost/filesystem.hpp>
 
+#include "iterator.hpp"
 
 namespace json {
     class node;
@@ -107,9 +108,13 @@ namespace json {
 
     /// Represents a JSON array, and contains its children.
     class array : public node {
+        protected:
+            typedef std::vector<std::unique_ptr<node>>::iterator       pointer_array_iterator;
+            typedef std::vector<std::unique_ptr<node>>::const_iterator const_pointer_array_iterator;
+
         public:
-            typedef std::vector<std::unique_ptr<node>>::iterator       array_iterator;
-            typedef std::vector<std::unique_ptr<node>>::const_iterator const_array_iterator;
+            typedef referencing_iterator<pointer_array_iterator>       iterator;
+            typedef referencing_iterator<const_pointer_array_iterator> const_iterator;
 
         protected:
             std::vector<std::unique_ptr<node>> m_values;
@@ -130,8 +135,8 @@ namespace json {
             virtual const node& operator [](unsigned int idx) const
                 { return *m_values[idx]; }
 
-            virtual const_array_iterator begin (void) const   { return m_values.begin (); }
-            virtual const_array_iterator end   (void) const   { return m_values.end (); }
+            virtual const_iterator begin (void) const   { return const_iterator (m_values.begin ()); }
+            virtual const_iterator end   (void) const   { return const_iterator (m_values.end   ()); }
 
             virtual void insert (std::unique_ptr<json::node> &&_value);
 
