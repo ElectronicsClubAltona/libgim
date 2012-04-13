@@ -305,6 +305,11 @@ json::node::as_boolean (void) const
         { throw parse_error ("node is not a boolean"); }
 
 
+const json::null&
+json::node::as_null (void) const
+        { throw parse_error ("node is not a null"); }
+
+
 bool
 json::node::operator!=(const node &rhs) const
     { return !(*this == rhs); }

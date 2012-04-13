@@ -55,6 +55,7 @@ namespace json {
             virtual const string&  as_string  (void) const;
             virtual const number&  as_number  (void) const;
             virtual const boolean& as_boolean (void) const;
+            virtual const null&    as_null    (void) const;
 
             virtual bool is_object  (void) const { return false; }
             virtual bool is_array   (void) const { return false; }
@@ -206,10 +207,12 @@ namespace json {
     /// Represents a JSON null value.
     class null : public node {
         public:
-            virtual bool is_null (void) const { return  true; }
             virtual bool operator==(const null&) const { return true; }
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
+
+            virtual bool        is_null (void) const { return  true; }
+            virtual const null& as_null (void) const { return *this; }
 
             virtual std::ostream& write (std::ostream &os) const;
     };
