@@ -24,10 +24,16 @@
 // Don't use the name 'noreturn' as it interferes with other headers which
 // may use __attribute__((noreturn)) explicitly.
 #define terminal __attribute__ ((noreturn)) 
+
+#if GCC_VERSION >= 40601
 #define nonnull  __attribute__ ((nonnull))
+#endif
 
 #define mustuse  __attribute__ ((warn_unused_result))
+
+#if GCC_VERSION >= 40601
 #define unused   __attribute__ ((unused))
+#endif
 
 #define pure     __attribute__ ((pure))
 
