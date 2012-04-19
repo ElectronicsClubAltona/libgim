@@ -39,9 +39,9 @@
 using namespace std;
 using namespace util;
 
-/*
- * Parsing
- */
+//
+// Parsing
+//
 
 struct parse_context {
     parse_context(json::node *_root):
@@ -231,9 +231,9 @@ struct parse_context {
 }%%
     
 
-/*
- * Node
- */
+//
+// Node
+//
 
 std::unique_ptr<json::node>
 json::parse (const boost::filesystem::path &path)
@@ -280,6 +280,10 @@ json::write (const json::node &node, std::ostream &os)
     { node.write (os); }
 
 
+//
+// Type conversion
+//
+
 const json::object&
 json::node::as_object  (void) const
         { throw type_error ("node is not an object"); }
@@ -310,6 +314,10 @@ json::node::as_null (void) const
         { throw type_error ("node is not a null"); }
 
 
+//
+// Global operatoers
+//
+
 bool
 json::node::operator!=(const node &rhs) const
     { return !(*this == rhs); }
@@ -328,9 +336,10 @@ const json::node&
 json::node::operator[] (unsigned int idx) const
     { return as_array()[idx]; }
 
-/*
- * Object
- */
+
+//
+// Object
+//
 
 json::object::~object ()
     { ; }
@@ -389,9 +398,9 @@ json::object::write (std::ostream &os) const {
 }
 
 
-/*
- * Array
- */
+//
+// Array
+//
 
 json::array::~array()
     { ; }
@@ -431,9 +440,9 @@ json::array::write (std::ostream &os) const {
 }
 
 
-/*
- * String
- */
+//
+// String
+//
 
 std::ostream&
 json::string::write (std::ostream &os) const {
@@ -447,9 +456,9 @@ json::string::operator ==(const json::string &rhs) const
     { return rhs.m_value == m_value; }
 
 
-/*
- * Number
- */
+//
+// Number
+//
 
 std::ostream&
 json::number::write (std::ostream &os) const {
@@ -463,9 +472,9 @@ json::number::operator ==(const json::number &rhs) const
     { return almost_equal (rhs.m_value, m_value); }
 
 
-/*
- * Boolean
- */
+//
+// Boolean
+//
 
 std::ostream&
 json::boolean::write (std::ostream &os) const {
@@ -478,9 +487,9 @@ json::boolean::operator ==(const json::boolean &rhs) const
     { return rhs.m_value == m_value; }
 
 
-/*
- * Null
- */ 
+//
+// Null
+// 
 
 std::ostream&
 json::null::write (std::ostream &os) const {
