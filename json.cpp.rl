@@ -384,6 +384,31 @@ json::object::operator[](const std::string &key) const {
 }
 
 
+void
+json::object::clear (void)
+    { m_values.clear (); }
+
+
+void
+json::object::erase (const std::string &key) {
+    auto pos = m_values.find (key);
+    if (pos == m_values.end ())
+        throw json::error ("erasing invalid key");
+
+    m_values.erase (key);
+}
+
+
+json::object::const_iterator
+json::object::begin (void) const
+    { return m_values.begin (); }
+
+
+json::object::const_iterator
+json::object::end (void) const
+    { return m_values.end (); }
+
+
 std::ostream&
 json::object::write (std::ostream &os) const {
     os << "{\n";

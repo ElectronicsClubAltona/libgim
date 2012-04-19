@@ -87,7 +87,11 @@ namespace json {
     /// Represents a JSON object, and contains its children.
     class object : public node {
         protected:
-            std::map<std::string, std::unique_ptr<node>> m_values;
+            typedef std::map<std::string, std::unique_ptr<node>> value_store;
+            typedef value_store::iterator       iterator;
+            typedef value_store::const_iterator const_iterator;
+
+            value_store m_values;
 
         public:
             object () { ; }
@@ -99,8 +103,14 @@ namespace json {
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
 
-            virtual void insert (const std::string &_key, std::unique_ptr<node>&& value);
+            virtual void insert (const std::string &key, std::unique_ptr<node>&& value);
             virtual const node& operator[](const std::string &key) const;
+
+            virtual void clear (void);
+            virtual void erase (const std::string &key);
+
+            virtual const_iterator begin (void) const;
+            virtual const_iterator end   (void) const;
 
             virtual std::ostream& write (std::ostream &os) const;
     };
