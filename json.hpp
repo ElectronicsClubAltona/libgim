@@ -169,6 +169,8 @@ namespace json {
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
 
+            virtual size_t size (void) const { return m_value.size (); }
+
             operator const std::string&(void) const { return m_value; }
             const std::string& native (void) const  { return m_value; }
 
@@ -264,6 +266,13 @@ namespace json {
                 error (_what)
             { ; }
     };
+
+
+    template <typename T>
+    json::node&& to_json (const T&);
+
+    template <typename T>
+    T&& from_json (const json::node&);
 }
 
 
