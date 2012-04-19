@@ -11,7 +11,7 @@ using namespace std;
 
 
 int 
-main (int argc, char **argv) {
+main (int, char **) {
 
     uint16_t u16 = 0x1358;
     uint32_t u32 = 0x12345678;

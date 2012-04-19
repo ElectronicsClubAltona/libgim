@@ -12,7 +12,7 @@ using namespace std;
 
 
 int
-main (int argc, char **argv) {
+main (int, char **) {
     struct ip_test {
         const char     *str;
         const ipv4::ip  ip;

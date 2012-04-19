@@ -52,10 +52,10 @@ check_keep_value (void) {
 
     // Give every item a unique value
     for (unsigned int i = 0; i < uintpool.capacity (); ++i) {
-        uint64_t *uint = uintpool.acquire ();
-        *uint = i;
+        uint64_t *item = uintpool.acquire ();
+        *item = i;
 
-        uintvector.push_back(uint);
+        uintvector.push_back(item);
     }
     check (uintvector.size () == uintpool.capacity ());
 
@@ -79,7 +79,7 @@ check_keep_value (void) {
 
 
 int 
-main (int argc, char **argv) {
+main (int, char **) {
     check_single ();
     check_unique_ptr ();
     check_keep_value ();
