@@ -319,12 +319,17 @@ json::node::as_null (void) const
 //
 
 bool
-json::node::operator!=(const node &rhs) const
+json::node::operator!= (const node &rhs) const
     { return !(*this == rhs); }
 
 
-bool json::node::operator==(const char *rhs) const
-    { return as_string () == rhs; }
+bool json::node::operator==(const char *rhs) const {
+    try {
+        return as_string () == rhs;
+    } catch (const json::type_error&) {
+        return false;
+    }
+}
 
 
 const json::node&
