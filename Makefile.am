@@ -101,7 +101,7 @@ SUFFIXES = .cpp .cpp.rl
 lib_LTLIBRARIES  = libutil.la
 libutil_la_SOURCES  = $(UTIL_FILES)
 libutil_la_CXXFLAGS = $(AM_CXXFLAGS)
-libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB)
+libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB) $(BOOST_SYSTEM_LIB)
 
 bin_PROGRAMS = 		\
     json-clean		\
@@ -112,6 +112,15 @@ json_clean_DEPENDENCIES = $(top_builddir)/.libs/libutil.la
 json_clean_LDFLAGS    = 		\
     $(BOOST_LDFLAGS)  			\
     $(BOOST_FILESYSTEM_LIB) 		\
+    $(BOOST_SYSTEM_LIB)			\
+    $(top_builddir)/.libs/libutil.a
+
+json_schema_SOURCES = json/schema.cpp
+json_schema_DEPENDENCIES = $(top_builddir)/.libs/libutil.la
+json_schema_LDFLAGS    = 		\
+    $(BOOST_LDFLAGS)  			\
+    $(BOOST_FILESYSTEM_LIB) 		\
+    $(BOOST_SYSTEM_LIB)			\
     $(top_builddir)/.libs/libutil.a
 
 
@@ -120,4 +129,5 @@ json_validate_DEPENDENCIES = $(top_builddir)/.libs/libutil.la
 json_validate_LDFLAGS    = 		\
     $(BOOST_LDFLAGS)  			\
     $(BOOST_FILESYSTEM_LIB) 		\
+    $(BOOST_SYSTEM_LIB)			\
     $(top_builddir)/.libs/libutil.a
