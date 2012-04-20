@@ -161,8 +161,8 @@ namespace json {
             std::string m_value;
 
         public:
-            string (const std::string &_value): m_value (_value) { ; }
-            string (const char        *_value): m_value (_value) { ; }
+            explicit string (const std::string &_value): m_value (_value) { ; }
+            explicit string (const char        *_value): m_value (_value) { ; }
 
             virtual const string& as_string  (void) const { return *this; }
             virtual bool          is_string  (void) const { return  true; }
@@ -185,8 +185,8 @@ namespace json {
             double m_value;
 
         public:
-            number (double _value): m_value (_value) { ; }
-            number (int _value):    m_value (_value) { ; }
+            explicit number (double _value): m_value (_value) { ; }
+            explicit number (int _value):    m_value (_value) { ; }
 
             virtual const number& as_number  (void) const { return *this; }
             virtual bool          is_number  (void) const { return  true; }
@@ -207,7 +207,7 @@ namespace json {
             bool m_value;
 
         public:
-            boolean (bool _value): m_value (_value) { ; }
+            explicit boolean (bool _value): m_value (_value) { ; }
 
             virtual const boolean& as_boolean (void) const { return *this; }
             virtual bool           is_boolean (void) const { return  true; }

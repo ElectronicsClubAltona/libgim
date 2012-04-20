@@ -344,7 +344,7 @@ json::node::operator!= (const node &rhs) const
 
 bool json::node::operator==(const char *rhs) const {
     try {
-        return as_string () == rhs;
+        return as_string ().native () == rhs;
     } catch (const json::type_error&) {
         return false;
     }
