@@ -57,6 +57,18 @@ template double rootsquare (double, double);
 template double rootsquare (   int,    int);
 
 
+template <typename T>
+bool
+is_integer (const T &value) {
+    T integer;
+    return exactly_equal (std::modf (value, &integer),
+                          static_cast<T> (0.0));
+}
+
+template bool is_integer (const double&);
+template bool is_integer (const  float&);
+
+
 template <>
 bool
 almost_equal (const float &a, const float &b)

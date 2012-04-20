@@ -49,6 +49,12 @@ T
 round_pow2 (T value) pure;
 
 
+template <typename T>
+bool
+is_integer (const T& value) pure;
+
+
+
 /**
  * Check if two floating point numbers are approximately equal. Returns true
  * if the difference is less than a percentage of each individual value.
