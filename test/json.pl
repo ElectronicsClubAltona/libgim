@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-$COMMAND = "./json-check";
+$COMMAND = "../json-validate";
 
 @good   = <json/good/*>;
 @bad    = <json/bad/*>;

@@ -13,6 +13,7 @@ TEST_BIN = 		\
 	float		\
 	hton		\
 	ip 		\
+	json		\
 	maths 		\
 	matrix 		\
 	pool		\
@@ -21,7 +22,7 @@ TEST_BIN = 		\
 	version
 
 TESTS = $(TEST_BIN) json.pl
-check_PROGRAMS = $(TEST_BIN) json-check
+check_PROGRAMS = $(TEST_BIN)
 EXTRA_DIST = json.pl
 
 backtrace_CPPFLAGS = $(COMMON_CXXFLAGS)
@@ -40,8 +41,8 @@ hton_SOURCES	   = hton.cpp
 ip_LDADD      	   = $(builddir)/../libutil.la
 ip_SOURCES         = ip.cpp
 
-json_check_LDADD   = $(builddir)/../libutil.la $(BOOST_FILESYSTEM_LIB)
-json_check_SOURCES = json-check.cpp
+json_LDADD   	   = $(builddir)/../libutil.la
+json_SOURCES       = json.cpp
 
 maths_LDADD        = $(builddir)/../libutil.la
 maths_SOURCES      = maths.cpp
