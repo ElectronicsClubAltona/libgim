@@ -167,6 +167,7 @@ namespace json {
 
             virtual const string& as_string  (void) const { return *this; }
             virtual bool          is_string  (void) const { return  true; }
+            virtual bool operator==(const char   *rhs) const;
             virtual bool operator==(const string &rhs) const;
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }

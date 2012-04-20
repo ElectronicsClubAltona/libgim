@@ -511,6 +511,11 @@ json::string::operator ==(const json::string &rhs) const
     { return rhs.m_value == m_value; }
 
 
+bool
+json::string::operator ==(const char *rhs) const
+    { return rhs == m_value; }
+
+
 //
 // Number
 //
