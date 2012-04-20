@@ -88,13 +88,14 @@ namespace json {
     class object : public node {
         protected:
             typedef std::map<std::string, std::unique_ptr<node>> value_store;
+        public:
             typedef value_store::iterator       iterator;
             typedef value_store::const_iterator const_iterator;
 
+        protected:
             value_store m_values;
 
         public:
-            object () { ; }
             virtual ~object ();
 
             virtual const object& as_object  (void) const { return *this; }
