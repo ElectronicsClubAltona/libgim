@@ -105,7 +105,8 @@ libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB) $(BOOST_SYSTEM_LIB)
 
 bin_PROGRAMS = 		\
     json-clean		\
-    json-validate
+    json-validate	\
+    json-schema
 
 json_clean_SOURCES    = json/clean.cpp
 json_clean_DEPENDENCIES = $(top_builddir)/.libs/libutil.la
