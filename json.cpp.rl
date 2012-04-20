@@ -229,7 +229,26 @@ struct parse_context {
 
     write data;
 }%%
-    
+
+
+//
+// External support
+// 
+
+template <>
+bool
+is_integer (const json::number &node) {
+    return is_integer (node.native ());
+}
+
+
+template <>
+bool
+is_integer (const json::node &node) {
+    return node.is_number () &&
+           is_integer (node.as_number ());
+}
+
 
 //
 // Node
