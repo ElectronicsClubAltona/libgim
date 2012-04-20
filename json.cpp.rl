@@ -403,6 +403,12 @@ json::object::operator[](const std::string &key) const {
 }
 
 
+bool
+json::object::has (const std::string &key) const {
+    return m_values.find (key) != m_values.end ();
+}
+
+
 void
 json::object::clear (void)
     { m_values.clear (); }

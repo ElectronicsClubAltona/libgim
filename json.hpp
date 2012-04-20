@@ -104,8 +104,9 @@ namespace json {
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
 
-            virtual void insert (const std::string &key, std::unique_ptr<node>&& value);
+            virtual void        insert (const std::string &key, std::unique_ptr<node>&& value);
             virtual const node& operator[](const std::string &key) const;
+            virtual bool        has (const std::string&) const;
 
             virtual void clear (void);
             virtual void erase (const std::string &key);
