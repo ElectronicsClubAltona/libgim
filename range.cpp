@@ -18,12 +18,12 @@ using namespace util;
 
 template <typename T>
 range<T>::range (const json::node &node) {
-    if (node.is_string () && (node.as_string () == "UNIT" ||
-                              node.as_string () == "unit")) {
+    if (node.is_string () && (node == "UNIT" ||
+                              node == "unit")) {
         min = UNIT.min;
         max = UNIT.max;
-    } else if (node.is_string () && (node.as_string () == "UNLIMITED" ||
-                                     node.as_string () == "unlimited")) {
+    } else if (node.is_string () && (node == "UNLIMITED" ||
+                                     node == "unlimited")) {
         min = UNLIMITED.min;
         max = UNLIMITED.max;
     } else {
