@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011 Danny Robson <danny@blubinc.net>
+ * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_MATHS_VECTOR_HPP

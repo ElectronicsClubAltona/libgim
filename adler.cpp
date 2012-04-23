@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@blubinc.net>
+ * Copyright 2010 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "adler.hpp"
