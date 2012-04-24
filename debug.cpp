@@ -64,3 +64,9 @@ void
 unreachable (const std::string& what) {
     panic (" Unreachable code executed: " + what); 
 }
+
+
+void
+unusual (void) {
+    panic ("Unusual code path found.");
+}

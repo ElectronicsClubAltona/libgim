@@ -149,6 +149,7 @@ void panic (void)               terminal;
 void not_implemented (void) terminal;
 void unreachable     (void) terminal;
 void unreachable     (const std::string&) terminal;
+void unusual         (void);
 
 
 void breakpoint (void);
