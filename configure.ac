@@ -12,11 +12,11 @@ LT_INIT
 AM_PROG_CC_C_O
 
 AC_CONFIG_MACRO_DIR([m4])
-
-AM_INIT_AUTOMAKE 
-AM_INIT_AUTOMAKE([1.11 silent-rules])
-AM_SILENT_RULES
 AC_CONFIG_HEADERS([config.h])
+
+AM_INIT_AUTOMAKE([1.11 silent-rules])
+AM_SILENT_RULES([yes])
+
 
 AC_ARG_ENABLE([debugging],
               [AS_HELP_STRING([--enable-debugging],
