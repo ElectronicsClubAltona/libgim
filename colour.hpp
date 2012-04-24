@@ -37,9 +37,10 @@ namespace util {
 
     template <> colour& randomise (colour&);
     template <> colour& random    (void);
+
+    std::ostream& operator<< (std::ostream&, const util::colour&);
+    const json::node& operator>> (const json::node&, util::colour&);
 }
 
-std::ostream& operator<< (std::ostream&, const util::colour&);
-const json::node& operator>> (const json::node&, util::colour&);
 
 #endif

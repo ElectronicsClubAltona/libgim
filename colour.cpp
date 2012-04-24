@@ -35,7 +35,7 @@ colour::operator*= (double v) {
 
 
 const json::node&
-operator>> (const json::node &node, colour &c) {
+util::operator>> (const json::node &node, colour &c) {
     c.red   = node[0].as_number ();
     c.green = node[1].as_number ();
     c.blue  = node[2].as_number ();
@@ -68,7 +68,7 @@ namespace util {
 
 
 std::ostream&
-operator<< (std::ostream &os, const util::colour &c) {
+util::operator<< (std::ostream &os, const util::colour &c) {
     os << "colour(" << c.red << ", " << c.green << ", " << c.blue << ", " << c.alpha << ")";
     return os;
 }

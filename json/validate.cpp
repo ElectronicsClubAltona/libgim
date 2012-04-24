@@ -25,7 +25,7 @@ main (int argc, char ** argv) {
     try {
        json::parse (boost::filesystem::path (argv[ARG_PATH]));
     } catch (json::error &x) {
-        std::cerr << x.what () << std::endl;
+        std::cerr << "Error: " << x.what () << std::endl;
         return EXIT_FAILURE;
     }
 

@@ -193,19 +193,19 @@ vector::sanity (void) const {
 
 
 util::vector
-operator* (double a, const util::vector &b)
+util::operator* (double a, const util::vector &b)
     { return b * a; }
 
 
 std::ostream&
-operator<< (std::ostream &os, const util::vector &v) {
+util::operator<< (std::ostream &os, const util::vector &v) {
     os << "vec(" << v.x << ", " << v.y << ", " << v.z << ")";
     return os;
 }
 
 
 const json::node&
-operator>> (const json::node &node, util::vector &v) {
+util::operator>> (const json::node &node, util::vector &v) {
     v.x = node[0].as_number ();
     v.y = node[1].as_number ();
     v.z = node[2].as_number ();

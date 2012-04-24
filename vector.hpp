@@ -58,11 +58,14 @@ namespace util {
 
         void sanity (void) const;
     };
+
+    util::vector operator* (double, const util::vector&);
+
+    std::ostream& operator<< (std::ostream&, const util::vector&);
+    const json::node& operator>> (const json::node&, util::vector&);
+
 }
 
-util::vector operator* (double, const util::vector&);
 
-std::ostream& operator<< (std::ostream&, const util::vector&);
-const json::node& operator>> (const json::node&, util::vector&);
 #endif
 
