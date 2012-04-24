@@ -46,6 +46,9 @@ UTIL_FILES   =		\
     json.hpp		\
     lerp.cpp		\
     lerp.hpp		\
+    log.cpp		\
+    log.hpp		\
+    log.ipp		\
     maths.cpp		\
     maths.hpp		\
     maths/matrix.cpp	\
