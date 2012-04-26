@@ -93,8 +93,26 @@ util::log (level_t l, const std::string &format)
     { detail::log (l, boost::format (format)); }
 
 
+static level_t
+log_level (void) {
+    const char *env = getenv ("LOG_LEVEL");
+    if (!env)
+        return DEFAULT;
+
+    try {
+        return string_to_level (env);
+    } catch (...) {
+        return DEFAULT;
+    }
+}
+
+
 void
 util::detail::log (level_t level, boost::format &&format) {
+    static const level_t LOG_LEVEL = log_level ();
+    if (level > LOG_LEVEL)
+        return;
+
     static const boost::format LEVEL_FORMAT ("%s [%s] ");
     
     char time_string[strlen("YYYY-mm-dd HHMMh") + 1];
