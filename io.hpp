@@ -75,6 +75,18 @@ namespace util {
         virtual ~indenter ();
     };
 
+    
+    class scoped_cwd {
+        public:
+            scoped_cwd ();
+            ~scoped_cwd ();
+
+        protected:
+            scoped_malloc<char> m_original;
+    };
+
+
+    void set_cwd (const boost::filesystem::path &);
 
 
 #if defined(HAVE_MMAP)

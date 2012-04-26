@@ -131,6 +131,24 @@ indenter::~indenter ()
         m_owner->rdbuf (m_dest);
 }
 
+//----------------------------------------------------------------------------
+scoped_cwd::scoped_cwd ():
+    m_original (getcwd (nullptr, 0))
+{
+    if (!m_original)
+        throw errno_error ();
+}
+
+
+scoped_cwd::~scoped_cwd () {
+    set_cwd (m_original.data ());
+}
+
+
+void
+util::set_cwd (const boost::filesystem::path &path) {
+    chdir (path.string ().c_str ());
+}
 
 //----------------------------------------------------------------------------
 #if defined(HAVE_MMAP)
@@ -188,5 +206,4 @@ mapped_file::data (void) const {
     return m_data;
 }
 #endif
-
 
