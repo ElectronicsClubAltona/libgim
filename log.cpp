@@ -45,9 +45,9 @@ level_to_string (level_t l) {
         "ALERT",
         "CRITICAL",
         "ERROR",
-        "WARNING",
+        "WARN",
         "NOTICE",
-        "INFORMATIONAL",
+        "INFO",
         "DEBUG"
     };
 
