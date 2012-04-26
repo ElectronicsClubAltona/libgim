@@ -22,6 +22,7 @@
 
 #include "annotations.hpp"
 #include "types.hpp"
+#include "memory.hpp"
 
 #include <cstdio>
 #include <cstdint>
@@ -40,7 +41,7 @@ namespace util {
 
     /// Reads an entire file into memory. Caller frees the result. Guarantees a
     /// null trailing byte.
-    uint8_t *
+    std::unique_ptr<char []>
     slurp (const boost::filesystem::path&) mustuse;
 
     /// A simple RAII wrapper for file descriptors

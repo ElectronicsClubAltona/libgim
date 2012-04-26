@@ -255,8 +255,10 @@ is_integer (const json::node &node) {
 //
 
 std::unique_ptr<json::node>
-json::parse (const boost::filesystem::path &path)
-    { return parse ((const char *)slurp (path)); }
+json::parse (const boost::filesystem::path &path) {
+    auto data = slurp (path);
+    return parse (static_cast <const char *> (data.get ()));
+}
 
 
 std::unique_ptr<json::node>

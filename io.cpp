@@ -33,7 +33,7 @@ using namespace std;
 using namespace util;
 
 //----------------------------------------------------------------------------
-uint8_t *
+std::unique_ptr<char []>
 util::slurp (const boost::filesystem::path& path)  {
     fd_ref fd(open (path.string ().c_str (), O_RDONLY)); // | O_CLOEXEC));
     
@@ -47,12 +47,12 @@ util::slurp (const boost::filesystem::path& path)  {
 
     // Allocate a buffer, and keep reading until it's full. We provide a null
     // padding at the tail as a 'just in case' measure for string manipulation.
-    unique_ptr <uint8_t[]> buffer (new uint8_t[size + 1]);
+    unique_ptr <char []> buffer (new char[size + 1]);
     buffer.get()[size] = '\0';
 
     check_hard (size >= 0);
     size_t remaining = (size_t)size;
-    uint8_t *cursor = buffer.get();
+    char *cursor = buffer.get();
 
     while (remaining) {
         ssize_t consumed = read (fd, cursor, remaining);
@@ -65,7 +65,7 @@ util::slurp (const boost::filesystem::path& path)  {
         cursor    += consumed;
     }
 
-    return buffer.release();
+    return buffer;
 }
 
 //----------------------------------------------------------------------------
