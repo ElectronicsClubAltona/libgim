@@ -58,6 +58,8 @@ UTIL_FILES   =		\
     maths/vector.hpp  	\
     matrix.cpp		\
     matrix.hpp		\
+    memory.cpp		\
+    memory.hpp		\
     nocopy.hpp		\
     perlin.cpp		\
     perlin.hpp		\
