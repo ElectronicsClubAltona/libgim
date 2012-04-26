@@ -32,13 +32,15 @@ namespace util {
         ALERT,                  /** action must be taken immediately */
         CRITICAL,               /** critical conditions */
         ERROR,                  /** error conditions */
-        WARNING,                /** warning conditions */
+        WARNING,                
+        WARN = WARNING,         /** warning conditions */
         NOTICE,                 /** normal but significant condition */
         INFORMATIONAL,
         INFO = INFORMATIONAL,   /** informational messages */
         DEBUG,                  /** debug-level messages */
 
-        NUM_LEVELS
+        NUM_LEVELS,
+        DEFAULT = INFO
     };
 
     std::ostream&
