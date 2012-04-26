@@ -224,19 +224,10 @@ is_number_valid (const json::number &node,
             continue;
         }
 
-        const json::node &val = *i.second;
         if (!validator->second (node, schema))
             return false;
     }
 
-    return true;
-}
-
-
-bool
-is_number_valid (const json::node   &node,
-                 const json::object &schema) {
-    not_implemented ();
     return true;
 }
 
