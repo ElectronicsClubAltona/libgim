@@ -42,6 +42,7 @@ UTIL_FILES   =		\
     io.hpp		\
     ip.cpp		\
     ip.hpp		\
+    iterator.hpp	\
     json.cpp		\
     json.hpp		\
     lerp.cpp		\
@@ -83,6 +84,7 @@ UTIL_FILES   =		\
     types.cpp		\
     types.hpp		\
     vector.cpp		\
+    vector.hpp		\
     version.cpp		\
     version.hpp
 
