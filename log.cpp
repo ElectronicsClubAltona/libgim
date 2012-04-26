@@ -25,11 +25,14 @@
 
 #include <ctime>
 #include <cstring>
+#include <map>
+#include <string>
 
 #include <boost/format.hpp>
 
 using namespace util;
 using std::string;
+using std::map;
 
 void
 check_level (level_t l)
@@ -52,6 +55,29 @@ level_to_string (level_t l) {
     };
 
     return level_names[l];
+}
+
+
+level_t
+string_to_level (const string &name) {
+    static const map <string, level_t> NAME_LEVELS = {
+        { "EMERGENCY",     EMERGENCY },
+        { "ALERT",         ALERT },
+        { "CRITICAL",      CRITICAL },
+        { "ERROR",         ERROR },
+        { "WARNING",       WARNING },
+        { "WARN",          WARNING },
+        { "NOTICE",        NOTICE },
+        { "INFO",          INFO },
+        { "INFORMATIONAL", INFORMATIONAL },
+        { "DEBUG",         DEBUG }
+    };
+
+    auto pos = NAME_LEVELS.find (name);
+    if (pos == NAME_LEVELS.end ())
+        throw std::range_error (name);
+
+    return pos->second;
 }
 
 
