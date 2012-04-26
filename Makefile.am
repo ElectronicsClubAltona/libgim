@@ -114,7 +114,7 @@ bin_PROGRAMS = 		\
     json-schema
 
 json_clean_SOURCES    = json/clean.cpp
-json_clean_DEPENDENCIES = $(top_builddir)/.libs/libutil.la
+json_clean_DEPENDENCIES = $(top_builddir)/libutil.la
 json_clean_LDFLAGS    = 		\
     $(BOOST_LDFLAGS)  			\
     $(BOOST_FILESYSTEM_LIB) 		\
@@ -122,7 +122,7 @@ json_clean_LDFLAGS    = 		\
     $(top_builddir)/.libs/libutil.a
 
 json_schema_SOURCES = json/schema.cpp
-json_schema_DEPENDENCIES = $(top_builddir)/.libs/libutil.la
+json_schema_DEPENDENCIES = $(top_builddir)/libutil.la
 json_schema_LDFLAGS    = 		\
     $(BOOST_LDFLAGS)  			\
     $(BOOST_FILESYSTEM_LIB) 		\
@@ -131,7 +131,7 @@ json_schema_LDFLAGS    = 		\
 
 
 json_validate_SOURCES = json/validate.cpp
-json_validate_DEPENDENCIES = $(top_builddir)/.libs/libutil.la
+json_validate_DEPENDENCIES = $(top_builddir)/libutil.la
 json_validate_LDFLAGS    = 		\
     $(BOOST_LDFLAGS)  			\
     $(BOOST_FILESYSTEM_LIB) 		\
