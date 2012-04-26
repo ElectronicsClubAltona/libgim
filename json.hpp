@@ -276,11 +276,10 @@ namespace json {
 
     template <typename T>
     T&& from_json (const json::node&);
+
+    std::ostream&
+    operator <<(std::ostream &os, const json::node &n);
 }
-
-
-std::ostream&
-operator <<(std::ostream &os, const json::node &n);
 
 #endif
 

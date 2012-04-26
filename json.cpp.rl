@@ -560,5 +560,5 @@ json::null::write (std::ostream &os) const {
 }
 
 ostream&
-operator <<(ostream &os, const json::node &n)
+json::operator <<(ostream &os, const json::node &n)
     { return n.write (os); }
