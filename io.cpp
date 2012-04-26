@@ -35,7 +35,7 @@ using namespace util;
 //----------------------------------------------------------------------------
 std::unique_ptr<char []>
 util::slurp (const boost::filesystem::path& path)  {
-    fd_ref fd(open (path.string ().c_str (), O_RDONLY)); // | O_CLOEXEC));
+    fd_ref fd(path);
     
     // Calculate the total file size
     off_t size = lseek (fd, 0, SEEK_END);
@@ -74,6 +74,14 @@ fd_ref::fd_ref (int _fd):
 {
     if (fd < 0) 
         throw invalid_argument ("invalid file descriptor");
+}
+
+
+fd_ref::fd_ref (const boost::filesystem::path &path):
+    fd (open (path.string ().c_str (), O_RDONLY))
+{
+    if (fd < 0)
+        throw path_error (path);
 }
 
 

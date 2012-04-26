@@ -49,7 +49,8 @@ namespace util {
         public:
             int fd;
 
-            fd_ref  (int _fd);
+            explicit fd_ref  (int _fd);
+            explicit fd_ref  (const boost::filesystem::path &);
             ~fd_ref ();
 
             operator int (void) const;
@@ -100,6 +101,13 @@ namespace util {
             size_t         size (void) const;
     };
 #endif
+
+    class path_error : public std::runtime_error {
+        public:
+            path_error (const boost::filesystem::path &path):
+                runtime_error ("Invalid path " + path.string ())
+            { ; }
+    };
 }
 
 #endif
