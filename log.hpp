@@ -23,6 +23,11 @@
 #include <iostream>
 #include <string>
 
+// Windows.h or one of its friends defines a macro 'ERROR'. Screw Microsoft.
+#ifdef ERROR
+#undef ERROR
+#endif
+
 namespace util {
     // rfc5424 log levels. It is assumed they are contiguous to simplify array
     // indexing in logging code.
