@@ -206,9 +206,28 @@ util::operator<< (std::ostream &os, const util::vector &v) {
 
 const json::node&
 util::operator>> (const json::node &node, util::vector &v) {
-    v.x = node[0].as_number ();
-    v.y = node[1].as_number ();
-    v.z = node[2].as_number ();
+    const json::array &array = node.as_array ();
 
-    return node;
+    switch (array.size ()) {
+        case 1:
+            v.x = array[0].as_number ();
+            v.y = std::numeric_limits<double>::quiet_NaN ();
+            v.z = std::numeric_limits<double>::quiet_NaN ();
+            return node;
+
+        case 2: v.y = array[1].as_number ();
+            v.x = array[0].as_number ();
+            v.y = array[1].as_number ();
+            v.z = std::numeric_limits<double>::quiet_NaN ();
+            return node;
+
+        case 3: v.z = array[2].as_number ();
+            v.x = array[0].as_number ();
+            v.y = array[1].as_number ();
+            v.z = array[2].as_number ();
+            return node;
+
+        default:
+            throw std::runtime_error ("Invalid dimensionality for json-to-vector");
+    }
 }
