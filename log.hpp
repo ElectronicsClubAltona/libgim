@@ -56,6 +56,7 @@ namespace util {
     #define LOG_CRITICAL(...)   do { log(util::CRITICAL,  ##__VA_ARGS__); } while (0)
     #define LOG_ERROR(...)      do { log(util::ERROR,     ##__VA_ARGS__); } while (0)
     #define LOG_WARNING(...)    do { log(util::WARNING,   ##__VA_ARGS__); } while (0)
+    #define LOG_WARN(...)       do { log(util::WARN,      ##__VA_ARGS__); } while (0)
     #define LOG_NOTICE(...)     do { log(util::NOTICE,    ##__VA_ARGS__); } while (0)
     #define LOG_INFO(...)       do { log(util::INFO,      ##__VA_ARGS__); } while (0)
     #define LOG_DEBUG(...)      do { log(util::DEBUG,     ##__VA_ARGS__); } while (0)
