@@ -1,11 +1,11 @@
 AC_INIT([libgim], [0.1.0], [danny@nerdcruft.net])
+## Explicitly set an empty CXXFLAGS if not present to prevent AC_PROG_CXX from
+## generating a default -O2. This allows us to manually select -O0 when
+## debugging is enabled.
+: ${CXXFLAGS=""}
 
 AC_CANONICAL_HOST
 
-## We remove CXXFLAGS as autotools inserts them /AFTER/ our own CXXFLAGS,
-## thus overriding any variables that both set (specifically we're concerned
-## about optimisation flags).
-CXXFLAGS="-g"
 AC_PROG_CXX
 AC_LANG([C++])
 LT_INIT
