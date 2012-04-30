@@ -63,6 +63,7 @@ UTIL_FILES   =		\
     nocopy.hpp		\
     perlin.cpp		\
     perlin.hpp		\
+    platform.hpp	\
     point.cpp		\
     point.hpp		\
     pool.cpp		\
