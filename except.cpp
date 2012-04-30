@@ -48,7 +48,7 @@ errno_error::errno_error ():
 
 /// Throw an errno_error exception if errno currently signals an error.
 void
-errno_error::try_code ()
+errno_error::try_code (void)
     { try_code (errno); }
 
 
@@ -57,4 +57,16 @@ void
 errno_error::try_code(int code) {
     if (code != 0)
         throw errno_error(code);
+}
+
+
+void
+errno_error::throw_code (void)
+    { throw_code (errno); }
+
+
+void
+errno_error::throw_code (int code) {
+    check_hard (code != 0);
+    throw errno_error (code);
 }

@@ -49,6 +49,9 @@ class errno_error : public std::runtime_error {
 
         static void try_code (void);
         static void try_code (int code);
+
+        static void throw_code (void);
+        static void throw_code (int code);
 };
 
 
