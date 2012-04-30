@@ -26,6 +26,8 @@ UTIL_FILES   =		\
     endian.hpp		\
     except.cpp  	\
     except.hpp  	\
+    exe.cpp		\
+    exe.hpp		\
     extent.cpp		\
     extent.hpp		\
     fixed.cpp		\
