@@ -70,3 +70,17 @@ void
 unusual (void) {
     panic ("Unusual code path found.");
 }
+
+
+#include <fenv.h>
+
+void
+enable_fpe (void) {
+    feenableexcept (FE_DIVBYZERO | FE_INVALID);
+}
+
+
+void
+disable_fpe (void) {
+    feenableexcept (0);
+}

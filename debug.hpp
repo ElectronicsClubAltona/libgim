@@ -154,4 +154,8 @@ void unusual         (void);
 
 void breakpoint (void);
 
+
+void enable_fpe (void);
+void disable_fpe (void);
+
 #endif // __DEBUG_HPP
