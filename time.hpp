@@ -24,6 +24,7 @@
 
 namespace util {
     uint64_t nanoseconds (void);
+    void     sleep (uint64_t ns);
 }
 
 #endif // __UTIL_TIME_HPP

@@ -20,11 +20,12 @@
 #include "time.hpp"
 
 #include "debug.hpp"
+#include "platform.hpp"
 
 
 using namespace util;
 
-#ifdef __WIN32
+#ifdef PLATFORM_WIN32
 
 #include <windows.h>
 
@@ -50,4 +51,21 @@ util::nanoseconds (void) {
 
     return static_cast<uint64_t> (t.tv_sec) * 1000000000ULL + static_cast<uint64_t> (t.tv_nsec);
 }
+
+
+void
+util::sleep (uint64_t ns) {
+    struct timespec req, rem;
+
+    req.tv_sec  = ns / 1000000000UL;
+    req.tv_nsec = ns % 1000000000UL;
+
+    while (nanosleep (&req, &rem)) {
+        req = rem;
+    }
+}
+
 #endif
+
+
+
