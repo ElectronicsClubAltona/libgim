@@ -87,6 +87,12 @@ typename std::enable_if<
 almost_equal (const Ta &a, const Tb &b)
     { return a == b; }
 
+
+template <typename T>
+bool
+almost_zero (T a)
+    { return almost_equal (a, 0); }
+
 const double PI = 3.141592653589793238462643;
 
 inline double
