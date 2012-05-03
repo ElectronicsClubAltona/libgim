@@ -90,7 +90,7 @@ almost_equal (const Ta &a, const Tb &b)
 const double PI = 3.141592653589793238462643;
 
 inline double
-to_degreees (double radians) {
+to_degrees (double radians) {
     return radians * 180 / PI;
 }
 
