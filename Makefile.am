@@ -71,6 +71,7 @@ UTIL_FILES   =		\
     pool.cpp		\
     pool.hpp		\
     preprocessor.hpp	\
+    raii.hpp		\
     random.cpp		\
     random.hpp		\
     range.cpp		\
