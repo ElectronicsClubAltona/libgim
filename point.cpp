@@ -29,9 +29,15 @@ using namespace util;
 
 double
 point::distance (const point &other) const {
-    return sqrt ((x - other.x) * (x - other.x) +
-                 (y - other.y) * (y - other.y) +
-                 (z - other.z) * (z - other.z));
+    return sqrt (distance2 (other));
+}
+
+
+double
+point::distance2 (const point &other) const {
+    return (x - other.x) * (x - other.x) +
+           (y - other.y) * (y - other.y) +
+           (z - other.z) * (z - other.z);
 }
 
 

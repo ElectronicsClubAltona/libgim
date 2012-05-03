@@ -30,6 +30,7 @@ namespace util {
         double x, y, z;
 
         double distance  (const point &) const;
+        double distance2 (const point &) const;
         double manhattan (const point &) const;
 
         point& operator*= (double);
