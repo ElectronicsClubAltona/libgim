@@ -46,7 +46,7 @@ namespace util {
 
         bool includes (const point&) const; // inclusive of borders
         bool contains (const point&) const; // exclusive of borders
-        bool overlaps (const region<T>&) const;
+        bool overlaps (const region<T>&) const; // exclusive of borders
 
         bool operator ==(const region<T>& rhs) const;
         bool operator !=(const region<T>& rhs) const
