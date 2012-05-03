@@ -56,6 +56,8 @@ namespace util {
         static vector spherical_to_cartesian (const vector &);
         static vector cartesian_to_spherical (const vector &);
 
+        bool is_zero (void) const;
+
         void sanity (void) const;
     };
 

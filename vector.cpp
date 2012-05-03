@@ -184,6 +184,14 @@ vector::cartesian_to_spherical (const vector &c) {
 }
 
 
+bool
+vector::is_zero (void) const {
+    return almost_equal (x, 0.0) &&
+           almost_equal (y, 0.0) &&
+           almost_equal (z, 0.0);
+}
+
+
 void
 vector::sanity (void) const {
     check_soft (!std::isnan (x));
