@@ -119,7 +119,7 @@ if test "x$ac_cv_debugging" = "xyes"; then
         ])
     fi
 
-    COMMON_CFLAGS="$COMMON_CFLAGS -D_FORTIFY_SOURCE=2"
+    COMMON_CFLAGS="$COMMON_CFLAGS -D_FORTIFY_SOURCE=2 -DENABLE_DEBUGGING=1"
 else
     COMMON_CFLAGS="$COMMON_CFLAGS -O2"
 fi
