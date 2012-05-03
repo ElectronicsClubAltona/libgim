@@ -145,9 +145,7 @@ max (const T &a , const T &b , const Args &...args )
     { return max ( b > a ? b : a, args...); }
 
 
-inline double sign (double x) { return x >= 0 ? 1.0 : -1.0; }
-inline float  sign (float  x) { return x >= 0 ? 1.0 : -1.0; }
-inline int    sign (int    x) { return x >= 0 ? 1   : -1  ; }
-
+template <typename T>
+int sign (T val);
 
 #endif // __MATHS_HPP

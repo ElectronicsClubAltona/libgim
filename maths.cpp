@@ -109,3 +109,28 @@ template uint8_t  round_pow2 (uint8_t);
 template uint16_t round_pow2 (uint16_t);
 template uint32_t round_pow2 (uint32_t);
 template uint64_t round_pow2 (uint64_t);
+
+
+template <typename T>
+int
+sign (T val) {
+    return val >= 0 ? 1 : -1;
+}
+
+
+template <>
+int
+sign (float val) {
+    return copysign (1.0, val);
+}
+
+
+template <>
+int
+sign (double val) {
+    return copysign (1.0, val);
+}
+
+
+template int sign (int);
+
