@@ -115,11 +115,11 @@ util::detail::log (level_t level, boost::format &&format) {
 
     static const boost::format LEVEL_FORMAT ("%s [%s] ");
     
-    char time_string[strlen("YYYY-mm-dd HHMMh") + 1];
+    char time_string[strlen("YYYY-mm-dd HHMMhSS") + 1];
     time_t unix_time = time (nullptr);
     if (0 == strftime (time_string,
                        elems (time_string),
-                       "%Y-%m-%d %H%Mh",
+                       "%Y-%m-%d %H%Mh%S",
                        localtime (&unix_time))) {
         unusual ();
         return;
