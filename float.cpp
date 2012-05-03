@@ -80,10 +80,14 @@ template <unsigned int E, unsigned int S>
 bool
 ieee_float<E, S>::almost_equal (floating_t a,
                                 floating_t b) { 
-    static const double epsilon = 0.001;
+    static const floating_t epsilon = 0.001;
+    const floating_t diff = fabs (a - b);
 
-    return fabs(a - b) <= epsilon * std::fabs (a) ||
-           fabs(a - b) <= epsilon * std::fabs (b);
+    // * Use an exact equality first so that infinities are not indirectly compared. This would generate NaNs in the diff.
+    // * Do not use gte or lte. This stops an infinite from making infinities on both sides of the inequality.
+    return exactly_equal (a, b)           ||
+           diff < epsilon * std::fabs (a) ||
+           diff < epsilon * std::fabs (b);
 }
 
 
