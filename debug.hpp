@@ -28,6 +28,14 @@
 #include <iostream>
 #include <sstream>
 
+#ifdef ENABLE_DEBUGGING
+#define DEBUG_ONLY(X)   \
+do {                    \
+    X;                  \
+} while (0)
+#else
+#define DEBUG_ONLY(X)
+#endif
 
 #define trace {                                                 \
     std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << std::endl;  \
