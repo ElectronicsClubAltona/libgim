@@ -28,9 +28,6 @@
 #include <iostream>
 #include <sstream>
 
-#define CONCATENATE_DETAIL(x, y) x##y
-#define CONCATENATE(x, y) CONCATENATE_DETAIL(x, y)
-#define raii CONCATENATE(unique, __COUNTER__)
 
 #define trace {                                                 \
     std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << std::endl;  \

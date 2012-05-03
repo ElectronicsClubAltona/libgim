@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Danny Robson <danny@blubinc.net>
+ * Copyright 2012 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __PREPROCESSOR_HPP
-#define __PREPROCESSOR_HPP
+#ifndef __UTIL_PREPROCESSOR_HPP
+#define __UTIL_PREPROCESSOR_HPP
 
 #define CONCATENATE_DETAIL(x, y) x##y
 #define CONCATENATE(x, y) CONCATENATE_DETAIL(x, y)

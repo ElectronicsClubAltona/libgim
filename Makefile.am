@@ -70,6 +70,7 @@ UTIL_FILES   =		\
     point.hpp		\
     pool.cpp		\
     pool.hpp		\
+    preprocessor.hpp	\
     random.cpp		\
     random.hpp		\
     range.cpp		\
