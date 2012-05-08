@@ -23,6 +23,7 @@
 #include "debug.hpp"
 #include "types.hpp"
 
+#include <array>
 #include <ctime>
 #include <cstring>
 #include <map>
@@ -43,7 +44,7 @@ const string&
 level_to_string (level_t l) {
     check_level (l);
 
-    static const std::string level_names[] = {
+    static const std::array <std::string, NUM_LEVELS> LEVEL_NAMES ({{
         "EMERGENCY",
         "ALERT",
         "CRITICAL",
@@ -52,9 +53,9 @@ level_to_string (level_t l) {
         "NOTICE",
         "INFO",
         "DEBUG"
-    };
+    }});
 
-    return level_names[l];
+    return LEVEL_NAMES[l];
 }
 
 
