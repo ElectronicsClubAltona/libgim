@@ -22,7 +22,7 @@
 
 #include "platform.hpp"
 
-#ifdef PLATFORM_LINUX
+#if defined(PLATFORM_LINUX)
 
 #include "types.hpp"
 #include "except.hpp"
@@ -57,6 +57,37 @@ retry:
         return boost::filesystem::path (resolved.data (), resolved.data () + written);
 }
 
+#elif defined(PLATFORM_WIN32)
+
+#include "except.hpp"
+
+#include <windows.h>
+
+boost::filesystem::path
+util::image_path (void) {
+        std::vector<char> resolved (256);
+
+retry:
+        const auto written = GetModuleFileName (nullptr, resolved.data (), resolved.size ());
+        if (written == 0)
+            win32_error::throw_code ();
+
+        if (written == resolved.size ()) {
+            resolved.resize (resolved.size () * 2);
+            goto retry;
+        }
+
+        return boost::filesystem::path (resolved.data (), resolved.data () + written);
+}
+
 #else
     #error "Unknown platform"
+
+// Mac OS X: _NSGetExecutablePath() (man 3 dyld)
+// Linux: readlink /proc/self/exe
+// Solaris: getexecname()
+// FreeBSD: sysctl CTL_KERN KERN_PROC KERN_PROC_PATHNAME -1
+// BSD with procfs: readlink /proc/curproc/file
+// Windows: GetModuleFileName() with hModule = NULL
+
 #endif
