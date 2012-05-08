@@ -88,10 +88,27 @@ almost_equal (const Ta &a, const Tb &b)
     { return a == b; }
 
 
+// Useful for explictly ignore equality warnings
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+template <typename T>
+bool
+exactly_equal (const T &a, const T &b) 
+    { return a == b; }
+#pragma GCC diagnostic pop
+
+
 template <typename T>
 bool
 almost_zero (T a)
     { return almost_equal (a, 0); }
+
+
+template <typename T>
+bool
+exactly_zero (T a)
+    { return exactly_equal (a, static_cast<T> (0)); }
+
 
 const double PI = 3.141592653589793238462643;
 
@@ -115,15 +132,6 @@ template <>
 bool
 almost_equal (const double &a, const double &b);
 
-
-// Useful for explictly ignore equality warnings
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
-template <typename T>
-bool
-exactly_equal (const T &a, const T &b) 
-    { return a == b; }
-#pragma GCC diagnostic pop
 
 /// Variadic minimum
 template <typename T>
