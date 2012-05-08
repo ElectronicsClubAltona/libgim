@@ -37,6 +37,14 @@ util::nanoseconds (void) {
 
     return ((double)count.QuadPart / freq.QuadPart) * 1000000000UL;
 }
+
+
+void
+util::sleep (uint64_t ns) {
+    static const uint64_t ns_in_ms = 1000000;
+    Sleep (ns / ns_in_ms);
+}
+
 #else
 
 #include <ctime>
