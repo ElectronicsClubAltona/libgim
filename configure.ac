@@ -96,6 +96,18 @@ AC_TYPE_SSIZE_T
 ## platform features
 COMMON_CFLAGS="$COMMON_CFLAGS -D_GNU_SOURCE"
 
+case $host_os in
+    mingw32)
+        ;;
+
+    linux-gnu)
+        ;;
+
+    *)
+        AC_ERROR([Unknown host_os])
+        ;;
+esac
+
 AC_FUNC_MMAP
 
 AC_CHECK_HEADER([execinfo.h], [break])
@@ -105,7 +117,7 @@ AC_SEARCH_LIBS([clock_gettime], [rt])
 if [[ "x$ac_cv_search_clock_gettime" == "x-*" ]]; then
     COMMON_LDFLAGS="$COMMON_LDFLAGS $ac_cv_search_clock_gettime"
 fi
-    
+
 
 ##
 ## Debug features
