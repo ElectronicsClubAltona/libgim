@@ -28,6 +28,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <boost/filesystem.hpp>
 
 
 using namespace std;
@@ -138,21 +139,21 @@ indenter::~indenter ()
 
 //----------------------------------------------------------------------------
 scoped_cwd::scoped_cwd ():
-    m_original (getcwd (nullptr, 0))
-{
-    if (!m_original)
-        throw errno_error ();
-}
+    m_original(boost::filesystem::canonical (getcwd (nullptr, 0)))
+{ ; }
 
 
 scoped_cwd::~scoped_cwd () {
-    set_cwd (m_original.data ());
+    set_cwd (m_original);
 }
 
 
 void
 util::set_cwd (const boost::filesystem::path &path) {
-    chdir (path.string ().c_str ());
+    check (path.string ().size () > 0);
+
+    if (chdir (path.string ().c_str ()) != 0)
+        throw errno_error ();
 }
 
 //----------------------------------------------------------------------------

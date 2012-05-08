@@ -82,7 +82,7 @@ namespace util {
             ~scoped_cwd ();
 
         protected:
-            scoped_malloc<char> m_original;
+            boost::filesystem::path m_original;
     };
 
 
