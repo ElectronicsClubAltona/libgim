@@ -21,6 +21,8 @@
 #ifndef __EXCEPT_HPP
 #define __EXCEPT_HPP
 
+#include "platform.hpp"
+
 #include <stdexcept>
 
 
@@ -53,6 +55,22 @@ class errno_error : public std::runtime_error {
         static void throw_code (void);
         static void throw_code (int code);
 };
+
+
+#if defined(PLATFORM_WIN32)
+#include <windows.h>
+
+class win32_error : public std::runtime_error {
+    public:
+        DWORD id;
+
+        win32_error (DWORD _id);
+        win32_error ();
+
+        static void try_code (void);
+        static void throw_code (void);
+};
+#endif
 
 
 #endif 

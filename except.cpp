@@ -19,6 +19,7 @@
 
 #include "except.hpp"
 #include "debug.hpp"
+#include "platform.hpp"
 
 #include <cstring>
 #include <cerrno>
@@ -70,3 +71,40 @@ errno_error::throw_code (int code) {
     check_hard (code != 0);
     throw errno_error (code);
 }
+
+
+#if defined(PLATFORM_WIN32)
+win32_error::win32_error (DWORD _id):
+    runtime_error ("Win32 error"),
+    id (_id)
+{
+    check_soft (id != ERROR_SUCCESS);
+}
+
+
+win32_error::win32_error (void):
+    runtime_error ("Win32 error"),
+    id (GetLastError ())
+{
+    check_soft (id != ERROR_SUCCESS);
+}
+
+
+void
+win32_error::try_code (void) {
+    const auto id = GetLastError ();
+    if (id == ERROR_SUCCESS)
+        return;
+
+    throw win32_error (id);
+}
+
+
+void
+win32_error::throw_code (void) {
+    const auto id = GetLastError ();
+    check (id != ERROR_SUCCESS);
+    throw win32_error (id);
+}
+
+#endif
