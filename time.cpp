@@ -21,6 +21,7 @@
 
 #include "debug.hpp"
 #include "platform.hpp"
+#include "types.hpp"
 
 
 using namespace util;
@@ -65,8 +66,8 @@ void
 util::sleep (uint64_t ns) {
     struct timespec req, rem;
 
-    req.tv_sec  = ns / 1000000000UL;
-    req.tv_nsec = ns % 1000000000UL;
+    req.tv_sec  = sign_cast<time_t> (ns / 1000000000UL);
+    req.tv_nsec = sign_cast<long>   (ns % 1000000000UL);
 
     while (nanosleep (&req, &rem)) {
         req = rem;
