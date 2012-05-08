@@ -19,6 +19,7 @@
 
 #include "debug.hpp"
 #include "backtrace.hpp"
+#include "log.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -72,6 +73,7 @@ unusual (void) {
 }
 
 
+#if defined(PLATFORM_LINUX)
 #include <fenv.h>
 
 void
@@ -84,3 +86,24 @@ void
 disable_fpe (void) {
     feenableexcept (0);
 }
+#else
+// contropfp is not defined supposedly due to a regression in GCC include behaviours.
+
+void
+enable_fpe (void) {
+    LOG_WARN ("Non-Linux exception code is broken under current GCC.");
+//    _clearfp();
+//    unsigned int ignored;
+//    _controlfp_s (&ignored, _MCW_EM, _MCW_EM);
+}
+
+
+void
+disable_fpe (void) {
+    LOG_WARN ("Non-Linux exception code is broken under current GCC.");
+//    _clearfp();
+//    unsigned int ignored;
+//    _controlfp_s (&ignored, 0, _MCW_EM);
+}
+
+#endif
