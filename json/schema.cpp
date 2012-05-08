@@ -371,8 +371,8 @@ is_items_valid (const json::array &node,
 
 
 bool
-is_additional_items_valid (const json::array &node,
-                           const json::node  &constraint) {
+is_additional_items_valid (const json::array &,
+                           const json::node  &) {
     not_implemented ();
     return false;
 }
