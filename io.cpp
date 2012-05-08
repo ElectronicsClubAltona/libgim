@@ -21,6 +21,7 @@
 
 #include "debug.hpp"
 #include "except.hpp"
+#include "platform.hpp"
 
 #include <cstdio>
 #include <sys/types.h>
@@ -58,7 +59,7 @@ util::slurp (const boost::filesystem::path& path)  {
         ssize_t consumed = read (fd, cursor, remaining);
         if (consumed == -1)
             throw errno_error();
-        check_hard (        consumed >= 0);
+        check_hard (        consumed >  0);
         check_hard ((size_t)consumed <= remaining);
 
         remaining -= (size_t)consumed;
@@ -78,7 +79,11 @@ fd_ref::fd_ref (int _fd):
 
 
 fd_ref::fd_ref (const boost::filesystem::path &path):
+#ifdef PLATFORM_WIN32
+    fd (open (path.string ().c_str (), O_RDONLY | O_BINARY))
+#else
     fd (open (path.string ().c_str (), O_RDONLY))
+#endif
 {
     if (fd < 0)
         throw path_error (path);
