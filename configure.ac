@@ -72,7 +72,6 @@ AS_CXX_COMPILER_FLAG([-fno-nonansi-builtins],
                  [COMMON_CFLAGS="$COMMON_CFLAGS -fno-nonansi-builtins"])
 AS_CXX_COMPILER_FLAG([-fno-rtti],           [COMMON_CFLAGS="$COMMON_CFLAGS -fno-rtti"])
 
-AS_CXX_COMPILER_FLAG([-ggdb],               [COMMON_CFLAGS="$COMMON_CFLAGS -ggdb"])
 
 ##
 ## Compiler features
@@ -137,6 +136,21 @@ if test "x$ac_cv_debugging" = "xyes"; then
 else
     COMMON_CFLAGS="$COMMON_CFLAGS -O2"
 fi
+
+case $host_os in
+    mingw32)
+        COMMON_CFLAGS="$COMMON_CFLAGS -gstabs"
+        ;;
+
+    linux-gnu)
+        COMMON_CFLAGS="$COMMON_CFLAGS -g"
+        AS_CXX_COMPILER_FLAG([-ggdb], [COMMON_CFLAGS="$COMMON_CFLAGS -ggdb"])
+        ;;
+
+    *)
+        AC_ERROR([Unknown host_os])
+        ;;
+esac
 
 case $host_cpu in
     x86_64)
