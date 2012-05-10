@@ -138,6 +138,21 @@ else
     COMMON_CFLAGS="$COMMON_CFLAGS -O2"
 fi
 
+case $host_cpu in
+    x86_64)
+        OPTIMISATION_FLAGS="$OPTIMISATION_FLAGS -mtune=core2"
+        ;;
+
+    i686)
+        OPTIMISATION_FLAGS="$OPTIMISATION_FLAGS -march=prescott -mfpmath=sse"
+        ;;
+
+    *)
+        AC_MSG_ERROR([Unknown target CPU])
+        ;;
+esac
+
+
 ##
 ## Documentation
 
@@ -165,11 +180,9 @@ fi
 
 ## Output
 
-COMMON_CXXFLAGS="-g -std=c++0x -pipe -include config.h $WARNING_FLAGS $COMMON_CFLAGS"
-COMMON_CFLAGS="-g -std=c99 -pipe -include config.h $WARNING_FLAGS $COMMON_CFLAGS"
+COMMON_CXXFLAGS="-std=c++0x -pipe -include config.h $WARNING_FLAGS $OPTIMISATION_FLAGS $COMMON_CFLAGS"
 COMMON_LDFLAGS="$COMMON_LDFLAGS "
 
-AC_SUBST(COMMON_CFLAGS)
 AC_SUBST(COMMON_CXXFLAGS)
 AC_SUBST(COMMON_LDFLAGS)
 
