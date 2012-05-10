@@ -15,8 +15,9 @@ namespace debug {
             const decltype(m_frames)& frames(void) const
                 { return m_frames; }
     };
+
+    std::ostream&
+    operator <<(std::ostream&, const debug::backtrace&);
 }
 
-std::ostream&
-operator <<(std::ostream&, const debug::backtrace&);
 

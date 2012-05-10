@@ -95,9 +95,14 @@ COMMON_CFLAGS="$COMMON_CFLAGS -D_GNU_SOURCE"
 
 case $host_os in
     mingw32)
+        AM_CONDITIONAL([PLATFORM_WIN32], [true])
+        AM_CONDITIONAL([PLATFORM_LINUX], [false])
+        COMMON_LDFLAGS="$COMMON_LDFLAGS -ldbghelp"
         ;;
 
     linux-gnu)
+        AM_CONDITIONAL([PLATFORM_WIN32], [false])
+        AM_CONDITIONAL([PLATFORM_LINUX], [true])
         ;;
 
     *)

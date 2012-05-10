@@ -23,7 +23,7 @@ debug::backtrace::backtrace (void):
 
 
 ostream&
-operator <<(ostream &os, const debug::backtrace &rhs) {
+debug::operator <<(ostream &os, const debug::backtrace &rhs) {
     const auto frames = rhs.frames ();
 
     typedef unique_ptr<char *[], decltype(&std::free)> unique_str;

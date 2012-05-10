@@ -96,10 +96,12 @@ UTIL_FILES   =		\
     version.hpp
 
 
-if HAVE_EXECINFO
+if PLATFORM_LINUX
 UTIL_FILES += backtrace_execinfo.cpp
-else
-UTIL_FILES += backtrace_null.cpp
+endif
+
+if PLATFORM_WIN32
+UTIL_FILES += backtrace_win32.cpp
 endif
 
 CLEANFILES = json.cpp version.cpp ip.cpp
