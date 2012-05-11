@@ -18,6 +18,7 @@ TEST_BIN = 		\
 	matrix 		\
 	pool		\
 	range 		\
+	region		\
 	signal		\
 	version
 
@@ -55,6 +56,9 @@ pool_SOURCES	   = pool.cpp
 
 range_LDADD        = $(builddir)/../libutil.la
 range_SOURCES 	   = range.cpp
+
+region_LDADD       = $(builddir)/../libutil.la
+region_SOURCES     = region.cpp
 
 signal_LDADD	   = $(builddir)/../libutil.la
 signal_SOURCES     = signal.cpp
