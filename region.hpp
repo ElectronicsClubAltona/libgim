@@ -48,6 +48,8 @@ namespace util {
         bool contains (const point&) const; // exclusive of borders
         bool overlaps (const region<T>&) const; // exclusive of borders
 
+        region overlap (const region<T>&) const;
+
         bool operator ==(const region<T>& rhs) const;
         bool operator !=(const region<T>& rhs) const
             { return !(*this == rhs); }
