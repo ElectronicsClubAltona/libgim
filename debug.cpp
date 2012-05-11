@@ -20,6 +20,7 @@
 #include "debug.hpp"
 #include "backtrace.hpp"
 #include "log.hpp"
+#include "platform.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -39,7 +40,13 @@ void
 panic (void)
     { panic ("NFI"); }
 
-
+#if defined(PLATFORM_WIN32)
+#include <windows.h>
+void
+breakpoint (void) {
+    DebugBreak ();
+}
+#else
 void
 breakpoint (void) {
 #if defined (__x86_64) || defined (__i386)
@@ -48,6 +55,7 @@ breakpoint (void) {
     raise (SIGINT);
 #endif
 }
+#endif
 
 
 void
