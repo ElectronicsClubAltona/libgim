@@ -20,7 +20,10 @@
 #ifndef __UTIL_PREPROCESSOR_HPP
 #define __UTIL_PREPROCESSOR_HPP
 
-#define CONCATENATE_DETAIL(x, y) x##y
-#define CONCATENATE(x, y) CONCATENATE_DETAIL(x, y)
+#define PASTE_DETAIL(x, y) x##y
+#define PASTE(x, y) PASTE_DETAIL(x, y)
+
+#define STRINGIFY_DETAIL(x) #x
+#define STRINGIFY(x) STRINGIFY_DETAIL(x)
 
 #endif
