@@ -130,5 +130,5 @@ util::detail::log (level_t level, boost::format &&format) {
                     % time_string
                     % level
               << format
-              << "\n";
+              << std::endl;
 }
