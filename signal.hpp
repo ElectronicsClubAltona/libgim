@@ -106,16 +106,19 @@ namespace util {
 
             /// Execute all callbacks, ignoring the return parameters. Does not combine results.
             void operator () (Args... tail) {
-                auto i = m_children.cbegin ();
-                bool looping = m_children.cend () != i;
+                if (m_children.empty ())
+                    return;
 
-                while (looping) {
+                auto i = m_children.cbegin ();
+                bool looping;
+
+                do {
                     // Increment before we execute so that the caller is able to deregister during execution.
                     auto current = i++;
                     looping = m_children.cend () != i;
 
                     (*current)(tail...);
-                }
+                } while (looping);
             }
     };
 }
