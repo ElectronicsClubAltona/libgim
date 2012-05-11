@@ -22,7 +22,7 @@
 
 #include "preprocessor.hpp"
 
-#define raii CONCATENATE(__unique_, __COUNTER__)
+#define raii PASTE(__unique_, __COUNTER__)
 
 namespace util {
     template <typename T>
