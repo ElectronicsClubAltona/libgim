@@ -66,11 +66,11 @@ string_to_level (const string &name) {
         { "ALERT",         ALERT },
         { "CRITICAL",      CRITICAL },
         { "ERROR",         ERROR },
-        { "WARNING",       WARNING },
-        { "WARN",          WARNING },
+        { "WARN",          WARN },
+        { "WARNING",       WARN },
         { "NOTICE",        NOTICE },
         { "INFO",          INFO },
-        { "INFORMATIONAL", INFORMATIONAL },
+        { "INFORMATIONAL", INFO },
         { "DEBUG",         DEBUG }
     };
 
