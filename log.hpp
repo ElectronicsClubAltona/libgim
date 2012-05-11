@@ -64,7 +64,11 @@ namespace util {
     #define LOG_WARN(...)       do { log(util::WARN,      ##__VA_ARGS__); } while (0)
     #define LOG_NOTICE(...)     do { log(util::NOTICE,    ##__VA_ARGS__); } while (0)
     #define LOG_INFO(...)       do { log(util::INFO,      ##__VA_ARGS__); } while (0)
+#if defined(ENABLE_DEBUGGING)
     #define LOG_DEBUG(...)      do { log(util::DEBUG,     ##__VA_ARGS__); } while (0)
+#else
+    #define LOG_DEBUG(...)      do { ; } while (0)
+#endif
 }
 
 #include "log.ipp"
