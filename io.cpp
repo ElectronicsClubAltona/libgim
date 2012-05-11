@@ -52,7 +52,7 @@ util::slurp (const boost::filesystem::path& path)  {
     unique_ptr <char []> buffer (new char[size + 1]);
     buffer.get()[size] = '\0';
 
-    check_hard (size >= 0);
+    CHECK_HARD (size >= 0);
     size_t remaining = (size_t)size;
     char *cursor = buffer.get();
 
@@ -60,8 +60,8 @@ util::slurp (const boost::filesystem::path& path)  {
         ssize_t consumed = read (fd, cursor, remaining);
         if (consumed == -1)
             throw errno_error();
-        check_hard (        consumed >  0);
-        check_hard ((size_t)consumed <= remaining);
+        CHECK_HARD (        consumed >  0);
+        CHECK_HARD ((size_t)consumed <= remaining);
 
         remaining -= (size_t)consumed;
         cursor    += consumed;
@@ -92,7 +92,7 @@ fd_ref::fd_ref (const boost::filesystem::path &path):
 
 
 fd_ref::~fd_ref () {
-    check (fd >= 0);
+    CHECK (fd >= 0);
     close (fd);
 }
 
@@ -150,7 +150,7 @@ scoped_cwd::~scoped_cwd () {
 
 void
 util::set_cwd (const boost::filesystem::path &path) {
-    check (path.string ().size () > 0);
+    CHECK (path.string ().size () > 0);
 
     if (chdir (path.string ().c_str ()) != 0)
         throw errno_error ();
@@ -177,7 +177,7 @@ mapped_file::mapped_file (const boost::filesystem::path &_path):
 
 
 mapped_file::~mapped_file () {
-    check (m_data != NULL);
+    CHECK (m_data != NULL);
     munmap (m_data, m_size);
 }
 
@@ -197,8 +197,8 @@ mapped_file::load_fd (void) {
 
 size_t
 mapped_file::size (void) const {
-    check (m_size > 0);
-    check (m_data != NULL);
+    CHECK (m_size > 0);
+    CHECK (m_data != NULL);
 
     return m_size;
 }
@@ -206,8 +206,8 @@ mapped_file::size (void) const {
 
 const uint8_t*
 mapped_file::data (void) const {
-    check (m_size > 0);
-    check (m_data != NULL);
+    CHECK (m_size > 0);
+    CHECK (m_data != NULL);
 
     return m_data;
 }

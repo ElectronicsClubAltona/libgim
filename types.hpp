@@ -86,7 +86,7 @@ namespace detail {
                                          std::is_unsigned<T>::value &&
                                          std::is_signed<V>::value, V>::type v)
     {
-        check_hard (v >= 0);
+        CHECK_HARD (v >= 0);
         return static_cast<T> (v);
     }
 
@@ -97,7 +97,7 @@ namespace detail {
                                          std::is_signed<T>::value &&
                                          std::is_unsigned<V>::value, V>::type v)
     {
-        check_hard (v < std::numeric_limits<V>::max () / 2);
+        CHECK_HARD (v < std::numeric_limits<V>::max () / 2);
         return static_cast<T> (v);
     }
 }
@@ -124,7 +124,7 @@ namespace detail {
     T
     _trunc_cast (const typename enable_if<sizeof (T) < sizeof (V) &&
                                           std::is_signed<T>::value == std::is_signed<V>::value, V>::type v) {
-        check_hard (v <= std::numeric_limits<T>::max ());
+        CHECK_HARD (v <= std::numeric_limits<T>::max ());
         checK_hard (v >= std::numeric_limits<T>::min ());
 
         return static_cast<T> (v);

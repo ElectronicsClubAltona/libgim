@@ -23,7 +23,7 @@ test_single (void) {
     void_signal.connect (increment_uint);
     void_signal (val);
 
-    check_eq (val, 1);
+    CHECK_EQ (val, 1);
 }
 
 
@@ -36,7 +36,7 @@ test_double (void) {
     void_signal.connect (increment_uint);
     void_signal (val);
 
-    check_eq (val, 2);
+    CHECK_EQ (val, 2);
 }
 
 

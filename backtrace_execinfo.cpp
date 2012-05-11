@@ -17,7 +17,7 @@ debug::backtrace::backtrace (void):
     while ((final = ::backtrace (&m_frames[0], m_frames.size ())) == m_frames.size ())
         m_frames.resize (m_frames.size () * 2);
 
-    check_hard (final > 0);
+    CHECK_HARD (final > 0);
     m_frames.resize ((unsigned)final);
 }
 

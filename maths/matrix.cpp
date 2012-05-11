@@ -50,7 +50,7 @@ matrix::matrix (size_t                                _rows,
         throw std::runtime_error ("rows and columns must be positive");
     if (size () != _data.size ())
         throw std::runtime_error ("element and initializer size differs");
-    check_hard (m_rows * m_columns == _data.size());
+    CHECK_HARD (m_rows * m_columns == _data.size());
 
     m_data = new double[size ()];
     std::copy (_data.begin (), _data.end (), m_data);
@@ -65,7 +65,7 @@ matrix::matrix (const std::initializer_list <vector> &rhs):
     double *row_cursor = m_data;
 
     for (auto i = rhs.begin (); i != rhs.end (); ++i) {
-        check (i->size () == m_columns);
+        CHECK (i->size () == m_columns);
 
         std::copy (i->data (), i->data () + i->size (), row_cursor);
         row_cursor += m_columns;
@@ -95,22 +95,22 @@ matrix::~matrix()
 
 void
 matrix::sanity (void) const {
-    check (m_rows    > 0);
-    check (m_columns > 0);
-    check (m_data != NULL);
+    CHECK (m_rows    > 0);
+    CHECK (m_columns > 0);
+    CHECK (m_data != NULL);
 }
 
 
 const double *
 matrix::operator [] (unsigned int row) const {
-    check_hard (row < m_rows);
+    CHECK_HARD (row < m_rows);
     return m_data + row * m_columns;
 }
 
 
 double *
 matrix::operator [] (unsigned int row) {
-    check_hard (row < m_rows);
+    CHECK_HARD (row < m_rows);
     return m_data + row * m_columns;
 }
 
@@ -303,8 +303,8 @@ matrix::determinant (void) const {
 
 double
 matrix::determinant2x2 (void) const {
-    check_eq (m_rows,    2);
-    check_eq (m_columns, 2);
+    CHECK_EQ (m_rows,    2);
+    CHECK_EQ (m_columns, 2);
 
     return (*this)[0][0] * (*this)[1][1] -
            (*this)[0][1] * (*this)[1][0];
@@ -320,8 +320,8 @@ matrix::determinant2x2 (void) const {
 //  det (A) = a(ei - fg) + b(fg - di) + c(dh - eg)
 double
 matrix::determinant3x3 (void) const {
-    check_eq (m_rows,    3);
-    check_eq (m_columns, 3);
+    CHECK_EQ (m_rows,    3);
+    CHECK_EQ (m_columns, 3);
 
     return (*this)[0][0] * (*this)[1][1] * (*this)[2][2] + // aei
            (*this)[0][1] * (*this)[1][2] * (*this)[2][0] + // bfg
@@ -335,8 +335,8 @@ matrix::determinant3x3 (void) const {
 // From libMathematics, http://www.geometrictools.com/ 
 double 
 matrix::determinant4x4 (void) const {
-    check_eq (m_rows,    4);
-    check_eq (m_columns, 4);
+    CHECK_EQ (m_rows,    4);
+    CHECK_EQ (m_columns, 4);
 
     double a0 = m_data[ 0] * m_data[ 5] - m_data[ 1] * m_data[ 4],
            a1 = m_data[ 0] * m_data[ 6] - m_data[ 2] * m_data[ 4],
@@ -372,8 +372,8 @@ matrix::inverse (void) const {
 
 matrix
 matrix::inverse2x2 (void) const {
-    check (m_rows    == 2);
-    check (m_columns == 2);
+    CHECK (m_rows    == 2);
+    CHECK (m_columns == 2);
 
     double det = determinant2x2 ();
     if (almost_equal (det, 0.))
@@ -389,8 +389,8 @@ matrix::inverse2x2 (void) const {
 //
 matrix
 matrix::inverse3x3 (void) const {
-    check (m_rows    == 3);
-    check (m_columns == 3);
+    CHECK (m_rows    == 3);
+    CHECK (m_columns == 3);
 
     double det = determinant3x3();
     if (almost_equal (det, 0.))
@@ -482,7 +482,7 @@ matrix::identity (size_t diag) {
 
 matrix
 matrix::magic (size_t n) {
-    check_hard (n > 2);
+    CHECK_HARD (n > 2);
 
     if (n % 2 == 1)
         return magic_odd (n);
@@ -498,8 +498,8 @@ matrix::magic (size_t n) {
 // If filled then drop down one row instead. Wrap around indexing.
 matrix
 matrix::magic_odd (size_t n) {
-    check_hard (n > 2);
-    check_hard (n % 2 == 1);
+    CHECK_HARD (n > 2);
+    CHECK_HARD (n % 2 == 1);
 
     matrix val (zeroes (n));
     for (unsigned int i = 1, x = n / 2, y = 0; i <= n * n; ++i) {

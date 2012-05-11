@@ -52,13 +52,13 @@ template <typename T>
 
 
             ~pool () {
-                check (m_next != NULL);
+                CHECK (m_next != NULL);
 
                 unsigned int doomed_count = 0;
                 for (node *cursor = m_next; cursor != NULL; cursor = cursor->_chain)
                     ++doomed_count;
 
-                check_eq (doomed_count, m_capacity);
+                CHECK_EQ (doomed_count, m_capacity);
                 operator delete (m_head);
             }
             

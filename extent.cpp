@@ -64,7 +64,7 @@ extent<T>::operator ==(const extent& rhs) const {
 template <typename T>
 void
 extent<T>::sanity (void) const
-    { check (width >= 0 && height >= 0); }
+    { CHECK (width >= 0 && height >= 0); }
 
 
 namespace util {

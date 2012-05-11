@@ -37,7 +37,7 @@ using std::map;
 
 void
 check_level (level_t l)
-    { check (l >= 0 && l < NUM_LEVELS); }
+    { CHECK (l >= 0 && l < NUM_LEVELS); }
 
 
 const string&

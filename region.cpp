@@ -141,7 +141,7 @@ region<T>::operator ==(const region& rhs) const
 
 template <typename T>
 void region<T>::sanity (void) const
-    { check (w >= 0 && h >= 0); }
+    { CHECK (w >= 0 && h >= 0); }
 
 
 namespace util {

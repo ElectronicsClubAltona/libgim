@@ -33,7 +33,7 @@ errno_error::errno_error (int _errno):
     runtime_error (strerror (_errno)),
     id            (_errno)
 {
-    check_hard (_errno != 0);
+    CHECK_HARD (_errno != 0);
 }
 
 
@@ -43,7 +43,7 @@ errno_error::errno_error ():
     runtime_error (strerror (errno)),
     id            (errno)
 {
-    check_hard (errno != 0);
+    CHECK_HARD (errno != 0);
 }
 
 
@@ -68,7 +68,7 @@ errno_error::throw_code (void)
 
 void
 errno_error::throw_code (int code) {
-    check_hard (code != 0);
+    CHECK_HARD (code != 0);
     throw errno_error (code);
 }
 
@@ -78,7 +78,7 @@ win32_error::win32_error (DWORD _id):
     runtime_error ("Win32 error"),
     id (_id)
 {
-    check_soft (id != ERROR_SUCCESS);
+    CHECK_SOFT (id != ERROR_SUCCESS);
 }
 
 
@@ -86,7 +86,7 @@ win32_error::win32_error (void):
     runtime_error ("Win32 error"),
     id (GetLastError ())
 {
-    check_soft (id != ERROR_SUCCESS);
+    CHECK_SOFT (id != ERROR_SUCCESS);
 }
 
 
@@ -103,7 +103,7 @@ win32_error::try_code (void) {
 void
 win32_error::throw_code (void) {
     const auto id = GetLastError ();
-    check (id != ERROR_SUCCESS);
+    CHECK (id != ERROR_SUCCESS);
     throw win32_error (id);
 }
 

@@ -73,7 +73,7 @@ double vector::dot (const double *restrict A,
 vector vector::cross (const double *restrict A,
                       const double *restrict B,
                       unsigned int size) { 
-    check_hard (size == 3);
+    CHECK_HARD (size == 3);
     return vector ({ A[1] * B[2] - A[2] * B[1],
                      A[2] * B[0] - A[0] * B[2],
                      A[0] * B[1] - A[1] * B[0] });

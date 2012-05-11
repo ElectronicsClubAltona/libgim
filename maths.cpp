@@ -84,7 +84,7 @@ almost_equal (const double &a, const double &b)
 template <typename T>
 typename enable_if<std::is_integral<T>::value, T>::type
 round_up (T value, T align) {
-    check_hard (align > 1);
+    CHECK_HARD (align > 1);
     return (value + align - 1) / align;
 }
 

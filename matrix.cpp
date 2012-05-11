@@ -21,7 +21,7 @@ using namespace util;
 
 void
 matrix::scale (double x, double y, double z) {
-    check_hard (is_affine ());
+    CHECK_HARD (is_affine ());
     values[0][0] *= x;
     values[1][1] *= y;
     values[2][2] *= z;
@@ -30,7 +30,7 @@ matrix::scale (double x, double y, double z) {
 
 void
 matrix::translate (double x, double y, double z) {
-    check_hard (is_affine ());
+    CHECK_HARD (is_affine ());
     values[0][3] += x;
     values[1][3] += y;
     values[2][3] += z;
@@ -45,7 +45,7 @@ matrix::inverse (void) const {
 
 matrix&
 matrix::invert (void) {
-    check_hard (is_affine ());
+    CHECK_HARD (is_affine ());
 
     // inv ([ M b ]  == [ inv(M) -inv(M).b ]
     //      [ 0 1 ])    [     0       1
@@ -64,7 +64,7 @@ matrix::invert (void) {
     double K = (values[0][0] * values[1][1] - values[0][1] * values[1][0]);
 
     double det = values[0][0] * A + values[0][1] * B + values[0][2] * C;
-    check_neq (det, 0.0);
+    CHECK_NEQ (det, 0.0);
 
     values[0][0] = A / det;
     values[0][1] = D / det;
@@ -105,7 +105,7 @@ matrix::operator* (const matrix &rhs) const {
 
 util::point
 matrix::to_local (const util::point &p) const {
-    check_soft (is_affine ());
+    CHECK_SOFT (is_affine ());
 
     return { p.x * values[0][0] + p.y * values[0][1] + p.z * values[0][2]  + values[0][3],
              p.x * values[1][0] + p.y * values[1][1] + p.z * values[1][2]  + values[1][3],

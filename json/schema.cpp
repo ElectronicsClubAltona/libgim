@@ -381,7 +381,7 @@ is_additional_items_valid (const json::array &,
 bool
 is_array_valid (const json::array  &node,
                 const json::object &schema) {
-    check_hard (node.is_array ());
+    CHECK_HARD (node.is_array ());
 
     typedef bool (*array_validator_t)(const json::array&, const json::node&);
     static const map<string, array_validator_t> VALIDATORS ({
@@ -441,7 +441,7 @@ is_properties_valid (const json::object &node,
 bool
 is_properties_valid (const json::object &node,
                      const json::node   &constraint) {
-    check (node.is_object ());
+    CHECK (node.is_object ());
 
     if (!constraint.is_object ())
         throw json::schema_error ("properties needs an object");

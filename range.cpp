@@ -57,7 +57,7 @@ range<T>::contains (const range <T> &r) const
 template <typename T>
 void
 range<T>::sanity (void) const
-    { check (min <= max); }
+    { CHECK (min <= max); }
 
 
 namespace util {
@@ -66,7 +66,7 @@ namespace util {
     range<double>::sanity (void) const {
         if (std::isnan (min) || std::isnan (max))
             return;
-        check (min <= max);
+        CHECK (min <= max);
     }
 }
 

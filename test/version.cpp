@@ -38,12 +38,12 @@ main (int, char **) {
     for (auto i = tests.begin (); i != tests.end (); ++i) {
         version v (i->str);
 
-        if (i->parts.size () > 0) check (v.major () == i->parts[0]);
-        if (i->parts.size () > 1) check (v.minor () == i->parts[1]);
-        if (i->parts.size () > 2) check (v.point () == i->parts[2]);
-        if (i->parts.size () > 3) check (v.build () == i->parts[3]);
+        if (i->parts.size () > 0) CHECK (v.major () == i->parts[0]);
+        if (i->parts.size () > 1) CHECK (v.minor () == i->parts[1]);
+        if (i->parts.size () > 2) CHECK (v.point () == i->parts[2]);
+        if (i->parts.size () > 3) CHECK (v.build () == i->parts[3]);
 
-        check_hard (i->parts.size () <= 4);
+        CHECK_HARD (i->parts.size () <= 4);
     }
 
     return EXIT_SUCCESS;

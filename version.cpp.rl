@@ -72,7 +72,7 @@ check_release (version::release_t r) {
 void
 version::sanity (void) const {
     check_release (m_release);
-    check (!m_values.empty ());
+    CHECK (!m_values.empty ());
 }
 
 

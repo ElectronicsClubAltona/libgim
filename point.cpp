@@ -89,9 +89,9 @@ point::operator- (const point &rhs) const {
 
 void
 point::sanity (void) const {
-    check_soft (!std::isnan (x));
-    check_soft (!std::isnan (y));
-    check_soft (!std::isnan (z));
+    CHECK_SOFT (!std::isnan (x));
+    CHECK_SOFT (!std::isnan (y));
+    CHECK_SOFT (!std::isnan (z));
 }
 
 

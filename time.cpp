@@ -55,8 +55,8 @@ util::nanoseconds (void) {
     struct timespec t;
     clock_gettime (CLOCK_REALTIME, &t);
 
-    check_soft (t.tv_sec  > 0);
-    check_soft (t.tv_nsec > 0);
+    CHECK_SOFT (t.tv_sec  > 0);
+    CHECK_SOFT (t.tv_nsec > 0);
 
     return static_cast<uint64_t> (t.tv_sec) * 1000000000ULL + static_cast<uint64_t> (t.tv_nsec);
 }

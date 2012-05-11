@@ -37,38 +37,38 @@ do {                    \
 #define DEBUG_ONLY(X)
 #endif
 
-#define trace {                                                 \
+#define TRACE {                                                                \
     std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << std::endl;  \
 }
 
 
-#define warn(MSG) do {                                                                      \
+#define WARN(MSG) do {                                                                      \
    std::cerr << __FILE__ << ":" << __func__ << ":" __LINE__ << ", " << (MSG) << std::endl;  \
 } while (0)
 
 
-#define warn_if(C, MSG) do {                                                                    \
+#define WARN_IF(C, MSG) do {                                                                    \
     if (C) {                                                                                    \
         std::cerr << __FILE__ << ":" << __func__ << ":" __LINE__ << ", " << (MSG) << std::endl; \
     }                                                                                           \
 } while (0)
 
 
-#define verify_soft(C, COND) ({     \
+#define VERIFY_SOFT(C, COND) ({     \
     const auto __DEBUG_value = (C); \
-    check_soft(__DEBUG_value COND); \
+    CHECK_SOFT(__DEBUG_value COND); \
     __DEBUG_value;                  \
 })
 
 
-#define verify_hard(C, COND) ({     \
+#define VERIFY_HARD(C, COND) ({     \
     const auto __DEBUG_value = (C); \
-    check_hard(__DEBUG_value COND); \
+    CHECK_HARD(__DEBUG_value COND); \
     __DEBUG_value;                  \
 })
 
 
-#define _check_meta(C, SUCCESS, FAILURE) do {                       \
+#define _CHECK_META(C, SUCCESS, FAILURE) do {                       \
     const auto __DEBUG_value = (C);                                 \
     if (unlikely (!__DEBUG_value)) {                                \
         std::cerr <<  PACKAGE << ": "                               \
@@ -85,14 +85,14 @@ do {                    \
 } while (0)
 
 
-#define check_hard(C) _check_meta((C), { ; }, { panic (); })
-#define check_soft(C) _check_meta((C), { ; }, { breakpoint (); })
+#define CHECK_HARD(C) _CHECK_META((C), { ; }, { panic (); })
+#define CHECK_SOFT(C) _CHECK_META((C), { ; }, { breakpoint (); })
 
 
-#define check_eq(A,B) do {                           \
+#define CHECK_EQ(A,B) do {                           \
     const auto __a = (A);                            \
     const auto __b = (B);                            \
-    _check_meta (almost_equal (__a, __b),            \
+    _CHECK_META (almost_equal (__a, __b),            \
                  { ; },                              \
                  {                                   \
         std::ostringstream os;                       \
@@ -105,10 +105,10 @@ do {                    \
 } while (0)
 
 
-#define check_neq(A,B) do {                          \
+#define CHECK_NEQ(A,B) do {                          \
     const auto __a = (A);                            \
     const auto __b = (B);                            \
-    _check_meta (!almost_equal (__a, __b),           \
+    _CHECK_META (!almost_equal (__a, __b),           \
                  { ; },                              \
                  {                                   \
         std::ostringstream os;                       \
@@ -121,7 +121,7 @@ do {                    \
 } while (0)
 
 
-#define check_throws(E,C) do {              \
+#define CHECK_THROWS(E,C) do {              \
     bool caught = false;                    \
                                             \
     try                                     \
@@ -133,7 +133,7 @@ do {                    \
         panic ("expected exception: " #E);  \
 } while (0)
 
-#define check(C) check_hard(C)
+#define CHECK(C) CHECK_HARD(C)
 
 
 class panic_error {

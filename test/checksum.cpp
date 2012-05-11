@@ -24,8 +24,8 @@ static const struct {
 int
 main (int, char**) {
     for (unsigned i = 0; i < elems (TESTS); ++i) {
-        check_eq (TESTS[i].adler, adler32 (TESTS[i].data, TESTS[i].size));
-        check_eq (TESTS[i].bsd,   bsdsum (TESTS[i].data, TESTS[i].size));
+        CHECK_EQ (TESTS[i].adler, adler32 (TESTS[i].data, TESTS[i].size));
+        CHECK_EQ (TESTS[i].bsd,   bsdsum (TESTS[i].data, TESTS[i].size));
     }
 
     return EXIT_SUCCESS;
