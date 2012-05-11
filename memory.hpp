@@ -37,8 +37,8 @@ public:
         free (m_data);
     }
 
-          T* data (void)        { return m_data; }
-    const T* data (void) const  { return m_data; }
+          T* get (void)        { return m_data; }
+    const T* get (void) const  { return m_data; }
 
     bool operator! (void) { return !m_data; }
 
