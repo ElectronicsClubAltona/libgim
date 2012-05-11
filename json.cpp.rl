@@ -121,13 +121,19 @@ struct parse_context {
 
     action new_number  {
         check_hard (!nodestack.empty ());
-        check      (!nodestack.back ().value);
-        
+
+        parse_context &back = nodestack.back ();
+        check (!back.value);
+        check_hard (back.start);
+        check_hard (back.stop);
+        check_hard (back.start <= back.stop);
+
         errno = 0;
-        double value = strtod (nodestack.back ().start, NULL);
-        if (errno)
+        char *end;
+        double value = strtod (back.start, &end);
+        if (end == back.start || errno)
             throw parse_error ("unable to parse number");
-        nodestack.back ().value = new json::number (value);
+        back.value = new json::number (value);
     }
 
     action new_null    {
