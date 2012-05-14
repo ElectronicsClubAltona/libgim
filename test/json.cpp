@@ -34,7 +34,7 @@ main (int, char**) {
     CHECK_HARD (!ref["string"].is_null ());
     CHECK_HARD (!ref["string"].is_number ());
     CHECK_HARD (!ref["string"].is_object ());
-    check_eq   ( ref["string"].as_string (), "brad");
+    CHECK_EQ   ( ref["string"].as_string (), "brad");
 
     CHECK_HARD ( ref["integer"].is_number ());
     CHECK_HARD (!ref["integer"].is_array ());
@@ -42,7 +42,7 @@ main (int, char**) {
     CHECK_HARD (!ref["integer"].is_null ());
     CHECK_HARD (!ref["integer"].is_object ());
     CHECK_HARD (!ref["integer"].is_string ());
-    check_eq   ( ref["integer"].as_number (), 1u);
+    CHECK_EQ   ( ref["integer"].as_number (), 1u);
 
     CHECK_HARD ( ref["null"].is_null ());
     CHECK_HARD (!ref["null"].is_array ());
@@ -57,7 +57,7 @@ main (int, char**) {
     CHECK_HARD (!ref["false"].is_number ());
     CHECK_HARD (!ref["false"].is_object ());
     CHECK_HARD (!ref["false"].is_string ());
-    check_eq   ( ref["false"].as_boolean (), false);
+    CHECK_EQ   ( ref["false"].as_boolean (), false);
 
     CHECK_HARD ( ref["true"].is_boolean ());
     CHECK_HARD (!ref["true"].is_array ());
@@ -65,7 +65,7 @@ main (int, char**) {
     CHECK_HARD (!ref["true"].is_number ());
     CHECK_HARD (!ref["true"].is_object ());
     CHECK_HARD (!ref["true"].is_string ());
-    check_eq   ( ref["true"].as_boolean (), true);
+    CHECK_EQ   ( ref["true"].as_boolean (), true);
 
     CHECK_HARD ( ref["double"].is_number ());
     CHECK_HARD (!ref["double"].is_array ());
@@ -73,7 +73,7 @@ main (int, char**) {
     CHECK_HARD (!ref["double"].is_null ());
     CHECK_HARD (!ref["double"].is_object ());
     CHECK_HARD (!ref["double"].is_string ());
-    check_eq   ( ref["double"].as_number (), 3.14);
+    CHECK_EQ   ( ref["double"].as_number (), 3.14);
 
     CHECK_HARD ( ref["object"].is_object ());
     CHECK_HARD (!ref["object"].is_array ());
