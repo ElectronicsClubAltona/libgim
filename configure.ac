@@ -90,7 +90,7 @@ AC_TYPE_SSIZE_T
 
 ##
 ## platform features
-COMMON_CFLAGS="$COMMON_CFLAGS -D_GNU_SOURCE"
+#AC_DEFINE([_GNU_SOURCE], [], [Description])
 
 case $host_os in
     mingw32)
@@ -123,7 +123,7 @@ fi
 ##
 ## Debug features
 if test "x$ac_cv_debugging" = "xyes"; then
-    COMMON_CFLAGS="$COMMON_CFLAGS -O0 -D_GLIBCXX_DEBUG"
+    COMMON_CFLAGS="$COMMON_CFLAGS -O0"
 
     if test "x$ac_cv_mudflap" = "xyes"; then
         AS_CXX_COMPILER_FLAG([-fmudflapth], [
@@ -132,7 +132,10 @@ if test "x$ac_cv_debugging" = "xyes"; then
         ])
     fi
 
-    COMMON_CFLAGS="$COMMON_CFLAGS -D_FORTIFY_SOURCE=2 -DENABLE_DEBUGGING=1"
+    AC_DEFINE([ENABLE_DEBUGGING], [], [Description])
+    AC_DEFINE([_FORTIFY_SOURCE], [2], [Description])
+    AC_DEFINE([_GLIBCXX_DEBUG], [], [Description])
+
 else
     COMMON_CFLAGS="$COMMON_CFLAGS -O2"
 fi
