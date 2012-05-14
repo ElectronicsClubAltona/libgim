@@ -82,6 +82,8 @@ UTIL_FILES   =		\
     signal.cpp		\
     signal.hpp		\
     si.hpp		\
+    stats.cpp		\
+    stats.hpp		\
     stream.cpp		\
     stream.hpp		\
     string.cpp		\
