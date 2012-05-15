@@ -83,8 +83,15 @@
 } while (0)
 
 
-#define CHECK_HARD(C) _CHECK_META((C), { ; }, { panic (); })
-#define CHECK_SOFT(C) _CHECK_META((C), { ; }, { breakpoint (); })
+#if defined(ENABLE_DEBUGGING)
+    #define CHECK_HARD(C) _CHECK_META((C), { ; }, { panic ();      })
+    #define CHECK_SOFT(C) _CHECK_META((C), { ; }, { breakpoint (); })
+    #define CHECK(C) CHECK_HARD(C)
+#else
+    #define CHECK_HARD(C) { };
+    #define CHECK_SOFT(C) { };
+    #define CHECK(C) CHECK_SOFT(C)
+#endif
 
 
 #define CHECK_EQ(A,B) do {                           \
@@ -130,8 +137,6 @@
     if (unlikely (!caught))                 \
         panic ("expected exception: " #E);  \
 } while (0)
-
-#define CHECK(C) CHECK_HARD(C)
 
 
 class panic_error {
