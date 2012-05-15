@@ -29,10 +29,8 @@
 #include <sstream>
 
 #ifdef ENABLE_DEBUGGING
-#define DEBUG_ONLY(X)   \
-do {                    \
-    X;                  \
-} while (0)
+#define DEBUG_ONLY(X) \
+    X;
 #else
 #define DEBUG_ONLY(X)
 #endif
