@@ -96,7 +96,7 @@ case $host_os in
     mingw32)
         AM_CONDITIONAL([PLATFORM_WIN32], [true])
         AM_CONDITIONAL([PLATFORM_LINUX], [false])
-        COMMON_LDFLAGS="$COMMON_LDFLAGS -ldbghelp"
+        #COMMON_LDFLAGS="$COMMON_LDFLAGS -ldbghelp"
         ;;
 
     linux-gnu)

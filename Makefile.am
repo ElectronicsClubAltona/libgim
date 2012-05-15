@@ -103,7 +103,7 @@ UTIL_FILES += backtrace_execinfo.cpp
 endif
 
 if PLATFORM_WIN32
-UTIL_FILES += backtrace_win32.cpp
+UTIL_FILES += backtrace_null.cpp
 endif
 
 CLEANFILES = json.cpp version.cpp ip.cpp
