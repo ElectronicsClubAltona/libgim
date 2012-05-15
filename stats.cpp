@@ -25,24 +25,31 @@
 
 template <typename T>
 util::stats::accumulator<T>::accumulator ():
-    min (std::numeric_limits<T>::max ()),
-    max (std::numeric_limits<T>::min ())
+    count (0),
+    min   (std::numeric_limits<T>::max ()),
+    max   (std::numeric_limits<T>::min ()),
+    sum   (0)
 { ; }
 
 
 template <typename T>
 void
 util::stats::accumulator<T>::add (T val) {
-    min = std::min (val, min);
-    max = std::max (val, max);
+    min  = std::min (val, min);
+    max  = std::max (val, max);
+    sum += val;
+
+    ++count;
 }
 
 
 template <typename T>
 void
 util::stats::accumulator<T>::add (const accumulator<T> &rhs) {
-    min = std::min (rhs.min, min);
-    max = std::max (rhs.max, max);
+    min    = std::min (rhs.min, min);
+    max    = std::max (rhs.max, max);
+    sum   += rhs.sum;
+    count += rhs.count;
 }
 
 
@@ -50,6 +57,12 @@ template <typename T>
 T
 util::stats::accumulator<T>::range (void) const
     { return max - min; }
+
+
+template <typename T>
+T
+util::stats::accumulator<T>::mean (void) const
+    { return sum / count; }
 
 
 template struct util::stats::accumulator<double>;

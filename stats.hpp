@@ -34,10 +34,14 @@ namespace util {
             void add (T);
             void add (const accumulator<T> &);
 
+            size_t count;
+
             T min;
             T max;
+            T sum;
 
             T range (void) const;
+            T mean  (void) const;
         };
 
         template <typename T>
