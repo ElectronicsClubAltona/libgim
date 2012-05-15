@@ -137,7 +137,8 @@ if test "x$ac_cv_debugging" = "xyes"; then
     AC_DEFINE([_GLIBCXX_DEBUG], [], [Description])
 
 else
-    COMMON_CFLAGS="$COMMON_CFLAGS -O2"
+    COMMON_CFLAGS="$COMMON_CFLAGS -O2 -flto"
+    COMMON_LDFLAGS="$COMMON_LDFLAGS -flto"
 fi
 
 case $host_os in
@@ -157,11 +158,11 @@ esac
 
 case $host_cpu in
     x86_64)
-        OPTIMISATION_FLAGS="$OPTIMISATION_FLAGS -mtune=core2"
+        OPTIMISATION_FLAGS="$OPTIMISATION_FLAGS -mtune=generic"
         ;;
 
     i686)
-        OPTIMISATION_FLAGS="$OPTIMISATION_FLAGS -march=prescott -mfpmath=sse"
+        OPTIMISATION_FLAGS="$OPTIMISATION_FLAGS -march=prescott -mtune=generic -mfpmath=sse"
         ;;
 
     *)
