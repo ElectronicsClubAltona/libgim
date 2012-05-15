@@ -11,7 +11,9 @@ debug::backtrace::backtrace (void):
 
 
 ostream&
-operator <<(ostream &os, const debug::backtrace &rhs) {
+debug::operator <<(ostream &os, const debug::backtrace &rhs) {
     os << "null backtrace";
     return os;
 }
+
+
