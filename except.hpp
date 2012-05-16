@@ -30,6 +30,14 @@ namespace util {
     class input_error : public std::runtime_error {
         public:
             input_error (const std::string &_what):
+                    runtime_error (_what)
+            { ; }
+    };
+
+
+    class output_error : public std::runtime_error {
+        public:
+            output_error (const std::string &_what):
                 runtime_error (_what)
             { ; }
     };
