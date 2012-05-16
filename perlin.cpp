@@ -80,7 +80,7 @@ generate (intmax_t x, intmax_t y, size_t seed) {
 }
 
 
-double
+static double
 smooth2d (intmax_t x, intmax_t y, size_t seed) {
     double corners = (generate(x - 1, y - 1, seed) + 
                       generate(x + 1, y - 1, seed) +
@@ -96,13 +96,13 @@ smooth2d (intmax_t x, intmax_t y, size_t seed) {
 }
 
 
-double
+static double
 curve (double t) {
     return t * t * (3.0 - 2.0 * t);
 }
 
 
-double
+static double
 sample2d (double x, double y, size_t seed) {
     intmax_t x_int = intmax_t (x);
     double   x_fac = x - x_int;
@@ -122,13 +122,13 @@ sample2d (double x, double y, size_t seed) {
 }
 
 
-double
+static double
 sigmoid (double x) {
     return -1.0 + 2.0 / (1.0 + exp (-2.0 * x));
 }
 
 
-double
+static double
 perlin2d (double x, double y, size_t seed) {
     size_t levels      = 16;
     double persistence = 0.7;
