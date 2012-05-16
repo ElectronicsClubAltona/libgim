@@ -25,6 +25,7 @@
 #include <cerrno>
 
 using namespace std;
+using namespace util;
 
 
 /// Construct an errno_error from a given error value. The error value MUST signal an error at

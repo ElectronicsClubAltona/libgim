@@ -26,51 +26,52 @@
 #include <stdexcept>
 
 
-class input_error : public std::runtime_error {
-    public:
-        input_error (const std::string &_what):
+namespace util {
+    class input_error : public std::runtime_error {
+        public:
+            input_error (const std::string &_what):
                 runtime_error (_what)
-        { ; }
-};
+            { ; }
+    };
 
 
-class unavailable_error : public std::runtime_error {
-    public:
-        unavailable_error (const std::string &_what):
-                runtime_error (_what)
-        { ; }
-};
+    class unavailable_error : public std::runtime_error {
+        public:
+            unavailable_error (const std::string &_what):
+                    runtime_error (_what)
+            { ; }
+    };
 
 
-/// An exception class used for reporting errors signalled by errno.
-class errno_error : public std::runtime_error {
-    public:
-        int id;
-        errno_error (int _errno);
-        errno_error ();
+    /// An exception class used for reporting errors signalled by errno.
+    class errno_error : public std::runtime_error {
+        public:
+            int id;
+            errno_error (int _errno);
+            errno_error ();
 
-        static void try_code (void);
-        static void try_code (int code);
+            static void try_code (void);
+            static void try_code (int code);
 
-        static void throw_code (void);
-        static void throw_code (int code);
-};
+            static void throw_code (void);
+            static void throw_code (int code);
+    };
 
 
 #if defined(PLATFORM_WIN32)
 #include <windows.h>
 
-class win32_error : public std::runtime_error {
-    public:
-        DWORD id;
+    class win32_error : public std::runtime_error {
+        public:
+            DWORD id;
 
-        win32_error (DWORD _id);
-        win32_error ();
+            win32_error (DWORD _id);
+            win32_error ();
 
-        static void try_code (void);
-        static void throw_code (void);
-};
+            static void try_code (void);
+            static void throw_code (void);
+    };
 #endif
-
+}
 
 #endif 
