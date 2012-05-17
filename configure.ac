@@ -137,8 +137,8 @@ if test "x$ac_cv_debugging" = "xyes"; then
     AC_DEFINE([_GLIBCXX_DEBUG], [], [Description])
 
 else
-    COMMON_CFLAGS="$COMMON_CFLAGS -O2 -flto"
-    COMMON_LDFLAGS="$COMMON_LDFLAGS -flto"
+    COMMON_CFLAGS="$COMMON_CFLAGS -O2 -flto=jobserver"
+    COMMON_LDFLAGS="$COMMON_LDFLAGS -flto=jobserver"
 fi
 
 case $host_os in
