@@ -23,8 +23,11 @@
 namespace lerp {
     double sigmoid (double val);
 
-    double linear (double a, double b, double weight);
-    double cosine (double a, double b, double weight);
+    double linear  (double a, double b, double weight);
+    double cosine  (double a, double b, double weight);
+    double cubic   (double a, double b, double weight);
+    double quintic (double a, double b, double weight);
+    double trunc   (double a, double b, double weight);
 }
 
 #endif 

@@ -31,6 +31,10 @@ lerp::sigmoid (double val) {
 }
 
 
+double lerp::trunc (double a, double, double)
+    { return a; }
+
+
 double
 lerp::linear (double a, double b, double weight) {
     CHECK (weight >= 0 && weight <= 1.0);
@@ -47,3 +51,17 @@ lerp::cosine (double a, double b, double weight) {
     return a * (1.0 - f) + b * f;
 }
 
+
+double
+lerp::cubic (double a, double b, double weight) {
+    CHECK (weight >= 0.0 && weight <= 1.0);
+    double t = weight * weight * (3.0 - 2.0 * weight);
+    return a * (1.0 - t) + b * t;
+}
+
+
+double
+lerp::quintic (double a, double b, double weight) {
+    double t = weight * weight * weight * (weight * (weight * 6.0 - 15.0) + 10.0);
+    return a * (1.0 - t) + b * t;
+}
