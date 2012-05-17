@@ -24,6 +24,30 @@
 #include <cstdlib>
 
 
-void perlin2d (uint8_t *restrict pixels, size_t width, size_t height);
+namespace util {
+    struct perlin {
+        typedef size_t seed_t;
+
+        unsigned octaves;
+        double   frequency;
+        double   persistence;
+        seed_t   seed;
+
+        perlin ();
+        perlin (unsigned octaves,
+                double   frequency,
+                double   persistence,
+                seed_t   seed);
+
+        double sample (double x, double y) const;
+
+    protected:
+        double generate (intmax_t x, intmax_t y) const;
+        double eval     (double   x, double   y) const;
+    };
+
+    void perlin2d (uint8_t *restrict pixels, size_t width, size_t height, const perlin&);
+}
+
 
 #endif
