@@ -37,18 +37,17 @@ double lerp::trunc (double a, double, double)
 
 double
 lerp::linear (double a, double b, double weight) {
-    CHECK (weight >= 0 && weight <= 1.0);
-    return (1.0 - weight) * a + weight * b;
+    CHECK (weight >= 0.0 && weight <= 1.0);
+    return a * (1.0 - weight) + b * weight;
 }
 
 
 double
 lerp::cosine (double a, double b, double weight) {
-    CHECK (weight >= 0 && weight <= 1.0);
-    double ft = weight * PI;
-    double f  = (1.0 - cos (ft)) * 0.5;
+    CHECK (weight >= 0.0 && weight <= 1.0);
+    double t  = (1.0 - cos (weight * PI)) * 0.5;
 
-    return a * (1.0 - f) + b * f;
+    return a * (1.0 - t) + b * t;
 }
 
 
