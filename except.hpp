@@ -25,7 +25,6 @@
 
 #include <stdexcept>
 
-
 namespace util {
     class input_error : public std::runtime_error {
         public:
@@ -64,11 +63,12 @@ namespace util {
             static void throw_code (void);
             static void throw_code (int code);
     };
-
+}
 
 #if defined(PLATFORM_WIN32)
 #include <windows.h>
 
+namespace  util {
     class win32_error : public std::runtime_error {
         public:
             DWORD id;
@@ -79,7 +79,7 @@ namespace util {
             static void try_code (void);
             static void throw_code (void);
     };
-#endif
 }
+#endif
 
 #endif 
