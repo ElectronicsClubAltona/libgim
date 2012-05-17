@@ -39,7 +39,7 @@ write_netpbm (const uint8_t *restrict pixels,
     CHECK_HARD (height > 0);
 
     // Establish an output stream
-    std::ofstream output (path.native (), std::ios::binary);
+    std::ofstream output (path.string ());
     if (!output.good ())
         throw util::output_error ("Unable to open output file");
 
