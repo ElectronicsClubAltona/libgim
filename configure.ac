@@ -179,7 +179,7 @@ esac
 CHECK_RAGEL([test/ragel.c.rl])
 
 
-AX_BOOST_BASE([1.42], [], [AC_MSG_ERROR([Boost version >= 1.42 required])])
+AX_BOOST_BASE([1.49], [], [AC_MSG_ERROR([Boost version >= 1.42 required])])
 AC_SUBST(BOOST_CPPFLAGS)
 AC_SUBST(BOOST_LDFLAGS)
 
