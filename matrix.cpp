@@ -103,18 +103,24 @@ matrix::operator* (const matrix &rhs) const {
 }
 
 
-util::point
-matrix::to_local (const util::point &p) const {
+util::point<3>
+matrix::to_local (const util::point<3> &p) const {
     CHECK_SOFT (is_affine ());
 
-    return { p.x * values[0][0] + p.y * values[0][1] + p.z * values[0][2]  + values[0][3],
-             p.x * values[1][0] + p.y * values[1][1] + p.z * values[1][2]  + values[1][3],
-             p.x * values[2][0] + p.y * values[2][1] + p.z * values[2][2]  + values[2][3] };
+    return { p.x * values[0][0] +
+             p.y * values[0][1] +
+             p.z * values[0][2] + values[0][3],
+             p.x * values[1][0] +
+             p.y * values[1][1] +
+             p.z * values[1][2] + values[1][3],
+             p.x * values[2][0] +
+             p.y * values[2][1] +
+             p.z * values[2][2] + values[2][3] };
 }
 
 
-util::point
-matrix::to_global (const util::point &p) const {
+util::point<3>
+matrix::to_global (const util::point<3> &p) const {
     return inverse ().to_local (p);
 }
 
@@ -145,10 +151,22 @@ matrix::ZEROES = { { { 0.0, 0.0, 0.0, 0.0 },
 
 std::ostream&
 operator<< (std::ostream &os, const matrix &m) {
-    os << "{ {" << m.values[0][0] << ", " << m.values[0][1] << ", " << m.values[0][2] << ", " << m.values[0][3] << "}, "
-       <<   "{" << m.values[1][0] << ", " << m.values[1][1] << ", " << m.values[1][2] << ", " << m.values[1][3] << "}, "
-       <<   "{" << m.values[2][0] << ", " << m.values[2][1] << ", " << m.values[2][2] << ", " << m.values[2][3] << "}, "
-       <<   "{" << m.values[3][0] << ", " << m.values[3][1] << ", " << m.values[3][2] << ", " << m.values[3][3] << "} }";
+    os << "{ {" << m.values[0][0] << ", "
+                << m.values[0][1] << ", "
+                << m.values[0][2] << ", "
+                << m.values[0][3] << "}, "
+       <<   "{" << m.values[1][0] << ", "
+                << m.values[1][1] << ", "
+                << m.values[1][2] << ", "
+                << m.values[1][3] << "}, "
+       <<   "{" << m.values[2][0] << ", "
+                << m.values[2][1] << ", "
+                << m.values[2][2] << ", "
+                << m.values[2][3] << "}, "
+       <<   "{" << m.values[3][0] << ", "
+                << m.values[3][1] << ", "
+                << m.values[3][2] << ", "
+                << m.values[3][3] << "} }";
 
     return os;
 }

@@ -21,50 +21,70 @@
 #define __UTIL_VECTOR_HPP
 
 #include "json.hpp"
+#include "detail/coord.hpp"
 
+#include <array>
 #include <iostream>
+#include <initializer_list>
 
 namespace util {
-    struct vector {
-        double x, y, z;
+    template <size_t S>
+    struct vector : public detail::coord_data<S> {
+        static_assert (S > 0, "vector dimensions must be strictly positive");
 
-        vector  operator* (double) const;
-        vector& operator*=(double);
-        vector  operator* (const vector&) const;
-        vector& operator*=(const vector&);
+        vector ();
 
-        vector  operator+ (const vector&) const;
-        vector& operator+=(const vector&);
+        template <typename... T>
+        vector (T ...t): detail::coord_data<S> {std::forward<T> (t)...} { ; }
 
-        vector  operator- (void) const;
-        vector  operator- (const vector&) const;
-        vector& operator-=(const vector&);
+        util::vector<S>  operator* (double) const;
+        util::vector<S>& operator*=(double);
+        util::vector<S>  operator* (const util::vector<S>&) const;
+        util::vector<S>& operator*=(const util::vector<S>&);
 
-        vector& operator =(const vector &);
+        util::vector<S>  operator+ (const util::vector<S>&) const;
+        util::vector<S>& operator+=(const util::vector<S>&);
 
-        bool operator== (const vector &) const;
+        util::vector<S>  operator- (void) const;
+        util::vector<S>  operator- (const util::vector<S>&) const;
+        util::vector<S>& operator-=(const util::vector<S>&);
+
+        util::vector<S>& operator =(const util::vector <S>&);
+
+        bool operator== (const util::vector <S>&) const;
 
         double magnitude  (void) const;
         double magnitude2 (void) const;
 
-        double dot   (const vector&) const;
-        vector cross (const vector&) const;
+        double dot (const util::vector<S>&) const;
 
-        vector& normalise  (void);
-        vector  normalised (void) const;
+        util::vector<S>& normalise  (void);
+        util::vector<S>  normalised (void) const;
 
-        static vector spherical_to_cartesian (const vector &);
-        static vector cartesian_to_spherical (const vector &);
 
         bool is_zero (void) const;
 
         void sanity (void) const;
     };
 
-    util::vector operator* (double, const util::vector&);
+    vector<3> cross (const vector<3>&, const vector<3>&);
 
-    std::ostream& operator<< (std::ostream&, const util::vector&);
-    const json::node& operator>> (const json::node&, util::vector&);
+    vector<3> spherical_to_cartesian (const util::vector <3>&);
+    vector<3> cartesian_to_spherical (const util::vector <3>&);
+
+
+    typedef vector<2> vector2;
+    typedef vector<3> vector3;
+
+
+    template <size_t S>
+    util::vector<S> operator* (double, const util::vector<S>&);
+
+    template <size_t S>
+    std::ostream& operator<< (std::ostream&, const util::vector<S>&);
+
+    template <size_t S>
+    const json::node& operator>> (const json::node&, util::vector<S>&);
 
 }
 

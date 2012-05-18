@@ -29,141 +29,193 @@
 
 
 using namespace util;
+using std::begin;
+using std::end;
 
-util::vector
-util::vector::operator* (double rhs) const {
-    return { rhs * x, rhs * y, rhs * z };
+
+template <size_t S>
+util::vector<S>::vector ()
+{ ; }
+
+
+//template <size_t S>
+//util::vector<S>::vector (const std::initializer_list<double> &_data) {
+//    CHECK (_data.size () == S);
+//
+//    std::copy (std::begin (_data),
+//               std::end   (_data),
+//               std::begin (this->data));
+//}
+
+
+template <size_t S>
+util::vector<S>
+util::vector<S>::operator* (double rhs) const {
+    util::vector<S> out;
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] * rhs;
+    return out;
 }
 
 
-vector&
-vector::operator*= (double rhs) {
-    x *= rhs;
-    y *= rhs;
-    z *= rhs;
+template <size_t S>
+util::vector<S>&
+util::vector<S>::operator*= (double rhs) {
+    for (double &i: this->data)
+        i *= rhs;
 
     return *this;
 }
 
 
-util::vector
-util::vector::operator* (const vector &rhs) const {
-    return { x * rhs.x, y * rhs.y, z * rhs.z };
+template <size_t S>
+util::vector<S>
+util::vector<S>::operator* (const util::vector<S> &rhs) const {
+    util::vector<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] * rhs.data[i];
+    return out;
 }
 
 
-util::vector&
-util::vector::operator*= (const vector &rhs) {
-    x *= rhs.x;
-    y *= rhs.y;
-    z *= rhs.z;
+template <size_t S>
+util::vector<S>&
+util::vector<S>::operator*= (const util::vector<S> &rhs) {
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] *= rhs.data[i];
 
     return *this;
 }
 
 
-vector
-vector::operator+ (const vector &rhs) const {
-    return { x + rhs.x, y + rhs.y, z + rhs.z };
+template <size_t S>
+util::vector<S>
+util::vector<S>::operator+ (const util::vector<S> &rhs) const {
+    util::vector<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] + rhs.data[i];
+    return out;
 }
 
 
-vector
-vector::operator- (void) const {
-    return { -x, -y, -z };
+template <size_t S>
+util::vector<S>
+util::vector<S>::operator- (void) const {
+    util::vector<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = -this->data[i];
+    return out;
 }
 
 
-vector
-vector::operator- (const vector &rhs) const
-    { return { x - rhs.x, y - rhs.y, z - rhs.z }; }
+template <size_t S>
+util::vector<S>
+util::vector<S>::operator- (const util::vector<S> &rhs) const {
+    util::vector<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] - rhs.data[i];
+    return out;
+}
 
 
-vector&
-vector::operator-= (const vector &rhs) {
-    x -= rhs.x;
-    y -= rhs.y;
-    z -= rhs.z;
+template <size_t S>
+util::vector<S>&
+util::vector<S>::operator-= (const util::vector<S> &rhs) {
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] -= rhs.data[i];
 
     return *this;
 }
 
 
-vector&
-vector::operator+= (const vector &rhs) {
-    x += rhs.x;
-    y += rhs.y;
-    z += rhs.z;
+template <size_t S>
+util::vector<S>&
+util::vector<S>::operator+= (const util::vector<S> &rhs) {
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] += rhs.data[i];
 
     return *this;
 }
 
 
-vector&
-vector::operator= (const vector &rhs) {
-    x = rhs.x;
-    y = rhs.y;
-    z = rhs.z;
+template <size_t S>
+util::vector<S>&
+util::vector<S>::operator= (const util::vector<S> &rhs) {
+    std::copy (begin (rhs.data), end (rhs.data), begin (this->data));
 
     return *this;
 }
 
 
+template <size_t S>
 bool
-vector::operator== (const vector &rhs) const {
-    return almost_equal (x, rhs.x) &&
-           almost_equal (y, rhs.y) &&
-           almost_equal (z, rhs.z);
+util::vector<S>::operator== (const util::vector<S> &rhs) const {
+    for (size_t i = 0; i < S; ++i)
+        if (!almost_equal (this->data[i], rhs.data[i]))
+            return false;
+
+    return true;
 }
 
 
+template <size_t S>
 double
-vector::magnitude (void) const {
-    return sqrt (x * x + y * y + z * z);
+util::vector<S>::magnitude (void) const {
+    return sqrt (magnitude2 ());
 }
 
 
+template <size_t S>
 double
-vector::magnitude2 (void) const {
-    return x * x + y * y + z * z;
+util::vector<S>::magnitude2 (void) const {
+    double total = 0.0;
+    for (size_t i = 0; i < S; ++i)
+        total += pow2 (this->data[i]);
+    return total;
 }
 
 
+template <size_t S>
 double
-vector::dot (const vector &rhs) const {
-    return x * rhs.x + y * rhs.y + z * rhs.z;
+util::vector<S>::dot (const util::vector<S> &rhs) const {
+    double total = 0.0;
+    for (size_t i = 0; i < S; ++i)
+        total += this->data[i] + rhs.data[i];
+    return total;
 }
 
 
-vector
-vector::cross (const vector &rhs) const { 
-    return { y * rhs.z - z * rhs.y,
-             z * rhs.x - x * rhs.z,
-             x * rhs.y - y * rhs.x };
-}
-
-
-vector&
-vector::normalise (void) {
+template <size_t S>
+util::vector<S>&
+util::vector<S>::normalise (void) {
     double mag = magnitude ();
 
-    x /= mag;
-    y /= mag;
-    z /= mag;
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] /= mag;
 
     return *this;
 }
 
 
-vector
-vector::normalised (void) const {
+template <size_t S>
+util::vector<S>
+util::vector<S>::normalised (void) const {
     double mag = magnitude ();
-    return { x / mag, y / mag, z / mag };
+    util::vector<S> out;
+    
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] / mag;
+
+    return out;
 }
 
 
-vector
-vector::spherical_to_cartesian (const vector &s) {
+util::vector<3>
+util::spherical_to_cartesian (const util::vector<3> &s) {
     return {
         s.x * sin (s.y) * cos (s.z),
         s.x * sin (s.y) * sin (s.z),
@@ -172,8 +224,8 @@ vector::spherical_to_cartesian (const vector &s) {
 }
 
 
-vector
-vector::cartesian_to_spherical (const vector &c) {
+util::vector<3>
+util::cartesian_to_spherical (const util::vector<3> &c) {
     double mag = c.magnitude ();
 
     return {
@@ -184,58 +236,81 @@ vector::cartesian_to_spherical (const vector &c) {
 }
 
 
+template <size_t S>
 bool
-vector::is_zero (void) const {
-    return almost_equal (x, 0.0) &&
-           almost_equal (y, 0.0) &&
-           almost_equal (z, 0.0);
+util::vector<S>::is_zero (void) const {
+    return std::all_of (begin (this->data),
+                        end   (this->data),
+                        [] (double i) { return almost_zero (i); });
 }
 
 
+template <size_t S>
 void
-vector::sanity (void) const {
-    CHECK_SOFT (!std::isnan (x));
-    CHECK_SOFT (!std::isnan (y));
-    CHECK_SOFT (!std::isnan (z));
+util::vector<S>::sanity (void) const {
+    CHECK_SOFT (std::all_of (begin (this->data),
+                             end   (this->data),
+                             [] (double i) { return !std::isnan (i); }));
 }
 
 
-util::vector
-util::operator* (double a, const util::vector &b)
+util::vector<3>
+util::cross (const util::vector<3> &a, const util::vector<3> &b) {
+    return { a.y * b.z - a.z * b.y,
+             a.z * b.x - a.x * b.z,
+             a.x * b.y - a.y * b.x };
+}
+
+
+template <size_t S>
+util::vector<S>
+util::operator* (double a, const util::vector<S> &b)
     { return b * a; }
 
 
+template util::vector<1> util::operator* (double, const util::vector<1>&);
+template util::vector<2> util::operator* (double, const util::vector<2>&);
+template util::vector<3> util::operator* (double, const util::vector<3>&);
+
+
+template <size_t S>
 std::ostream&
-util::operator<< (std::ostream &os, const util::vector &v) {
-    os << "vec(" << v.x << ", " << v.y << ", " << v.z << ")";
+util::operator<< (std::ostream &os, const util::vector<S> &v) {
+    os << "vec" << S << "(" << v.data[0];
+    for (double i: v.data)
+        os << ", " << i;
+    os << ")";
     return os;
 }
 
 
+template std::ostream& util::operator<< (std::ostream&, const util::vector<1> &v);
+template std::ostream& util::operator<< (std::ostream&, const util::vector<2> &v);
+template std::ostream& util::operator<< (std::ostream&, const util::vector<3> &v);
+
+
+template <size_t S>
 const json::node&
-util::operator>> (const json::node &node, util::vector &v) {
+util::operator>> (const json::node &node, util::vector<S> &v) {
     const json::array &array = node.as_array ();
+    if (array.size () != S) 
+        throw std::runtime_error ("Invalid dimensionality for json-to-vector");
 
-    switch (array.size ()) {
-        case 1:
-            v.x = array[0].as_number ();
-            v.y = std::numeric_limits<double>::quiet_NaN ();
-            v.z = std::numeric_limits<double>::quiet_NaN ();
-            return node;
-
-        case 2: v.y = array[1].as_number ();
-            v.x = array[0].as_number ();
-            v.y = array[1].as_number ();
-            v.z = std::numeric_limits<double>::quiet_NaN ();
-            return node;
-
-        case 3: v.z = array[2].as_number ();
-            v.x = array[0].as_number ();
-            v.y = array[1].as_number ();
-            v.z = array[2].as_number ();
-            return node;
-
-        default:
-            throw std::runtime_error ("Invalid dimensionality for json-to-vector");
-    }
+    std::transform (begin (array),
+                    end   (array),
+                    begin (v.data),
+                    [] (const json::node &n) {
+                        return n.as_number ().native ();
+                    });
+    return node;
 }
+
+
+template const json::node& util::operator>> (const json::node&, util::vector<1>&);
+template const json::node& util::operator>> (const json::node&, util::vector<2>&);
+template const json::node& util::operator>> (const json::node&, util::vector<3>&);
+
+
+template struct util::vector<1>;
+template struct util::vector<2>;
+template struct util::vector<3>;

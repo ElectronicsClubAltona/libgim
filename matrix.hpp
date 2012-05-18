@@ -29,8 +29,8 @@ namespace util {
 
         matrix operator* (const matrix&) const;
 
-        point to_local  (const point &p) const;
-        point to_global (const point &p) const;
+        point<3> to_local  (const point<3> &p) const;
+        point<3> to_global (const point<3> &p) const;
 
         bool is_affine (void) const;
 

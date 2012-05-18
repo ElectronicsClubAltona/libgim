@@ -24,79 +24,129 @@
 #include <cmath>
 
 using namespace std;
-using namespace util;
 
 
+template <size_t S>
+util::point<S>::point ()
+{ ; }
+
+
+template <size_t S>
 double
-point::distance (const point &other) const {
+util::point<S>::distance (const util::point<S> &other) const {
     return sqrt (distance2 (other));
 }
 
 
+template <size_t S>
 double
-point::distance2 (const point &other) const {
-    return (x - other.x) * (x - other.x) +
-           (y - other.y) * (y - other.y) +
-           (z - other.z) * (z - other.z);
+util::point<S>::distance2 (const util::point<S> &other) const {
+    double total = 0.0;
+
+    for (size_t i = 0; i < S; ++i)
+        total += pow2 (this->data[i] - other.data[i]);
+    return total;
 }
 
 
+
+template <size_t S>
 double
-point::manhattan (const point &other) const {
-    return fabs (x - other.x) + 
-           fabs (y - other.y) +
-           fabs (z - other.z);
+util::point<S>::manhattan (const util::point<S> &other) const {
+    double total = 0.0;
+
+    for (size_t i = 0; i < S; ++i)
+        total += fabs (this->data[i] - other.data[i]);
+    return total;
 }
 
 
-point&
-point::operator*= (double f) {
-    x *= f;
-    y *= f;
-    z *= f;
+template <size_t S>
+util::point<S>&
+util::point<S>::operator*= (double f) {
+    for (double &i: this->data)
+        i *= f;
 
     return *this;
 }
 
 
-point
-point::operator* (double f) const {
-    return { x * f, y * f, z * f };
+template <size_t S>
+util::point<S>
+util::point<S>::operator* (double f) const {
+    util::point<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] * f;
+    return out;
 }
 
 
-point
-point::operator+ (const vector &rhs) const {
-    return { x + rhs.x, y + rhs.y, z + rhs.z };
+template <size_t S>
+util::point<S>
+util::point<S>::operator+ (const util::vector<S> &rhs) const {
+    util::point<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] + rhs.data[i];
+    return out;
 }
 
 
-point&
-point::operator+= (const vector &rhs) {
-    x += rhs.x;
-    y += rhs.y;
-    z += rhs.z;
-
+template <size_t S>
+util::point<S>&
+util::point<S>::operator+= (const util::vector<S> &rhs) {
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] += rhs.data[i];
     return *this;
 }
 
 
-util::vector
-point::operator- (const point &rhs) const {
-    return { x - rhs.x, y - rhs.y, z - rhs.z };
+template <size_t S>
+util::point<S>
+util::point<S>::operator- (const util::point<S> &rhs) const {
+    util::point<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] - rhs.data[i];
+    return out;
 }
 
 
+template <size_t S>
+util::vector<S>
+util::point<S>::to (const util::point<S> &rhs) const {
+    util::vector<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = rhs.data[i] - this->data[i];
+    return out;
+}
+
+
+template <size_t S>
 void
-point::sanity (void) const {
-    CHECK_SOFT (!std::isnan (x));
-    CHECK_SOFT (!std::isnan (y));
-    CHECK_SOFT (!std::isnan (z));
+util::point<S>::sanity (void) const {
+    CHECK_SOFT (std::all_of (begin (this->data),
+                             end   (this->data),
+                             [] (double i) { return !std::isnan (i); }));
 }
 
 
+template <size_t S>
 std::ostream&
-operator<< (std::ostream &os, const point &p) {
-    os << "point(" << p.x << ", " << p.y << ", " << p.z << ")";
+util::operator<< (std::ostream &os, const util::point<S> &p) {
+    os << "point" << S << "(";
+    os << p.data[0];
+
+    for (size_t i = 1; i < S; ++i)
+        os << ", " << p.data[i];
+
+    os << ")";
     return os;
 }
+
+
+template struct util::point<1>;
+template struct util::point<2>;
+template struct util::point<3>;

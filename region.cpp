@@ -41,7 +41,7 @@ region<T>::region (T _x, T _y, T _w, T _h):
 
 template <typename T>
 region<T>&
-region<T>::operator+= (const vector &rhs) {
+region<T>::operator+= (const vector<2> &rhs) {
     x += rhs.x;
     y += rhs.y;
 
@@ -69,25 +69,25 @@ region<T>::empty (void) const
 
 
 template <typename T>
-point
+point<2>
 region<T>::base (void) const {
-    return { static_cast<double> (x), static_cast<double> (y), 0.0 };
+    return { static_cast<double> (x), static_cast<double> (y) };
 }
 
 
 template <typename T>
-point
+point<2>
 region<T>::centre (void) const {
     double cx = x + static_cast<T>(w / 2.0),
            cy = y + static_cast<T>(h / 2.0);
 
-    return { cx, cy, 0.0 };
+    return { cx, cy };
 }
 
 
 template <typename T>
 bool
-region<T>::includes (const point &p) const {
+region<T>::includes (const point<2> &p) const {
     return p.x >= x &&
            p.y >= y &&
            p.x <= x + w &&
@@ -97,7 +97,7 @@ region<T>::includes (const point &p) const {
 
 template <typename T>
 bool
-region<T>::contains (const point& p) const {
+region<T>::contains (const point<2> &p) const {
     return p.x > x &&
            p.y > y &&
            p.x < x + w &&

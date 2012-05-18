@@ -34,18 +34,18 @@ namespace util {
 
         region (T _x, T _y, T _w, T _h);
 
-        region& operator +=(const vector& rhs);
+        region& operator +=(const vector<2>& rhs);
 
         T area     (void) const;
         T diameter (void) const;
 
         bool empty (void) const;
 
-        point base   (void) const;
-        point centre (void) const;
+        point<2> base   (void) const;
+        point<2> centre (void) const;
 
-        bool includes (const point&) const; // inclusive of borders
-        bool contains (const point&) const; // exclusive of borders
+        bool includes (const point<2>&) const; // inclusive of borders
+        bool contains (const point<2>&) const; // exclusive of borders
         bool overlaps (const region<T>&) const; // exclusive of borders
 
         region overlap (const region<T>&) const;
