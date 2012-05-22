@@ -46,6 +46,9 @@ namespace util {
         /// Return the closest number that falls within the range.
         T clamp (T val) const;
 
+        /// Expand the range to include this value if necessary
+        T expand (T val);
+
         /// Normalise a number to [0, 1] within the range. Does not check bounds.
         double normalise (T val) const;
 

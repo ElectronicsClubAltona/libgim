@@ -78,6 +78,14 @@ range<T>::clamp (T val) const
 
 
 template <typename T>
+T
+range<T>::expand (T val) {
+    min = std::min (min, val);
+    max = std::max (max, val);
+}
+
+
+template <typename T>
 double
 range<T>::normalise (T val) const {
     return ((double)val - min) /
