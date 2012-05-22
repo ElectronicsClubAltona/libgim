@@ -39,6 +39,17 @@ namespace util {
 
         util::vector<S>  operator* (double) const;
         util::vector<S>& operator*=(double);
+
+        util::vector<S>  operator/ (double) const;
+        util::vector<S>& operator/=(double);
+
+        util::vector<S>  operator+ (double) const;
+        util::vector<S>& operator+=(double);
+
+        util::vector<S>  operator- (double) const;
+        util::vector<S>& operator-=(double);
+
+
         util::vector<S>  operator* (const util::vector<S>&) const;
         util::vector<S>& operator*=(const util::vector<S>&);
 

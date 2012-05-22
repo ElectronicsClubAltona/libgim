@@ -21,6 +21,7 @@
 
 #include "debug.hpp"
 #include "maths.hpp"
+#include "random.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -36,16 +37,6 @@ using std::end;
 template <size_t S>
 util::vector<S>::vector ()
 { ; }
-
-
-//template <size_t S>
-//util::vector<S>::vector (const std::initializer_list<double> &_data) {
-//    CHECK (_data.size () == S);
-//
-//    std::copy (std::begin (_data),
-//               std::end   (_data),
-//               std::begin (this->data));
-//}
 
 
 template <size_t S>
@@ -133,6 +124,27 @@ util::vector<S>::operator-= (const util::vector<S> &rhs) {
 
 
 template <size_t S>
+util::vector<S>
+util::vector<S>::operator- (double rhs) const {
+    util::vector<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] - rhs;
+    return out;
+}
+
+
+template <size_t S>
+util::vector<S>&
+util::vector<S>::operator-= (double rhs) {
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] -= rhs;
+
+    return *this;
+}
+
+
+template <size_t S>
 util::vector<S>&
 util::vector<S>::operator+= (const util::vector<S> &rhs) {
     for (size_t i = 0; i < S; ++i)
@@ -184,7 +196,7 @@ double
 util::vector<S>::dot (const util::vector<S> &rhs) const {
     double total = 0.0;
     for (size_t i = 0; i < S; ++i)
-        total += this->data[i] + rhs.data[i];
+        total += this->data[i] * rhs.data[i];
     return total;
 }
 
@@ -314,3 +326,11 @@ template const json::node& util::operator>> (const json::node&, util::vector<3>&
 template struct util::vector<1>;
 template struct util::vector<2>;
 template struct util::vector<3>;
+
+
+namespace util {
+    template <> vector<1> random (void) { util::vector<1> out; randomise (out.data); return out; }
+    template <> vector<2> random (void) { util::vector<2> out; randomise (out.data); return out; }
+    template <> vector<3> random (void) { util::vector<3> out; randomise (out.data); return out; }
+}
+
