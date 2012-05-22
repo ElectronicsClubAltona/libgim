@@ -22,13 +22,27 @@
 
 #include "range.hpp"
 
+#include <type_traits>
+
 using namespace util;
 
 namespace util {
     template <typename T>
     T
+    random (void) {
+        static_assert (std::is_integral<T>::value, "random should only operate on integral types");
+        return range<T>::UNLIMITED.random ();
+    }
+
+    template <>
+    double
     random (void)
-        { return range<T>::UNLIMITED.random (); }
+        { return range<double>::UNIT.random (); }
+
+    template <>
+    float
+    random (void)
+        { return range<float>::UNIT.random (); }
 
     template <typename T>
     T&

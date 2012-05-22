@@ -76,6 +76,7 @@ UTIL_FILES   =		\
     raii.hpp		\
     random.cpp		\
     random.hpp		\
+    random.ipp		\
     range.cpp		\
     range.hpp		\
     region.cpp		\

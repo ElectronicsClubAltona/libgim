@@ -26,6 +26,9 @@ namespace util {
     template <typename T>
     T& randomise (T &);
 
+    template <typename T, size_t N>
+    T* randomise (T(&)[N]);
+
     template <typename T>
     T random (void);
 
@@ -48,5 +51,7 @@ namespace util {
         return *begin;
     }
 }
+
+#include "random.ipp"
 
 #endif
