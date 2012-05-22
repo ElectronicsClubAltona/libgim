@@ -61,6 +61,7 @@ lerp::cubic (double a, double b, double weight) {
 
 double
 lerp::quintic (double a, double b, double weight) {
+    CHECK (weight >= 0.0 && weight <= 1.0);
     double t = weight * weight * weight * (weight * (weight * 6.0 - 15.0) + 10.0);
     return a * (1.0 - t) + b * t;
 }
