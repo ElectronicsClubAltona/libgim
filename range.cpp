@@ -78,7 +78,7 @@ range<T>::clamp (T val) const
 
 
 template <typename T>
-T
+void
 range<T>::expand (T val) {
     min = std::min (min, val);
     max = std::max (max, val);
