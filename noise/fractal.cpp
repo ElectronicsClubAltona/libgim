@@ -72,6 +72,7 @@ util::noise::fbm<B>::eval (double x, double y) const {
 }
 
 
+template struct util::noise::fbm<util::noise::cellular>;
 template struct util::noise::fbm<util::noise::gradient<lerp::linear>>;
 template struct util::noise::fbm<util::noise::gradient<lerp::quintic>>;
 template struct util::noise::fbm<util::noise::value<lerp::linear>>;
@@ -123,6 +124,7 @@ util::noise::musgrave<B>::eval (double x, double y) const {
     return total;
 }
 
+template struct util::noise::musgrave<util::noise::cellular>;
 template struct util::noise::musgrave<util::noise::gradient<lerp::linear>>;
 template struct util::noise::musgrave<util::noise::gradient<lerp::quintic>>;
 template struct util::noise::musgrave<util::noise::value<lerp::linear>>;

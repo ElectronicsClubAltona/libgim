@@ -19,8 +19,12 @@
 
 #include "noise/basis.hpp"
 #include "noise/lut.hpp"
+
 #include "../vector.hpp"
+#include "../point.hpp"
 #include "../random.hpp"
+
+#include <algorithm>
 
 using namespace util::noise;
 
@@ -85,9 +89,9 @@ template <lerp_function L>
 template <lerp_function L>
 double 
 value<L>::eval (double x, double y) const {
-    intmax_t x_int = intmax_t (x);
+    intmax_t x_int = static_cast<intmax_t> (x);
+    intmax_t y_int = static_cast<intmax_t> (y);
     double   x_fac = x - x_int;
-    intmax_t y_int = intmax_t (y);
     double   y_fac = y - y_int;
 
     // Generate the four corner values
@@ -121,9 +125,9 @@ gradient<L>::gradient ()
 template <lerp_function L>
 double 
 gradient<L>::eval (double x, double y) const {
-    intmax_t x_int = intmax_t (x);
+    intmax_t x_int = static_cast<intmax_t> (x);
+    intmax_t y_int = static_cast<intmax_t> (y);
     double   x_fac = x - x_int;
-    intmax_t y_int = intmax_t (y);
     double   y_fac = y - y_int;
 
     // Generate the four corner values
@@ -146,3 +150,52 @@ template struct gradient<lerp::linear>;
 template struct gradient<lerp::cubic>;
 template struct gradient<lerp::quintic>;
 
+
+///////////////////////////////////////////////////////////////////////////////
+cellular::cellular (seed_t _seed):
+    basis (_seed)
+{ ; }
+
+
+cellular::cellular ()
+{ ; }
+
+
+double
+cellular::eval (double x, double y) const {
+    using util::point2;
+
+    intmax_t x_int = static_cast<intmax_t> (x);
+    intmax_t y_int = static_cast<intmax_t> (y);
+    double   x_fac = x - x_int;
+    double   y_fac = y - y_int;
+
+    // +---+---+---+
+    // | 0 | 1 | 2 |
+    // +---+---+---+
+    // | 3 | 4 | 5 |
+    // +---+-------+
+    // | 6 | 7 | 8 |
+    // +---+---+---+
+
+    point2 centre = { x_fac, y_fac };
+    double distances[9] = { std::numeric_limits<double>::quiet_NaN () };
+    double *cursor = distances;
+
+    for (signed y_off = -1; y_off <= 1 ; ++y_off)
+        for (signed x_off = -1; x_off <= 1; ++x_off) {
+            auto pos = point2 (double (x_off), double (y_off));
+            auto off = generate<vector2> (x_int + x_off, y_int + y_off, this->seed);
+            off += 1;
+            off /= 2;
+
+            CHECK (off.x >= 0 && off.x <= 1.0);
+            CHECK (off.y >= 0 && off.y <= 1.0);
+
+            pos += off;
+            *cursor++ = pos.distance2 (centre);
+        }
+
+    std::sort (std::begin (distances), std::end (distances));
+    return distances[0];
+}
