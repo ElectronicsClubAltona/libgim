@@ -70,7 +70,7 @@ AS_CXX_COMPILER_FLAG([-pedantic],           [COMMON_CFLAGS="$COMMON_CFLAGS -peda
 AS_CXX_COMPILER_FLAG([-fno-common ],        [COMMON_CFLAGS="$COMMON_CFLAGS -fno-common "])
 AS_CXX_COMPILER_FLAG([-fno-nonansi-builtins],
                  [COMMON_CFLAGS="$COMMON_CFLAGS -fno-nonansi-builtins"])
-AS_CXX_COMPILER_FLAG([-fno-rtti],           [COMMON_CFLAGS="$COMMON_CFLAGS -fno-rtti"])
+##AS_CXX_COMPILER_FLAG([-fno-rtti],           [COMMON_CFLAGS="$COMMON_CFLAGS -fno-rtti"])
 
 
 ##

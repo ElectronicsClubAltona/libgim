@@ -14,40 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_PERLIN_HPP
-#define __UTIL_PERLIN_HPP
+#ifndef __UTIL_NOISE_LUT_HPP
+#define __UTIL_NOISE_LUT_HPP
 
-#include <cstdint>
 #include <cstdlib>
+#include <type_traits>
 
+#include "types.hpp"
 
 namespace util {
-    struct perlin {
-        typedef size_t seed_t;
+    namespace noise {
+        extern const size_t PERM[256];
+        extern const double LUT [256];
 
-        unsigned octaves;
-        double   frequency;
-        double   persistence;
-        seed_t   seed;
+        template <typename T>
+        typename std::enable_if<std::is_integral<T>::value, size_t>::type
+        permute (T idx) {
+            return PERM[(size_t)idx % elems (PERM)];
+        }
 
-        perlin ();
-        perlin (unsigned octaves,
-                double   frequency,
-                double   persistence,
-                seed_t   seed);
-
-        double sample (double x, double y) const;
-
-    protected:
-        double generate (intmax_t x, intmax_t y) const;
-        double eval     (double   x, double   y) const;
-    };
-
-    void perlin2d (uint8_t *restrict pixels, size_t width, size_t height, const perlin&);
+        template <typename T1, typename T2, typename ...R>
+        size_t permute (T1 t1, T2 t2, R ...r) {
+            auto p  = permute (t1);
+                 p += permute (t2, r...);
+            return p % elems (PERM);
+        }
+    }
 }
-
 
 #endif

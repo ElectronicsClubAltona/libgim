@@ -65,8 +65,14 @@ UTIL_FILES   =		\
     memory.cpp		\
     memory.hpp		\
     nocopy.hpp		\
-    perlin.cpp		\
-    perlin.hpp		\
+    noise.cpp		\
+    noise.hpp		\
+    noise/basis.cpp	\
+    noise/basis.hpp	\
+    noise/fractal.cpp	\
+    noise/fractal.hpp	\
+    noise/lut.cpp	\
+    noise/lut.hpp	\
     platform.hpp	\
     point.cpp		\
     point.hpp		\
