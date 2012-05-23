@@ -82,6 +82,26 @@ util::vector<S>::operator*= (const util::vector<S> &rhs) {
 
 template <size_t S>
 util::vector<S>
+util::vector<S>::operator/ (double rhs) const {
+    util::vector<S> out;
+    
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] / rhs;
+    return out;
+}
+
+
+template <size_t S>
+util::vector<S>&
+util::vector<S>::operator/= (double rhs) {
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] /= rhs;
+    return *this;
+}
+
+
+template <size_t S>
+util::vector<S>
 util::vector<S>::operator+ (const util::vector<S> &rhs) const {
     util::vector<S> out;
 
@@ -150,6 +170,15 @@ util::vector<S>::operator+= (const util::vector<S> &rhs) {
     for (size_t i = 0; i < S; ++i)
         this->data[i] += rhs.data[i];
 
+    return *this;
+}
+
+
+template <size_t S>
+util::vector<S>&
+util::vector<S>::operator+= (double rhs) {
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] += rhs;
     return *this;
 }
 
