@@ -27,6 +27,15 @@ main (int, char **) {
 
     CHECK_HARD ( range<uint16_t>::UNLIMITED.contains (numeric_limits<uint16_t>::min()));
     CHECK_HARD ( range<uint16_t>::UNLIMITED.contains (numeric_limits<uint16_t>::max()));
+
+    {
+        range<double> initial_nan (numeric_limits<double>::quiet_NaN (),
+                                   numeric_limits<double>::quiet_NaN ());
+        initial_nan.expand (1.0);
+        CHECK_EQ (initial_nan.min, 1.0);
+        CHECK_EQ (initial_nan.max, 1.0);
+    }
+
     return EXIT_SUCCESS;
 }
 

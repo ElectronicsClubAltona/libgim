@@ -80,8 +80,10 @@ range<T>::clamp (T val) const
 template <typename T>
 void
 range<T>::expand (T val) {
-    min = std::min (min, val);
-    max = std::max (max, val);
+    // The arguments to min and max are such that expansion from initial NaN
+    // values should change both min and max to be that value.
+    min = std::min (val, min);
+    max = std::max (val, max);
 }
 
 
