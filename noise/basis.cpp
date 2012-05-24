@@ -101,6 +101,12 @@ value<L>::eval (double x, double y) const {
     double   x_fac = x - x_int;
     double   y_fac = y - y_int;
 
+    // Shift the coordinate system down a little to ensure we get unit weights
+    // for the lerp. It's better to do this than abs the fractional portion so
+    // we don't get reflections along the origin.
+    if (x < 0) { x_fac = 1.0 + x_fac; x_int -= 1; }
+    if (y < 0) { y_fac = 1.0 + y_fac; y_int -= 1; }
+
     // Generate the four corner values
     double p0 = generate<double> (x_int,     y_int,     this->seed);
     double p1 = generate<double> (x_int + 1, y_int,     this->seed);
@@ -143,6 +149,12 @@ gradient<L>::eval (double x, double y) const {
     intmax_t y_int = static_cast<intmax_t> (y);
     double   x_fac = x - x_int;
     double   y_fac = y - y_int;
+
+    // Shift the coordinate system down a little to ensure we get unit weights
+    // for the lerp. It's better to do this than abs the fractional portion so
+    // we don't get reflections along the origin.
+    if (x < 0) { x_fac = 1.0 + x_fac; x_int -= 1; }
+    if (y < 0) { y_fac = 1.0 + y_fac; y_int -= 1; }
 
     // Generate the four corner values. It's not strictly necessary to
     // normalise the values, but we get a more consistent and visually
@@ -190,6 +202,12 @@ cellular::eval (double x, double y) const {
     intmax_t y_int = static_cast<intmax_t> (y);
     double   x_fac = x - x_int;
     double   y_fac = y - y_int;
+
+    // Generate the four corner values. It's not strictly necessary to
+    // normalise the values, but we get a more consistent and visually
+    // appealing range of outputs with normalised values.
+    if (x < 0) { x_fac = 1.0 + x_fac; x_int -= 1; }
+    if (y < 0) { y_fac = 1.0 + y_fac; y_int -= 1; }
 
     // +---+---+---+
     // | 0 | 1 | 2 |
