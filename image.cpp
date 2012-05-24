@@ -52,9 +52,7 @@ write_netpbm (const uint8_t *restrict pixels,
     // Write the data rows
     for (size_t y = 0; y < height; ++y) {
         for (size_t x = 0; x < width; ++x)
-            output << (size_t)pixels[y * stride + x] << " ";
-        
-        output << "\n";
+            output << (uint8_t)pixels[y * stride + x];
     }
 }
 
@@ -65,7 +63,7 @@ util::pgm::write (const uint8_t *restrict pixels,
                   size_t stride,
                   const boost::filesystem::path &path) {
     // TODO: We should switch between P2 (ascii) and P5 (binary)
-    static const char MAGIC[] = "P2";
+    static const char MAGIC[] = "P5";
     write_netpbm (pixels, width, height, stride, path, MAGIC);
 }
 
