@@ -34,8 +34,11 @@ util::noise::fractal::fractal (unsigned      _octaves,
 { ; }
 
 
-util::noise::fractal::fractal ()
-{ ;}
+util::noise::fractal::fractal ():
+    octaves    (1),
+    frequency  (0.1),
+    lacunarity (0.6)
+{ ; }
 
 
 util::noise::fractal::~fractal ()
