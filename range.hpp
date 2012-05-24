@@ -48,8 +48,21 @@ namespace util {
 
         /// Expand the range to include this value if necessary
         void expand (T val);
+
         /// Normalise a number to [0, 1] within the range. Does not check bounds.
         double normalise (T val) const;
+
+        range& operator*= (T);
+        range  operator*  (T) const;
+
+        range& operator/= (T);
+        range  operator/  (T) const;
+
+        range& operator+= (T);
+        range  operator+  (T) const;
+
+        range& operator-= (T);
+        range  operator-  (T) const;
 
         /// Return a pseudo-random uniformly distributed value within the range.
         /// There are no statistical randomness guarantees whatsoever. 

@@ -95,6 +95,23 @@ range<T>::normalise (T val) const {
 }
 
 
+template <typename T>
+range<T>&
+range<T>::operator*= (T val) {
+    min *= val;
+    max *= val;
+
+    return *this;
+}
+
+
+template <typename T>
+range<T>
+range<T>::operator* (T val) const {
+    return range<T> (min * val, max * val);
+}
+
+
 namespace util {
     template <>
     double
