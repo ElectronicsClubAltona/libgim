@@ -54,9 +54,9 @@ namespace util {
         template <typename B>
         struct musgrave : public fractal {
             musgrave (unsigned octaves,
-                 double frequency,
-                 double lacunarity,
-                 basis::seed_t seed);
+                      double frequency,
+                      double lacunarity,
+                      basis::seed_t seed);
             musgrave ();
 
             B basis;
