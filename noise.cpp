@@ -29,15 +29,9 @@ util::noise::image2d (uint8_t *restrict pixels,
                       size_t            width,
                       size_t            height,
                       const util::noise::fractal &p) {
-    util::range<double> r(std::numeric_limits<double>::quiet_NaN (),
-                          std::numeric_limits<double>::quiet_NaN ());
-
     for (size_t y = 0; y < height; ++y)
         for (size_t x = 0; x < width; ++x) {
-            double v = p.eval (x / double (width), y / double (height));
-            r.expand (v);
+            double v = p.eval (x, y);
             pixels[x + y * width] = v * std::numeric_limits<uint8_t>::max ();
         }
-
-    std::cerr << r << "\n";
 }
