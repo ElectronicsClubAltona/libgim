@@ -191,7 +191,7 @@ cellular::cellular ()
 
 range<double>
 cellular::bounds (void) const
-    { return { 0.0, sqrt(2) }; }
+    { return { 0.0, 1.5 }; }
 
 
 double
@@ -236,5 +236,7 @@ cellular::eval (double x, double y) const {
         }
 
     std::sort (std::begin (distances), std::end (distances));
+    CHECK_SOFT (distances[0] >= 0);
+    CHECK_SOFT (bounds ().contains (distances[0]));
     return distances[0];
 }
