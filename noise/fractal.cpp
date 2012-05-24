@@ -58,13 +58,15 @@ double
 util::noise::fbm<B>::eval (double x, double y) const {
     double total = 0.0;
     double f     = this->frequency;
-    double a     = this->lacunarity;
+    double a     = 1.0;
+    double a_sum = 0.0;
 
     for (size_t i = 0; i < this->octaves; ++i) {
         total += basis.eval (x * f, y * f) * a;
-        total  = max (-1.0, min (1.0, total));
 
         f *= 2.0;
+
+        a_sum += a;
         a *= this->lacunarity;
     }
 

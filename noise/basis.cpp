@@ -27,6 +27,7 @@
 #include <algorithm>
 
 using namespace util::noise;
+using util::range;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Generate a type from [-UNIT..UNIT]
@@ -82,8 +83,14 @@ value<L>::value (seed_t _seed):
 
 
 template <lerp_function L>
-    value<L>::value ()
+value<L>::value ()
 { ; }
+
+
+template <lerp_function L>
+range<double>
+value<L>::bounds (void) const
+    { return { -1.0, 1.0 }; }
 
 
 template <lerp_function L>
@@ -117,9 +124,16 @@ gradient<L>::gradient (seed_t _seed):
     basis (_seed)
 { ; }
 
+
 template <lerp_function L>
 gradient<L>::gradient ()
 { ; }
+
+
+template <lerp_function L>
+range<double>
+gradient<L>::bounds (void) const
+    { return { -sqrt(2.0) / 2.0, sqrt (2.0) / 2.0 }; }
 
 
 template <lerp_function L>
@@ -130,11 +144,13 @@ gradient<L>::eval (double x, double y) const {
     double   x_fac = x - x_int;
     double   y_fac = y - y_int;
 
-    // Generate the four corner values
-    vector2 p0 = generate<vector2> (x_int,     y_int,       this->seed);
-    vector2 p1 = generate<vector2> (x_int + 1, y_int,       this->seed);
-    vector2 p2 = generate<vector2> (x_int,     y_int + 1,   this->seed);
-    vector2 p3 = generate<vector2> (x_int + 1, y_int + 1,   this->seed);
+    // Generate the four corner values. It's not strictly necessary to
+    // normalise the values, but we get a more consistent and visually
+    // appealing range of outputs with normalised values.
+    vector2 p0 = generate<vector2> (x_int,     y_int,       this->seed).normalise ();
+    vector2 p1 = generate<vector2> (x_int + 1, y_int,       this->seed).normalise ();
+    vector2 p2 = generate<vector2> (x_int,     y_int + 1,   this->seed).normalise ();
+    vector2 p3 = generate<vector2> (x_int + 1, y_int + 1,   this->seed).normalise ();
 
     double  v0 = p0.x *        x_fac  + p0.y *  y_fac;
     double  v1 = p1.x * (x_fac - 1.0) + p1.y *  y_fac;
@@ -159,6 +175,11 @@ cellular::cellular (seed_t _seed):
 
 cellular::cellular ()
 { ; }
+
+
+range<double>
+cellular::bounds (void) const
+    { return { 0.0, sqrt(2) }; }
 
 
 double

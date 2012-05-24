@@ -22,6 +22,7 @@
 
 #include <cstdlib>
 #include "../lerp.hpp"
+#include "../range.hpp"
 
 namespace util {
     namespace noise {
@@ -35,6 +36,8 @@ namespace util {
             virtual ~basis ();
 
             seed_t seed;
+
+            virtual range<double> bounds (void) const = 0;
             virtual double eval (double x, double y) const = 0;
         };
 
@@ -42,18 +45,24 @@ namespace util {
         template <lerp_function L> struct value : public basis {
             value (seed_t);
             value ();
+
+            virtual range<double> bounds (void) const;
             virtual double eval (double x, double y) const;
         };
 
         template <lerp_function L> struct gradient : public basis {
             gradient (seed_t);
             gradient ();
+
+            virtual range<double> bounds (void) const;
             virtual double eval (double x, double y) const;
         };
 
         struct cellular : public basis {
             cellular (seed_t);
             cellular ();
+
+            virtual range<double> bounds (void) const;
             virtual double eval (double x, double y) const;
         };
     }
