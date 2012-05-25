@@ -29,7 +29,7 @@ using namespace util;
 
 
 template <typename T>
-region<T>::region (T _x, T _y, T _w, T _h):
+region<T>::region (T _x, T _y, size_type _w, size_type _h):
     x (_x),
     y (_y),
     w (_w),
@@ -49,15 +49,15 @@ region<T>::operator+= (const vector<2> &rhs) {
 
 
 template <typename T>
-T 
+typename region<T>::size_type
 region<T>::area (void) const
     { return w * h; }
 
 
 template <typename T>
-T 
+typename region<T>::size_type
 region<T>::diameter (void) const {
-    return (T)sqrt (w * w + h * h);
+    return static_cast<size_type> (sqrt (w * w + h * h));
 }
 
 

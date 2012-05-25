@@ -22,6 +22,7 @@
 #define __UTIL_REGION_HPP
 
 #include "point.hpp"
+#include "types/traits.hpp"
 
 namespace util {
     /**
@@ -29,15 +30,17 @@ namespace util {
      */
     template <typename T>
     struct region {
-        T x, y;
-        T w, h;
+        typedef typename always_unsigned<T>::type size_type;
 
-        region (T _x, T _y, T _w, T _h);
+        T x, y;                 
+        size_type w, h;
+
+        region (T _x, T _y, size_type _w, size_type _h);
 
         region& operator +=(const vector<2>& rhs);
 
-        T area     (void) const;
-        T diameter (void) const;
+        size_type area     (void) const;
+        size_type diameter (void) const;
 
         bool empty (void) const;
 
