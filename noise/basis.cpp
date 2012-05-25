@@ -20,9 +20,10 @@
 #include "noise/basis.hpp"
 #include "noise/lut.hpp"
 
-#include "../vector.hpp"
+#include "../debug.hpp"
 #include "../point.hpp"
 #include "../random.hpp"
+#include "../vector.hpp"
 
 #include <algorithm>
 

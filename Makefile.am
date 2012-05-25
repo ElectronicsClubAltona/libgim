@@ -21,7 +21,6 @@ UTIL_FILES   =		\
     crc.hpp		\
     debug.cpp   	\
     debug.hpp   	\
-    enable_if.hpp  	\
     endian.cpp		\
     endian.hpp		\
     except.cpp  	\
@@ -99,8 +98,12 @@ UTIL_FILES   =		\
     string.hpp		\
     time.cpp		\
     time.hpp		\
-    types.cpp		\
     types.hpp		\
+    types/bits.hpp	\
+    types/casts.hpp	\
+    types/string.cpp	\
+    types/string.hpp	\
+    types/traits.hpp	\
     vector.cpp		\
     vector.hpp		\
     version.cpp		\

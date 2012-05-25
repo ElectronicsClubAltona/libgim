@@ -52,6 +52,16 @@ util::noise::fractal::eval (double, double) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename B>
+util::noise::fbm<B>::fbm (unsigned _octaves,
+                          double   _frequency,
+                          double   _lacunarity,
+                          basis::seed_t _seed):
+    fractal (_octaves, _frequency, _lacunarity),
+    basis (_seed)
+{ ; }
+
+
+template <typename B>
 util::noise::fbm<B>::fbm ()
 { ; }
 
@@ -85,6 +95,16 @@ template struct util::noise::fbm<util::noise::value<lerp::quintic>>;
 
 
 ///////////////////////////////////////////////////////////////////////////////
+template <typename B>
+util::noise::musgrave<B>::musgrave (unsigned _octaves,
+                                    double   _frequency,
+                                    double   _lacunarity,
+                                    basis::seed_t _seed):
+    fractal (_octaves, _frequency, _lacunarity),
+    basis (_seed)
+{ ; }
+
+
 template <typename B>
 util::noise::musgrave<B>::musgrave ()
 { ; }

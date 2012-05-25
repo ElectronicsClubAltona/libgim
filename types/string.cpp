@@ -14,32 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_FLETCHER_HPP
-#define __UTIL_FLETCHER_HPP
+#include "string.hpp"
 
-#include "types/bits.hpp"
+#define do_type_to_string(T)                                                    \
+template <> std::string type_to_string <T>       (void) { return #T; }          \
+template <> std::string type_to_string <const T> (void) { return "const " #T; }
 
-#include <cstdint>
-#include <cstdlib>
+do_type_to_string (float)
+do_type_to_string (double)
 
+do_type_to_string (  int8_t)
+do_type_to_string ( int16_t)
+do_type_to_string ( int32_t)
+do_type_to_string ( int64_t)
 
-template <unsigned BITS, unsigned MODULUS, unsigned INITIAL_A, unsigned INITIAL_B>
-typename bits_type<BITS>::uint
-fletcher (const void *restrict _data, size_t size) {
-    const uint8_t *restrict data = static_cast<const uint8_t*> (_data);
-    typename bits_type<BITS>::uint A = INITIAL_A,
-                                   B = INITIAL_B;
-
-    for (size_t i = 0; i < size; ++i) {
-        A = (A + data[i]) % MODULUS;
-        B = (A +       B) % MODULUS;
-    }
-
-    return (B << (BITS / 2)) | A;
-}
-
-#endif
+do_type_to_string ( uint8_t)
+do_type_to_string (uint16_t)
+do_type_to_string (uint32_t)
+do_type_to_string (uint64_t)
 

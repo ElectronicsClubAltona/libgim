@@ -20,7 +20,7 @@
 #ifndef __UTIL_FIXED_HPP
 #define __UTIL_FIXED_HPP
 
-#include "types.hpp"
+#include "types/bits.hpp"
 
 #include <cstdint>
 

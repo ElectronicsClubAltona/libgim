@@ -14,20 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __ENABLE_IF_HPP
-#define __ENABLE_IF_HPP
+#ifndef __UTIL_TYPES_STRING_HPP
+#define __UTIL_TYPES_STRING_HPP
 
-template <bool B, typename T>
-struct enable_if {
-    typedef T type;
-};
-
+#include <string>
 
 template <typename T>
-struct enable_if<false, T>  { };
+std::string
+type_to_string (void);
 
-
-#endif // __ENABLE_IF_HPP
+#endif

@@ -21,7 +21,7 @@
 
 #include "debug.hpp"
 #include "platform.hpp"
-#include "types.hpp"
+#include "types/casts.hpp"
 
 
 using namespace util;

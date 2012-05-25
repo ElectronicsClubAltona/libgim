@@ -1,7 +1,7 @@
 #ifndef __FLOAT_HPP
 #define __FLOAT_HPP
 
-#include "types.hpp"
+#include "types/bits.hpp"
 #include "debug.hpp"
 
 

@@ -24,8 +24,8 @@
 
 #if defined(PLATFORM_LINUX)
 
-#include "types.hpp"
 #include "except.hpp"
+#include "types/casts.hpp"
 
 #include <sys/stat.h>
 #include <sys/types.h>

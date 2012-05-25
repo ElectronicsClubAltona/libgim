@@ -20,6 +20,7 @@
 
 #include "../json.hpp"
 
+#include "../debug.hpp"
 #include "../maths.hpp"
 
 #include <cmath>

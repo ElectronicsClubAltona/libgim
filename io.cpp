@@ -22,6 +22,7 @@
 #include "debug.hpp"
 #include "except.hpp"
 #include "platform.hpp"
+#include "types/casts.hpp"
 
 #include <cstdio>
 #include <sys/types.h>

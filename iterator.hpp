@@ -21,7 +21,7 @@
 #ifndef __UTIL_ITERATOR_HPP
 #define __UTIL_ITERATOR_HPP
 
-#include "types.hpp"
+#include "types/traits.hpp"
 
 
 template <typename Base>
