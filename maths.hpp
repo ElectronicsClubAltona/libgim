@@ -68,12 +68,22 @@ almost_equal (const T &a, const T &b)
     { return a == b; }
 
 
+template <>
+bool
+almost_equal (const float &a, const float &b);
+
+
+template <>
+bool
+almost_equal (const double &a, const double &b);
+
+
 template <typename Ta, typename Tb>
 typename std::enable_if<
     std::is_arithmetic<Ta>::value && std::is_arithmetic<Tb>::value,
     bool
 >::type
-almost_equal (const Ta &a, const Tb &b) {
+almost_equal (Ta a, Tb b) {
     return almost_equal <decltype(a + b)> (static_cast<decltype(a + b)>(a),
                                            static_cast<decltype(a + b)>(b));
 }
@@ -121,16 +131,6 @@ inline double
 to_radians (double degrees) {
     return degrees / 180 * PI;
 }
-
-
-template <>
-bool
-almost_equal (const float &a, const float &b);
-
-
-template <>
-bool
-almost_equal (const double &a, const double &b);
 
 
 /// Variadic minimum
