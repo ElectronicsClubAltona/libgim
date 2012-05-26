@@ -28,17 +28,21 @@
 #include <limits>
 #include <numeric>
 
+#pragma GCC optimize("-O3")
 
+//-----------------------------------------------------------------------------
 using namespace util;
 using std::begin;
 using std::end;
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::vector<S>::vector ()
 { ; }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::vector<S>
 util::vector<S>::operator* (double rhs) const {
@@ -80,6 +84,7 @@ util::vector<S>::operator*= (const util::vector<S> &rhs) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::vector<S>
 util::vector<S>::operator/ (double rhs) const {
@@ -100,6 +105,7 @@ util::vector<S>::operator/= (double rhs) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::vector<S>
 util::vector<S>::operator+ (const util::vector<S> &rhs) const {
@@ -111,6 +117,37 @@ util::vector<S>::operator+ (const util::vector<S> &rhs) const {
 }
 
 
+template <size_t S>
+util::vector<S>
+util::vector<S>::operator+ (double rhs) const {
+    util::vector<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] + rhs;
+    return out;
+}
+
+
+template <size_t S>
+util::vector<S>&
+util::vector<S>::operator+= (const util::vector<S> &rhs) {
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] += rhs.data[i];
+
+    return *this;
+}
+
+
+template <size_t S>
+util::vector<S>&
+util::vector<S>::operator+= (double rhs) {
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] += rhs;
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::vector<S>
 util::vector<S>::operator- (void) const {
@@ -164,25 +201,7 @@ util::vector<S>::operator-= (double rhs) {
 }
 
 
-template <size_t S>
-util::vector<S>&
-util::vector<S>::operator+= (const util::vector<S> &rhs) {
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] += rhs.data[i];
-
-    return *this;
-}
-
-
-template <size_t S>
-util::vector<S>&
-util::vector<S>::operator+= (double rhs) {
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] += rhs;
-    return *this;
-}
-
-
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::vector<S>&
 util::vector<S>::operator= (const util::vector<S> &rhs) {
@@ -203,6 +222,7 @@ util::vector<S>::operator== (const util::vector<S> &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 double
 util::vector<S>::magnitude (void) const {
@@ -216,16 +236,6 @@ util::vector<S>::magnitude2 (void) const {
     double total = 0.0;
     for (size_t i = 0; i < S; ++i)
         total += pow2 (this->data[i]);
-    return total;
-}
-
-
-template <size_t S>
-double
-util::vector<S>::dot (const util::vector<S> &rhs) const {
-    double total = 0.0;
-    for (size_t i = 0; i < S; ++i)
-        total += this->data[i] * rhs.data[i];
     return total;
 }
 
@@ -255,6 +265,26 @@ util::vector<S>::normalised (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
+template <size_t S>
+double
+util::vector<S>::dot (const util::vector<S> &rhs) const {
+    double total = 0.0;
+    for (size_t i = 0; i < S; ++i)
+        total += this->data[i] * rhs.data[i];
+    return total;
+}
+
+
+util::vector<3>
+util::cross (const util::vector<3> &a, const util::vector<3> &b) {
+    return { a.y * b.z - a.z * b.y,
+             a.z * b.x - a.x * b.z,
+             a.x * b.y - a.y * b.x };
+}
+
+
+//-----------------------------------------------------------------------------
 util::vector<3>
 util::spherical_to_cartesian (const util::vector<3> &s) {
     return {
@@ -277,6 +307,7 @@ util::cartesian_to_spherical (const util::vector<3> &c) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 bool
 util::vector<S>::is_zero (void) const {
@@ -295,14 +326,7 @@ util::vector<S>::sanity (void) const {
 }
 
 
-util::vector<3>
-util::cross (const util::vector<3> &a, const util::vector<3> &b) {
-    return { a.y * b.z - a.z * b.y,
-             a.z * b.x - a.x * b.z,
-             a.x * b.y - a.y * b.x };
-}
-
-
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::vector<S>
 util::operator* (double a, const util::vector<S> &b)
@@ -314,6 +338,29 @@ template util::vector<2> util::operator* (double, const util::vector<2>&);
 template util::vector<3> util::operator* (double, const util::vector<3>&);
 
 
+template <size_t S>
+util::vector<S>
+util::operator+ (double a, const util::vector<S> &b)
+    { return b + a; }
+
+
+template util::vector<1> util::operator+ (double, const util::vector<1>&);
+template util::vector<2> util::operator+ (double, const util::vector<2>&);
+template util::vector<3> util::operator+ (double, const util::vector<3>&);
+
+
+template <size_t S>
+util::vector<S>
+util::operator- (double a, const util::vector<S> &b)
+    { return a + (-b); }
+
+
+template util::vector<1> util::operator- (double, const util::vector<1>&);
+template util::vector<2> util::operator- (double, const util::vector<2>&);
+template util::vector<3> util::operator- (double, const util::vector<3>&);
+
+
+//-----------------------------------------------------------------------------
 template <size_t S>
 std::ostream&
 util::operator<< (std::ostream &os, const util::vector<S> &v) {
@@ -330,6 +377,7 @@ template std::ostream& util::operator<< (std::ostream&, const util::vector<2> &v
 template std::ostream& util::operator<< (std::ostream&, const util::vector<3> &v);
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 const json::node&
 util::operator>> (const json::node &node, util::vector<S> &v) {
@@ -352,11 +400,13 @@ template const json::node& util::operator>> (const json::node&, util::vector<2>&
 template const json::node& util::operator>> (const json::node&, util::vector<3>&);
 
 
+//-----------------------------------------------------------------------------
 template struct util::vector<1>;
 template struct util::vector<2>;
 template struct util::vector<3>;
 
 
+//-----------------------------------------------------------------------------
 namespace util {
     template <> vector<1> random (void) { util::vector<1> out; randomise (out.data); return out; }
     template <> vector<2> random (void) { util::vector<2> out; randomise (out.data); return out; }

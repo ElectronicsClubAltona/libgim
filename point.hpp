@@ -59,6 +59,9 @@ namespace util {
     typedef point<2> point2;
     typedef point<3> point3;
 
+    template <size_t S> point<S> operator* (const vector<S>&, const point<S>&);
+    template <size_t S> point<S> operator* (const point<S>&, const vector<S>&);
+
     template <size_t S>
     std::ostream& operator<< (std::ostream&, const util::point<S>&);
 }

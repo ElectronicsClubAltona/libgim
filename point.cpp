@@ -25,12 +25,15 @@
 
 using namespace std;
 
+#pragma GCC optimize("-O3")
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::point<S>::point ()
 { ; }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 double
 util::point<S>::distance (const util::point<S> &other) const {
@@ -49,7 +52,6 @@ util::point<S>::distance2 (const util::point<S> &other) const {
 }
 
 
-
 template <size_t S>
 double
 util::point<S>::manhattan (const util::point<S> &other) const {
@@ -61,6 +63,7 @@ util::point<S>::manhattan (const util::point<S> &other) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::point<S>&
 util::point<S>::operator*= (double f) {
@@ -113,6 +116,7 @@ util::point<S>::operator- (const util::point<S> &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::vector<S>
 util::point<S>::to (const util::point<S> &rhs) const {
@@ -124,6 +128,7 @@ util::point<S>::to (const util::point<S> &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 void
 util::point<S>::sanity (void) const {
@@ -133,6 +138,35 @@ util::point<S>::sanity (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
+template <size_t S>
+util::point<S>
+util::operator* (const vector<S> &v, const point<S> &p) {
+    point<S> out;
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = p.data[i] + v.data[i];
+
+    return out;
+}
+
+
+template util::point<1> util::operator* (const vector<1>&, const point<1>&);
+template util::point<2> util::operator* (const vector<2>&, const point<2>&);
+template util::point<3> util::operator* (const vector<3>&, const point<3>&);
+
+
+template <size_t S>
+util::point<S>
+util::operator* (const point<S> &p, const vector<S> &v)
+    { return v * p; }
+
+
+template util::point<1> util::operator* (const point<1>&, const vector<1>&);
+template util::point<2> util::operator* (const point<2>&, const vector<2>&);
+template util::point<3> util::operator* (const point<3>&, const vector<3>&);
+
+
+//-----------------------------------------------------------------------------
 template <size_t S>
 std::ostream&
 util::operator<< (std::ostream &os, const util::point<S> &p) {

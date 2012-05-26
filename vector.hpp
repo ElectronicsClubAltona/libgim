@@ -88,11 +88,11 @@ namespace util {
     typedef vector<3> vector3;
 
 
-    template <size_t S>
-    util::vector<S> operator* (double, const util::vector<S>&);
+    template <size_t S> util::vector<S> operator* (double, const util::vector<S>&);
+    template <size_t S> util::vector<S> operator+ (double, const util::vector<S>&);
+    template <size_t S> util::vector<S> operator- (double, const util::vector<S>&);
 
-    template <size_t S>
-    std::ostream& operator<< (std::ostream&, const util::vector<S>&);
+    template <size_t S> std::ostream& operator<< (std::ostream&, const util::vector<S>&);
 
     template <size_t S>
     const json::node& operator>> (const json::node&, util::vector<S>&);
