@@ -40,9 +40,13 @@ ipv4::ip::ip (uint32_t _integer):
 { ; }
 
 
-ipv4::ip::ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d):
-    m_octets ({ a, b, c, d })
-{ ; }
+ipv4::ip::ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d)
+{
+    m_octets[0] = a;
+    m_octets[1] = b;
+    m_octets[2] = c;
+    m_octets[3] = d;
+}
 
 
 ipv4::ip&

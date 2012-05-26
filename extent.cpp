@@ -79,7 +79,9 @@ namespace util {
         { return; }
 }
 
-template struct extent<unsigned int>;
-template struct extent<unsigned long>;
-template struct extent<double>;
 
+namespace util {
+    template struct extent<unsigned int>;
+    template struct extent<unsigned long>;
+    template struct extent<double>;
+}

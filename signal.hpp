@@ -31,7 +31,7 @@ namespace util {
     template <typename Ret, typename ...Args>
     class signal {
         public:
-            typedef Ret (*callback_function)(Args...);
+            //typedef Ret (*callback_function)(Args...);
             typedef std::function<Ret(Args...)> callback_object;
 
         protected:
@@ -81,9 +81,9 @@ namespace util {
 
 
             /// Add a callback to the list.
-            const cookie
-            connect (const callback_function &_cb)
-                { return m_children.insert (m_children.end (), _cb); }
+            //const cookie
+            //connect (const callback_function &_cb)
+            //    { return m_children.insert (m_children.end (), _cb); }
 
 
             void disconnect (const cookie _cb)
