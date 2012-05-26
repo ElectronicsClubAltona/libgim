@@ -43,12 +43,14 @@ constexpr uint16_t ntoh (uint16_t n)
 
 
 constexpr uint32_t hton (uint32_t h) {
+#if defined(__GNUG__)
     return __builtin_bswap32 (h);
-
-    //return (h & 0xFF000000U) >> 24 |
-    //       (h & 0x00FF0000U) >>  8 |
-    //       (h & 0x0000FF00U) <<  8 |
-    //       (h & 0x000000FFU) << 24;
+#else
+    return (h & 0xFF000000U) >> 24 |
+           (h & 0x00FF0000U) >>  8 |
+           (h & 0x0000FF00U) <<  8 |
+           (h & 0x000000FFU) << 24;
+#endif
 }
 
 
@@ -57,16 +59,18 @@ constexpr uint32_t ntoh (uint32_t n)
 
 
 constexpr uint64_t hton (uint64_t h) {
+#if defined(__GNUG__)
     return __builtin_bswap64 (h);
-
-    // return (h & 0xFF00000000000000UL) >> 56 |
-    //        (h & 0x00FF000000000000UL) >> 40 |
-    //        (h & 0x0000FF0000000000UL) >> 24 |
-    //        (h & 0x000000FF00000000UL) >>  8 |
-    //        (h & 0x00000000FF000000UL) <<  8 |
-    //        (h & 0x0000000000FF0000UL) << 24 |
-    //        (h & 0x000000000000FF00UL) << 40 |
-    //        (h & 0x00000000000000FFUL) << 56;
+#else
+    return (h & 0xFF00000000000000UL) >> 56 |
+           (h & 0x00FF000000000000UL) >> 40 |
+           (h & 0x0000FF0000000000UL) >> 24 |
+           (h & 0x000000FF00000000UL) >>  8 |
+           (h & 0x00000000FF000000UL) <<  8 |
+           (h & 0x0000000000FF0000UL) << 24 |
+           (h & 0x000000000000FF00UL) << 40 |
+           (h & 0x00000000000000FFUL) << 56;
+#endif
 }
 
 
