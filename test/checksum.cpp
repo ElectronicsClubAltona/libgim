@@ -2,6 +2,7 @@
 #include "adler.hpp"
 #include "bsdsum.hpp"
 #include "types.hpp"
+#include "debug.hpp"
 
 #include <cstdlib>
 #include <cstring>
