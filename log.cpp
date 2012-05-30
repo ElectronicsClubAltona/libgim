@@ -39,7 +39,6 @@ void
 check_level (level_t l)
     { CHECK (l >= 0 && l < NUM_LEVELS); }
 
-
 const string&
 level_to_string (level_t l) {
     check_level (l);
