@@ -48,6 +48,12 @@ extent<T>::area (void) const
 
 
 template <typename T>
+double
+extent<T>::aspect (void) const
+    { return static_cast<double> (width) / height; }
+
+
+template <typename T>
 bool
 extent<T>::empty (void) const
     { return almost_equal (area(), 0); }

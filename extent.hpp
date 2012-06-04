@@ -33,6 +33,8 @@ namespace util {
         T    area  (void) const;
         T diameter (void) const;
 
+        double aspect (void) const;
+
         bool empty (void) const;
 
         bool operator ==(const extent& rhs) const;
