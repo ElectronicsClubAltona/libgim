@@ -153,8 +153,9 @@ class panic_error {
 void panic (const std::string&) terminal;
 void panic (void)               terminal;
 
-
 void not_implemented (void) terminal;
+void not_implemented (const char*) terminal;
+
 void unreachable     (void) terminal;
 void unreachable     (const std::string&) terminal;
 void unusual         (void);

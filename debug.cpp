@@ -28,6 +28,7 @@
 using namespace std;
 
 
+//------------------------------------------------------------------------------
 void
 panic (const std::string& what) {
     breakpoint ();
@@ -40,6 +41,8 @@ void
 panic (void)
     { panic ("NFI"); }
 
+
+//------------------------------------------------------------------------------
 #if defined(PLATFORM_WIN32)
 #include <windows.h>
 void
@@ -58,11 +61,20 @@ breakpoint (void) {
 #endif
 
 
+//------------------------------------------------------------------------------
 void
-not_implemented (void)
-    { panic ("Function not implemented"); }
+not_implemented (void) {
+    static const char *MSG = "Function not implemented";
+    not_implemented (MSG);
+}
 
 
+void
+not_implemented (const char *msg)
+    { panic (msg); }
+
+
+//------------------------------------------------------------------------------
 void
 unreachable (void) {
     panic ("Unreachable code executed");
@@ -75,15 +87,16 @@ unreachable (const std::string& what) {
 }
 
 
+//------------------------------------------------------------------------------
 void
 unusual (void) {
     panic ("Unusual code path found.");
 }
 
 
+//------------------------------------------------------------------------------
 #if defined(PLATFORM_LINUX)
 #include <fenv.h>
-
 void
 enable_fpe (void) {
     feenableexcept (FE_DIVBYZERO | FE_INVALID);
@@ -113,5 +126,4 @@ disable_fpe (void) {
 //    unsigned int ignored;
 //    _controlfp_s (&ignored, 0, _MCW_EM);
 }
-
 #endif
