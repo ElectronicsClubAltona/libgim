@@ -17,6 +17,7 @@ UTIL_FILES   =		\
     bsdsum.cpp		\
     colour.cpp		\
     colour.hpp		\
+    detail/coord.hpp	\
     crc.cpp		\
     crc.hpp		\
     debug.cpp   	\
