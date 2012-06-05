@@ -29,6 +29,8 @@ namespace util {
         T width, height;
 
         extent (const T  _width, const T  _height);
+        extent (const extent&);
+        extent& operator= (const extent&);
 
         T    area  (void) const;
         T diameter (void) const;

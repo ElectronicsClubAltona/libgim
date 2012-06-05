@@ -27,13 +27,32 @@
 using namespace util;
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 extent<T>::extent (const T  _width, const T  _height):
         width (_width),
         height (_height)
-    { ; }
+{ ; }
 
 
+template <typename T>
+extent<T>::extent (const extent<T> &rhs):
+        width  (rhs.width),
+        height (rhs.height)
+{ ; }
+
+
+template <typename T>
+extent<T>&
+extent<T>::operator= (const extent<T> &rhs) {
+    width  = rhs.width;
+    height = rhs.height;
+
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
 template <typename T>
 T
 extent<T>::diameter (void) const {
@@ -47,18 +66,21 @@ extent<T>::area (void) const
     { return width * height; }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 double
 extent<T>::aspect (void) const
     { return static_cast<double> (width) / height; }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 bool
 extent<T>::empty (void) const
     { return almost_equal (area(), 0); }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 bool
 extent<T>::operator ==(const extent& rhs) const {
@@ -67,6 +89,7 @@ extent<T>::operator ==(const extent& rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 void
 extent<T>::sanity (void) const
@@ -86,6 +109,7 @@ namespace util {
 }
 
 
+//-----------------------------------------------------------------------------
 namespace util {
     template struct extent<unsigned int>;
     template struct extent<unsigned long>;
