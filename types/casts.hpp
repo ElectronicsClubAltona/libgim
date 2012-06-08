@@ -26,6 +26,7 @@
 #include <limits>
 
 
+//-----------------------------------------------------------------------------
 namespace detail {
     template <typename T, typename V>
     T
@@ -58,6 +59,7 @@ sign_cast (const V v)
     { return detail::_sign_cast<T,V>(v); }
 
 
+//-----------------------------------------------------------------------------
 namespace detail {
     // Same sign, no possibility of truncation with larger target type
     template <typename T, typename V>
@@ -83,5 +85,16 @@ template <typename T, typename V>
 T
 trunc_cast (V v)
     { return detail::_trunc_cast<T, V> (v); }
+
+
+//-----------------------------------------------------------------------------
+template <typename T, typename V>
+T
+size_cast (const V v) {
+    CHECK_HARD (std::numeric_limits<T>::min () <= v);
+    CHECK_HARD (std::numeric_limits<T>::max () >= v);
+    
+    return static_cast<T> (v);
+}
 
 #endif
