@@ -181,6 +181,11 @@ util::operator<< (std::ostream &os, const util::point<S> &p) {
 }
 
 
+template std::ostream& util::operator<< (std::ostream &os, const util::point<1>&);
+template std::ostream& util::operator<< (std::ostream &os, const util::point<2>&);
+template std::ostream& util::operator<< (std::ostream &os, const util::point<3>&);
+
+
 template struct util::point<1>;
 template struct util::point<2>;
 template struct util::point<3>;
