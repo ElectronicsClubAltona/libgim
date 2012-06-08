@@ -163,8 +163,10 @@ operator<< (std::ostream &os, const region<T> &rhs) {
 }
 
 
-template struct region<unsigned int>;
-template struct region<unsigned long>;
+template struct region<int32_t>;
+template struct region<int64_t>;
+template struct region<uint32_t>;
+template struct region<uint64_t>;
 template struct region<double>;
 
 template std::ostream& operator<< (std::ostream&, const region<unsigned int>&);
