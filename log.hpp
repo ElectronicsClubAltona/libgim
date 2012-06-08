@@ -56,16 +56,16 @@ namespace util {
     template <typename ...tail>
     void log (level_t, const std::string &format, tail ..._tail);
 
-    #define LOG_EMERGENCY(...)  do { log(util::EMERGENCY, ##__VA_ARGS__); } while (0)
-    #define LOG_ALERT(...)      do { log(util::ALERT,     ##__VA_ARGS__); } while (0)
-    #define LOG_CRITICAL(...)   do { log(util::CRITICAL,  ##__VA_ARGS__); } while (0)
-    #define LOG_ERROR(...)      do { log(util::ERROR,     ##__VA_ARGS__); } while (0)
-    #define LOG_WARNING(...)    do { log(util::WARNING,   ##__VA_ARGS__); } while (0)
-    #define LOG_WARN(...)       do { log(util::WARN,      ##__VA_ARGS__); } while (0)
-    #define LOG_NOTICE(...)     do { log(util::NOTICE,    ##__VA_ARGS__); } while (0)
-    #define LOG_INFO(...)       do { log(util::INFO,      ##__VA_ARGS__); } while (0)
+    #define LOG_EMERGENCY(...)  do { util::log(util::EMERGENCY, ##__VA_ARGS__); } while (0)
+    #define LOG_ALERT(...)      do { util::log(util::ALERT,     ##__VA_ARGS__); } while (0)
+    #define LOG_CRITICAL(...)   do { util::log(util::CRITICAL,  ##__VA_ARGS__); } while (0)
+    #define LOG_ERROR(...)      do { util::log(util::ERROR,     ##__VA_ARGS__); } while (0)
+    #define LOG_WARNING(...)    do { util::log(util::WARNING,   ##__VA_ARGS__); } while (0)
+    #define LOG_WARN(...)       do { util::log(util::WARN,      ##__VA_ARGS__); } while (0)
+    #define LOG_NOTICE(...)     do { util::log(util::NOTICE,    ##__VA_ARGS__); } while (0)
+    #define LOG_INFO(...)       do { util::log(util::INFO,      ##__VA_ARGS__); } while (0)
 #if defined(ENABLE_DEBUGGING)
-    #define LOG_DEBUG(...)      do { log(util::DEBUG,     ##__VA_ARGS__); } while (0)
+    #define LOG_DEBUG(...)      do { util::log(util::DEBUG,     ##__VA_ARGS__); } while (0)
 #else
     #define LOG_DEBUG(...)      do { ; } while (0)
 #endif
