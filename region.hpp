@@ -30,6 +30,7 @@ namespace util {
      */
     template <typename T>
     struct region {
+        typedef T position_type;
         typedef typename always_unsigned<T>::type size_type;
 
         T x, y;                 
