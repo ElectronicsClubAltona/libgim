@@ -29,7 +29,7 @@ namespace util {
         typedef double (*lerp_function)(double, double, double);
 
         struct basis {
-            typedef size_t seed_t;
+            typedef uint64_t seed_t;
 
             basis (seed_t);
             basis ();
