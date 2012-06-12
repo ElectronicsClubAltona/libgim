@@ -31,8 +31,8 @@ using namespace std;
 //------------------------------------------------------------------------------
 void
 panic (const std::string& what) {
-    breakpoint ();
     cerr << "PANIC: " << what << "\n" << debug::backtrace () << endl;
+    breakpoint ();
     abort ();
 }
 
