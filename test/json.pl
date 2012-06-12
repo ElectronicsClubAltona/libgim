@@ -2,8 +2,8 @@
 
 $COMMAND = "../json-validate";
 
-@good   = <json/good/*>;
-@bad    = <json/bad/*>;
+@good   = <json_data/good/*>;
+@bad    = <json_data/bad/*>;
 $success = 1;
 
 
