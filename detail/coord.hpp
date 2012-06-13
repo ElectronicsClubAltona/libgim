@@ -20,13 +20,20 @@
 #ifndef __UTIL_COORD_HPP
 #define __UTIL_COORD_HPP
 
+#include "../platform.hpp"
+
 namespace util {
     namespace detail {
         // Disable GCC warnings about validity of anonyous structures in
         // unions. Push comes to shove I'll manually redsign everything to
         // keep this syntax anyway.
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-pedantic"
+#if defined(COMPILER_GCC)
+    #pragma GCC diagnostic ignored "-pedantic"
+#endif
+#if defined(COMPILER_CLANG)
+    #pragma GCC diagnostic ignored "-Wgnu"
+#endif
         template <size_t S>
         struct coord_data {
             coord_data () { ; }
