@@ -120,9 +120,14 @@ value<L>::eval (double x, double y) const {
               y_fac);
 }
 
-template struct value<lerp::linear>;
-template struct value<lerp::cubic>;
-template struct value<lerp::quintic>;
+
+namespace util {
+    namespace noise {
+        template struct value<lerp::linear>;
+        template struct value<lerp::cubic>;
+        template struct value<lerp::quintic>;
+    }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -175,9 +180,14 @@ gradient<L>::eval (double x, double y) const {
               y_fac);
 }
 
-template struct gradient<lerp::linear>;
-template struct gradient<lerp::cubic>;
-template struct gradient<lerp::quintic>;
+
+namespace util {
+    namespace noise {
+        template struct gradient<lerp::linear>;
+        template struct gradient<lerp::cubic>;
+        template struct gradient<lerp::quintic>;
+    }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////

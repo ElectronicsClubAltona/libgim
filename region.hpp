@@ -60,10 +60,11 @@ namespace util {
 
         void sanity (void) const;
     };
+
+
+    template <typename T>
+    std::ostream& operator<< (std::ostream&, const util::region<T>&);
 }
 
-template <typename T>
-std::ostream&
-operator<< (std::ostream&, const util::region<T>&);
 
 #endif 

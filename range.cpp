@@ -1,3 +1,23 @@
+/*
+ * This file is part of libgim.
+ *
+ * libgim is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * libgim is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright 2011-2012 Danny Robson <danny@nerdcruft.net>
+ */
+
+
 #include "range.hpp"
 
 #include "debug.hpp"
@@ -7,15 +27,12 @@
 #include <cstdint>
 
 
+//-----------------------------------------------------------------------------
 using namespace std;
 using namespace util;
 
 
-/*
- * Range
- */
-
-
+//-----------------------------------------------------------------------------
 template <typename T>
 range<T>::range (const json::node &node) {
     if (node.is_string () && (node == "UNIT" ||
@@ -170,9 +187,11 @@ const range<T>
 range<T>::UNIT (0.0, 1.0);
 
 
-template struct range<double>;
-template struct range<float>;
-template struct range<uint8_t>;
-template struct range<uint16_t>;
-template struct range<uint32_t>;
-template struct range<uint64_t>;
+namespace util {
+    template struct range<double>;
+    template struct range<float>;
+    template struct range<uint8_t>;
+    template struct range<uint16_t>;
+    template struct range<uint32_t>;
+    template struct range<uint64_t>;
+}
