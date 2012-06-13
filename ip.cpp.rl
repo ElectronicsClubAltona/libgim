@@ -20,6 +20,8 @@
 
 #include "ip.hpp"
 
+#include "types/casts.hpp"
+
 #include <stdexcept>
 #include <iostream>
 
@@ -84,7 +86,7 @@ ipv4::ip::operator == (const ipv4::ip &rhs) const {
                 __octet = 0;
 
                 for (auto i = octetstart; i < octetend; ++i)
-                    __octet = __octet * 10 + *i - '0';
+                    __octet = __octet * 10u + sign_cast<unsigned> (*i - '0');
             };
 
     ipv4 := (octet %{ __octets[0] = __octet; } '.'
