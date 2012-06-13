@@ -74,6 +74,8 @@ AS_CXX_COMPILER_FLAG([-fno-nonansi-builtins],
                  [COMMON_CFLAGS="$COMMON_CFLAGS -fno-nonansi-builtins"])
 ##AS_CXX_COMPILER_FLAG([-fno-rtti],           [COMMON_CFLAGS="$COMMON_CFLAGS -fno-rtti"])
 
+AS_CXX_COMPILER_FLAG([-fno-deduce-init-list], [COMMON_CFLAGS="$COMMON_CFLAGS -fno-deduce-init-list "])
+
 
 ##
 ## Compiler features
@@ -200,7 +202,7 @@ fi
 
 ## Output
 
-COMMON_CXXFLAGS="-std=c++0x -fno-deduce-init-list -pipe -include config.h $WARNING_FLAGS $OPTIMISATION_FLAGS $COMMON_CFLAGS"
+COMMON_CXXFLAGS="-std=c++0x -pipe -include config.h $WARNING_FLAGS $OPTIMISATION_FLAGS $COMMON_CFLAGS"
 COMMON_LDFLAGS="$COMMON_LDFLAGS "
 
 AC_SUBST(COMMON_CXXFLAGS)
