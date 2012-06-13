@@ -21,6 +21,7 @@
 #include "region.hpp"
 
 #include "debug.hpp"
+#include "types/casts.hpp"
 
 #include <cmath>
 #include <type_traits>
@@ -89,8 +90,8 @@ bool
 region<T>::includes (const point<2> &p) const {
     return p.x >= x &&
            p.y >= y &&
-           p.x <= x + w &&
-           p.y <= y + h;
+           p.x - x <= w &&
+           p.y - y <= h;
 }
 
 
@@ -99,8 +100,8 @@ bool
 region<T>::contains (const point<2> &p) const {
     return p.x > x &&
            p.y > y &&
-           p.x < x + w &&
-           p.y < y + h;
+           p.x - x < w &&
+           p.y - y < h;
 }
 
 
@@ -108,23 +109,28 @@ template <typename T>
 bool
 region<T>::overlaps (const region<T> &rhs) const {
     //return !overlap (rhs).empty ();
-
-    return x     < rhs.x + rhs.w && 
-           x + w > rhs.x &&
-           y     < rhs.y + rhs.h &&
-           y + h > rhs.y;
+    
+    return x     < sign_cast<T> (rhs.w) + rhs.x && 
+           rhs.x < sign_cast<T> (    w) +     x &&
+           y     < sign_cast<T> (rhs.h) + rhs.y &&
+           rhs.y < sign_cast<T> (    h) +     y;
 }
 
 
 template<typename T>
 region<T>
 region<T>::overlap (const region<T> &rhs) const {
-    double newx1 = max (x, rhs.x),
-           newy1 = max (y, rhs.y),
-           newx2 = min (x + w, rhs.x + w),
-           newy2 = min (y + h, rhs.y + h);
+    T newx1 = max (x, rhs.x),
+      newy1 = max (y, rhs.y),
+      newx2 = min (x + sign_cast<T> (w), rhs.x + sign_cast<T> (rhs.w)),
+      newy2 = min (y + sign_cast<T> (h), rhs.y + sign_cast<T> (rhs.h));
 
-    return region<T> (newx1, newy1, newx2 - newx1, newy2 - newy1);
+    if (newx2 < newx1 || newy2 < newy1)
+        throw std::logic_error ("No overlap");
+
+    size_type nw = sign_cast<size_type> (newx2 - newx1);
+    size_type nh = sign_cast<size_type> (newy2 - newy1);
+    return region<T> (newx1, newy1, nw, nh);
     
 }
 
@@ -139,25 +145,30 @@ region<T>::operator ==(const region& rhs) const
 
 
 template <typename T>
-void region<T>::sanity (void) const
-    { CHECK (w >= 0 && h >= 0); }
+void
+region<T>::sanity (void) const {
+    static_assert(!std::is_floating_point<T>::value,
+                  "Floating point types need width and height checks");
+}
 
 
 namespace util {
     template <>
-    void region<unsigned int>::sanity (void) const
-        { return; }
+    void region<double>::sanity (void) const {
+        CHECK (w >= 0 && h >= 0);
+    }
 
 
     template <>
-    void region<unsigned long>::sanity (void) const
-        { return; }
+    void region<float>::sanity (void) const {
+        CHECK (w >= 0 && h >= 0);
+    }
 }
 
 
 template <typename T>
 std::ostream&
-operator<< (std::ostream &os, const region<T> &rhs) {
+util::operator<< (std::ostream &os, const region<T> &rhs) {
     os << "region(" << rhs.x << ", " << rhs.y << ", " << rhs.w << ", " << rhs.h << ")";
     return os;
 }
