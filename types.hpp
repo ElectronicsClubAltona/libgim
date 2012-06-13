@@ -17,17 +17,23 @@
  * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __TYPES_HPP
-#define __TYPES_HPP
+#ifndef __UTIL_TYPES_HPP
+#define __UTIL_TYPES_HPP
+
+#include "platform.hpp"
 
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
 
 /// Returns the number of elements of a statically allocated array
+#if !defined(COMPILER_CLANG)
 template <typename T, size_t N>  
 size_t elems(T (&)[N])
     { return N; }
+#else
+#define elems(x) (sizeof(x) / 0[x])
+#endif
 
 
 template<class T, class...Args>
@@ -37,4 +43,4 @@ make_unique(Args&&... args) {
 }
 
 
-#endif // __TYPES_HPP
+#endif

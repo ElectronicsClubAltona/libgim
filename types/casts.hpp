@@ -41,13 +41,19 @@ namespace detail {
 
     template <typename T, typename V>
     T
-    _sign_cast (const typename std::enable_if<sizeof(T) == sizeof(V)   &&
+    _sign_cast (const typename std::enable_if<sizeof(T) == sizeof(V)  &&
                                              std::is_signed<T>::value &&
                                              std::is_unsigned<V>::value, V>::type v)
     {
         CHECK_HARD (v < std::numeric_limits<V>::max () / 2);
         return static_cast<T> (v);
     }
+
+
+    template <typename T, typename V>
+    T
+    _sign_cast (const typename std::enable_if<std::is_same<T, V>::value, V>::type v)
+        { return v; }
 }
 
 /// Safely cast a numeric type to its (un)signed counterpart, aborting if the
