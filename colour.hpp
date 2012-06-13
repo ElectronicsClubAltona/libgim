@@ -27,8 +27,6 @@
 
 namespace util {
     struct colour {
-        colour& operator*= (double);
-
         double red;
         double green;
         double blue;

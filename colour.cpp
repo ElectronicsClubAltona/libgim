@@ -20,20 +20,14 @@
 #include "colour.hpp"
 #include "range.hpp"
 
+
+//-----------------------------------------------------------------------------
 using namespace util;
 
 
-colour&
-colour::operator*= (double v) {
-    red   *= v;
-    green *= v;
-    blue  *= v;
-    alpha *= v;
-
-    return *this;
-}
 
 
+//-----------------------------------------------------------------------------
 const json::node&
 util::operator>> (const json::node &node, colour &c) {
     c.red   = node[0].as_number ();
@@ -50,6 +44,7 @@ util::operator>> (const json::node &node, colour &c) {
 }
 
 
+//-----------------------------------------------------------------------------
 namespace util {
     template<>
     colour
@@ -67,6 +62,7 @@ namespace util {
 }
 
 
+//-----------------------------------------------------------------------------
 std::ostream&
 util::operator<< (std::ostream &os, const util::colour &c) {
     os << "colour(" << c.red << ", " << c.green << ", " << c.blue << ", " << c.alpha << ")";
