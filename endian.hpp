@@ -20,6 +20,8 @@
 #ifndef __UTIL_ENDIAN_HPP
 #define __UTIL_ENDIAN_HPP
 
+#include "platform.hpp"
+
 #include <cstdint>
 
 
@@ -43,7 +45,7 @@ constexpr uint16_t ntoh (uint16_t n)
 
 
 constexpr uint32_t hton (uint32_t h) {
-#if defined(__GNUG__)
+#if defined(COMPILER_GCC)
     return __builtin_bswap32 (h);
 #else
     return (h & 0xFF000000U) >> 24 |
@@ -59,7 +61,7 @@ constexpr uint32_t ntoh (uint32_t n)
 
 
 constexpr uint64_t hton (uint64_t h) {
-#if defined(__GNUG__)
+#if defined(COMPILER_GCC)
     return __builtin_bswap64 (h);
 #else
     return (h & 0xFF00000000000000UL) >> 56 |
