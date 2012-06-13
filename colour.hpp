@@ -31,6 +31,9 @@ namespace util {
         double green;
         double blue;
         double alpha;
+
+        static const colour WHITE;
+        static const colour BLACK;
     };
 
     template <> colour& randomise (colour&);
