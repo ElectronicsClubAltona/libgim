@@ -28,7 +28,9 @@
 #include <limits>
 #include <numeric>
 
+#if defined(COMPILER_GCC)
 #pragma GCC optimize("-O3")
+#endif
 
 //-----------------------------------------------------------------------------
 using namespace util;

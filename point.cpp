@@ -25,7 +25,9 @@
 
 using namespace std;
 
-#pragma GCC optimize("-O3")
+#if defined(COMPILER_GCC)
+    #pragma GCC optimize("-O3")
+#endif
 
 //-----------------------------------------------------------------------------
 template <size_t S>
