@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_PLATFORM_HPP
@@ -26,6 +26,15 @@
     #define PLATFORM_WIN32
 #else
     #error "Unknown platform"
+#endif
+
+// Clang needs to be checked before GCC as it pretends to be GCC 
+#if defined(__clang__)
+    #define COMPILER_CLANG
+#elif defined(__GNUC__)
+    #define COMPILER_GCC
+#else
+    #error "Unknown compiler"
 #endif
 
 #endif
