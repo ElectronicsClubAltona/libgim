@@ -78,9 +78,23 @@ namespace detail {
     template <typename T, typename V>
     T
     _trunc_cast (const typename std::enable_if<sizeof (T) < sizeof (V) &&
-                                               std::is_signed<T>::value == std::is_signed<V>::value, V>::type v) {
-        CHECK_HARD (v <= std::numeric_limits<T>::max ());
-        checK_hard (v >= std::numeric_limits<T>::min ());
+                                               std::is_signed<T>::value == std::is_signed<V>::value &&
+                                               std::is_integral<T>::value, V>::type v) {
+        CHECK_HARD (v <= std::numeric_limits<T>::max    ());
+        CHECK_HARD (v >= std::numeric_limits<T>::lowest ());
+
+        return static_cast<T> (v);
+    }
+
+
+    template <typename T, typename V>
+    T
+    _trunc_cast (const typename std::enable_if<sizeof (T) < sizeof (V) &&
+                                               std::is_signed<T>::value == std::is_signed<V>::value &&
+                                               std::is_floating_point<T>::value, V>::type v) {
+        CHECK_HARD (v <= std::numeric_limits<T>::max    ());
+        CHECK_HARD (v >= std::numeric_limits<T>::lowest ());
+        CHECK_HARD (exactly_equal (remainder (v, 1), 0.0));
 
         return static_cast<T> (v);
     }
@@ -97,8 +111,8 @@ trunc_cast (V v)
 template <typename T, typename V>
 T
 size_cast (const V v) {
-    CHECK_HARD (std::numeric_limits<T>::min () <= v);
-    CHECK_HARD (std::numeric_limits<T>::max () >= v);
+    CHECK_HARD (std::numeric_limits<T>::lowest () <= v);
+    CHECK_HARD (std::numeric_limits<T>::max    () >= v);
     
     return static_cast<T> (v);
 }
