@@ -59,6 +59,22 @@ namespace util {
             { return !(*this == rhs); }
 
         void sanity (void) const;
+
+#if 0
+        struct iterator {
+            T x, y;
+            T a;
+            size_type w, h;
+
+            iterator& operator++ (void);
+            iterator& operator*  (void);
+            bool operator== (const iterator&) const;
+            bool operator!= (const iterator&) const;
+        };
+
+        iterator begin (void);
+        iterator end   (void);
+#endif
     };
 
 
