@@ -367,8 +367,8 @@ template <size_t S>
 std::ostream&
 util::operator<< (std::ostream &os, const util::vector<S> &v) {
     os << "vec" << S << "(" << v.data[0];
-    for (double i: v.data)
-        os << ", " << i;
+    for (size_t i = 1; i < S; ++i)
+        os << ", " << v.data[i];
     os << ")";
     return os;
 }
