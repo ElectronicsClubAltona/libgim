@@ -116,7 +116,7 @@ util::detail::log (level_t level, boost::format &&format) {
     static const boost::format LEVEL_FORMAT ("%s [%s] ");
     
     static const size_t time_len = strlen("YYYY-mm-dd HHMMhSS") + 1;
-    std::string time_string (time_len, '\0');
+    std::string time_string (time_len - 1, '\0');
     time_t unix_time = time (nullptr);
 
     if (0 == strftime (&time_string[0],
