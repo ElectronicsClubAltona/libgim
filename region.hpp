@@ -62,6 +62,9 @@ namespace util {
         bool operator !=(const region<T>& rhs) const
             { return !(*this == rhs); }
 
+        static const region<T> MAX;
+        static const region<T> UNIT;
+
         void sanity (void) const;
 
 #if 0

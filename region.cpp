@@ -39,6 +39,7 @@ region<T>::region (T _x, T _y, size_type _w, size_type _h):
     w (_w),
     h (_h)
 {
+    DEBUG_ONLY (sanity ());
 }
 
 
@@ -111,15 +112,15 @@ region<T>::contains (const point<2> &p) const {
 }
 
 
+// FIXME: This will fail with an actual infinite range (NaNs will be generated
+// in the conditionals).
 template <typename T>
 bool
 region<T>::overlaps (const region<T> &rhs) const {
-    //return !overlap (rhs).empty ();
-    
-    return x     < sign_cast<T> (rhs.w) + rhs.x && 
-           rhs.x < sign_cast<T> (    w) +     x &&
-           y     < sign_cast<T> (rhs.h) + rhs.y &&
-           rhs.y < sign_cast<T> (    h) +     y;
+    return  x     < rhs.x + rhs.w &&
+            rhs.x < x     +     w &&
+            y     < rhs.y + rhs.h &&
+            rhs.y < y     +     h;
 }
 
 
@@ -156,6 +157,8 @@ region<T>::operator== (const region& rhs) const
 template <typename T>
 void
 region<T>::sanity (void) const {
+    CHECK_SOFT (w > 0);
+    CHECK_SOFT (h > 0);
     static_assert(!std::is_floating_point<T>::value,
                   "Floating point types need width and height checks");
 }
@@ -231,6 +234,22 @@ namespace util {
 
 //-----------------------------------------------------------------------------
 template <typename T>
+const region<T>
+region<T>::MAX (std::numeric_limits<T>::lowest (),
+                std::numeric_limits<T>::lowest (),
+                std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity () :
+                                                       std::numeric_limits<T>::max (),
+                std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity () :
+                                                       std::numeric_limits<T>::max ());
+
+
+template  <typename T>
+const region<T>
+region<T>::UNIT (0, 0, 1, 1);
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 std::ostream&
 util::operator<< (std::ostream &os, const region<T> &rhs) {
     os << "region(" << rhs.x << ", " << rhs.y << ", " << rhs.w << ", " << rhs.h << ")";
@@ -244,6 +263,7 @@ namespace util {
     template struct region<int64_t>;
     template struct region<uint32_t>;
     template struct region<uint64_t>;
+    template struct region<float>;
     template struct region<double>;
 
     template std::ostream& operator<< (std::ostream&, const region< int32_t>&);
