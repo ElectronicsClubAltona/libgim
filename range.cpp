@@ -177,10 +177,16 @@ range<T>::operator ==(const range<T> &rhs) const
 
 template <typename T> 
 const range<T>
-range<T>::UNLIMITED (numeric_limits <T>::is_integer ?  numeric_limits <T>::min () :
-                                                      -numeric_limits <T>::infinity (),
-                     numeric_limits <T>::is_integer ?  numeric_limits <T>::max () :
-                                                       numeric_limits <T>::infinity ());
+range<T>::UNLIMITED (numeric_limits<T>::has_infinity ? -numeric_limits<T>::infinity () :
+                                                        numeric_limits<T>::lowest   (),
+                     numeric_limits<T>::has_infinity ?  numeric_limits<T>::infinity () :
+                                                        numeric_limits<T>::max      ());
+
+template <typename T>
+const range<T>
+range<T>::MAX (numeric_limits<T>::lowest (),
+               numeric_limits<T>::max ());
+
 
 template <typename T>
 const range<T>

@@ -73,9 +73,10 @@ namespace util {
             { return !(*this == rhs); }
 
         /// A range which is guaranteed to contain all elements type T
-        static const range <T> UNLIMITED;
+        static const range<T> UNLIMITED;
+        static const range<T> MAX;
         /// A range which only contains elements between 0 and 1 inclusive
-        static const range <T> UNIT;
+        static const range<T> UNIT;
 
         void sanity (void) const;
     };
