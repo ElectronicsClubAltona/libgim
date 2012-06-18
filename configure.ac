@@ -141,8 +141,10 @@ if test "x$ac_cv_debugging" = "xyes"; then
     AC_DEFINE([_GLIBCXX_DEBUG], [], [Description])
 
 else
-    COMMON_CFLAGS="$COMMON_CFLAGS -O2 -flto=jobserver"
-    COMMON_LDFLAGS="$COMMON_LDFLAGS -flto=jobserver"
+    ## Use 'none' LTO partitioning to avoid discarded section linker errors
+    ## against boost
+    COMMON_CFLAGS="$COMMON_CFLAGS -O2 -flto=8 -flto-partition=none"
+    COMMON_LDFLAGS="$COMMON_LDFLAGS -flto=8 -flto-partition=none"
 fi
 
 case $host_os in
