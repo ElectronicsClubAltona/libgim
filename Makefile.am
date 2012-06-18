@@ -130,7 +130,7 @@ SUFFIXES = .cpp .cpp.rl
 lib_LTLIBRARIES  = libutil.la
 libutil_la_SOURCES  = $(UTIL_FILES)
 libutil_la_CXXFLAGS = $(AM_CXXFLAGS)
-libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB) $(BOOST_SYSTEM_LIB)
+libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB)
 
 bin_PROGRAMS = 		\
     json-clean		\
