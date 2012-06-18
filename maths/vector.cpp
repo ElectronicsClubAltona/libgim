@@ -74,6 +74,7 @@ vector vector::cross (const double *restrict A,
                       const double *restrict B,
                       unsigned int size) { 
     CHECK_HARD (size == 3);
+    (void)size;
     return vector ({ A[1] * B[2] - A[2] * B[1],
                      A[2] * B[0] - A[0] * B[2],
                      A[0] * B[1] - A[1] * B[0] });
