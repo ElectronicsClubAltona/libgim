@@ -24,8 +24,9 @@
 
 namespace util {
     class nocopy {
-        public:
-            nocopy () { ; }
+        protected:
+            nocopy  () { ; }
+            ~nocopy () { ; }
 
         private:
             nocopy            (const nocopy &) = delete;
