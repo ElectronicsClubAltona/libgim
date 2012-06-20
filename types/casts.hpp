@@ -117,4 +117,21 @@ size_cast (const V v) {
     return static_cast<T> (v);
 }
 
+
+//-----------------------------------------------------------------------------
+template <typename T, typename V>
+T*
+known_cast (V *v) {
+    CHECK_HARD (nullptr != dynamic_cast<T> (v));
+    return static_cast<T> (v);
+}
+
+
+template <typename T, typename V>
+T&
+known_cast (V &v) {
+    CHECK_NOTHROW (dynamic_cast<T> (v));
+    return static_cast<T> (v);
+}
+
 #endif
