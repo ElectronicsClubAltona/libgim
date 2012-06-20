@@ -139,6 +139,15 @@
 } while (0)
 
 
+#define CHECK_NOTHROW(C) do {               \
+    try {                                   \
+        C;                                  \
+    } catch (...) {                         \
+        panic ("unexpected exception");     \
+    }                                       \
+} while (0)
+
+
 class panic_error {
     protected:
         std::string m_what;
