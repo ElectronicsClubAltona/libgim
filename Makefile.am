@@ -64,6 +64,14 @@ UTIL_FILES   =		\
     matrix.hpp		\
     memory.cpp		\
     memory.hpp		\
+    net/address.cpp	\
+    net/address.hpp	\
+    net/except.cpp	\
+    net/except.hpp	\
+    net/types.cpp	\
+    net/types.hpp	\
+    net/socket.cpp	\
+    net/socket.hpp	\
     nocopy.hpp		\
     noise.cpp		\
     noise.hpp		\
