@@ -9,7 +9,10 @@
 /Doxyfile
 /install-sh
 /ip.cpp
+/json-clean
 /json.cpp
+/json-schema
+/json-validate
 /libgim-*.tar.*
 .libs
 /libtool
