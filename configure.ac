@@ -182,7 +182,7 @@ esac
 
 ##
 ## Required packages
-CHECK_RAGEL([test/ragel.c.rl])
+CHECK_RAGEL([ip.cpp])
 
 
 AX_BOOST_BASE([1.49], [], [AC_MSG_ERROR([Boost version >= 1.42 required])])
