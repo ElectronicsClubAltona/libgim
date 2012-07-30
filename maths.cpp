@@ -65,6 +65,24 @@ template bool is_integer (const double&);
 template bool is_integer (const  float&);
 
 
+//-----------------------------------------------------------------------------
+template <>
+unsigned
+digits (const uint32_t &v) {
+    return (v >= 1000000000) ? 10 :
+           (v >=  100000000) ?  9 :
+           (v >=   10000000) ?  8 : 
+           (v >=    1000000) ?  7 :
+           (v >=     100000) ?  6 :
+           (v >=      10000) ?  5 : 
+           (v >=       1000) ?  4 :
+           (v >=        100) ?  3 :
+           (v >=         10) ?  2 :
+                                1;
+}
+
+
+//-----------------------------------------------------------------------------
 template <>
 bool
 almost_equal (const float &a, const float &b)

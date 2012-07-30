@@ -55,6 +55,10 @@ bool
 is_integer (const T& value) pure;
 
 
+template <typename T>
+unsigned
+digits (const T& value) pure;
+
 
 /**
  * Check if two floating point numbers are approximately equal. Returns true
