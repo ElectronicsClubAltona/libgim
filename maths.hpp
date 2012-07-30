@@ -25,8 +25,9 @@
 #include <type_traits>
 
 template <typename T>
-T 
-pow2 (T value) pure;
+constexpr T 
+pow2 (T value)
+    { return value * value; }
 
 
 template <typename T>

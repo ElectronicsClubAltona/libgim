@@ -25,15 +25,7 @@
 #include <type_traits>
 
 
-template <typename T>
-T 
-pow2 (T value)
-    { return value * value; }
-
-template double pow2(double);
-template    int pow2(   int);
-
-
+//-----------------------------------------------------------------------------
 template <typename T>
 bool
 is_pow2 (T value) {
@@ -41,21 +33,25 @@ is_pow2 (T value) {
     return (return_type)(value && !(value & (value - 1)));
 }
 
+
 template bool is_pow2 (uint8_t);
 template bool is_pow2 (uint16_t);
 template bool is_pow2 (uint32_t);
 template bool is_pow2 (uint64_t);
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 double
 rootsquare (T a, T b)
     { return sqrt (pow2 (a) + pow2 (b)); }
 
+
 template double rootsquare (double, double);
 template double rootsquare (   int,    int);
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 bool
 is_integer (const T &value) {
@@ -63,6 +59,7 @@ is_integer (const T &value) {
     return exactly_equal (std::modf (value, &integer),
                           static_cast<T> (0.0));
 }
+
 
 template bool is_integer (const double&);
 template bool is_integer (const  float&);
@@ -80,6 +77,7 @@ almost_equal (const double &a, const double &b)
     { return ieee_double::almost_equal (a, b); }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 typename std::enable_if<std::is_integral<T>::value, T>::type
 round_up (T value, T align) {
@@ -88,6 +86,7 @@ round_up (T value, T align) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 T
 round_pow2 (T value) {
@@ -110,6 +109,7 @@ template uint32_t round_pow2 (uint32_t);
 template uint64_t round_pow2 (uint64_t);
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 int
 sign (T val) {
