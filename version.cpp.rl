@@ -32,25 +32,26 @@ using namespace util;
 
 version::version (unsigned int _major,
                   unsigned int _minor):
-        m_values  (2),
-        m_release (RELEASE_PRODUCTION) {
+    m_size    (2),
+    m_release (RELEASE_PRODUCTION)
+{
     m_values[OFFSET_MAJOR] = _major;
     m_values[OFFSET_MINOR] = _minor;
 }
 
 
 version::version (const string& str):
-        m_values  (NUM_OFFSETS, 0),
-        m_release (RELEASE_PRODUCTION) {
-    m_values.clear ();
+    m_size    (0),
+    m_release (RELEASE_PRODUCTION)
+{
     parse (str);
 }
 
 
 version::version (const char *str):
-        m_values  (NUM_OFFSETS, 0),
-        m_release (RELEASE_PRODUCTION) {
-    m_values.clear ();
+    m_size    (0),
+    m_release (RELEASE_PRODUCTION)
+{
     parse (str);
 }
 
@@ -72,7 +73,7 @@ check_release (version::release_t r) {
 void
 version::sanity (void) const {
     check_release (m_release);
-    CHECK (!m_values.empty ());
+    CHECK (m_size > 0);
 }
 
 
@@ -85,7 +86,7 @@ version::sanity (void) const {
         { current *= 10;
           current += (uintptr_t)(fc - (unsigned char)'0'); }
     action finish
-        { m_values.push_back (current); }
+        { m_values[m_size++] = current; }
 
     number   = (digit+)
                >clear
@@ -101,7 +102,7 @@ version::sanity (void) const {
     version := (dots type?)
                $!{ throw invalid_argument (str); };
 
-	write data;
+    write data;
 }%%
 
 
@@ -147,7 +148,7 @@ release_string (const version::release_t r) {
 
 
 bool
-version::operator > (const version &rhs) const {
+version::operator> (const version &rhs) const {
     unsigned int count = min (m_values.size (), rhs.m_values.size ());
 
     for (unsigned int i = 0; i < count; ++i)

@@ -17,11 +17,11 @@
  * Copyright 2010 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __VERSION_HPP
-#define __VERSION_HPP
+#ifndef __UTIL_VERSION_HPP
+#define __UTIL_VERSION_HPP
 
+#include <array>
 #include <string>
-#include <vector>
 #include <iostream>
 
 
@@ -54,22 +54,20 @@ namespace util {
                 NUM_OFFSETS
             };
 
-            std::vector <unsigned int>  m_values;
-            release_t                   m_release;
+            std::array<unsigned int, NUM_OFFSETS> m_values;
+            size_t m_size;
+            release_t m_release;
 
             void parse (const std::string&);
             void parse (const char*);
 
         public:
+            unsigned int major (void) const { return m_values[OFFSET_MAJOR]; }
+            unsigned int minor (void) const { return m_values[OFFSET_MINOR]; }
+            unsigned int point (void) const { return m_values[OFFSET_POINT]; }
+            unsigned int build (void) const { return m_values[OFFSET_BUILD]; }
 
-            unsigned int major (void) const
-                { return m_values[OFFSET_MAJOR]; }
-            unsigned int minor (void) const
-                { return m_values[OFFSET_MINOR]; }
-            unsigned int point (void) const
-                { return m_values[OFFSET_POINT]; }
-            unsigned int build (void) const
-                { return m_values[OFFSET_BUILD]; }
+            size_t size (void) const { return m_size; }
 
             bool operator <  (const version& rhs) const;
             bool operator >  (const version& rhs) const;
