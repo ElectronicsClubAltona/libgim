@@ -23,6 +23,9 @@
 #include "../debug.hpp"
 #include "../endian.hpp"
 #include "../types.hpp"
+#include "../raii.hpp"
+
+#include <netdb.h>
 
 #ifdef __WIN32
 #else
@@ -51,6 +54,37 @@ const char* inet_ntop(int af, const void* src, char* dst, int size){
 
 
 //-----------------------------------------------------------------------------
+template <domain D>
+typename address<D>::port_type
+address<D>::port (void) const 
+    { return m_port; }
+
+
+template <domain D>
+void
+address<D>::set_port (const port_type &_port)
+    { m_port = _port; }
+
+
+template <domain D>
+typename address<D>::ip_type
+address<D>::resolve (const std::string &str) {
+    addrinfo  hint;
+    memset (&hint, 0, sizeof (hint));
+    hint.ai_family = static_cast<int> (D);
+
+    addrinfo* resolved;
+    int err = getaddrinfo (str.c_str (), nullptr, nullptr, &resolved);
+    if (err)
+        net::error::throw_code ();
+
+    auto deletor = [] (addrinfo *a) { freeaddrinfo (a); };
+    std::unique_ptr<addrinfo, decltype(deletor)> raii(resolved, deletor);
+    return ip_type (reinterpret_cast<sockaddr_type*> (resolved->ai_addr)->sin_addr.s_addr);
+}
+
+
+//-----------------------------------------------------------------------------
 namespace net {
     template <>
     address<domain::INET>::address (const sockaddr_type &addr):
@@ -63,9 +97,9 @@ namespace net {
 
 
     template <domain D>
-    address<D>::address (const std::string &_ip,
+    address<D>::address (const std::string &_addr,
                          port_type          _port):
-        m_ip   (_ip),
+        m_ip   (resolve (_addr)),
         m_mask (  0),
         m_port (_port)
     { ; }
@@ -115,25 +149,23 @@ net::operator<< (std::ostream &os, const address<net::domain::INET> &addr) {
 
 
 //-----------------------------------------------------------------------------
-template <>
-const address<domain::INET>
+template <> const address<domain::INET>
 address<domain::INET>::LOOPBACK  ("127.0.0.1", 0);
 
-
-template <>
-const address<domain::INET>
+template <> const address<domain::INET>
 address<domain::INET>::ANY       ("0.0.0.0", 0);
 
-
-template <>
-const address<domain::INET6>
-address<domain::INET6>::LOOPBACK ("::1", 0);
-
-
-template <>
-const address<domain::INET6>
-address<domain::INET6>::ANY      ("::0", 0);
+template typename address<domain::INET>::ip_type
+address<domain::INET>::resolve (const std::string &);
 
 template class address<domain::INET>;
-template class address<domain::INET6>;
+
+//-----------------------------------------------------------------------------
+//template <> const address<domain::INET6>
+//address<domain::INET6>::LOOPBACK ("::1", 0);
+//
+//template <> const address<domain::INET6>
+//address<domain::INET6>::ANY      ("::0", 0);
+//
+//template class address<domain::INET6>;
 

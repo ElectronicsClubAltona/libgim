@@ -75,26 +75,17 @@ namespace net {
             static const address<D> ANY;
 
             address (const sockaddr_type &);
-            address (const std::string&, 
-                     port_type);
+            address (const std::string &address, port_type);
 
-            port_type
-            port (void) const
-                { return m_port; }
+            port_type port (void) const;
+            void set_port (const port_type &);
 
-            void
-            set_port (const port_type &_port)
-                { m_port = _port; }
+            ip_type ip (void) const         { return m_ip; }
 
-            ip_type
-            ip (void) const
-                { return m_ip; }
+            sockaddr_type to_sockaddr (void) const;
+            std::string   to_string   (void) const;
 
-            sockaddr_type
-            to_sockaddr (void) const;
-
-            std::string
-            to_string (void) const;
+            static ip_type resolve (const std::string &);
 
             bool operator ==(const address<D> &rhs);
     };
