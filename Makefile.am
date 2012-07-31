@@ -87,6 +87,8 @@ UTIL_FILES   =		\
     pool.cpp		\
     pool.hpp		\
     preprocessor.hpp	\
+    quaternion.cpp	\
+    quaternion.hpp	\
     raii.hpp		\
     random.cpp		\
     random.hpp		\
