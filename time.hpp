@@ -21,10 +21,29 @@
 #define __UTIL_TIME_HPP
 
 #include <cstdint>
+#include <string>
+
+#include "stats.hpp"
 
 namespace util {
     uint64_t nanoseconds (void);
     void     sleep (uint64_t ns);
+
+    class polled_duration {
+        public:
+            polled_duration (std::string name, uint64_t interval);
+
+            void start (void);
+            void stop  (void);
+
+        protected:
+            std::string m_name;
+            uint64_t    m_last;
+            uint64_t    m_interval;
+            uint64_t    m_next;
+
+            stats::accumulator<uint64_t> m_series;
+    };
 }
 
 #endif // __UTIL_TIME_HPP

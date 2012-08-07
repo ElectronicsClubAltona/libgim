@@ -20,6 +20,7 @@
 #include "time.hpp"
 
 #include "debug.hpp"
+#include "log.hpp"
 #include "platform.hpp"
 #include "types/casts.hpp"
 
@@ -77,4 +78,28 @@ util::sleep (uint64_t ns) {
 #endif
 
 
+util::polled_duration::polled_duration (std::string name, uint64_t interval):
+    m_name     (name),
+    m_interval (interval),
+    m_next     (nanoseconds () + interval) 
+{ ; }
 
+
+void
+util::polled_duration::start (void) {
+    m_last = nanoseconds ();
+}
+
+
+void
+util::polled_duration::stop (void) {
+    uint64_t now = nanoseconds ();
+    uint64_t dt  = now - m_last;
+    m_series.add (dt / 1000000);
+
+    if (m_next < now) {
+        LOG_DEBUG ("timing: '%s'. %s", m_name, m_series);
+        m_series.reset ();
+        m_next = now + m_interval;
+    }
+}
