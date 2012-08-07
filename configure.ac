@@ -100,6 +100,10 @@ case $host_os in
     mingw32)
         AM_CONDITIONAL([PLATFORM_WIN32], [true])
         AM_CONDITIONAL([PLATFORM_LINUX], [false])
+
+        AC_CHECK_HEADERS([winsock2.h ws2tcpip.h])  
+        AC_SUBST([NET_LIBS], [-lws2_32])
+
         #COMMON_LDFLAGS="$COMMON_LDFLAGS -ldbghelp"
         ;;
 

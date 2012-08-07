@@ -25,10 +25,10 @@
 #include "../types.hpp"
 #include "../raii.hpp"
 
-#include <netdb.h>
 
 #ifdef __WIN32
 #else
+    #include <netdb.h>
     #include <arpa/inet.h>
 #endif
 
