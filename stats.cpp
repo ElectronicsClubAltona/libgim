@@ -24,12 +24,19 @@
 
 
 template <typename T>
-util::stats::accumulator<T>::accumulator ():
-    count (0),
-    min   (std::numeric_limits<T>::max ()),
-    max   (std::numeric_limits<T>::min ()),
-    sum   (0)
-{ ; }
+util::stats::accumulator<T>::accumulator () {
+    reset ();
+}
+
+
+template <typename T>
+void
+util::stats::accumulator<T>::reset (void) {
+    count = 0;
+    min   = std::numeric_limits<T>::max ();
+    max   = std::numeric_limits<T>::min ();
+    sum   = 0;
+}
 
 
 template <typename T>

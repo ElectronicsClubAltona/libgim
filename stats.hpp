@@ -31,6 +31,8 @@ namespace util {
         struct accumulator {
             accumulator ();
 
+            void reset (void);
+
             void add (T);
             void add (const accumulator<T> &);
 
