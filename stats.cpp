@@ -72,6 +72,7 @@ util::stats::accumulator<T>::mean (void) const
     { return sum / count; }
 
 
+template struct util::stats::accumulator<uint64_t>;
 template struct util::stats::accumulator<double>;
 template struct util::stats::accumulator<float>;
 
@@ -84,6 +85,7 @@ util::stats::operator<< (std::ostream &os, const accumulator<T> &rhs) {
 }
 
 
+template std::ostream& util::stats::operator<< (std::ostream&, const accumulator<uint64_t> &);
 template std::ostream& util::stats::operator<< (std::ostream&, const accumulator<double> &);
 template std::ostream& util::stats::operator<< (std::ostream&, const accumulator<float > &);
 
