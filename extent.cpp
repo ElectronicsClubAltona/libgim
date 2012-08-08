@@ -30,23 +30,23 @@ using namespace util;
 //-----------------------------------------------------------------------------
 template <typename T>
 extent<T>::extent (const T  _width, const T  _height):
-        width (_width),
-        height (_height)
+        w (_width),
+        h (_height)
 { ; }
 
 
 template <typename T>
 extent<T>::extent (const extent<T> &rhs):
-        width  (rhs.width),
-        height (rhs.height)
+        w (rhs.w),
+        h (rhs.h)
 { ; }
 
 
 template <typename T>
 extent<T>&
 extent<T>::operator= (const extent<T> &rhs) {
-    width  = rhs.width;
-    height = rhs.height;
+    w = rhs.w;
+    h = rhs.h;
 
     return *this;
 }
@@ -56,21 +56,21 @@ extent<T>::operator= (const extent<T> &rhs) {
 template <typename T>
 T
 extent<T>::diameter (void) const {
-    return (T)sqrt (width * width + height * height);
+    return (T)sqrt (w * w + h * h);
 }
 
 
 template <typename T>
 T
 extent<T>::area (void) const
-    { return width * height; }
+    { return w * h; }
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
 double
 extent<T>::aspect (void) const
-    { return static_cast<double> (width) / height; }
+    { return static_cast<double> (w) / h; }
 
 
 //-----------------------------------------------------------------------------
@@ -84,8 +84,8 @@ extent<T>::empty (void) const
 template <typename T>
 bool
 extent<T>::operator ==(const extent& rhs) const {
-    return almost_equal (width,  rhs.width) &&
-           almost_equal (height, rhs.height);
+    return almost_equal (w, rhs.w) &&
+           almost_equal (h, rhs.h);
 }
 
 
@@ -93,7 +93,7 @@ extent<T>::operator ==(const extent& rhs) const {
 template <typename T>
 void
 extent<T>::sanity (void) const
-    { CHECK (width >= 0 && height >= 0); }
+    { CHECK (w >= 0 && h >= 0); }
 
 
 namespace util {

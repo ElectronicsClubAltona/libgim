@@ -26,7 +26,7 @@ namespace util {
      */
     template <typename T>
     struct extent {
-        T width, height;
+        T w, h;
 
         extent (const T  _width, const T  _height);
         extent (const extent&);
