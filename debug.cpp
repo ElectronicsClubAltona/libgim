@@ -17,8 +17,8 @@
  * Copyright 2010 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "debug.hpp"
 #include "backtrace.hpp"
+#include "debug.hpp"
 #include "log.hpp"
 #include "platform.hpp"
 
@@ -127,3 +127,14 @@ disable_fpe (void) {
 //    _controlfp_s (&ignored, 0, _MCW_EM);
 }
 #endif
+
+
+//------------------------------------------------------------------------------
+void debug::init (void) {
+#if defined(PLATFORM_WIN32)
+    if (nullptr == LoadLibrary("exchndl.dll")) {
+        std::cerr << GetLastError () << "\n";
+        LOG_WARNING("Emergency debugger not loaded");
+    }
+#endif
+}

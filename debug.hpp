@@ -162,8 +162,10 @@ class panic_error {
 void panic (const std::string&) terminal;
 void panic (void)               terminal;
 
+
 void not_implemented (void) terminal;
 void not_implemented (const char*) terminal;
+
 
 void unreachable     (void) terminal;
 void unreachable     (const std::string&) terminal;
@@ -175,5 +177,10 @@ void breakpoint (void);
 
 void enable_fpe (void);
 void disable_fpe (void);
+
+
+namespace debug {
+    void init (void);
+}
 
 #endif // __DEBUG_HPP
