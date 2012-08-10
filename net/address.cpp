@@ -155,10 +155,9 @@ address<domain::INET>::LOOPBACK  ("127.0.0.1", 0);
 template <> const address<domain::INET>
 address<domain::INET>::ANY       ("0.0.0.0", 0);
 
-template typename address<domain::INET>::ip_type
-address<domain::INET>::resolve (const std::string &);
-
-template class address<domain::INET>;
+namespace net {
+    template class address<domain::INET>;
+}
 
 //-----------------------------------------------------------------------------
 //template <> const address<domain::INET6>
