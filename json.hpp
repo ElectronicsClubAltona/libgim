@@ -272,14 +272,25 @@ namespace json {
 
     std::ostream&
     operator <<(std::ostream &os, const json::node &n);
+
+
+    template <typename T>
+    struct io {
+        static std::unique_ptr<json::node> serialise (const T&);
+        static T deserialise (const json::node&);
+    };
 }
 
 
 template <typename T>
-json::node&& to_json (const T&);
+json::node&& to_json (const T &t) {
+    return json::io<T>::serialise (t);
+}
 
 template <typename T>
-T from_json (const json::node&);
+T from_json (const json::node &n) {
+    return json::io<T>::deserialise (n);
+}
 
 #endif
 
