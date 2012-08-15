@@ -122,8 +122,8 @@ size_cast (const V v) {
 template <typename T, typename V>
 T*
 known_cast (V *v) {
-    CHECK_HARD (nullptr != dynamic_cast<T> (v));
-    return static_cast<T> (v);
+    CHECK_HARD (nullptr != dynamic_cast<T*> (v));
+    return static_cast<T*> (v);
 }
 
 
