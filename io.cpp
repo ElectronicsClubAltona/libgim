@@ -58,7 +58,7 @@ util::slurp (const boost::filesystem::path& path)  {
     char *cursor = buffer.get();
 
     while (remaining) {
-        ssize_t consumed = read (fd, cursor, remaining);
+        ssize_t consumed = ::read (fd, cursor, remaining);
         if (consumed == -1)
             throw errno_error();
         CHECK_HARD (        consumed >  0);
@@ -69,6 +69,26 @@ util::slurp (const boost::filesystem::path& path)  {
     }
 
     return buffer;
+}
+
+//----------------------------------------------------------------------------
+void
+util::write (const boost::filesystem::path &path, const char *data, size_t len) {
+    CHECK_SOFT (len > 0);
+    CHECK_HARD (data);
+
+    fd_ref fd (path);
+    const char *cursor = data;
+    size_t remaining   = len;
+
+    while (remaining) {
+        ssize_t consumed = ::write (fd, cursor, remaining);
+        if (consumed < 0)
+            errno_error::throw_code ();
+
+        remaining -= sign_cast<size_t> (consumed);
+        cursor    += sign_cast<size_t> (consumed);
+    }
 }
 
 //----------------------------------------------------------------------------

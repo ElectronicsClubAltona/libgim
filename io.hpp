@@ -44,6 +44,9 @@ namespace util {
     std::unique_ptr<char []>
     slurp (const boost::filesystem::path&) mustuse;
 
+    void
+    write (const boost::filesystem::path &, const char *data, size_t len);
+
     /// A simple RAII wrapper for file descriptors
     struct fd_ref {
         public:
