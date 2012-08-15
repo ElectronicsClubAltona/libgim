@@ -274,6 +274,9 @@ namespace json {
     operator <<(std::ostream &os, const json::node &n);
 
 
+    // Instantiate this template for the type you wish to output. We use a
+    // helper class here to avoid partial template specialisation of a
+    // function (eg, for templated types).
     template <typename T>
     struct io {
         static std::unique_ptr<json::node> serialise (const T&);
@@ -282,14 +285,14 @@ namespace json {
 }
 
 
-template <typename T>
-json::node&& to_json (const T &t) {
-    return json::io<T>::serialise (t);
+template <typename T, class ...Args>
+json::node&& to_json (const T &t, Args&&... args) {
+    return json::io<T>::serialise (t, std::forward<Args>(args)...);
 }
 
-template <typename T>
-T from_json (const json::node &n) {
-    return json::io<T>::deserialise (n);
+template <typename T, class ...Args>
+T from_json (const json::node &n, Args&&... args) {
+    return json::io<T>::deserialise (n, std::forward<Args>(args)...);
 }
 
 #endif
