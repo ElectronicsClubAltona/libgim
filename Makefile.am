@@ -90,6 +90,7 @@ UTIL_FILES   =		\
     point.hpp		\
     pool.cpp		\
     pool.hpp		\
+    pool.ipp		\
     preprocessor.hpp	\
     quaternion.cpp	\
     quaternion.hpp	\

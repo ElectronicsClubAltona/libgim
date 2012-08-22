@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2012 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_POOL_HPP
@@ -23,7 +23,7 @@
 #include "nocopy.hpp"
 
 namespace util {
-template <typename T>
+    template <typename T>
     class pool : public nocopy {
         protected:
             union node {
@@ -36,65 +36,18 @@ template <typename T>
             unsigned int  m_capacity;
 
         public:
-            pool (unsigned int _capacity):
-                m_capacity (_capacity)
-            {
-                static_assert (sizeof (T) >= sizeof (uintptr_t),
-                               "pool<T>'s chained block system requires that T be at least pointer sized");
+            pool (unsigned int _capacity);
+            ~pool ();
 
-                m_head = (node *)operator new (sizeof (T) * m_capacity);
-                m_next = m_head;
-
-                for (unsigned int i = 0; i < m_capacity - 1; ++i)
-                    m_next[i]._chain = &m_next[i + 1];
-                m_next[m_capacity - 1]._chain = NULL;
-            }
-
-
-            ~pool () {
-                CHECK (m_next != NULL);
-
-                unsigned int doomed_count = 0;
-                for (node *cursor = m_next; cursor != NULL; cursor = cursor->_chain)
-                    ++doomed_count;
-
-                CHECK_EQ (doomed_count, m_capacity);
-                operator delete (m_head);
-            }
-            
-
-            unsigned int capacity (void) const
-                { return m_capacity; }
-
+            unsigned int capacity (void) const;
 
             template <typename ...Args>
-            T*   acquire (Args&... args) {
-                if (!m_next)
-                    throw std::bad_alloc ();
+            T*   acquire (Args&... args);
 
-                node *newnext = m_next->_chain;
-                T *data = (T*)&m_next->_data;
-                
-                try {
-                    new (data) T (args...);
-                } catch (...) {
-                    m_next->_chain = newnext;
-                    throw;
-                }
-
-                m_next  = newnext;
-                return data;
-            }
-
-
-            void release (T *data) {
-                data->~T();
-                node *newnode = (node *)data;
-
-                newnode->_chain = m_next;
-                m_next = newnode;
-            }
+            void release (T *data);
     };
 }
+
+#include "pool.ipp"
 
 #endif // __UTIL_POOL_HPP
