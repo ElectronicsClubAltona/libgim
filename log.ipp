@@ -17,11 +17,18 @@
  * Copyright 2012 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_LOG_IPP
+#ifdef __UTIL_LOG_IPP
+#error Double inclusion of util/log.ipp
+#endif
+
 #define __UTIL_LOG_IPP
 
+
+//-----------------------------------------------------------------------------
 #include <boost/format.hpp>
 
+
+//-----------------------------------------------------------------------------
 namespace util {
     namespace detail  {
         void
@@ -39,5 +46,3 @@ namespace util {
         { detail::log (l, std::move (boost::format (format)), _tail...); }
 }
 
-
-#endif

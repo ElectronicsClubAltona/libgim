@@ -17,9 +17,14 @@
  * Copyright 2010 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_RANDOM_IPP
+#ifdef __UTIL_RANDOM_IPP
+#error Double inclusion of util/random.ipp
+#endif
+
 #define __UTIL_RANDOM_IPP
 
+
+//-----------------------------------------------------------------------------
 namespace util {
     template <typename T, size_t N>
     T* randomise (T (&array)[N]) {
@@ -29,4 +34,3 @@ namespace util {
     }
 }
 
-#endif

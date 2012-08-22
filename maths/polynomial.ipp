@@ -17,6 +17,14 @@
  * Copyright 2010 Danny Robson <danny@nerdcruft.net>
  */
 
+#ifdef __UTIL_MATHS_POLYNOMIAL_IPP
+#error Double includion of util/maths/polynomial.hpp
+#endif
+
+#define __UTIL_MATHS_POLYNOMIAL_IPP
+
+
+//-----------------------------------------------------------------------------
 template <typename T, size_t N>
 T
 maths::polynomial<T,N>::eval (T x) const {
