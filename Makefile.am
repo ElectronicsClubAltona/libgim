@@ -117,6 +117,8 @@ UTIL_FILES   =		\
     types.hpp		\
     types/bits.hpp	\
     types/casts.hpp	\
+    types/comparator.hpp\
+    types/comparator.ipp\
     types/string.cpp	\
     types/string.hpp	\
     types/traits.hpp	\
