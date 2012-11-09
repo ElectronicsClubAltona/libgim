@@ -37,8 +37,7 @@ namespace util {
         ACCESS_WRITE     = 1 << 1,
         ACCESS_READWRITE = ACCESS_READ | ACCESS_WRITE
     };
-
-
+    
     /// Reads an entire file into memory. Caller frees the result. Guarantees a
     /// null trailing byte.
     std::unique_ptr<char []>
@@ -60,8 +59,7 @@ namespace util {
     };
 
 
-    class indenter : public std::streambuf
-    {
+    class indenter : public std::streambuf {
     protected:
         std::streambuf* m_dest;
         bool            m_line_start;
@@ -117,6 +115,7 @@ namespace util {
     };
 #endif
 
+    
     class path_error : public std::runtime_error {
         public:
             path_error (const boost::filesystem::path &path):
