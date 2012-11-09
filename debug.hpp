@@ -110,6 +110,38 @@
 } while (0)
 
 
+#define CHECK_LT(A,B) do {                           \
+    const auto __a = (A);                            \
+    const auto __b = (B);                            \
+    _CHECK_META (__a < __b,                          \
+                 { ; },                              \
+                 {                                   \
+        std::ostringstream os;                       \
+        os << "expected less than.\n"                \
+           << "__a: " << #A << " is " << __a << ")"  \
+           << "\n >= \n"                             \
+           << "__b: " << #B << " is " << __b << ")"; \
+        panic (os.str ());                           \
+    });                                              \
+} while (0)
+
+
+#define CHECK_GT(A,B) do {                           \
+    const auto __a = (A);                            \
+    const auto __b = (B);                            \
+    _CHECK_META (__a > __b,                          \
+                 { ; },                              \
+                 {                                   \
+        std::ostringstream os;                       \
+        os << "expected greater than.\n"             \
+           << "__a: " << #A << " is " << __a << ")"  \
+           << "\n <= \n"                             \
+           << "__b: " << #B << " is " << __b << ")"; \
+        panic (os.str ());                           \
+    });                                              \
+} while (0)
+
+
 #define CHECK_NEQ(A,B) do {                          \
     const auto __a = (A);                            \
     const auto __b = (B);                            \
