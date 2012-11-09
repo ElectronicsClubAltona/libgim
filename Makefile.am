@@ -35,6 +35,8 @@ UTIL_FILES   =		\
     fletcher.hpp	\
     float.cpp		\
     float.hpp		\
+    fourcc.cpp		\
+    fourcc.hpp		\
     fwd.hpp		\
     guid.cpp		\
     guid.hpp		\

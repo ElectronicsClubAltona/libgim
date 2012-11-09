@@ -19,6 +19,12 @@
 
 #include "fourcc.hpp"
 
+using util::fourcc;
+using std::ostream;
+
+
+static_assert (sizeof(fourcc) == 4, "fourcc must be a 4 byte POD");
+
 
 fourcc
 fourcc::from_chars (uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
@@ -34,7 +40,7 @@ fourcc::from_chars (uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
 
 
 fourcc
-fourcc::from_str (const char data[4]) {
+fourcc::from_string (const char data[4]) {
     fourcc lhs;
 
     lhs.data[0] = (uint8_t)data[0];

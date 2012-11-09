@@ -23,16 +23,18 @@
 #include <iostream>
 #include <cstdint>
 
-struct fourcc {
-    uint8_t data[4];
+namespace util {
+    struct fourcc {
+        uint8_t data[4];
 
-    static fourcc from_str(const char[4]);
-    static fourcc from_chars(uint8_t, uint8_t, uint8_t, uint8_t);
+        static fourcc from_string(const char[4]);
+        static fourcc from_chars(uint8_t, uint8_t, uint8_t, uint8_t);
 
-    bool operator== (const char[4]) const;
-    operator uint32_t (void) const;
-};
+        bool operator== (const char[4]) const;
+        operator uint32_t (void) const;
+    };
+}
 
-std::ostream& operator<< (std::ostream&, fourcc);
+std::ostream& operator<< (std::ostream&, util::fourcc);
 
 #endif
