@@ -64,8 +64,7 @@ breakpoint (void) {
 //------------------------------------------------------------------------------
 void
 not_implemented (void) {
-    static const char *MSG = "Function not implemented";
-    not_implemented (MSG);
+    not_implemented ("Function not implemented");
 }
 
 
@@ -130,8 +129,52 @@ disable_fpe (void) {
 
 
 //------------------------------------------------------------------------------
-void debug::init (void) {
 #if defined(PLATFORM_WIN32)
+#include <io.h>
+#include <fcntl.h>
+
+void
+force_console (void) {
+    if (!AttachConsole (ATTACH_PARENT_PROCESS))
+        return;
+
+    auto out_handle = GetStdHandle (STD_OUTPUT_HANDLE);
+    auto err_handle = GetStdHandle (STD_ERROR_HANDLE);
+    auto in_handle  = GetStdHandle (STD_INPUT_HANDLE);
+
+    auto out_fd = _open_osfhandle (reinterpret_cast<intptr_t> (out_handle), _O_TEXT);
+    auto err_fd = _open_osfhandle (reinterpret_cast<intptr_t> (err_handle), _O_TEXT);
+    auto in_fd  = _open_osfhandle (reinterpret_cast<intptr_t> (in_handle),  _O_TEXT);
+
+    auto out_file = _fdopen (out_fd, "w");
+    auto err_file = _fdopen (err_fd, "w");
+    auto in_file  = _fdopen (in_fd,  "r");
+
+    /// FILE objects are not reassignable, but Windows doesn't leave us much
+    /// choice here.
+    *stdout = *out_file;
+    *stderr = *err_file;
+    *stdin  = *in_file;
+
+    setvbuf (stdout, NULL, _IONBF, 0);
+    setvbuf (stderr, NULL, _IONBF, 0);
+    setvbuf (stdin,  NULL, _IONBF, 0);
+
+    ios::sync_with_stdio ();
+
+    // Windows doesn't give an immediate newline when an application is run
+    // from a console, so we provide one here for sanity.
+    std::cout << "\n";
+}
+#endif
+
+
+//------------------------------------------------------------------------------
+void
+debug::init (void) {
+#if defined(PLATFORM_WIN32)
+    force_console ();
+
     if (nullptr == LoadLibrary("exchndl.dll")) {
         std::cerr << GetLastError () << "\n";
         LOG_WARNING("Emergency debugger not loaded");
