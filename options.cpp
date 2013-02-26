@@ -22,17 +22,15 @@
 
 #include "config.h"
 
-#include <iostream>
-#include <stdexcept>
-
 #include <cassert>
+#include <cmath>
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
-#include <cmath>
-#include <stdint.h>
-
-#include <stdint.h>
-#include <string.h>
+#include <cstring>
+#include <iostream>
+#include <memory>
+#include <stdexcept>
 
 
 using namespace std;
@@ -57,13 +55,16 @@ option::option (char        _letter,
 
 
 
-void option::execute (void) {
+void
+option::execute (void) {
     throw runtime_error(
         "Cannot provide no value for the option '" + m_longopt + "'"
     ); 
 }
 
-void option::execute (const string& data) {
+
+void
+option::execute (const string& data) {
     assert(data.size() > 0);
     throw runtime_error(
         "Cannot provide a value for the option '" + m_longopt + "'"
@@ -71,7 +72,8 @@ void option::execute (const string& data) {
 }
 
 
-ostream& operator<< (ostream & os, const option& opt) {
+ostream&
+operator<< (ostream & os, const option& opt) {
     os  << (opt.is_required () ? " -"  : "[-" ) << opt.shortopt ()
         << (opt.is_required () ? " \t" : "]\t") << opt.longopt  ()
         << "\t"   << opt.description ();
@@ -177,7 +179,6 @@ bytesoption::execute (const std::string& data) {
 
     size_t defaultvalue = *m_data;
 
-
     try {
         bytesmodifier modifier = m_modifier;
         off_t cursor = data.size () - 1;
@@ -231,7 +232,7 @@ bytesoption::execute (const std::string& data) {
         --cursor;
         assert (cursor >= 0);
 
-        multiplier = pow ((double)modifier_factor, (int)specified);
+        multiplier = std::pow (modifier_factor, (int)specified);
         get_arg (data.substr(0, cursor + 1), m_data);
         *m_data *= multiplier;
     } catch (...) {
@@ -244,6 +245,7 @@ bytesoption::execute (const std::string& data) {
 
     m_found = true;
 }
+
 
 /*
  * Internal helper options. Print help and usage.
@@ -264,22 +266,23 @@ class helpoption : public option {
         helpoption (processor * _processor):
             option (HELP_CHARACTER, HELP_NAME, HELP_DESCRIPTION, false),
             m_processor (_processor)
-    { ; }
+        { ; }
 
 
         virtual void execute (void);
         virtual void execute (const std::string& data)
-        { option::execute (data); }
+            { option::execute (data); }
 };
 
 
 const char  helpoption::HELP_CHARACTER   = 'h';
 const char *helpoption::HELP_NAME        = "help";
 const char *helpoption::HELP_DESCRIPTION =
-"display help and usage information";
+    "display help and usage information";
 
 
-void helpoption::execute (void) {
+void
+helpoption::execute (void) {
     m_processor->print_usage ();
     exit (EXIT_SUCCESS);
 }
@@ -294,17 +297,17 @@ processor::processor ()
 
 
 processor::~processor () {
-    for(auto i = m_options.begin(); i != m_options.end(); i++)
-        delete *i;
+    for (auto i: m_options)
+        delete i;
 }
 
 
-void processor::print_usage (void) {
+void
+processor::print_usage (void) {
     cout << "Usage: " << m_command << " [options]" << endl;
 
-    for(list<option *>::const_iterator i = m_options.begin ();
-            i != m_options.end (); i++)
-        cout << '\t' << **i << endl;
+    for (const auto i: m_options)
+        cout << '\t' << *i << endl;
 }
 
 
@@ -321,12 +324,13 @@ void processor::print_usage (void) {
  *
  * @return the number of tokens consumed for this option; must be at least 1.
  */
-unsigned int processor::parse_short (int pos, int argc, const char ** argv) {
+unsigned int
+processor::parse_short (int pos, int argc, const char **argv) {
     assert (pos > 0);
     assert (pos < argc);
 
     assert (argv[pos] != NULL);
-    const char * arg = argv[pos];
+    const char *arg = argv[pos];
 
     // Must begin with a dash, then have at least one non-dash character
     assert (arg[0] == '-');
@@ -375,33 +379,34 @@ unsigned int processor::parse_short (int pos, int argc, const char ** argv) {
  *
  * @return the number of tokens consumed for this option; must be 1.
  */
-unsigned int processor::parse_long (int pos, int argc, const char ** argv) {
+unsigned int
+processor::parse_long (int pos, int argc, const char ** argv) {
     assert (pos > 0);
     assert (pos < argc);
 
     assert (argv[pos] != NULL);
-    const char * arg = argv[pos];
+    const char *arg = argv[pos];
 
     // We must have at least two hyphens, and two letters (else a short opt)
     assert (arg[0] == '-');
     assert (arg[1] == '-');
-    assert (strlen(arg) >= 4);
+    assert (strlen (arg) >= 4);
 
     // Skip past the dashes to the argument name
     arg += 2;
 
     // If there's an equals it's has a value to extract
     const char * data = strchr (arg, '=');
-    if( data) {
+    if (data) {
         arg = strndup (arg, data - arg); // Copy just the arg name
         data++;                          // Skip the '='
     }
 
-    option * o = m_longopt[arg];
+    option *o = m_longopt[arg];
     if (!o) 
         throw runtime_error ("Cannot match option");
 
-    if(data)
+    if (data)
         o->execute (data); 
     else
         o->execute ();
@@ -432,8 +437,8 @@ processor::parse_args (int argc, const char ** argv) {
 
     // Must make sure each option has a chance to reset state (clear flags,
     // etc) between parses
-    for(auto i = m_options.begin (); i != m_options.end (); i++)
-        (*i)->reset ();
+    for (auto i: m_options)
+        i->reset ();
 
     const unsigned int FIRST_ARGUMENT = 1;
     try {
@@ -463,12 +468,13 @@ processor::parse_args (int argc, const char ** argv) {
         exit (EXIT_FAILURE);
     }
 
-    for (auto i = m_options.begin (); i != m_options.end (); ++i)
-        (*i)->finish ();
+    for (auto i: m_options)
+        i->finish ();
 }
 
 
-void processor::add_option (option * opt) {
+void
+processor::add_option (option *opt) {
     if (m_shortopt.find (opt->shortopt ()) != m_shortopt.end ())
         throw logic_error ("Short option already exists");
     if (m_longopt.find (opt->longopt   ()) != m_longopt.end ())
@@ -477,20 +483,20 @@ void processor::add_option (option * opt) {
     m_shortopt[opt->shortopt ()] = opt;
     m_longopt [opt->longopt  ()] = opt;
 
-    m_options.push_back( opt);
+    m_options.push_back (opt);
 }
 
 
-option* processor::remove_option (char letter) {
+option*
+processor::remove_option (char letter) {
     // Locate the option by short name
-    std::map<char, option*>::iterator s_candidate = m_shortopt.find (letter);
-
+    const auto s_candidate = m_shortopt.find (letter);
     if (s_candidate == m_shortopt.end ())
         throw logic_error ("Cannot remove an option which is not present");
-    option * opt = (*s_candidate).second;
+    option *opt = (*s_candidate).second;
 
     // Locate the long option entry
-    std::map<string, option*>::iterator l_candidate = m_longopt.find (opt->longopt ());
+    const auto l_candidate = m_longopt.find (opt->longopt ());
     assert (l_candidate != m_longopt.end ());
 
     // Remove all references and return
@@ -502,16 +508,16 @@ option* processor::remove_option (char letter) {
 }
 
 
-option* processor::remove_option (const char * name) {
+option*
+processor::remove_option (const char *name) {
     // Locate the option by long name
-    std::map<string, option*>::iterator l_candidate = m_longopt.find (name);
-
+    const auto l_candidate = m_longopt.find (name);
     if (l_candidate == m_longopt.end ())
         throw logic_error ("Cannot remove an option which is not present");
     option * opt = (*l_candidate).second;
 
     // Locate the short option entry
-    std::map<char, option*>::iterator s_candidate = m_shortopt.find (opt->shortopt ());
+    const auto s_candidate = m_shortopt.find (opt->shortopt ());
     assert (s_candidate != m_shortopt.end ());
 
     // Remove all references and return the option object
@@ -526,12 +532,6 @@ option* processor::remove_option (const char * name) {
 /* Parse args from a stream, one arg per line
 */
 void parse_stream (std::istream & is) {
-    char * buffer = new char[MAX_CHUNK_LENGTH + 1];
-    try {
-
-    } catch (...) {
-        delete [] buffer;
-        throw;
-    }
+    unique_ptr<char[]> buffer (new char [MAX_CHUNK_LENGTH + 1]);
 }
 

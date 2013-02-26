@@ -222,13 +222,13 @@ namespace util {
             /* Description of types available for parsing
             */
             enum bytestype {
-                BYTES_SINGLE,
-                BYTES_KILO,
-                BYTES_MEGA,
-                BYTES_GIGA,
-                BYTES_TERA,
-                BYTES_PETA,
-                BYTES_EXA,
+                BYTES_SINGLE = 0,
+                BYTES_KILO   = 1,
+                BYTES_MEGA   = 2,
+                BYTES_GIGA   = 3,
+                BYTES_TERA   = 4,
+                BYTES_PETA   = 5,
+                BYTES_EXA    = 6,
 
                 // Currently does not support yota or zeta as there can be
                 // trouble converting them without loss into 64bit quantities.
