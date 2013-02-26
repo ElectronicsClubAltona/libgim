@@ -24,5 +24,11 @@ bool
 strbegins(const char *restrict str,
           const char *restrict prefix);
 
+
+#if !defined(HAVE_STRNDUP)
+char *restrict
+strndup (const char *restrict s, size_t size);
+#endif
+
 #endif // __UTIL_STRING_HPP
 

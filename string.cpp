@@ -28,3 +28,29 @@ strbegins (const char *restrict str,
            const char *restrict prefix) {
     return 0 == strncmp (prefix, str, strlen (prefix));
 }
+
+
+
+#if !defined(HAVE_STRNDUP)
+// Written by Niels Möller <nisse@lysator.liu.se>
+// Placed in the public domain
+
+char *restrict
+strndup (const char *restrict s, size_t size)
+{
+    char *r;
+    char *end = (char *)memchr(s, 0, size);
+
+    if (end)
+        // Length + 1
+        size = end - s + 1;
+
+    char * r = malloc(size);
+
+    if (size) {
+        memcpy(r, s, size-1);
+        r[size-1] = '\0';
+    }
+    return r;
+}
+#endif
