@@ -6,11 +6,13 @@
 /float*
 /hton*
 /ip*
+/json
 /json-check*
 /maths*
 /matrix*
 /option
 /pool*
 /range*
+/region*
 /signal*
 /version*
