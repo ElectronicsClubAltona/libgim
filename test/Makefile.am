@@ -16,6 +16,7 @@ TEST_BIN = 		\
 	json		\
 	maths 		\
 	matrix 		\
+	option		\
 	pool		\
 	range 		\
 	region		\
@@ -50,6 +51,9 @@ maths_SOURCES      = maths.cpp
 
 matrix_LDADD       = $(builddir)/../libutil.la
 matrix_SOURCES     = matrix.cpp
+
+option_LDADD	   = $(builddir)/../libutil.la
+option_SOURCES     = options/success.cpp
 
 pool_LDADD         = $(builddir)/../libutil.la
 pool_SOURCES	   = pool.cpp

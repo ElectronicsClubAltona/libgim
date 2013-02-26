@@ -85,6 +85,8 @@ UTIL_FILES   =		\
     noise/fractal.hpp	\
     noise/lut.cpp	\
     noise/lut.hpp	\
+    options.cpp		\
+    options.hpp		\
     platform.hpp	\
     point.cpp		\
     point.hpp		\
