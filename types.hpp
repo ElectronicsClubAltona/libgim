@@ -27,13 +27,9 @@
 #include <memory>
 
 /// Returns the number of elements of a statically allocated array
-#if !defined(COMPILER_CLANG)
 template <typename T, size_t N>  
 size_t elems(T (&)[N])
     { return N; }
-#else
-#define elems(x) (sizeof(x) / 0[x])
-#endif
 
 
 template <class T, class...Args>
