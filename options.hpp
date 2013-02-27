@@ -24,6 +24,7 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 
@@ -286,7 +287,7 @@ namespace util {
             std::map<char, option *> m_shortopt;
             std::map<std::string, option *> m_longopt;
 
-            std::list<option *> m_options;
+            std::list<std::unique_ptr<option>> m_options;
 
             // The command to execute the application
             std::string m_command;
@@ -308,14 +309,14 @@ namespace util {
             void parse_stream(std::istream & is);
 
 
-            void add_option(option * opt);
+            void add_option(std::unique_ptr<option>);
 
-            option* remove_option(char letter);
-            option* remove_option(const char * name);
-            option* remove_option(const std::string& name)
-                { return remove_option(name.c_str()); }
-            option* remove_option(const option * opt)
-                { return remove_option(opt->longopt ()); }
+            std::unique_ptr<option> remove_option(char letter);
+            std::unique_ptr<option> remove_option(const char * name);
+            std::unique_ptr<option> remove_option(const std::string& name)
+                { return remove_option (name.c_str()); }
+            std::unique_ptr<option> remove_option(const option *opt)
+                { return remove_option (opt->longopt ()); }
     };
 }
 

@@ -22,6 +22,11 @@
 
 #include "config.h"
 
+#include "debug.hpp"
+#include "types.hpp"
+#include "types/casts.hpp"
+
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstdint>
@@ -29,7 +34,6 @@
 #include <cstring>
 #include <cstring>
 #include <iostream>
-#include <memory>
 #include <stdexcept>
 
 
@@ -292,21 +296,20 @@ helpoption::execute (void) {
  * Command line processing options
  */
 
-processor::processor ()
-{ add_option (new helpoption (this)); }
-
-
-processor::~processor () {
-    for (auto i: m_options)
-        delete i;
+processor::processor () {
+    add_option (make_unique<helpoption> (this));
 }
+
+
+processor::~processor ()
+{ ; }
 
 
 void
 processor::print_usage (void) {
     cout << "Usage: " << m_command << " [options]" << endl;
 
-    for (const auto i: m_options)
+    for (const auto &i: m_options)
         cout << '\t' << *i << endl;
 }
 
@@ -437,7 +440,7 @@ processor::parse_args (int argc, const char ** argv) {
 
     // Must make sure each option has a chance to reset state (clear flags,
     // etc) between parses
-    for (auto i: m_options)
+    for (auto &i: m_options)
         i->reset ();
 
     const unsigned int FIRST_ARGUMENT = 1;
@@ -468,62 +471,76 @@ processor::parse_args (int argc, const char ** argv) {
         exit (EXIT_FAILURE);
     }
 
-    for (auto i: m_options)
+    for (auto &i: m_options)
         i->finish ();
 }
 
 
 void
-processor::add_option (option *opt) {
+processor::add_option (std::unique_ptr<option> opt) {
     if (m_shortopt.find (opt->shortopt ()) != m_shortopt.end ())
         throw logic_error ("Short option already exists");
     if (m_longopt.find (opt->longopt   ()) != m_longopt.end ())
         throw logic_error ("Long option already exists");
 
-    m_shortopt[opt->shortopt ()] = opt;
-    m_longopt [opt->longopt  ()] = opt;
+    m_shortopt[opt->shortopt ()] = opt.get ();
+    m_longopt [opt->longopt  ()] = opt.get ();
 
-    m_options.push_back (opt);
+    m_options.push_back (move (opt));
 }
 
 
-option*
+std::unique_ptr<option>
 processor::remove_option (char letter) {
     // Locate the option by short name
     const auto s_candidate = m_shortopt.find (letter);
     if (s_candidate == m_shortopt.end ())
         throw logic_error ("Cannot remove an option which is not present");
-    option *opt = (*s_candidate).second;
+    option *target = (*s_candidate).second;
 
     // Locate the long option entry
-    const auto l_candidate = m_longopt.find (opt->longopt ());
+    const auto l_candidate = m_longopt.find (target->longopt ());
     assert (l_candidate != m_longopt.end ());
 
     // Remove all references and return
+    auto prime = std::find_if (
+        m_options.begin (),
+        m_options.end (),
+        [&target] (std::unique_ptr<option> &rhs) { return rhs.get () == target; }
+    );
+    std::unique_ptr<option> opt = move (*prime);
+    
     m_shortopt.erase (s_candidate);
-    m_longopt.erase (l_candidate);
-    m_options.remove (opt);
+    m_longopt.erase  (l_candidate);
+    m_options.erase  (prime);
 
     return opt;
 }
 
 
-option*
+std::unique_ptr<option>
 processor::remove_option (const char *name) {
     // Locate the option by long name
     const auto l_candidate = m_longopt.find (name);
     if (l_candidate == m_longopt.end ())
         throw logic_error ("Cannot remove an option which is not present");
-    option * opt = (*l_candidate).second;
+    option *target = (*l_candidate).second;
 
     // Locate the short option entry
-    const auto s_candidate = m_shortopt.find (opt->shortopt ());
+    const auto s_candidate = m_shortopt.find (target->shortopt ());
     assert (s_candidate != m_shortopt.end ());
 
-    // Remove all references and return the option object
+    // Remove all references and return
+    auto prime = std::find_if (
+        m_options.begin (),
+        m_options.end (),
+        [&target] (std::unique_ptr<option> &rhs) { return rhs.get () == target; }
+    );
+    std::unique_ptr<option> opt = move (*prime);
+    
     m_shortopt.erase (s_candidate);
-    m_longopt.erase (l_candidate);
-    m_options.remove (opt);
+    m_longopt.erase  (l_candidate);
+    m_options.erase  (prime);
 
     return opt;
 }
