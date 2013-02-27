@@ -55,8 +55,8 @@ AS_CXX_COMPILER_FLAG([-Wsign-conversion],   [WARNING_FLAGS="$WARNING_FLAGS -Wsig
 AS_CXX_COMPILER_FLAG([-Wtype-limits],       [WARNING_FLAGS="$WARNING_FLAGS -Wtype-limits"])
 AS_CXX_COMPILER_FLAG([-Wfloat-equal],       [WARNING_FLAGS="$WARNING_FLAGS -Wfloat-equal"])
 
-#AS_CXX_COMPILER_FLAG([-Wswitch-default],    [COMMON_CFLAGS="$COMMON_CFLAGS -Wswitch-default"])
-AS_CXX_COMPILER_FLAG([-Wswitch-enum],       [COMMON_CFLAGS="$COMMON_CFLAGS -Wswitch-enum"])
+AS_CXX_COMPILER_FLAG([-Wswitch-default],    [COMMON_CFLAGS="$COMMON_CFLAGS -Wswitch-default"])
+#AS_CXX_COMPILER_FLAG([-Wswitch-enum],       [COMMON_CFLAGS="$COMMON_CFLAGS -Wswitch-enum"])
 
 #AS_CXX_COMPILER_FLAG([-Wzero-as-null-pointer-constant], [WARNING_FLAGS="$WARNING_FLAGS -Wzero-as-null-pointer-constant"])
 

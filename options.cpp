@@ -137,7 +137,7 @@ bytesoption::bytesoption (char           _letter,
                           bytestype      _type,
                           bytesmodifier  _modifier,
                           bool           _required):
-    valueoption<size_t> (_letter, _name, _desc, _data),
+    valueoption<size_t> (_letter, _name, _desc, _data, _required),
     m_type (_type),
     m_modifier (_modifier)
 { ; }
@@ -169,9 +169,10 @@ bytesoption::type_from_character (char c) {
         case 'k':
         case 'K':
             return BYTES_KILO;
-    }
 
-    throw domain_error("Invalid magnitude specifier");
+        default:
+            throw domain_error("Invalid magnitude specifier");
+    }
 }
 
 
@@ -185,19 +186,21 @@ bytesoption::execute (const std::string& data) {
 
     try {
         bytesmodifier modifier = m_modifier;
-        off_t cursor = data.size () - 1;
+        size_t cursor = data.size () - 1;
 
         // Consume an optional trailing `byte' type
         if (data[cursor] == 'B' || data[cursor] == 'b') {
-            if (--cursor < 0)
+            if (cursor == 0)
                 throw invalid_argument ("Size is too short");
+            --cursor;
         }
 
         // Check if we explicitly request base2
         if (data[cursor] == 'i') {
             modifier = BYTES_BASE2;
-            if (--cursor < 0)
+            if (cursor == 0)
                 throw invalid_argument("Size is too short");
+            --cursor;
         }
 
         // Determine what constant factor is needed for the raw size
@@ -213,7 +216,7 @@ bytesoption::execute (const std::string& data) {
                 break;
 
             default:
-                abort ();
+                unreachable ();
         }
 
         // Find the difference in magnitude between what is desired, and what
@@ -234,7 +237,6 @@ bytesoption::execute (const std::string& data) {
         // ... so that we can easily decrement the cursor without special logic
         // after reading the specifiers.
         --cursor;
-        assert (cursor >= 0);
 
         multiplier = std::pow (modifier_factor, (int)specified);
         get_arg (data.substr(0, cursor + 1), m_data);
@@ -399,10 +401,11 @@ processor::parse_long (int pos, int argc, const char ** argv) {
     arg += 2;
 
     // If there's an equals it's has a value to extract
-    const char * data = strchr (arg, '=');
+    const char *data = strchr (arg, '=');
     if (data) {
-        arg = strndup (arg, data - arg); // Copy just the arg name
-        data++;                          // Skip the '='
+        arg = strndup (arg, sign_cast<size_t> (data - arg));
+        //arg = strndup (arg, data - arg); // Copy just the arg name
+        ++data;                          // Skip the '='
     }
 
     option *o = m_longopt[arg];
@@ -445,7 +448,7 @@ processor::parse_args (int argc, const char ** argv) {
 
     const unsigned int FIRST_ARGUMENT = 1;
     try {
-        for (int i = FIRST_ARGUMENT; i < argc; ++i) {
+        for (size_t i = FIRST_ARGUMENT; i < sign_cast<unsigned> (argc); ++i) {
             // An argument must begin with a dash, if not we've reached the
             // end of the argument lists or we have a parsing error.
             if (argv[i][0] != '-')
@@ -548,7 +551,7 @@ processor::remove_option (const char *name) {
 
 /* Parse args from a stream, one arg per line
 */
-void parse_stream (std::istream & is) {
-    unique_ptr<char[]> buffer (new char [MAX_CHUNK_LENGTH + 1]);
-}
+//void parse_stream (std::istream & is) {
+//    unique_ptr<char[]> buffer (new char [MAX_CHUNK_LENGTH + 1]);
+//}
 
