@@ -11,6 +11,7 @@ AC_LANG([C++])
 LT_INIT
 AM_PROG_CC_C_O
 
+AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
 
