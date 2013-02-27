@@ -1,6 +1,7 @@
 
 #include "../debug.hpp"
 #include "../json.hpp"
+#include "../maths.hpp"
 
 #include <memory>
 #include <cstdlib>
@@ -42,7 +43,12 @@ main (int, char**) {
     CHECK_HARD (!ref["integer"].is_null ());
     CHECK_HARD (!ref["integer"].is_object ());
     CHECK_HARD (!ref["integer"].is_string ());
-    CHECK_EQ   ( ref["integer"].as_number (), 1u);
+    CHECK (
+        exactly_equal (
+            (unsigned)ref["integer"].as_number ().native (),
+            1u
+        )
+    );
 
     CHECK_HARD ( ref["null"].is_null ());
     CHECK_HARD (!ref["null"].is_array ());
@@ -73,7 +79,12 @@ main (int, char**) {
     CHECK_HARD (!ref["double"].is_null ());
     CHECK_HARD (!ref["double"].is_object ());
     CHECK_HARD (!ref["double"].is_string ());
-    CHECK_EQ   ( ref["double"].as_number (), 3.14);
+    CHECK (
+        exactly_equal (
+            ref["double"].as_number ().native (),
+            3.14
+        )
+    );
 
     CHECK_HARD ( ref["object"].is_object ());
     CHECK_HARD (!ref["object"].is_array ());
