@@ -20,6 +20,8 @@
 #ifndef __UTIL_LOG_HPP
 #define __UTIL_LOG_HPP
 
+#include "nocopy.hpp"
+
 #include <iostream>
 #include <string>
 
@@ -69,6 +71,17 @@ namespace util {
 #else
     #define LOG_DEBUG(...)      do { ; } while (0)
 #endif
+
+
+    class scoped_logger : public nocopy {
+        public:
+            scoped_logger (const level_t, const std::string&);
+            ~scoped_logger ();
+
+        protected:
+            const level_t      m_level;
+            const std::string &m_message;
+    };
 }
 
 #include "log.ipp"

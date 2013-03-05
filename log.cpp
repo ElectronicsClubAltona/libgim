@@ -133,3 +133,15 @@ util::detail::log (level_t level, boost::format &&format) {
               << format
               << std::endl;
 }
+
+
+scoped_logger::scoped_logger (const level_t      _level,
+                              const std::string &_message):
+    m_level   (_level),
+    m_message (_message)
+{ ; }
+
+
+scoped_logger::~scoped_logger () {
+    log (m_level, m_message);
+}
