@@ -10,11 +10,12 @@
 /*.log
 /maths*
 /matrix*
-/md[24]*
+/md[245]*
 /option
 /pool*
 /range*
 /region*
+/sha1*
 /signal*
 /*.trs
 /version*

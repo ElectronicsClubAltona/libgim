@@ -25,6 +25,7 @@ TEST_BIN = 		\
 	range 		\
 	region		\
 	signal		\
+	sha1		\
 	version
 
 TESTS = $(TEST_BIN) json.pl
@@ -82,6 +83,9 @@ region_SOURCES     = region.cpp
 
 signal_LDADD	   = $(builddir)/../libutil.la
 signal_SOURCES     = signal.cpp
+
+sha1_LDADD         = $(builddir)/../libutil.la
+sha1_SOURCES       = sha1.cpp
 
 version_LDADD      = $(builddir)/../libutil.la
 version_SOURCES    = version.cpp
