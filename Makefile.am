@@ -46,6 +46,8 @@ UTIL_FILES   =		\
     hash/md2.hpp	\
     hash/md4.cpp	\
     hash/md4.hpp	\
+    hash/md5.cpp	\
+    hash/md5.hpp	\
     image.cpp		\
     image.hpp		\
     io.cpp		\

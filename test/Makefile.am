@@ -19,6 +19,7 @@ TEST_BIN = 		\
 	matrix 		\
 	md2		\
 	md4		\
+	md5		\
 	option		\
 	pool		\
 	range 		\
@@ -63,6 +64,9 @@ md2_SOURCES        = md2.cpp
 
 md4_LDADD          = $(builddir)/../libutil.la
 md4_SOURCES        = md4.cpp
+
+md5_LDADD          = $(builddir)/../libutil.la
+md5_SOURCES        = md5.cpp
 
 option_LDADD	   = $(builddir)/../libutil.la
 option_SOURCES     = options/success.cpp
