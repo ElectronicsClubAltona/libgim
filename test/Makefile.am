@@ -17,6 +17,7 @@ TEST_BIN = 		\
 	json		\
 	maths 		\
 	matrix 		\
+	md2		\
 	option		\
 	pool		\
 	range 		\
@@ -55,6 +56,9 @@ maths_SOURCES      = maths.cpp
 
 matrix_LDADD       = $(builddir)/../libutil.la
 matrix_SOURCES     = matrix.cpp
+
+md2_LDADD          = $(builddir)/../libutil.la
+md2_SOURCES        = md2.cpp
 
 option_LDADD	   = $(builddir)/../libutil.la
 option_SOURCES     = options/success.cpp
