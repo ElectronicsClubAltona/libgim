@@ -9,6 +9,7 @@ AM_LDFLAGS  = $(COMMON_LDFLAGS)
 
 TEST_BIN = 		\
 	backtrace 	\
+	bitwise		\
 	checksum	\
 	float		\
 	hton		\
@@ -30,6 +31,9 @@ EXTRA_DIST = json.pl
 backtrace_CPPFLAGS = $(COMMON_CXXFLAGS)
 backtrace_LDADD    = $(builddir)/../libutil.la
 backtrace_SOURCES  = backtrace.cpp
+
+bitwise_LDADD      = $(builddir)/../libutil.la
+bitwise_SOURCES    = bitwise.cpp
 
 checksum_LDADD	   = $(builddir)/../libutil.la
 checksum_SOURCES   = checksum.cpp

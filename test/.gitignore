@@ -1,13 +1,13 @@
-/*.log
-/*.trs
 /adler*
 /backtrace*
+/bitwise
 /checksum*
 /float*
 /hton*
 /ip*
 /json
 /json-check*
+/*.log
 /maths*
 /matrix*
 /option
@@ -15,4 +15,5 @@
 /range*
 /region*
 /signal*
+/*.trs
 /version*
