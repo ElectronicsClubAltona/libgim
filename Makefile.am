@@ -139,7 +139,9 @@ UTIL_FILES   =		\
     vector.cpp		\
     vector.hpp		\
     version.cpp		\
-    version.hpp
+    version.hpp		\
+    zlib.cpp		\
+    zlib.hpp
 
 
 if PLATFORM_LINUX

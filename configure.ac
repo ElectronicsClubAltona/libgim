@@ -209,6 +209,7 @@ if test "x$ax_cv_boost_filesystem" != "xyes"; then
 fi
 
 ## Optional packages
+PKG_CHECK_MODULES([ZLIB], [zlib >= 1.2.0])
 
 ## Output
 
