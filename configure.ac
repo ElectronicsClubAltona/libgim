@@ -146,7 +146,6 @@ if test "x$ac_cv_debugging" = "xyes"; then
     fi
 
     AC_DEFINE([ENABLE_DEBUGGING], [], [Description])
-    AC_DEFINE([_FORTIFY_SOURCE], [2], [Description])
     AC_DEFINE([_GLIBCXX_DEBUG], [], [Description])
 
 else
