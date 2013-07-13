@@ -7,19 +7,13 @@ AM_LDFLAGS  = $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(COM
 SUBDIRS = test
 
 UTIL_FILES   =		\
-    adler.hpp		\
-    adler.cpp		\
     annotations.hpp 	\
     backtrace.hpp   	\
     bitwise.cpp		\
     bitwise.hpp		\
-    bsdsum.hpp		\
-    bsdsum.cpp		\
     colour.cpp		\
     colour.hpp		\
     detail/coord.hpp	\
-    crc.cpp		\
-    crc.hpp		\
     debug.cpp   	\
     debug.hpp   	\
     endian.cpp		\
@@ -42,12 +36,22 @@ UTIL_FILES   =		\
     guid.hpp		\
     hash.cpp		\
     hash.hpp		\
+    hash/adler.cpp	\
+    hash/adler.hpp	\
+    hash/bsdsum.hpp	\
+    hash/bsdsum.cpp	\
+    hash/crc.cpp	\
+    hash/crc.hpp	\
     hash/md2.cpp	\
     hash/md2.hpp	\
     hash/md4.cpp	\
     hash/md4.hpp	\
     hash/md5.cpp	\
     hash/md5.hpp	\
+    hash/pbkdf1.cpp	\
+    hash/pbkdf1.hpp	\
+    hash/pbkdf2.cpp	\
+    hash/pbkdf2.hpp	\
     hash/sha1.cpp	\
     hash/sha1.hpp	\
     image.cpp		\

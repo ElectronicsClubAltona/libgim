@@ -1,6 +1,6 @@
 
-#include "adler.hpp"
-#include "bsdsum.hpp"
+#include "hash/adler.hpp"
+#include "hash/bsdsum.hpp"
 #include "types.hpp"
 #include "debug.hpp"
 
