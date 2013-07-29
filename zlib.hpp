@@ -29,6 +29,7 @@
 namespace util {
     namespace zlib {
         extern const char* version (void);
+        extern const char* code_to_string (int);
 
         extern void compress (uint8_t       *dst, size_t dst_len,
                               const uint8_t *src, size_t src_len,

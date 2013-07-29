@@ -8,6 +8,31 @@ util::zlib::version (void) {
 }
 
 
+const char*
+util::zlib::code_to_string (int code) {
+    static const int MIN_CODE = -6;
+    static const int MAX_CODE =  2;
+
+    if (code > MAX_CODE || code < MIN_CODE) {
+        unreachable ();
+    }
+
+    static const char* CODES[] = {
+        "OK",
+        "STREAM_END",
+        "NEED_DICT",
+        "ERRNO",
+        "STREAM_ERROR",
+        "DATA_ERROR",
+        "MEM_ERROR",
+        "BUF_ERROR",
+        "VERSION_ERROR",
+    };
+
+    return CODES[code + MIN_CODE];
+}
+
+
 size_t
 util::zlib::uncompress (uint8_t       *dst, size_t dst_len,
                         const uint8_t *src, size_t src_len) {
