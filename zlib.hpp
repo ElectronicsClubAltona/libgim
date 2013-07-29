@@ -65,7 +65,9 @@ namespace util {
         template <int CODE>
         class code_error : public error {
             public:
-                code_error(void);
+                code_error(void):
+                    error (code_to_string (CODE))
+                { ; }
         };
     }
 }
