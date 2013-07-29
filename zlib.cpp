@@ -75,3 +75,9 @@ util::zlib::error::throw_code (int code) {
     }
 }
 
+
+template class util::zlib::code_error<Z_STREAM_ERROR>;
+template class util::zlib::code_error<Z_DATA_ERROR>;
+template class util::zlib::code_error<Z_MEM_ERROR>;
+template class util::zlib::code_error<Z_BUF_ERROR>;
+template class util::zlib::code_error<Z_VERSION_ERROR>;
