@@ -46,6 +46,7 @@ namespace util {
 
         size_type area     (void) const;
         size_type diameter (void) const;
+        void scale (double factor);
 
         bool empty (void) const;
 

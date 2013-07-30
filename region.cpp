@@ -68,6 +68,17 @@ region<T>::diameter (void) const {
 
 
 template <typename T>
+void
+region<T>::scale (double factor) {
+    x -= (w * factor - w) / 2.0;
+    y -= (h * factor - h) / 2.0;
+
+    w *= factor;
+    h *= factor;
+}
+
+
+template <typename T>
 bool 
 region<T>::empty (void) const
     { return almost_equal (area (), 0); }
