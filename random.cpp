@@ -44,6 +44,11 @@ namespace util {
     random (void)
         { return range<float>::UNIT.random (); }
 
+    template <>
+    bool
+    random (void)
+        { return rand () & 0x01; }
+
     template <typename T>
     T&
     randomise (T &val)
