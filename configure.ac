@@ -186,7 +186,7 @@ AX_BOOST_SYSTEM
 AX_BOOST_FILESYSTEM
 AC_SUBST(BOOST_FILESYSTEM_LIB)
 
-AS_IF([text "x$ax_cv_boost_filesystem" != "xyes"], [
+AS_IF([test "x$ax_cv_boost_filesystem" != "xyes"], [
     AC_MSG_ERROR("boost-filesystem is a hard requirement")
 ])
 
