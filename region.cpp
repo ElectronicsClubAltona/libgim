@@ -136,6 +136,17 @@ region<T>::overlaps (const region<T> &rhs) const {
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
+point2
+region<T>::constrain (const point2 &p) const {
+    point2 v;
+    v.x = std::min (std::max (static_cast<T> (p.x), x), x + w);
+    v.y = std::min (std::max (static_cast<T> (p.y), y), y + h);
+
+    return v;
+}
+
+//-----------------------------------------------------------------------------
 template<typename T>
 region<T>
 region<T>::overlap (const region<T> &rhs) const {

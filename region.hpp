@@ -50,12 +50,14 @@ namespace util {
 
         bool empty (void) const;
 
-        point<2> base   (void) const;
-        point<2> centre (void) const;
+        point2 base   (void) const;
+        point2 centre (void) const;
 
-        bool includes (const point<2>&) const; // inclusive of borders
-        bool contains (const point<2>&) const; // exclusive of borders
+        bool includes (const point2&) const; // inclusive of borders
+        bool contains (const point2&) const; // exclusive of borders
         bool overlaps (const region<T>&) const; // exclusive of borders
+
+        point2 constrain (const point2&) const;
 
         region overlap (const region<T>&) const;
 
