@@ -78,15 +78,14 @@ namespace util {
         void sanity (void) const;
     };
 
-    vector<3> cross (const vector<3>&, const vector<3>&);
+    vector<2> polar_to_cartesian (const vector<2>&);
 
+    vector<3> cross (const vector<3>&, const vector<3>&);
     vector<3> spherical_to_cartesian (const util::vector <3>&);
     vector<3> cartesian_to_spherical (const util::vector <3>&);
 
-
     typedef vector<2> vector2;
     typedef vector<3> vector3;
-
 
     template <size_t S> util::vector<S> operator* (double, const util::vector<S>&);
     template <size_t S> util::vector<S> operator+ (double, const util::vector<S>&);

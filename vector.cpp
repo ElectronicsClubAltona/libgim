@@ -266,6 +266,12 @@ util::vector<S>::normalised (void) const {
     return out;
 }
 
+//-----------------------------------------------------------------------------
+util::vector<2>
+util::polar_to_cartesian (const util::vector<2> &v) {
+    return { v.r * std::cos (v.t),
+             v.r * std::sin (v.t) };
+}
 
 //-----------------------------------------------------------------------------
 template <size_t S>
