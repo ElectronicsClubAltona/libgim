@@ -22,6 +22,7 @@ TEST_BIN = 		\
 	md5		\
 	options		\
 	pool		\
+	random		\
 	range 		\
 	region		\
 	signal		\

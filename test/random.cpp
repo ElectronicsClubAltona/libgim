@@ -1,0 +1,56 @@
+#include "random.hpp"
+#include "debug.hpp"
+
+#include <iostream>
+#include <cmath>
+#include <cstdlib>
+
+using namespace std;
+
+
+// TODO: Use a more robust test like Chi-Square
+void
+test_bool (void) {
+    static const unsigned ITERATIONS = 1024;
+    static const unsigned THRESHOLD  = ITERATIONS * 0.1;
+    
+    unsigned counts[2] = { 0, 0 };
+    for (unsigned i = 0; i < ITERATIONS; ++i)
+        ++counts[util::random<bool> () ? 0 : 1];
+
+    unsigned diff = counts[0] > counts[1] ?
+                    counts[0] - counts[1] :
+                    counts[1] - counts[0];
+
+    CHECK_LT (diff, THRESHOLD);
+}
+
+
+// TODO: Use a more robust test like Kolmogorov-Smirnov
+void
+test_float (void) {
+    static const unsigned BUCKETS    =    8;
+    static const unsigned ITERATIONS = 4096;
+    static const unsigned EXPECTED   = ITERATIONS / BUCKETS;
+    static const float    THRESHOLD  = EXPECTED * 0.1;
+
+    unsigned counts[BUCKETS] = { 0 };
+    for (unsigned i = 0; i < ITERATIONS; ++i)
+        ++counts[unsigned (util::random<float> () * BUCKETS)];
+
+    for (unsigned c: counts) {
+        unsigned diff = EXPECTED > c ?
+                        EXPECTED - c :
+                        c - EXPECTED;
+
+        CHECK_LT (diff, THRESHOLD);
+    }
+}
+
+
+int
+main (int, char **) {
+    srand (time (NULL));
+    test_bool ();
+    test_float ();
+}
