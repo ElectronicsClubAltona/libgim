@@ -73,6 +73,10 @@ namespace util {
                     double x;
                     double y;
                 };
+                struct {
+                    double r;
+                    double t;
+                };
             };
         };
 
