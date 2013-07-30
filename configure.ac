@@ -25,7 +25,6 @@ AM_INIT_AUTOMAKE([1.14 dist-bzip2 dist-xz foreign subdir-objects])
 AM_SILENT_RULES([yes])
 
 AC_CONFIG_HEADERS([config.h])
-AX_APPEND_FLAG([-include config.h])
 
 ###############################################################################
 ## Major compilation options
@@ -176,7 +175,7 @@ AS_CASE([$host_os],
 
 CHECK_RAGEL([ip.cpp])
 
-AX_BOOST_BASE([1.52], [], [AC_MSG_ERROR([Boost version >= 1.52 required])])
+AX_BOOST_BASE([1.53], [], [AC_MSG_ERROR([Boost version >= 1.53 required])])
 AC_SUBST(BOOST_CPPFLAGS)
 AC_SUBST(BOOST_LDFLAGS)
 
@@ -219,6 +218,10 @@ AX_APPEND_COMPILE_FLAGS([-pipe])
 
 ###############################################################################
 ## Output
+
+# inclusion of config.h has to go after compilation tests otherwise we risk
+# failure on a clean build
+AX_APPEND_FLAG([-include config.h])
 
 AC_CONFIG_FILES([
     Doxyfile
