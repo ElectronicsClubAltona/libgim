@@ -29,6 +29,10 @@ using namespace util;
 const util::colour util::colour::WHITE ({ 1.0, 1.0, 1.0, 1.0 });
 const util::colour util::colour::BLACK ({ 0.0, 0.0, 0.0, 1.0 });
 
+const util::colour util::colour::RED   ({ 1.0, 0.0, 0.0, 1.0 });
+const util::colour util::colour::GREEN ({ 0.0, 1.0, 0.0, 1.0 });
+const util::colour util::colour::BLUE  ({ 0.0, 0.0, 1.0, 1.0 });
+
 
 //-----------------------------------------------------------------------------
 const json::node&
