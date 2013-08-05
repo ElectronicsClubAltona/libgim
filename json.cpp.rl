@@ -39,9 +39,8 @@
 using namespace std;
 using namespace util;
 
-//
+//-----------------------------------------------------------------------------
 // Parsing
-//
 
 struct parse_context {
     parse_context(json::node *_root):
@@ -237,9 +236,8 @@ struct parse_context {
 }%%
 
 
-//
+//-----------------------------------------------------------------------------
 // External support
-// 
 
 template <>
 bool
@@ -256,9 +254,8 @@ is_integer (const json::node &node) {
 }
 
 
-//
+//-----------------------------------------------------------------------------
 // Node
-//
 
 std::unique_ptr<json::node>
 json::parse (const boost::filesystem::path &path) {
@@ -307,9 +304,8 @@ json::write (const json::node &node, std::ostream &os)
     { node.write (os); }
 
 
-//
+//-----------------------------------------------------------------------------
 // Type conversion
-//
 
 const json::object&
 json::node::as_object  (void) const
@@ -341,9 +337,8 @@ json::node::as_null (void) const
         { throw type_error ("node is not a null"); }
 
 
-//
+//-----------------------------------------------------------------------------
 // Global operatoers
-//
 
 bool
 json::node::operator!= (const node &rhs) const
@@ -369,9 +364,8 @@ json::node::operator[] (unsigned int idx) const
     { return as_array()[idx]; }
 
 
-//
+//-----------------------------------------------------------------------------
 // Object
-//
 
 json::object::~object ()
     { ; }
@@ -461,9 +455,8 @@ json::object::write (std::ostream &os) const {
 }
 
 
-//
+//-----------------------------------------------------------------------------
 // Array
-//
 
 json::array::~array()
     { ; }
@@ -503,9 +496,8 @@ json::array::write (std::ostream &os) const {
 }
 
 
-//
+//-----------------------------------------------------------------------------
 // String
-//
 
 std::ostream&
 json::string::write (std::ostream &os) const {
@@ -524,9 +516,8 @@ json::string::operator ==(const char *rhs) const
     { return rhs == m_value; }
 
 
-//
+//-----------------------------------------------------------------------------
 // Number
-//
 
 std::ostream&
 json::number::write (std::ostream &os) const {
@@ -540,9 +531,8 @@ json::number::operator ==(const json::number &rhs) const
     { return almost_equal (rhs.m_value, m_value); }
 
 
-//
+//-----------------------------------------------------------------------------
 // Boolean
-//
 
 std::ostream&
 json::boolean::write (std::ostream &os) const {
@@ -555,9 +545,8 @@ json::boolean::operator ==(const json::boolean &rhs) const
     { return rhs.m_value == m_value; }
 
 
-//
+//-----------------------------------------------------------------------------
 // Null
-// 
 
 std::ostream&
 json::null::write (std::ostream &os) const {
