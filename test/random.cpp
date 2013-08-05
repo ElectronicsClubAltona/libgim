@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -53,4 +54,6 @@ main (int, char **) {
     srand (time (NULL));
     test_bool ();
     test_float ();
+
+    return EXIT_SUCCESS;
 }

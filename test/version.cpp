@@ -1,9 +1,10 @@
 
-#include <string>
-#include <vector>
-
 #include "../version.hpp"
 #include "../debug.hpp"
+
+#include <string>
+#include <vector>
+#include <cstdlib>
 
 using namespace std;
 using namespace util;
