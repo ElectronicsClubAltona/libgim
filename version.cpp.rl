@@ -26,38 +26,41 @@
 #include "debug.hpp"
 
 
-using namespace std;
 using namespace util;
+
+//-----------------------------------------------------------------------------
+version::version ():
+    size (0)
+{ ; }
 
 
 version::version (unsigned int _major,
                   unsigned int _minor):
-    m_size    (2),
-    m_release (RELEASE_PRODUCTION)
+    size    (2),
+    release (RELEASE_PRODUCTION)
 {
-    m_values[OFFSET_MAJOR] = _major;
-    m_values[OFFSET_MINOR] = _minor;
+    values[OFFSET_MAJOR] = _major;
+    values[OFFSET_MINOR] = _minor;
 }
 
 
-version::version (const string& str):
-    m_size    (0),
-    m_release (RELEASE_PRODUCTION)
+version::version (const std::string& str): 
+    size (0)
 {
-    parse (str);
+    *this = version::parse (str);
 }
 
 
 version::version (const char *str):
-    m_size    (0),
-    m_release (RELEASE_PRODUCTION)
+    size (0)
 {
-    parse (str);
+    *this = version::parse (str);
 }
 
 
+//-----------------------------------------------------------------------------
 static void
-check_release (version::release_t r) {
+sanity (version::release_t r) {
     switch (r) {
         case version::RELEASE_ALPHA:
         case version::RELEASE_BETA:
@@ -72,21 +75,22 @@ check_release (version::release_t r) {
 
 void
 version::sanity (void) const {
-    check_release (m_release);
-    CHECK (m_size > 0);
+    ::sanity (release);
+    CHECK (size > 0);
 }
 
 
+//-----------------------------------------------------------------------------
 %%{
     machine version;
     
     action clear 
-        { current = 0; }
+        { accum = 0; }
     action increment 
-        { current *= 10;
-          current += (uintptr_t)(fc - (unsigned char)'0'); }
+        { accum *= 10;
+          accum += (uintptr_t)(fc - (unsigned char)'0'); }
     action finish
-        { m_values[m_size++] = current; }
+        { v.values[v.size++] = accum ; }
 
     number   = (digit+)
                >clear
@@ -95,87 +99,105 @@ version::sanity (void) const {
                   
     dots     = (number '.')* number;
 
-    type     =   ('beta'i     | 'b'i) %{ m_release = RELEASE_BETA;  }
-               | ('alpha'i    | 'a'i) %{ m_release = RELEASE_ALPHA; }
-               | ('gamma'i    | 'g'i) %{ m_release = RELEASE_GAMMA; };
+    type     =   ('beta'i     | 'b'i) %{ v.release = RELEASE_BETA;  }
+               | ('alpha'i    | 'a'i) %{ v.release = RELEASE_ALPHA; }
+               | ('gamma'i    | 'g'i) %{ v.release = RELEASE_GAMMA; };
 
     version := (dots type?)
-               $!{ throw invalid_argument (str); };
+               $!{ throw std::invalid_argument (str); };
 
     write data;
 }%%
 
 
-void
-version::parse (const string& str) {
-    unsigned int current;
+//-----------------------------------------------------------------------------
+util::version
+util::version::parse (const std::string& str) {
+    unsigned int accum;
 
     int         cs;
     const char *p   = str.data (),
                *pe  = str.data () + str.size (),
                *eof = pe;
 
-    %%write init;
-    %%write exec;
-}
-
-
-void
-version::parse (const char *str) {
-    unsigned int current;
-
-    int         cs;
-    const char *p   = str,
-               *pe  = str + strlen (str),
-               *eof = pe;
+    version v;
 
     %%write init;
     %%write exec;
+    
+    return v;
 }
 
 
-static string
-release_string (const version::release_t r) {
-    switch (r) {
-        case (version::RELEASE_ALPHA):        return "a";
-        case (version::RELEASE_BETA):         return "b";
-        case (version::RELEASE_GAMMA):        return "g";
-        case (version::RELEASE_PRODUCTION):   return  "";
-    }
+util::version
+util::version::parse (const char *str) {
+    return parse (std::string (str));
+}
 
-    panic ("invalid release_t");
+
+//-----------------------------------------------------------------------------
+static std::string
+release_to_string (version::release_t r) {
+    sanity (r);
+
+    static const char* RELEASE_STRINGS[] = {
+        "a",    // RELEASE_ALPHA
+        "b",    // RELEASE_BETA
+        "g",    // RELEASE_GAMMA
+        ""      // RELEASE_PRODUCTION
+    };
+
+    return RELEASE_STRINGS[r];
 }
 
 
 bool
 version::operator> (const version &rhs) const {
-    unsigned int count = min (m_values.size (), rhs.m_values.size ());
+    unsigned int count = min (values.size (), rhs.values.size ());
 
     for (unsigned int i = 0; i < count; ++i)
-        if (m_values[i] < rhs.m_values[i])
+        if (values[i] < rhs.values[i])
             return false;
 
-    if (m_values.size () < rhs.m_values.size())
+    if (values.size () < rhs.values.size())
         return false;
 
-    if (m_release <= rhs.m_release)
+    if (release <= rhs.release)
         return false;
 
     return true;
 }
 
 
-namespace util {
-    ostream&
-    operator <<(ostream& os, const util::version& rhs) {
-        auto i = rhs.m_values.begin();
-        os << *i; ++i;
-
-        for (; i != rhs.m_values.end(); ++i)
-            os << '.' << *i;
-
-        os << release_string (rhs.m_release);
-        return os;
-    }
+bool
+version::operator== (const version &rhs) const {
+    return values  == rhs.values &&
+           size    == rhs.size   &&
+           release == rhs.release;
 }
 
+
+std::ostream&
+operator <<(std::ostream& os, const util::version& rhs) {
+    size_t elements = rhs.size;
+    CHECK_HARD (elements > 0);
+
+    os << rhs.major ();
+    if (!--elements)
+        goto done;
+
+    os << "." << rhs.minor ();
+    if (!--elements)
+        goto done;
+
+    os << "." << rhs.point ();
+    if (!--elements)
+        goto done;
+
+    os << "." << rhs.build ();
+    CHECK_EQ (--elements, 0);
+
+done:
+    os << release_to_string (rhs.release);
+    return os;
+}

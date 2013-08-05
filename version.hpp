@@ -26,61 +26,51 @@
 
 
 namespace util {
-    class version {
-        public:
-            enum release_t {
-                RELEASE_ALPHA,
-                RELEASE_BETA,
-                RELEASE_GAMMA,
-                RELEASE_PRODUCTION
-            };
+    struct version {
+        enum release_t {
+            RELEASE_ALPHA,
+            RELEASE_BETA,
+            RELEASE_GAMMA,
+            RELEASE_PRODUCTION
+        };
 
-            version (unsigned int _major,
-                     unsigned int _minor);
-            version (const std::string& str);
-            version (const char *str);
+        version ();
+        version (unsigned int _major, unsigned int _minor);
+        version (const std::string& str);
+        version (const char *str);
 
-            virtual ~version () { ; }
+        void sanity (void) const;
 
-            virtual void sanity (void) const;
+        enum {
+            OFFSET_MAJOR = 0,
+            OFFSET_MINOR = 1,
+            OFFSET_POINT = 2,
+            OFFSET_BUILD = 3,
 
-        protected:
-            enum {
-                OFFSET_MAJOR = 0,
-                OFFSET_MINOR = 1,
-                OFFSET_POINT = 2,
-                OFFSET_BUILD = 3,
+            NUM_OFFSETS
+        };
 
-                NUM_OFFSETS
-            };
+        unsigned major (void) const { return values[OFFSET_MAJOR]; }
+        unsigned minor (void) const { return values[OFFSET_MINOR]; }
+        unsigned point (void) const { return values[OFFSET_POINT]; }
+        unsigned build (void) const { return values[OFFSET_BUILD]; }
 
-            std::array<unsigned int, NUM_OFFSETS> m_values;
-            size_t m_size;
-            release_t m_release;
+        std::array<unsigned int, NUM_OFFSETS> values;
+        size_t size;
+        release_t release;
 
-            void parse (const std::string&);
-            void parse (const char*);
+        static version parse (const std::string&);
+        static version parse (const char*);
 
-        public:
-            unsigned int major (void) const { return m_values[OFFSET_MAJOR]; }
-            unsigned int minor (void) const { return m_values[OFFSET_MINOR]; }
-            unsigned int point (void) const { return m_values[OFFSET_POINT]; }
-            unsigned int build (void) const { return m_values[OFFSET_BUILD]; }
-
-            size_t size (void) const { return m_size; }
-
-            bool operator <  (const version& rhs) const;
-            bool operator >  (const version& rhs) const;
-            bool operator >= (const version& rhs) const;
-            bool operator <= (const version& rhs) const;
-            bool operator == (const version& rhs) const
-                { return m_values  == rhs.m_values &&
-                         m_release == rhs.m_release; }
-
-            friend std::ostream&
-            operator <<(std::ostream& os, const version& rhs);
+        bool operator <  (const version& rhs) const;
+        bool operator >  (const version& rhs) const;
+        bool operator >= (const version& rhs) const;
+        bool operator <= (const version& rhs) const;
+        bool operator == (const version& rhs) const;
     };
 }
+
+std::ostream& operator<< (std::ostream& os, const util::version& rhs);
 
 
 #endif // __VERSION_HPP
