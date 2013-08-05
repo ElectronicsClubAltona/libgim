@@ -39,7 +39,7 @@ namespace util {
             coord_data () { ; }
 
             template <typename ...T>
-            coord_data (T ...t): data{t...}
+            coord_data (T ..._t): data{_t...}
             { ; }
 
             double data[S];
@@ -50,7 +50,7 @@ namespace util {
             coord_data () { ; }
 
             template <typename ...T>
-            coord_data (T ...t): data{t...}
+            coord_data (T ..._t): data{_t...}
             { ; }
 
             union {
@@ -64,7 +64,7 @@ namespace util {
             coord_data () { ; }
 
             template <typename ...T>
-            coord_data (T ...t): data{t...}
+            coord_data (T ..._t): data{_t...}
             { ; }
 
             union {
