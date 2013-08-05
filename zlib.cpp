@@ -37,8 +37,12 @@ size_t
 util::zlib::uncompress (uint8_t       *dst, size_t dst_len,
                         const uint8_t *src, size_t src_len) {
     size_t actual_len = dst_len;
-    int err = ::uncompress (dst, &actual_len, src, src_len);
+    uLongf zlib_actual = actual_len;
+    
+    int err = ::uncompress (dst, &zlib_actual, src, src_len);
     error::try_code (err);
+
+    actual_len = zlib_actual;
     return actual_len;
 }
 
