@@ -27,8 +27,8 @@
 
 using namespace util;
 
+// ----------------------------------------------------------------------------
 #ifdef PLATFORM_WIN32
-
 #include <windows.h>
 
 uint64_t
@@ -48,7 +48,6 @@ util::sleep (uint64_t ns) {
 }
 
 #else
-
 #include <ctime>
 
 uint64_t
@@ -74,10 +73,24 @@ util::sleep (uint64_t ns) {
         req = rem;
     }
 }
-
 #endif
 
+// ----------------------------------------------------------------------------
+delta_clock::delta_clock():
+    time { util::nanoseconds (), util::nanoseconds () }
+{ ; }
 
+
+double
+delta_clock::seconds (void) {
+    time.prev = time.curr;
+    time.curr = nanoseconds ();
+
+    return (time.curr - time.prev) / 1000000000.0;
+}
+
+
+// ----------------------------------------------------------------------------
 util::polled_duration::polled_duration (std::string name, uint64_t interval):
     m_name     (name),
     m_interval (interval),

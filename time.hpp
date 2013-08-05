@@ -26,9 +26,24 @@
 #include "stats.hpp"
 
 namespace util {
+    // ------------------------------------------------------------------------
     uint64_t nanoseconds (void);
     void     sleep (uint64_t ns);
 
+    // ------------------------------------------------------------------------
+    class delta_clock {
+        public:
+            delta_clock ();
+            double seconds (void);
+
+        protected:
+            struct {
+                uint64_t prev;
+                uint64_t curr;
+            } time;
+    };
+
+    // ------------------------------------------------------------------------
     class polled_duration {
         public:
             polled_duration (std::string name, uint64_t interval);
