@@ -23,6 +23,7 @@
 #include "config.h"
 
 #include "debug.hpp"
+#include "string.hpp"
 #include "types.hpp"
 #include "types/casts.hpp"
 
