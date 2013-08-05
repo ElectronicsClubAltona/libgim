@@ -52,7 +52,7 @@ AX_APPEND_COMPILE_FLAGS([-Wtype-limits])
 AX_APPEND_COMPILE_FLAGS([-Wfloat-equal])
 AX_APPEND_COMPILE_FLAGS([-Wunused-parameter])
 AX_APPEND_COMPILE_FLAGS([-Wunused-but-set-variable])
-AX_APPEND_COMPILE_FLAGS([-Wshadwo])
+AX_APPEND_COMPILE_FLAGS([-Wshadow])
 AX_APPEND_COMPILE_FLAGS([-Wredundant-decls])
 
 AX_APPEND_COMPILE_FLAGS([-pedantic])
