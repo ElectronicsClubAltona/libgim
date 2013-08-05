@@ -14,11 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2013 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "colour.hpp"
+
 #include "range.hpp"
+#include "random.hpp"
 
 
 //-----------------------------------------------------------------------------
@@ -35,8 +37,12 @@ const util::colour util::colour::BLUE  ({ 0.0, 0.0, 1.0, 1.0 });
 
 
 //-----------------------------------------------------------------------------
+//! Extract a colour object from a JSON node.
+//! 
+//! Data must be an array or 3 or 4 numbers. Guarantees success, or throws a
+//! json::type_error.
 const json::node&
-util::operator>> (const json::node &node, colour &c) {
+operator>> (const json::node &node, colour &c) {
     c.red   = node[0].as_number ();
     c.green = node[1].as_number ();
     c.blue  = node[2].as_number ();
@@ -71,7 +77,7 @@ namespace util {
 
 //-----------------------------------------------------------------------------
 std::ostream&
-util::operator<< (std::ostream &os, const util::colour &c) {
+operator<< (std::ostream &os, const util::colour &c) {
     os << "colour(" << c.red << ", " << c.green << ", " << c.blue << ", " << c.alpha << ")";
     return os;
 }

@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2013 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_COLOUR_HPP
 #define __UTIL_COLOUR_HPP
 
 #include "json.hpp"
-#include "random.hpp"
 
 #include <iostream>
 
 namespace util {
+    /// An RGBA colour POD type.
     struct colour {
         double red;
         double green;
@@ -39,12 +39,9 @@ namespace util {
         static const colour GREEN;
     };
 
-    template <> colour& randomise (colour&);
-    template <> colour& random    (void);
-
-    std::ostream& operator<< (std::ostream&, const util::colour&);
-    const json::node& operator>> (const json::node&, util::colour&);
 }
 
+std::ostream& operator<< (std::ostream&, const util::colour&);
+const json::node& operator>> (const json::node&, util::colour&);
 
 #endif
