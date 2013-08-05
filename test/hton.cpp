@@ -2,10 +2,15 @@
 #include "../endian.hpp"
 
 #include "../debug.hpp"
+#include "../platform.hpp"
 
 #include <cstdlib>
-#include <arpa/inet.h>
-#include <netinet/in.h>
+#if defined(PLATFORM_WIN32)
+    #include <winsock2.h>
+#else
+    #include <arpa/inet.h>
+    #include <netinet/in.h>
+#endif
 
 using namespace std;
 

@@ -32,6 +32,9 @@ TEST_BIN = 		\
 AM_DEFAULT_SOURCE_EXT = .cpp
 LDADD = $(builddir)/../libutil.la
 
+hton_LDFLAGS = -lws2_32
+ip_LDFLAGS   = -lws2_32
+
 TESTS = $(TEST_BIN) json.pl
 check_PROGRAMS = $(TEST_BIN)
 EXTRA_DIST = json.pl
