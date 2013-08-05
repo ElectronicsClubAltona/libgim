@@ -168,7 +168,7 @@ SHA1::finish (void) {
     size_t index = (total / sizeof (W[0])) % BLOCK_SIZE;
     size_t octet = sizeof (W[0]) - total % sizeof (W[0]) - 1;
 
-    W[index] |= 0x80 << octet * 8;
+    W[index] |= 0x80u << octet * 8u;
     if (index >= BLOCK_SIZE - 2) {
         W[elems(W) - 2] = 0;
         W[elems(W) - 1] = 0;
