@@ -557,3 +557,27 @@ json::null::write (std::ostream &os) const {
 ostream&
 json::operator <<(ostream &os, const json::node &n)
     { return n.write (os); }
+
+
+//-----------------------------------------------------------------------------
+// to_json
+
+namespace json {
+    template <>
+    std::unique_ptr<node>
+    io<bool>::serialise (const bool &b) {
+        return std::unique_ptr<node> (new boolean (b));
+    }
+
+    template <>
+    std::unique_ptr<node>
+    io<nullptr_t>::serialise (const nullptr_t &) {
+        return std::unique_ptr<node> (new null ());
+    }
+
+    template <>
+    std::unique_ptr<node>
+    io<std::string>::serialise (const std::string &s) {
+        return std::unique_ptr<node> (new string (s));
+    }
+}

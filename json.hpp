@@ -286,7 +286,7 @@ namespace json {
 
 
 template <typename T, class ...Args>
-json::node&& to_json (const T &t, Args&&... args) {
+std::unique_ptr<json::node> to_json (const T &t, Args&&... args) {
     return json::io<T>::serialise (t, std::forward<Args>(args)...);
 }
 
