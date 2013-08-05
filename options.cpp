@@ -447,9 +447,9 @@ processor::parse_args (int argc, const char ** argv) {
     for (auto &i: m_options)
         i->reset ();
 
-    const unsigned int FIRST_ARGUMENT = 1;
+    const int FIRST_ARGUMENT = 1;
     try {
-        for (size_t i = FIRST_ARGUMENT; i < sign_cast<unsigned> (argc); ++i) {
+        for (int i = FIRST_ARGUMENT; i < argc; ++i) {
             // An argument must begin with a dash, if not we've reached the
             // end of the argument lists or we have a parsing error.
             if (argv[i][0] != '-')
@@ -465,10 +465,10 @@ processor::parse_args (int argc, const char ** argv) {
             if (argv[i][1] != '-') 
                 consumed = parse_short (i, argc, argv);
             else 
-                consumed =  parse_long (i, argc, argv);
+                consumed = parse_long (i, argc, argv);
 
             assert (consumed >= 1);
-            i += consumed - 1;
+            i += sign_cast<int> (consumed - 1);
         }
     } catch (runtime_error &x) {
         print_usage ();
