@@ -1,10 +1,3 @@
-AM_CPPFLAGS =                   \
-        $(COMMON_CXXFLAGS)      \
-        -I$(top_srcdir)         \
-        -I$(top_srcdir)/include \
-        -I$(top_srcdir)/src/    \
-        -I$(top_srcdir)/lib/
-
 AM_LDFLAGS  = $(COMMON_LDFLAGS)
 
 TEST_BIN = 		\

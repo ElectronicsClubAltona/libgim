@@ -1,5 +1,5 @@
-#include "random.hpp"
-#include "debug.hpp"
+#include "../random.hpp"
+#include "../debug.hpp"
 
 #include <iostream>
 #include <cmath>
