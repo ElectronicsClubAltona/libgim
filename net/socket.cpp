@@ -25,8 +25,10 @@
 #include "../log.hpp"
 #include "except.hpp"
 
-#if !defined(HAVE_WINSOCK2_H)
-	#include <sys/socket.h>
+#if defined(HAVE_WINSOCK2_H)
+    #include <winsock2.h>
+#else
+    #include <sys/socket.h>
 #endif
 
 #include <sys/types.h>
@@ -211,8 +213,8 @@ net::socket<D, type::STREAM>::listen (const address_type &_addr, unsigned int _b
 template <domain D>
 typename net::socket<D, type::STREAM>::socket_ptr
 net::socket<D, type::STREAM>::accept (void) {
-    int newfd = ::accept (this->m_fd, NULL, 0);
-    if (newfd < 0)
+    socket_t newfd = ::accept (this->m_fd, NULL, 0);
+    if (newfd == INVALID_SOCKET)
         net::error::throw_code ();
 
     return socket_ptr(new socket<D, type::STREAM> (newfd));

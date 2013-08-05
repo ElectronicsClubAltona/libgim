@@ -41,6 +41,7 @@ namespace net {
     typedef SOCKET socket_t;
 #else
     typedef int socket_t;
+    const socket_t INVALID_SOCKET = -1;
 #endif
 
     /// Defines the protocol family, or communication domain of a socket (see `man socket').

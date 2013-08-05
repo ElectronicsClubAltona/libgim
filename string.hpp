@@ -26,8 +26,12 @@ strbegins(const char *restrict str,
 
 
 #if !defined(HAVE_STRNDUP)
-char *restrict
-strndup (const char *restrict s, size_t size);
+#include <cstddef>
+
+extern "C" {
+    char *
+    strndup (const char *restrict s, size_t size);
+}
 #endif
 
 #endif // __UTIL_STRING_HPP

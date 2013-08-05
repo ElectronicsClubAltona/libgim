@@ -21,6 +21,8 @@
 
 #include <cstring>
 
+#include "types/casts.hpp"
+
 // TODO: Horribly inefficient, but God help you if you're relying on this
 // being efficient in the first place.
 bool
@@ -32,23 +34,24 @@ strbegins (const char *restrict str,
 
 
 #if !defined(HAVE_STRNDUP)
+#include <cstdlib>
+
 // Written by Niels Möller <nisse@lysator.liu.se>
 // Placed in the public domain
 
-char *restrict
+char *
 strndup (const char *restrict s, size_t size)
 {
-    char *r;
-    char *end = (char *)memchr(s, 0, size);
+    char *end = static_cast<char *> (memchr (s, 0, size));
 
     if (end)
         // Length + 1
-        size = end - s + 1;
+        size = sign_cast<size_t> (end - s) + 1u;
 
-    char * r = malloc(size);
+    char * r = static_cast<char *> (malloc (size));
 
     if (size) {
-        memcpy(r, s, size-1);
+        memcpy (r, s, size-1);
         r[size-1] = '\0';
     }
     return r;

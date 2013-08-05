@@ -20,6 +20,7 @@
 #include "except.hpp"
 
 #include "../debug.hpp"
+#include "../types/casts.hpp"
 
 
 //-----------------------------------------------------------------------------
@@ -38,11 +39,15 @@ net::error::error (int _code):
 { CHECK (_code != 0); }
 
 
+//-----------------------------------------------------------------------------
 std::string
 net::error::code_to_string (int code) {
 #ifdef __WIN32
     char message[256];
-    int output = FormatMessage (0, NULL, code, 0, message, sizeof (message), NULL);
+
+    // It should be fine to signcast the code here as Windows guarantees all
+    // error messages are positive but appears to use int for compatibility
+    DWORD output = FormatMessage (0, NULL, sign_cast<unsigned> (code), 0, message, sizeof (message), NULL);
     CHECK_HARD (output != 0);
 
     return std::string (message);
@@ -52,6 +57,7 @@ net::error::code_to_string (int code) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 net::error::throw_code (int code) {
 #ifdef __WIN32
@@ -79,6 +85,12 @@ net::error::throw_code (int code) {
 
 
 void
+net::error::throw_code (void)
+    { throw_code (last_code ()); }
+
+
+//-----------------------------------------------------------------------------
+void
 net::error::try_code (int err) {
     if (err == 0)
         return;
@@ -92,11 +104,7 @@ net::error::try_code (void)
     { try_code (last_code ()); }
 
 
-void
-net::error::throw_code (void)
-    { throw_code (last_code ()); }
-
-
+//-----------------------------------------------------------------------------
 int
 net::error::last_code (void) {
 #ifdef __WIN32
@@ -107,6 +115,7 @@ net::error::last_code (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <int CODE>
 net::error_code<CODE>::error_code (void):
     net::error (CODE)
