@@ -57,7 +57,8 @@ namespace util {
         bool contains (const point2&) const; // exclusive of borders
         bool overlaps (const region<T>&) const; // exclusive of borders
 
-        point2 constrain (const point2&) const;
+        void constrain (point2&) const;
+        point2 constrained (const point2&) const;
 
         region overlap (const region<T>&) const;
 
