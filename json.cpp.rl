@@ -24,16 +24,17 @@
 #include "io.hpp"
 #include "maths.hpp"
 
-#include <deque>
-#include <stdexcept>
-#include <cstdlib>
 #include <algorithm>
+#include <cstdlib>
+#include <deque>
+#include <iomanip>
 #include <sstream>
+#include <stdexcept>
 
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 
 using namespace std;
@@ -521,7 +522,7 @@ json::string::operator ==(const char *rhs) const
 
 std::ostream&
 json::number::write (std::ostream &os) const {
-    os << m_value;
+    os << setprecision (numeric_limits<double>::digits10) << m_value;
     return os;
 }
 
