@@ -100,12 +100,13 @@
     _CHECK_META (almost_equal (__a, __b),            \
                  { ; },                              \
                  {                                   \
-        std::ostringstream os;                       \
-        os << "expected equality.\n"                 \
+        std::ostringstream __debug_check_neq_os;     \
+        __debug_check_neq_os                         \
+           << "expected equality.\n"                 \
            << "__a: " << #A << " is " << __a << ")"  \
            << "\n != \n"                             \
            << "__b: " << #B << " is " << __b << ")"; \
-        panic (os.str ());                           \
+        panic (__debug_check_neq_os.str ());         \
     });                                              \
 } while (0)
 
@@ -116,12 +117,13 @@
     _CHECK_META (__a < __b,                          \
                  { ; },                              \
                  {                                   \
-        std::ostringstream os;                       \
-        os << "expected less than.\n"                \
+        std::ostringstream __debug_check_lt_os;      \
+        __debug_check_lt_os                          \
+           << "expected less than.\n"                \
            << "__a: " << #A << " is " << __a << ")"  \
            << "\n >= \n"                             \
            << "__b: " << #B << " is " << __b << ")"; \
-        panic (os.str ());                           \
+        panic (__debug_check_lt_os.str ());          \
     });                                              \
 } while (0)
 
@@ -132,12 +134,13 @@
     _CHECK_META (__a > __b,                          \
                  { ; },                              \
                  {                                   \
-        std::ostringstream os;                       \
-        os << "expected greater than.\n"             \
+        std::ostringstream __debug_check_gt_os;      \
+        __debug_check_gt_os                          \
+           << "expected greater than.\n"             \
            << "__a: " << #A << " is " << __a << ")"  \
            << "\n <= \n"                             \
            << "__b: " << #B << " is " << __b << ")"; \
-        panic (os.str ());                           \
+        panic (__debug_check_gt_os.str ());          \
     });                                              \
 } while (0)
 
@@ -148,12 +151,12 @@
     _CHECK_META (!almost_equal (__a, __b),           \
                  { ; },                              \
                  {                                   \
-        std::ostringstream os;                       \
-        os << "unexpected equality.\n"               \
+        std::ostringstream __debug_neq_os;           \
+        __debug_neq_os << "unexpected equality.\n"   \
            << "__a: " << #A << " is " << __a << ")"  \
            << "\n == \n"                             \
            << "__b: " << #B << " is " << __b << ")"; \
-        panic (os.str ());                           \
+        panic (__debug_neq_os.str ());               \
     });                                              \
 } while (0)
 
