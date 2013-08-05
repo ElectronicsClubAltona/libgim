@@ -580,4 +580,16 @@ namespace json {
     io<std::string>::serialise (const std::string &s) {
         return std::unique_ptr<node> (new string (s));
     }
+
+    template <>
+    std::unique_ptr<node>
+    io<int>::serialise (const int &i) {
+        return std::unique_ptr<node> (new number (i));
+    }
+
+    template <>
+    std::unique_ptr<node>
+    io<float>::serialise (const float &f) {
+        return std::unique_ptr<node> (new number (f));
+    }
 }
