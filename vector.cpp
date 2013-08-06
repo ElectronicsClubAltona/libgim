@@ -325,6 +325,7 @@ util::vector<S>::is_zero (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 void
 util::vector<S>::sanity (void) const {

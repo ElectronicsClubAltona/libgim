@@ -75,6 +75,8 @@ namespace util {
 
         bool is_zero (void) const;
 
+        template <size_t D> vector<D> redim (void) const;
+
         void sanity (void) const;
     };
 
