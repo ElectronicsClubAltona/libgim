@@ -43,6 +43,12 @@ namespace util {
         return *cursor;
     }
 
+    template <typename T, size_t N>
+    T&
+    choose (T (&v)[N]) {
+        return v[static_cast<size_t> (random<float> () * N)];
+    }
+
     template <typename T>
     typename T::value_type&
     choose (T begin, T end) {
