@@ -87,6 +87,27 @@ util::point<S>::operator* (double f) const {
 }
 
 
+//-----------------------------------------------------------------------------
+template <size_t S>
+util::point<S>
+util::point<S>::operator- (const util::vector<S> &rhs) const {
+    util::point<S> out;
+
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] - rhs.data[i];
+    return out;
+}
+
+
+template <size_t S>
+util::point<S>&
+util::point<S>::operator-= (const util::vector<S> &rhs) {
+    for (size_t i = 0; i < S; ++i)
+        this->data[i] -= rhs.data[i];
+    return *this;
+}
+
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::point<S>
 util::point<S>::operator+ (const util::vector<S> &rhs) const {
@@ -107,6 +128,7 @@ util::point<S>::operator+= (const util::vector<S> &rhs) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S>
 util::point<S>
 util::point<S>::operator- (const util::point<S> &rhs) const {

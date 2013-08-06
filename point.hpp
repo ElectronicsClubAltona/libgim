@@ -46,6 +46,8 @@ namespace util {
         point<S>  operator*  (double) const;
         point<S>  operator-  (const point<S>&) const;
 
+        point<S>  operator-  (const util::vector<S>&) const;
+        point<S>& operator-= (const util::vector<S>&);
         point<S>  operator+  (const util::vector<S>&) const;
         point<S>& operator+= (const util::vector<S>&);
 
