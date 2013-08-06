@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2013 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __SIGNAL_HPP
-#define __SIGNAL_HPP
+#ifndef __UTIL_SIGNAL_HPP
+#define __UTIL_SIGNAL_HPP
 
 #include "debug.hpp"
 #include "nocopy.hpp"
@@ -44,83 +44,34 @@ namespace util {
                 cookie                m_cookie;
                 signal<Ret, Args...>& m_parent;
 
-                scoped_cookie (cookie _cookie,
-                               signal<Ret, Args...> &_parent):
-                    m_cookie (_cookie),
-                    m_parent (_parent)
-                { ; }
+                scoped_cookie (cookie _cookie, signal<Ret, Args...> &_parent);
+                scoped_cookie (scoped_cookie &&rhs);
+                ~scoped_cookie ();
 
-                scoped_cookie (scoped_cookie &&rhs):
-                    m_cookie (rhs.m_cookie),
-                    m_parent (rhs.m_parent)
-                {
-                    rhs.m_cookie = rhs.m_parent.m_children.end ();
-                }
-
-                ~scoped_cookie () {
-                    if (m_parent.m_children.end () != m_cookie)
-                        m_parent.disconnect (m_cookie);
-                }
-
-                void renew (callback_object &&cb)
-                    { *m_cookie = std::move (cb); }
-
-                void release (void)
-                    { m_cookie = m_parent.m_children.end (); }
+                void renew (callback_object &&cb);
+                void release (void);
             };
 
         public:
-            signal ()
-                { /*m_children.reserve (16);*/ }
-
+            signal ();
 
             /// Add a callback to list.
-            const cookie
-            connect (const callback_object &_cb)
-                { return m_children.insert (m_children.end (), _cb); }
+            cookie connect (const callback_object &_cb);
+            scoped_cookie scoped_connect (const callback_object &_cb);
 
-
-            /// Add a callback to the list.
-            //const cookie
-            //connect (const callback_function &_cb)
-            //    { return m_children.insert (m_children.end (), _cb); }
-
-
-            void disconnect (const cookie _cb)
-                { m_children.erase (_cb); }
-
-
+            void disconnect (const cookie _cb);
             /// Disconnect all callbacks
-            void clear (void) 
-                { m_children.clear (); }
-
+            void clear (void);
 
             /// Returns the number of callbacks connected.
-            unsigned int size (void) const
-                { return m_children.size (); }
-
-
-            bool empty (void) const
-                { return m_children.empty (); }
-
+            unsigned int size (void) const;
+            bool empty (void) const;
 
             /// Execute all callbacks, ignoring the return parameters. Does not combine results.
-            void operator () (Args... tail) {
-                if (m_children.empty ())
-                    return;
-
-                auto i = m_children.cbegin ();
-                bool looping;
-
-                do {
-                    // Increment before we execute so that the caller is able to deregister during execution.
-                    auto current = i++;
-                    looping = m_children.cend () != i;
-
-                    (*current)(tail...);
-                } while (looping);
-            }
+            void operator () (Args... tail);
     };
 }
+
+#include "signal.ipp"
 
 #endif // __SIGNAL_HPP

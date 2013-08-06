@@ -118,6 +118,7 @@ UTIL_FILES   =		\
     si.cpp		\
     signal.cpp		\
     signal.hpp		\
+    signal.ipp		\
     si.hpp		\
     stats.cpp		\
     stats.hpp		\
