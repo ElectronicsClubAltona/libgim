@@ -269,8 +269,10 @@ util::vector<S>::normalised (void) const {
 //-----------------------------------------------------------------------------
 util::vector<2>
 util::polar_to_cartesian (const util::vector<2> &v) {
-    return { v.r * std::cos (v.t),
-             v.r * std::sin (v.t) };
+    return util::vector<2> {
+        v.r * std::cos (v.t),
+        v.r * std::sin (v.t)
+    };
 }
 
 //-----------------------------------------------------------------------------
@@ -286,16 +288,18 @@ util::vector<S>::dot (const util::vector<S> &rhs) const {
 
 util::vector<3>
 util::cross (const util::vector<3> &a, const util::vector<3> &b) {
-    return { a.y * b.z - a.z * b.y,
-             a.z * b.x - a.x * b.z,
-             a.x * b.y - a.y * b.x };
+    return util::vector<3> {
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    };
 }
 
 
 //-----------------------------------------------------------------------------
 util::vector<3>
 util::spherical_to_cartesian (const util::vector<3> &s) {
-    return {
+    return util::vector<3> {
         s.x * sin (s.y) * cos (s.z),
         s.x * sin (s.y) * sin (s.z),
         s.x * cos (s.y),
@@ -307,7 +311,7 @@ util::vector<3>
 util::cartesian_to_spherical (const util::vector<3> &c) {
     double mag = c.magnitude ();
 
-    return {
+    return util::vector<3> {
         mag,
         acos  (c.z / mag),
         atan2 (c.y, c.x)

@@ -36,7 +36,7 @@ namespace util {
         vector ();
 
         template <typename... T>
-        vector (T ...t): detail::coord_data<S> {std::forward<T> (t)...} { ; }
+        explicit vector (T ...t): detail::coord_data<S> {std::forward<T> (t)...} { ; }
 
         util::vector<S>  operator* (double) const;
         util::vector<S>& operator*=(double);
