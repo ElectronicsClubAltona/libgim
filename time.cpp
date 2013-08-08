@@ -28,6 +28,10 @@
 using namespace util;
 
 // ----------------------------------------------------------------------------
+static const uint64_t SECOND      = 1000000000UL;
+static const uint64_t MILLISECOND =    1000000UL;
+
+// ----------------------------------------------------------------------------
 #ifdef PLATFORM_WIN32
 #include <windows.h>
 
@@ -37,14 +41,13 @@ util::nanoseconds (void) {
     QueryPerformanceFrequency (&freq);
     QueryPerformanceCounter   (&count); 
 
-    return ((double)count.QuadPart / freq.QuadPart) * 1000000000UL;
+    return ((double)count.QuadPart / freq.QuadPart) * SECOND;
 }
 
 
 void
 util::sleep (uint64_t ns) {
-    static const uint64_t ns_in_ms = 1000000;
-    Sleep (ns / ns_in_ms);
+    Sleep (ns / MILLISECOND);
 }
 
 #else
@@ -58,7 +61,7 @@ util::nanoseconds (void) {
     CHECK_SOFT (t.tv_sec  > 0);
     CHECK_SOFT (t.tv_nsec > 0);
 
-    return static_cast<uint64_t> (t.tv_sec) * 1000000000ULL + static_cast<uint64_t> (t.tv_nsec);
+    return static_cast<uint64_t> (t.tv_sec) * SECOND + static_cast<uint64_t> (t.tv_nsec);
 }
 
 
@@ -66,8 +69,8 @@ void
 util::sleep (uint64_t ns) {
     struct timespec req, rem;
 
-    req.tv_sec  = sign_cast<time_t> (ns / 1000000000UL);
-    req.tv_nsec = sign_cast<long>   (ns % 1000000000UL);
+    req.tv_sec  = sign_cast<time_t> (ns / SECOND);
+    req.tv_nsec = sign_cast<long>   (ns % SECOND);
 
     while (nanosleep (&req, &rem)) {
         req = rem;
@@ -86,7 +89,7 @@ delta_clock::seconds (void) {
     time.prev = time.curr;
     time.curr = nanoseconds ();
 
-    return (time.curr - time.prev) / 1000000000.0;
+    return (time.curr - time.prev) / static_cast<double> (SECOND);
 }
 
 
@@ -108,7 +111,7 @@ void
 util::polled_duration::stop (void) {
     uint64_t now = nanoseconds ();
     uint64_t dt  = now - m_last;
-    m_series.add (dt / 1000000);
+    m_series.add (dt / MILLISECOND);
 
     if (m_next < now) {
         LOG_DEBUG ("timing: '%s'. %s", m_name, m_series);
