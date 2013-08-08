@@ -94,6 +94,25 @@ delta_clock::seconds (void) {
 
 
 // ----------------------------------------------------------------------------
+util::rate_limiter::rate_limiter (unsigned rate):
+    m_last (nanoseconds ()),
+    m_target (static_cast<double> (SECOND) / rate)
+{ ; }
+
+
+void
+util::rate_limiter::poll (void) {
+    uint64_t now = nanoseconds ();
+    uint64_t total = now - m_last;
+
+    if (total < m_target)
+        sleep (m_target - total);
+
+    m_last = now;
+}
+
+
+// ----------------------------------------------------------------------------
 util::polled_duration::polled_duration (std::string name, uint64_t interval):
     m_name     (name),
     m_interval (interval),

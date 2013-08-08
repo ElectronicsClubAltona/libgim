@@ -44,6 +44,18 @@ namespace util {
     };
 
     // ------------------------------------------------------------------------
+    class rate_limiter {
+        public:
+            rate_limiter (unsigned rate);
+
+            void poll (void);
+
+        protected:
+            uint64_t m_last;
+            unsigned m_target;
+    };
+
+    // ------------------------------------------------------------------------
     class polled_duration {
         public:
             polled_duration (std::string name, uint64_t interval);
