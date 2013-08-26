@@ -22,18 +22,19 @@
 
 #include "vector.hpp"
 
-#include <assert.h>
 #include <algorithm>
-#include <stdexcept>
+#include <assert.h>
 #include <initializer_list>
 #include <iostream>
+#include <memory>
+#include <stdexcept>
 
 namespace maths {
     class matrix {
         protected:
             size_t  m_rows,
                     m_columns;
-            double *restrict m_data;
+            std::unique_ptr<double[]> m_data;
 
         public:
             matrix (size_t _rows, size_t _columns);

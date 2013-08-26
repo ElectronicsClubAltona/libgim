@@ -29,13 +29,10 @@ using namespace util;
 using namespace maths;
 
 matrix::matrix (size_t _rows, size_t _columns):
-        m_rows    (_rows),
-        m_columns (_columns),
-        m_data    (NULL) {
-    if (m_rows <= 0 || m_columns <= 0)
-        throw std::runtime_error ("rows and columns must be positive");
-
-    m_data = new double[size ()];
+    m_rows    (_rows),
+    m_columns (_columns),
+    m_data    (new double[_rows * _columns])
+{
 }
 
 
@@ -43,17 +40,14 @@ matrix::matrix (size_t                                _rows,
                 size_t                                _columns,
                 const std::initializer_list <double> &_data):
     m_rows    (_rows),
-    m_columns (_columns),
-    m_data    (NULL)
+    m_columns (_columns)
 {
-    if (m_rows <= 0 || m_columns <= 0)
-        throw std::runtime_error ("rows and columns must be positive");
     if (size () != _data.size ())
         throw std::runtime_error ("element and initializer size differs");
     CHECK_HARD (m_rows * m_columns == _data.size());
 
-    m_data = new double[size ()];
-    std::copy (_data.begin (), _data.end (), m_data);
+    m_data.reset (new double[size ()]);
+    std::copy (_data.begin (), _data.end (), m_data.get ());
 }
 
 
@@ -62,7 +56,7 @@ matrix::matrix (const std::initializer_list <vector> &rhs):
     m_columns (rhs.begin()->size ()),
     m_data    (new double[m_rows * m_columns]) 
 {
-    double *row_cursor = m_data;
+    double *row_cursor = m_data.get ();
 
     for (auto i = rhs.begin (); i != rhs.end (); ++i) {
         CHECK (i->size () == m_columns);
@@ -74,62 +68,62 @@ matrix::matrix (const std::initializer_list <vector> &rhs):
 
 
 matrix::matrix (const matrix &rhs):
-        m_rows    (rhs.m_rows),
-        m_columns (rhs.m_columns) {
-    m_data = new double [m_rows * m_columns];
-    std::copy (rhs.m_data, rhs.m_data + m_rows * m_columns, m_data);
+    m_rows    (rhs.m_rows),
+    m_columns (rhs.m_columns)
+{
+    m_data.reset (new double [m_rows * m_columns]);
+    std::copy (rhs.m_data.get (), rhs.m_data.get () + m_rows * m_columns, m_data.get ());
 }
 
 
 matrix::matrix (matrix &&rhs):
-        m_rows    (rhs.m_rows),
-        m_columns (rhs.m_columns),
-        m_data    (rhs.m_data) {
-    rhs.m_data = NULL;
+    m_rows    (rhs.m_rows),
+    m_columns (rhs.m_columns),
+    m_data    (std::move (rhs.m_data))
+{
 }
 
 
 matrix::~matrix()
-    { delete [] m_data; }
+{ ; }
 
 
 void
 matrix::sanity (void) const {
     CHECK (m_rows    > 0);
     CHECK (m_columns > 0);
-    CHECK (m_data != NULL);
+    CHECK (m_data != nullptr);
 }
 
 
 const double *
 matrix::operator [] (unsigned int row) const {
     CHECK_HARD (row < m_rows);
-    return m_data + row * m_columns;
+    return m_data.get () + row * m_columns;
 }
 
 
 double *
 matrix::operator [] (unsigned int row) {
     CHECK_HARD (row < m_rows);
-    return m_data + row * m_columns;
+    return m_data.get () + row * m_columns;
 }
 
 
 const double *
 matrix::data (void) const
-    { return m_data; }
+    { return m_data.get (); }
 
 
 matrix&
-matrix::operator  =(const matrix& rhs) {
+matrix::operator =(const matrix& rhs) {
     if (size () != rhs.size ()) {
-        delete [] m_data;
-        m_data = new double [m_rows * m_columns];
+        m_data.reset (new double [rhs.rows () * rhs.columns ()]);
     }
 
     m_rows    = rhs.m_rows;
     m_columns = rhs.m_columns;
-    std::copy (rhs.m_data, rhs.m_data + m_rows * m_columns, m_data);
+    std::copy (rhs.m_data.get (), rhs.m_data.get () + m_rows * m_columns, m_data.get ());
 
     return *this;
 }
@@ -210,7 +204,7 @@ matrix::operator ==(const matrix& rhs) const {
         rhs.columns () != columns  ())
         return false;
 
-    return std::equal (m_data, m_data + size (), rhs.data ());
+    return std::equal (m_data.get (), m_data.get () + size (), rhs.data ());
 }
 
 
@@ -466,7 +460,7 @@ matrix::zeroes (size_t diag)
 matrix
 matrix::zeroes (size_t rows, size_t columns) {
     matrix m (rows, columns);
-    std::fill (m.m_data, m.m_data + m.size (), 0.0);
+    std::fill (m.m_data.get (), m.m_data.get () + m.size (), 0.0);
     return m;
 }
 
