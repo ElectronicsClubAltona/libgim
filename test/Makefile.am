@@ -1,4 +1,5 @@
 AM_LDFLAGS  = $(COMMON_LDFLAGS)
+AM_CXXFLAGS = $(COMMON_CXXFLAGS) -I$(top_srcdir)
 
 TEST_BIN = 		\
 	backtrace 	\
