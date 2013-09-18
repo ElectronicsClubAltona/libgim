@@ -37,6 +37,10 @@ AC_ARG_ENABLE([mudflap],
     [AS_HELP_STRING([--enable-mudflap], [enable mudflap runtime debugging])]
 )
 
+AC_ARG_ENABLE([sanitizer], [
+    AS_HELP_STRING([--enable-sanitizer], [enable memory sanitizer])
+])
+
 ###############################################################################
 ## Warnings
 
@@ -132,6 +136,11 @@ AS_IF([test "x$enable_debugging" = "xyes"], [
     AS_IF([test "x$enable_mudflap" = "xyes"], [
         AX_APPEND_COMPILE_FLAGS([-fmudflapth])
         AX_APPEND_LINK_FLAGS([-lmudflapth])
+    ])
+
+    AS_IF([test "x$enable_sanitizer" = "xyes"], [
+        AX_APPEND_COMPILE_FLAGS([-fsanitize=address])
+        AX_APPEND_LINK_FLAGS([-fsanitize=address])
     ])
 
     AX_APPEND_COMPILE_FLAGS([-ggdb])
