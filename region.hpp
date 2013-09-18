@@ -50,8 +50,9 @@ namespace util {
 
         bool empty (void) const;
 
-        point2 base   (void) const;
-        point2 centre (void) const;
+        point2 base    (void) const;
+        point2 centre  (void) const;
+        point2 closest (point2) const;
 
         bool includes (const point2&) const; // inclusive of borders
         bool contains (const point2&) const; // exclusive of borders

@@ -102,6 +102,21 @@ region<T>::centre (void) const {
 }
 
 
+template <typename T>
+point<2>
+region<T>::closest (point<2> p) const {
+    return {
+        p.x < x     ? x     :
+        p.x > x + w ? x + w :
+        p.x,
+
+        p.y < y     ? y     :
+        p.y < y + h ? y + h :
+        p.y
+    };
+}
+
+
 //-----------------------------------------------------------------------------
 template <typename T>
 bool
