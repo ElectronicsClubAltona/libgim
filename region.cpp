@@ -111,7 +111,7 @@ region<T>::closest (point<2> p) const {
         p.x,
 
         p.y < y     ? y     :
-        p.y < y + h ? y + h :
+        p.y > y + h ? y + h :
         p.y
     };
 }
