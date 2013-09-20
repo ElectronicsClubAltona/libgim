@@ -92,6 +92,24 @@ delta_clock::seconds (void) {
     return (time.curr - time.prev) / static_cast<double> (SECOND);
 }
 
+// ----------------------------------------------------------------------------
+util::period_query::period_query (double seconds) {
+    m_time.start  = nanoseconds ();
+    m_time.period = seconds * SECOND;
+}
+
+
+bool
+util::period_query::poll (void) {
+    uint64_t now  = nanoseconds ();
+    uint64_t diff = now - m_time.start;
+    if (diff < m_time.period)
+        return false;
+
+    m_time.start += diff % m_time.period;
+    return true;
+}
+
 
 // ----------------------------------------------------------------------------
 util::rate_limiter::rate_limiter (unsigned rate):

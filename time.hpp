@@ -44,6 +44,20 @@ namespace util {
     };
 
     // ------------------------------------------------------------------------
+    class period_query {
+        public:
+            period_query (double seconds);
+
+            bool poll (void);
+
+        protected:
+            struct {
+                uint64_t start;
+                uint64_t period;
+            } m_time;
+    };
+
+    // ------------------------------------------------------------------------
     class rate_limiter {
         public:
             rate_limiter (unsigned rate);
