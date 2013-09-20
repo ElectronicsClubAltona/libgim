@@ -28,7 +28,7 @@
 
 /// Returns the number of elements of a statically allocated array
 template <typename T, size_t N>  
-size_t elems(T (&)[N])
+constexpr size_t elems(T (&)[N])
     { return N; }
 
 
