@@ -22,9 +22,11 @@
 
 #include "preprocessor.hpp"
 
+/// Defines a translation-unit-unique variable useful for unnamed scoped variables
 #define raii PASTE(__unique_, __COUNTER__)
 
 namespace util {
+    /// Increments a counter for the lifetime of the object
     template <typename T>
     struct scoped_counter {
         scoped_counter (T &_counter):
@@ -38,6 +40,7 @@ namespace util {
     };
 
     
+    /// Executes a function upon object destruction
     template <typename T>
     struct scoped_function {
         scoped_function (T &&_func):
