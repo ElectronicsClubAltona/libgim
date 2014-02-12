@@ -128,6 +128,23 @@
 } while (0)
 
 
+#define CHECK_LE(A,B) do {                           \
+    const auto __a = (A);                            \
+    const auto __b = (B);                            \
+    _CHECK_META (__a <= __b,                         \
+                 { ; },                              \
+                 {                                   \
+        std::ostringstream __debug_check_lt_os;      \
+        __debug_check_lt_os                          \
+           << "expected less or equal to\n"          \
+           << "__a: " << #A << " is " << __a << ")"  \
+           << "\n > \n"                              \
+           << "__b: " << #B << " is " << __b << ")"; \
+        panic (__debug_check_lt_os.str ());          \
+    });                                              \
+} while (0)
+
+
 #define CHECK_GT(A,B) do {                           \
     const auto __a = (A);                            \
     const auto __b = (B);                            \
@@ -139,6 +156,23 @@
            << "expected greater than.\n"             \
            << "__a: " << #A << " is " << __a << ")"  \
            << "\n <= \n"                             \
+           << "__b: " << #B << " is " << __b << ")"; \
+        panic (__debug_check_gt_os.str ());          \
+    });                                              \
+} while (0)
+
+
+#define CHECK_GE(A,B) do {                           \
+    const auto __a = (A);                            \
+    const auto __b = (B);                            \
+    _CHECK_META (__a >= __b,                         \
+                 { ; },                              \
+                 {                                   \
+        std::ostringstream __debug_check_gt_os;      \
+        __debug_check_gt_os                          \
+           << "expected greater or equal to.\n"      \
+           << "__a: " << #A << " is " << __a << ")"  \
+           << "\n < \n"                              \
            << "__b: " << #B << " is " << __b << ")"; \
         panic (__debug_check_gt_os.str ());          \
     });                                              \
