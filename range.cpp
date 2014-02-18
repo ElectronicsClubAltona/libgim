@@ -107,7 +107,6 @@ range<T>::expand (T val) {
 template <typename T>
 double
 range<T>::normalise (T val) const {
-    CHECK_SOFT (val >= min && val <= max);
     return ((double)val - min) /
            ((double)max - min);
 }

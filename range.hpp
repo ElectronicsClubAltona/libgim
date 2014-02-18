@@ -49,7 +49,9 @@ namespace util {
         /// Expand the range to include this value if necessary
         void expand (T val);
 
-        /// Normalise a number to [0, 1] within the range. Does not check bounds.
+        /// Normalise a number to [0, 1] within the range. Does not check
+        /// bounds, it is the caller's responsibility to clamp the result if
+        /// needed.
         double normalise (T val) const;
 
         range& operator*= (T);
