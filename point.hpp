@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-14 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_POINT_HPP
@@ -53,7 +53,7 @@ namespace util {
 
         util::vector<S> to (const point<S>&) const;
 
-        template <size_t D> point<D> redim (void);
+        template <size_t D> point<D> redim (void) const;
 
         void sanity (void) const;
     };
@@ -68,6 +68,6 @@ namespace util {
     std::ostream& operator<< (std::ostream&, const util::point<S>&);
 }
 
-
+#include "point.ipp"
 
 #endif // __UTIL_POINT_HPP

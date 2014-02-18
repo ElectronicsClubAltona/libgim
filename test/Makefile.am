@@ -15,6 +15,7 @@ TEST_BIN = 		\
 	md4		\
 	md5		\
 	options		\
+	point		\
 	pool		\
 	rand		\
 	range 		\

@@ -101,6 +101,7 @@ UTIL_FILES   =		\
     platform.hpp	\
     point.cpp		\
     point.hpp		\
+    point.ipp		\
     pool.cpp		\
     pool.hpp		\
     pool.ipp		\
