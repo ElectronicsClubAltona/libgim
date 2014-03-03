@@ -103,7 +103,7 @@ version::sanity (void) const {
                | ('alpha'i    | 'a'i) %{ v.release = RELEASE_ALPHA; }
                | ('gamma'i    | 'g'i) %{ v.release = RELEASE_GAMMA; };
 
-    version := (dots type?)
+    version := (dots type?) >clear
                $!{ throw std::invalid_argument (str); };
 
     write data;
