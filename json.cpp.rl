@@ -273,7 +273,7 @@ std::unique_ptr<json::node>
 json::parse (const char *start,
              const char *stop) {
     bool __success = true;
-    json::node *__root = NULL;
+    json::node *__root = nullptr;
     size_t top = 0;
     int cs;
     deque <int> fsmstack;
