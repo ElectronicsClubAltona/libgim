@@ -289,8 +289,6 @@ json::parse (const char *start,
     if (!__success) 
         throw parse_error ("unable to parse json");
 
-    //__root->print (cout) << endl;
-    CHECK (*__root == *__root);
     return std::unique_ptr<json::node> (__root);
 }
 
