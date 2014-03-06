@@ -21,9 +21,11 @@
 #include "range.hpp"
 
 #include "debug.hpp"
+#include "json.hpp"
 #include "maths.hpp"
 
 #include <limits>
+#include <cmath>
 #include <cstdint>
 
 
@@ -33,25 +35,6 @@ using namespace util;
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-range<T>::range (const json::node &node) {
-    if (node.is_string () && (node == "UNIT" ||
-                              node == "unit")) {
-        min = UNIT.min;
-        max = UNIT.max;
-    } else if (node.is_string () && (node == "UNLIMITED" ||
-                                     node == "unlimited")) {
-        min = UNLIMITED.min;
-        max = UNLIMITED.max;
-    } else {
-        min = node[0].as_number ();
-        max = node[1].as_number ();
-    }
-
-    sanity ();
-}
-
-
 template <typename T>
 range<T>::range (T _min, T _max):
         min (_min),
@@ -199,4 +182,25 @@ namespace util {
     template struct range<uint16_t>;
     template struct range<uint32_t>;
     template struct range<uint64_t>;
+}
+
+
+//-----------------------------------------------------------------------------
+namespace json {
+    template <>
+    util::range<double>
+    io<util::range<double>>::deserialise (const json::node &node) {
+        if (node.is_string () && (node == "UNIT" ||
+                                  node == "unit")) {
+            return util::range<double>::UNIT;
+        } else if (node.is_string () && (node == "UNLIMITED" ||
+                                         node == "unlimited")) {
+            return util::range<double>::UNLIMITED;
+        } else {
+            return {
+                node[0].as_number (),
+                node[1].as_number ()
+            };
+        }
+    }
 }

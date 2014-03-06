@@ -21,7 +21,8 @@
 #ifndef __UTIL_RANGE_HPP
 #define __UTIL_RANGE_HPP
 
-#include "json.hpp"
+#include <iostream>
+
 
 namespace util {
     /**
@@ -33,7 +34,6 @@ namespace util {
         T min;
         T max;
 
-        range (const json::node &node);
         range (T _min, T _max);
 
         /// Check whether value falls within this range (inclusive)

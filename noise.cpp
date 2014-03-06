@@ -23,6 +23,7 @@
 #include "range.hpp"
 
 #include <iostream>
+#include <limits>
 
 void
 util::noise::image2d (uint8_t *restrict pixels,

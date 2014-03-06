@@ -20,6 +20,8 @@
 #ifndef __NET_SOCKET_HPP
 #define __NET_SOCKET_HPP
 
+#include <memory>
+
 #include "types.hpp"
 #include "address.hpp"
 
