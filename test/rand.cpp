@@ -12,7 +12,7 @@ using namespace std;
 // TODO: Use a more robust test like Chi-Square
 void
 test_bool (void) {
-    static const unsigned ITERATIONS = 1024;
+    static const unsigned ITERATIONS = 8192;
     static const unsigned THRESHOLD  = ITERATIONS * 0.1;
     
     unsigned counts[2] = { 0, 0 };
@@ -31,7 +31,7 @@ test_bool (void) {
 void
 test_float (void) {
     static const unsigned BUCKETS    =    8;
-    static const unsigned ITERATIONS = 4096;
+    static const unsigned ITERATIONS = 8912;
     static const unsigned EXPECTED   = ITERATIONS / BUCKETS;
     static const float    THRESHOLD  = EXPECTED * 0.1;
 
