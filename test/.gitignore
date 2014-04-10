@@ -15,6 +15,7 @@
 /pool*
 /random*
 /range*
+/ripemd
 /region*
 /sha1*
 /signal*

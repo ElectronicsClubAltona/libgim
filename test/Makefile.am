@@ -20,6 +20,7 @@ TEST_BIN = 		\
 	rand		\
 	range 		\
 	region		\
+	ripemd		\
 	signal		\
 	sha1		\
 	version
