@@ -60,6 +60,12 @@ unsigned
 digits (const T& value) pure;
 
 
+template <typename T>
+T
+divup (const T a, const T b)
+    { return (a + b - 1) / a; }
+
+
 /**
  * Check if two floating point numbers are approximately equal. Returns true
  * if the difference is less than a percentage of each individual value.
