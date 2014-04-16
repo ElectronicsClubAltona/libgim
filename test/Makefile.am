@@ -23,6 +23,7 @@ TEST_BIN = 		\
 	ripemd		\
 	signal		\
 	sha1		\
+	sha2		\
 	version
 
 AM_DEFAULT_SOURCE_EXT = .cpp

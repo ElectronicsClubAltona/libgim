@@ -53,6 +53,8 @@ UTIL_FILES   =		\
     hash/pbkdf2.hpp	\
     hash/ripemd.cpp	\
     hash/ripemd.hpp	\
+    hash/sha2.cpp	\
+    hash/sha2.hpp	\
     hash/sha1.cpp	\
     hash/sha1.hpp	\
     image.cpp		\

@@ -18,7 +18,7 @@
 /range
 /ripemd
 /region
-/sha1
+/sha[12]
 /signal
 /*.trs
 /version
