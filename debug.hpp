@@ -28,6 +28,7 @@
 #include <iostream>
 #include <sstream>
 
+///////////////////////////////////////////////////////////////////////////////
 #ifdef ENABLE_DEBUGGING
 #define DEBUG_ONLY(X) \
     X;
@@ -35,6 +36,14 @@
 #define DEBUG_ONLY(X)
 #endif
 
+
+///////////////////////////////////////////////////////////////////////////////
+#define EXIT_XSUCCESS        0
+#define EXIT_XSKIP          77
+#define EXIT_XHARD_ERROR    99
+
+
+///////////////////////////////////////////////////////////////////////////////
 #define TRACE {                                                                \
     std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << std::endl;  \
 }
@@ -52,6 +61,7 @@
 } while (0)
 
 
+///////////////////////////////////////////////////////////////////////////////
 #define VERIFY_SOFT(C, COND) ({     \
     const auto __DEBUG_value = (C); \
     CHECK_SOFT(__DEBUG_value COND); \
@@ -66,6 +76,7 @@
 })
 
 
+///////////////////////////////////////////////////////////////////////////////
 #define _CHECK_META(C, SUCCESS, FAILURE) do {                       \
     const auto __DEBUG_value = (C);                                 \
     if (unlikely (!__DEBUG_value)) {                                \
@@ -94,6 +105,7 @@
 #endif
 
 
+///////////////////////////////////////////////////////////////////////////////
 #define CHECK_EQ(A,B) do {                           \
     const auto __a = (A);                            \
     const auto __b = (B);                            \
@@ -111,6 +123,7 @@
 } while (0)
 
 
+///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LT(A,B) do {                           \
     const auto __a = (A);                            \
     const auto __b = (B);                            \
@@ -128,6 +141,7 @@
 } while (0)
 
 
+///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LE(A,B) do {                           \
     const auto __a = (A);                            \
     const auto __b = (B);                            \
@@ -145,6 +159,7 @@
 } while (0)
 
 
+///////////////////////////////////////////////////////////////////////////////
 #define CHECK_GT(A,B) do {                           \
     const auto __a = (A);                            \
     const auto __b = (B);                            \
@@ -162,6 +177,7 @@
 } while (0)
 
 
+///////////////////////////////////////////////////////////////////////////////
 #define CHECK_GE(A,B) do {                           \
     const auto __a = (A);                            \
     const auto __b = (B);                            \
@@ -179,6 +195,7 @@
 } while (0)
 
 
+///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NEQ(A,B) do {                          \
     const auto __a = (A);                            \
     const auto __b = (B);                            \
@@ -195,6 +212,7 @@
 } while (0)
 
 
+///////////////////////////////////////////////////////////////////////////////
 #define CHECK_THROWS(E,C) do {              \
     bool caught = false;                    \
                                             \
@@ -208,6 +226,7 @@
 } while (0)
 
 
+///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NOTHROW(C) do {               \
     try {                                   \
         C;                                  \
@@ -217,6 +236,7 @@
 } while (0)
 
 
+///////////////////////////////////////////////////////////////////////////////
 class panic_error {
     protected:
         std::string m_what;
@@ -232,22 +252,27 @@ void panic (const std::string&) terminal;
 void panic (void)               terminal;
 
 
+///////////////////////////////////////////////////////////////////////////////
 void not_implemented (void) terminal;
 void not_implemented (const char*) terminal;
 
 
+///////////////////////////////////////////////////////////////////////////////
 void unreachable     (void) terminal;
 void unreachable     (const std::string&) terminal;
 void unusual         (void);
 
 
+///////////////////////////////////////////////////////////////////////////////
 void breakpoint (void);
 
 
+///////////////////////////////////////////////////////////////////////////////
 void enable_fpe (void);
 void disable_fpe (void);
 
 
+///////////////////////////////////////////////////////////////////////////////
 namespace debug {
     void init (void);
 }
