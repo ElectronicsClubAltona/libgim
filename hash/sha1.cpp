@@ -20,6 +20,7 @@
 #include "sha1.hpp"
 
 #include "bitwise.hpp"
+#include "debug.hpp"
 #include "endian.hpp"
 #include "types.hpp"
 #include "types/casts.hpp"
@@ -64,15 +65,16 @@ static const uint32_t K_40 = 0x8F1BBCDC;
 static const uint32_t K_60 = 0xCA62C1D6;
 
 
-static const uint32_t DEFAULT_H0 = 0x67452301;
-static const uint32_t DEFAULT_H1 = 0xEFCDAB89;
-static const uint32_t DEFAULT_H2 = 0x98BADCFE;
-static const uint32_t DEFAULT_H3 = 0x10325476;
-static const uint32_t DEFAULT_H4 = 0xC3D2E1F0;
+static const uint32_t DEFAULT_H[] = {
+    0x67452301,
+    0xEFCDAB89,
+    0x98BADCFE,
+    0x10325476,
+    0xC3D2E1F0
+};
 
-
-static const size_t BLOCK_SIZE = 16;
-
+static const size_t BLOCK_WORDS = 16;
+static const size_t BLOCK_BYTES = BLOCK_WORDS * sizeof (uint32_t);
 
 SHA1::SHA1()
 {
@@ -83,53 +85,49 @@ SHA1::SHA1()
 void
 SHA1::reset (void) {
     total = 0;
-
-    H[0] = DEFAULT_H0;
-    H[1] = DEFAULT_H1;
-    H[2] = DEFAULT_H2;
-    H[3] = DEFAULT_H3;
-    H[4] = DEFAULT_H4;
-
-    std::fill (begin (W), end (W), 0);
-
     state = READY;
+
+    std::copy (std::begin (DEFAULT_H), std::end (DEFAULT_H), H);
 }
 
 
 void
 SHA1::update (const uint8_t *data, size_t size) {
-    assert (state == READY);
-    assert (numeric_limits<decltype(total)>::max () - total >= size);
-
+    CHECK_EQ (state, READY);
+    CHECK_GE (numeric_limits<decltype(total)>::max () - total, size);
 
     while (size > 0) {
-        size_t offset = total % BLOCK_SIZE;
-        size_t tocopy = std::min (BLOCK_SIZE - offset, size);
+        // Copy the data into the remaining available buffer slots
+        const size_t offset = total % BLOCK_BYTES;
+        const size_t chunk  = std::min (BLOCK_BYTES - offset, size);
         
-        for (size_t i = 0; i < tocopy; ++i) {
-            size_t   octet = sizeof(W[0]) - (offset + i) % sizeof (W[0]);
-            size_t   index = (offset / sizeof (W[0]) + i) / sizeof (W[0]);
+        std::copy (data, data + chunk, c + offset);
 
-            size_t   shift = (octet - 1) * 8u;
-            uint32_t byte  = *data++;
+        total += chunk;
 
-            W[index] |= byte << shift;
-        }
-
-        total += tocopy;
-
-        if (total % BLOCK_SIZE == 0) {
+        // Attempt to process if full
+        if (total % BLOCK_BYTES == 0)
             process ();
-            std::fill (begin (W), end (W), 0);
-        }
-        size -= tocopy;
+
+        size -= chunk;
+        data += chunk;
     }
 }
 
 
 void
 SHA1::process (void) {
-    // Shuffle the work buffer a bit and initialise the state variables
+    CHECK_EQ (total % BLOCK_BYTES, 0);
+
+    // Byteswap the raw input we have buffered ready for arithmetic
+    std::transform (std::begin (W),
+                    std::end   (W),
+                    std::begin (W),
+                    [] (uint32_t x) {
+        return ntoh (x);
+    });
+
+    // Initialise the work buffer and the state variables
     for (size_t t = 16; t < 80; ++t)
         W[t] = rotatel (W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16], 1);
 
@@ -154,7 +152,7 @@ SHA1::process (void) {
     for (size_t t = 40; t < 60; ++t) ROTATE_STATE(40);
     for (size_t t = 60; t < 80; ++t) ROTATE_STATE(60);
 
-    // Save out the intermediate hash again
+    // Update the resulting hash state
     H[0] += A;
     H[1] += B;
     H[2] += C;
@@ -165,34 +163,37 @@ SHA1::process (void) {
 
 void
 SHA1::finish (void) {
-    size_t index = (total / sizeof (W[0])) % BLOCK_SIZE;
-    size_t octet = sizeof (W[0]) - total % sizeof (W[0]) - 1;
+    size_t offset = total % BLOCK_BYTES;
+    size_t used   = total * 8;
 
-    W[index] |= 0x80u << octet * 8u;
-    if (index >= BLOCK_SIZE - 2) {
-        W[elems(W) - 2] = 0;
-        W[elems(W) - 1] = 0;
-        process();
-        std::fill (begin (W), end (W), 0);
-        index = 0;
-    } else {
-        ++index;
+    // Append a single one bit
+    c[offset++] = 0x80;
+    total += 1;
+
+    // Zero fill if we can't append length
+    size_t chunk = BLOCK_BYTES - offset;
+    if (chunk < sizeof (total)) {
+        std::fill_n (c + offset, chunk, 0);
+        total += chunk;
+
+        process ();
+
+        chunk  = BLOCK_BYTES;
+        offset = 0;
     }
 
-    std::fill (begin (W) + index, end (W), 0);
+    // Zero fill and append total length
+    std::fill_n (c + offset, chunk - sizeof (total), 0);
+    c[BLOCK_BYTES - 1] = used & 0xFF; used >>= 8;
+    c[BLOCK_BYTES - 2] = used & 0xFF; used >>= 8;
+    c[BLOCK_BYTES - 3] = used & 0xFF; used >>= 8;
+    c[BLOCK_BYTES - 4] = used & 0xFF; used >>= 8;
+    c[BLOCK_BYTES - 5] = used & 0xFF; used >>= 8;
+    c[BLOCK_BYTES - 6] = used & 0xFF; used >>= 8;
+    c[BLOCK_BYTES - 7] = used & 0xFF; used >>= 8;
+    c[BLOCK_BYTES - 8] = used & 0xFF; used >>= 8;
 
-    union {
-        uint32_t full;
-        uint8_t  part[4];
-    } swapper;
-
-    swapper.full = 0;
-    swapper.part[3] = uint8_t(total);
-
-    total *= 8;
-
-    W[BLOCK_SIZE - 2] = 0x00000000;
-    W[BLOCK_SIZE - 1] = total << 24;
+    total += chunk;
     process ();
 
     state = FINISHED;
@@ -201,7 +202,7 @@ SHA1::finish (void) {
 
 SHA1::digest_t
 SHA1::digest (void) const {
-    assert (state == FINISHED);
+    CHECK_EQ (state, FINISHED);
 
     return { {
         size_cast<uint8_t> ((H[0] >> 24u) & 0xFF),

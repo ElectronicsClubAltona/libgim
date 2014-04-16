@@ -53,7 +53,7 @@ namespace util {
                 
                 union {
                     uint8_t  c[16*4+64*4];
-                    uint32_t W[16+64];
+                    uint32_t W[16  +64  ];
                 };
         };
     }
