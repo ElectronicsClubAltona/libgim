@@ -31,7 +31,6 @@ UTIL_FILES   =		\
     extent.hpp		\
     fixed.cpp		\
     fixed.hpp		\
-    fletcher.hpp	\
     float.cpp		\
     float.hpp		\
     fourcc.cpp		\
@@ -47,6 +46,7 @@ UTIL_FILES   =		\
     hash/bsdsum.cpp	\
     hash/crc.cpp	\
     hash/crc.hpp	\
+    hash/fletcher.hpp	\
     hash/md2.cpp	\
     hash/md2.hpp	\
     hash/md4.cpp	\
