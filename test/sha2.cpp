@@ -4,11 +4,11 @@
 
 #include <cstring>
 
-using util::hash::SHA2;
+using util::hash::SHA256;
 
 static const struct {
     const char     *input;
-    SHA2::digest_t  output;
+    SHA256::digest_t  output;
 } TESTS[] = {
     { "",
       { 0xE3, 0xB0, 0xC4, 0x42, 0x98, 0xFC, 0x1C, 0x14, 0x9A, 0xFB, 0xF4, 0xC8, 0x99, 0x6F, 0xB9, 0x24,
@@ -40,7 +40,7 @@ static const struct {
 int
 main (int, char **) {
     for (auto i: TESTS) {
-        SHA2 obj;
+        SHA256 obj;
         obj.update (reinterpret_cast<const uint8_t*> (i.input), strlen (i.input));
         obj.finish ();
 

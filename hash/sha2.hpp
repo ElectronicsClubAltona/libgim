@@ -16,12 +16,12 @@
 
 namespace util {
     namespace hash {
-        class SHA2 {
+        class SHA256 {
             public:
                 typedef std::array<uint8_t,32> digest_t;
 
             public:
-                SHA2();
+                SHA256();
 
                 void update (const uint8_t *, size_t);
                 void finish (void);

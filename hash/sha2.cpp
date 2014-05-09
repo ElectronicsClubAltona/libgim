@@ -156,7 +156,7 @@ uint64_t H_512[] = {
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-SHA2::SHA2 ():
+SHA256::SHA256 ():
     m_total (0)
 {
     std::copy (std::begin (H_256), std::end (H_256), std::begin (H));
@@ -164,7 +164,7 @@ SHA2::SHA2 ():
 
 
 void
-SHA2::update (const uint8_t *data, size_t length) {
+SHA256::update (const uint8_t *data, size_t length) {
     while (length) {
         size_t buffered = m_total % sizeof (M);
         size_t chunk = std::min (sizeof (M) - buffered, length);
@@ -180,7 +180,7 @@ SHA2::update (const uint8_t *data, size_t length) {
 
 
 void
-SHA2::finish (void) {
+SHA256::finish (void) {
     // Append a single 1 bit followed by 0s.
     size_t buffered = m_total % sizeof (M);
     size_t used     = m_total * 8;
@@ -219,7 +219,7 @@ SHA2::finish (void) {
 
 
 void
-SHA2::process (void) {
+SHA256::process (void) {
     CHECK_EQ (m_total % sizeof (M), 0);
 
     // Initialise the message schedule, W
@@ -264,8 +264,8 @@ SHA2::process (void) {
 }
 
 
-SHA2::digest_t
-SHA2::digest (void) const {
+SHA256::digest_t
+SHA256::digest (void) const {
     digest_t out;
     
     auto cursor = out.begin ();
