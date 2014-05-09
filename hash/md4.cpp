@@ -110,9 +110,7 @@ MD4::update (const uint8_t *data, size_t size) {
 
 
 MD4::digest_t
-MD4::digest (void) {
-    finish ();
-
+MD4::digest (void) const {
     digest_t d;
     memcpy (d.data (), ABCD.data(), sizeof (ABCD));
     return d; 

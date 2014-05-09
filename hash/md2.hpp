@@ -36,13 +36,12 @@ namespace util {
                 void update (const uint8_t *data, size_t len);
                 void update (const void    *data, size_t len);
 
-                digest_t digest (void);
-
+                void finish (void);
+                digest_t digest (void) const;
                 void reset (void);
 
             private:
                 void transform (void);
-                void finish (void);
 
                 uint64_t m_total;
 

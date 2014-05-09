@@ -141,9 +141,7 @@ MD5::update (const uint8_t *data, size_t size) {
 
 
 MD5::digest_t
-MD5::digest (void) {
-    finish ();
-
+MD5::digest (void) const {
     static_assert (sizeof (ABCD) == sizeof (digest_t),
                    "Hash state must be the same size as the final digest");
 

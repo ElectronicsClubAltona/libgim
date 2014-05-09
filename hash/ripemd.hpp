@@ -22,13 +22,15 @@ namespace util {
             public:
                 RIPEMD();
 
-                void update(const uint8_t*, size_t);
-                void finish(void);
-                digest_t digest(void) const;
-                void reset(void);
+                void update (const uint8_t*, size_t);
+                digest_t digest (void) const;
+                void finish (void);
+                void reset (void);
 
             protected:
                 void transform ();
+
+                bool m_finished;
 
                 uint32_t m_state[5];
                 uint64_t m_length;

@@ -108,9 +108,7 @@ MD2::update (const uint8_t *data, size_t size) {
 
 
 MD2::digest_t
-MD2::digest (void) {
-    finish ();
-
+MD2::digest (void) const {
     digest_t d;
     memcpy (d.data (), X, sizeof (d));
     return d;
