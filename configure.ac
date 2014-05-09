@@ -44,29 +44,29 @@ AC_ARG_ENABLE([sanitizer], [
 ###############################################################################
 ## Warnings
 
-AX_APPEND_COMPILE_FLAGS([-Wall])
-AX_APPEND_COMPILE_FLAGS([-Wextra])
-AX_APPEND_COMPILE_FLAGS([-Wno-parentheses])
-AX_APPEND_COMPILE_FLAGS([-Wpointer-arith])
-AX_APPEND_COMPILE_FLAGS([-Wcast-qual])
-AX_APPEND_COMPILE_FLAGS([-Wcast-align])
-AX_APPEND_COMPILE_FLAGS([-Wsign-compare])
-AX_APPEND_COMPILE_FLAGS([-Wsign-conversion])
-AX_APPEND_COMPILE_FLAGS([-Wtype-limits])
-AX_APPEND_COMPILE_FLAGS([-Wfloat-equal])
-AX_APPEND_COMPILE_FLAGS([-Wunused-parameter])
-AX_APPEND_COMPILE_FLAGS([-Wunused-but-set-variable])
-AX_APPEND_COMPILE_FLAGS([-Wshadow])
-AX_APPEND_COMPILE_FLAGS([-Wredundant-decls])
+AX_APPEND_COMPILE_FLAGS([-Wall], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wextra], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wno-parentheses], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wpointer-arith], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wcast-qual], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wcast-align], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wsign-compare], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wsign-conversion], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wtype-limits], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wfloat-equal], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wunused-parameter], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wunused-but-set-variable], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wshadow], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wredundant-decls], [], [-Werror])
 
-AX_APPEND_COMPILE_FLAGS([-pedantic])
+AX_APPEND_COMPILE_FLAGS([-pedantic], [], [-Werror])
 
 ######################################################################
 ## Platform compilation helpers
 
-AX_APPEND_COMPILE_FLAGS([-fno-common])
-AX_APPEND_COMPILE_FLAGS([-fno-nonansi-builtins])
-AX_APPEND_COMPILE_FLAGS([-fno-deduce-init-list])
+AX_APPEND_COMPILE_FLAGS([-fno-common], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-fno-nonansi-builtins], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-fno-deduce-init-list], [], [-Werror])
 
 ###############################################################################
 ## Compiler features
@@ -126,7 +126,7 @@ AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
 
 AC_SEARCH_LIBS([clock_gettime], [rt])
 AS_IF([test "x$ac_cv_search_clock_gettime" == "x-*"], [
-    AX_APPEND_LINK_FLAGS([$ac_cv_search_clock_gettime])
+    AX_APPEND_LINK_FLAGS([$ac_cv_search_clock_gettime], [], [-Werror])
 ])
 
 ###############################################################################
@@ -134,43 +134,43 @@ AS_IF([test "x$ac_cv_search_clock_gettime" == "x-*"], [
 
 AS_IF([test "x$enable_debugging" = "xyes"], [
     AS_IF([test "x$enable_mudflap" = "xyes"], [
-        AX_APPEND_COMPILE_FLAGS([-fmudflapth])
-        AX_APPEND_LINK_FLAGS([-lmudflapth])
+        AX_APPEND_COMPILE_FLAGS([-fmudflapth], [], [-Werror])
+        AX_APPEND_LINK_FLAGS([-lmudflapth], [], [-Werror])
     ])
 
     AS_IF([test "x$enable_sanitizer" = "xyes"], [
-        AX_APPEND_COMPILE_FLAGS([-fsanitize=address])
-        AX_APPEND_LINK_FLAGS([-fsanitize=address])
+        AX_APPEND_COMPILE_FLAGS([-fsanitize=address], [], [-Werror])
+        AX_APPEND_LINK_FLAGS([-fsanitize=address], [], [-Werror])
     ])
 
-    AX_APPEND_COMPILE_FLAGS([-ggdb])
+    AX_APPEND_COMPILE_FLAGS([-ggdb], [], [-Werror])
 
-    AC_DEFINE([ENABLE_DEBUGGING], [], [Debugging support enabled])
-    AC_DEFINE([_GLIBCXX_DEBUG],   [], [Use glibcxx debugging mode])
+    AC_DEFINE([ENABLE_DEBUGGING], [], [Debugging support enabled], [], [-Werror])
+    AC_DEFINE([_GLIBCXX_DEBUG],   [], [Use glibcxx debugging mode], [], [-Werror])
 
-    AX_APPEND_COMPILE_FLAGS([-O0])
+    AX_APPEND_COMPILE_FLAGS([-O0], [], [-Werror])
 ], [
-    AX_APPEND_COMPILE_FLAGS([-02])
-    AX_APPEND_COMPILE_FLAGS([-flto=8])
-    AX_APPEND_COMPILE_FLAGS([-flto-partition=none])
+    AX_APPEND_COMPILE_FLAGS([-02], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-flto=8], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-flto-partition=none], [], [-Werror])
 
-    AX_APPEND_LINK_FLAGS([-flto=8])
-    AX_APPEND_LINK_FLAGS([-flto-partition=none])
-    AX_APPEND_LINK_FLAGS([-fwhole-program])
+    AX_APPEND_LINK_FLAGS([-flto=8], [], [-Werror])
+    AX_APPEND_LINK_FLAGS([-flto-partition=none], [], [-Werror])
+    AX_APPEND_LINK_FLAGS([-fwhole-program], [], [-Werror])
 ])
 
 AS_CASE([$host_os],
     [mingw32], [
-        AX_APPEND_COMPILE_FLAGS([-gstabs])
+        AX_APPEND_COMPILE_FLAGS([-gstabs], [], [-Werror])
 
         ## HACK: Stop multiple defines from boost exception rethrowers
         ## terminating the build. Works around boost bug #4258.
-        AX_APPEND_COMPILE_FLAGS([-Wl,--allow-multiple-definition])
+        AX_APPEND_COMPILE_FLAGS([-Wl,--allow-multiple-definition], [], [-Werror])
     ],
 
     [linux-gnu], [
-        AX_APPEND_COMPILE_FLAGS([-g])
-        AX_APPEND_COMPILE_FLAGS([-ggdb])
+        AX_APPEND_COMPILE_FLAGS([-g], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-ggdb], [], [-Werror])
     ],
 
     [AC_MSG_WARN([Unknown host_os])]
@@ -211,19 +211,19 @@ AC_SUBST(ZLIB_LIBS)
 
 AS_CASE([$host_cpu],
     [x86_64], [
-        AX_APPEND_COMPILE_FLAGS([-mtune=generic])
+        AX_APPEND_COMPILE_FLAGS([-mtune=generic], [], [-Werror])
     ],
 
     [i686], [
-        AX_APPEND_COMPILE_FLAGS([-march=prescott])
-        AX_APPEND_COMPILE_FLAGS([-mtune=generic])
-        AX_APPEND_COMPILE_FLAGS([-mfpmath=sse])
+        AX_APPEND_COMPILE_FLAGS([-march=prescott], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-mtune=generic], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-mfpmath=sse], [], [-Werror])
     ],
 
     [AC_MSG_WARN([unknown host_cpu])]
 )
 
-AX_APPEND_COMPILE_FLAGS([-pipe])
+AX_APPEND_COMPILE_FLAGS([-pipe], [], [-Werror])
 
 ###############################################################################
 ## Output
