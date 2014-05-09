@@ -33,10 +33,6 @@ AC_ARG_ENABLE([debugging],
     [AS_HELP_STRING([--enable-debugging], [enables developer debugging support])]
 )
 
-AC_ARG_ENABLE([mudflap],
-    [AS_HELP_STRING([--enable-mudflap], [enable mudflap runtime debugging])]
-)
-
 AC_ARG_ENABLE([sanitizer], [
     AS_HELP_STRING([--enable-sanitizer], [enable memory sanitizer])
 ])
@@ -133,11 +129,6 @@ AS_IF([test "x$ac_cv_search_clock_gettime" == "x-*"], [
 ## Debug features
 
 AS_IF([test "x$enable_debugging" = "xyes"], [
-    AS_IF([test "x$enable_mudflap" = "xyes"], [
-        AX_APPEND_COMPILE_FLAGS([-fmudflapth], [], [-Werror])
-        AX_APPEND_LINK_FLAGS([-lmudflapth], [], [-Werror])
-    ])
-
     AS_IF([test "x$enable_sanitizer" = "xyes"], [
         AX_APPEND_COMPILE_FLAGS([-fsanitize=address], [], [-Werror])
         AX_APPEND_LINK_FLAGS([-fsanitize=address], [], [-Werror])
