@@ -1,3 +1,4 @@
-json-clean
-json-schema
-json-validate
+/hash
+/json-clean
+/json-schema
+/json-validate
