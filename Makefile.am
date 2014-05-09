@@ -170,26 +170,23 @@ libutil_la_SOURCES  = $(UTIL_FILES)
 libutil_la_CXXFLAGS = $(AM_CXXFLAGS)
 libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB)
 
+###############################################################################
+## Utility programs
+
+LDADD = $(top_builddir)/.libs/libutil.a
 bin_PROGRAMS = 				\
     tools/json-clean			\
     tools/json-validate			\
     tools/json-schema
 
-tools_json_clean_SOURCES    = json/clean.cpp
-tools_json_clean_DEPENDENCIES = $(top_builddir)/libutil.la
-tools_json_clean_LDFLAGS    = 		\
-    $(top_builddir)/.libs/libutil.a	\
-    $(AM_LDFLAGS)
+tools_json_clean_SOURCES    	= tools/json-clean.cpp
+tools_json_clean_DEPENDENCIES 	= $(top_builddir)/libutil.la
+tools_json_clean_LDFLAGS    	= $(AM_LDFLAGS)
 
-tools_json_schema_SOURCES = json/schema.cpp
-tools_json_schema_DEPENDENCIES = $(top_builddir)/libutil.la
-tools_json_schema_LDFLAGS    = 		\
-    $(top_builddir)/.libs/libutil.a	\
-    $(AM_LDFLAGS)
+tools_json_schema_SOURCES 	= tools/json-schema.cpp
+tools_json_schema_DEPENDENCIES 	= $(top_builddir)/libutil.la
+tools_json_schema_LDFLAGS    	= $(AM_LDFLAGS)
 
-
-tools_json_validate_SOURCES = json/validate.cpp
-tools_json_validate_DEPENDENCIES = $(top_builddir)/libutil.la
-tools_json_validate_LDFLAGS    = 		\
-    $(top_builddir)/.libs/libutil.a	\
-    $(AM_LDFLAGS)
+tools_json_validate_SOURCES 		= tools/json-validate.cpp
+tools_json_validate_DEPENDENCIES 	= $(top_builddir)/libutil.la
+tools_json_validate_LDFLAGS    		= $(AM_LDFLAGS)
