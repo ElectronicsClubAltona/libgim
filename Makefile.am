@@ -1,9 +1,15 @@
+###############################################################################
+## Global build rules
+
 ACLOCAL_AMFLAGS = -I m4
 
 AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(COMMON_CXXFLAGS) $(ZLIB_CFLAGS)
 AM_LDFLAGS  = $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(COMMON_LDFLAGS) $(ZLIB_LIBS)
 
 SUBDIRS = test
+
+###############################################################################
+## Source definitions
 
 UTIL_FILES   =		\
     annotations.hpp 	\
@@ -157,6 +163,8 @@ if PLATFORM_WIN32
 UTIL_FILES += backtrace_null.cpp
 endif
 
+###############################################################################
+## Local build rules
 CLEANFILES = json.cpp version.cpp ip.cpp
 EXTRA_DIST = json.cpp.rl version.cpp.rl ip.cpp.rl
 
@@ -165,6 +173,8 @@ SUFFIXES = .cpp .cpp.rl
 .cpp.rl.cpp:
 	$(RAGEL) $(RAGELFLAGS) -C $< -o $(builddir)/$@
 
+###############################################################################
+## Library definition
 lib_LTLIBRARIES  = libutil.la
 libutil_la_SOURCES  = $(UTIL_FILES)
 libutil_la_CXXFLAGS = $(AM_CXXFLAGS)
