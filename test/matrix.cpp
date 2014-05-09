@@ -43,10 +43,11 @@ test_identity (const matrix &m) {
 
     for (unsigned int i = 0; i < m.rows (); ++i)
         for (unsigned int j = 0; j < m.columns (); ++j)
-            if (i == j)
+            if (i == j) {
                 CHECK_HARD (almost_equal (m[i][j], 1.0));
-            else
+            } else {
                 CHECK_HARD (almost_equal (m[i][j], 0.0));
+            }
 }
 
 
