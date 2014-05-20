@@ -5,12 +5,12 @@
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * libgim is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -191,10 +191,10 @@ struct parse_context {
         | '\\t'
         | '\\u' xdigit{4};
 
-    string = ('"'    
+    string = ('"'
               char* >{ nodestack.back ().start = fpc; }
                     %{ nodestack.back ().stop  = fpc; })
-              '"' 
+              '"'
               @new_string;
 
     ## other
@@ -207,11 +207,11 @@ struct parse_context {
     array    = '[' @{ fhold; fcall  _array; } ']';
 
     value    =
-          string  
-        | boolean 
+          string
+        | boolean
         | number  >{ nodestack.back ().start = fpc; } %{ nodestack.back ().stop = fpc; } %new_number
-        | object  
-        | array  
+        | object
+        | array
         | 'null'  %new_null;
 
     ## compound data types
@@ -286,7 +286,7 @@ json::parse (const char *start,
     %%write init;
     %%write exec;
 
-    if (!__success) 
+    if (!__success)
         throw parse_error ("unable to parse json");
 
     return std::unique_ptr<json::node> (__root);
@@ -479,9 +479,9 @@ json::array::operator ==(const json::array &rhs) const {
 
 std::ostream&
 json::array::write (std::ostream &os) const {
-    os << "[\n"; 
+    os << "[\n";
     {
-        indenter raii(os); 
+        indenter raii(os);
 
         for (auto i = m_values.begin (); i != m_values.end (); ++i) {
             (*i)->write (os);
@@ -526,7 +526,7 @@ json::number::write (std::ostream &os) const {
 
 
 bool
-json::number::operator ==(const json::number &rhs) const 
+json::number::operator ==(const json::number &rhs) const
     { return almost_equal (rhs.m_value, m_value); }
 
 
@@ -540,7 +540,7 @@ json::boolean::write (std::ostream &os) const {
 }
 
 bool
-json::boolean::operator ==(const json::boolean &rhs) const 
+json::boolean::operator ==(const json::boolean &rhs) const
     { return rhs.m_value == m_value; }
 
 

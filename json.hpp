@@ -62,7 +62,7 @@ namespace json {
             virtual bool is_array   (void) const { return false; }
             virtual bool is_string  (void) const { return false; }
             virtual bool is_number  (void) const { return false; }
-            virtual bool is_boolean (void) const { return false; } 
+            virtual bool is_boolean (void) const { return false; }
             virtual bool is_null    (void) const { return false; }
 
             virtual bool operator==(const node &rhs) const = 0;
@@ -81,7 +81,7 @@ namespace json {
             virtual const node& operator[] (unsigned int) const;
 
             virtual std::ostream& write (std::ostream &os) const = 0;
-    };                                          
+    };
 
 
     /// Represents a JSON object, and contains its children.
@@ -141,7 +141,7 @@ namespace json {
                 { return rhs == *this; }
 
             virtual size_t size (void) const
-                { return m_values.size (); } 
+                { return m_values.size (); }
             virtual node& operator [](unsigned int idx)
                 { return *m_values[idx]; }
             virtual const node& operator [](unsigned int idx) const
