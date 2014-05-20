@@ -5,8 +5,7 @@
 /float
 /hton
 /ip
-/json
-/json-check
+/json/types
 /*.log
 /maths
 /matrix
@@ -16,8 +15,8 @@
 /pool
 /rand
 /range
-/ripemd
 /region
+/ripemd
 /sha[12]
 /signal
 /*.trs
