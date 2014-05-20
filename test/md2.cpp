@@ -47,6 +47,7 @@ main (int, char **) {
     for (const auto &i: TESTS) {
         MD2 h;
         h.update (i.input, strlen (i.input));
+        h.finish ();
         auto out = h.digest ();
 
         if (out != i.output) {
