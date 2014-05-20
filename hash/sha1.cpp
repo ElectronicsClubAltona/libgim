@@ -191,7 +191,7 @@ SHA1::finish (void) {
     c[BLOCK_BYTES - 5] = used & 0xFF; used >>= 8;
     c[BLOCK_BYTES - 6] = used & 0xFF; used >>= 8;
     c[BLOCK_BYTES - 7] = used & 0xFF; used >>= 8;
-    c[BLOCK_BYTES - 8] = used & 0xFF; used >>= 8;
+    c[BLOCK_BYTES - 8] = used & 0xFF;
 
     total += chunk;
     process ();
