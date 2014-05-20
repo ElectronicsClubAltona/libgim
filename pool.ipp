@@ -52,7 +52,7 @@ namespace util {
         CHECK_EQ (doomed_count, m_capacity);
         operator delete (m_head);
     }
-            
+
 
     template <typename T>
     unsigned int
@@ -69,7 +69,7 @@ namespace util {
 
         node *newnext = m_next->_chain;
         T *data = (T*)&m_next->_data;
-        
+
         try {
             new (data) T (args...);
         } catch (...) {
