@@ -32,7 +32,7 @@ namespace util {
         static_assert (sizeof (T) >= sizeof (uintptr_t),
                        "pool<T>'s chained block system requires that T be at least pointer sized");
 
-        m_head = (node *)operator new (sizeof (T) * m_capacity);
+        m_head = static_cast<node *> (operator new (sizeof (T) * m_capacity));
         m_next = m_head;
 
         for (unsigned int i = 0; i < m_capacity - 1; ++i)
@@ -86,7 +86,7 @@ namespace util {
     void
     pool<T>::release (T *data) {
         data->~T();
-        node *newnode = (node *)data;
+        node *newnode = reinterpret_cast<node *> (data);
 
         newnode->_chain = m_next;
         m_next = newnode;
