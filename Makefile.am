@@ -137,6 +137,8 @@ UTIL_FILES   =		\
     stream.hpp		\
     string.cpp		\
     string.hpp		\
+    stringid.cpp	\
+    stringid.hpp	\
     time.cpp		\
     time.hpp		\
     types.hpp		\

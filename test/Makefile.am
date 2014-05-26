@@ -21,9 +21,10 @@ TEST_BIN = 		\
 	range 		\
 	region		\
 	ripemd		\
-	signal		\
 	sha1		\
 	sha2		\
+	signal		\
+	stringid	\
 	version
 
 AM_DEFAULT_SOURCE_EXT = .cpp
