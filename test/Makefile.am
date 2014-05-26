@@ -8,7 +8,7 @@ TEST_BIN = 		\
 	float		\
 	hton		\
 	ip 		\
-	json		\
+	json/types	\
 	maths 		\
 	matrix 		\
 	md2		\
@@ -34,6 +34,7 @@ if PLATFORM_WIN32
 hton_LDFLAGS = -lws2_32
 endif
 
-TESTS = $(TEST_BIN) json.pl
+TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
+TESTS = static.test json.test
 check_PROGRAMS = $(TEST_BIN)
-EXTRA_DIST = json.pl
+EXTRA_DIST = static.test json.test

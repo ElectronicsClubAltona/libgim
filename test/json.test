@@ -1,0 +1,27 @@
+#!/bin/sh
+
+validate=../tools/json-validate
+
+good=(json/good/*)
+bad=(json/bad/*)
+
+count=$((${#good[@]}+${#bad[@]}))
+echo 1..$count
+
+for i in ${good[@]};
+do
+    $validate $i 2>/dev/null 1>&2
+    case $? in
+    0) echo "ok     - $(basename $i .json)";;
+    *) echo "not ok - $(basename $i .json)";;
+    esac
+done
+
+for i in ${bad[@]};
+do
+    $validate $i 1>&2 2>/dev/null
+    case $? in
+    0) echo "not ok - $(basename $i .json)";;
+    *) echo "ok     - $(basename $i .json)";;
+    esac
+done
