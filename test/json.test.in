@@ -1,9 +1,9 @@
 #!/bin/sh
 
-validate=../tools/json-validate
+validate=@abs_top_builddir@/tools/json-validate
 
-good=(json/good/*)
-bad=(json/bad/*)
+good=(@abs_top_srcdir@/test/json/good/*)
+bad=(@abs_top_srcdir@/test/json/bad/*)
 
 count=$((${#good[@]}+${#bad[@]}))
 echo 1..$count

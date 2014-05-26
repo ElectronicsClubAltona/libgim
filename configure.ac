@@ -228,5 +228,8 @@ AC_CONFIG_FILES([
     Doxyfile
     Makefile
     test/Makefile
+    test/json.test
+], [
+    chmod a+x test/json.test
 ])
 AC_OUTPUT
