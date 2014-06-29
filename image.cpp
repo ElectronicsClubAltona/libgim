@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -26,6 +26,7 @@
 #include <fstream>
 
 
+//-----------------------------------------------------------------------------
 static void
 write_netpbm (const uint8_t *restrict pixels,
               size_t width,
@@ -56,6 +57,8 @@ write_netpbm (const uint8_t *restrict pixels,
     }
 }
 
+
+//-----------------------------------------------------------------------------
 void
 util::pgm::write (const uint8_t *restrict pixels,
                   size_t width,
@@ -68,6 +71,7 @@ util::pgm::write (const uint8_t *restrict pixels,
 }
 
 
+//-----------------------------------------------------------------------------
 void
 util::ppm::write (const uint8_t *restrict pixels,
                   size_t width,
