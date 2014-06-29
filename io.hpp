@@ -59,6 +59,7 @@ namespace util {
     };
 
 
+    //-------------------------------------------------------------------------
     class indenter : public std::streambuf {
     protected:
         std::streambuf* m_dest;
@@ -76,7 +77,19 @@ namespace util {
         virtual ~indenter ();
     };
 
-    
+    //-------------------------------------------------------------------------
+    template <typename T>
+    struct indented {
+        indented (const T &_data);
+        const T &data;
+    };
+
+
+    template <typename T>
+    indented<T>
+    make_indented (const T &_data);
+
+    //-------------------------------------------------------------------------
     class scoped_cwd {
         public:
             scoped_cwd ();
@@ -123,5 +136,12 @@ namespace util {
             { ; }
     };
 }
+
+
+template <typename T>
+std::ostream&
+operator<< (std::ostream &os, const util::indented<T> &v);
+
+#include "io.ipp"
 
 #endif
