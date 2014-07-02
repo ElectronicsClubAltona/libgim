@@ -124,6 +124,8 @@ UTIL_FILES   =		\
     random.ipp		\
     range.cpp		\
     range.hpp		\
+    rational.cpp	\
+    rational.hpp	\
     region.cpp		\
     region.hpp		\
     si.cpp		\
