@@ -111,7 +111,8 @@ namespace util {
 
 //-----------------------------------------------------------------------------
 namespace util {
-    template struct extent<unsigned int>;
-    template struct extent<unsigned long>;
+    template struct extent<uint32_t>;
+    template struct extent<uint64_t>;
+    template struct extent<float>;
     template struct extent<double>;
 }
