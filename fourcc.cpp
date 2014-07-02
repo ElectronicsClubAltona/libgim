@@ -43,10 +43,10 @@ fourcc
 fourcc::from_string (const char data[4]) {
     fourcc lhs;
 
-    lhs.data[0] = (uint8_t)data[0];
-    lhs.data[1] = (uint8_t)data[1];
-    lhs.data[2] = (uint8_t)data[2];
-    lhs.data[3] = (uint8_t)data[3];
+    lhs.data[0] = static_cast<uint8_t> (data[0]);
+    lhs.data[1] = static_cast<uint8_t> (data[1]);
+    lhs.data[2] = static_cast<uint8_t> (data[2]);
+    lhs.data[3] = static_cast<uint8_t> (data[3]);
 
     return lhs;
 }
@@ -62,10 +62,10 @@ fourcc::operator== (const char rhs[4]) const {
 
 
 fourcc::operator uint32_t (void) const {
-    return (uint32_t)(data[0] << 24U |
-                      data[1] << 16U |
-                      data[2] <<  8U |
-                      data[3]);
+    return static_cast<uint32_t> (data[0] << 24U |
+                                  data[1] << 16U |
+                                  data[2] <<  8U |
+                                  data[3]);
 }
 
 

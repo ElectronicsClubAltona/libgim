@@ -56,7 +56,7 @@ extent<T>::operator= (const extent<T> &rhs) {
 template <typename T>
 T
 extent<T>::diameter (void) const {
-    return (T)sqrt (w * w + h * h);
+    return static_cast<T> (sqrt (w * w + h * h));
 }
 
 

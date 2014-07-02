@@ -156,14 +156,14 @@ guid::operator== (const guid &rhs) const {
 
 std::ostream&
 operator<< (std::ostream &os, const guid &g) {
-    uint64_t data4_b = (uint64_t)g.data4[0] <<  0 |
-                       (uint64_t)g.data4[1] <<  8 |
-                       (uint64_t)g.data4[2] << 16 |
-                       (uint64_t)g.data4[3] << 24 |
-                       (uint64_t)g.data4[4] << 32 |
-                       (uint64_t)g.data4[5] << 40;
-    uint16_t data4_a = (uint16_t)g.data4[6] <<  0 |
-                       (uint16_t)g.data4[7] <<  8;
+    uint64_t data4_b = static_cast<uint64_t> (g.data4[0]) <<  0u |
+                       static_cast<uint64_t> (g.data4[1]) <<  8u |
+                       static_cast<uint64_t> (g.data4[2]) << 16u |
+                       static_cast<uint64_t> (g.data4[3]) << 24u |
+                       static_cast<uint64_t> (g.data4[4]) << 32u |
+                       static_cast<uint64_t> (g.data4[5]) << 40u;
+    uint16_t data4_a = static_cast<uint16_t> (g.data4[6]) <<  0u |
+                       static_cast<uint16_t> (g.data4[7]) <<  8u;
 
     os << hex << setfill ('0') << setw (2 * sizeof (g.data1)) << g.data1 << "-"
                                << setw (2 * sizeof (g.data2)) << g.data2 << "-"
