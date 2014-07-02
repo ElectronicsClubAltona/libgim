@@ -37,6 +37,19 @@ using std::begin;
 using std::end;
 
 
+//-----------------------------------------------------------------------------
+std::ostream&
+operator<< (std::ostream &os, SHA1::state_t t) {
+    switch (t) {
+        case SHA1::READY:       os << "READY";      return os;
+        case SHA1::FINISHED:    os << "FINISHED";   return os;
+        default:
+            unreachable ();
+    }
+}
+
+
+//-----------------------------------------------------------------------------
 // Logical function for sequence of rounds
 static inline uint32_t
 f_00 (uint32_t B, uint32_t C, uint32_t D)
