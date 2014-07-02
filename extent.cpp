@@ -108,6 +108,18 @@ namespace util {
         { return; }
 }
 
+//-----------------------------------------------------------------------------
+template <typename T>
+std::ostream&
+operator<< (std::ostream &os, util::extent<T> e) {
+    os << "[" << e.w << ", " << e.h << "]";
+    return os;
+}
+
+
+template std::ostream& operator<< (std::ostream&, util::extent<uint16_t>);
+template std::ostream& operator<< (std::ostream&, util::extent<uint32_t>);
+template std::ostream& operator<< (std::ostream&, util::extent<uint64_t>);
 
 //-----------------------------------------------------------------------------
 namespace util {

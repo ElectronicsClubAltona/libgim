@@ -20,6 +20,8 @@
 #ifndef __UTIL_EXTENT_HPP
 #define __UTIL_EXTENT_HPP
 
+#include <iostream>
+
 namespace util {
     /**
      * A pure two-dimensional size, without positioning
@@ -47,5 +49,7 @@ namespace util {
     };
 }
 
-#endif
+template <typename T>
+std::ostream& operator<< (std::ostream&, util::extent<T>);
 
+#endif
