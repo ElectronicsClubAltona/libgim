@@ -14,12 +14,14 @@ using namespace std;
 debug::backtrace::backtrace (void):
     m_frames (DEFAULT_DEPTH) {
 
-    int final;
-    while ((final = ::backtrace (&m_frames[0], m_frames.size ())) == sign_cast<ssize_t> (m_frames.size ()))
-        m_frames.resize (m_frames.size () * 2);
+    size_t last;
+    size_t size = m_frames.size ();
 
-    CHECK_HARD (final > 0);
-    m_frames.resize ((unsigned)final);
+    while ((last = ::backtrace (&m_frames[0], m_frames.size ())) == size)
+        m_frames.resize (size = m_frames.size () * 2);
+
+    CHECK_HARD (last > 0);
+    m_frames.resize (last);
 }
 
 

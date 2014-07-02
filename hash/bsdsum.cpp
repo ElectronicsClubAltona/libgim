@@ -26,7 +26,7 @@ bsdsum (const void *restrict _data, size_t size) {
     uint16_t accum = 0;
 
     for (size_t i = 0; i < size; ++i) {
-        accum  = (accum >> 1) | ((accum & 0x1) << 15);
+        accum  = (accum >> 1u) | ((accum & 0x01u) << 15u);
         accum += data[i];
     }
 
