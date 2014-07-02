@@ -60,11 +60,11 @@ region<T>::diameter (void) const {
 template <typename T>
 void
 region<T>::scale (double factor) {
-    x -= (w * factor - w) / 2.0;
-    y -= (h * factor - h) / 2.0;
+    x -= static_cast<T> ((w * factor - w) / 2.0);
+    y -= static_cast<T> ((h * factor - h) / 2.0);
 
-    w *= factor;
-    h *= factor;
+    w = static_cast<T> (w * factor);
+    h = static_cast<T> (h * factor);
 }
 
 

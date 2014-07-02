@@ -47,8 +47,11 @@ fixed<INT, FRAC>::to_double (void) const
 
 template <unsigned int INT, unsigned int FRAC>
 float
-fixed<INT, FRAC>::to_float (void) const
-    { return m_value / std::pow (2.0f, FRAC); }
+fixed<INT, FRAC>::to_float (void) const {
+    return static_cast<float> (
+        m_value / std::pow (2.0f, FRAC)
+    );
+}
 
 
 template <unsigned int INT, unsigned int FRAC>

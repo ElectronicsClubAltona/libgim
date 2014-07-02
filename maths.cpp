@@ -138,14 +138,14 @@ sign (T val) {
 template <>
 int
 sign (float val) {
-    return copysign (1.0, val);
+    return static_cast<int> (copysign (1.0f, val));
 }
 
 
 template <>
 int
 sign (double val) {
-    return copysign (1.0, val);
+    return static_cast<int> (copysign (1.0, val));
 }
 
 

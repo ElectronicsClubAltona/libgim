@@ -33,6 +33,6 @@ util::noise::image2d (uint8_t *restrict pixels,
     for (size_t y = 0; y < height; ++y)
         for (size_t x = 0; x < width; ++x) {
             double v = p.eval (x, y);
-            pixels[x + y * width] = v * std::numeric_limits<uint8_t>::max ();
+            pixels[x + y * width] = static_cast<uint8_t> (v * std::numeric_limits<uint8_t>::max ());
         }
 }

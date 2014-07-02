@@ -95,7 +95,7 @@ delta_clock::seconds (void) {
 // ----------------------------------------------------------------------------
 util::period_query::period_query (double seconds) {
     m_time.start  = nanoseconds ();
-    m_time.period = seconds * SECOND;
+    m_time.period = static_cast<uint64_t> (seconds * SECOND);
 }
 
 

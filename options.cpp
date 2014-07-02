@@ -239,7 +239,7 @@ bytesoption::execute (const std::string& data) {
         // after reading the specifiers.
         --cursor;
 
-        multiplier = std::pow (modifier_factor, (int)specified);
+        multiplier = static_cast<uintmax_t> (std::pow (modifier_factor, (int)specified));
         get_arg (data.substr(0, cursor + 1), m_data);
         *m_data *= multiplier;
     } catch (...) {

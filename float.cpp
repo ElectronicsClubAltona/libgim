@@ -82,7 +82,7 @@ ieee_float<E, S>::almost_equal (floating_t a,
                                 floating_t b) { 
     // Static cast to avoid integer casting warnings when using uint16_t for half
     static const floating_t epsilon = static_cast<floating_t> (0.001);
-    const floating_t diff = fabs (a - b);
+    const floating_t diff = static_cast<floating_t> (std::fabs (a - b));
 
     // * Use an exact equality first so that infinities are not indirectly compared. This would generate NaNs in the diff.
     // * Do not use gte or lte. This stops an infinite from making infinities on both sides of the inequality.
