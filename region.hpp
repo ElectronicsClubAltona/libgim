@@ -42,8 +42,6 @@ namespace util {
 
         region (T _x, T _y, size_type _w, size_type _h);
 
-        region& operator +=(const vector<2>& rhs);
-
         size_type area     (void) const;
         size_type diameter (void) const;
         void scale (double factor);

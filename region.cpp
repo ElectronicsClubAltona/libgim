@@ -43,16 +43,6 @@ region<T>::region (T _x, T _y, size_type _w, size_type _h):
 }
 
 
-template <typename T>
-region<T>&
-region<T>::operator+= (const vector<2> &rhs) {
-    x += rhs.x;
-    y += rhs.y;
-
-    return *this;
-}
-
-
 //-----------------------------------------------------------------------------
 template <typename T>
 typename region<T>::size_type
