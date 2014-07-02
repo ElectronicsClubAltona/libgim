@@ -159,7 +159,7 @@ AS_IF([test "x$enable_debugging" = "xyes"], [
 
     AX_APPEND_COMPILE_FLAGS([-O0], [], [-Werror])
 ], [
-    AX_APPEND_COMPILE_FLAGS([-02], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-O2], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-flto=8], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-flto-partition=none], [], [-Werror])
 
