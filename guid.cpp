@@ -190,14 +190,14 @@ operator>> (std::istream &is, guid &g) {
               >> data4_a >> dash4a
               >> data4_b;
 
-    uint64_t data4 = data4_b | (uint64_t)data4_a << 48;
-    g.data4[0] = data4 & 0xFF; data4 >>= 8;
-    g.data4[1] = data4 & 0xFF; data4 >>= 8;
-    g.data4[2] = data4 & 0xFF; data4 >>= 8;
-    g.data4[3] = data4 & 0xFF; data4 >>= 8;
-    g.data4[4] = data4 & 0xFF; data4 >>= 8;
-    g.data4[5] = data4 & 0xFF; data4 >>= 8;
-    g.data4[6] = data4 & 0xFF; data4 >>= 8;
+    uint64_t data4 = data4_b | static_cast<uint64_t> (data4_a) << 48u;
+    g.data4[0] = data4 & 0xFF; data4 >>= 8u;
+    g.data4[1] = data4 & 0xFF; data4 >>= 8u;
+    g.data4[2] = data4 & 0xFF; data4 >>= 8u;
+    g.data4[3] = data4 & 0xFF; data4 >>= 8u;
+    g.data4[4] = data4 & 0xFF; data4 >>= 8u;
+    g.data4[5] = data4 & 0xFF; data4 >>= 8u;
+    g.data4[6] = data4 & 0xFF; data4 >>= 8u;
     g.data4[7] = data4 & 0xFF;
         
     if (braces)
