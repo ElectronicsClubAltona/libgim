@@ -83,10 +83,8 @@ guid::from_bytes (const uint8_t *bytes) {
     g.data3 = *reinterpret_cast<const uint16_t *> (bytes);
     bytes += sizeof (g.data3);
 
-    for (signed i = 7; i >= 0; --i) {
-        g.data4[i] = *reinterpret_cast<const uint8_t *> (bytes);
-        ++bytes;
-    }
+    for (signed i = 7; i >= 0; --i)
+        g.data4[i] = *bytes++;
 
     return g;
 }
@@ -100,7 +98,7 @@ guid::from_string (const char *bytes)
 guid::type
 guid::get_type (void) const {
     // Top three bits signal the type
-    unsigned bits = (unsigned)data4[2] >> 5U;
+    unsigned bits = data4[2] >> 5U;
 
     switch (bits) {
         case 0x0:

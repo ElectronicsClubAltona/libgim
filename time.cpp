@@ -114,7 +114,7 @@ util::period_query::poll (void) {
 // ----------------------------------------------------------------------------
 util::rate_limiter::rate_limiter (unsigned rate):
     m_last (nanoseconds ()),
-    m_target (static_cast<double> (SECOND) / rate)
+    m_target (SECOND / rate)
 { ; }
 
 

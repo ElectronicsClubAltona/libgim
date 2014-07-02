@@ -53,7 +53,7 @@ write_netpbm (const uint8_t *restrict pixels,
     // Write the data rows
     for (size_t y = 0; y < height; ++y) {
         for (size_t x = 0; x < width; ++x)
-            output << (uint8_t)pixels[y * stride + x];
+            output << pixels[y * stride + x];
     }
 }
 
