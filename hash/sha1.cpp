@@ -58,6 +58,7 @@ f_60 (uint32_t B, uint32_t C, uint32_t D)
     { return B ^ C ^ D; }
 
 
+//-----------------------------------------------------------------------------
 // Constant words for sequence of rounds
 static const uint32_t K_00 = 0x5A827999;
 static const uint32_t K_20 = 0x6ED9EBA1;
@@ -76,6 +77,8 @@ static const uint32_t DEFAULT_H[] = {
 static const size_t BLOCK_WORDS = 16;
 static const size_t BLOCK_BYTES = BLOCK_WORDS * sizeof (uint32_t);
 
+
+//-----------------------------------------------------------------------------
 SHA1::SHA1()
 {
     reset ();
@@ -91,6 +94,7 @@ SHA1::reset (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 SHA1::update (const uint8_t *data, size_t size) {
     CHECK_EQ (state, READY);
@@ -115,6 +119,7 @@ SHA1::update (const uint8_t *data, size_t size) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 SHA1::process (void) {
     CHECK_EQ (total % BLOCK_BYTES, 0);
@@ -161,6 +166,7 @@ SHA1::process (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 SHA1::finish (void) {
     size_t offset = total % BLOCK_BYTES;
@@ -200,6 +206,7 @@ SHA1::finish (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 SHA1::digest_t
 SHA1::digest (void) const {
     CHECK_EQ (state, FINISHED);
