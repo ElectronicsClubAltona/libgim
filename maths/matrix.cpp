@@ -243,12 +243,18 @@ matrix::is_magic (void) const {
         unsigned int sum1 = 0, sum2 = 0;
 
         for (unsigned int j = 0; j < m_columns; ++j) {
-            if (!numbers.contains ((*this)[i][j]) ||
-                !numbers.contains ((*this)[j][i]))
+            double a = (*this)[i][j],
+                   b = (*this)[j][i];
+
+            if (!exactly_zero (a) || !exactly_zero (b))
                 return false;
 
-            sum1 += (*this)[i][j];
-            sum2 += (*this)[j][i];
+            if (!numbers.contains (a) ||
+                !numbers.contains (b))
+                return false;
+
+            sum1 += static_cast<unsigned> (a);
+            sum2 += static_cast<unsigned> (b);
         }
         
         if (sum1 != expected || sum2 != expected)
