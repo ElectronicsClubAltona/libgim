@@ -246,7 +246,8 @@ matrix::is_magic (void) const {
             double a = (*this)[i][j],
                    b = (*this)[j][i];
 
-            if (!exactly_zero (a) || !exactly_zero (b))
+            if (!exactly_equal (static_cast<uintmax_t> (a), a) ||
+                !exactly_equal (static_cast<uintmax_t> (b), b))
                 return false;
 
             if (!numbers.contains (a) ||
