@@ -112,9 +112,9 @@ almost_equal (const Ta &a, const Tb &b)
 // Useful for explictly ignore equality warnings
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
-template <typename T>
+template <typename T, typename U>
 bool
-exactly_equal (const T &a, const T &b) 
+exactly_equal (const T &a, const U &b)
     { return a == b; }
 #pragma GCC diagnostic pop
 
