@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "io.hpp"
@@ -182,18 +182,8 @@ util::set_cwd (const boost::filesystem::path &path) {
 #include <sys/mman.h>
 
 
-mapped_file::mapped_file (const char *_path):
-    m_fd (open (_path, O_RDONLY))
-{ load_fd (); } 
-
-
-mapped_file::mapped_file (const std::string &_path):
-    m_fd (open (_path.c_str (), O_RDONLY))
-{ load_fd (); } 
-
-
 mapped_file::mapped_file (const boost::filesystem::path &_path):
-    m_fd (open (_path.native ().c_str (), O_RDONLY))
+    m_fd (open (_path.native ().c_str (), O_RDWR))
 { load_fd (); } 
 
 
@@ -210,7 +200,7 @@ mapped_file::load_fd (void) {
         throw errno_error ();
 
     m_size = (size_t)meta.st_size;
-    m_data = (uint8_t *)mmap (NULL, m_size, PROT_READ, MAP_PRIVATE, m_fd, 0);
+    m_data = (uint8_t *)mmap (NULL, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
     if (m_data == MAP_FAILED)
         throw errno_error ();
 }
@@ -222,6 +212,15 @@ mapped_file::size (void) const {
     CHECK (m_data != NULL);
 
     return m_size;
+}
+
+
+uint8_t*
+mapped_file::data (void) {
+    CHECK (m_size > 0);
+    CHECK (m_data != NULL);
+
+    return m_data;
 }
 
 

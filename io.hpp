@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_IO_HPP
@@ -114,16 +114,15 @@ namespace util {
             void load_fd (void);
 
         public:
-            mapped_file (const char                    *path);
-            mapped_file (const std::string             &path);
             mapped_file (const boost::filesystem::path &path);
 
-            mapped_file (const mapped_file             &rhs);
-            mapped_file& operator =(const mapped_file  &rhs);
+            mapped_file (const mapped_file&) = delete;
+            mapped_file& operator= (const mapped_file&) = delete;
 
             ~mapped_file ();
 
             const uint8_t* data (void) const;
+            uint8_t*       data (void);
             size_t         size (void) const;
     };
 #endif
