@@ -14,18 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_TYPES_HPP
 #define __UTIL_TYPES_HPP
 
-#include "platform.hpp"
-
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
+#include <stdexcept>
 
+//-----------------------------------------------------------------------------
 /// Returns the number of elements of a statically allocated array
 template <typename T, size_t N>  
 constexpr size_t elems(const T (&)[N])
@@ -36,6 +36,26 @@ template <class T, class...Args>
 std::unique_ptr<T>
 make_unique(Args&&... args) {
     return std::unique_ptr<T> (new T(std::forward<Args>(args)...));
+}
+
+
+//-----------------------------------------------------------------------------
+template <class T>
+T
+first (T a) {
+    if (a)
+        return a;
+
+    throw std::logic_error ("no valid object");
+}
+
+template <class T, class ...Args>
+T
+first (T a, Args&& ...b) {
+    if (a)
+        return a;
+
+    return first (std::forward<Args>(b)...);
 }
 
 #endif
