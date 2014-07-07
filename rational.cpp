@@ -55,5 +55,7 @@ rational<T>::operator double (void) const {
 
 
 //-----------------------------------------------------------------------------
-template struct rational<uint32_t>;
-template struct rational<int32_t>;
+namespace util {
+    template struct rational<uint32_t>;
+    template struct rational<int32_t>;
+}
