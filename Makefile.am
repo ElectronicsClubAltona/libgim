@@ -108,6 +108,8 @@ UTIL_FILES   =		\
     noise/lut.hpp	\
     options.cpp		\
     options.hpp		\
+    pascal.cpp		\
+    pascal.hpp		\
     platform.hpp	\
     point.cpp		\
     point.hpp		\
