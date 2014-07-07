@@ -5,12 +5,12 @@
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * libgim is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -54,7 +54,7 @@ matrix::matrix (size_t                                _rows,
 matrix::matrix (const std::initializer_list <vector> &rhs):
     m_rows    (rhs.size    ()),
     m_columns (rhs.begin()->size ()),
-    m_data    (new double[m_rows * m_columns]) 
+    m_data    (new double[m_rows * m_columns])
 {
     double *row_cursor = m_data.get ();
 
@@ -184,7 +184,7 @@ matrix::operator * (const matrix& rhs) const {
 
     matrix val (matrix::zeroes (m_rows, rhs.columns ()));
 
-    for (unsigned int i = 0; i < m_rows; ++i) 
+    for (unsigned int i = 0; i < m_rows; ++i)
         for (unsigned int j = 0; j < rhs.columns (); ++j)
             for (unsigned int k = 0; k < m_columns; ++k)
                 val[i][j] += (*this)[i][k] * rhs[k][j];
@@ -212,7 +212,7 @@ matrix::operator ==(const matrix& rhs) const {
 
 
 size_t
-matrix::rows (void) const 
+matrix::rows (void) const
     { return m_rows; }
 
 
@@ -222,12 +222,12 @@ matrix::columns (void) const
 
 
 size_t
-matrix::size (void) const 
+matrix::size (void) const
     { return rows () * columns (); }
 
 
 bool
-matrix::is_square (void) const 
+matrix::is_square (void) const
     { return m_rows == m_columns; }
 
 
@@ -256,7 +256,7 @@ matrix::is_magic (void) const {
             sum1 += static_cast<unsigned> (a);
             sum2 += static_cast<unsigned> (b);
         }
-        
+
         if (sum1 != expected || sum2 != expected)
             return false;
     }
@@ -298,7 +298,7 @@ matrix::determinant (void) const {
 
 // With matrix A = [ a, b ]
 //                 [ c, d ]
-//  
+//
 // det (A) = ad - bc
 
 double
@@ -332,8 +332,8 @@ matrix::determinant3x3 (void) const {
 }
 
 
-// From libMathematics, http://www.geometrictools.com/ 
-double 
+// From libMathematics, http://www.geometrictools.com/
+double
 matrix::determinant4x4 (void) const {
     CHECK_EQ (m_rows,    4);
     CHECK_EQ (m_columns, 4);
@@ -462,7 +462,7 @@ matrix
 matrix::zeroes (size_t diag)
         { return zeroes (diag, diag); }
 
-        
+
 matrix
 matrix::zeroes (size_t rows, size_t columns) {
     matrix m (rows, columns);
