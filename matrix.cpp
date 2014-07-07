@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "matrix.hpp"
@@ -26,8 +26,10 @@
 using namespace util;
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
 void
-matrix::scale (double x, double y, double z) {
+matrix<T>::scale (T x, T y, T z) {
     CHECK_HARD (is_affine ());
     values[0][0] *= x;
     values[1][1] *= y;
@@ -35,8 +37,10 @@ matrix::scale (double x, double y, double z) {
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
 void
-matrix::translate (double x, double y, double z) {
+matrix<T>::translate (T x, T y, T z) {
     CHECK_HARD (is_affine ());
     values[0][3] += x;
     values[1][3] += y;
@@ -44,33 +48,37 @@ matrix::translate (double x, double y, double z) {
 }
 
 
-matrix
-matrix::inverse (void) const {
-    return matrix(*this).invert ();
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>
+matrix<T>::inverse (void) const {
+    return matrix<T>(*this).invert ();
 }
 
 
-matrix&
-matrix::invert (void) {
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>&
+matrix<T>::invert (void) {
     CHECK_HARD (is_affine ());
 
     // inv ([ M b ]  == [ inv(M) -inv(M).b ]
     //      [ 0 1 ])    [     0       1
 
     // Invert the 3x3 M
-    double A = (values[1][1] * values[2][2] - values[1][2] * values[2][1]);
-    double B = (values[1][2] * values[2][0] - values[1][0] * values[2][2]);
-    double C = (values[1][0] * values[2][1] - values[1][1] * values[2][0]);
+    T A = (values[1][1] * values[2][2] - values[1][2] * values[2][1]);
+    T B = (values[1][2] * values[2][0] - values[1][0] * values[2][2]);
+    T C = (values[1][0] * values[2][1] - values[1][1] * values[2][0]);
 
-    double D = (values[0][2] * values[2][1] - values[0][1] * values[2][2]);
-    double E = (values[0][0] * values[2][2] - values[0][2] * values[2][0]);
-    double F = (values[2][0] * values[0][1] - values[0][0] * values[2][1]);
+    T D = (values[0][2] * values[2][1] - values[0][1] * values[2][2]);
+    T E = (values[0][0] * values[2][2] - values[0][2] * values[2][0]);
+    T F = (values[2][0] * values[0][1] - values[0][0] * values[2][1]);
 
-    double G = (values[0][1] * values[1][2] - values[0][2] * values[1][1]);
-    double H = (values[0][2] * values[1][0] - values[0][0] * values[1][2]);
-    double K = (values[0][0] * values[1][1] - values[0][1] * values[1][0]);
+    T G = (values[0][1] * values[1][2] - values[0][2] * values[1][1]);
+    T H = (values[0][2] * values[1][0] - values[0][0] * values[1][2]);
+    T K = (values[0][0] * values[1][1] - values[0][1] * values[1][0]);
 
-    double det = values[0][0] * A + values[0][1] * B + values[0][2] * C;
+    T det = values[0][0] * A + values[0][1] * B + values[0][2] * C;
     CHECK_NEQ (det, 0.0);
 
     values[0][0] = A / det;
@@ -84,9 +92,9 @@ matrix::invert (void) {
     values[2][2] = K / det;
 
     // Multiply the b
-    double b0 = - values[0][0] * values[0][3] - values[0][1] * values[1][3] - values[0][2] * values[2][3];
-    double b1 = - values[1][0] * values[0][3] - values[1][1] * values[1][3] - values[1][2] * values[2][3];
-    double b2 = - values[2][0] * values[0][3] - values[2][1] * values[1][3] - values[2][2] * values[2][3];
+    T b0 = - values[0][0] * values[0][3] - values[0][1] * values[1][3] - values[0][2] * values[2][3];
+    T b1 = - values[1][0] * values[0][3] - values[1][1] * values[1][3] - values[1][2] * values[2][3];
+    T b2 = - values[2][0] * values[0][3] - values[2][1] * values[1][3] - values[2][2] * values[2][3];
 
     values[0][3] = b0;
     values[1][3] = b1;
@@ -96,9 +104,11 @@ matrix::invert (void) {
 }
 
 
-matrix
-matrix::operator* (const matrix &rhs) const {
-    matrix m;
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>
+matrix<T>::operator* (const matrix<T> &rhs) const {
+    matrix<T> m;
     memset (m.values, 0, sizeof (m.values));
 
     for (unsigned i = 0; i < 4; ++i)
@@ -110,8 +120,10 @@ matrix::operator* (const matrix &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
 util::point<3>
-matrix::to_local (const util::point<3> &p) const {
+matrix<T>::to_local (const util::point<3> &p) const {
     CHECK_SOFT (is_affine ());
 
     return { p.x * values[0][0] +
@@ -126,38 +138,51 @@ matrix::to_local (const util::point<3> &p) const {
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
 util::point<3>
-matrix::to_global (const util::point<3> &p) const {
+matrix<T>::to_global (const util::point<3> &p) const {
     return inverse ().to_local (p);
 }
 
 
-
+//-----------------------------------------------------------------------------
+template <typename T>
 bool
-matrix::is_affine (void) const {
-    return exactly_equal (values[3][0], 0.0) &&
-           exactly_equal (values[3][1], 0.0) &&
-           exactly_equal (values[3][2], 0.0) &&
-           exactly_equal (values[3][3], 1.0);
+matrix<T>::is_affine (void) const {
+    return exactly_equal (values[3][0], static_cast<T> (0)) &&
+           exactly_equal (values[3][1], static_cast<T> (0)) &&
+           exactly_equal (values[3][2], static_cast<T> (0)) &&
+           exactly_equal (values[3][3], static_cast<T> (1));
 }
 
 
-const matrix
-matrix::IDENTITY = { { { 1.0, 0.0, 0.0, 0.0 },
-                       { 0.0, 1.0, 0.0, 0.0 },
-                       { 0.0, 0.0, 1.0, 0.0 },
-                       { 0.0, 0.0, 0.0, 1.0 } } };
+//-----------------------------------------------------------------------------
+template <typename T>
+const matrix<T>
+matrix<T>::IDENTITY = { { { 1, 0, 0, 0 },
+                          { 0, 1, 0, 0 },
+                          { 0, 0, 1, 0 },
+                          { 0, 0, 0, 1 } } };
 
 
-const matrix
-matrix::ZEROES = { { { 0.0, 0.0, 0.0, 0.0 },
-                     { 0.0, 0.0, 0.0, 0.0 },
-                     { 0.0, 0.0, 0.0, 0.0 },
-                     { 0.0, 0.0, 0.0, 0.0 } } };
+template <typename T>
+const matrix<T>
+matrix<T>::ZEROES = { { { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 },
+                        { 0, 0, 0, 0 } } };
 
 
+//-----------------------------------------------------------------------------
+template struct matrix<float>;
+template struct matrix<double>;
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 std::ostream&
-operator<< (std::ostream &os, const matrix &m) {
+operator<< (std::ostream &os, const matrix<T> &m) {
     os << "{ {" << m.values[0][0] << ", "
                 << m.values[0][1] << ", "
                 << m.values[0][2] << ", "

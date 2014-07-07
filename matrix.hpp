@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_MATRIX_HPP
@@ -25,27 +25,29 @@
 #include <iostream>
 
 namespace util {
+    template <typename T>
     struct matrix {
-        double values[4][4];
+        T values[4][4];
 
-        void scale     (double x, double y, double z);
-        void translate (double x, double y, double z);
+        void scale     (T x, T y, T z);
+        void translate (T x, T y, T z);
 
-        matrix  inverse (void) const;
-        matrix& invert  (void);
+        matrix<T>  inverse (void) const;
+        matrix<T>& invert  (void);
 
-        matrix operator* (const matrix&) const;
+        matrix<T> operator* (const matrix<T>&) const;
 
         point<3> to_local  (const point<3> &p) const;
         point<3> to_global (const point<3> &p) const;
 
         bool is_affine (void) const;
 
-        static const matrix IDENTITY;
-        static const matrix ZEROES;
+        static const matrix<T> IDENTITY;
+        static const matrix<T> ZEROES;
     };
 }
 
-std::ostream& operator<< (std::ostream&, const util::matrix&);
+template <typename T>
+std::ostream& operator<< (std::ostream&, const util::matrix<T>&);
 
 #endif
