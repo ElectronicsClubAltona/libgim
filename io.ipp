@@ -22,7 +22,7 @@ namespace util {
 
 template <typename T>
 std::ostream&
-operator<< (std::ostream &os, const util::indented<T> &v) {
+operator<< (std::ostream &os, const util::indented<T> &&v) {
     util::indenter raii (os);
     os << v.data;
     return os;
