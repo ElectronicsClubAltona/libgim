@@ -52,5 +52,22 @@ rotater (const T &value, size_t magnitude) {
 
 #undef MODT
 
+// TODO: make constexpr for C++14
+template <typename T>
+T
+reverse (T value) {
+    T out = value;
+
+    size_t bits = sizeof (value) * 8 - 1;
+    for (value >>= 1; value; value >>= 1) {
+        out <<= 1;
+        out  |= value & 0x01;
+        --bits;
+    }
+
+    out <<= bits;
+    return out;
+}
+
 #endif 
 
