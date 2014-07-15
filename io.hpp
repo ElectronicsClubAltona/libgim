@@ -46,13 +46,15 @@ namespace util {
     void
     write (const boost::filesystem::path &, const char *data, size_t len);
 
+
+    ///------------------------------------------------------------------------
     /// A simple RAII wrapper for file descriptors
     struct fd_ref {
         public:
             int fd;
 
             explicit fd_ref  (int _fd);
-            explicit fd_ref  (const boost::filesystem::path &);
+            explicit fd_ref  (const boost::filesystem::path&, int flags);
             ~fd_ref ();
 
             operator int (void) const;

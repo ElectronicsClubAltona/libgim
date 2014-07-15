@@ -38,7 +38,7 @@ using namespace util;
 //----------------------------------------------------------------------------
 std::unique_ptr<char []>
 util::slurp (const boost::filesystem::path& path)  {
-    fd_ref fd(path);
+    fd_ref fd(path, O_RDONLY);
     
     // Calculate the total file size
     off_t size = lseek (fd, 0, SEEK_END);
@@ -77,7 +77,7 @@ util::write (const boost::filesystem::path &path, const char *data, size_t len) 
     CHECK_SOFT (len > 0);
     CHECK_HARD (data);
 
-    fd_ref fd (path);
+    fd_ref fd (path, O_WRONLY);
     const char *cursor = data;
     size_t remaining   = len;
 
@@ -100,11 +100,11 @@ fd_ref::fd_ref (int _fd):
 }
 
 
-fd_ref::fd_ref (const boost::filesystem::path &path):
+fd_ref::fd_ref (const boost::filesystem::path &path, int flags):
 #ifdef PLATFORM_WIN32
-    fd (open (path.string ().c_str (), O_RDONLY | O_BINARY))
+    fd (open (path.native ().c_str (), flags | O_BINARY))
 #else
-    fd (open (path.string ().c_str (), O_RDONLY))
+    fd (open (path.native ().c_str (), flags))
 #endif
 {
     if (fd < 0)
@@ -183,7 +183,7 @@ util::set_cwd (const boost::filesystem::path &path) {
 
 
 mapped_file::mapped_file (const boost::filesystem::path &_path):
-    m_fd (open (_path.native ().c_str (), O_RDWR))
+    m_fd (_path, O_RDWR)
 { load_fd (); } 
 
 
