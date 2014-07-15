@@ -22,25 +22,39 @@
 
 #include <iostream>
 
+namespace util {
+    namespace stream {
+        //---------------------------------------------------------------------
+        class null : public std::ostream {
+            public:
+                std::ostream & put   (char c);
+                std::ostream & write (const char *s, std::streamsize n);
 
-class nullstream : public std::ostream {
-    public:
-        std::ostream & put   (char c);
-        std::ostream & write (const char *s, std::streamsize n);
+                std::streampos tellp (void);
+                std::ostream & seekp (std::streampos pos);
+                std::ostream & seekp (std::streamoff off,
+                                      std::ios_base::seekdir dir);
 
-        std::streampos tellp (void);
-        std::ostream & seekp (std::streampos pos);
-        std::ostream & seekp (std::streamoff off,
-                              std::ios_base::seekdir dir);
+                std::ostream & flush (void);
 
-        std::ostream & flush (void);
+                bool good (void) const;
+                bool bad  (void) const;
+                bool eof  (void) const;
+                bool fail (void) const;
 
-        bool good (void) const;
-        bool bad  (void) const;
-        bool eof  (void) const;
-        bool fail (void) const;
+        };
 
-};
 
+        //---------------------------------------------------------------------
+        struct bits {
+            bits (uintmax_t value, unsigned count);
+
+            uintmax_t value;
+            unsigned  count;
+        };
+    }
+}
+
+std::ostream& operator<< (std::ostream&, util::stream::bits);
 
 #endif

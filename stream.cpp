@@ -19,18 +19,57 @@
 
 #include "stream.hpp"
 
+#include "debug.hpp"
+
+using util::stream::null;
+using util::stream::bits;
+
+//-----------------------------------------------------------------------------
 std::ostream&
-nullstream::put (char)
+null::put (char)
     { return *this; }
 
 
+//-----------------------------------------------------------------------------
 bool
-nullstream::good (void) const
+null::good (void) const
     { return !bad () && !eof () && !fail (); }
 
 
-bool nullstream::bad  (void) const { return false; }
-bool nullstream::eof  (void) const { return false; }
-bool nullstream::fail (void) const { return false; }
+//-----------------------------------------------------------------------------
+bool null::bad  (void) const { return false; }
+bool null::eof  (void) const { return false; }
+bool null::fail (void) const { return false; }
 
 
+//-----------------------------------------------------------------------------
+bits::bits (uintmax_t _value, unsigned _count):
+    value (_value),
+    count (_count)
+{
+    CHECK_LE (count, sizeof(value) * 8);
+}
+
+
+//-----------------------------------------------------------------------------
+std::ostream&
+operator<< (std::ostream &os, util::stream::bits b) {
+    char digits[sizeof (b.value) * 8 + 1] = { 0 };
+    char *cursor = std::end (digits) - 1;
+
+    uintmax_t bits  = b.value;
+    unsigned  count = b.count;
+
+    while (count) {
+        CHECK_GE (cursor, digits);
+
+        --cursor;
+        *cursor = (bits & 0x01) ? '1' : '0';
+
+        bits >>= 1;
+        count -= 1;
+    }
+
+    os << cursor << "/" << b.count;
+    return os;
+}
