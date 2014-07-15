@@ -60,10 +60,10 @@ unsigned
 digits (const T& value) pure;
 
 
-template <typename T>
+template <typename T, typename U>
 T
-divup (const T a, const T b)
-    { return (a + b - 1) / a; }
+divup (const T a, const U b)
+    { return (a + b - 1) / b; }
 
 
 /**
