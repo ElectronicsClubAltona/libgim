@@ -52,4 +52,15 @@ template <typename T> struct always_unsigned {
 template <> struct always_unsigned<double> { typedef double type; };
 template <> struct always_unsigned<float > { typedef float  type; };
 
+
+//-----------------------------------------------------------------------------
+template <typename T, typename U> struct is_lossless_cast : std::enable_if<
+    std::is_integral<T>::value &&
+    std::is_integral<U>::value &&
+    std::is_signed<T>::value == std::is_signed<U>::value &&
+    sizeof (T) <= sizeof (U),
+
+    std::true_type
+>::value { };
+
 #endif
