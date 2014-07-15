@@ -20,6 +20,9 @@
 #ifndef __UTIL_TYPES_TRAITS_HPP
 #define __UTIL_TYPES_TRAITS_HPP
 
+#include <type_traits>
+
+//-----------------------------------------------------------------------------
 template <typename T> struct is_dereferencable     : std::false_type { };
 template <typename T> struct is_dereferencable<T*> : std::true_type  { };
 template <typename T> struct is_dereferencable<std::unique_ptr<T>> : std::true_type { };
@@ -35,6 +38,8 @@ template <typename T> struct dereferenced_type {
     >::type type;
 };
 
+
+//-----------------------------------------------------------------------------
 template <typename T> struct dereferenced_type<std::unique_ptr<T>> { typedef T type; };
 template <typename T> struct dereferenced_type<std::shared_ptr<T>> { typedef T type; };
 template <typename T> struct dereferenced_type<std::weak_ptr<T>>   { typedef T type; };
