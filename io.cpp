@@ -25,11 +25,13 @@
 #include "types/casts.hpp"
 
 #include <cstdio>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
+
 #include <boost/filesystem.hpp>
+#include <stdexcept>
 
 
 using namespace std;
@@ -95,8 +97,8 @@ util::write (const boost::filesystem::path &path, const char *data, size_t len) 
 fd_ref::fd_ref (int _fd):
     fd (_fd)
 {
-    if (fd < 0) 
-        throw invalid_argument ("invalid file descriptor");
+    if (fd < 0)
+        throw std::invalid_argument ("invalid descriptor");
 }
 
 
@@ -108,7 +110,7 @@ fd_ref::fd_ref (const boost::filesystem::path &path, int flags):
 #endif
 {
     if (fd < 0)
-        throw path_error (path);
+        util::errno_error::throw_code ();
 }
 
 
