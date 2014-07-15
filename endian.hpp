@@ -14,69 +14,54 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_ENDIAN_HPP
 #define __UTIL_ENDIAN_HPP
 
-#include "platform.hpp"
-
 #include <cstdint>
 
 
-enum {
-    ENDIAN_BIG,
-    ENDIAN_LITTLE
-};
+//-----------------------------------------------------------------------------
+template <typename T>
+constexpr T
+bswap (T);
+
+template <> constexpr  uint8_t bswap ( uint8_t v) { return v; }
+template <> constexpr uint16_t bswap (uint16_t v) { return __builtin_bswap16 (v); }
+template <> constexpr uint32_t bswap (uint32_t v) { return __builtin_bswap32 (v); }
+template <> constexpr uint64_t bswap (uint64_t v) { return __builtin_bswap64 (v); }
 
 
-constexpr  uint8_t hton (uint8_t h) { return h; }
-constexpr  uint8_t ntoh (uint8_t n) { return n; }
-
-
-constexpr uint16_t hton (uint16_t h) {
-    return ((h & 0xFF00) >> 8) |
-           ((h & 0x00FF) << 8);
+//-----------------------------------------------------------------------------
+template <typename T>
+constexpr T
+identity (T &&v) {
+    return v;
 }
 
-constexpr uint16_t ntoh (uint16_t n)
-    { return hton (n); }
 
+//-----------------------------------------------------------------------------
+#if defined(WORDS_BIGENDIAN)
+template <typename T> constexpr T hton (T v) { return v; }
+template <typename T> constexpr T ntoh (T v) { return v; }
 
-constexpr uint32_t hton (uint32_t h) {
-#if defined(COMPILER_GCC)
-    return __builtin_bswap32 (h);
+template <typename T> constexpr T htob (T v) { return v; }
+template <typename T> constexpr T htol (T v) { return bswap (v); }
+
+template <typename T> constexpr T btoh (T v) { return v; }
+template <typename T> constexpr T ltoh (T v) { return bswap (v); }
 #else
-    return (h & 0xFF000000U) >> 24 |
-           (h & 0x00FF0000U) >>  8 |
-           (h & 0x0000FF00U) <<  8 |
-           (h & 0x000000FFU) << 24;
+template <typename T> constexpr T hton (T v) { return bswap (v); }
+template <typename T> constexpr T ntoh (T v) { return bswap (v); }
+
+template <typename T> constexpr T htob (T v) { return bswap (v); }
+template <typename T> constexpr T htol (T v) { return v; }
+
+template <typename T> constexpr T btoh (T v) { return bswap (v); }
+template <typename T> constexpr T ltoh (T v) { return v; }
 #endif
-}
 
-
-constexpr uint32_t ntoh (uint32_t n)
-    { return hton (n); }
-
-
-constexpr uint64_t hton (uint64_t h) {
-#if defined(COMPILER_GCC)
-    return __builtin_bswap64 (h);
-#else
-    return (h & 0xFF00000000000000UL) >> 56 |
-           (h & 0x00FF000000000000UL) >> 40 |
-           (h & 0x0000FF0000000000UL) >> 24 |
-           (h & 0x000000FF00000000UL) >>  8 |
-           (h & 0x00000000FF000000UL) <<  8 |
-           (h & 0x0000000000FF0000UL) << 24 |
-           (h & 0x000000000000FF00UL) << 40 |
-           (h & 0x00000000000000FFUL) << 56;
-#endif
-}
-
-
-constexpr uint64_t ntoh (uint64_t n)
-    { return hton (n); }
 
 #endif
