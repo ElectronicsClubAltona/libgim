@@ -175,9 +175,10 @@ matrix<T>::ZEROES = { { { 0, 0, 0, 0 },
 
 
 //-----------------------------------------------------------------------------
-template struct matrix<float>;
-template struct matrix<double>;
-
+namespace util {
+    template struct matrix<float>;
+    template struct matrix<double>;
+}
 
 //-----------------------------------------------------------------------------
 template <typename T>
