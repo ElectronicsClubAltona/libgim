@@ -233,5 +233,30 @@ mapped_file::data (void) const {
 
     return m_data;
 }
+
+
+uint8_t*
+mapped_file::begin (void) {
+    return data ();
+}
+
+
+uint8_t*
+mapped_file::end (void) {
+    return data () + size ();
+}
+
+
+const uint8_t*
+mapped_file::begin (void) const {
+    return data ();
+}
+
+
+const uint8_t*
+mapped_file::end (void) const {
+    return data () + size ();
+}
+
 #endif
 
