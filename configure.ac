@@ -41,18 +41,20 @@ AC_ARG_ENABLE([sanitizer], [
 ###############################################################################
 ## Warnings
 
+# Compound warnings
 AX_APPEND_COMPILE_FLAGS([-Wall], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wextra], [], [-Werror])
 
+# General warnings
 AX_APPEND_COMPILE_FLAGS([-Wcast-align], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wcast-qual], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wfloat-conversion], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wfloat-equal], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Winline], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wno-aggressive-loop-optimizations], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wnoexcept], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wnon-virtual-dtor], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wno-parentheses], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-vla], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wpointer-arith], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wredundant-decls], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wshadow], [], [-Werror])
@@ -65,14 +67,23 @@ AX_APPEND_COMPILE_FLAGS([-Wunsafe-loop-optimizations], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wunused-but-set-variable], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wunused-parameter], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wuseless-cast], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wfloat-conversion], [], [-Werror])
 
-#AX_APPEND_COMPILE_FLAGS([-Wold-style-cast], [], [-Werror])
-#AX_APPEND_COMPILE_FLAGS([-Wdouble-promotion], [], [-Werror])
-#AX_APPEND_COMPILE_FLAGS([-Woverloaded-virtual], [], [-Werror])
+# Required extensions
+AX_APPEND_COMPILE_FLAGS([-Wgnu-flexible-array-union-member], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wno-gnu-zero-variadic-macro-arguments], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wno-nested-anon-types], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wno-vla-extension], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-Wno-vla], [], [-Werror])
+
+# Excessive warnings
 #AX_APPEND_COMPILE_FLAGS([-Wconversion], [], [-Werror])
+#AX_APPEND_COMPILE_FLAGS([-Wdouble-promotion], [], [-Werror])
+#AX_APPEND_COMPILE_FLAGS([-Wold-style-cast], [], [-Werror])
+#AX_APPEND_COMPILE_FLAGS([-Woverloaded-virtual], [], [-Werror])
 #AX_APPEND_COMPILE_FLAGS([-Wsign-conversion], [], [-Werror])
 
+# Strict warnings
 AX_APPEND_COMPILE_FLAGS([-pedantic], [], [-Werror])
 
 ######################################################################
