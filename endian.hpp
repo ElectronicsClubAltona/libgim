@@ -28,6 +28,11 @@ template <typename T>
 constexpr T
 bswap (T);
 
+template <> constexpr  int8_t bswap ( int8_t v) { return v; }
+template <> constexpr int16_t bswap (int16_t v) { return __builtin_bswap16 (v); }
+template <> constexpr int32_t bswap (int32_t v) { return __builtin_bswap32 (v); }
+template <> constexpr int64_t bswap (int64_t v) { return __builtin_bswap64 (v); }
+
 template <> constexpr  uint8_t bswap ( uint8_t v) { return v; }
 template <> constexpr uint16_t bswap (uint16_t v) { return __builtin_bswap16 (v); }
 template <> constexpr uint32_t bswap (uint32_t v) { return __builtin_bswap32 (v); }
