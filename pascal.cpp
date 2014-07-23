@@ -117,10 +117,22 @@ template std::ostream& operator<< (std::ostream&, parray<const uint64_t>);
 
 //-----------------------------------------------------------------------------
 namespace util {
+    template struct parray<int8_t>;
+    template struct parray<int16_t>;
+    template struct parray<int32_t>;
+    template struct parray<int64_t>;
+
+    template struct parray<uint8_t>;
     template struct parray<uint16_t>;
     template struct parray<uint32_t>;
     template struct parray<uint64_t>;
 
+    template struct parray<const int8_t>;
+    template struct parray<const int16_t>;
+    template struct parray<const int32_t>;
+    template struct parray<const int64_t>;
+
+    template struct parray<const uint8_t>;
     template struct parray<const uint16_t>;
     template struct parray<const uint32_t>;
     template struct parray<const uint64_t>;
