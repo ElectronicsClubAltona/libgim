@@ -69,11 +69,11 @@ AX_APPEND_COMPILE_FLAGS([-Wunused-parameter], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wuseless-cast], [], [-Werror])
 
 # Required extensions
-AX_APPEND_COMPILE_FLAGS([-Wgnu-flexible-array-union-member], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-gnu-zero-variadic-macro-arguments], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-nested-anon-types], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-vla-extension], [], [-Werror])
+#AX_APPEND_COMPILE_FLAGS([-Wgnu-flexible-array-union-member], [], [-Werror])
+#AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
+#AX_APPEND_COMPILE_FLAGS([-Wno-gnu-zero-variadic-macro-arguments], [], [-Werror])
+#AX_APPEND_COMPILE_FLAGS([-Wno-nested-anon-types], [], [-Werror])
+#AX_APPEND_COMPILE_FLAGS([-Wno-vla-extension], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wno-vla], [], [-Werror])
 
 # Excessive warnings
