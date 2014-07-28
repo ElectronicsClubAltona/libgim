@@ -54,7 +54,7 @@ namespace util {
             int fd;
 
             explicit fd_ref  (int _fd);
-            explicit fd_ref  (const boost::filesystem::path&, int flags);
+            explicit fd_ref  (const boost::filesystem::path&, access_t access);
             ~fd_ref ();
 
             operator int (void) const;
@@ -108,15 +108,18 @@ namespace util {
 #if defined(HAVE_MMAP)
     /// Wraps a mechanism to map a file into memory. Read only.
     class mapped_file {
-        protected:
+        private:
             fd_ref   m_fd;
             uint8_t *m_data;
             size_t   m_size;
 
-            void load_fd (void);
+            void load_fd (access_t);
+
+        protected:
+            int access_to_flags (access_t);
 
         public:
-            mapped_file (const boost::filesystem::path &path);
+            mapped_file (const boost::filesystem::path &path, access_t access = ACCESS_READWRITE);
 
             mapped_file (const mapped_file&) = delete;
             mapped_file& operator= (const mapped_file&) = delete;

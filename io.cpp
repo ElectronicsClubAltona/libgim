@@ -38,10 +38,28 @@ using namespace std;
 using namespace util;
 
 //----------------------------------------------------------------------------
+static int
+access_to_cflags (access_t a) {
+    int flags = 0;
+
+    if ((a & ACCESS_READWRITE) == ACCESS_READWRITE) {
+        flags = O_RDWR;
+    } else if (a & ACCESS_READ) {
+        flags = O_RDONLY;
+    } else if (a & ACCESS_WRITE) {
+        flags = O_WRONLY;
+    }
+
+    a = static_cast<access_t> (a & ~ACCESS_READWRITE);
+
+    return flags;
+}
+
+//----------------------------------------------------------------------------
 std::unique_ptr<char []>
 util::slurp (const boost::filesystem::path& path)  {
-    fd_ref fd(path, O_RDONLY);
-    
+    fd_ref fd(path, ACCESS_READ);
+
     // Calculate the total file size
     off_t size = lseek (fd, 0, SEEK_END);
     if (size == (off_t)-1)
@@ -79,7 +97,7 @@ util::write (const boost::filesystem::path &path, const char *data, size_t len) 
     CHECK_SOFT (len > 0);
     CHECK_HARD (data);
 
-    fd_ref fd (path, O_WRONLY);
+    fd_ref fd (path, ACCESS_WRITE);
     const char *cursor = data;
     size_t remaining   = len;
 
@@ -102,11 +120,11 @@ fd_ref::fd_ref (int _fd):
 }
 
 
-fd_ref::fd_ref (const boost::filesystem::path &path, int flags):
+fd_ref::fd_ref (const boost::filesystem::path &path, access_t access):
 #ifdef PLATFORM_WIN32
-    fd (open (path.native ().c_str (), flags | O_BINARY))
+    fd (open (path.native ().c_str (), access_to_cflags (access) | O_BINARY))
 #else
-    fd (open (path.native ().c_str (), flags))
+    fd (open (path.native ().c_str (), access_to_cflags (access)))
 #endif
 {
     if (fd < 0)
@@ -184,9 +202,9 @@ util::set_cwd (const boost::filesystem::path &path) {
 #include <sys/mman.h>
 
 
-mapped_file::mapped_file (const boost::filesystem::path &_path):
-    m_fd (_path, O_RDWR)
-{ load_fd (); } 
+mapped_file::mapped_file (const boost::filesystem::path &_path, access_t _access):
+    m_fd (_path, _access)
+{ load_fd (_access); }
 
 
 mapped_file::~mapped_file () {
@@ -195,14 +213,28 @@ mapped_file::~mapped_file () {
 }
 
 
+int
+mapped_file::access_to_flags (access_t a) {
+    int flags = 0;
+
+    if (a & ACCESS_READ)
+        flags |= PROT_READ;
+
+    if (a & ACCESS_WRITE)
+        flags |= PROT_WRITE;
+
+    return flags;
+}
+
+
 void
-mapped_file::load_fd (void) {
+mapped_file::load_fd (access_t access) {
     struct stat meta;
     if (fstat (m_fd, &meta) < 0)
         throw errno_error ();
 
     m_size = (size_t)meta.st_size;
-    m_data = (uint8_t *)mmap (NULL, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0);
+    m_data = (uint8_t *)mmap (NULL, m_size, access_to_flags (access), MAP_SHARED, m_fd, 0);
     if (m_data == MAP_FAILED)
         throw errno_error ();
 }
