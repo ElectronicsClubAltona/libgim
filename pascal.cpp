@@ -71,14 +71,14 @@ parray<T>::at (size_t idx) const {
 //-----------------------------------------------------------------------------
 template <typename T>
 T*
-parray<T>::begin (void) {
+parray<T>::begin (void) const {
     return data;
 }
 
 
 template <typename T>
 T*
-parray<T>::end (void) {
+parray<T>::end (void) const {
     return data + size;
 }
 

@@ -37,8 +37,8 @@ namespace util {
         T& at (size_t idx);
         const T& at (size_t idx) const;
 
-        T* begin (void);
-        T* end   (void);
+        T* begin (void) const;
+        T* end   (void) const;
 
         const T* cbegin (void) const;
         const T* cend   (void) const;
