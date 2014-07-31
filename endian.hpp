@@ -20,8 +20,17 @@
 #ifndef __UTIL_ENDIAN_HPP
 #define __UTIL_ENDIAN_HPP
 
-#include <cstdint>
+#include "types/bits.hpp"
 
+#include <cstdint>
+#include <type_traits>
+
+//-----------------------------------------------------------------------------
+// Uses the TIFF header values. Just because. Don't rely on this.
+enum class endian : uint16_t {
+    BIG    = 0x4D4D,
+    LITTLE = 0x4949,
+};
 
 //-----------------------------------------------------------------------------
 template <typename T>
@@ -68,5 +77,31 @@ template <typename T> constexpr T btoh (T v) { return bswap (v); }
 template <typename T> constexpr T ltoh (T v) { return v; }
 #endif
 
+//-----------------------------------------------------------------------------
+struct from_endian {
+    from_endian (endian _endian):
+        src (_endian)
+    { ; }
+
+    template <typename T>
+    T operator() (const T v) const {
+        static_assert (std::is_integral<T>::value || std::is_enum<T>::value,
+                       "endian conversion is only defined for integrals currently");
+
+        auto u = static_cast<
+            typename std::conditional<
+                std::is_signed<T>::value,
+                typename sized_type<T>::sint,
+                typename sized_type<T>::uint
+            >::type
+        > (v);
+
+        return static_cast<T> (
+            (src == endian::LITTLE) ? ltoh (u) : btoh (u)
+        );
+    }
+
+    endian src;
+};
 
 #endif
