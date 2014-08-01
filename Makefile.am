@@ -67,6 +67,7 @@ UTIL_FILES   =		\
     image.hpp		\
     io.cpp		\
     io.hpp		\
+    io.ipp		\
     ip.cpp		\
     ip.hpp		\
     iterator.hpp	\

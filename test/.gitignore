@@ -5,6 +5,7 @@
 /float
 /hton
 /ip
+/json.test.actual
 /json/types
 /*.log
 /maths
