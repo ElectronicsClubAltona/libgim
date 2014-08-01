@@ -20,5 +20,6 @@
 /ripemd
 /sha[12]
 /signal
+/stringid
 /*.trs
 /version
