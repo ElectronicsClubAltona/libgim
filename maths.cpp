@@ -97,15 +97,6 @@ almost_equal (const double &a, const double &b)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-typename std::enable_if<std::is_integral<T>::value, T>::type
-round_up (T value, T align) {
-    CHECK_HARD (align > 1);
-    return (value + align - 1) / align;
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
 T
 round_pow2 (T value) {
     typedef typename std::enable_if<std::is_integral<T>::value, T>::type return_type;

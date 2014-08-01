@@ -40,9 +40,9 @@ double
 rootsquare (T a, T b) pure;
 
 
-template <typename T>
-T
-round_up (T value, T align) pure;
+template <typename T, typename U>
+typename std::common_type<T, U>::type
+round_up (T value, U align) pure;
 
 
 template <typename T>
@@ -172,5 +172,8 @@ max (const T &a , const T &b , const Args &...args )
 
 template <typename T>
 int sign (T val);
+
+
+#include "maths.ipp"
 
 #endif // __MATHS_HPP

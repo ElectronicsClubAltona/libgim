@@ -79,6 +79,7 @@ UTIL_FILES   =		\
     log.ipp		\
     maths.cpp		\
     maths.hpp		\
+    maths.ipp		\
     maths/matrix.cpp	\
     maths/matrix.hpp	\
     maths/polynomial.ipp\
