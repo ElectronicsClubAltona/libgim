@@ -87,9 +87,17 @@ namespace util {
     };
 
 
+    //-------------------------------------------------------------------------
     template <typename T>
     indented<T>
     make_indented (const T &_data);
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    std::ostream&
+    operator<< (std::ostream &os, const util::indented<T> &v);
+
 
     //-------------------------------------------------------------------------
     class scoped_cwd {
@@ -146,11 +154,6 @@ namespace util {
             { ; }
     };
 }
-
-
-template <typename T>
-std::ostream&
-operator<< (std::ostream &os, const util::indented<T> &v);
 
 #include "io.ipp"
 

@@ -17,13 +17,13 @@ namespace util {
     make_indented (const T &_data) {
         return indented<T> (_data);
     }
-}
 
 
-template <typename T>
-std::ostream&
-operator<< (std::ostream &os, const util::indented<T> &&v) {
-    util::indenter raii (os);
-    os << v.data;
-    return os;
+    template <typename T>
+    std::ostream&
+    operator<< (std::ostream &os, const util::indented<T> &&v) {
+        util::indenter raii (os);
+        os << v.data;
+        return os;
+    }
 }
