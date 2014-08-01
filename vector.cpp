@@ -398,12 +398,12 @@ util::operator>> (const json::node &node, util::vector<S> &v) {
     if (array.size () != S) 
         throw std::runtime_error ("Invalid dimensionality for json-to-vector");
 
-    std::transform (begin (array),
-                    end   (array),
-                    begin (v.data),
-                    [] (const json::node &n) {
-                        return n.as_number ().native ();
-                    });
+    // XXX: This used to be a std::transform but gcc 4.9.0 hit an internal
+    // compiler error at this point in release mode, so we dumb it down a
+    // little.
+    for (size_t i = 0; i < array.size (); ++i)
+        v.data[i] = array[i].as_number ().native ();
+
     return node;
 }
 
