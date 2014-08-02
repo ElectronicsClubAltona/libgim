@@ -175,6 +175,14 @@ template <typename T>
 int sign (T val);
 
 
+template <typename T, typename U, typename V>
+T
+limit (const T &&val, const U &&hi, const V &&lo) {
+    return val > hi ? hi:
+           val < lo ? lo:
+           std::move (val);
+}
+
 #include "maths.ipp"
 
 #endif // __MATHS_HPP
