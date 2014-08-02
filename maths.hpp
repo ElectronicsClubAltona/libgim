@@ -23,6 +23,7 @@
 #include "annotations.hpp"
 
 #include <type_traits>
+#include <utility>
 
 template <typename T>
 constexpr T
@@ -151,9 +152,9 @@ min (const T &a)
     { return a; }
 
 
-template <typename T, typename ...Args>
-const T&
-min (const T &a , const T &b , const Args &...args )
+template <typename T, typename U, typename ...Args>
+typename std::common_type<T, U>::type
+min (const T a , const U b , const Args &...args )
     { return min ( b < a ? b : a, args...); }
 
 
