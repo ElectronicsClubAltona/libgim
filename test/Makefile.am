@@ -9,7 +9,7 @@ TEST_BIN = 		\
 	hton		\
 	ip 		\
 	json/types	\
-	maths 		\
+	maths/maths 	\
 	matrix 		\
 	md2		\
 	md4		\
