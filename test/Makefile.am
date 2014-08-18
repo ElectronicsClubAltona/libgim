@@ -10,7 +10,7 @@ TEST_BIN = 		\
 	ip 		\
 	json/types	\
 	maths/maths 	\
-	matrix 		\
+	maths/matrix 	\
 	md2		\
 	md4		\
 	md5		\

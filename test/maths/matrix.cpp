@@ -26,12 +26,12 @@ operator <<(std::ostream &os, const matrix &m) {
 }
 
 
-void 
+void
 test_zeroes (const matrix &m) {
     assert (m.rows ());
     assert (m.columns ());
 
-    for (unsigned int i = 0; i < m.rows (); ++i) 
+    for (unsigned int i = 0; i < m.rows (); ++i)
         for (unsigned int j = 0; j < m.columns (); ++j)
             CHECK_HARD (almost_equal (m[i][j], 0.0));
 }
