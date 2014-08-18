@@ -1,4 +1,4 @@
-AM_LDFLAGS  = $(COMMON_LDFLAGS)
+AM_LDFLAGS  = $(COMMON_LDFLAGS) $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB)
 AM_CXXFLAGS = $(COMMON_CXXFLAGS) -I$(top_srcdir)
 
 TEST_BIN = 		\
@@ -28,7 +28,7 @@ TEST_BIN = 		\
 	version
 
 AM_DEFAULT_SOURCE_EXT = .cpp
-LDADD = $(builddir)/../libutil.la
+LDADD = $(builddir)/../.libs/libutil.a
 
 if PLATFORM_WIN32
 hton_LDFLAGS = -lws2_32

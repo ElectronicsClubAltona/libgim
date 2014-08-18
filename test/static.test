@@ -1,6 +1,6 @@
 #!/bin/sh
 
-tests=($(find . -maxdepth 1 -type f -executable | grep -v test))
+tests=($(find . -type f -executable | grep -v test))
 
 echo 1..$((${#tests[@]}))
 
