@@ -98,7 +98,7 @@ main (int, char **) {
     CHECK_EQ (magic3[2][0], 4.0);
     CHECK_EQ (magic3[2][1], 3.0);
     CHECK_EQ (magic3[2][2], 8.0);
-    
+
     CHECK_EQ (seq2x2.determinant (),   -2.0);
     CHECK_EQ (magic3.determinant (), -360.0);
 
@@ -113,7 +113,7 @@ main (int, char **) {
                                                  - 7.0, -22.0,  53.0 }) /= 360.0);
 
     matrix invertible4 (4, 4, { 4, 14, 15,  1,
-                                9,  7,  6, 12, 
+                                9,  7,  6, 12,
                                 5, 11, 10,  8,
                                 0,  0,  0,  1 });
     CHECK_EQ (invertible4.inverse (), matrix (4, 4, {   4,  25, -21, -136,

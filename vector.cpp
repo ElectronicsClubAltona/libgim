@@ -91,7 +91,7 @@ template <size_t S>
 util::vector<S>
 util::vector<S>::operator/ (double rhs) const {
     util::vector<S> out;
-    
+
     for (size_t i = 0; i < S; ++i)
         out.data[i] = this->data[i] / rhs;
     return out;
@@ -259,7 +259,7 @@ util::vector<S>
 util::vector<S>::normalised (void) const {
     double mag = magnitude ();
     util::vector<S> out;
-    
+
     for (size_t i = 0; i < S; ++i)
         out.data[i] = this->data[i] / mag;
 
@@ -395,7 +395,7 @@ template <size_t S>
 const json::node&
 util::operator>> (const json::node &node, util::vector<S> &v) {
     const json::array &array = node.as_array ();
-    if (array.size () != S) 
+    if (array.size () != S)
         throw std::runtime_error ("Invalid dimensionality for json-to-vector");
 
     // XXX: This used to be a std::transform but gcc 4.9.0 hit an internal

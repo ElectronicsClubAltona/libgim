@@ -64,7 +64,7 @@ void
 option::execute (void) {
     throw runtime_error(
         "Cannot provide no value for the option '" + m_longopt + "'"
-    ); 
+    );
 }
 
 
@@ -245,7 +245,7 @@ bytesoption::execute (const std::string& data) {
         bytestype specified = m_type;
         try {
             specified = type_from_character (data[cursor]);
-            // If the character is a digit, it just means the user skipped the 
+            // If the character is a digit, it just means the user skipped the
             // size specifier, which is ok.
         } catch (domain_error x) {
             if (!isdigit (data[cursor]))
@@ -395,7 +395,7 @@ processor::parse_short (int pos, int argc, const char **argv) {
 /**
  * Parse a single argument in long form. We are given an offset into the
  * argument array, and arguments. Establishes whether a value is present and
- * passes control over to the option. 
+ * passes control over to the option.
  *
  * The format of the options are "--foo[=bar]"
  *
@@ -430,11 +430,11 @@ processor::parse_long (int pos, int argc, const char ** argv) {
     }
 
     option *o = m_longopt[arg];
-    if (!o) 
+    if (!o)
         throw runtime_error ("Cannot match option");
 
     if (data)
-        o->execute (data); 
+        o->execute (data);
     else
         o->execute ();
 
@@ -479,12 +479,12 @@ processor::parse_args (int argc, const char ** argv) {
             if (strlen (argv[i]) <= 1)
                 throw runtime_error ("Invalid argument");
 
-            // Actually hand off args to be parsed. Subtract one from the 
+            // Actually hand off args to be parsed. Subtract one from the
             // tokens consumed, as the for loop increments tokens too.
             unsigned int consumed;
-            if (argv[i][1] != '-') 
+            if (argv[i][1] != '-')
                 consumed = parse_short (i, argc, argv);
-            else 
+            else
                 consumed = parse_long (i, argc, argv);
 
             assert (consumed >= 1);
@@ -533,7 +533,7 @@ processor::remove_option (char letter) {
         [&target] (std::unique_ptr<option> &rhs) { return rhs.get () == target; }
     );
     std::unique_ptr<option> opt = move (*prime);
-    
+
     m_shortopt.erase (s_candidate);
     m_longopt.erase  (l_candidate);
     m_options.erase  (prime);
@@ -561,7 +561,7 @@ processor::remove_option (const char *name) {
         [&target] (std::unique_ptr<option> &rhs) { return rhs.get () == target; }
     );
     std::unique_ptr<option> opt = move (*prime);
-    
+
     m_shortopt.erase (s_candidate);
     m_longopt.erase  (l_candidate);
     m_options.erase  (prime);
