@@ -192,23 +192,6 @@ namespace util {
     };
 
 
-    // God-damn Solaris strikes again with its antiquated everything. So you
-    // don't get these goodies on that system, with its ancient compiler.
-#if __GNUC__ >= 4
-    template<>
-    bool& valueoption<bool>::get_arg(const std::string& arg, bool * val) {
-        if      (arg == "true"  || arg == "yes" || arg == "1")
-            *val = true;
-        else if (arg == "false" || arg == "no"  || arg == "0")
-            *val = false;
-        else
-            throw std::domain_error("Invalid form for boolean argument");
-        
-        return *val;
-    }
-#endif
-
-
     /**
      * Interpret a (possibly) numeric value as a data size.
      *

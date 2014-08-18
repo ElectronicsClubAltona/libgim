@@ -128,6 +128,26 @@ presentoption::execute (void) {
 
 
 /*
+ * Value option
+ */
+
+namespace util {
+    template<>
+    bool&
+    valueoption<bool>::get_arg(const std::string& arg, bool *val) {
+        if      (arg == "true"  || arg == "yes" || arg == "1")
+            *val = true;
+        else if (arg == "false" || arg == "no"  || arg == "0")
+            *val = false;
+        else
+            throw std::domain_error("Invalid form for boolean argument");
+
+        return *val;
+    }
+}
+
+
+/*
  * bytesoption
  */
 
