@@ -97,6 +97,25 @@ namespace util {
             coord_data (T... t): data{t...}
             { ; }
         };
+
+        template <>
+        struct coord_data<4> {
+            union {
+                double data[4];
+                struct {
+                    double x;
+                    double y;
+                    double z;
+                    double w;
+                };
+            };
+
+            coord_data () { ; }
+
+            template <typename... T>
+            coord_data (T... t): data{t...}
+            { ; }
+        };
 #pragma GCC diagnostic pop
     }
 }
