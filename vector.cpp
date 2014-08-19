@@ -388,6 +388,7 @@ util::operator<< (std::ostream &os, const util::vector<S> &v) {
 template std::ostream& util::operator<< (std::ostream&, const util::vector<1> &v);
 template std::ostream& util::operator<< (std::ostream&, const util::vector<2> &v);
 template std::ostream& util::operator<< (std::ostream&, const util::vector<3> &v);
+template std::ostream& util::operator<< (std::ostream&, const util::vector<4> &v);
 
 
 //-----------------------------------------------------------------------------
@@ -411,12 +412,14 @@ util::operator>> (const json::node &node, util::vector<S> &v) {
 template const json::node& util::operator>> (const json::node&, util::vector<1>&);
 template const json::node& util::operator>> (const json::node&, util::vector<2>&);
 template const json::node& util::operator>> (const json::node&, util::vector<3>&);
+template const json::node& util::operator>> (const json::node&, util::vector<4>&);
 
 
 //-----------------------------------------------------------------------------
 template struct util::vector<1>;
 template struct util::vector<2>;
 template struct util::vector<3>;
+template struct util::vector<4>;
 
 
 //-----------------------------------------------------------------------------
@@ -424,5 +427,6 @@ namespace util {
     template <> vector<1> random (void) { util::vector<1> out; randomise (out.data); return out; }
     template <> vector<2> random (void) { util::vector<2> out; randomise (out.data); return out; }
     template <> vector<3> random (void) { util::vector<3> out; randomise (out.data); return out; }
+    template <> vector<4> random (void) { util::vector<4> out; randomise (out.data); return out; }
 }
 

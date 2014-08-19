@@ -97,7 +97,6 @@ namespace util {
 
     template <size_t S>
     const json::node& operator>> (const json::node&, util::vector<S>&);
-
 }
 
 
