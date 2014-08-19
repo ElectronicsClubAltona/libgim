@@ -11,6 +11,7 @@ TEST_BIN = 		\
 	json/types	\
 	maths/maths 	\
 	maths/matrix 	\
+	matrix		\
 	md2		\
 	md4		\
 	md5		\

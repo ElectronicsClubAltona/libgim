@@ -29,11 +29,18 @@ namespace util {
     struct matrix {
         T values[4][4];
 
+        static const size_t rows = 4;
+        static const size_t cols = 4;
+
         void scale     (T x, T y, T z);
         void translate (T x, T y, T z);
 
         matrix<T>  inverse (void) const;
         matrix<T>& invert  (void);
+        matrix<T>  inverse_affine (void) const;
+        matrix<T>& invert_affine  (void);
+
+        T det (void) const;
 
         matrix<T> operator* (const matrix<T>&) const;
 

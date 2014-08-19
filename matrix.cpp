@@ -52,7 +52,127 @@ matrix<T>::translate (T x, T y, T z) {
 template <typename T>
 matrix<T>
 matrix<T>::inverse (void) const {
-    return matrix<T>(*this).invert ();
+    matrix<T> m;
+
+    T d = det ();
+    if (almost_zero (d))
+        throw std::runtime_error ("non-singular matrix");
+    auto v = values;
+
+    m.values[0][0] = v[1][2] * v[2][3] * v[3][1] -
+                     v[1][3] * v[2][2] * v[3][1] +
+                     v[1][3] * v[2][1] * v[3][2] -
+                     v[1][1] * v[2][3] * v[3][2] -
+                     v[1][2] * v[2][1] * v[3][3] +
+                     v[1][1] * v[2][2] * v[3][3];
+
+    m.values[0][1] = v[0][3] * v[2][2] * v[3][1] -
+                     v[0][2] * v[2][3] * v[3][1] -
+                     v[0][3] * v[2][1] * v[3][2] +
+                     v[0][1] * v[2][3] * v[3][2] +
+                     v[0][2] * v[2][1] * v[3][3] -
+                     v[0][1] * v[2][2] * v[3][3];
+
+    m.values[0][2] = v[0][2] * v[1][3] * v[3][1] -
+                     v[0][3] * v[1][2] * v[3][1] +
+                     v[0][3] * v[1][1] * v[3][2] -
+                     v[0][1] * v[1][3] * v[3][2] -
+                     v[0][2] * v[1][1] * v[3][3] +
+                     v[0][1] * v[1][2] * v[3][3];
+
+    m.values[0][3] = v[0][3] * v[1][2] * v[2][1] -
+                     v[0][2] * v[1][3] * v[2][1] -
+                     v[0][3] * v[1][1] * v[2][2] +
+                     v[0][1] * v[1][3] * v[2][2] +
+                     v[0][2] * v[1][1] * v[2][3] -
+                     v[0][1] * v[1][2] * v[2][3];
+
+    m.values[1][0] = v[1][3] * v[2][2] * v[3][0] -
+                     v[1][2] * v[2][3] * v[3][0] -
+                     v[1][3] * v[2][0] * v[3][2] +
+                     v[1][0] * v[2][3] * v[3][2] +
+                     v[1][2] * v[2][0] * v[3][3] -
+                     v[1][0] * v[2][2] * v[3][3];
+
+    m.values[1][1] = v[0][2] * v[2][3] * v[3][0] -
+                     v[0][3] * v[2][2] * v[3][0] +
+                     v[0][3] * v[2][0] * v[3][2] -
+                     v[0][0] * v[2][3] * v[3][2] -
+                     v[0][2] * v[2][0] * v[3][3] +
+                     v[0][0] * v[2][2] * v[3][3];
+
+    m.values[1][2] = v[0][3] * v[1][2] * v[3][0] -
+                     v[0][2] * v[1][3] * v[3][0] -
+                     v[0][3] * v[1][0] * v[3][2] +
+                     v[0][0] * v[1][3] * v[3][2] +
+                     v[0][2] * v[1][0] * v[3][3] -
+                     v[0][0] * v[1][2] * v[3][3];
+
+    m.values[1][3] = v[0][2] * v[1][3] * v[2][0] -
+                     v[0][3] * v[1][2] * v[2][0] +
+                     v[0][3] * v[1][0] * v[2][2] -
+                     v[0][0] * v[1][3] * v[2][2] -
+                     v[0][2] * v[1][0] * v[2][3] +
+                     v[0][0] * v[1][2] * v[2][3];
+
+    m.values[2][0] = v[1][1] * v[2][3] * v[3][0] -
+                     v[1][3] * v[2][1] * v[3][0] +
+                     v[1][3] * v[2][0] * v[3][1] -
+                     v[1][0] * v[2][3] * v[3][1] -
+                     v[1][1] * v[2][0] * v[3][3] +
+                     v[1][0] * v[2][1] * v[3][3];
+
+    m.values[2][1] = v[0][3] * v[2][1] * v[3][0] -
+                     v[0][1] * v[2][3] * v[3][0] -
+                     v[0][3] * v[2][0] * v[3][1] +
+                     v[0][0] * v[2][3] * v[3][1] +
+                     v[0][1] * v[2][0] * v[3][3] -
+                     v[0][0] * v[2][1] * v[3][3];
+
+    m.values[2][2] = v[0][1] * v[1][3] * v[3][0] -
+                     v[0][3] * v[1][1] * v[3][0] +
+                     v[0][3] * v[1][0] * v[3][1] -
+                     v[0][0] * v[1][3] * v[3][1] -
+                     v[0][1] * v[1][0] * v[3][3] +
+                     v[0][0] * v[1][1] * v[3][3];
+
+    m.values[2][3] = v[0][3] * v[1][1] * v[2][0] -
+                     v[0][1] * v[1][3] * v[2][0] -
+                     v[0][3] * v[1][0] * v[2][1] +
+                     v[0][0] * v[1][3] * v[2][1] +
+                     v[0][1] * v[1][0] * v[2][3] -
+                     v[0][0] * v[1][1] * v[2][3];
+
+    m.values[3][0] = v[1][2] * v[2][1] * v[3][0] -
+                     v[1][1] * v[2][2] * v[3][0] -
+                     v[1][2] * v[2][0] * v[3][1] +
+                     v[1][0] * v[2][2] * v[3][1] +
+                     v[1][1] * v[2][0] * v[3][2] -
+                     v[1][0] * v[2][1] * v[3][2];
+
+    m.values[3][1] = v[0][1] * v[2][2] * v[3][0] -
+                     v[0][2] * v[2][1] * v[3][0] +
+                     v[0][2] * v[2][0] * v[3][1] -
+                     v[0][0] * v[2][2] * v[3][1] -
+                     v[0][1] * v[2][0] * v[3][2] +
+                     v[0][0] * v[2][1] * v[3][2];
+
+    m.values[3][2] = v[0][2] * v[1][1] * v[3][0] -
+                     v[0][1] * v[1][2] * v[3][0] -
+                     v[0][2] * v[1][0] * v[3][1] +
+                     v[0][0] * v[1][2] * v[3][1] +
+                     v[0][1] * v[1][0] * v[3][2] -
+                     v[0][0] * v[1][1] * v[3][2];
+
+    m.values[3][3] = v[0][1] * v[1][2] * v[2][0] -
+                     v[0][2] * v[1][1] * v[2][0] +
+                     v[0][2] * v[1][0] * v[2][1] -
+                     v[0][0] * v[1][2] * v[2][1] -
+                     v[0][1] * v[1][0] * v[2][2] +
+                     v[0][0] * v[1][1] * v[2][2];
+
+    m /= d;
+    return m;
 }
 
 
@@ -60,10 +180,30 @@ matrix<T>::inverse (void) const {
 template <typename T>
 matrix<T>&
 matrix<T>::invert (void) {
+    auto m = *this;
+    m.invert ();
+    *this = m;
+
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>
+matrix<T>::inverse_affine (void) const {
+    return matrix<T>(*this).invert_affine ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>&
+matrix<T>::invert_affine (void) {
     CHECK_HARD (is_affine ());
 
     // inv ([ M b ]  == [ inv(M) -inv(M).b ]
-    //      [ 0 1 ])    [     0       1
+    //      [ 0 1 ])    [     0       1    ]
 
     // Invert the 3x3 M
     T A = (values[1][1] * values[2][2] - values[1][2] * values[2][1]);
@@ -78,18 +218,18 @@ matrix<T>::invert (void) {
     T H = (values[0][2] * values[1][0] - values[0][0] * values[1][2]);
     T K = (values[0][0] * values[1][1] - values[0][1] * values[1][0]);
 
-    T det = values[0][0] * A + values[0][1] * B + values[0][2] * C;
-    CHECK_NEQ (det, 0.0);
+    T d = values[0][0] * A + values[0][1] * B + values[0][2] * C;
+    CHECK_NEQ (d, 0.0);
 
-    values[0][0] = A / det;
-    values[0][1] = D / det;
-    values[0][2] = G / det;
-    values[1][0] = B / det;
-    values[1][1] = E / det;
-    values[1][2] = H / det;
-    values[2][0] = C / det;
-    values[2][1] = F / det;
-    values[2][2] = K / det;
+    values[0][0] = A / d;
+    values[0][1] = D / d;
+    values[0][2] = G / d;
+    values[1][0] = B / d;
+    values[1][1] = E / d;
+    values[1][2] = H / d;
+    values[2][0] = C / d;
+    values[2][1] = F / d;
+    values[2][2] = K / d;
 
     // Multiply the b
     T b0 = - values[0][0] * values[0][3] - values[0][1] * values[1][3] - values[0][2] * values[2][3];
@@ -101,6 +241,40 @@ matrix<T>::invert (void) {
     values[2][3] = b2;
 
     return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+T
+matrix<T>::det (void) const {
+    return values[0][3] * values[1][2] * values[2][1] * values[3][0] -
+           values[0][2] * values[1][3] * values[2][1] * values[3][0] -
+           values[0][3] * values[1][1] * values[2][2] * values[3][0] +
+           values[0][1] * values[1][3] * values[2][2] * values[3][0] +
+           values[0][2] * values[1][1] * values[2][3] * values[3][0] -
+           values[0][1] * values[1][2] * values[2][3] * values[3][0] -
+
+           values[0][3] * values[1][2] * values[2][0] * values[3][1] +
+           values[0][2] * values[1][3] * values[2][0] * values[3][1] +
+           values[0][3] * values[1][0] * values[2][2] * values[3][1] -
+           values[0][0] * values[1][3] * values[2][2] * values[3][1] -
+           values[0][2] * values[1][0] * values[2][3] * values[3][1] +
+           values[0][0] * values[1][2] * values[2][3] * values[3][1] +
+
+           values[0][3] * values[1][1] * values[2][0] * values[3][2] -
+           values[0][1] * values[1][3] * values[2][0] * values[3][2] -
+           values[0][3] * values[1][0] * values[2][1] * values[3][2] +
+           values[0][0] * values[1][3] * values[2][1] * values[3][2] +
+           values[0][1] * values[1][0] * values[2][3] * values[3][2] -
+           values[0][0] * values[1][1] * values[2][3] * values[3][2] -
+
+           values[0][2] * values[1][1] * values[2][0] * values[3][3] +
+           values[0][1] * values[1][2] * values[2][0] * values[3][3] +
+           values[0][2] * values[1][0] * values[2][1] * values[3][3] -
+           values[0][0] * values[1][2] * values[2][1] * values[3][3] -
+           values[0][1] * values[1][0] * values[2][2] * values[3][3] +
+           values[0][0] * values[1][1] * values[2][2] * values[3][3];
 }
 
 
@@ -150,10 +324,10 @@ matrix<T>::to_global (const util::point<3> &p) const {
 template <typename T>
 bool
 matrix<T>::is_affine (void) const {
-    return exactly_equal (values[3][0], static_cast<T> (0)) &&
-           exactly_equal (values[3][1], static_cast<T> (0)) &&
-           exactly_equal (values[3][2], static_cast<T> (0)) &&
-           exactly_equal (values[3][3], static_cast<T> (1));
+    return exactly_equal (values[3][0], T {0}) &&
+           exactly_equal (values[3][1], T {0}) &&
+           exactly_equal (values[3][2], T {0}) &&
+           exactly_equal (values[3][3], T {1});
 }
 
 
