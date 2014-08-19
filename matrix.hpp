@@ -43,6 +43,13 @@ namespace util {
         T det (void) const;
 
         matrix<T> operator* (const matrix<T>&) const;
+        vector<4> operator* (const vector<4>&) const;
+
+        matrix<T> operator/ (T) const;
+
+        matrix<T>& operator/= (T);
+
+        bool operator== (const matrix<T>&) const;
 
         point<3> to_local  (const point<3> &p) const;
         point<3> to_global (const point<3> &p) const;

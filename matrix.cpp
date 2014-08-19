@@ -296,6 +296,56 @@ matrix<T>::operator* (const matrix<T> &rhs) const {
 
 //-----------------------------------------------------------------------------
 template <typename T>
+vector<4>
+matrix<T>::operator* (const vector<4> &rhs) const {
+    return vector<4> {
+        values[0][0] * rhs.x + values[0][1] * rhs.y + values[0][2] * rhs.z + values[0][3] * rhs.w,
+        values[1][0] * rhs.x + values[1][1] * rhs.y + values[1][2] * rhs.z + values[1][3] * rhs.w,
+        values[2][0] * rhs.x + values[2][1] * rhs.y + values[2][2] * rhs.z + values[2][3] * rhs.w,
+        values[3][0] * rhs.x + values[3][1] * rhs.y + values[3][2] * rhs.z + values[3][3] * rhs.w
+    };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>
+matrix<T>::operator/ (T s) const {
+    matrix<T> m;
+
+    for (size_t r = 0; r < m.rows; ++r)
+        for (size_t c = 0; c < m.cols; ++c)
+            m.values[r][c] = values[r][c] / s;
+
+    return m;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>&
+matrix<T>::operator/= (T s) {
+    for (size_t r = 0; r < rows; ++r)
+        for (size_t c = 0; c < cols; ++c)
+            values[r][c] /= s;
+
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+bool
+matrix<T>::operator== (const matrix<T> &rhs) const {
+    for (size_t r = 0; r < rows; ++r)
+        for (size_t c = 0; c < cols; ++c)
+            if (!almost_equal (rhs.values[r][c], values[r][c]))
+                return false;
+    return true;
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
 util::point<3>
 matrix<T>::to_local (const util::point<3> &p) const {
     CHECK_SOFT (is_affine ());
