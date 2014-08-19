@@ -59,9 +59,12 @@ namespace util {
         static const matrix<T> IDENTITY;
         static const matrix<T> ZEROES;
     };
+
+    typedef matrix<float> matrixf;
+
+    template <typename T>
+    std::ostream& operator<< (std::ostream&, const util::matrix<T>&);
 }
 
-template <typename T>
-std::ostream& operator<< (std::ostream&, const util::matrix<T>&);
 
 #endif

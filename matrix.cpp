@@ -405,26 +405,30 @@ namespace util {
 }
 
 //-----------------------------------------------------------------------------
-template <typename T>
-std::ostream&
-operator<< (std::ostream &os, const matrix<T> &m) {
-    os << "{ {" << m.values[0][0] << ", "
-                << m.values[0][1] << ", "
-                << m.values[0][2] << ", "
-                << m.values[0][3] << "}, "
-       <<   "{" << m.values[1][0] << ", "
-                << m.values[1][1] << ", "
-                << m.values[1][2] << ", "
-                << m.values[1][3] << "}, "
-       <<   "{" << m.values[2][0] << ", "
-                << m.values[2][1] << ", "
-                << m.values[2][2] << ", "
-                << m.values[2][3] << "}, "
-       <<   "{" << m.values[3][0] << ", "
-                << m.values[3][1] << ", "
-                << m.values[3][2] << ", "
-                << m.values[3][3] << "} }";
+namespace util {
+    template <typename T>
+    std::ostream&
+    operator<< (std::ostream &os, const matrix<T> &m) {
+        os << "{ {" << m.values[0][0] << ", "
+                    << m.values[0][1] << ", "
+                    << m.values[0][2] << ", "
+                    << m.values[0][3] << "}, "
+           <<   "{" << m.values[1][0] << ", "
+                    << m.values[1][1] << ", "
+                    << m.values[1][2] << ", "
+                    << m.values[1][3] << "}, "
+           <<   "{" << m.values[2][0] << ", "
+                    << m.values[2][1] << ", "
+                    << m.values[2][2] << ", "
+                    << m.values[2][3] << "}, "
+           <<   "{" << m.values[3][0] << ", "
+                    << m.values[3][1] << ", "
+                    << m.values[3][2] << ", "
+                    << m.values[3][3] << "} }";
 
-    return os;
+        return os;
+    }
 }
 
+template std::ostream& util::operator<< (std::ostream&, const matrix<float>&);
+template std::ostream& util::operator<< (std::ostream&, const matrix<double>&);
