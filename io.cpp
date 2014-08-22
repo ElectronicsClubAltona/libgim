@@ -280,13 +280,13 @@ mapped_file::end (void) {
 
 
 const uint8_t*
-mapped_file::begin (void) const {
+mapped_file::cbegin (void) const {
     return data ();
 }
 
 
 const uint8_t*
-mapped_file::end (void) const {
+mapped_file::cend (void) const {
     return data () + size ();
 }
 

@@ -141,8 +141,8 @@ namespace util {
             uint8_t*       begin (void);
             uint8_t*       end   (void);
 
-            const uint8_t* begin (void) const;
-            const uint8_t* end   (void) const;
+            const uint8_t* cbegin (void) const;
+            const uint8_t* cend   (void) const;
     };
 #endif
 
