@@ -43,7 +43,7 @@ rootsquare (T a, T b) pure;
 
 template <typename T, typename U>
 typename std::common_type<T, U>::type
-round_up (T value, U align) pure;
+align (T value, U size) pure;
 
 
 template <typename T>

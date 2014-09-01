@@ -28,9 +28,9 @@
 //-----------------------------------------------------------------------------
 template <typename T, typename U>
 typename std::common_type<T,U>::type
-round_up (T value, U align) {
-    static_assert (std::is_integral<T>::value, "round_up requires integral types");
-    static_assert (std::is_integral<U>::value, "round_up requires integral types");
+align (T value, U size) {
+    static_assert (std::is_integral<T>::value, "align requires integral types");
+    static_assert (std::is_integral<U>::value, "align requires integral types");
 
-    return divup (value, align) * align;
+    return divup (value, size) * size;
 }
