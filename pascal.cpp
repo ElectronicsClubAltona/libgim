@@ -87,7 +87,7 @@ parray<T>::end (void) const {
 template <typename T>
 const T*
 parray<T>::cbegin (void) const {
-    return data + size;
+    return data;
 }
 
 
