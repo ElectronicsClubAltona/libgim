@@ -1,7 +1,8 @@
 #include "../bitwise.hpp"
 
-int
-main (int, char**) {
+
+static void
+test_rotate (void) {
     CHECK_EQ (rotatel (uint8_t (0x0F), 0), 0x0F);
     CHECK_EQ (rotatel (uint8_t (0x0F), 4), 0xF0);
     CHECK_EQ (rotatel (uint8_t (0xF0), 4), 0x0F);
@@ -29,6 +30,22 @@ main (int, char**) {
 
     CHECK_EQ (rotatel (uint64_t (0x1234567890ABCDEF), 12), 0x4567890ABCDEF123);
     CHECK_EQ (rotater (uint64_t (0x1234567890ABCDEF), 12), 0xDEF1234567890ABC);
+}
+
+
+void
+test_reverse (void) {
+    for (unsigned i = 0; i < 256; ++i) {
+        auto first = reverse<uint8_t> (i);
+        auto last  = reverse<uint8_t> (first);
+        CHECK_EQ (last, i);
+    }
+}
+
+int
+main (int, char**) {
+    test_rotate ();
+    test_reverse ();
 
     return 0;
 }
