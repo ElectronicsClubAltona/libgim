@@ -588,6 +588,12 @@ namespace json {
 
     template <>
     std::unique_ptr<node>
+    io<size_t>::serialise (const size_t &i) {
+        return std::unique_ptr<node> (new number (i));
+    }
+
+    template <>
+    std::unique_ptr<node>
     io<float>::serialise (const float &f) {
         return std::unique_ptr<node> (new number (f));
     }

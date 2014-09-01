@@ -189,7 +189,8 @@ namespace json {
 
         public:
             explicit number (double _value): m_value (_value) { ; }
-            explicit number (int _value):    m_value (_value) { ; }
+            explicit number (int    _value): m_value (_value) { ; }
+            explicit number (size_t _value): m_value (_value) { ; }
 
             virtual const number& as_number  (void) const { return *this; }
             virtual bool          is_number  (void) const { return  true; }
