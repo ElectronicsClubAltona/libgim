@@ -101,22 +101,25 @@ parray<T>::cend (void) const {
 //-----------------------------------------------------------------------------
 template <typename T>
 std::ostream&
-operator<< (std::ostream &os, parray<T> p) {
+util::operator<< (std::ostream &os, parray<T> p) {
     os << "[" << p.size << ", " << std::hex << p.data << std::dec << "]";
     return os;
 }
 
 
-template std::ostream& operator<< (std::ostream&, parray<uint16_t>);
-template std::ostream& operator<< (std::ostream&, parray<uint32_t>);
-template std::ostream& operator<< (std::ostream&, parray<uint64_t>);
+template std::ostream& util::operator<< (std::ostream&, parray<uint16_t>);
+template std::ostream& util::operator<< (std::ostream&, parray<uint32_t>);
+template std::ostream& util::operator<< (std::ostream&, parray<uint64_t>);
 
-template std::ostream& operator<< (std::ostream&, parray<const uint16_t>);
-template std::ostream& operator<< (std::ostream&, parray<const uint32_t>);
-template std::ostream& operator<< (std::ostream&, parray<const uint64_t>);
+template std::ostream& util::operator<< (std::ostream&, parray<const uint16_t>);
+template std::ostream& util::operator<< (std::ostream&, parray<const uint32_t>);
+template std::ostream& util::operator<< (std::ostream&, parray<const uint64_t>);
 
 //-----------------------------------------------------------------------------
 namespace util {
+    template struct parray<char>;
+    template struct parray<const char>;
+
     template struct parray<int8_t>;
     template struct parray<int16_t>;
     template struct parray<int32_t>;

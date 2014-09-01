@@ -43,9 +43,10 @@ namespace util {
         const T* cbegin (void) const;
         const T* cend   (void) const;
     };
+
+    template <typename T>
+    std::ostream& operator<< (std::ostream&, util::parray<T>);
 }
 
-template <typename T>
-std::ostream& operator<< (std::ostream&, util::parray<T>);
 
 #endif
