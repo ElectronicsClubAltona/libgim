@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "adler.hpp"
@@ -28,3 +28,10 @@ uint32_t
 adler32 (const void* restrict _data, size_t _size)
     { return fletcher<32, MODULUS, 1, 0> (_data, _size); }
 
+
+//-----------------------------------------------------------------------------
+uint32_t
+adler32 (const uint8_t *first, const uint8_t *last)
+{
+    return adler32 (first, last - first);
+}

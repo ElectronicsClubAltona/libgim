@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_ADLER_HPP
@@ -24,5 +24,6 @@
 #include <cstdlib>
 
 extern uint32_t adler32(const void* restrict, size_t);
+extern uint32_t adler32 (const uint8_t *first, const uint8_t *last);
 
 #endif
