@@ -1,8 +1,0 @@
-#!/bin/sh
-
-## This is just an ugly hack to pass execution from a known exectuable
-## application to the test application. config.status won't preserve
-## executable bits on the new file, so we can't just use the generated test
-## application directly.
-
-/bin/sh `dirname $0`/json.test.actual "$@"
