@@ -42,6 +42,26 @@ template bool is_pow2 (uint64_t);
 
 //-----------------------------------------------------------------------------
 template <typename T>
+T
+log2 (T v) {
+    static_assert (std::is_integral<T>::value,
+                   "log2 is only implemented for integers");
+
+    T l = 0;
+    while (v) {
+        v >>= 1;
+        l  += 1;
+    }
+
+    return l;
+}
+
+template uint32_t log2 (uint32_t);
+template uint64_t log2 (uint64_t);
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 double
 rootsquare (T a, T b)
     { return sqrt (pow2 (a) + pow2 (b)); }

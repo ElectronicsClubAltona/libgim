@@ -37,6 +37,11 @@ is_pow2 (T value) pure;
 
 
 template <typename T>
+T
+log2 (T val) pure;
+
+
+template <typename T>
 double
 rootsquare (T a, T b) pure;
 
