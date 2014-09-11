@@ -39,10 +39,6 @@ compute (std::istream &is, const char *name) {
         std::istream_iterator<uint8_t> ( )
     };
 
-    std::cerr << "got: ";
-    std::copy (data.begin (), data.end (), std::ostream_iterator<uint8_t> (std::cerr));
-    std::cerr << "\n";
-
     #define simple(FUNC) do {                                                   \
         if (std::strcmp (name, #FUNC))                                          \
             break;                                                              \
