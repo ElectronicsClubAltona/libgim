@@ -24,14 +24,17 @@
 
 static const unsigned MODULUS = 65521;
 
+//-----------------------------------------------------------------------------
 uint32_t
 adler32 (const void* restrict _data, size_t _size)
-    { return fletcher<32, MODULUS, 1, 0> (_data, _size); }
+{
+    return adler32 ((uint8_t*)_data, (uint8_t*)_data + _size);
+}
 
 
 //-----------------------------------------------------------------------------
 uint32_t
 adler32 (const uint8_t *first, const uint8_t *last)
 {
-    return adler32 (first, last - first);
+    return fletcher<32, MODULUS, 1, 0> (first, last - first);
 }

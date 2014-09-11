@@ -26,19 +26,27 @@
 #include <cstdlib>
 
 
-template <unsigned BITS, unsigned MODULUS, unsigned INITIAL_A, unsigned INITIAL_B>
-typename bits_type<BITS>::uint
-fletcher (const void *restrict _data, size_t size) {
-    const uint8_t *restrict data = static_cast<const uint8_t*> (_data);
-    typename bits_type<BITS>::uint A = INITIAL_A,
-                                   B = INITIAL_B;
+template <
+    unsigned OUTPUT,
+    unsigned MODULUS,
+    unsigned INITIAL_A,
+    unsigned INITIAL_B
+>
+typename bits_type<OUTPUT>::uint
+fletcher (const void *restrict _data,
+          size_t size)
+{
+    typedef typename bits_type<OUTPUT / 2>::uint temp_t;
+
+    auto data = static_cast<const uint8_t*> (_data);
+    temp_t A = INITIAL_A, B = INITIAL_B;
 
     for (size_t i = 0; i < size; ++i) {
         A = (A + data[i]) % MODULUS;
         B = (A +       B) % MODULUS;
     }
 
-    return (B << (BITS / 2)) | A;
+    return (B << (OUTPUT / 2u)) + A;
 }
 
 #endif
