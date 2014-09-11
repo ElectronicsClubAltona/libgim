@@ -58,8 +58,8 @@ level_to_string (level_t l) {
 }
 
 
-level_t
-string_to_level (const string &name) {
+static level_t
+string_to_level (string name) {
     static const map <string, level_t> NAME_LEVELS = {
         { "EMERGENCY",     EMERGENCY },
         { "ALERT",         ALERT },
@@ -72,6 +72,8 @@ string_to_level (const string &name) {
         { "INFORMATIONAL", INFO },
         { "DEBUG",         DEBUG }
     };
+
+    std::transform (name.cbegin (), name.cend (), name.begin (), ::toupper);
 
     auto pos = NAME_LEVELS.find (name);
     if (pos == NAME_LEVELS.end ())
