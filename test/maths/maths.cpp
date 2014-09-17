@@ -45,5 +45,10 @@ main (int, char **) {
     CHECK_EQ (log2 (8u), 3);
     CHECK_EQ (log2 (1u), 0);
 
+    CHECK_EQ (log2   (9u), 3);
+    CHECK_EQ (log2up (9u), 4);
+    CHECK_EQ (log2up (8u), 3);
+    CHECK_EQ (log2up (1u), 0);
+
     return EXIT_SUCCESS;
 }

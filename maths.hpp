@@ -42,6 +42,11 @@ log2 (T val) pure;
 
 
 template <typename T>
+T
+log2up (T val) pure;
+
+
+template <typename T>
 double
 rootsquare (T a, T b) pure;
 

@@ -43,6 +43,18 @@ template bool is_pow2 (uint64_t);
 //-----------------------------------------------------------------------------
 template <typename T>
 T
+log2up (T v)
+{
+    return log2 ((v << 1) - 1);
+}
+
+template uint32_t log2up (uint32_t);
+template uint64_t log2up (uint64_t);
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+T
 log2 (T v) {
     static_assert (std::is_integral<T>::value,
                    "log2 is only implemented for integers");
