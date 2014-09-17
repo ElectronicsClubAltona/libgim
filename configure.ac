@@ -166,6 +166,7 @@ AS_IF([test "x$enable_debugging" = "xyes"], [
     ])
 
     AX_APPEND_COMPILE_FLAGS([-ggdb], [], [-Werror])
+    AX_APPEND_LINK_FLAGS([-rdynamic])
 
     AC_DEFINE([ENABLE_DEBUGGING], [], [Debugging support enabled], [], [-Werror])
     AC_DEFINE([_GLIBCXX_DEBUG],   [], [Use glibcxx debugging mode], [], [-Werror])
