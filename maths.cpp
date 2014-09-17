@@ -48,14 +48,14 @@ log2 (T v) {
                    "log2 is only implemented for integers");
 
     T l = 0;
-    while (v) {
-        v >>= 1;
-        l  += 1;
-    }
+    while (v >>= 1)
+        ++l;
 
     return l;
 }
 
+template uint8_t  log2 (uint8_t);
+template uint16_t log2 (uint16_t);
 template uint32_t log2 (uint32_t);
 template uint64_t log2 (uint64_t);
 
