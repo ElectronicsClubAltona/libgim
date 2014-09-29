@@ -127,7 +127,7 @@ namespace util {
             int access_to_flags (access_t);
 
         public:
-            mapped_file (const boost::filesystem::path &path, access_t access = ACCESS_READWRITE);
+            mapped_file (const boost::filesystem::path &path, access_t access = ACCESS_READ);
 
             mapped_file (const mapped_file&) = delete;
             mapped_file& operator= (const mapped_file&) = delete;
