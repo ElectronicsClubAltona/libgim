@@ -20,8 +20,6 @@
 #ifndef __DEBUG_HPP
 #define __DEBUG_HPP
 
-
-#include "annotations.hpp"
 #include "maths.hpp"
 
 #include <stdexcept>
@@ -79,7 +77,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define _CHECK_META(C, SUCCESS, FAILURE) do {                       \
     const auto __DEBUG_value = (C);                                 \
-    if (unlikely (!__DEBUG_value)) {                                \
+    if (!__DEBUG_value)            {                                \
         std::cerr <<  PACKAGE << ": "                               \
                   << __FILE__ << ":"                                \
                   << __LINE__ << ": "                               \
@@ -221,7 +219,7 @@
     catch (E)                               \
         { caught = true; }                  \
                                             \
-    if (unlikely (!caught))                 \
+    if (!caught)                            \
         panic ("expected exception: " #E);  \
 } while (0)
 
@@ -248,19 +246,19 @@ class panic_error {
 };
 
 
-void panic (const std::string&) terminal;
-void panic (void)               terminal;
+void panic [[noreturn]] (const std::string&);
+void panic [[noreturn]] (void);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void not_implemented (void) terminal;
-void not_implemented (const char*) terminal;
+void not_implemented [[noreturn]] (void);
+void not_implemented [[noreturn]] (const char*);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void unreachable     (void) terminal;
-void unreachable     (const std::string&) terminal;
-void unusual         (void);
+void unreachable [[noreturn]] (void);
+void unreachable [[noreturn]] (const std::string&);
+void unusual (void);
 
 
 ///////////////////////////////////////////////////////////////////////////////

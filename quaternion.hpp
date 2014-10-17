@@ -20,7 +20,6 @@
 #ifndef __UTIL_QUATERNION_HPP
 #define __UTIL_QUATERNION_HPP
 
-#include "annotations.hpp"
 #include "vector.hpp"
 
 namespace util {
@@ -29,8 +28,8 @@ namespace util {
 
         static const quaternion IDENTITY;
 
-        static quaternion rotation (double radians, vector<3> axis) mustuse;
-        static quaternion rotation (vector<3> from, vector<3> to) mustuse;
+        static quaternion rotation (double radians, vector<3> axis);
+        static quaternion rotation (vector<3> from, vector<3> to);
 
         quaternion operator* (const quaternion&) const;
     };

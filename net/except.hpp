@@ -30,8 +30,6 @@
 #include <string>
 #include <stdexcept>
 
-#include "../annotations.hpp"
-
 
 //-----------------------------------------------------------------------------
 namespace net {
@@ -47,14 +45,14 @@ namespace net {
             /// Throw an error corresponding the a given code. Code must be a valid error code,
             /// not success otherwise the application will (at best) abort.
             static void
-            throw_code (int code) terminal;
+            throw_code [[noreturn]] (int code);
 
             /// Throw an error corresponding to the most recent error condition. This will check
             /// the current error condition in a platform agnostic manner, and pass on to
             /// throw_code(int). This should be used whenever an error has been detected, rather
             /// than the more normal try_code(errno) due to Windows error reporting quirks.
             static void
-            throw_code (void) terminal;
+            throw_code [[noreturn]] (void);
 
             static void
             try_code (int code);

@@ -12,7 +12,6 @@ SUBDIRS = test
 ## Source definitions
 
 UTIL_FILES   =		\
-    annotations.hpp 	\
     backtrace.hpp   	\
     bitwise.cpp		\
     bitwise.hpp		\

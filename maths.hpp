@@ -20,8 +20,6 @@
 #ifndef __MATHS_HPP
 #define __MATHS_HPP
 
-#include "annotations.hpp"
-
 #include <type_traits>
 #include <utility>
 
@@ -33,42 +31,42 @@ pow2 (T value)
 
 template <typename T>
 bool
-is_pow2 (T value) pure;
+is_pow2 [[gnu::pure]] (T value);
 
 
 template <typename T>
 T
-log2 (T val) pure;
+log2 [[gnu::pure]] (T val);
 
 
 template <typename T>
 T
-log2up (T val) pure;
+log2up [[gnu::pure]] (T val);
 
 
 template <typename T>
 double
-rootsquare (T a, T b) pure;
+rootsquare [[gnu::pure]] (T a, T b);
 
 
 template <typename T, typename U>
 typename std::common_type<T, U>::type
-align (T value, U size) pure;
+align [[gnu::pure]] (T value, U size);
 
 
 template <typename T>
 T
-round_pow2 (T value) pure;
+round_pow2 [[gnu::pure]] (T value);
 
 
 template <typename T>
 bool
-is_integer (const T& value) pure;
+is_integer [[gnu::pure]] (const T& value);
 
 
 template <typename T>
 unsigned
-digits (const T& value) pure;
+digits [[gnu::pure]] (const T& value);
 
 
 template <typename T, typename U>

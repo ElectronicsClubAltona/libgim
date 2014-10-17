@@ -22,7 +22,6 @@
 
 #include "json.hpp"
 #include "detail/coord.hpp"
-#include "annotations.hpp"
 
 #include <array>
 #include <iostream>
@@ -71,7 +70,7 @@ namespace util {
         double dot (const util::vector<S>&) const;
 
         util::vector<S>& normalise  (void);
-        util::vector<S>  normalised (void) const mustuse;
+        util::vector<S>  normalised [[gnu::warn_unused_result]] (void) const;
 
         bool is_zero (void) const;
 

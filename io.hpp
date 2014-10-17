@@ -20,7 +20,6 @@
 #ifndef __UTIL_IO_HPP
 #define __UTIL_IO_HPP
 
-#include "annotations.hpp"
 #include "types.hpp"
 #include "memory.hpp"
 
@@ -41,7 +40,7 @@ namespace util {
     /// Reads an entire file into memory. Caller frees the result. Guarantees a
     /// null trailing byte.
     std::unique_ptr<char []>
-    slurp (const boost::filesystem::path&) mustuse;
+    slurp [[gnu::warn_unused_result]] (const boost::filesystem::path&);
 
     void
     write (const boost::filesystem::path &, const char *data, size_t len);
