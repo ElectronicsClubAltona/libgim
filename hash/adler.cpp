@@ -28,7 +28,8 @@ static const unsigned MODULUS = 65521;
 uint32_t
 adler32 (const void* restrict _data, size_t _size)
 {
-    return adler32 ((uint8_t*)_data, (uint8_t*)_data + _size);
+    return adler32 (static_cast<const uint8_t*> (_data),
+                    static_cast<const uint8_t*> (_data) + _size);
 }
 
 
