@@ -30,10 +30,20 @@ namespace util {
 
         explicit operator float  (void) const;
         explicit operator double (void) const;
+        explicit operator int    (void) const;
+
+        rational<T>  inverse (void) const;
+        rational<T>& invert  (void);
+
+        template <typename U> rational<T> operator* (const U&) const;
+        template <typename U> rational<T> operator/ (const U&) const;
 
         T n;
         T d;
     };
+
+    template <typename T, typename U>
+    rational<T> operator/ (U, rational<T>);
 }
 
 #endif

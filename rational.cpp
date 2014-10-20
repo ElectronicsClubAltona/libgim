@@ -55,7 +55,49 @@ rational<T>::operator double (void) const {
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
+rational<T>::operator int (void) const {
+    return n / d;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+rational<T>
+rational<T>::inverse (void) const {
+    return rational<T> { d, n };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+template <typename U>
+rational<T>
+rational<T>::operator* (const U &rhs) const {
+    return { rhs * n, d };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+template <typename U>
+rational<T>
+rational<T>::operator/ (const U &rhs) const {
+    return { n, rhs * d };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T, typename U>
+rational<T>
+util::operator/ (U lhs, rational<T> rhs) {
+    return rhs.inverse () * lhs;
+}
+
+//-----------------------------------------------------------------------------
 namespace util {
     template struct rational<uint32_t>;
     template struct rational<int32_t>;
+
+    template rational<uint32_t> operator/ (int, rational<uint32_t>);
 }
