@@ -161,8 +161,10 @@ AS_IF([test "x$enable_debugging" = "xyes"], [
     AS_IF([test "x$enable_sanitizer" = "xyes"], [
         AX_APPEND_COMPILE_FLAGS([-fsanitize=address], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-fsanitize=undefined], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-fsanitize=leak], [], [-Werror])
         AX_APPEND_LINK_FLAGS([-fsanitize=address], [], [-Werror])
         AX_APPEND_LINK_FLAGS([-fsanitize=undefined], [], [-Werror])
+        AX_APPEND_LINK_FLAGS([-fsanitize=leak], [], [-Werror])
     ])
 
     AX_APPEND_COMPILE_FLAGS([-ggdb], [], [-Werror])
