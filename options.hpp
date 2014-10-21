@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2013 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2013-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -167,18 +167,11 @@ namespace util {
 
         protected:
             // Retrieve string to value conversion
+            static
             T& get_arg(const std::string &arg,
-                       T                 *val) {
-                std::istringstream stream (arg, std::istringstream::in);
-                stream.exceptions (
-                      std::istringstream::failbit
-                    | std::istringstream::badbit
-                );
-                stream >> *val;
+                       T                 *val);
 
-                return *val;
-            }
-
+            static
             T& get_arg(const std::string &_arg,
                        T                 *val,
                        const T           &defaultval) {
@@ -302,6 +295,5 @@ namespace util {
                 { return remove_option (opt->longopt ()); }
     };
 }
-
 
 #endif

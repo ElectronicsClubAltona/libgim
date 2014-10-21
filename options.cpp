@@ -131,6 +131,7 @@ presentoption::execute (void) {
  * Value option
  */
 
+
 namespace util {
     template<>
     bool&
@@ -144,7 +145,34 @@ namespace util {
 
         return *val;
     }
+
+
+    template <typename T>
+    T&
+    valueoption<T>::get_arg(const std::string &arg,
+                            T                 *val)
+    {
+        std::istringstream stream (arg, std::istringstream::in);
+        stream.exceptions (
+              std::istringstream::failbit
+            | std::istringstream::badbit
+        );
+
+        stream >> *val;
+        return *val;
+    }
 }
+
+
+template std::string& util::valueoption<std::string>::get_arg (const std::string&, std::string*);
+
+template  int16_t& util::valueoption< int16_t>::get_arg (const std::string&,  int16_t*);
+template  int32_t& util::valueoption< int32_t>::get_arg (const std::string&,  int32_t*);
+template  int64_t& util::valueoption< int64_t>::get_arg (const std::string&,  int64_t*);
+
+template uint16_t& util::valueoption<uint16_t>::get_arg (const std::string&, uint16_t*);
+template uint32_t& util::valueoption<uint32_t>::get_arg (const std::string&, uint32_t*);
+template uint64_t& util::valueoption<uint64_t>::get_arg (const std::string&, uint64_t*);
 
 
 /*
