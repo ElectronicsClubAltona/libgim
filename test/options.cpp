@@ -70,31 +70,33 @@ test_bool_opt (void) {
     p->add_option (make_unique<valueoption<bool>> ('b', "bool", "testing boolean actions", &value));
 
     // List all legal forms of positive or negative boolean values
-    static const char *argv[] = { "./foo", "-b", NULL };
+    std::array<const char*, 3> argv { "./foo", "-b", NULL };
     static const char *positive[] = { "1", "true", "yes" };
     static const char *negative[] = { "0", "false", "no" };
 
     // For each boolean value, ensure that it returns as expected
-    for (size_t i = 0; i < elems (positive); ++i) {
-        argv[2] = positive[i];
-        p->parse_args (elems (argv), argv);
+    for (auto i: positive) {
+        static size_t count;
+        std::cerr << "iter " << count++ << '\n';
+        argv[2] = i;
+        p->parse_args (argv.size (), argv.data ());
         CHECK (value == true);
     }
 
-    for (size_t i = 0; i < elems (negative); ++i) {
-        argv[2] = negative[i];
-        p->parse_args (elems (argv), argv);
+    for (auto i: negative) {
+        argv[2] = i;
+        p->parse_args (argv.size (), argv.data ());
         CHECK (value == false);
     }
 
     // Check that invalid forms of boolean all throw exceptions
     const char* invalid[] = { "foo", "y", "null" };
 
-    for (size_t i = 0; i < elems (invalid); ++i) {
-        argv[2] = invalid[i];
+    for (auto i: invalid) {
+        argv[2] = i;
         CHECK_THROWS (
             std::domain_error,
-            p->parse_args (elems (argv), argv)
+            p->parse_args (argv.size (), argv.data ())
         );
     }
 }
