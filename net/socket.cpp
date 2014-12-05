@@ -52,8 +52,12 @@ socket_domain<D>::socket_domain (socket_t _fd):
     // TODO: Make this not retarded. Fucking Windows.
     #define dup(X) (X)
 
-    static_assert(sizeof(int) == sizeof(ssize_t), "int != ssize_t");
-    static_assert(sizeof(int) == sizeof( size_t), "int !=  size_t");
+    // Winsock has incorrect return and parameter types (according to POSIX)
+    // so we need some wrappers around the system implementations that casts
+    // to expected types. Mainly int vs ssize_t returns, and int vs size_t
+    // parameters.
+    static_assert(sizeof(int) <= sizeof(ssize_t), "int != ssize_t");
+    static_assert(sizeof(int) <= sizeof( size_t), "int !=  size_t");
 
     ssize_t recv(socket_t _socket, void *_buf, size_t _len, int _flags)
     	{ return (ssize_t)::recv(_socket, (char*)_buf, (int)_len, _flags); }
