@@ -185,10 +185,6 @@ AS_IF([test "x$enable_debugging" = "xyes"], [
 AS_CASE([$host_os],
     [mingw32], [
         AX_APPEND_COMPILE_FLAGS([-gstabs], [], [-Werror])
-
-        ## HACK: Stop multiple defines from boost exception rethrowers
-        ## terminating the build. Works around boost bug #4258.
-        AX_APPEND_COMPILE_FLAGS([-Wl,--allow-multiple-definition], [], [-Werror])
     ],
 
     [linux-gnu], [
