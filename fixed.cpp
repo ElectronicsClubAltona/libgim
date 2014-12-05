@@ -14,12 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011, 2014 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "fixed.hpp"
 
 #include <cmath>
+
+using namespace util;
 
 /*
  * Constructors
