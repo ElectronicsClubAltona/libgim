@@ -165,6 +165,7 @@ force_console (void) {
     // Windows doesn't give an immediate newline when an application is run
     // from a console, so we provide one here for sanity.
     std::cout << "\n";
+    std::cerr << "Console installed\n";
 }
 #endif
 
