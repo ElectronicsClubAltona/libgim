@@ -62,6 +62,12 @@ fixed<INT, FRAC>::to_integral (void) const
     { return m_value >> FRAC; }
 
 
+template <unsigned int INT, unsigned int FRAC>
+typename fixed<INT, FRAC>::combined_type
+fixed<INT, FRAC>::to_native (void) const
+    { return m_value; }
+
+
 /*
  * Integral operators
  */

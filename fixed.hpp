@@ -41,6 +41,7 @@ namespace util {
             double        to_double   (void) const;
             float         to_float    (void) const;
             integral_type to_integral (void) const;
+            combined_type to_native   (void) const;
 
             fixed<INT, FRAC>& operator +=(const fixed<INT, FRAC>);
             fixed<INT, FRAC>& operator -=(const fixed<INT, FRAC>);
