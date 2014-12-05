@@ -204,19 +204,21 @@ AS_CASE([$host_os],
 CHECK_RAGEL([ip.cpp])
 
 AX_BOOST_BASE([1.53], [], [AC_MSG_ERROR([Boost version >= 1.53 required])])
-AC_SUBST(BOOST_CPPFLAGS)
-AC_SUBST(BOOST_LDFLAGS)
 
 # boost-system isn't a hard requirement, it's only really used to fulfill
 # some other dependency I've since forgotten about...
 AX_BOOST_SYSTEM
 
-AX_BOOST_FILESYSTEM
-AC_SUBST(BOOST_FILESYSTEM_LIB)
+AX_BOOST_THREAD
+AS_IF([test "x$ax_cv_boost_thread" != "xyes"], [
+    AC_MSG_ERROR("boost-thread is a hard requirement")
+])
 
+AX_BOOST_FILESYSTEM
 AS_IF([test "x$ax_cv_boost_filesystem" != "xyes"], [
     AC_MSG_ERROR("boost-filesystem is a hard requirement")
 ])
+
 
 ###############################################################################
 ## Optional packages
