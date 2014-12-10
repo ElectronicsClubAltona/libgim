@@ -176,10 +176,12 @@ AS_IF([test "x$enable_debugging" = "xyes"], [
     AX_APPEND_COMPILE_FLAGS([-O0], [], [-Werror])
 ], [
     AX_APPEND_COMPILE_FLAGS([-O2], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-flto], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-flto-partition=none], [], [-Werror])
 
-    AX_APPEND_LINK_FLAGS([-fuse-linker-plugin], [], [-Werror])
+    # mingw LTO support currently appears to be broken
+    AS_IF([test x"${host_os}" != x"mingw32"], [
+        AX_APPEND_COMPILE_FLAGS([-flto])
+        AX_APPEND_LINK_FLAGS([-fuse-linker-plugin], [], [-Werror])
+    ])
 ])
 
 AS_CASE([$host_os],
