@@ -4,7 +4,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
 AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(ZLIB_CFLAGS)
-AM_LDFLAGS  = $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
 
 SUBDIRS = test
 
@@ -182,18 +181,22 @@ SUFFIXES = .cpp .cpp.rl
 
 ###############################################################################
 ## Library definition
-lib_LTLIBRARIES  = libutil.la
-libutil_la_SOURCES  = $(UTIL_FILES)
-libutil_la_CXXFLAGS = $(AM_CXXFLAGS)
-libutil_la_LIBADD   = $(BOOST_SYSTEM_LIB)
+lib_LIBRARIES = libutil.a
+libutil_a_SOURCES  = $(UTIL_FILES)
+libutil_a_CXXFLAGS = $(AM_CXXFLAGS)
 
 ###############################################################################
 ## Utility programs
 
 AM_DEFAULT_SOURCE_EXT = .cpp
-LDADD = $(top_builddir)/libutil.la
+
+AM_LDFLAGS  = $(BOOST_LDFLAGS)
+LDADD = $(top_builddir)/libutil.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
+
 bin_PROGRAMS = 				\
     tools/hash				\
     tools/json-clean			\
     tools/json-validate			\
     tools/json-schema
+
+tools_hash_LDADD = $(top_builddir)/libutil.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
