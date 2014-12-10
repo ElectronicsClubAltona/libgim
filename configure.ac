@@ -235,18 +235,22 @@ AC_SUBST(ZLIB_LIBS)
 AS_CASE([$host_cpu],
     [x86_64], [
         AX_APPEND_COMPILE_FLAGS([-mtune=generic], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-msse], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-msse2], [], [-Werror])
     ],
 
     [i686], [
         AX_APPEND_COMPILE_FLAGS([-march=prescott], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-mtune=generic], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-mfpmath=sse], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-mcmov], [], [-Werror])
     ],
 
     [AC_MSG_WARN([unknown host_cpu])]
 )
 
 AX_APPEND_COMPILE_FLAGS([-pipe], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-mfpmath=sse], [], [-Werror])
+AX_APPEND_COMPILE_FLAGS([-msahf], [], [-Werror])
 
 ###############################################################################
 ## Output
