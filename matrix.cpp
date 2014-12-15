@@ -309,12 +309,15 @@ template <typename T>
 matrix<T>
 matrix<T>::operator* (const matrix<T> &rhs) const {
     matrix<T> m;
-    memset (m.values, 0, sizeof (m.values));
 
-    for (unsigned i = 0; i < 4; ++i)
-        for (unsigned j = 0; j < 4; ++j)
-            for (unsigned k = 0; k < 4; ++k)
-                m.values[i][j] += values[i][k] * rhs.values[k][j];
+    for (unsigned row = 0; row < 4; ++row) {
+        for (unsigned col = 0; col < 4; ++col) {
+            m.values[row][col] = T {0};
+
+            for (unsigned inner = 0; inner < 4; ++inner)
+                m.values[row][col] += values[row][inner] * rhs.values[inner][col];
+        }
+    }
 
     return m;
 }
