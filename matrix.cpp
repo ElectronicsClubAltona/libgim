@@ -51,6 +51,32 @@ matrix<T>::translate (T x, T y, T z) {
 //-----------------------------------------------------------------------------
 template <typename T>
 matrix<T>
+matrix<T>::transposed (void) const
+{
+    matrix<T> m;
+    for (size_t i = 0; i < 4; ++i)
+        for (size_t j = 0; j < 4; ++j)
+            m.values[i][j] = values[j][i];
+    return m;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>&
+matrix<T>::transpose (void)
+{
+    for (size_t i = 0; i < 4; ++i)
+        for (size_t j = i + 1; j < 4; ++j)
+            std::swap (values[i][j], values[j][i]);
+
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>
 matrix<T>::inverse (void) const {
     matrix<T> m;
 

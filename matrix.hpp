@@ -35,6 +35,9 @@ namespace util {
         void scale     (T x, T y, T z);
         void translate (T x, T y, T z);
 
+        matrix& transpose  (void);
+        matrix  transposed (void) const;
+
         matrix<T>  inverse (void) const;
         matrix<T>& invert  (void);
         matrix<T>  inverse_affine (void) const;
