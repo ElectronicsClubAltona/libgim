@@ -503,6 +503,20 @@ matrix<T>::look_at (util::point<3> eye,
 
 //-----------------------------------------------------------------------------
 template <typename T>
+matrix<T>
+matrix<T>::translate (util::vector<3> v)
+{
+    return { {
+        { 1.f, 0.f, 0.f, v.x },
+        { 0.f, 1.f, 0.f, v.y },
+        { 0.f, 0.f, 1.f, v.z },
+        { 0.f, 0.f, 0.f, 1.f },
+    } };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 const matrix<T>
 matrix<T>::IDENTITY = { { { 1, 0, 0, 0 },
                           { 0, 1, 0, 0 },

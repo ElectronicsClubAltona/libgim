@@ -65,6 +65,11 @@ namespace util {
         static matrix<T> perspective (T fov, T aspect, T near, T far);
         static matrix<T> look_at (util::point<3> eye, util::point<3> centre, util::vector<3> up);
 
+        // Affine matrices
+        static matrix<T> translate (util::vector<3>);
+        static matrix<T> scale     (util::vector<3>);
+        static matrix<T> rotate    (util::vector<3> about, T angle);
+
         // Constant matrices
         static const matrix<T> IDENTITY;
         static const matrix<T> ZEROES;
