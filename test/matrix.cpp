@@ -33,6 +33,39 @@ main (int, char **) {
     }
 
     {
+        // Simple matrix-matrix multiplication
+        util::matrix<float> a { {
+            {  1,  2,  3,  4 },
+            {  5,  6,  7,  8 },
+            {  9, 10, 11, 12 },
+            { 13, 14, 15, 16 },
+        } };
+
+        util::matrix<float> b { {
+            { 17, 18, 19, 20 },
+            { 21, 22, 23, 24 },
+            { -1, -2, -3, -4 },
+            { -5, -6, -7, -8 }
+        } };
+
+        util::matrix<float> ab { {
+            {   9,   8,   7,   6 },
+            {  41,  40,  39,  38 },
+            {  73,  72,  71,  70 },
+            { 105, 104, 103, 102 },
+        } };
+
+        ab *= 4;
+
+        auto res = a * b;
+
+        std::cout << a << "\nx\n" << b << "\n=\n" << (res / 4) << '\n';
+
+        CHECK_EQ (ab, res);
+    }
+
+
+    {
         // Ensure identity inverts to identity
         auto m = util::matrix<float>::IDENTITY.inverse ();
         for (size_t r = 0; r < m.rows; ++r)
