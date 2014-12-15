@@ -59,6 +59,13 @@ namespace util {
 
         bool is_affine (void) const;
 
+        // Perspective matrices
+        static matrix<T> ortho   (T left, T right, T bottom, T top, T near, T far);
+        static matrix<T> ortho2D (T left, T right, T bottom, T top);
+        static matrix<T> perspective (T fov, T aspect, T near, T far);
+        static matrix<T> look_at (util::point<3> eye, util::point<3> centre, util::vector<3> up);
+
+        // Constant matrices
         static const matrix<T> IDENTITY;
         static const matrix<T> ZEROES;
     };

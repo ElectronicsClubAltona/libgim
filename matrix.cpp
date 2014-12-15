@@ -22,6 +22,7 @@
 #include "debug.hpp"
 
 #include <cstring>
+#include <cmath>
 
 using namespace util;
 
@@ -419,6 +420,84 @@ matrix<T>::is_affine (void) const {
            exactly_equal (values[3][1], T {0}) &&
            exactly_equal (values[3][2], T {0}) &&
            exactly_equal (values[3][3], T {1});
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>
+matrix<T>::ortho (T left, T right,
+                  T bottom, T top,
+                  T near, T far)
+{
+    CHECK_GT (far, near);
+
+    T tx = - (right + left) / (right - left);
+    T ty = - (top + bottom) / (top - bottom);
+    T tz = - (far + near)   / (far - near);
+
+    T rl = 2 / (right - left);
+    T tb = 2 / (top - bottom);
+    T fn = 2 / (far - near);
+
+    return { {
+        { rl,  0,  0, tx },
+        {  0, tb,  0, ty },
+        {  0,  0, fn, tz },
+        {  0,  0,  0,  1 },
+    } };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>
+matrix<T>::ortho2D (T left, T right,
+                    T bottom, T top)
+{
+    return ortho (left, right, bottom, top, -1, 1);
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>
+matrix<T>::perspective (T fov, T aspect, T near, T far)
+{
+    T f = std::tan (fov / 2);
+
+    T tx = 1 / (f * aspect);
+    T ty = 1 / f;
+    T z1 =     (far + near) / (near - far);
+    T z2 = (2 * far * near) / (near - far);
+
+    return { {
+        { tx,  0,  0,  0 },
+        {  0, ty,  0,  0 },
+        {  0,  0, z1, z2 },
+        {  0,  0, -1,  0 }
+    } };
+}
+
+
+//-----------------------------------------------------------------------------
+// Emulates gluLookAt
+template <typename T>
+matrix<T>
+matrix<T>::look_at (util::point<3> eye,
+                    util::point<3> centre,
+                    util::vector<3> up)
+{
+    const auto f = eye.to (centre).normalise ();
+    const auto s = cross (f, up).normalise ();
+    const auto u = cross (s, f);
+
+    return { {
+        {  s.x,  s.y,  s.z, -dot (s, eye) },
+        {  u.x,  u.y,  u.z, -dot (u, eye) },
+        { -f.x, -f.y, -f.z,  dot (f, eye) },
+        {    0,    0,    0,  1 },
+    } };
 }
 
 
