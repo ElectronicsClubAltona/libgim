@@ -29,7 +29,7 @@ TEST_BIN = 		\
 	version
 
 AM_DEFAULT_SOURCE_EXT = .cpp
-LDADD = $(builddir)/../.libs/libutil.a
+LDADD = $(builddir)/../libutil.a
 
 if PLATFORM_WIN32
 hton_LDFLAGS = -lws2_32
