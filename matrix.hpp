@@ -48,8 +48,8 @@ namespace util {
         matrix<T> operator* (const matrix<T>&) const;
         vector<4> operator* (const vector<4>&) const;
 
-        matrix<T> operator/ (T) const;
-
+        matrix<T>& operator*= (T);
+        matrix<T>  operator/  (T) const;
         matrix<T>& operator/= (T);
 
         bool operator== (const matrix<T>&) const;

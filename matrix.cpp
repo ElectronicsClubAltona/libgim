@@ -338,6 +338,18 @@ matrix<T>::operator* (const vector<4> &rhs) const {
 
 //-----------------------------------------------------------------------------
 template <typename T>
+matrix<T>&
+matrix<T>::operator*= (T f){
+    for (size_t i = 0; i < 4; ++i)
+        for (size_t j = 0; j < 4; ++j)
+            values[i][j] *= f;
+
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 matrix<T>
 matrix<T>::operator/ (T s) const {
     matrix<T> m;
