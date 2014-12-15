@@ -43,6 +43,9 @@ namespace util {
             { ; }
 
             double data[S];
+
+            double& operator[] (size_t i)       { return data[i]; }
+            double  operator[] (size_t i) const { return data[i]; }
         };
 
         template <>
@@ -57,6 +60,9 @@ namespace util {
                 double data[1];
                 double x;
             };
+
+            double& operator[] (size_t i)       { return data[i]; }
+            double  operator[] (size_t i) const { return data[i]; }
         };
 
         template <>
@@ -78,6 +84,9 @@ namespace util {
                     double t;
                 };
             };
+
+            double& operator[] (size_t i)       { return data[i]; }
+            double  operator[] (size_t i) const { return data[i]; }
         };
 
         template <>
@@ -96,6 +105,9 @@ namespace util {
             template <typename... T>
             coord_data (T... t): data{t...}
             { ; }
+
+            double& operator[] (size_t i)       { return data[i]; }
+            double  operator[] (size_t i) const { return data[i]; }
         };
 
         template <>
@@ -115,6 +127,9 @@ namespace util {
             template <typename... T>
             coord_data (T... t): data{t...}
             { ; }
+
+            double& operator[] (size_t i)       { return data[i]; }
+            double  operator[] (size_t i) const { return data[i]; }
         };
 #pragma GCC diagnostic pop
     }
