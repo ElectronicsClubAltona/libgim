@@ -110,6 +110,15 @@ namespace util {
             double  operator[] (size_t i) const { return data[i]; }
         };
 
+        template <size_t S>
+        double dot (const coord_data<S> &a, const coord_data<S> &b)
+        {
+            double sum = 0;
+            for (size_t i = 0; i < S; ++i)
+                sum += a.data[i] * b.data[i];
+            return sum;
+        }
+
         template <>
         struct coord_data<4> {
             union {
