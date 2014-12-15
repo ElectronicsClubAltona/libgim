@@ -8,7 +8,7 @@ int
 main (int, char **) {
     {
         // Identity matrix-vector multiplication
-        auto v = util::vector<4> { 1, 2, 3, 4 };
+        auto v = util::vector<4,float> { 1.f, 2.f, 3.f, 4.f };
         auto r = util::matrix<float>::IDENTITY * v;
         CHECK_EQ (r, v);
     }
@@ -22,7 +22,7 @@ main (int, char **) {
             { 13, 14, 15, 16 }
         } };
 
-        util::vector<4> v { 1, 2, 3, 4 };
+        util::vector<4,float> v { 1.f, 2.f, 3.f, 4.f };
 
         auto r = m * v;
 

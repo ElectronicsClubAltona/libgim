@@ -29,43 +29,51 @@
 
 namespace util {
     /// An n-dimensional position in space.
-    template <size_t S>
-    struct point : public detail::coord_data<S> {
+    template <size_t S, typename T>
+    struct point : public detail::coord<S,T> {
         static_assert (S > 0, "point dimensions must be strictly positive.");
 
         point ();
 
-        template <typename... T>
-        point (T ...t): detail::coord_data<S> {std::forward<T> (t)...} { ; }
+        template <typename... U>
+        point (U ...u): detail::coord<S,T> {std::forward<U> (u)...} { ; }
 
-        double distance  (const point &) const;
-        double distance2 (const point &) const;
-        double manhattan (const point &) const;
+        // point operators
+        T distance  (const point &) const;
+        T distance2 (const point &) const;
+        T manhattan (const point &) const;
 
-        point<S>& operator*= (double);
-        point<S>  operator*  (double) const;
-        point<S>  operator-  (const point<S>&) const;
+        vector<S,T> to (const point&) const;
 
-        point<S>  operator-  (const util::vector<S>&) const;
-        point<S>& operator-= (const util::vector<S>&);
-        point<S>  operator+  (const util::vector<S>&) const;
-        point<S>& operator+= (const util::vector<S>&);
+        // arithetic operators
+        point<S,T>& operator*= (T);
+        point<S,T>  operator*  (T) const;
+        point<S,T>  operator-  (const point<S,T>&) const;
 
-        util::vector<S> to (const point<S>&) const;
+        point<S,T>  operator-  (const vector<S,T>&) const;
+        point<S,T>& operator-= (const vector<S,T>&);
+        point<S,T>  operator+  (const vector<S,T>&) const;
+        point<S,T>& operator+= (const vector<S,T>&);
 
-        template <size_t D> point<D> redim (void) const;
+        template <size_t D> point<D,T> redim (void) const;
 
         void sanity (void) const;
     };
 
-    typedef point<2> point2;
-    typedef point<3> point3;
+    // free maths operators
+    template <size_t S, typename T> point<S,T> operator* (const vector<S,T>&, const point<S,T>&);
+    template <size_t S, typename T> point<S,T> operator* (const point<S,T>&, const vector<S,T>&);
 
-    template <size_t S> point<S> operator* (const vector<S>&, const point<S>&);
-    template <size_t S> point<S> operator* (const point<S>&, const vector<S>&);
+    // iostream operators
+    template <size_t S, typename T>
+    std::ostream& operator<< (std::ostream&, const point<S,T>&);
 
-    template <size_t S>
-    std::ostream& operator<< (std::ostream&, const util::point<S>&);
+    // Convenience typedefs
+    typedef point<2,float> point2f;
+    typedef point<3,float> point3f;
+
+    typedef point<2,double> point2d;
+    typedef point<3,double> point3d;
 }
 
 #include "point.ipp"

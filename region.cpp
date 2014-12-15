@@ -53,18 +53,18 @@ region<T>::area (void) const
 template <typename T>
 typename region<T>::size_type
 region<T>::diameter (void) const {
-    return static_cast<size_type> (sqrt (w * w + h * h));
+    return static_cast<size_type> (std::sqrt (w * w + h * h));
 }
 
 
 template <typename T>
 void
-region<T>::scale (double factor) {
-    x -= static_cast<T> ((w * factor - w) / 2.0);
-    y -= static_cast<T> ((h * factor - h) / 2.0);
+region<T>::scale (T factor) {
+    x -= (w * factor - w) / T{2};
+    y -= (h * factor - h) / T{2};
 
-    w = static_cast<T> (w * factor);
-    h = static_cast<T> (h * factor);
+    w = w * factor;
+    h = h * factor;
 }
 
 
@@ -76,25 +76,25 @@ region<T>::empty (void) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
-point<2>
+point<2,T>
 region<T>::base (void) const {
-    return { static_cast<double> (x), static_cast<double> (y) };
+    return { x, y };
 }
 
 
 template <typename T>
-point<2>
+point<2,T>
 region<T>::centre (void) const {
-    double cx = x + static_cast<T>(w / 2.0),
-           cy = y + static_cast<T>(h / 2.0);
+    T cx = x + w / T{2},
+      cy = y + h / T{2};
 
-    return { cx, cy };
+    return point<2,T> { cx, cy };
 }
 
 
 template <typename T>
-point<2>
-region<T>::closest (point<2> p) const {
+point<2,T>
+region<T>::closest (point<2,T> p) const {
     return {
         p.x < x     ? x     :
         p.x > x + w ? x + w :
@@ -110,7 +110,7 @@ region<T>::closest (point<2> p) const {
 //-----------------------------------------------------------------------------
 template <typename T>
 bool
-region<T>::includes (const point<2> &p) const {
+region<T>::includes (const point<2,T> &p) const {
     return p.x >= x &&
            p.y >= y &&
            p.x - x <= w &&
@@ -120,7 +120,7 @@ region<T>::includes (const point<2> &p) const {
 
 template <typename T>
 bool
-region<T>::contains (const point<2> &p) const {
+region<T>::contains (const point<2,T> &p) const {
     return p.x > x &&
            p.y > y &&
            p.x - x < w &&
@@ -143,18 +143,19 @@ region<T>::overlaps (const region<T> &rhs) const {
 //-----------------------------------------------------------------------------
 template <typename T>
 void
-region<T>::constrain (point2 &p) const {
-    p.x = std::min (std::max (static_cast<T> (p.x), x), x + w);
-    p.y = std::min (std::max (static_cast<T> (p.y), y), y + h);
+region<T>::constrain (point<2,T> &p) const {
+    p.x = std::min (std::max (p.x, x), x + w);
+    p.y = std::min (std::max (p.y, y), y + h);
 }
 
 
 template <typename T>
-point2
-region<T>::constrained (const point2 &p) const {
-    point2 v;
-    v.x = std::min (std::max (static_cast<T> (p.x), x), x + w);
-    v.y = std::min (std::max (static_cast<T> (p.y), y), y + h);
+point<2,T>
+region<T>::constrained (const point<2,T> &p) const
+{
+    point<2,T> v;
+    v.x = std::min (std::max (p.x, x), x + w);
+    v.y = std::min (std::max (p.y, y), y + h);
 
     return v;
 }
@@ -305,5 +306,6 @@ namespace util {
     template std::ostream& operator<< (std::ostream&, const region< int64_t>&);
     template std::ostream& operator<< (std::ostream&, const region<uint32_t>&);
     template std::ostream& operator<< (std::ostream&, const region<uint64_t>&);
+    template std::ostream& operator<< (std::ostream&, const region<   float>&);
     template std::ostream& operator<< (std::ostream&, const region<  double>&);
 }

@@ -45,8 +45,8 @@ namespace util {
 
         T det (void) const;
 
-        matrix<T> operator* (const matrix<T>&) const;
-        vector<4> operator* (const vector<4>&) const;
+        matrix<T>   operator* (const matrix<T>&) const;
+        vector<4,T> operator* (const vector<4,T>&) const;
 
         matrix<T>& operator*= (T);
         matrix<T>  operator/  (T) const;
@@ -54,8 +54,8 @@ namespace util {
 
         bool operator== (const matrix<T>&) const;
 
-        point<3> to_local  (const point<3> &p) const;
-        point<3> to_global (const point<3> &p) const;
+        point<3,T> to_local  (const point<3,T> &p) const;
+        point<3,T> to_global (const point<3,T> &p) const;
 
         bool is_affine (void) const;
 
@@ -63,12 +63,12 @@ namespace util {
         static matrix<T> ortho   (T left, T right, T bottom, T top, T near, T far);
         static matrix<T> ortho2D (T left, T right, T bottom, T top);
         static matrix<T> perspective (T fov, T aspect, T near, T far);
-        static matrix<T> look_at (util::point<3> eye, util::point<3> centre, util::vector<3> up);
+        static matrix<T> look_at (point<3,T> eye, point<3,T> centre, vector<3,T> up);
 
         // Affine matrices
-        static matrix<T> translate (util::vector<3>);
-        static matrix<T> scale     (util::vector<3>);
-        static matrix<T> rotate    (util::vector<3> about, T angle);
+        static matrix<T> translate (util::vector<3,T>);
+        static matrix<T> scale     (util::vector<3,T>);
+        static matrix<T> rotate    (util::vector<3,T> about, T angle);
 
         // Constant matrices
         static const matrix<T> IDENTITY;
@@ -78,7 +78,7 @@ namespace util {
     typedef matrix<float> matrixf;
 
     template <typename T>
-    std::ostream& operator<< (std::ostream&, const util::matrix<T>&);
+    std::ostream& operator<< (std::ostream&, const matrix<T>&);
 }
 
 

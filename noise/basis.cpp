@@ -46,12 +46,12 @@ generate (intmax_t x, intmax_t y, basis::seed_t seed) {
 
 
 template <>
-util::vector2
+util::vector2d
 generate (intmax_t x, intmax_t y, basis::seed_t seed) {
     auto u = permute (x, y, seed);
     auto v = permute (u ^ seed);
 
-    return util::vector2 (LUT[u], LUT[v]);
+    return util::vector2d (LUT[u], LUT[v]);
 }
 
 
@@ -165,10 +165,10 @@ gradient<L>::eval (double x, double y) const {
     // Generate the four corner values. It's not strictly necessary to
     // normalise the values, but we get a more consistent and visually
     // appealing range of outputs with normalised values.
-    vector2 p0 = generate<vector2> (x_int,     y_int,       this->seed).normalise ();
-    vector2 p1 = generate<vector2> (x_int + 1, y_int,       this->seed).normalise ();
-    vector2 p2 = generate<vector2> (x_int,     y_int + 1,   this->seed).normalise ();
-    vector2 p3 = generate<vector2> (x_int + 1, y_int + 1,   this->seed).normalise ();
+    vector2d p0 = generate<vector2d> (x_int,     y_int,       this->seed).normalise ();
+    vector2d p1 = generate<vector2d> (x_int + 1, y_int,       this->seed).normalise ();
+    vector2d p2 = generate<vector2d> (x_int,     y_int + 1,   this->seed).normalise ();
+    vector2d p3 = generate<vector2d> (x_int + 1, y_int + 1,   this->seed).normalise ();
 
     double  v0 = p0.x *        x_fac  + p0.y *  y_fac;
     double  v1 = p1.x * (x_fac - 1.0) + p1.y *  y_fac;
@@ -207,7 +207,7 @@ cellular::bounds (void) const
 
 double
 cellular::eval (double x, double y) const {
-    using util::point2;
+    using util::point2d;
 
     intmax_t x_int = static_cast<intmax_t> (x);
     intmax_t y_int = static_cast<intmax_t> (y);
@@ -228,14 +228,14 @@ cellular::eval (double x, double y) const {
     // | 6 | 7 | 8 |
     // +---+---+---+
 
-    point2 centre = { x_fac, y_fac };
+    point2d centre = { x_fac, y_fac };
     double distances[9] = { std::numeric_limits<double>::quiet_NaN () };
     double *cursor = distances;
 
     for (signed y_off = -1; y_off <= 1 ; ++y_off)
         for (signed x_off = -1; x_off <= 1; ++x_off) {
-            auto pos = point2 (double (x_off), double (y_off));
-            auto off = generate<vector2> (x_int + x_off, y_int + y_off, this->seed);
+            auto pos = point2d (double (x_off), double (y_off));
+            auto off = generate<vector2d> (x_int + x_off, y_int + y_off, this->seed);
             off += 1;
             off /= 2;
 

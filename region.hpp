@@ -44,20 +44,20 @@ namespace util {
 
         size_type area     (void) const;
         size_type diameter (void) const;
-        void scale (double factor);
+        void scale (T factor);
 
         bool empty (void) const;
 
-        point2 base    (void) const;
-        point2 centre  (void) const;
-        point2 closest (point2) const;
+        point<2,T> base    (void) const;
+        point<2,T> centre  (void) const;
+        point<2,T> closest (point<2,T>) const;
 
-        bool includes (const point2&) const; // inclusive of borders
-        bool contains (const point2&) const; // exclusive of borders
+        bool includes (const point<2,T>&) const; // inclusive of borders
+        bool contains (const point<2,T>&) const; // exclusive of borders
         bool overlaps (const region<T>&) const; // exclusive of borders
 
-        void constrain (point2&) const;
-        point2 constrained (const point2&) const;
+        void constrain (point<2,T>&) const;
+        point<2,T> constrained (const point<2,T>&) const;
 
         region overlap (const region<T>&) const;
 

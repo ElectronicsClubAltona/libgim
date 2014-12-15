@@ -23,13 +23,14 @@
 #include "vector.hpp"
 
 namespace util {
+    template <typename T>
     struct quaternion {
-        double w, x, y, z;
+        T w, x, y, z;
 
         static const quaternion IDENTITY;
 
-        static quaternion rotation (double radians, vector<3> axis);
-        static quaternion rotation (vector<3> from, vector<3> to);
+        static quaternion rotation (T radians, vector<3,T> axis);
+        static quaternion rotation (vector<3,T> from, vector<3,T> to);
 
         quaternion operator* (const quaternion&) const;
     };

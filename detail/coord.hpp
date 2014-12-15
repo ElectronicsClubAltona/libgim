@@ -34,111 +34,111 @@ namespace util {
 #if defined(COMPILER_CLANG)
     #pragma GCC diagnostic ignored "-Wgnu"
 #endif
-        template <size_t S>
-        struct coord_data {
-            coord_data () { ; }
+        template <size_t S, typename T>
+        struct coord {
+            coord () { ; }
 
-            template <typename ...T>
-            coord_data (T ..._t): data{_t...}
+            template <typename ...U>
+            coord (U ..._u): data{_u...}
             { ; }
 
-            double data[S];
+            T data[S];
 
-            double& operator[] (size_t i)       { return data[i]; }
-            double  operator[] (size_t i) const { return data[i]; }
+            T& operator[] (size_t i)       { return data[i]; }
+            T  operator[] (size_t i) const { return data[i]; }
         };
 
-        template <>
-        struct coord_data<1> {
-            coord_data () { ; }
+        template <typename T>
+        struct coord<1,T> {
+            coord () { ; }
 
-            template <typename ...T>
-            coord_data (T ..._t): data{_t...}
-            { ; }
-
-            union {
-                double data[1];
-                double x;
-            };
-
-            double& operator[] (size_t i)       { return data[i]; }
-            double  operator[] (size_t i) const { return data[i]; }
-        };
-
-        template <>
-        struct coord_data<2> {
-            coord_data () { ; }
-
-            template <typename ...T>
-            coord_data (T ..._t): data{_t...}
+            template <typename ...U>
+            coord (U ..._u): data{_u...}
             { ; }
 
             union {
-                double data[2];
-                struct {
-                    double x;
-                    double y;
-                };
-                struct {
-                    double r;
-                    double t;
-                };
+                T data[1];
+                T x;
             };
 
-            double& operator[] (size_t i)       { return data[i]; }
-            double  operator[] (size_t i) const { return data[i]; }
+            T& operator[] (size_t i)       { return data[i]; }
+            T  operator[] (size_t i) const { return data[i]; }
         };
 
-        template <>
-        struct coord_data<3> {
-            union {
-                double data[3];
-                struct {
-                    double x;
-                    double y;
-                    double z;
-                };
-            };
+        template <typename T>
+        struct coord<2,T> {
+            coord () { ; }
 
-            coord_data () { ; }
-
-            template <typename... T>
-            coord_data (T... t): data{t...}
+            template <typename ...U>
+            coord (U ..._u): data{_u...}
             { ; }
 
-            double& operator[] (size_t i)       { return data[i]; }
-            double  operator[] (size_t i) const { return data[i]; }
+            union {
+                T data[2];
+                struct {
+                    T x;
+                    T y;
+                };
+                struct {
+                    T r;
+                    T t;
+                };
+            };
+
+            T& operator[] (size_t i)       { return data[i]; }
+            T  operator[] (size_t i) const { return data[i]; }
         };
 
-        template <size_t S>
-        double dot (const coord_data<S> &a, const coord_data<S> &b)
+        template <typename T>
+        struct coord<3,T> {
+            union {
+                T data[3];
+                struct {
+                    T x;
+                    T y;
+                    T z;
+                };
+            };
+
+            coord () { ; }
+
+            template <typename... U>
+            coord (U... u): data{u...}
+            { ; }
+
+            T& operator[] (size_t i)       { return data[i]; }
+            T  operator[] (size_t i) const { return data[i]; }
+        };
+
+        template <size_t S, typename T>
+        T dot (const coord<S,T> &a, const coord<S,T> &b)
         {
-            double sum = 0;
+            T sum { 0 };
             for (size_t i = 0; i < S; ++i)
                 sum += a.data[i] * b.data[i];
             return sum;
         }
 
-        template <>
-        struct coord_data<4> {
+        template <typename T>
+        struct coord<4,T> {
             union {
-                double data[4];
+                T data[4];
                 struct {
-                    double x;
-                    double y;
-                    double z;
-                    double w;
+                    T x;
+                    T y;
+                    T z;
+                    T w;
                 };
             };
 
-            coord_data () { ; }
+            coord () { ; }
 
-            template <typename... T>
-            coord_data (T... t): data{t...}
+            template <typename... U>
+            coord (U... u): data{u...}
             { ; }
 
-            double& operator[] (size_t i)       { return data[i]; }
-            double  operator[] (size_t i) const { return data[i]; }
+            T& operator[] (size_t i)       { return data[i]; }
+            T  operator[] (size_t i) const { return data[i]; }
         };
 #pragma GCC diagnostic pop
     }

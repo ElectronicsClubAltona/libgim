@@ -20,8 +20,10 @@
 #include "point.hpp"
 
 #include "debug.hpp"
+#include "maths.hpp"
 
 #include <cmath>
+#include <cstdlib>
 
 using namespace std;
 
@@ -30,56 +32,61 @@ using namespace std;
 #endif
 
 //-----------------------------------------------------------------------------
-template <size_t S>
-util::point<S>::point ()
+template <size_t S, typename T>
+util::point<S,T>::point ()
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <size_t S>
-double
-util::point<S>::distance (const util::point<S> &other) const {
-    return sqrt (distance2 (other));
+template <size_t S, typename T>
+T
+util::point<S,T>::distance (const point<S,T> &other) const {
+    // TODO: this should not truncate on integral types
+    return static_cast<T> (
+        std::sqrt (distance2 (other))
+    );
 }
 
 
-template <size_t S>
-double
-util::point<S>::distance2 (const util::point<S> &other) const {
-    double total = 0.0;
+template <size_t S, typename T>
+T
+util::point<S,T>::distance2 (const point<S,T> &other) const {
+    T total { 0 };
 
     for (size_t i = 0; i < S; ++i)
         total += pow2 (this->data[i] - other.data[i]);
+
     return total;
 }
 
 
-template <size_t S>
-double
-util::point<S>::manhattan (const util::point<S> &other) const {
-    double total = 0.0;
+template <size_t S, typename T>
+T
+util::point<S,T>::manhattan (const point<S,T> &other) const {
+    T total { 0 };
 
     for (size_t i = 0; i < S; ++i)
-        total += fabs (this->data[i] - other.data[i]);
+        total += ::abs (this->data[i] - other.data[i]);
+
     return total;
 }
 
 
 //-----------------------------------------------------------------------------
-template <size_t S>
-util::point<S>&
-util::point<S>::operator*= (double f) {
-    for (double &i: this->data)
+template <size_t S, typename T>
+util::point<S,T>&
+util::point<S,T>::operator*= (T f) {
+    for (auto &i: this->data)
         i *= f;
 
     return *this;
 }
 
 
-template <size_t S>
-util::point<S>
-util::point<S>::operator* (double f) const {
-    util::point<S> out;
+template <size_t S, typename T>
+util::point<S,T>
+util::point<S,T>::operator* (T f) const {
+    util::point<S,T> out;
 
     for (size_t i = 0; i < S; ++i)
         out.data[i] = this->data[i] * f;
@@ -88,10 +95,10 @@ util::point<S>::operator* (double f) const {
 
 
 //-----------------------------------------------------------------------------
-template <size_t S>
-util::point<S>
-util::point<S>::operator- (const util::vector<S> &rhs) const {
-    util::point<S> out;
+template <size_t S, typename T>
+util::point<S,T>
+util::point<S,T>::operator- (const vector<S,T> &rhs) const {
+    util::point<S,T> out;
 
     for (size_t i = 0; i < S; ++i)
         out.data[i] = this->data[i] - rhs.data[i];
@@ -99,19 +106,19 @@ util::point<S>::operator- (const util::vector<S> &rhs) const {
 }
 
 
-template <size_t S>
-util::point<S>&
-util::point<S>::operator-= (const util::vector<S> &rhs) {
+template <size_t S, typename T>
+util::point<S,T>&
+util::point<S,T>::operator-= (const util::vector<S,T> &rhs) {
     for (size_t i = 0; i < S; ++i)
         this->data[i] -= rhs.data[i];
     return *this;
 }
 
 //-----------------------------------------------------------------------------
-template <size_t S>
-util::point<S>
-util::point<S>::operator+ (const util::vector<S> &rhs) const {
-    util::point<S> out;
+template <size_t S, typename T>
+util::point<S,T>
+util::point<S,T>::operator+ (const vector<S,T> &rhs) const {
+    util::point<S,T> out;
 
     for (size_t i = 0; i < S; ++i)
         out.data[i] = this->data[i] + rhs.data[i];
@@ -119,9 +126,9 @@ util::point<S>::operator+ (const util::vector<S> &rhs) const {
 }
 
 
-template <size_t S>
-util::point<S>&
-util::point<S>::operator+= (const util::vector<S> &rhs) {
+template <size_t S, typename T>
+util::point<S,T>&
+util::point<S,T>::operator+= (const util::vector<S,T> &rhs) {
     for (size_t i = 0; i < S; ++i)
         this->data[i] += rhs.data[i];
     return *this;
@@ -129,10 +136,10 @@ util::point<S>::operator+= (const util::vector<S> &rhs) {
 
 
 //-----------------------------------------------------------------------------
-template <size_t S>
-util::point<S>
-util::point<S>::operator- (const util::point<S> &rhs) const {
-    util::point<S> out;
+template <size_t S, typename T>
+util::point<S,T>
+util::point<S,T>::operator- (const point<S,T> &rhs) const {
+    util::point<S,T> out;
 
     for (size_t i = 0; i < S; ++i)
         out.data[i] = this->data[i] - rhs.data[i];
@@ -141,10 +148,10 @@ util::point<S>::operator- (const util::point<S> &rhs) const {
 
 
 //-----------------------------------------------------------------------------
-template <size_t S>
-util::vector<S>
-util::point<S>::to (const util::point<S> &rhs) const {
-    util::vector<S> out;
+template <size_t S, typename T>
+util::vector<S,T>
+util::point<S,T>::to (const point<S,T> &rhs) const {
+    util::vector<S,T> out;
 
     for (size_t i = 0; i < S; ++i)
         out.data[i] = rhs.data[i] - this->data[i];
@@ -153,9 +160,9 @@ util::point<S>::to (const util::point<S> &rhs) const {
 
 
 //-----------------------------------------------------------------------------
-template <size_t S>
+template <size_t S, typename T>
 void
-util::point<S>::sanity (void) const {
+util::point<S,T>::sanity (void) const {
     CHECK_SOFT (std::all_of (begin (this->data),
                              end   (this->data),
                              [] (double i) { return !std::isnan (i); }));
@@ -163,10 +170,10 @@ util::point<S>::sanity (void) const {
 
 
 //-----------------------------------------------------------------------------
-template <size_t S>
-util::point<S>
-util::operator* (const vector<S> &v, const point<S> &p) {
-    point<S> out;
+template <size_t S, typename T>
+util::point<S,T>
+util::operator* (const vector<S,T> &v, const point<S,T> &p) {
+    point<S,T> out;
     for (size_t i = 0; i < S; ++i)
         out.data[i] = p.data[i] + v.data[i];
 
@@ -174,26 +181,34 @@ util::operator* (const vector<S> &v, const point<S> &p) {
 }
 
 
-template util::point<1> util::operator* (const vector<1>&, const point<1>&);
-template util::point<2> util::operator* (const vector<2>&, const point<2>&);
-template util::point<3> util::operator* (const vector<3>&, const point<3>&);
+template util::point<1,float> util::operator* (const vector<1,float>&, const point<1,float>&);
+template util::point<2,float> util::operator* (const vector<2,float>&, const point<2,float>&);
+template util::point<3,float> util::operator* (const vector<3,float>&, const point<3,float>&);
+
+template util::point<1,double> util::operator* (const vector<1,double>&, const point<1,double>&);
+template util::point<2,double> util::operator* (const vector<2,double>&, const point<2,double>&);
+template util::point<3,double> util::operator* (const vector<3,double>&, const point<3,double>&);
 
 
-template <size_t S>
-util::point<S>
-util::operator* (const point<S> &p, const vector<S> &v)
+template <size_t S, typename T>
+util::point<S,T>
+util::operator* (const point<S,T> &p, const vector<S,T> &v)
     { return v * p; }
 
 
-template util::point<1> util::operator* (const point<1>&, const vector<1>&);
-template util::point<2> util::operator* (const point<2>&, const vector<2>&);
-template util::point<3> util::operator* (const point<3>&, const vector<3>&);
+template util::point<1,float> util::operator* (const point<1,float>&, const vector<1,float>&);
+template util::point<2,float> util::operator* (const point<2,float>&, const vector<2,float>&);
+template util::point<3,float> util::operator* (const point<3,float>&, const vector<3,float>&);
+
+template util::point<1,double> util::operator* (const point<1,double>&, const vector<1,double>&);
+template util::point<2,double> util::operator* (const point<2,double>&, const vector<2,double>&);
+template util::point<3,double> util::operator* (const point<3,double>&, const vector<3,double>&);
 
 
 //-----------------------------------------------------------------------------
-template <size_t S>
+template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, const util::point<S> &p) {
+util::operator<< (std::ostream &os, const util::point<S,T> &p) {
     os << "point" << S << "(";
     os << p.data[0];
 
@@ -205,11 +220,23 @@ util::operator<< (std::ostream &os, const util::point<S> &p) {
 }
 
 
-template std::ostream& util::operator<< (std::ostream &os, const util::point<1>&);
-template std::ostream& util::operator<< (std::ostream &os, const util::point<2>&);
-template std::ostream& util::operator<< (std::ostream &os, const util::point<3>&);
+template std::ostream& util::operator<< (std::ostream &os, const util::point<1,float>&);
+template std::ostream& util::operator<< (std::ostream &os, const util::point<2,float>&);
+template std::ostream& util::operator<< (std::ostream &os, const util::point<3,float>&);
+
+template std::ostream& util::operator<< (std::ostream &os, const util::point<1,double>&);
+template std::ostream& util::operator<< (std::ostream &os, const util::point<2,double>&);
+template std::ostream& util::operator<< (std::ostream &os, const util::point<3,double>&);
 
 
-template struct util::point<1>;
-template struct util::point<2>;
-template struct util::point<3>;
+#define INSTANTIATE(T)              \
+template struct util::point<1,T>;   \
+template struct util::point<2,T>;   \
+template struct util::point<3,T>;
+
+INSTANTIATE(int32_t)
+INSTANTIATE(uint32_t)
+INSTANTIATE(int64_t)
+INSTANTIATE(uint64_t)
+INSTANTIATE(float)
+INSTANTIATE(double)

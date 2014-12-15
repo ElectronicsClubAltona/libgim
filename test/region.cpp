@@ -3,7 +3,8 @@
 #include "../debug.hpp"
 
 using util::region;
-using util::point2;
+using util::point;
+using util::point2d;
 
 int
 main (int, char **) {
@@ -20,16 +21,16 @@ main (int, char **) {
     CHECK_EQ (region<double>::UNIT.area (), 1.0);
     CHECK_EQ (region< float>::UNIT.area (), 1.0f);
 
-    CHECK_HARD (region<int> (0, 0, 2, 2).includes (point2(1.0, 1.0)));
-    CHECK_HARD (region<int> (0, 0, 2, 2).includes (point2(0.0, 0.0)));
-    CHECK_HARD (region<int> (0, 0, 2, 2).includes (point2(2.0, 2.0)));
+    CHECK_HARD (region<int> (0, 0, 2, 2).includes (point<2,int>(1, 1)));
+    CHECK_HARD (region<int> (0, 0, 2, 2).includes (point<2,int>(0, 0)));
+    CHECK_HARD (region<int> (0, 0, 2, 2).includes (point<2,int>(2, 2)));
 
-    CHECK_HARD ( region<int> (0, 0, 2, 2).contains (point2(1.0, 1.0)));
-    CHECK_HARD (!region<int> (0, 0, 2, 2).contains (point2(0.0, 0.0)));
-    CHECK_HARD (!region<int> (0, 0, 2, 2).contains (point2(2.0, 2.0)));
+    CHECK_HARD ( region<int> (0, 0, 2, 2).contains (point<2,int>(1, 1)));
+    CHECK_HARD (!region<int> (0, 0, 2, 2).contains (point<2,int>(0, 0)));
+    CHECK_HARD (!region<int> (0, 0, 2, 2).contains (point<2,int>(2, 2)));
 
-    CHECK_HARD (region<intmax_t> (0, 0, 10, 10).includes (point2 (0.4, 0.01)));
-    CHECK_HARD (region<intmax_t> (0, 0, 10, 10).contains (point2 (0.4, 0.01)));
+    //CHECK_HARD (region<intmax_t> (0, 0, 10, 10).includes (point2d (0.4, 0.01)));
+    //CHECK_HARD (region<intmax_t> (0, 0, 10, 10).contains (point2d (0.4, 0.01)));
 
     return 0;
 }

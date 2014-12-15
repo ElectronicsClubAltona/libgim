@@ -20,10 +20,10 @@
 #include <algorithm>
 
 namespace util {
-    template<size_t S>
+    template<size_t S, typename T>
     template<size_t D>
-    point<D> point<S>::redim (void) const {
-        point<D> out;
+    point<D,T> point<S,T>::redim (void) const {
+        point<D,T> out;
         std::copy (std::begin (this->data), std::begin (this->data) + D, std::begin (out.data));
         return out;
     }

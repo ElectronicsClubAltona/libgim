@@ -326,9 +326,9 @@ matrix<T>::operator* (const matrix<T> &rhs) const {
 
 //-----------------------------------------------------------------------------
 template <typename T>
-vector<4>
-matrix<T>::operator* (const vector<4> &rhs) const {
-    return vector<4> {
+vector<4,T>
+matrix<T>::operator* (const vector<4,T> &rhs) const {
+    return vector<4,T> {
         values[0][0] * rhs.x + values[0][1] * rhs.y + values[0][2] * rhs.z + values[0][3] * rhs.w,
         values[1][0] * rhs.x + values[1][1] * rhs.y + values[1][2] * rhs.z + values[1][3] * rhs.w,
         values[2][0] * rhs.x + values[2][1] * rhs.y + values[2][2] * rhs.z + values[2][3] * rhs.w,
@@ -388,8 +388,8 @@ matrix<T>::operator== (const matrix<T> &rhs) const {
 
 //-----------------------------------------------------------------------------
 template <typename T>
-util::point<3>
-matrix<T>::to_local (const util::point<3> &p) const {
+util::point<3,T>
+matrix<T>::to_local (const util::point<3,T> &p) const {
     CHECK_SOFT (is_affine ());
 
     return { p.x * values[0][0] +
@@ -406,8 +406,8 @@ matrix<T>::to_local (const util::point<3> &p) const {
 
 //-----------------------------------------------------------------------------
 template <typename T>
-util::point<3>
-matrix<T>::to_global (const util::point<3> &p) const {
+util::point<3,T>
+matrix<T>::to_global (const util::point<3,T> &p) const {
     return inverse ().to_local (p);
 }
 
@@ -484,9 +484,9 @@ matrix<T>::perspective (T fov, T aspect, T near, T far)
 // Emulates gluLookAt
 template <typename T>
 matrix<T>
-matrix<T>::look_at (util::point<3> eye,
-                    util::point<3> centre,
-                    util::vector<3> up)
+matrix<T>::look_at (util::point<3,T> eye,
+                    util::point<3,T> centre,
+                    util::vector<3,T> up)
 {
     const auto f = eye.to (centre).normalise ();
     const auto s = cross (f, up).normalise ();
@@ -504,7 +504,7 @@ matrix<T>::look_at (util::point<3> eye,
 //-----------------------------------------------------------------------------
 template <typename T>
 matrix<T>
-matrix<T>::translate (util::vector<3> v)
+matrix<T>::translate (util::vector<3,T> v)
 {
     return { {
         { 1.f, 0.f, 0.f, v.x },

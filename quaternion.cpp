@@ -25,30 +25,34 @@ using util::quaternion;
 
 
 //-----------------------------------------------------------------------------
-const quaternion quaternion::IDENTITY = { 1.0, 0.0, 0.0, 0.0 };
+template<> const quaternion<float> quaternion<float>::IDENTITY = { 1, 0, 0, 0 };
+template<> const quaternion<double> quaternion<double>::IDENTITY = { 1, 0, 0, 0 };
 
 
 //-----------------------------------------------------------------------------
-quaternion
-quaternion::rotation (double radians, vector<3> axis) {
-    radians /= 2.0;
+template <typename T>
+quaternion<T>
+quaternion<T>::rotation (T radians, vector<3,T> axis) {
+    radians /= T{2};
     axis.normalise ();
 
     return {
-        cos (radians),
-        axis.x * sin (radians),
-        axis.y * sin (radians),
-        axis.z * sin (radians)
+        std::cos (radians),
+        axis.x * std::sin (radians),
+        axis.y * std::sin (radians),
+        axis.z * std::sin (radians)
     };
 }
 
 
-quaternion
-quaternion::rotation (vector<3> from, vector<3> to) {
+//-----------------------------------------------------------------------------
+template <typename T>
+quaternion<T>
+quaternion<T>::rotation (vector<3,T> from, vector<3,T> to) {
     auto v = util::cross (from, to);
 
     return {
-        acos (from.dot (to)),
+        std::acos (from.dot (to)),
         v.x,
         v.y,
         v.z
@@ -56,8 +60,10 @@ quaternion::rotation (vector<3> from, vector<3> to) {
 }
 
 
-quaternion
-quaternion::operator* (const quaternion &rhs) const {
+//-----------------------------------------------------------------------------
+template <typename T>
+quaternion<T>
+quaternion<T>::operator* (const quaternion<T> &rhs) const {
     return {
         w * rhs.w - (x * rhs.x + y * rhs.y + z * rhs.z),
         w * rhs.x + rhs.w * x + y * rhs.z - z * rhs.y,
@@ -66,3 +72,7 @@ quaternion::operator* (const quaternion &rhs) const {
     };
 }
 
+
+//-----------------------------------------------------------------------------
+template struct quaternion<float>;
+template struct quaternion<double>;

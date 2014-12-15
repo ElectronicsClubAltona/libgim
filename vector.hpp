@@ -28,74 +28,83 @@
 #include <initializer_list>
 
 namespace util {
-    template <size_t S>
-    struct vector : public detail::coord_data<S> {
+    template <size_t S, typename T>
+    struct vector : public detail::coord<S, T> {
         static_assert (S > 0, "vector dimensions must be strictly positive");
 
         vector ();
 
-        template <typename... T>
-        explicit vector (T ...t): detail::coord_data<S> {std::forward<T> (t)...} { ; }
+        template <typename... U>
+        explicit vector (U ...u): detail::coord<S, T> {std::forward<U> (u)...} { ; }
 
-        util::vector<S>  operator* (double) const;
-        util::vector<S>& operator*=(double);
+        // arithmetic operators
+        vector<S,T>  operator* (T) const;
+        vector<S,T>& operator*=(T);
 
-        util::vector<S>  operator/ (double) const;
-        util::vector<S>& operator/=(double);
+        vector<S,T>  operator/ (T) const;
+        vector<S,T>& operator/=(T);
 
-        util::vector<S>  operator+ (double) const;
-        util::vector<S>& operator+=(double);
+        vector<S,T>  operator+ (T) const;
+        vector<S,T>& operator+=(T);
 
-        util::vector<S>  operator- (double) const;
-        util::vector<S>& operator-=(double);
+        vector<S,T>  operator- (T) const;
+        vector<S,T>& operator-=(T);
 
+        // element operators
+        vector<S,T>  operator* (const vector<S,T>&) const;
+        vector<S,T>& operator*=(const vector<S,T>&);
 
-        util::vector<S>  operator* (const util::vector<S>&) const;
-        util::vector<S>& operator*=(const util::vector<S>&);
+        vector<S,T>  operator+ (const vector<S,T>&) const;
+        vector<S,T>& operator+=(const vector<S,T>&);
 
-        util::vector<S>  operator+ (const util::vector<S>&) const;
-        util::vector<S>& operator+=(const util::vector<S>&);
+        vector<S,T>  operator- (void) const;
+        vector<S,T>  operator- (const vector<S,T>&) const;
+        vector<S,T>& operator-=(const vector<S,T>&);
 
-        util::vector<S>  operator- (void) const;
-        util::vector<S>  operator- (const util::vector<S>&) const;
-        util::vector<S>& operator-=(const util::vector<S>&);
+        vector<S, T>& operator =(const vector<S,T>&);
 
-        util::vector<S>& operator =(const util::vector <S>&);
-
-        bool operator== (const util::vector <S>&) const;
-
-        double magnitude  (void) const;
-        double magnitude2 (void) const;
-
-        double dot (const util::vector<S>&) const;
-
-        util::vector<S>& normalise  (void);
-        util::vector<S>  normalised [[gnu::warn_unused_result]] (void) const;
+        // logical operators
+        bool operator== (const vector<S,T>&) const;
 
         bool is_zero (void) const;
 
-        template <size_t D> vector<D> redim (void) const;
+        // vector operators
+        T magnitude  (void) const;
+        T magnitude2 (void) const;
+
+        T dot (const vector<S,T>&) const;
+
+        vector<S,T>& normalise  (void);
+        vector<S,T>  normalised [[gnu::warn_unused_result]] (void) const;
+
+        template <size_t D> vector<D,T> redim (void) const;
 
         void sanity (void) const;
     };
 
-    vector<2> polar_to_cartesian (const vector<2>&);
+    // free vector operators
+    template <typename T> vector<2,T> polar_to_cartesian (const vector<2,T>&);
 
-    vector<3> cross (const vector<3>&, const vector<3>&);
-    vector<3> spherical_to_cartesian (const util::vector <3>&);
-    vector<3> cartesian_to_spherical (const util::vector <3>&);
+    template <typename T> vector<3,T> cross (const vector<3,T>&, const vector<3,T>&);
+    template <typename T> vector<3,T> spherical_to_cartesian (const vector<3,T>&);
+    template <typename T> vector<3,T> cartesian_to_spherical (const vector<3,T>&);
 
-    typedef vector<2> vector2;
-    typedef vector<3> vector3;
+    template <size_t S, typename T> vector<S,T> operator* (T, const vector<S,T>&);
+    template <size_t S, typename T> vector<S,T> operator+ (T, const vector<S,T>&);
+    template <size_t S, typename T> vector<S,T> operator- (T, const vector<S,T>&);
 
-    template <size_t S> util::vector<S> operator* (double, const util::vector<S>&);
-    template <size_t S> util::vector<S> operator+ (double, const util::vector<S>&);
-    template <size_t S> util::vector<S> operator- (double, const util::vector<S>&);
+    // output and serialisation operators
+    template <size_t S, typename T> std::ostream& operator<< (std::ostream&, const vector<S,T>&);
 
-    template <size_t S> std::ostream& operator<< (std::ostream&, const util::vector<S>&);
+    template <size_t S, typename T>
+    const json::node& operator>> (const json::node&, vector<S,T>&);
 
-    template <size_t S>
-    const json::node& operator>> (const json::node&, util::vector<S>&);
+    // convenience typedefs
+    typedef vector<2,float> vector2f;
+    typedef vector<3,float> vector3f;
+
+    typedef vector<2,double> vector2d;
+    typedef vector<3,double> vector3d;
 }
 
 

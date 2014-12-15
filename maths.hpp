@@ -24,6 +24,12 @@
 #include <utility>
 
 template <typename T>
+T
+abs (T value)
+{ return value > 0 ? value : -value; }
+
+
+template <typename T>
 constexpr T
 pow2 (T value)
     { return value * value; }
