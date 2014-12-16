@@ -20,7 +20,7 @@ AC_PROG_CXX
 AC_PROG_CXXCPP
 AC_PROG_RANLIB
 
-AX_CXX_COMPILE_STDCXX_11([noext])
+AX_APPEND_COMPILE_FLAGS([-std=c++1y])
 
 AM_INIT_AUTOMAKE([1.14 dist-bzip2 dist-xz foreign subdir-objects])
 AM_SILENT_RULES([yes])
