@@ -80,7 +80,7 @@ namespace util {
                     T y;
                 };
                 struct {
-                    T r;
+                    T s;
                     T t;
                 };
             };
@@ -97,6 +97,11 @@ namespace util {
                     T x;
                     T y;
                     T z;
+                };
+                struct {
+                    T r;
+                    T g;
+                    T b;
                 };
             };
 
@@ -128,6 +133,12 @@ namespace util {
                     T y;
                     T z;
                     T w;
+                };
+                struct {
+                    T r;
+                    T g;
+                    T b;
+                    T a;
                 };
             };
 
