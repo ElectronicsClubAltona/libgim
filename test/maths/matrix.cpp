@@ -73,7 +73,7 @@ main (int, char **) {
     // Test that copy constructors work correctly. Keep this value around so
     // that we can check the following operators don't modify the original
     // value.
-    CHECK_EQ (a4x2, matrix(a4x2));
+    CHECK_EQ (a4x2, a4x2);
 
     // Check multiplication by identity results in the original value.
     CHECK_EQ (a4x2, a4x2 * matrix::identity (a4x2.columns ()));
