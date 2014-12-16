@@ -28,12 +28,12 @@ using namespace util;
 
 
 //-----------------------------------------------------------------------------
-const util::colour util::colour::WHITE ({ 1.0, 1.0, 1.0, 1.0 });
-const util::colour util::colour::BLACK ({ 0.0, 0.0, 0.0, 1.0 });
+const util::colour util::colour::WHITE ({ 1, 1, 1, 1 });
+const util::colour util::colour::BLACK ({ 0, 0, 0, 1 });
 
-const util::colour util::colour::RED   ({ 1.0, 0.0, 0.0, 1.0 });
-const util::colour util::colour::GREEN ({ 0.0, 1.0, 0.0, 1.0 });
-const util::colour util::colour::BLUE  ({ 0.0, 0.0, 1.0, 1.0 });
+const util::colour util::colour::RED   ({ 1, 0, 0, 1 });
+const util::colour util::colour::GREEN ({ 0, 1, 0, 1 });
+const util::colour util::colour::BLUE  ({ 0, 0, 1, 1 });
 
 
 //-----------------------------------------------------------------------------
@@ -43,14 +43,14 @@ const util::colour util::colour::BLUE  ({ 0.0, 0.0, 1.0, 1.0 });
 //! json::type_error.
 const json::node&
 operator>> (const json::node &node, colour &c) {
-    c.red   = node[0].as_number ();
-    c.green = node[1].as_number ();
-    c.blue  = node[2].as_number ();
+    c.red   = static_cast<float> (node[0].as_number ());
+    c.green = static_cast<float> (node[1].as_number ());
+    c.blue  = static_cast<float> (node[2].as_number ());
 
     try {
-        c.alpha = node[3].as_number ();
+        c.alpha = static_cast<float> (node[3].as_number ());
     } catch (...) {
-        c.alpha = 1.0;
+        c.alpha = 1;
     }
 
     return node;
@@ -62,10 +62,10 @@ namespace util {
     template<>
     colour
     random (void) {
-        return colour ({ range<double>::UNIT.random (),
-                         range<double>::UNIT.random (),
-                         range<double>::UNIT.random (),
-                         range<double>::UNIT.random () });
+        return colour ({ range<float>::UNIT.random (),
+                         range<float>::UNIT.random (),
+                         range<float>::UNIT.random (),
+                         range<float>::UNIT.random () });
     }
 
     template <>
@@ -77,7 +77,7 @@ namespace util {
 
 //-----------------------------------------------------------------------------
 std::ostream&
-operator<< (std::ostream &os, const util::colour &c) {
+util::operator<< (std::ostream &os, const util::colour &c) {
     os << "colour(" << c.red << ", " << c.green << ", " << c.blue << ", " << c.alpha << ")";
     return os;
 }

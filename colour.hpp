@@ -27,10 +27,10 @@
 namespace util {
     /// An RGBA colour POD type.
     struct colour {
-        double red;
-        double green;
-        double blue;
-        double alpha;
+        float red;
+        float green;
+        float blue;
+        float alpha;
 
         static const colour WHITE;
         static const colour BLACK;
@@ -39,9 +39,8 @@ namespace util {
         static const colour GREEN;
     };
 
+    std::ostream& operator<< (std::ostream&, const util::colour&);
+    const json::node& operator>> (const json::node&, util::colour&);
 }
-
-std::ostream& operator<< (std::ostream&, const util::colour&);
-const json::node& operator>> (const json::node&, util::colour&);
 
 #endif
