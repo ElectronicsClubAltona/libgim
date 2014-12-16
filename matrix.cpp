@@ -517,6 +517,20 @@ matrix<T>::translate (util::vector<3,T> v)
 
 //-----------------------------------------------------------------------------
 template <typename T>
+matrix<T>
+matrix<T>::scale (util::vector<3,T> v)
+{
+    return { {
+        { v.x, 0.f, 0.f, 0.f },
+        { 0.f, v.y, 0.f, 0.f },
+        { 0.f, 0.f, v.z, 0.f },
+        { 0.f, 0.f, 0.f, 1.f }
+    } };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 const matrix<T>
 matrix<T>::IDENTITY = { { { 1, 0, 0, 0 },
                           { 0, 1, 0, 0 },
