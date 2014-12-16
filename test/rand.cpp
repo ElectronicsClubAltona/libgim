@@ -13,7 +13,7 @@ using namespace std;
 void
 test_bool (void) {
     static const unsigned ITERATIONS = 8192;
-    static const unsigned THRESHOLD  = ITERATIONS * 0.1;
+    static const unsigned THRESHOLD  = ITERATIONS / 10;
     
     unsigned counts[2] = { 0, 0 };
     for (unsigned i = 0; i < ITERATIONS; ++i)
@@ -33,7 +33,7 @@ test_float (void) {
     static const unsigned BUCKETS    =    8;
     static const unsigned ITERATIONS = 8912;
     static const unsigned EXPECTED   = ITERATIONS / BUCKETS;
-    static const float    THRESHOLD  = EXPECTED * 0.1;
+    static const float    THRESHOLD  = EXPECTED / 10;
 
     unsigned counts[BUCKETS] = { 0 };
     for (unsigned i = 0; i < ITERATIONS; ++i)
