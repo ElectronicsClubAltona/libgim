@@ -35,7 +35,7 @@ namespace util {
         vector ();
 
         template <typename... U>
-        explicit vector (U ...u): detail::coord<S, T> {std::forward<U> (u)...} { ; }
+        vector (U ...u): detail::coord<S, T> {std::forward<U> (u)...} { ; }
 
         // arithmetic operators
         vector<S,T>  operator* (T) const;
