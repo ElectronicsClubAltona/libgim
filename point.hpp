@@ -74,6 +74,8 @@ namespace util {
 
     typedef point<2,double> point2d;
     typedef point<3,double> point3d;
+
+    typedef point<2,size_t> point2u;
 }
 
 #include "point.ipp"
