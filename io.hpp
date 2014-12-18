@@ -112,7 +112,6 @@ namespace util {
     void set_cwd (const boost::filesystem::path &);
 
 
-#if defined(HAVE_MMAP)
     /// Wraps a mechanism to map a file into memory. Read only.
     class mapped_file {
         private:
@@ -143,7 +142,6 @@ namespace util {
             const uint8_t* cbegin (void) const;
             const uint8_t* cend   (void) const;
     };
-#endif
 
     
     class path_error : public std::runtime_error {
