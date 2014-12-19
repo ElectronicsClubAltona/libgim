@@ -31,6 +31,9 @@ namespace util {
         private:
             nocopy            (const nocopy &) = delete;
             nocopy& operator =(const nocopy &) = delete;
+
+            nocopy            (nocopy &&) = delete;
+            nocopy& operator =(nocopy &&) = delete;
     };
 }
 
