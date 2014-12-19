@@ -162,11 +162,15 @@ UTIL_FILES   =		\
 
 
 if PLATFORM_LINUX
-UTIL_FILES += backtrace_execinfo.cpp
+UTIL_FILES += 			\
+    backtrace_execinfo.cpp	\
+    io_posix.cpp
 endif
 
 if PLATFORM_WIN32
-UTIL_FILES += backtrace_null.cpp
+UTIL_FILES += 			\
+    backtrace_null.cpp		\
+    io_win32.cpp
 endif
 
 ###############################################################################

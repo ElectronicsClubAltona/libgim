@@ -22,12 +22,17 @@
 
 #include "types.hpp"
 #include "memory.hpp"
+#include "platform.hpp"
+#include "nocopy.hpp"
 
 #include <cstdio>
 #include <cstdint>
 #include <memory>
 #include <boost/filesystem/path.hpp>
 
+#ifdef PLATFORM_WIN32
+#include <windows.h>
+#endif
 
 namespace util {
     /// Specifies bitwise combinations of IO access rights.
@@ -58,6 +63,22 @@ namespace util {
 
             operator int (void) const;
     };
+
+
+#ifdef PLATFORM_WIN32
+    struct handle_ref : util::nocopy {
+    public:
+        explicit handle_ref (HANDLE);
+        explicit handle_ref ();
+        ~handle_ref ();
+
+        void reset (HANDLE);
+
+        operator HANDLE (void) const;
+
+        HANDLE handle;
+    };
+#endif
 
 
     //-------------------------------------------------------------------------
@@ -111,39 +132,8 @@ namespace util {
 
     void set_cwd (const boost::filesystem::path &);
 
-
-    /// Wraps a mechanism to map a file into memory. Read only.
-    class mapped_file {
-        private:
-            fd_ref   m_fd;
-            uint8_t *m_data;
-            size_t   m_size;
-
-            void load_fd (access_t);
-
-        protected:
-            int access_to_flags (access_t);
-
-        public:
-            mapped_file (const boost::filesystem::path &path, access_t access = ACCESS_READ);
-
-            mapped_file (const mapped_file&) = delete;
-            mapped_file& operator= (const mapped_file&) = delete;
-
-            ~mapped_file ();
-
-            const uint8_t* data (void) const;
-            uint8_t*       data (void);
-            size_t         size (void) const;
-
-            uint8_t*       begin (void);
-            uint8_t*       end   (void);
-
-            const uint8_t* cbegin (void) const;
-            const uint8_t* cend   (void) const;
-    };
-
     
+    //-------------------------------------------------------------------------
     class path_error : public std::runtime_error {
         public:
             path_error (const boost::filesystem::path &path):
@@ -151,6 +141,12 @@ namespace util {
             { ; }
     };
 }
+
+#ifdef PLATFORM_WIN32
+#include "io_win32.hpp"
+#else
+#include "io_posix.hpp"
+#endif
 
 #include "io.ipp"
 
