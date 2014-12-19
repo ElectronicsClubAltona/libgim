@@ -37,7 +37,7 @@ namespace util {
         T    area  (void) const;
         T diameter (void) const;
 
-        double aspect (void) const;
+        float aspect (void) const;
 
         bool empty (void) const;
 

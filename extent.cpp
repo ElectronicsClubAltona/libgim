@@ -68,9 +68,11 @@ extent<T>::area (void) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
-double
+float
 extent<T>::aspect (void) const
-    { return static_cast<double> (w) / h; }
+{
+    return static_cast<float> (w) / static_cast<float> (h);
+}
 
 
 //-----------------------------------------------------------------------------
