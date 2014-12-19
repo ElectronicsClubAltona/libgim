@@ -56,6 +56,9 @@ namespace util {
         point<S,T>  operator+  (const vector<S,T>&) const;
         point<S,T>& operator+= (const vector<S,T>&);
 
+        // logical operators
+        bool operator== (const point<S,T>&) const;
+
         template <size_t D> point<D,T> redim (void) const;
 
         void sanity (void) const;

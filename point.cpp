@@ -126,6 +126,17 @@ util::point<S,T>::to (const point<S,T> &rhs) const {
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
+bool
+util::point<S,T>::operator== (const util::point<S,T> &rhs) const
+{
+    return std::equal (std::begin (this->data),
+                       std::end   (this->data),
+                       std::begin (rhs.data));
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
 void
 util::point<S,T>::sanity (void) const {
     CHECK_SOFT (std::all_of (begin (this->data),
