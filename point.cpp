@@ -39,41 +39,6 @@ util::point<S,T>::point ()
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-T
-util::point<S,T>::distance (const point<S,T> &other) const {
-    // TODO: this should not truncate on integral types
-    return static_cast<T> (
-        std::sqrt (distance2 (other))
-    );
-}
-
-
-template <size_t S, typename T>
-T
-util::point<S,T>::distance2 (const point<S,T> &other) const {
-    T total { 0 };
-
-    for (size_t i = 0; i < S; ++i)
-        total += pow2 (this->data[i] - other.data[i]);
-
-    return total;
-}
-
-
-template <size_t S, typename T>
-T
-util::point<S,T>::manhattan (const point<S,T> &other) const {
-    T total { 0 };
-
-    for (size_t i = 0; i < S; ++i)
-        total += ::abs (this->data[i] - other.data[i]);
-
-    return total;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
 util::point<S,T>&
 util::point<S,T>::operator*= (T f) {
     for (auto &i: this->data)

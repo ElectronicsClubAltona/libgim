@@ -17,9 +17,53 @@
  * Copyright 2014 Danny Robson <danny@nerdcruft.net>
  */
 
+#include "maths.hpp"
+
 #include <algorithm>
 
 namespace util {
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T>
+    template <typename U>
+    typename std::common_type<T,U>::type
+    util::point<S,T>::distance (const point<S,U> &rhs) const {
+        return std::sqrt (distance2 (rhs));
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T>
+    template <typename U>
+    typename std::common_type<T,U>::type
+    util::point<S,T>::distance2 (const point<S,U> &rhs) const {
+        typedef typename std::common_type<T,U>::type result_t;
+
+        result_t sum { 0 };
+
+        for (size_t i = 0; i < S; ++i)
+            sum += pow2 (this->data[i] - rhs.data[i]);
+
+        return sum;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T>
+    template <typename U>
+    typename std::common_type<T,U>::type
+    util::point<S,T>::manhattan (const point<S,U> &rhs) const {
+        typedef typename std::common_type<T,U>::type result_t;
+
+        result_t sum { 0 };
+
+        for (size_t i = 0; i < S; ++i)
+            sum += std::abs (this->data[i] - rhs.data[i]);
+
+        return sum;
+    }
+
+
+    //-------------------------------------------------------------------------
     template<size_t S, typename T>
     template<size_t D>
     point<D,T> point<S,T>::redim (void) const {

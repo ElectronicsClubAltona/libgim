@@ -26,6 +26,7 @@
 #include <array>
 #include <initializer_list>
 #include <iostream>
+#include <type_traits>
 
 namespace util {
     /// An n-dimensional position in space.
@@ -39,9 +40,9 @@ namespace util {
         point (U ...u): detail::coord<S,T> {std::forward<U> (u)...} { ; }
 
         // point operators
-        T distance  (const point &) const;
-        T distance2 (const point &) const;
-        T manhattan (const point &) const;
+        template <typename U> typename std::common_type<T,U>::type distance  (const point<S,U> &) const;
+        template <typename U> typename std::common_type<T,U>::type distance2 (const point<S,U> &) const;
+        template <typename U> typename std::common_type<T,U>::type manhattan (const point<S,U> &) const;
 
         vector<S,T> to (const point&) const;
 
