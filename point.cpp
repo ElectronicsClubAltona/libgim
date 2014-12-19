@@ -204,6 +204,9 @@ template std::ostream& util::operator<< (std::ostream &os, const util::point<1,d
 template std::ostream& util::operator<< (std::ostream &os, const util::point<2,double>&);
 template std::ostream& util::operator<< (std::ostream &os, const util::point<3,double>&);
 
+template std::ostream& util::operator<< (std::ostream &os, const util::point<1,size_t>&);
+template std::ostream& util::operator<< (std::ostream &os, const util::point<2,size_t>&);
+template std::ostream& util::operator<< (std::ostream &os, const util::point<3,size_t>&);
 
 #define INSTANTIATE(T)              \
 template struct util::point<1,T>;   \
