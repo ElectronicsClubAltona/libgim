@@ -38,6 +38,9 @@ namespace util {
         struct coord {
             coord () { ; }
 
+            coord (T v)
+            { std::fill (std::begin (data), std::end (data), v); }
+
             template <typename ...U>
             coord (U ..._u): data{_u...}
             { ; }
@@ -51,6 +54,9 @@ namespace util {
         template <typename T>
         struct coord<1,T> {
             coord () { ; }
+
+            coord (T v)
+            { std::fill (std::begin (data), std::end (data), v); }
 
             template <typename ...U>
             coord (U ..._u): data{_u...}
@@ -68,6 +74,9 @@ namespace util {
         template <typename T>
         struct coord<2,T> {
             coord () { ; }
+
+            coord (T v)
+            { std::fill (std::begin (data), std::end (data), v); }
 
             template <typename ...U>
             coord (U ..._u): data{_u...}
@@ -107,6 +116,9 @@ namespace util {
 
             coord () { ; }
 
+            coord (T v)
+            { std::fill (std::begin (data), std::end (data), v); }
+
             template <typename... U>
             coord (U... u): data{u...}
             { ; }
@@ -143,6 +155,9 @@ namespace util {
             };
 
             coord () { ; }
+
+            coord (T v)
+            { std::fill (std::begin (data), std::end (data), v); }
 
             template <typename... U>
             coord (U... u): data{u...}
