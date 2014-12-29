@@ -531,6 +531,42 @@ matrix<T>::scale (util::vector<3,T> v)
 
 //-----------------------------------------------------------------------------
 template <typename T>
+matrix<T>
+matrix<T>::rotate (util::vector<3,T> about, T angle)
+{
+    about.normalise ();
+
+    T c = std::cos (angle);
+    T s = std::sin (angle);
+    T x = about.x,
+      y = about.y,
+      z = about.z;
+
+    return { {
+        { x * x * (1 - c) + c,
+          x * y * (1 - c) - z * s,
+          x * z * (1 - c) + y * s,
+          0
+        },
+
+        { y * x * (1 - c) + z * s,
+          y * y * (1 - c) + c,
+          y * z * (1 - c) - x * s,
+          0
+        },
+
+        { z * x * (1 - c) - y * s,
+          z * y * (1 - c) + x * s,
+          z * z * (1 - c) + c,
+          0
+        },
+
+        { 0, 0, 0, 1 }
+    } };
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
 const matrix<T>
 matrix<T>::IDENTITY = { { { 1, 0, 0, 0 },
                           { 0, 1, 0, 0 },
