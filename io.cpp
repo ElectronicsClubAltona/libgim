@@ -92,14 +92,15 @@ util::slurp (const boost::filesystem::path& path)  {
 }
 
 //----------------------------------------------------------------------------
+template <typename T>
 void
-util::write (const boost::filesystem::path &path, const char *data, size_t len) {
+util::write (const boost::filesystem::path &path, const T *data, size_t len) {
     CHECK_SOFT (len > 0);
     CHECK_HARD (data);
 
     fd_ref fd (path, ACCESS_WRITE);
-    const char *cursor = data;
-    size_t remaining   = len;
+    const char *cursor = reinterpret_cast<const char*> (data);
+    size_t remaining   = len * sizeof (T);
 
     while (remaining) {
         ssize_t consumed = ::write (fd, cursor, remaining);
@@ -110,6 +111,10 @@ util::write (const boost::filesystem::path &path, const char *data, size_t len) 
         cursor    += sign_cast<size_t> (consumed);
     }
 }
+
+template void write<char> (const boost::filesystem::path&, const char*,    size_t);
+template void write<uint8_t> (const boost::filesystem::path&, const uint8_t*, size_t);
+
 
 //----------------------------------------------------------------------------
 fd_ref::fd_ref (int _fd):

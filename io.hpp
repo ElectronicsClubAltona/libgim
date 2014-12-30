@@ -47,8 +47,9 @@ namespace util {
     std::unique_ptr<char []>
     slurp [[gnu::warn_unused_result]] (const boost::filesystem::path&);
 
+    template <typename T>
     void
-    write (const boost::filesystem::path &, const char *data, size_t len);
+    write (const boost::filesystem::path &, const T *data, size_t len);
 
 
     ///------------------------------------------------------------------------
