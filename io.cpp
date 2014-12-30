@@ -43,11 +43,11 @@ access_to_cflags (access_t a) {
     int flags = 0;
 
     if ((a & ACCESS_READWRITE) == ACCESS_READWRITE) {
-        flags = O_RDWR;
+        flags = O_RDWR | O_CREAT;
     } else if (a & ACCESS_READ) {
         flags = O_RDONLY;
     } else if (a & ACCESS_WRITE) {
-        flags = O_WRONLY;
+        flags = O_WRONLY | O_CREAT;
     }
 
     a = static_cast<access_t> (a & ~ACCESS_READWRITE);
