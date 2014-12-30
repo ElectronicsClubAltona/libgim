@@ -129,9 +129,9 @@ fd_ref::fd_ref (const boost::filesystem::path &path, access_t access):
 #ifdef PLATFORM_WIN32
     // Windows requires the use of 'string ()' to convert to char datatype
     // rather than the typical wchar
-    fd (open (path.string ().c_str (), access_to_cflags (access) | O_BINARY))
+    fd (open (path.string ().c_str (), access_to_cflags (access) | O_BINARY, 0660))
 #else
-    fd (open (path.native ().c_str (), access_to_cflags (access)))
+    fd (open (path.native ().c_str (), access_to_cflags (access), 0660))
 #endif
 {
     if (fd < 0)
