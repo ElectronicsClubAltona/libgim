@@ -55,7 +55,7 @@ namespace util {
 
 
     template <typename T>
-    unsigned int
+    size_t
     pool<T>::capacity (void) const
         { return m_capacity; }
 

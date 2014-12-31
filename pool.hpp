@@ -22,6 +22,8 @@
 
 #include "nocopy.hpp"
 
+#include <cstdlib>
+
 namespace util {
     template <typename T>
     class pool : public nocopy {
@@ -31,20 +33,27 @@ namespace util {
                 node *_chain;
             };
 
-            node         *m_head;
-            node         *m_next;
-            unsigned int  m_capacity;
+            node   *m_head;
+            node   *m_next;
+            size_t  m_capacity;
 
         public:
             pool (unsigned int _capacity);
             ~pool ();
 
-            unsigned int capacity (void) const;
-
+            // Data management
             template <typename ...Args>
             T*   acquire (Args&... args);
 
             void release (T *data);
+
+            size_t capacity (void) const;
+
+            // Indexing
+            size_t index (const T*) const;
+
+            T& operator[] (size_t idx);
+            const T& operator[] (size_t idx) const;
     };
 }
 
