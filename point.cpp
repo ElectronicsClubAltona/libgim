@@ -147,6 +147,10 @@ util::point<S,T>::sanity (void) const {
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
+const util::point<S,T> util::point<S,T>::ORIGIN (T {0});
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
 util::point<S,T>
 util::operator* (const vector<S,T> &v, const point<S,T> &p) {
     point<S,T> out;

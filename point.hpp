@@ -61,6 +61,8 @@ namespace util {
 
         template <size_t D> point<D,T> redim (void) const;
 
+        static const point<S,T> ORIGIN;
+
         void sanity (void) const;
     };
 
