@@ -102,7 +102,7 @@ namespace util {
     // convenience typedefs
     typedef vector<2,float> vector2f;
     typedef vector<3,float> vector3f;
-    typedef vector<3,float> vector4f;
+    typedef vector<4,float> vector4f;
 
     typedef vector<2,double> vector2d;
     typedef vector<3,double> vector3d;
