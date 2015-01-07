@@ -35,12 +35,14 @@ mapped_file::mapped_file (const boost::filesystem::path &_path, access_t _access
 { load_fd (_access); }
 
 
+//----------------------------------------------------------------------------
 mapped_file::~mapped_file () {
     CHECK (m_data != NULL);
     munmap (m_data, m_size);
 }
 
 
+//----------------------------------------------------------------------------
 int
 mapped_file::access_to_flags (access_t a) {
     int flags = 0;
@@ -55,6 +57,7 @@ mapped_file::access_to_flags (access_t a) {
 }
 
 
+//----------------------------------------------------------------------------
 void
 mapped_file::load_fd (access_t access) {
     struct stat meta;
@@ -68,6 +71,7 @@ mapped_file::load_fd (access_t access) {
 }
 
 
+//----------------------------------------------------------------------------
 size_t
 mapped_file::size (void) const {
     CHECK (m_size > 0);
@@ -77,6 +81,7 @@ mapped_file::size (void) const {
 }
 
 
+//----------------------------------------------------------------------------
 uint8_t*
 mapped_file::data (void) {
     CHECK (m_size > 0);
@@ -86,6 +91,7 @@ mapped_file::data (void) {
 }
 
 
+//----------------------------------------------------------------------------
 const uint8_t*
 mapped_file::data (void) const {
     CHECK (m_size > 0);
@@ -95,24 +101,28 @@ mapped_file::data (void) const {
 }
 
 
+//----------------------------------------------------------------------------
 uint8_t*
 mapped_file::begin (void) {
     return data ();
 }
 
 
+//----------------------------------------------------------------------------
 uint8_t*
 mapped_file::end (void) {
     return data () + size ();
 }
 
 
+//----------------------------------------------------------------------------
 const uint8_t*
 mapped_file::cbegin (void) const {
     return data ();
 }
 
 
+//----------------------------------------------------------------------------
 const uint8_t*
 mapped_file::cend (void) const {
     return data () + size ();
