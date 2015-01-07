@@ -47,8 +47,6 @@ mapped_file::mapped_file (const boost::filesystem::path &path,
                           access_t access):
     m_data (nullptr, UnmapViewOfFile)
 {
-    std::cerr << "mapped_file\n";
-
     m_file.reset (CreateFile (path.string ().c_str (),
                               access_to_flags (access),
                               access == ACCESS_READ ? FILE_SHARE_READ : 0,
@@ -59,7 +57,6 @@ mapped_file::mapped_file (const boost::filesystem::path &path,
 
     if (m_file == INVALID_HANDLE_VALUE)
         win32_error::throw_code ();
-    std::cerr << "mapped_file: file\n";
 
     m_mapping.reset (CreateFileMapping (m_file,
                                         nullptr,
@@ -69,7 +66,6 @@ mapped_file::mapped_file (const boost::filesystem::path &path,
 
     if (m_mapping == INVALID_HANDLE_VALUE)
         win32_error::throw_code ();
-    std::cerr << "mapped_file: mapping\n";
 
     auto view = MapViewOfFile (m_mapping,
                                access == ACCESS_READ ? FILE_MAP_READ : FILE_MAP_WRITE,
@@ -77,14 +73,12 @@ mapped_file::mapped_file (const boost::filesystem::path &path,
                                0);
     if (view == nullptr)
         win32_error::throw_code ();
-    std::cerr << "mapped_file: view\n";
 
     m_data.reset (
         static_cast<unsigned char*> (view)
     );
 
     m_size = GetFileSize (m_file, nullptr);
-    std::cout << "size: " << m_size << '\n';
 }
 
 
