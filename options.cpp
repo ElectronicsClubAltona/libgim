@@ -275,7 +275,7 @@ bytesoption::execute (const std::string& data) {
             specified = type_from_character (data[cursor]);
             // If the character is a digit, it just means the user skipped the
             // size specifier, which is ok.
-        } catch (domain_error x) {
+        } catch (domain_error &x) {
             if (!isdigit (data[cursor]))
                 throw invalid_argument ("Not a size");
 
