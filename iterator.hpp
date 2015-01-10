@@ -59,7 +59,7 @@ class referencing_iterator {
         bool operator>  (const referencing_iterator<Base> &rhs) { return m_base >  rhs.m_base; }
         bool operator<  (const referencing_iterator<Base> &rhs) { return m_base <  rhs.m_base; }
 
-        const reference operator*() const
+        const value_type& operator*() const
             { return **m_base; }
         reference operator*()
             { return **m_base; }
