@@ -74,5 +74,5 @@ quaternion<T>::operator* (const quaternion<T> &rhs) const {
 
 
 //-----------------------------------------------------------------------------
-template struct quaternion<float>;
-template struct quaternion<double>;
+template struct util::quaternion<float>;
+template struct util::quaternion<double>;

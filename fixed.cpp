@@ -128,5 +128,6 @@ fixed<INT, FRAC>::operator /(integral_type val) const
     { return fixed<INT, FRAC>(m_value / val); }
 
 
-template class fixed<16,16>;
-template class fixed<32,32>;
+//-----------------------------------------------------------------------------
+template class util::fixed<16,16>;
+template class util::fixed<32,32>;

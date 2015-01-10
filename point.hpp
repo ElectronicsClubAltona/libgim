@@ -87,7 +87,6 @@ namespace util {
 #include <functional>
 
 namespace std {
-    template <>
     template <size_t S, typename T>
     struct hash<util::point<S,T>> {
         size_t operator() (const util::point<S,T> &p) const {

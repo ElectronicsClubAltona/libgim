@@ -112,8 +112,9 @@ util::write (const boost::filesystem::path &path, const T *data, size_t len) {
     }
 }
 
-template void write<char> (const boost::filesystem::path&, const char*,    size_t);
-template void write<uint8_t> (const boost::filesystem::path&, const uint8_t*, size_t);
+
+template void util::write<char> (const boost::filesystem::path&, const char*,    size_t);
+template void util::write<uint8_t> (const boost::filesystem::path&, const uint8_t*, size_t);
 
 
 //----------------------------------------------------------------------------
