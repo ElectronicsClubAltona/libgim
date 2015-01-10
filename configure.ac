@@ -21,6 +21,8 @@ AC_PROG_CXXCPP
 
 AX_APPEND_COMPILE_FLAGS([-std=c++1y])
 
+AX_COMPILER_VENDOR
+
 AM_INIT_AUTOMAKE([1.14 dist-bzip2 dist-xz foreign subdir-objects])
 AM_SILENT_RULES([yes])
 
@@ -39,6 +41,10 @@ AC_ARG_ENABLE([sanitizer], [
 
 ###############################################################################
 ## Warnings
+##
+## Note: GCC will silently accept warnings that it doesn't handle but then
+## complain about them at the first legitimate warning discovered in a source
+## file. To work around this we have to detect GCC.
 
 # Compound warnings
 AX_APPEND_COMPILE_FLAGS([-Wall], [], [-Werror])
@@ -70,19 +76,26 @@ AX_APPEND_COMPILE_FLAGS([-Wuseless-cast], [], [-Werror])
 #AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
 #AX_APPEND_COMPILE_FLAGS([-Wno-vla-extension], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wno-vla], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-vla-extension], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-gnu-zero-variadic-macro-arguments], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-gnu-conditional-omitted-operand], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-zero-length-array], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-gnu-empty-struct], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-gnu-flexible-array-union-member], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-flexible-array-extensions], [], [-Werror])
+
+AS_IF([test "x$ax_cv_cxx_compiler_vendor" != "xgnu"], [
+    AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wno-flexible-array-extensions], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wno-gnu-conditional-omitted-operand], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wno-gnu-empty-struct], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wno-gnu-flexible-array-union-member], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wno-gnu-zero-variadic-macro-arguments], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wno-vla-extension], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wno-zero-length-array], [], [-Werror])
+])
 
 # Excessive warnings
-AX_APPEND_COMPILE_FLAGS([-Wno-nested-anon-types], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-unused-const-variable], [], [-Werror])
 AX_APPEND_COMPILE_FLAGS([-Wno-missing-braces], [], [-Werror])
+
+AS_IF([test "x$ax_cv_cxx_compiler_vendor" != "xgnu"], [
+    AX_APPEND_COMPILE_FLAGS([-Wno-nested-anon-types], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wno-unused-const-variable], [], [-Werror])
+])
+
 #AX_APPEND_COMPILE_FLAGS([-Wunsafe-loop-optimizations], [], [-Werror])
 #AX_APPEND_COMPILE_FLAGS([-Winline], [], [-Werror])
 #AX_APPEND_COMPILE_FLAGS([-Wconversion], [], [-Werror])
