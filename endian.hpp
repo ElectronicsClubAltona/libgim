@@ -88,17 +88,22 @@ struct from_endian {
         static_assert (std::is_integral<T>::value || std::is_enum<T>::value,
                        "endian conversion is only defined for integrals currently");
 
-        auto u = static_cast<
-            typename std::conditional<
-                std::is_signed<T>::value,
-                typename sized_type<T>::sint,
-                typename sized_type<T>::uint
-            >::type
-        > (v);
+        union {
+            typename sized_type<T>::sint sint;
+            typename sized_type<T>::uint uint;
+        };
 
-        return static_cast<T> (
-            (src == endian::LITTLE) ? ltoh (u) : btoh (u)
-        );
+        if (std::is_signed<T>::value)
+            sint = v;
+        else
+            uint = v;
+
+        uint = (src == endian::LITTLE) ? ltoh (uint) : btoh (uint);
+
+        if (std::is_signed<T>::value)
+            return T (sint);
+        else
+            return T (uint);
     }
 
     endian src;
