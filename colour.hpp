@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010-2013 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_COLOUR_HPP
@@ -27,10 +27,10 @@
 namespace util {
     /// An RGBA colour POD type.
     struct colour {
-        float red;
-        float green;
-        float blue;
-        float alpha;
+        float r;
+        float g;
+        float b;
+        float a;
 
         static const colour WHITE;
         static const colour BLACK;
