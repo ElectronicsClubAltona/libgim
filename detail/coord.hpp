@@ -36,6 +36,8 @@ namespace util {
 #endif
         template <size_t S, typename T>
         struct coord {
+            typedef T value_type;
+
             coord () { ; }
 
             coord (T v)
@@ -53,6 +55,8 @@ namespace util {
 
         template <typename T>
         struct coord<1,T> {
+            typedef T value_type;
+
             coord () { ; }
 
             coord (T v)
@@ -73,6 +77,8 @@ namespace util {
 
         template <typename T>
         struct coord<2,T> {
+            typedef T value_type;
+
             coord () { ; }
 
             coord (T v)
@@ -100,6 +106,8 @@ namespace util {
 
         template <typename T>
         struct coord<3,T> {
+            typedef T value_type;
+
             union {
                 T data[3];
                 struct {
@@ -138,6 +146,8 @@ namespace util {
 
         template <typename T>
         struct coord<4,T> {
+            typedef T value_type;
+
             union {
                 T data[4];
                 struct {
