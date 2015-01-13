@@ -40,7 +40,7 @@ namespace util {
 
             coord () { ; }
 
-            coord (T v)
+            explicit coord (T v)
             { std::fill (std::begin (data), std::end (data), v); }
 
             template <typename ...U>
@@ -61,7 +61,7 @@ namespace util {
 
             coord () { ; }
 
-            coord (T v)
+            explicit coord (T v)
             { std::fill (std::begin (data), std::end (data), v); }
 
             template <typename ...U>
@@ -85,7 +85,7 @@ namespace util {
 
             coord () { ; }
 
-            coord (T v)
+            explicit coord (T v)
             { std::fill (std::begin (data), std::end (data), v); }
 
             template <typename ...U>
@@ -132,7 +132,7 @@ namespace util {
 
             coord () { ; }
 
-            coord (T v)
+            explicit coord (T v)
             { std::fill (std::begin (data), std::end (data), v); }
 
             template <typename... U>
@@ -176,7 +176,7 @@ namespace util {
 
             coord () { ; }
 
-            coord (T v)
+            explicit coord (T v)
             { std::fill (std::begin (data), std::end (data), v); }
 
             template <typename... U>
