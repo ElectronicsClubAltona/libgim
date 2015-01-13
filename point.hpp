@@ -34,10 +34,7 @@ namespace util {
     struct point : public detail::coord<S,T> {
         static_assert (S > 0, "point dimensions must be strictly positive.");
 
-        point ();
-
-        template <typename... U>
-        point (U ...u): detail::coord<S,T> {std::forward<U> (u)...} { ; }
+        using detail::coord<S,T>::coord;
 
         // point operators
         template <typename U> typename std::common_type<T,U>::type distance  (const point<S,U> &) const;

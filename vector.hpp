@@ -32,10 +32,7 @@ namespace util {
     struct vector : public detail::coord<S, T> {
         static_assert (S > 0, "vector dimensions must be strictly positive");
 
-        vector ();
-
-        template <typename... U>
-        vector (U ...u): detail::coord<S, T> {std::forward<U> (u)...} { ; }
+        using detail::coord<S,T>::coord;
 
         // arithmetic operators
         vector<S,T>  operator* (T) const;

@@ -40,12 +40,6 @@ using std::end;
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::vector<S,T>::vector ()
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
 util::vector<S,T>
 util::vector<S,T>::operator* (T rhs) const {
     util::vector<S,T> out;

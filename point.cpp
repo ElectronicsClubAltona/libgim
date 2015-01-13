@@ -33,12 +33,6 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::point<S,T>::point ()
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
 util::point<S,T>&
 util::point<S,T>::operator*= (T f) {
     for (auto &i: this->data)
