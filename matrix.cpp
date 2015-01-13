@@ -19,6 +19,7 @@
 
 #include "matrix.hpp"
 
+#include "point.hpp"
 #include "debug.hpp"
 
 #include <cstring>
@@ -307,6 +308,20 @@ template <typename T>
 vector<4,T>
 matrix<T>::operator* (const vector<4,T> &rhs) const {
     return vector<4,T> {
+        values[0][0] * rhs.x + values[0][1] * rhs.y + values[0][2] * rhs.z + values[0][3] * rhs.w,
+        values[1][0] * rhs.x + values[1][1] * rhs.y + values[1][2] * rhs.z + values[1][3] * rhs.w,
+        values[2][0] * rhs.x + values[2][1] * rhs.y + values[2][2] * rhs.z + values[2][3] * rhs.w,
+        values[3][0] * rhs.x + values[3][1] * rhs.y + values[3][2] * rhs.z + values[3][3] * rhs.w
+    };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+point<4,T>
+matrix<T>::operator* (const point<4,T> &rhs) const
+{
+    return point<4,T> {
         values[0][0] * rhs.x + values[0][1] * rhs.y + values[0][2] * rhs.z + values[0][3] * rhs.w,
         values[1][0] * rhs.x + values[1][1] * rhs.y + values[1][2] * rhs.z + values[1][3] * rhs.w,
         values[2][0] * rhs.x + values[2][1] * rhs.y + values[2][2] * rhs.z + values[2][3] * rhs.w,
