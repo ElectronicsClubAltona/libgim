@@ -73,6 +73,7 @@ namespace util {
     };
 
     typedef matrix<float> matrixf;
+    typedef matrix<float> matrix4f;
 
     template <typename T>
     std::ostream& operator<< (std::ostream&, const matrix<T>&);
