@@ -77,6 +77,7 @@ namespace util {
     // Convenience typedefs
     typedef point<2,float> point2f;
     typedef point<3,float> point3f;
+    typedef point<4,float> point4f;
 
     typedef point<2,double> point2d;
     typedef point<3,double> point3d;
