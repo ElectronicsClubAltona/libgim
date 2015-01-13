@@ -27,6 +27,7 @@ UTIL_FILES   =		\
     exe.hpp		\
     extent.cpp		\
     extent.hpp		\
+    extent.ipp		\
     fixed.cpp		\
     fixed.hpp		\
     float.cpp		\

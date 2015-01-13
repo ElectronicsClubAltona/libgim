@@ -45,11 +45,16 @@ namespace util {
         bool operator !=(const extent& rhs) const
             { return !(*this == rhs); }
 
+        template <typename U>
+        extent<U> cast (void) const;
+
         void sanity (void) const;
     };
 }
 
 template <typename T>
 std::ostream& operator<< (std::ostream&, util::extent<T>);
+
+#include "extent.ipp"
 
 #endif
