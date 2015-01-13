@@ -22,6 +22,11 @@
 
 #include "../platform.hpp"
 
+#include <algorithm>
+#include <iterator>
+
+#include <cstdlib>
+
 namespace util {
     namespace detail {
         // Disable GCC warnings about validity of anonyous structures in
