@@ -20,17 +20,22 @@
 #ifndef __UTIL_COLOUR_HPP
 #define __UTIL_COLOUR_HPP
 
+#include "detail/coord.hpp"
+
 #include "json.hpp"
 
 #include <iostream>
 
 namespace util {
     /// An RGBA colour POD type.
-    struct colour {
-        float r;
-        float g;
-        float b;
-        float a;
+    template <typename T>
+    struct colour : public detail::coord<4, T> {
+        using detail::coord<4,T>::coord;
+
+        T r;
+        T g;
+        T b;
+        T a;
 
         static const colour WHITE;
         static const colour BLACK;
@@ -39,8 +44,10 @@ namespace util {
         static const colour GREEN;
     };
 
-    std::ostream& operator<< (std::ostream&, const util::colour&);
-    const json::node& operator>> (const json::node&, util::colour&);
+    typedef colour<float> colour4f;
+
+    const json::node& operator>> (const json::node&, util::colour4f&);
+    std::ostream& operator<< (std::ostream&, const util::colour4f&);
 }
 
 #endif
