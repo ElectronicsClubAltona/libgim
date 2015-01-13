@@ -47,6 +47,9 @@ namespace util {
             coord (U ..._u): data{_u...}
             { ; }
 
+            coord (const coord<S,T> &rhs) = default;
+            coord& operator= (const coord<S,T> &rhs) = default;
+
             T data[S];
 
             static const size_t dimension = S;
@@ -67,6 +70,9 @@ namespace util {
             template <typename ...U>
             coord (U ..._u): data{_u...}
             { ; }
+
+            coord (const coord<1,T> &rhs) = default;
+            coord& operator= (const coord<1,T> &rhs) = default;
 
             union {
                 T data[1];
@@ -91,6 +97,9 @@ namespace util {
             template <typename ...U>
             coord (U ..._u): data{_u...}
             { ; }
+
+            coord (const coord<2,T> &rhs) = default;
+            coord& operator= (const coord<2,T> &rhs) = default;
 
             union {
                 T data[2];
@@ -139,6 +148,9 @@ namespace util {
             coord (U... u): data{u...}
             { ; }
 
+            coord (const coord<3,T> &rhs) = default;
+            coord& operator= (const coord<3,T> &rhs) = default;
+
             T& operator[] (size_t i)       { return data[i]; }
             T  operator[] (size_t i) const { return data[i]; }
         };
@@ -182,6 +194,9 @@ namespace util {
             template <typename... U>
             coord (U... u): data{u...}
             { ; }
+
+            coord (const coord<4,T> &rhs) = default;
+            coord& operator= (const coord<4,T> &rhs) = default;
 
             T& operator[] (size_t i)       { return data[i]; }
             T  operator[] (size_t i) const { return data[i]; }
