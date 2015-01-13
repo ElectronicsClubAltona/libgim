@@ -146,49 +146,54 @@ exactly_zero (T a)
     { return exactly_equal (a, static_cast<T> (0)); }
 
 
-const double PI = 3.141592653589793238462643;
+//-----------------------------------------------------------------------------
+constexpr double PI = 3.141592653589793238462643;
 
-inline double
+constexpr double
 to_degrees (double radians) {
     return radians * 180 / PI;
 }
 
-inline double
+constexpr double
 to_radians (double degrees) {
     return degrees / 180 * PI;
 }
 
 
+//-----------------------------------------------------------------------------
 /// Variadic minimum
 template <typename T>
-const T&
-min (const T &a)
+constexpr T
+min (const T a)
     { return a; }
 
 
 template <typename T, typename U, typename ...Args>
-typename std::common_type<T, U>::type
+constexpr typename std::common_type<T, U>::type
 min (const T a , const U b , const Args &...args )
     { return min ( b < a ? b : a, args...); }
 
 
+//-----------------------------------------------------------------------------
 /// Variadic maximum
 template <typename T>
-const T&
-max (const T &a)
+constexpr T
+max (const T a)
     { return a; }
 
 
 template <typename T, typename ...Args>
-const T&
-max (const T &a , const T &b , const Args &...args )
+constexpr T
+max (const T a , const T b , const Args &...args )
     { return max ( b > a ? b : a, args...); }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 int sign (T val);
 
 
+//-----------------------------------------------------------------------------
 template <typename T, typename U, typename V>
 T
 limit (const T &&val, const U &&hi, const V &&lo) {
