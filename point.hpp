@@ -57,6 +57,7 @@ namespace util {
         bool operator== (const point<S,T>&) const;
 
         template <size_t D> point<D,T> redim (void) const;
+        template <size_t D> point<D,T> redim (const util::point<D,T> &fill) const;
 
         static const point<S,T> ORIGIN;
 

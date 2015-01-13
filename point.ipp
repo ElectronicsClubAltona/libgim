@@ -68,7 +68,29 @@ namespace util {
     template<size_t D>
     point<D,T> point<S,T>::redim (void) const {
         point<D,T> out;
-        std::copy (std::begin (this->data), std::begin (this->data) + D, std::begin (out.data));
+        std::copy_n (std::begin (this->data),
+                     min (S, D),
+                     std::begin (out.data));
+        return out;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template<size_t S, typename T>
+    template<size_t D>
+    point<D,T> point<S,T>::redim (const point<D,T> &fill) const {
+        point<D,T> out;
+
+        static constexpr auto L1 = min (S, D);
+        static constexpr auto L2 = D - L1;
+
+        std::copy_n (std::begin (this->data),
+                     L1,
+                     std::begin (out.data));
+
+        std::copy_n (fill.data + L1,
+                     L2,
+                     out.data + L1);
         return out;
     }
 }
