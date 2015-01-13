@@ -305,6 +305,14 @@ matrix<T>::operator* (const matrix<T> &rhs) const {
 
 //-----------------------------------------------------------------------------
 template <typename T>
+matrix<T>&
+matrix<T>::operator*=(const matrix<T> &rhs) {
+    return *this = *this * rhs;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 vector<4,T>
 matrix<T>::operator* (const vector<4,T> &rhs) const {
     return vector<4,T> {
