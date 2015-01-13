@@ -51,9 +51,6 @@ namespace util {
 
         bool operator== (const matrix<T>&) const;
 
-        point<3,T> to_local  (const point<3,T> &p) const;
-        point<3,T> to_global (const point<3,T> &p) const;
-
         bool is_affine (void) const;
 
         // Perspective matrices

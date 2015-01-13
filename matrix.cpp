@@ -364,31 +364,6 @@ matrix<T>::operator== (const matrix<T> &rhs) const {
     return true;
 }
 
-//-----------------------------------------------------------------------------
-template <typename T>
-util::point<3,T>
-matrix<T>::to_local (const util::point<3,T> &p) const {
-    CHECK_SOFT (is_affine ());
-
-    return { p.x * values[0][0] +
-             p.y * values[0][1] +
-             p.z * values[0][2] + values[0][3],
-             p.x * values[1][0] +
-             p.y * values[1][1] +
-             p.z * values[1][2] + values[1][3],
-             p.x * values[2][0] +
-             p.y * values[2][1] +
-             p.z * values[2][2] + values[2][3] };
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-util::point<3,T>
-matrix<T>::to_global (const util::point<3,T> &p) const {
-    return inverse ().to_local (p);
-}
-
 
 //-----------------------------------------------------------------------------
 template <typename T>
