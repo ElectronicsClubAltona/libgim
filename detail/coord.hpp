@@ -52,7 +52,7 @@ namespace util {
 
             T data[S];
 
-            static const size_t dimension = S;
+            static constexpr size_t dimension = S;
 
             T& operator[] (size_t i)       { return data[i]; }
             T  operator[] (size_t i) const { return data[i]; }
@@ -79,7 +79,7 @@ namespace util {
                 T x;
             };
 
-            static const size_t dimension = 1;
+            static constexpr size_t dimension = 1;
 
             T& operator[] (size_t i)       { return data[i]; }
             T  operator[] (size_t i) const { return data[i]; }
@@ -113,7 +113,7 @@ namespace util {
                 };
             };
 
-            static const size_t dimension = 2;
+            static constexpr size_t dimension = 2;
 
             T& operator[] (size_t i)       { return data[i]; }
             T  operator[] (size_t i) const { return data[i]; }
@@ -137,7 +137,7 @@ namespace util {
                 };
             };
 
-            static const size_t dimension = 3;
+            static constexpr size_t dimension = 3;
 
             coord () { ; }
 
@@ -184,7 +184,7 @@ namespace util {
                 };
             };
 
-            static const size_t dimension = 4;
+            static constexpr size_t dimension = 4;
 
             coord () { ; }
 
