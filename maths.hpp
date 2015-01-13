@@ -154,6 +154,13 @@ to_degrees (double radians) {
     return radians * 180 / PI;
 }
 
+//-----------------------------------------------------------------------------
+constexpr float
+to_radians (float degrees) {
+    return degrees / 180 * static_cast<float> (PI);
+}
+
+
 constexpr double
 to_radians (double degrees) {
     return degrees / 180 * PI;

@@ -40,7 +40,8 @@ main (int, char **) {
     CHECK_EQ (sign (-numeric_limits<double>::infinity ()), -1);
 
     CHECK_EQ (to_degrees (PI),  180);
-    CHECK_EQ (to_radians (180),  PI);
+    CHECK_EQ (to_radians (180.f),  PI);
+    CHECK_EQ (to_radians (180.0),  PI);
 
     CHECK_EQ (log2 (8u), 3);
     CHECK_EQ (log2 (1u), 0);
