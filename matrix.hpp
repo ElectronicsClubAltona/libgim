@@ -32,9 +32,6 @@ namespace util {
         static const size_t rows = 4;
         static const size_t cols = 4;
 
-        void scale     (T x, T y, T z);
-        void translate (T x, T y, T z);
-
         matrix& transpose  (void);
         matrix  transposed (void) const;
 

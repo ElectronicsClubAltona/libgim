@@ -29,28 +29,6 @@ using namespace util;
 
 //-----------------------------------------------------------------------------
 template <typename T>
-void
-matrix<T>::scale (T x, T y, T z) {
-    CHECK_HARD (is_affine ());
-    values[0][0] *= x;
-    values[1][1] *= y;
-    values[2][2] *= z;
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-void
-matrix<T>::translate (T x, T y, T z) {
-    CHECK_HARD (is_affine ());
-    values[0][3] += x;
-    values[1][3] += y;
-    values[2][3] += z;
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
 matrix<T>
 matrix<T>::transposed (void) const
 {
