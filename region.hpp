@@ -89,6 +89,7 @@ namespace util {
 #endif
     };
 
+    typedef region<size_t> region2u;
 
     template <typename T>
     std::ostream& operator<< (std::ostream&, const util::region<T>&);
