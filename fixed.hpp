@@ -36,7 +36,7 @@ namespace util {
         public:
             explicit fixed(double);
             explicit fixed(float);
-            explicit fixed(integral_type);
+            fixed(integral_type);
 
             double        to_double   (void) const;
             float         to_float    (void) const;
