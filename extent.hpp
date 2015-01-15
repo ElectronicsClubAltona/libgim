@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_EXTENT_HPP
@@ -50,10 +50,13 @@ namespace util {
 
         void sanity (void) const;
     };
+
+    typedef extent<size_t> extent2u;
+
+    template <typename T>
+    std::ostream& operator<< (std::ostream&, util::extent<T>);
 }
 
-template <typename T>
-std::ostream& operator<< (std::ostream&, util::extent<T>);
 
 #include "extent.ipp"
 

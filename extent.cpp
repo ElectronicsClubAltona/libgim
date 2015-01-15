@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "extent.hpp"
@@ -113,15 +113,15 @@ namespace util {
 //-----------------------------------------------------------------------------
 template <typename T>
 std::ostream&
-operator<< (std::ostream &os, util::extent<T> e) {
+util::operator<< (std::ostream &os, util::extent<T> e) {
     os << "[" << e.w << ", " << e.h << "]";
     return os;
 }
 
 
-template std::ostream& operator<< (std::ostream&, util::extent<uint16_t>);
-template std::ostream& operator<< (std::ostream&, util::extent<uint32_t>);
-template std::ostream& operator<< (std::ostream&, util::extent<uint64_t>);
+template std::ostream& util::operator<< (std::ostream&, util::extent<uint16_t>);
+template std::ostream& util::operator<< (std::ostream&, util::extent<uint32_t>);
+template std::ostream& util::operator<< (std::ostream&, util::extent<uint64_t>);
 
 //-----------------------------------------------------------------------------
 namespace util {
