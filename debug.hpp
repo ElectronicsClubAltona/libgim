@@ -47,14 +47,9 @@
 }
 
 
-#define WARN(MSG) do {                                                                      \
-   std::cerr << __FILE__ << ":" << __func__ << ":" __LINE__ << ", " << (MSG) << std::endl;  \
-} while (0)
-
-
-#define WARN_IF(C, MSG) do {                                                                    \
+#define WARN(C) do {                                                                            \
     if (C) {                                                                                    \
-        std::cerr << __FILE__ << ":" << __func__ << ":" __LINE__ << ", " << (MSG) << std::endl; \
+        std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << ", " << #C << std::endl; \
     }                                                                                           \
 } while (0)
 
