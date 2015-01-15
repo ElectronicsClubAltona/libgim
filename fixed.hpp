@@ -43,6 +43,10 @@ namespace util {
             integral_type to_integral (void) const;
             combined_type to_native   (void) const;
 
+            static fixed<INT,FRAC> from_native (integral_type);
+
+            static integral_type to_integral (integral_type);
+
             fixed<INT, FRAC>& operator +=(const fixed<INT, FRAC>);
             fixed<INT, FRAC>& operator -=(const fixed<INT, FRAC>);
             fixed<INT, FRAC>& operator *=(const fixed<INT, FRAC>);
