@@ -176,9 +176,15 @@ min (const T a)
 
 
 template <typename T, typename U, typename ...Args>
-constexpr typename std::common_type<T, U>::type
-min (const T a , const U b , const Args &...args )
-    { return min ( b < a ? b : a, args...); }
+constexpr typename std::enable_if<
+    std::is_unsigned<typename std::decay<T>::type>::value == std::is_unsigned<typename std::decay<U>::type>::value &&
+    std::is_integral<typename std::decay<T>::type>::value == std::is_integral<typename std::decay<U>::type>::value,
+    typename std::common_type<T,U>::type
+>::type
+min (const T a, const U b, Args ...args)
+{
+    return min (a < b ? a : b, std::forward<Args> (args)...);
+}
 
 
 //-----------------------------------------------------------------------------
@@ -189,11 +195,16 @@ max (const T a)
     { return a; }
 
 
-template <typename T, typename ...Args>
-constexpr T
-max (const T a , const T b , const Args &...args )
-    { return max ( b > a ? b : a, args...); }
-
+template <typename T, typename U, typename ...Args>
+constexpr typename std::enable_if<
+    std::is_unsigned<typename std::decay<T>::type>::value == std::is_unsigned<typename std::decay<U>::type>::value &&
+    std::is_integral<typename std::decay<T>::type>::value == std::is_integral<typename std::decay<U>::type>::value,
+    typename std::common_type<T,U>::type
+>::type
+max (const T a, const U b, Args ...args)
+{
+    return max (a > b ? a : b, std::forward<Args> (args)...);
+}
 
 //-----------------------------------------------------------------------------
 template <typename T>
