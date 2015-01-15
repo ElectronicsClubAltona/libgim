@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-14 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_POINT_HPP
@@ -46,6 +46,8 @@ namespace util {
         // arithetic operators
         point<S,T>& operator*= (T);
         point<S,T>  operator*  (T) const;
+        point<S,T>  operator/  (T) const;
+
         point<S,T>  operator-  (const point<S,T>&) const;
 
         point<S,T>  operator-  (const vector<S,T>&) const;

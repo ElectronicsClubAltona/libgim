@@ -56,6 +56,21 @@ util::point<S,T>::operator* (T f) const {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::point<S,T>
+util::point<S,T>::operator/ (T f) const
+{
+    point<S,T> out;
+
+    std::transform (std::begin (this->data),
+                    std::end   (this->data),
+                    std::begin (out.data),
+                    [f] (auto i) { return i / f; });
+
+    return out;
+}
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+util::point<S,T>
 util::point<S,T>::operator- (const vector<S,T> &rhs) const {
     util::point<S,T> out;
 
