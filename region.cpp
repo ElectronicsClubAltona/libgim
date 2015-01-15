@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -29,6 +29,17 @@
 
 //-----------------------------------------------------------------------------
 using namespace util;
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+region<T>::region (util::point<2,T> _point,
+                   util::extent<size_type> _size):
+    x (_point.x),
+    y (_point.y),
+    w (_size.w),
+    h (_size.h)
+{ ; }
 
 
 //-----------------------------------------------------------------------------

@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 
 #ifndef __UTIL_REGION_HPP
 #define __UTIL_REGION_HPP
 
+#include "extent.hpp"
 #include "point.hpp"
 #include "types/traits.hpp"
 
@@ -40,6 +41,7 @@ namespace util {
         T x, y;                 
         size_type w, h;
 
+        region (util::point<2,T>, util::extent<size_type>);
         region (T _x, T _y, size_type _w, size_type _h);
 
         size_type area     (void) const;
