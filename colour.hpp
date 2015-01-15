@@ -32,11 +32,6 @@ namespace util {
     struct colour : public detail::coord<4, T> {
         using detail::coord<4,T>::coord;
 
-        T r;
-        T g;
-        T b;
-        T a;
-
         static const colour WHITE;
         static const colour BLACK;
         static const colour RED;

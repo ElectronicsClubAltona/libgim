@@ -5,6 +5,7 @@ TEST_BIN = 		\
 	backtrace 	\
 	bitwise		\
 	checksum	\
+	colour		\
 	float		\
 	hton		\
 	ip 		\
