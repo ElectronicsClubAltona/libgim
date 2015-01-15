@@ -508,7 +508,7 @@ matrix<T>::scale (util::vector<3,T> v)
 //-----------------------------------------------------------------------------
 template <typename T>
 matrix<T>
-matrix<T>::rotate (util::vector<3,T> about, T angle)
+matrix<T>::rotate (T angle, util::vector<3,T> about)
 {
     about.normalise ();
 
