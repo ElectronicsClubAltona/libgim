@@ -156,6 +156,7 @@ UTIL_FILES   =		\
     types/traits.hpp	\
     vector.cpp		\
     vector.hpp		\
+    vector.ipp		\
     version.cpp		\
     version.hpp		\
     zlib.cpp		\

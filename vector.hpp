@@ -75,6 +75,9 @@ namespace util {
         vector<S,T>  normalised [[gnu::warn_unused_result]] (void) const;
 
         template <size_t D> vector<D,T> redim (void) const;
+        template <size_t D> vector<D,T> redim (const util::vector<D,T> &fill) const;
+
+        static const vector<S,T> ZERO;
 
         void sanity (void) const;
     };
@@ -106,6 +109,7 @@ namespace util {
     typedef vector<3,double> vector4d;
 }
 
+#include "vector.ipp"
 
 #endif
 
