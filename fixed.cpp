@@ -151,3 +151,4 @@ fixed<INT, FRAC>::operator /(integral_type val) const
 //-----------------------------------------------------------------------------
 template class util::fixed<16,16>;
 template class util::fixed<32,32>;
+template class util::fixed<26, 6>;
