@@ -49,9 +49,7 @@ region<T>::region (T _x, T _y, size_type _w, size_type _h):
     y (_y),
     w (_w),
     h (_h)
-{
-    DEBUG_ONLY (sanity ());
-}
+{ ; }
 
 
 //-----------------------------------------------------------------------------
@@ -204,8 +202,8 @@ region<T>::operator== (const region& rhs) const
 template <typename T>
 void
 region<T>::sanity (void) const {
-    CHECK_SOFT (w > 0);
-    CHECK_SOFT (h > 0);
+    CHECK_GE (w, 0);
+    CHECK_GE (h, 0);
     static_assert(!std::is_floating_point<T>::value,
                   "Floating point types need width and height checks");
 }
