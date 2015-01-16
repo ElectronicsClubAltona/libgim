@@ -68,6 +68,19 @@ extent<T>::area (void) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
+extent<T>
+extent<T>::expanded (util::vector<2,T> size) const
+{
+    return {
+        w + size.x,
+        h + size.y
+    };
+}
+
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 float
 extent<T>::aspect (void) const
 {

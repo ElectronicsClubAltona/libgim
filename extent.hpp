@@ -20,6 +20,8 @@
 #ifndef __UTIL_EXTENT_HPP
 #define __UTIL_EXTENT_HPP
 
+#include "vector.hpp"
+
 #include <iostream>
 
 namespace util {
@@ -36,6 +38,8 @@ namespace util {
 
         T    area  (void) const;
         T diameter (void) const;
+
+        extent<T> expanded (util::vector<2,T>) const;
 
         float aspect (void) const;
 
