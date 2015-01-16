@@ -38,7 +38,7 @@ namespace util {
         typedef T size_type;
 #endif
 
-        T x, y;                 
+        T x, y;
         size_type w, h;
 
         region (util::point<2,T>, util::extent<size_type>);
@@ -96,4 +96,4 @@ namespace util {
 }
 
 
-#endif 
+#endif
