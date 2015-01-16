@@ -56,6 +56,7 @@ namespace util {
     };
 
     typedef extent<size_t> extent2u;
+    typedef extent<float> extent2f;
 
     template <typename T>
     std::ostream& operator<< (std::ostream&, util::extent<T>);
