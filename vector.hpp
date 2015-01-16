@@ -100,6 +100,9 @@ namespace util {
     const json::node& operator>> (const json::node&, vector<S,T>&);
 
     // convenience typedefs
+    typedef vector<2,size_t> vector2u;
+    typedef vector<2,long> vector2i;
+
     typedef vector<2,float> vector2f;
     typedef vector<3,float> vector3f;
     typedef vector<4,float> vector4f;

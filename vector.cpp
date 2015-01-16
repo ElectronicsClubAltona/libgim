@@ -412,6 +412,16 @@ util::operator<< (std::ostream &os, const util::vector<S,T> &v) {
 }
 
 
+template std::ostream& util::operator<< (std::ostream&, const util::vector<1,size_t> &v);
+template std::ostream& util::operator<< (std::ostream&, const util::vector<2,size_t> &v);
+template std::ostream& util::operator<< (std::ostream&, const util::vector<3,size_t> &v);
+template std::ostream& util::operator<< (std::ostream&, const util::vector<4,size_t> &v);
+
+template std::ostream& util::operator<< (std::ostream&, const util::vector<1,long> &v);
+template std::ostream& util::operator<< (std::ostream&, const util::vector<2,long> &v);
+template std::ostream& util::operator<< (std::ostream&, const util::vector<3,long> &v);
+template std::ostream& util::operator<< (std::ostream&, const util::vector<4,long> &v);
+
 template std::ostream& util::operator<< (std::ostream&, const util::vector<1,float> &v);
 template std::ostream& util::operator<< (std::ostream&, const util::vector<2,float> &v);
 template std::ostream& util::operator<< (std::ostream&, const util::vector<3,float> &v);
