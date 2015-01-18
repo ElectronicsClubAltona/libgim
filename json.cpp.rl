@@ -228,7 +228,7 @@ struct parse_context {
              $!failure
              @{ fhold; fret; };
 
-    json := (space* object space*)
+    json := (space* (object | array) space*)
             $!failure
             %success
             >{ __success = false; };
