@@ -286,8 +286,11 @@ json::parse (const char *start,
     %%write init;
     %%write exec;
 
-    if (!__success)
-        throw parse_error ("unable to parse json");
+    if (!__success) {
+        std::ostringstream os;
+        os << "unable to parse json at char " << (p - start);
+        throw parse_error (os.str ());
+    }
 
     return std::unique_ptr<json::node> (__root);
 }
