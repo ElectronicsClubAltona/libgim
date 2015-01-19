@@ -30,8 +30,6 @@
 namespace util {
     template <size_t S, typename T>
     struct vector : public detail::coord<S, T> {
-        static_assert (S > 0, "vector dimensions must be strictly positive");
-
         using detail::coord<S,T>::coord;
 
         // arithmetic operators

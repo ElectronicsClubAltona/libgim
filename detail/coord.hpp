@@ -5,16 +5,16 @@
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * libgim is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_COORD_HPP
@@ -39,173 +39,120 @@ namespace util {
 #if defined(COMPILER_CLANG)
     #pragma GCC diagnostic ignored "-Wgnu"
 #endif
+
+        //---------------------------------------------------------------------
+        // coord types are not really intended to have arbitrary dimension, so
+        // don't add specialisations (or a general case) without a decent
+        // reason.
         template <size_t S, typename T>
-        struct coord {
-            typedef T value_type;
+        struct coord_data;
 
-            coord () { ; }
-
-            explicit coord (T v)
-            { std::fill (std::begin (data), std::end (data), v); }
-
-            template <typename ...U>
-            coord (U ..._u): data{_u...}
-            { ; }
-
-            coord (const coord<S,T> &rhs) = default;
-            coord& operator= (const coord<S,T> &rhs) = default;
-
-            T data[S];
-
-            static constexpr size_t dimension = S;
-
-            T& operator[] (size_t i)       { return data[i]; }
-            T  operator[] (size_t i) const { return data[i]; }
-        };
-
+        //---------------------------------------------------------------------
         template <typename T>
-        struct coord<1,T> {
-            typedef T value_type;
-
-            coord () { ; }
-
-            explicit coord (T v)
-            { std::fill (std::begin (data), std::end (data), v); }
-
-            template <typename ...U>
-            coord (U ..._u): data{_u...}
+        struct coord_data<1, T>
+        {
+            coord_data () = default;
+            coord_data (T v0):
+                data { v0 }
             { ; }
-
-            coord (const coord<1,T> &rhs) = default;
-            coord& operator= (const coord<1,T> &rhs) = default;
 
             union {
                 T data[1];
                 T x;
             };
-
-            static constexpr size_t dimension = 1;
-
-            T& operator[] (size_t i)       { return data[i]; }
-            T  operator[] (size_t i) const { return data[i]; }
         };
 
+
+        //---------------------------------------------------------------------
         template <typename T>
-        struct coord<2,T> {
-            typedef T value_type;
-
-            coord () { ; }
-
-            explicit coord (T v)
-            { std::fill (std::begin (data), std::end (data), v); }
-
-            template <typename ...U>
-            coord (U ..._u): data{_u...}
+        struct coord_data<2,T>
+        {
+            coord_data () = default;
+            coord_data (T v0, T v1):
+                data { v0, v1 }
             { ; }
-
-            coord (const coord<2,T> &rhs) = default;
-            coord& operator= (const coord<2,T> &rhs) = default;
 
             union {
                 T data[2];
-                struct {
-                    T x;
-                    T y;
-                };
-                struct {
-                    T s;
-                    T t;
-                };
+
+                struct { T x, y; };
+                struct { T s, t; };
             };
-
-            static constexpr size_t dimension = 2;
-
-            T& operator[] (size_t i)       { return data[i]; }
-            T  operator[] (size_t i) const { return data[i]; }
         };
 
+
+        //---------------------------------------------------------------------
         template <typename T>
-        struct coord<3,T> {
-            typedef T value_type;
+        struct coord_data<3,T>
+        {
+            coord_data () = default;
+            coord_data (T v0, T v1, T v2):
+                data { v0, v1, v2 }
+            { ; }
 
             union {
                 T data[3];
-                struct {
-                    T x;
-                    T y;
-                    T z;
-                };
-                struct {
-                    T r;
-                    T g;
-                    T b;
-                };
+
+                struct { T x, y, z; };
+                struct { T s, t, p; };
+                struct { T r, g, b; };
             };
-
-            static constexpr size_t dimension = 3;
-
-            coord () { ; }
-
-            explicit coord (T v)
-            { std::fill (std::begin (data), std::end (data), v); }
-
-            template <typename... U>
-            coord (U... u): data{u...}
-            { ; }
-
-            coord (const coord<3,T> &rhs) = default;
-            coord& operator= (const coord<3,T> &rhs) = default;
-
-            T& operator[] (size_t i)       { return data[i]; }
-            T  operator[] (size_t i) const { return data[i]; }
         };
 
-        template <size_t S, typename T>
-        T dot (const coord<S,T> &a, const coord<S,T> &b)
-        {
-            T sum { 0 };
-            for (size_t i = 0; i < S; ++i)
-                sum += a.data[i] * b.data[i];
-            return sum;
-        }
 
+        //---------------------------------------------------------------------
         template <typename T>
-        struct coord<4,T> {
-            typedef T value_type;
+        struct coord_data<4,T>
+        {
+            coord_data () = default;
+            coord_data (T v0, T v1, T v2, T v3):
+                data { v0, v1, v2, v3 }
+            { ; }
 
             union {
                 T data[4];
-                struct {
-                    T x;
-                    T y;
-                    T z;
-                    T w;
-                };
-                struct {
-                    T r;
-                    T g;
-                    T b;
-                    T a;
-                };
+
+                struct { T x, y, z, w; };
+                struct { T s, t, p, q; };
+                struct { T r, g, b, a; };
             };
+        };
 
-            static constexpr size_t dimension = 4;
 
-            coord () { ; }
+        //---------------------------------------------------------------------
+        template <size_t S, typename T>
+        struct coord : public coord_data<S,T> {
+            static_assert (S > 0, "coord dimensions must be strictly positive");
+
+            typedef T value_type;
+            static constexpr size_t dimension = S;
+
+            using coord_data<S,T>::coord_data;
+            coord () = default;
 
             explicit coord (T v)
-            { std::fill (std::begin (data), std::end (data), v); }
+            { std::fill (std::begin (this->data), std::end (this->data), v); }
 
-            template <typename... U>
-            coord (U... u): data{u...}
-            { ; }
+            coord (const coord<S,T> &rhs) = default;
+            coord& operator= (const coord<S,T> &rhs) = default;
 
-            coord (const coord<4,T> &rhs) = default;
-            coord& operator= (const coord<4,T> &rhs) = default;
-
-            T& operator[] (size_t i)       { return data[i]; }
-            T  operator[] (size_t i) const { return data[i]; }
+            T& operator[] (size_t i)       { return this->data[i]; }
+            T  operator[] (size_t i) const { return this->data[i]; }
         };
+
+
+        //---------------------------------------------------------------------
+        // XXX: Unsure whether this should really be defined for arbitrary
+        // types in a semantic sense, but practicality suggestes this is the
+        // best option; point/vector dot product is too useful.
+        template <size_t S, typename T>
+        T dot (const coord<S,T> &a, const coord<S,T> &b)
+        {
+            return std::inner_product (std::begin (a.data),
+                                       std::end   (a.data),
+                                       std::begin (b.data),
+                                       T {0});
+        }
 #pragma GCC diagnostic pop
     }
 }

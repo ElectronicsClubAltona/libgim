@@ -32,8 +32,6 @@ namespace util {
     /// An n-dimensional position in space.
     template <size_t S, typename T>
     struct point : public detail::coord<S,T> {
-        static_assert (S > 0, "point dimensions must be strictly positive.");
-
         using detail::coord<S,T>::coord;
 
         // point operators
