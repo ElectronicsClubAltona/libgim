@@ -56,7 +56,7 @@ util::sleep (uint64_t ns) {
 uint64_t
 util::nanoseconds (void) {
     struct timespec t;
-    clock_gettime (CLOCK_REALTIME, &t);
+    clock_gettime (CLOCK_MONOTONIC, &t);
 
     CHECK_SOFT (t.tv_sec  > 0);
     CHECK_SOFT (t.tv_nsec > 0);
