@@ -63,6 +63,8 @@ namespace util {
 
         static const point<S,T> ORIGIN;
 
+        template<typename U> point<S,U> cast (void) const;
+
         void sanity (void) const;
     };
 

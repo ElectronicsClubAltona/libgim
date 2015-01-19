@@ -93,4 +93,18 @@ namespace util {
                      out.data + L1);
         return out;
     }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T>
+    template <typename U>
+    point<S,U>
+    point<S,T>::cast (void) const
+    {
+        point<S,U> out;
+        std::copy (std::begin (this->data),
+                   std::end   (this->data),
+                   std::begin (out.data));
+        return out;
+    }
 }
