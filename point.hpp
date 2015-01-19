@@ -46,7 +46,7 @@ namespace util {
         point<S,T>  operator*  (T) const;
         point<S,T>  operator/  (T) const;
 
-        point<S,T>  operator-  (const point<S,T>&) const;
+        vector<S,T>  operator-  (const point<S,T>&) const;
 
         point<S,T>  operator-  (const vector<S,T>&) const;
         point<S,T>& operator-= (const vector<S,T>&);

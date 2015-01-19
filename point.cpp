@@ -111,9 +111,9 @@ util::point<S,T>::operator+= (const util::vector<S,T> &rhs) {
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::point<S,T>
+util::vector<S,T>
 util::point<S,T>::operator- (const point<S,T> &rhs) const {
-    util::point<S,T> out;
+    util::vector<S,T> out;
 
     for (size_t i = 0; i < S; ++i)
         out.data[i] = this->data[i] - rhs.data[i];
