@@ -79,21 +79,21 @@ util::sleep (uint64_t ns) {
 #endif
 
 // ----------------------------------------------------------------------------
-delta_clock::delta_clock():
+delta_clock::delta_clock ():
     time { util::nanoseconds (), util::nanoseconds () }
 { ; }
 
 
-double
+float
 delta_clock::seconds (void) {
     time.prev = time.curr;
     time.curr = nanoseconds ();
 
-    return (time.curr - time.prev) / static_cast<double> (SECOND);
+    return (time.curr - time.prev) / static_cast<float> (SECOND);
 }
 
 // ----------------------------------------------------------------------------
-util::period_query::period_query (double seconds) {
+util::period_query::period_query (float seconds) {
     m_time.start  = nanoseconds ();
     m_time.period = static_cast<uint64_t> (seconds * SECOND);
 }

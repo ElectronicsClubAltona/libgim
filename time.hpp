@@ -34,7 +34,7 @@ namespace util {
     class delta_clock {
         public:
             delta_clock ();
-            double seconds (void);
+            float seconds (void);
 
         protected:
             struct {
@@ -46,7 +46,7 @@ namespace util {
     // ------------------------------------------------------------------------
     class period_query {
         public:
-            period_query (double seconds);
+            period_query (float seconds);
 
             bool poll (void);
 
