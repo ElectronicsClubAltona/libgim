@@ -494,6 +494,14 @@ matrix<T>::translate (util::vector<3,T> v)
 //-----------------------------------------------------------------------------
 template <typename T>
 matrix<T>
+matrix<T>::scale (T mag)
+{
+    return scale (vector<3,T> (mag));
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>
 matrix<T>::scale (util::vector<3,T> v)
 {
     return { {

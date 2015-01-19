@@ -65,6 +65,7 @@ namespace util {
         // Affine matrices
         static matrix<T> translate (util::vector<3,T>);
         static matrix<T> scale     (util::vector<3,T>);
+        static matrix<T> scale     (T);
         static matrix<T> rotate    (T angle, util::vector<3,T> about);
 
         // Constant matrices
