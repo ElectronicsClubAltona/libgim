@@ -34,7 +34,6 @@ UTIL_FILES   =		\
     float.hpp		\
     fourcc.cpp		\
     fourcc.hpp		\
-    fwd.hpp		\
     guid.cpp		\
     guid.hpp		\
     hash.cpp		\
