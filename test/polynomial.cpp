@@ -33,9 +33,7 @@ main (int, char**)
         std::sort (s.begin (), s.end ());
 
         for (size_t j = 0; j < 3; ++j) {
-            std::cerr << i.solutions[j] << "==" << s[j] << '\n';
-
-            bool equal = ieee_single::almost_equal (i.solutions[j], s[j], 864'026'624);
+            bool equal = ieee_single::almost_equal (i.solutions[j], s[j]);
             bool invalid = std::isnan (i.solutions[j]) && std::isnan (s[j]);
 
             CHECK (equal || invalid);

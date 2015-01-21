@@ -126,6 +126,44 @@ namespace util { namespace polynomial {
         float sub = a / 3.f;
         for (auto &i: s)
             i -= sub;
+
+        // Run an iteration of Newtons method to make the results slightly
+        // more accurate, they're a little loose straight out of the bat.
+        float da = 3;
+        float db = 2 * a;
+        float dc = b;
+
+        for (auto &i: s) {
+            float deriv = da * i * i + db * i + dc;
+            if (almost_zero (deriv))
+                continue;
+
+            i = i - eval (coeffs, i) / deriv;
+        }
+
         return s;
     }
 } }
+
+
+//-----------------------------------------------------------------------------
+template <size_t S>
+float
+util::polynomial::eval (const std::array<float,S> coeffs, const float x)
+{
+    float x_ = 1.f;
+    float sum = 0.f;
+    for (size_t i = 0; i < S; ++i) {
+        sum += coeffs[S-i-1] * x_;
+        x_ *= x;
+    }
+
+    return sum;
+}
+
+
+//-----------------------------------------------------------------------------
+template float util::polynomial::eval (std::array<float,1>, float);
+template float util::polynomial::eval (std::array<float,2>, float);
+template float util::polynomial::eval (std::array<float,3>, float);
+template float util::polynomial::eval (std::array<float,4>, float);

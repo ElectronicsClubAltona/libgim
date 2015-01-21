@@ -31,7 +31,7 @@ namespace util {
 
         template <size_t S>
         float
-        eval (std::array<float,S>);
+        eval (std::array<float,S>, float x);
     }
 }
 
