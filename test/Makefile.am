@@ -18,6 +18,7 @@ TEST_BIN = 		\
 	md5		\
 	options		\
 	point		\
+	polynomial	\
 	pool		\
 	rand		\
 	range 		\
