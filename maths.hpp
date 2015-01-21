@@ -38,6 +38,11 @@ pow2 [[gnu::pure]] (T value)
 
 
 template <typename T>
+T
+pow (T x, unsigned y);
+
+
+template <typename T>
 bool
 is_pow2 [[gnu::pure]] (T value);
 

@@ -34,3 +34,17 @@ align (T value, U size) {
 
     return divup (value, size) * size;
 }
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+T
+pow (T x, unsigned y)
+{
+    T v = 1;
+
+    for (unsigned i = 1; i <= y; ++i)
+        v *= x;
+
+    return v;
+}
