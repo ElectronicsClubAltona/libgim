@@ -105,13 +105,14 @@
     _CHECK_META (almost_equal (__a, __b),            \
                  { ; },                              \
                  {                                   \
-        std::ostringstream __debug_check_neq_os;     \
-        __debug_check_neq_os                         \
+        std::ostringstream __debug_os;               \
+        __debug_os.precision (15);                   \
+        __debug_os                                   \
            << "expected equality.\n"                 \
            << "__a: " << #A << " is " << __a << ")"  \
            << "\n != \n"                             \
            << "__b: " << #B << " is " << __b << ")"; \
-        panic (__debug_check_neq_os.str ());         \
+        panic (__debug_os.str ());                   \
     });                                              \
 } while (0)
 
