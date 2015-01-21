@@ -12,6 +12,8 @@ SUBDIRS = test
 
 UTIL_FILES   =		\
     backtrace.hpp   	\
+    bezier.cpp		\
+    bezier.hpp		\
     bitwise.cpp		\
     bitwise.hpp		\
     colour.cpp		\
