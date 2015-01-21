@@ -158,6 +158,7 @@ util::point<S,T>::sanity (void) const {
 template <size_t S, typename T>
 const util::point<S,T> util::point<S,T>::ORIGIN (T {0});
 
+
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::point<S,T>
@@ -170,28 +171,13 @@ util::operator* (const vector<S,T> &v, const point<S,T> &p) {
 }
 
 
-template util::point<1,float> util::operator* (const vector<1,float>&, const point<1,float>&);
-template util::point<2,float> util::operator* (const vector<2,float>&, const point<2,float>&);
-template util::point<3,float> util::operator* (const vector<3,float>&, const point<3,float>&);
-
-template util::point<1,double> util::operator* (const vector<1,double>&, const point<1,double>&);
-template util::point<2,double> util::operator* (const vector<2,double>&, const point<2,double>&);
-template util::point<3,double> util::operator* (const vector<3,double>&, const point<3,double>&);
-
-
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::point<S,T>
 util::operator* (const point<S,T> &p, const vector<S,T> &v)
     { return v * p; }
 
 
-template util::point<1,float> util::operator* (const point<1,float>&, const vector<1,float>&);
-template util::point<2,float> util::operator* (const point<2,float>&, const vector<2,float>&);
-template util::point<3,float> util::operator* (const point<3,float>&, const vector<3,float>&);
-
-template util::point<1,double> util::operator* (const point<1,double>&, const vector<1,double>&);
-template util::point<2,double> util::operator* (const point<2,double>&, const vector<2,double>&);
-template util::point<3,double> util::operator* (const point<3,double>&, const vector<3,double>&);
 
 
 //-----------------------------------------------------------------------------
@@ -209,22 +195,19 @@ util::operator<< (std::ostream &os, const util::point<S,T> &p) {
 }
 
 
-template std::ostream& util::operator<< (std::ostream &os, const util::point<1,float>&);
-template std::ostream& util::operator<< (std::ostream &os, const util::point<2,float>&);
-template std::ostream& util::operator<< (std::ostream &os, const util::point<3,float>&);
+//-----------------------------------------------------------------------------
+#define INSTANTIATE_S_T(S,T)                                                            \
+template struct util::point<S,T>;                                                       \
+template std::ostream& util::operator<< (std::ostream &os, const util::point<S,T>&);    \
+template util::point<S,T> util::operator* (const point<S,T>&, const vector<S,T>&);      \
+template util::point<S,T> util::operator* (const vector<S,T>&, const point<S,T>&);      \
 
-template std::ostream& util::operator<< (std::ostream &os, const util::point<1,double>&);
-template std::ostream& util::operator<< (std::ostream &os, const util::point<2,double>&);
-template std::ostream& util::operator<< (std::ostream &os, const util::point<3,double>&);
+#define INSTANTIATE(T)  \
+INSTANTIATE_S_T(1,T)    \
+INSTANTIATE_S_T(2,T)    \
+INSTANTIATE_S_T(3,T)    \
+INSTANTIATE_S_T(4,T)
 
-template std::ostream& util::operator<< (std::ostream &os, const util::point<1,size_t>&);
-template std::ostream& util::operator<< (std::ostream &os, const util::point<2,size_t>&);
-template std::ostream& util::operator<< (std::ostream &os, const util::point<3,size_t>&);
-
-#define INSTANTIATE(T)              \
-template struct util::point<1,T>;   \
-template struct util::point<2,T>;   \
-template struct util::point<3,T>;
 
 INSTANTIATE(int32_t)
 INSTANTIATE(uint32_t)
