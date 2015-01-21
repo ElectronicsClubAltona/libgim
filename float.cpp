@@ -101,12 +101,17 @@ ieee_float<E, S>::almost_equal (floating_t a,
 }
 
 
+// Based on the cynus `AlmostEqualUlps`
 template <unsigned int E, unsigned int S>
 bool
 ieee_float<E, S>::almost_equal (floating_t _a,
                                 floating_t _b,
                                 uint_t ulps)
 {
+    // Ensure ULPs is small enough that the default NaNs won't compare as
+    // equal to anything else.
+    CHECK_LE (ulps, 4 * 1024 * 1024);
+
     union {
         floating_t f;
         sint_t     s;
