@@ -164,24 +164,33 @@ exactly_zero (T a)
 
 
 //-----------------------------------------------------------------------------
-constexpr double PI = 3.141592653589793238462643;
+// angles, trig
+constexpr double PI_d = 3.141592653589793238462643;
+constexpr float  PI_f = 3.141592653589793238462643f;
 
 //-----------------------------------------------------------------------------
 constexpr double
 to_degrees (double radians) {
-    return radians * 180 / PI;
+    return radians * 180 / PI_d;
 }
+
+
+constexpr float
+to_degrees (float radians) {
+    return radians * 180 / PI_f;
+}
+
 
 //-----------------------------------------------------------------------------
 constexpr float
 to_radians (float degrees) {
-    return degrees / 180 * static_cast<float> (PI);
+    return degrees / 180 * static_cast<float> (PI_f);
 }
 
 
 constexpr double
 to_radians (double degrees) {
-    return degrees / 180 * PI;
+    return degrees / 180 * PI_d;
 }
 
 

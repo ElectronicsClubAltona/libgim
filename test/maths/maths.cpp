@@ -10,6 +10,9 @@ using std::numeric_limits;
 
 int
 main (int, char **) {
+    std::cerr.precision (15);
+    std::cout.precision (15);
+
     CHECK_HARD (!almost_equal (-2.0, 0.0));
     CHECK_HARD (!almost_equal (-2.f, 0.f));
     CHECK_HARD ( almost_equal ( 0.0, 0.0));
@@ -39,9 +42,10 @@ main (int, char **) {
     CHECK_EQ (sign ( numeric_limits<double>::infinity ()),  1);
     CHECK_EQ (sign (-numeric_limits<double>::infinity ()), -1);
 
-    CHECK_EQ (to_degrees (PI),  180);
-    CHECK_EQ (to_radians (180.f),  PI);
-    CHECK_EQ (to_radians (180.0),  PI);
+    CHECK_EQ (to_degrees (PI_d),  180.0);
+    CHECK_EQ (to_degrees (PI_f),  180.f);
+    CHECK_EQ (to_radians (180.f),  PI_f);
+    CHECK_EQ (to_radians (180.0),  PI_d);
 
     CHECK_EQ (log2 (8u), 3);
     CHECK_EQ (log2 (1u), 0);
