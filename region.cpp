@@ -28,13 +28,9 @@
 
 
 //-----------------------------------------------------------------------------
-using namespace util;
-
-
-//-----------------------------------------------------------------------------
 template <typename T>
-region<T>::region (util::point<2,T> _point,
-                   util::extent<size_type> _size):
+util::region<T>::region (point<2,T> _point,
+                         extent<size_type> _size):
     x (_point.x),
     y (_point.y),
     w (_size.w),
@@ -44,7 +40,10 @@ region<T>::region (util::point<2,T> _point,
 
 //-----------------------------------------------------------------------------
 template <typename T>
-region<T>::region (T _x, T _y, size_type _w, size_type _h):
+util::region<T>::region (position_type _x,
+                         position_type _y,
+                         size_type _w,
+                         size_type _h):
     x (_x),
     y (_y),
     w (_w),
@@ -54,21 +53,27 @@ region<T>::region (T _x, T _y, size_type _w, size_type _h):
 
 //-----------------------------------------------------------------------------
 template <typename T>
-typename region<T>::size_type
-region<T>::area (void) const
-    { return w * h; }
+typename util::region<T>::size_type
+util::region<T>::area (void) const
+{
+    return w * h;
+}
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
-typename region<T>::size_type
-region<T>::diameter (void) const {
+typename util::region<T>::size_type
+util::region<T>::diameter (void) const
+{
     return static_cast<size_type> (std::sqrt (w * w + h * h));
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 void
-region<T>::scale (T factor) {
+util::region<T>::scale (T factor)
+{
     x -= (w * factor - w) / T{2};
     y -= (h * factor - h) / T{2};
 
@@ -77,23 +82,29 @@ region<T>::scale (T factor) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 bool 
-region<T>::empty (void) const
-    { return almost_equal (area (), 0); }
+util::region<T>::empty (void) const
+{
+    return almost_zero (area ());
+}
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
-point<2,T>
-region<T>::base (void) const {
+util::point<2,T>
+util::region<T>::base (void) const
+{
     return { x, y };
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
-point<2,T>
-region<T>::centre (void) const {
+util::point<2,T>
+util::region<T>::centre (void) const
+{
     T cx = x + w / T{2},
       cy = y + h / T{2};
 
@@ -101,9 +112,11 @@ region<T>::centre (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
-point<2,T>
-region<T>::closest (point<2,T> p) const {
+util::point<2,T>
+util::region<T>::closest (point<2,T> p) const
+{
     return {
         p.x < x     ? x     :
         p.x > x + w ? x + w :
@@ -119,7 +132,8 @@ region<T>::closest (point<2,T> p) const {
 //-----------------------------------------------------------------------------
 template <typename T>
 bool
-region<T>::includes (const point<2,T> &p) const {
+util::region<T>::includes (const point<2,T> &p) const
+{
     return p.x >= x &&
            p.y >= y &&
            p.x - x <= w &&
@@ -127,9 +141,11 @@ region<T>::includes (const point<2,T> &p) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 bool
-region<T>::contains (const point<2,T> &p) const {
+util::region<T>::contains (const point<2,T> &p) const
+{
     return p.x > x &&
            p.y > y &&
            p.x - x < w &&
@@ -137,11 +153,13 @@ region<T>::contains (const point<2,T> &p) const {
 }
 
 
+//-----------------------------------------------------------------------------
 // FIXME: This will fail with an actual infinite range (NaNs will be generated
 // in the conditionals).
 template <typename T>
 bool
-region<T>::overlaps (const region<T> &rhs) const {
+util::region<T>::intersects (const util::region<T> &rhs) const
+{
     return  x     < rhs.x + rhs.w &&
             rhs.x < x     +     w &&
             y     < rhs.y + rhs.h &&
@@ -152,15 +170,17 @@ region<T>::overlaps (const region<T> &rhs) const {
 //-----------------------------------------------------------------------------
 template <typename T>
 void
-region<T>::constrain (point<2,T> &p) const {
+util::region<T>::constrain (point<2,T> &p) const
+{
     p.x = std::min (std::max (p.x, x), x + w);
     p.y = std::min (std::max (p.y, y), y + h);
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
-point<2,T>
-region<T>::constrained (const point<2,T> &p) const
+util::point<2,T>
+util::region<T>::constrained (const point<2,T> &p) const
 {
     point<2,T> v;
     v.x = std::min (std::max (p.x, x), x + w);
@@ -169,10 +189,12 @@ region<T>::constrained (const point<2,T> &p) const
     return v;
 }
 
+
 //-----------------------------------------------------------------------------
 template<typename T>
-region<T>
-region<T>::overlap (const region<T> &rhs) const {
+util::region<T>
+util::region<T>::intersection (const util::region<T> &rhs) const
+{
     T newx1 = max (x, rhs.x),
       newy1 = max (y, rhs.y),
       newx2 = min (x + sign_cast<T> (w), rhs.x + sign_cast<T> (rhs.w)),
@@ -183,7 +205,7 @@ region<T>::overlap (const region<T> &rhs) const {
 
     size_type nw = sign_cast<size_type> (newx2 - newx1);
     size_type nh = sign_cast<size_type> (newy2 - newy1);
-    return region<T> (newx1, newy1, nw, nh);
+    return util::region<T> (newx1, newy1, nw, nh);
     
 }
 
@@ -191,17 +213,19 @@ region<T>::overlap (const region<T> &rhs) const {
 //-----------------------------------------------------------------------------
 template <typename T>
 bool
-region<T>::operator== (const region& rhs) const
-    { return almost_equal (x, rhs.x) &&
-             almost_equal (y, rhs.y) &&
-             almost_equal (w, rhs.w) &&
-             almost_equal (h, rhs.h); }
+util::region<T>::operator== (const region& rhs) const
+{
+    return almost_equal (x, rhs.x) &&
+           almost_equal (y, rhs.y) &&
+           almost_equal (w, rhs.w) &&
+           almost_equal (h, rhs.h);
+}
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
 void
-region<T>::sanity (void) const {
+util::region<T>::sanity (void) const {
     CHECK_GE (w, 0);
     CHECK_GE (h, 0);
     static_assert(!std::is_floating_point<T>::value,
@@ -210,77 +234,26 @@ region<T>::sanity (void) const {
 
 
 //-----------------------------------------------------------------------------
-// The desired iterator semantics have been difficult to nail down; is it
-// edge-inclusive, left-bottom inclusive, purely exclusive, integral only?
-// The code has been left here because it was a little annoying to write and
-// we're likely to need it again some day.
-#if 0
-template <typename T>
-typename region<T>::iterator&
-region<T>::iterator::operator++ (void) {
-    if (++x > static_cast<T> (w)) {
-        x = a;
-        ++y;
-    }
-
-    return *this;
-}
-
-
-template <typename T>
-typename region<T>::iterator&
-region<T>::iterator::operator* (void) {
-    return *this;
-}
-
-
-template <typename T>
-bool
-region<T>::iterator::operator== (const iterator &rhs) const {
-    return almost_equal (rhs.x, x) && almost_equal (rhs.y, y);
-}
-
-
-template <typename T>
-bool
-region<T>::iterator::operator!= (const iterator &rhs) const {
-    return !(*this == rhs);
-}
-
-
-template <typename T>
-typename region<T>::iterator
-region<T>::begin (void) {
-    return { x, y, x, w, h };
-}
-
-
-template <typename T>
-typename region<T>::iterator
-region<T>::end (void) {
-    return { x, y + sign_cast<T> (h) + 1, x, w, h };
-}
-#endif
-
-
 namespace util {
     template <>
     void region<double>::sanity (void) const {
-        CHECK (w >= 0 && h >= 0);
+        CHECK_GE (w, 0);
+        CHECK_GE (h, 0);
     }
 
 
     template <>
     void region<float>::sanity (void) const {
-        CHECK (w >= 0 && h >= 0);
+        CHECK_GE (w, 0);
+        CHECK_GE (h, 0);
     }
 }
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
-const region<T>
-region<T>::MAX (std::numeric_limits<T>::lowest (),
+const util::region<T>
+util::region<T>::MAX (std::numeric_limits<T>::lowest (),
                 std::numeric_limits<T>::lowest (),
                 std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity () :
                                                        std::numeric_limits<T>::max (),
@@ -289,14 +262,14 @@ region<T>::MAX (std::numeric_limits<T>::lowest (),
 
 
 template  <typename T>
-const region<T>
-region<T>::UNIT (0, 0, 1, 1);
+const util::region<T>
+util::region<T>::UNIT (0, 0, 1, 1);
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
 std::ostream&
-util::operator<< (std::ostream &os, const region<T> &rhs) {
+util::operator<< (std::ostream &os, const util::region<T> &rhs) {
     os << "region(" << rhs.x << ", " << rhs.y << ", " << rhs.w << ", " << rhs.h << ")";
     return os;
 }

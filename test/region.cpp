@@ -12,11 +12,11 @@ main (int, char **) {
          region<double> a (32.7, -6.09703, 0.8, 2);
          region<double> b (33.5, -4.5,     0.5, 0.5);
 
-         CHECK_HARD (!a.overlaps (b));
+         CHECK_HARD (!a.intersects (b));
     }
 
-    CHECK_HARD (region<double>::MAX.overlaps (region<double>::UNIT));
-    CHECK_HARD (region< float>::MAX.overlaps (region< float>::UNIT));
+    CHECK_HARD (region<double>::MAX.intersects (region<double>::UNIT));
+    CHECK_HARD (region< float>::MAX.intersects (region< float>::UNIT));
 
     CHECK_EQ (region<double>::UNIT.area (), 1.0);
     CHECK_EQ (region< float>::UNIT.area (), 1.0f);

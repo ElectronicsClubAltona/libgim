@@ -32,11 +32,7 @@ namespace util {
     template <typename T>
     struct region {
         typedef T position_type;
-#if 0
-        typedef typename always_unsigned<T>::type size_type;
-#else
         typedef T size_type;
-#endif
 
         T x, y;
         size_type w, h;
@@ -54,39 +50,28 @@ namespace util {
         point<2,T> centre  (void) const;
         point<2,T> closest (point<2,T>) const;
 
+        // Point and region relation queries
         bool includes (const point<2,T>&) const; // inclusive of borders
         bool contains (const point<2,T>&) const; // exclusive of borders
-        bool overlaps (const region<T>&) const; // exclusive of borders
+        bool intersects (const region<T>&) const;  // exclusive of borders
 
+        // Move a point to be within the region bounds
         void constrain (point<2,T>&) const;
         point<2,T> constrained (const point<2,T>&) const;
 
-        region overlap (const region<T>&) const;
+        // Compute binary region combinations
+        region intersection (const region<T>&) const;
 
+        // Logical comparison operators
         bool operator ==(const region<T>& rhs) const;
         bool operator !=(const region<T>& rhs) const
             { return !(*this == rhs); }
 
+        // Utility constants
         static const region<T> MAX;
         static const region<T> UNIT;
 
         void sanity (void) const;
-
-#if 0
-        struct iterator {
-            T x, y;
-            T a;
-            size_type w, h;
-
-            iterator& operator++ (void);
-            iterator& operator*  (void);
-            bool operator== (const iterator&) const;
-            bool operator!= (const iterator&) const;
-        };
-
-        iterator begin (void);
-        iterator end   (void);
-#endif
     };
 
     typedef region<size_t> region2u;
