@@ -359,15 +359,6 @@ util::operator* (T a, const util::vector<S,T> &b)
     { return b * a; }
 
 
-template util::vector<1,float> util::operator* (float, const util::vector<1,float>&);
-template util::vector<2,float> util::operator* (float, const util::vector<2,float>&);
-template util::vector<3,float> util::operator* (float, const util::vector<3,float>&);
-
-template util::vector<1,double> util::operator* (double, const util::vector<1,double>&);
-template util::vector<2,double> util::operator* (double, const util::vector<2,double>&);
-template util::vector<3,double> util::operator* (double, const util::vector<3,double>&);
-
-
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>
@@ -375,29 +366,11 @@ util::operator+ (T a, const util::vector<S,T> &b)
     { return b + a; }
 
 
-template util::vector<1,float> util::operator+ (float, const util::vector<1,float>&);
-template util::vector<2,float> util::operator+ (float, const util::vector<2,float>&);
-template util::vector<3,float> util::operator+ (float, const util::vector<3,float>&);
-
-template util::vector<1,double> util::operator+ (double, const util::vector<1,double>&);
-template util::vector<2,double> util::operator+ (double, const util::vector<2,double>&);
-template util::vector<3,double> util::operator+ (double, const util::vector<3,double>&);
-
-
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>
 util::operator- (T a, const util::vector<S,T> &b)
     { return a + (-b); }
-
-
-template util::vector<1,float> util::operator- (float, const util::vector<1,float>&);
-template util::vector<2,float> util::operator- (float, const util::vector<2,float>&);
-template util::vector<3,float> util::operator- (float, const util::vector<3,float>&);
-
-template util::vector<1,double> util::operator- (double, const util::vector<1,double>&);
-template util::vector<2,double> util::operator- (double, const util::vector<2,double>&);
-template util::vector<3,double> util::operator- (double, const util::vector<3,double>&);
 
 
 //-----------------------------------------------------------------------------
@@ -410,27 +383,6 @@ util::operator<< (std::ostream &os, const util::vector<S,T> &v) {
     os << ")";
     return os;
 }
-
-
-template std::ostream& util::operator<< (std::ostream&, const util::vector<1,size_t> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<2,size_t> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<3,size_t> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<4,size_t> &v);
-
-template std::ostream& util::operator<< (std::ostream&, const util::vector<1,long> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<2,long> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<3,long> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<4,long> &v);
-
-template std::ostream& util::operator<< (std::ostream&, const util::vector<1,float> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<2,float> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<3,float> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<4,float> &v);
-
-template std::ostream& util::operator<< (std::ostream&, const util::vector<1,double> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<2,double> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<3,double> &v);
-template std::ostream& util::operator<< (std::ostream&, const util::vector<4,double> &v);
 
 
 //-----------------------------------------------------------------------------
@@ -451,23 +403,23 @@ util::operator>> (const json::node &node, util::vector<S,T> &v) {
 }
 
 
-template const json::node& util::operator>> (const json::node&, util::vector<1,float>&);
-template const json::node& util::operator>> (const json::node&, util::vector<2,float>&);
-template const json::node& util::operator>> (const json::node&, util::vector<3,float>&);
-template const json::node& util::operator>> (const json::node&, util::vector<4,float>&);
-
-template const json::node& util::operator>> (const json::node&, util::vector<1,double>&);
-template const json::node& util::operator>> (const json::node&, util::vector<2,double>&);
-template const json::node& util::operator>> (const json::node&, util::vector<3,double>&);
-template const json::node& util::operator>> (const json::node&, util::vector<4,double>&);
-
-
 //-----------------------------------------------------------------------------
-#define INSTANTIATE(T)              \
-template struct util::vector<1,T>;  \
-template struct util::vector<2,T>;  \
-template struct util::vector<3,T>;  \
-template struct util::vector<4,T>;
+
+#define INSTANTIATE_S_T(S,T)                                                        \
+template struct util::vector<S,T>;                                                  \
+template util::vector<S,T> util::operator* (T, const util::vector<S,T>&);           \
+template util::vector<S,T> util::operator+ (T, const util::vector<S,T>&);           \
+template util::vector<S,T> util::operator- (T, const util::vector<S,T>&);           \
+template std::ostream& util::operator<< (std::ostream&, const util::vector<S,T> &v);\
+template const json::node& util::operator>> (const json::node&, util::vector<S,T>&);
+
+
+#define INSTANTIATE(T)  \
+INSTANTIATE_S_T(1,T)    \
+INSTANTIATE_S_T(2,T)    \
+INSTANTIATE_S_T(3,T)    \
+INSTANTIATE_S_T(4,T)
+
 
 INSTANTIATE(uint32_t)
 INSTANTIATE(int32_t)
