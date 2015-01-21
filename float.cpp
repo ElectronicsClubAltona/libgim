@@ -122,7 +122,6 @@ ieee_float<E, S>::almost_equal (floating_t _a,
         return true;
 
     uint_t diff = std::abs (a.s - b.s);
-    std::cerr << "diff: " << diff << '\n';
     return diff <= ulps;
 }
 
