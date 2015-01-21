@@ -178,6 +178,11 @@ util::operator* (const point<S,T> &p, const vector<S,T> &v)
     { return v * p; }
 
 
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+util::point<S,T>
+util::operator* (T a, const point<S,T> &b)
+    { return b * a; }
 
 
 //-----------------------------------------------------------------------------
@@ -201,6 +206,7 @@ template struct util::point<S,T>;                                               
 template std::ostream& util::operator<< (std::ostream &os, const util::point<S,T>&);    \
 template util::point<S,T> util::operator* (const point<S,T>&, const vector<S,T>&);      \
 template util::point<S,T> util::operator* (const vector<S,T>&, const point<S,T>&);      \
+template util::point<S,T> util::operator* (T, const point<S,T>&);
 
 #define INSTANTIATE(T)  \
 INSTANTIATE_S_T(1,T)    \

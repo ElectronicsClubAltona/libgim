@@ -69,6 +69,7 @@ namespace util {
     // free maths operators
     template <size_t S, typename T> point<S,T> operator* (const vector<S,T>&, const point<S,T>&);
     template <size_t S, typename T> point<S,T> operator* (const point<S,T>&, const vector<S,T>&);
+    template <size_t S, typename T> point<S,T> operator* (T, const point<S,T>&);
 
     // iostream operators
     template <size_t S, typename T>
