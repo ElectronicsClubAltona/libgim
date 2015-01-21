@@ -37,7 +37,10 @@ using std::map;
 
 void
 check_level (level_t l)
-    { CHECK (l >= 0 && l < NUM_LEVELS); }
+{
+    (void)l; // Consume even in release mode
+    CHECK (l >= 0 && l < NUM_LEVELS);
+}
 
 const string&
 level_to_string (level_t l) {
