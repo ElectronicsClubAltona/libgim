@@ -76,20 +76,56 @@ ieee_float<E, S>::operator==(floating_t _floating) const {
 #include <iostream>
 
 
+//template <unsigned int E, unsigned int S>
+//bool
+//ieee_float<E, S>::almost_equal (floating_t a,
+//                                floating_t b) { 
+//    // Static cast to avoid integer casting warnings when using uint16_t for half
+//    static const floating_t epsilon = static_cast<floating_t> (0.001);
+//    const floating_t diff = static_cast<floating_t> (std::fabs (a - b));
+//
+//    // * Use an exact equality first so that infinities are not indirectly compared. This would generate NaNs in the diff.
+//    // * Do not use gte or lte. This stops an infinite from making infinities on both sides of the inequality.
+//    return exactly_equal (a, b)           ||
+//           diff < epsilon * std::fabs (a) ||
+//           diff < epsilon * std::fabs (b);
+//}
+
+
 template <unsigned int E, unsigned int S>
 bool
 ieee_float<E, S>::almost_equal (floating_t a,
-                                floating_t b) { 
-    // Static cast to avoid integer casting warnings when using uint16_t for half
-    static const floating_t epsilon = static_cast<floating_t> (0.001);
-    const floating_t diff = static_cast<floating_t> (std::fabs (a - b));
-
-    // * Use an exact equality first so that infinities are not indirectly compared. This would generate NaNs in the diff.
-    // * Do not use gte or lte. This stops an infinite from making infinities on both sides of the inequality.
-    return exactly_equal (a, b)           ||
-           diff < epsilon * std::fabs (a) ||
-           diff < epsilon * std::fabs (b);
+                                floating_t b)
+{
+    return almost_equal (a, b, 10000);
 }
+
+
+template <unsigned int E, unsigned int S>
+bool
+ieee_float<E, S>::almost_equal (floating_t _a,
+                                floating_t _b,
+                                uint_t ulps)
+{
+    union {
+        floating_t f;
+        sint_t     s;
+    } a, b;
+
+    a.f = _a;
+    b.f = _b;
+
+    if (std::isnan (a.f) || std::isnan (b.f))
+        return false;
+
+    if (a.s == b.s)
+        return true;
+
+    uint_t diff = std::abs (a.s - b.s);
+    std::cerr << "diff: " << diff << '\n';
+    return diff <= ulps;
+}
+
 
 
 template class ieee_float< 5,  10>; // ieee_half

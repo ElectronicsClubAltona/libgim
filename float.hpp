@@ -14,6 +14,7 @@ class ieee_float {
 
         static const unsigned int BIAS = (1 << (EXPONENT - 1)) - 1;
 
+        typedef typename bits_type<TOTAL_BITS>::sint     sint_t;
         typedef typename bits_type<TOTAL_BITS>::uint     uint_t;
         typedef typename bits_type<TOTAL_BITS>::floating floating_t;
 
@@ -50,6 +51,7 @@ class ieee_float {
         bool operator==   (floating_t) const;
 
         static bool almost_equal (floating_t, floating_t);
+        static bool almost_equal (floating_t, floating_t, uint_t ulps);
 };
 
 
