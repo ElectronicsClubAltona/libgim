@@ -68,12 +68,12 @@ namespace util { namespace polynomial {
 namespace util { namespace polynomial {
     template <>
     std::array<float,3>
-    solve (std::array<float,4> coeff)
+    solve (std::array<float,4> coeffs)
     {
-        const float _a = coeff[0];
-        const float _b = coeff[1];
-        const float _c = coeff[2];
-        const float _d = coeff[3];
+        const float _a = coeffs[0];
+        const float _b = coeffs[1];
+        const float _c = coeffs[2];
+        const float _d = coeffs[3];
 
         if (almost_zero (_a)) {
             auto s = solve<3> ({_b, _c, _d});
@@ -92,8 +92,8 @@ namespace util { namespace polynomial {
         const float c = _d / _a;
 
         // Substituate x = y - a / 3 to eliminate the quadric. Now: x^3 + px + q = 0
-        float p = (-1 / 3.f * a * a + b) / 3.f;
-        float q = (2 / 27.f * a * a * a - 1 / 3.f * a * b + c) / 2.f;
+        float p = (-a * a / 3.f + b) / 3.f;
+        float q = (2 * a * a * a / 27.f - a * b /3.f + c) / 2.f;
 
         // Solve using Cardano's method
         float D = q * q + p * p * p;
@@ -108,7 +108,7 @@ namespace util { namespace polynomial {
                 s[1] = -u;
             }
         } else if (D < 0) {
-            float phi = 1 / 3.f * std::acos (-q / std::sqrt (-p * p * p));
+            float phi = std::acos (-q / std::sqrt (-p * p * p)) / 3.f;
             float t   = 2 * std::sqrt (-p);
 
             s[0] =  t * std::cos (phi);
