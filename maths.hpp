@@ -29,9 +29,11 @@ abs (T value)
 { return value > 0 ? value : -value; }
 
 
+//-----------------------------------------------------------------------------
+// Exponentials
 template <typename T>
 constexpr T
-pow2 (T value)
+pow2 [[gnu::pure]] (T value)
     { return value * value; }
 
 
@@ -40,6 +42,8 @@ bool
 is_pow2 [[gnu::pure]] (T value);
 
 
+//-----------------------------------------------------------------------------
+// Logarithms
 template <typename T>
 T
 log2 [[gnu::pure]] (T val);
@@ -50,11 +54,15 @@ T
 log2up [[gnu::pure]] (T val);
 
 
+//-----------------------------------------------------------------------------
+// Roots
 template <typename T>
 double
 rootsquare [[gnu::pure]] (T a, T b);
 
 
+//-----------------------------------------------------------------------------
+// Rounding
 template <typename T, typename U>
 typename std::common_type<T, U>::type
 align [[gnu::pure]] (T value, U size);
@@ -65,29 +73,33 @@ T
 round_pow2 [[gnu::pure]] (T value);
 
 
-template <typename T>
-bool
-is_integer [[gnu::pure]] (const T& value);
-
-
-template <typename T>
-unsigned
-digits [[gnu::pure]] (const T& value);
-
-
 template <typename T, typename U>
 T
 divup (const T a, const U b)
     { return (a + b - 1) / b; }
 
 
-/**
- * Check if two floating point numbers are approximately equal. Returns true
- * if the difference is less than a percentage of each individual value.
- *
- * @e maximum percentage difference for equal values
- */
+//-----------------------------------------------------------------------------
+// Classification
+template <typename T>
+bool
+is_integer [[gnu::pure]] (const T& value);
 
+
+//-----------------------------------------------------------------------------
+// Properties
+template <typename T>
+unsigned
+digits [[gnu::pure]] (const T& value);
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+int sign (T val);
+
+
+//-----------------------------------------------------------------------------
+// Comparisons
 template <typename T>
 bool
 almost_equal (const T &a, const T &b)
@@ -149,6 +161,7 @@ exactly_zero (T a)
 //-----------------------------------------------------------------------------
 constexpr double PI = 3.141592653589793238462643;
 
+//-----------------------------------------------------------------------------
 constexpr double
 to_degrees (double radians) {
     return radians * 180 / PI;
@@ -206,19 +219,17 @@ max (const T a, const U b, Args ...args)
     return max (a > b ? a : b, std::forward<Args> (args)...);
 }
 
-//-----------------------------------------------------------------------------
-template <typename T>
-int sign (T val);
-
 
 //-----------------------------------------------------------------------------
 template <typename T, typename U, typename V>
 T
-limit (const T &&val, const U &&hi, const V &&lo) {
+limit (const T &&val, const U &&hi, const V &&lo)
+{
     return val > hi ? hi:
            val < lo ? lo:
            std::move (val);
 }
+
 
 #include "maths.ipp"
 
