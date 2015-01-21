@@ -212,6 +212,17 @@ util::region<T>::intersection (const util::region<T> &rhs) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
+util::region<T>
+util::region<T>::inset (T mag)
+{
+    CHECK_GE (w - x, 2 * mag);
+    CHECK_GE (h - y, 2 * mag);
+
+    return { x + mag, y + mag, w - 2 * mag, h - 2 * mag };
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
 bool
 util::region<T>::operator== (const region& rhs) const
 {

@@ -62,6 +62,9 @@ namespace util {
         // Compute binary region combinations
         region intersection (const region<T>&) const;
 
+        // Compute a region `mag` units into the region
+        region inset (T mag);
+
         // Logical comparison operators
         bool operator ==(const region<T>& rhs) const;
         bool operator !=(const region<T>& rhs) const
