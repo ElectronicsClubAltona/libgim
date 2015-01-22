@@ -3,6 +3,7 @@ AM_CXXFLAGS = $(COMMON_CXXFLAGS) -I$(top_srcdir)
 
 TEST_BIN = 		\
 	backtrace 	\
+	bezier		\
 	bitwise		\
 	checksum	\
 	colour		\
