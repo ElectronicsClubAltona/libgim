@@ -80,8 +80,9 @@ namespace util {
         void sanity (void) const;
     };
 
-    typedef region<size_t> region2u;
-    typedef region<float>  region2f;
+    typedef region<size_t>   region2u;
+    typedef region<intmax_t> region2i;
+    typedef region<float>    region2f;
 
     template <typename T>
     std::ostream& operator<< (std::ostream&, const util::region<T>&);
