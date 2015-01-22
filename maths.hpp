@@ -237,11 +237,11 @@ max (const T a, const U b, Args ...args)
 //-----------------------------------------------------------------------------
 template <typename T, typename U, typename V>
 T
-limit (const T &&val, const U &&hi, const V &&lo)
+limit (const T val, const U hi, const V lo)
 {
     return val > hi ? hi:
            val < lo ? lo:
-           std::move (val);
+           val;
 }
 
 
