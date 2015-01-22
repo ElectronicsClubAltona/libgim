@@ -27,9 +27,9 @@
 
 //-----------------------------------------------------------------------------
 template <size_t S>
-util::bezier<S>::bezier (const util::point2f _points[S])
+util::bezier<S>::bezier (const util::point2f (&_points)[S+1])
 {
-    std::copy (_points, _points + S, m_points);
+    std::copy (_points, _points + S + 1, m_points);
 }
 
 
@@ -37,7 +37,7 @@ util::bezier<S>::bezier (const util::point2f _points[S])
 namespace util {
     template <>
     point2f
-    bezier<2>::eval (float t)
+    bezier<1>::eval (float t) const
     {
         CHECK_GE (t, 0);
         CHECK_LE (t, 1);
@@ -57,7 +57,7 @@ namespace util {
 namespace util {
     template <>
     point2f
-    bezier<3>::eval (float t)
+    bezier<2>::eval (float t) const
     {
         CHECK_GE (t, 0);
         CHECK_LE (t, 1);
@@ -78,7 +78,7 @@ namespace util {
 namespace util {
     template <>
     point2f
-    bezier<4>::eval (float t)
+    bezier<3>::eval (float t) const
     {
         CHECK_GE (t, 0);
         CHECK_LE (t, 1);
@@ -101,7 +101,7 @@ template <size_t S>
 util::point2f&
 util::bezier<S>::operator[] (size_t idx)
 {
-    CHECK_LT (idx, S);
+    CHECK_LE (idx, S);
 
     return m_points[idx];
 }
@@ -112,7 +112,7 @@ template <size_t S>
 const util::point2f&
 util::bezier<S>::operator[] (size_t idx) const
 {
-    CHECK_LT (idx, S);
+    CHECK_LE (idx, S);
 
     return m_points[idx];
 }

@@ -25,16 +25,17 @@
 namespace util {
     template <size_t S>
     class bezier {
-        bezier (const util::point2f[S]);
+    public:
+        bezier (const util::point2f (&)[S+1]);
 
-        point2f eval (float t);
-        float distance (point2f);
+        point2f eval (float t) const;
+        float distance (point2f) const;
 
         point2f& operator[] (size_t idx);
         const point2f& operator[] (size_t idx) const;
 
     private:
-        point2f m_points[S];
+        point2f m_points[S+1];
     };
 }
 
