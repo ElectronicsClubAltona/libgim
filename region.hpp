@@ -37,6 +37,7 @@ namespace util {
         position_type x, y;
         size_type w, h;
 
+        region () = default;
         region (util::point<2,T>, util::extent<size_type>);
         region (T _x, T _y, size_type _w, size_type _h);
 
