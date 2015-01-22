@@ -42,12 +42,12 @@ namespace util {
         CHECK_GE (t, 0);
         CHECK_LE (t, 1);
 
-        auto v0 =      t  * m_points[0];
-        auto v1 = (1 - t) * m_points[1];
+        auto v0 = (1 - t) * m_points[0];
+        auto v1 =      t  * m_points[1];
 
         return {
             v0.x + v1.x,
-            v0.y + v0.y
+            v0.y + v1.y
         };
     }
 }
