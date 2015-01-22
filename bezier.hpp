@@ -22,6 +22,8 @@
 
 #include "point.hpp"
 
+#include <iostream>
+
 namespace util {
     template <size_t S>
     class bezier {
@@ -37,6 +39,9 @@ namespace util {
     private:
         point2f m_points[S+1];
     };
+
+    template <size_t S>
+    std::ostream& operator<< (std::ostream&, const bezier<S>&);
 }
 
 #endif

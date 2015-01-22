@@ -270,6 +270,23 @@ util::bezier<S>::operator[] (size_t idx) const
 
 
 //-----------------------------------------------------------------------------
-template class util::bezier<2>;
-template class util::bezier<3>;
-template class util::bezier<4>;
+template <size_t S>
+std::ostream&
+util::operator<< (std::ostream &os, const bezier<S> &b)
+{
+    os << b[0];
+    for (size_t i = 1; i < S+1; ++i)
+        os << ", " << b[i];
+
+    return os;
+}
+
+
+//-----------------------------------------------------------------------------
+#define INSTANTIATE(S)                                                      \
+template class util::bezier<S>;                                             \
+template std::ostream& util::operator<< (std::ostream&, const bezier<S>&);
+
+INSTANTIATE(1)
+INSTANTIATE(2)
+INSTANTIATE(3)
