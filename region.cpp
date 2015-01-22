@@ -221,6 +221,34 @@ util::region<T>::inset (T mag)
     return { x + mag, y + mag, w - 2 * mag, h - 2 * mag };
 }
 
+
+//-----------------------------------------------------------------------------
+template <typename T>
+util::region<T>&
+util::region<T>::expand (T mag)
+{
+    x -= mag;
+    y -= mag;
+    w += mag * 2;
+    h += mag * 2;
+
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+util::region<T>
+util::region<T>::expanded (T mag) const
+{
+    return {
+        x - mag,
+        y - mag,
+        w + mag * 2,
+        h + mag * 2,
+    };
+}
+
 //-----------------------------------------------------------------------------
 template <typename T>
 bool

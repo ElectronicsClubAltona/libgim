@@ -64,6 +64,8 @@ namespace util {
 
         // Compute a region `mag` units into the region
         region inset (T mag);
+        region expanded (T mag) const;
+        region& expand (T mag);
 
         // Logical comparison operators
         bool operator ==(const region<T>& rhs) const;
