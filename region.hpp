@@ -34,7 +34,7 @@ namespace util {
         typedef T position_type;
         typedef T size_type;
 
-        T x, y;
+        position_type x, y;
         size_type w, h;
 
         region (util::point<2,T>, util::extent<size_type>);
