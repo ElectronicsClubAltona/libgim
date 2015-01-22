@@ -28,7 +28,7 @@ main (int, char**)
     };
 
     for (auto &i: CUBICS) {
-        auto s = util::polynomial::solve (i.coeffs);
+        std::array<float,3> s = util::polynomial::solve<3> (i.coeffs);
 
         std::sort (s.begin (), s.end ());
 

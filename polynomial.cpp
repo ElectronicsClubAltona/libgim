@@ -52,7 +52,7 @@ namespace util { namespace polynomial {
         const float c = coeff[2];
 
         if (almost_zero (a)) {
-            auto s = solve<2> ({b, c});
+            auto s = solve<1> ({b, c});
             return { s[0], std::numeric_limits<float>::quiet_NaN () };
         }
 
@@ -76,7 +76,7 @@ namespace util { namespace polynomial {
         const float _d = coeffs[3];
 
         if (almost_zero (_a)) {
-            auto s = solve<3> ({_b, _c, _d});
+            auto s = solve<2> ({_b, _c, _d});
             return {s[0], s[1], std::numeric_limits<float>::quiet_NaN () };
         }
 

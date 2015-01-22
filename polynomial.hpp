@@ -26,8 +26,8 @@
 namespace util {
     namespace polynomial {
         template <size_t S>
-        std::array<float,S-1>
-        solve (std::array<float,S>);
+        std::array<float,S>
+        solve (std::array<float,S+1>);
 
         template <size_t S>
         float
