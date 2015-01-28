@@ -35,6 +35,7 @@ namespace util {
         extent (const T  _width, const T  _height);
         extent (const extent&);
         extent& operator= (const extent&);
+        extent () = default;
 
         T    area  (void) const;
         T diameter (void) const;
