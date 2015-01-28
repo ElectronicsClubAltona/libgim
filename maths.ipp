@@ -38,13 +38,8 @@ align (T value, U size) {
 
 //-----------------------------------------------------------------------------
 template <typename T>
-T
+constexpr T
 pow (T x, unsigned y)
 {
-    T v = 1;
-
-    for (unsigned i = 1; i <= y; ++i)
-        v *= x;
-
-    return v;
+    return y == 0 ? 1 : x * pow (x, y - 1);
 }
