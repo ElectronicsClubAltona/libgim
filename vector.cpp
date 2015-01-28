@@ -230,6 +230,7 @@ util::vector<S,T>::magnitude (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 T
 util::vector<S,T>::magnitude2 (void) const {
@@ -353,24 +354,30 @@ util::vector<S,T>::sanity (void) const {
 
 
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
+template <size_t S, typename T, typename U>
 util::vector<S,T>
-util::operator* (T a, const util::vector<S,T> &b)
-    { return b * a; }
+util::operator* (U a, const util::vector<S,T> &b)
+{
+    return b * T(a);
+}
 
 
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
+template <size_t S, typename T, typename U>
 util::vector<S,T>
-util::operator+ (T a, const util::vector<S,T> &b)
-    { return b + a; }
+util::operator+ (U a, const util::vector<S,T> &b)
+{
+    return b + T(a);
+}
 
 
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
+template <size_t S, typename T, typename U>
 util::vector<S,T>
-util::operator- (T a, const util::vector<S,T> &b)
-    { return a + (-b); }
+util::operator- (U a, const util::vector<S,T> &b)
+{
+    return a + (-b);
+}
 
 
 //-----------------------------------------------------------------------------
@@ -407,7 +414,9 @@ util::operator>> (const json::node &node, util::vector<S,T> &v) {
 
 #define INSTANTIATE_S_T(S,T)                                                        \
 template struct util::vector<S,T>;                                                  \
-template util::vector<S,T> util::operator* (T, const util::vector<S,T>&);           \
+template util::vector<S,T> util::operator* (int, const util::vector<S,T>&);         \
+template util::vector<S,T> util::operator* (unsigned, const util::vector<S,T>&);    \
+template util::vector<S,T> util::operator* (float, const util::vector<S,T>&);       \
 template util::vector<S,T> util::operator+ (T, const util::vector<S,T>&);           \
 template util::vector<S,T> util::operator- (T, const util::vector<S,T>&);           \
 template std::ostream& util::operator<< (std::ostream&, const util::vector<S,T> &v);\
