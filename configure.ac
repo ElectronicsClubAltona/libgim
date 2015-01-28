@@ -207,6 +207,10 @@ AS_IF([test "x$enable_debugging" = "xyes"], [
     AX_APPEND_COMPILE_FLAGS([-ftree-vectorize], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-funsafe-loop-optimizations], [], [-Werror])
 
+    # gcc >= 4.8 defaults to enabling stack-protector, we care more about
+    # performance than security.
+    AX_APPEND_COMPILE_FLAGS([-fno-stack-protector], [], [-Werror])
+
     # mingw LTO support currently appears to be broken
     AS_IF([test x"${host_os}" != x"mingw32"], [
         AX_APPEND_COMPILE_FLAGS([-flto])
