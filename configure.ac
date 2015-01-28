@@ -202,6 +202,11 @@ AS_IF([test "x$enable_debugging" = "xyes"], [
 ], [
     AX_APPEND_COMPILE_FLAGS([-O2], [], [-Werror])
 
+    AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribute-patterns], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-ftree-loop-if-convert-stores], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-ftree-vectorize], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-funsafe-loop-optimizations], [], [-Werror])
+
     # mingw LTO support currently appears to be broken
     AS_IF([test x"${host_os}" != x"mingw32"], [
         AX_APPEND_COMPILE_FLAGS([-flto])
