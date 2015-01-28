@@ -241,6 +241,26 @@ util::vector<S,T>::magnitude2 (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+T
+util::vector<S,T>::difference (const util::vector<S,T> &rhs) const {
+    // TODO: change the signature to ensure it does not truncate
+    return static_cast<T> (std::sqrt (difference2 (rhs)));
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+T
+util::vector<S,T>::difference2 (const util::vector<S,T> &rhs) const {
+    T sum {0};
+    for (size_t i = 0; i < S; ++i)
+        sum += pow2 (this->data[i] - rhs.data[i]);
+    return sum;
+}
+
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>&
 util::vector<S,T>::normalise (void) {

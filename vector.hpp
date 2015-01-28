@@ -67,6 +67,9 @@ namespace util {
         T magnitude  (void) const;
         T magnitude2 (void) const;
 
+        T difference  (const vector<S,T>&) const;
+        T difference2 (const vector<S,T>&) const;
+
         T dot (const vector<S,T>&) const;
 
         vector<S,T>& normalise  (void);
