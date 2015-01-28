@@ -247,7 +247,7 @@ cellular::eval (double x, double y) const {
         }
 
     std::sort (std::begin (distances), std::end (distances));
-    CHECK_SOFT (distances[0] >= 0);
-    CHECK_SOFT (bounds ().contains (distances[0]));
+    CHECK_GE (distances[0], 0);
+    CHECK (bounds ().contains (distances[0]));
     return distances[0];
 }

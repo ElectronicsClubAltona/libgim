@@ -34,7 +34,7 @@ namespace detail {
                                               std::is_unsigned<T>::value &&
                                               std::is_signed<V>::value, V>::type v)
     {
-        CHECK_HARD (v >= 0);
+        CHECK_GE (v, 0);
         return static_cast<T> (v);
     }
 
@@ -45,7 +45,7 @@ namespace detail {
                                              std::is_signed<T>::value &&
                                              std::is_unsigned<V>::value, V>::type v)
     {
-        CHECK_HARD (v < std::numeric_limits<V>::max () / 2);
+        CHECK_LT (v, std::numeric_limits<V>::max () / 2);
         return static_cast<T> (v);
     }
 
@@ -80,8 +80,8 @@ namespace detail {
     _trunc_cast (const typename std::enable_if<sizeof (T) < sizeof (V) &&
                                                std::is_signed<T>::value == std::is_signed<V>::value &&
                                                std::is_integral<T>::value, V>::type v) {
-        CHECK_HARD (v <= std::numeric_limits<T>::max    ());
-        CHECK_HARD (v >= std::numeric_limits<T>::lowest ());
+        CHECK_LE (v, std::numeric_limits<T>::max    ());
+        CHECK_GE (v, std::numeric_limits<T>::lowest ());
 
         return static_cast<T> (v);
     }
@@ -92,9 +92,9 @@ namespace detail {
     _trunc_cast (const typename std::enable_if<sizeof (T) < sizeof (V) &&
                                                std::is_signed<T>::value == std::is_signed<V>::value &&
                                                std::is_floating_point<T>::value, V>::type v) {
-        CHECK_HARD (v <= std::numeric_limits<T>::max    ());
-        CHECK_HARD (v >= std::numeric_limits<T>::lowest ());
-        CHECK_HARD (exactly_equal (remainder (v, 1), 0.0));
+        CHECK_LE (v, std::numeric_limits<T>::max    ());
+        CHECK_GE (v, std::numeric_limits<T>::lowest ());
+        CHECK_EQ (remainder (v, 1), 0.0);
 
         return static_cast<T> (v);
     }
@@ -111,8 +111,8 @@ trunc_cast (V v)
 template <typename T, typename V>
 T
 size_cast (const V v) {
-    CHECK_HARD (std::numeric_limits<T>::lowest () <= v);
-    CHECK_HARD (std::numeric_limits<T>::max    () >= v);
+    CHECK_LE (std::numeric_limits<T>::lowest (), v);
+    CHECK_GE (std::numeric_limits<T>::max    (), v);
     
     return static_cast<T> (v);
 }
@@ -122,7 +122,7 @@ size_cast (const V v) {
 template <typename T, typename V>
 T*
 known_cast (V *v) {
-    CHECK_HARD (nullptr != dynamic_cast<T*> (v));
+    CHECK (dynamic_cast<T*> (v));
     return static_cast<T*> (v);
 }
 

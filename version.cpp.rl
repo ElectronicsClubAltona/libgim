@@ -180,7 +180,7 @@ version::operator== (const version &rhs) const {
 std::ostream&
 operator <<(std::ostream& os, const util::version& rhs) {
     size_t elements = rhs.size;
-    CHECK_HARD (elements > 0);
+    CHECK_GT (elements, 0);
 
     os << rhs.major ();
     if (!--elements)

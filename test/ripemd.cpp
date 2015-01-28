@@ -111,7 +111,7 @@ main(int, char**) {
                     strlen (TESTS[i].input));
         obj.finish ();
 
-        CHECK_HARD (obj.digest () == TESTS[i].output);
+        CHECK (obj.digest () == TESTS[i].output);
     }
 
     // Perform 'million-a' check
@@ -130,7 +130,7 @@ main(int, char**) {
         0x52, 0x78, 0x32, 0x43, 0xc1, 0x69, 0x7b, 0xdb, 0xe1, 0x6d,
         0x37, 0xf9, 0x7f, 0x68, 0xf0, 0x83, 0x25, 0xdc, 0x15, 0x28
     };
-    CHECK_HARD (obj.digest () == MILLION);
+    CHECK (obj.digest () == MILLION);
 
     return EXIT_SUCCESS;
 }

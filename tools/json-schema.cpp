@@ -382,7 +382,7 @@ is_additional_items_valid (const json::array &,
 bool
 is_array_valid (const json::array  &node,
                 const json::object &schema) {
-    CHECK_HARD (node.is_array ());
+    CHECK (node.is_array ());
 
     typedef bool (*array_validator_t)(const json::array&, const json::node&);
     static const map<string, array_validator_t> VALIDATORS ({

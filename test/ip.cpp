@@ -23,7 +23,7 @@ main (int, char **) {
 
     for (unsigned int i = 0; i < elems (data); ++i) {
         ipv4::ip parsed (ipv4::ip::parse (data[i].str));
-        CHECK_HARD (parsed == data[i].ip);
+        CHECK (parsed == data[i].ip);
     }
 
     return EXIT_SUCCESS;

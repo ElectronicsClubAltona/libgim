@@ -33,7 +33,7 @@ test_zeroes (const matrix &m) {
 
     for (unsigned int i = 0; i < m.rows (); ++i)
         for (unsigned int j = 0; j < m.columns (); ++j)
-            CHECK_HARD (almost_equal (m[i][j], 0.0));
+            CHECK (almost_equal (m[i][j], 0.0));
 }
 
 
@@ -44,9 +44,9 @@ test_identity (const matrix &m) {
     for (unsigned int i = 0; i < m.rows (); ++i)
         for (unsigned int j = 0; j < m.columns (); ++j)
             if (i == j) {
-                CHECK_HARD (almost_equal (m[i][j], 1.0));
+                CHECK (almost_equal (m[i][j], 1.0));
             } else {
-                CHECK_HARD (almost_equal (m[i][j], 0.0));
+                CHECK (almost_equal (m[i][j], 0.0));
             }
 }
 
@@ -102,9 +102,9 @@ main (int, char **) {
     CHECK_EQ (seq2x2.determinant (),   -2.0);
     CHECK_EQ (magic3.determinant (), -360.0);
 
-    CHECK_HARD ( seq2x2.is_square ());
-    CHECK_HARD ( magic3.is_square ());
-    CHECK_HARD (!  a4x2.is_square ());
+    CHECK ( seq2x2.is_square ());
+    CHECK ( magic3.is_square ());
+    CHECK (!  a4x2.is_square ());
 
     CHECK_EQ (seq2x2.inverse (), matrix (2, 2, { -2.0,  1.0,
                                                   1.5, -0.5 }));
@@ -124,10 +124,10 @@ main (int, char **) {
     const matrix homo3x3 (3, 3, { 1, 2, 0,
                                   3, 4, 0,
                                   0, 0, 1 });
-    CHECK_HARD (homo3x3.is_homogeneous ());
-    CHECK_HARD (!matrix::zeroes   (3).is_homogeneous ());
-    CHECK_HARD ( matrix::identity (3).is_homogeneous ());
-    CHECK_HARD (invertible4.is_homogeneous ());
+    CHECK (homo3x3.is_homogeneous ());
+    CHECK (!matrix::zeroes   (3).is_homogeneous ());
+    CHECK ( matrix::identity (3).is_homogeneous ());
+    CHECK (invertible4.is_homogeneous ());
 
     return EXIT_SUCCESS;
 }

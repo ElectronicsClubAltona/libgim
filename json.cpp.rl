@@ -80,9 +80,9 @@ struct parse_context {
     action new_array  { nodestack.push_back (parse_context(new json::array));  }
 
     action new_object_value {
-        CHECK_HARD (nodestack.back ().root->is_object ());
-        CHECK      (nodestack.back ().key);
-        CHECK      (nodestack.back ().value);
+        CHECK (nodestack.back ().root->is_object ());
+        CHECK (nodestack.back ().key);
+        CHECK (nodestack.back ().value);
 
         if (!nodestack.back ().key->is_string ())
             throw parse_error ("object keys must be strings");
@@ -95,8 +95,8 @@ struct parse_context {
     }
 
     action new_array_value {
-        CHECK_HARD (nodestack.back ().root->is_array ());
-        CHECK      (nodestack.back ().value);
+        CHECK (nodestack.back ().root->is_array ());
+        CHECK (nodestack.back ().value);
 
         json::array *array = (json::array *)nodestack.back ().root;
         array->insert (unique_ptr<json::node> (nodestack.back ().value));
@@ -104,8 +104,8 @@ struct parse_context {
     }
 
     action new_string  {
-        CHECK_HARD (!nodestack.empty ());
-        CHECK      (!nodestack.back ().value);
+        CHECK (!nodestack.empty ());
+        CHECK (!nodestack.back ().value);
 
         std::string value (std::string (nodestack.back ().start,
                                         nodestack.back ().stop));
@@ -113,20 +113,20 @@ struct parse_context {
     }
 
     action new_boolean {
-        CHECK_HARD (!nodestack.empty ());
-        CHECK      (!nodestack.back ().value);
+        CHECK (!nodestack.empty ());
+        CHECK (!nodestack.back ().value);
 
         throw parse_error ("unable to parse boolean");
     }
 
     action new_number  {
-        CHECK_HARD (!nodestack.empty ());
+        CHECK (!nodestack.empty ());
 
         parse_context &back = nodestack.back ();
         CHECK (!back.value);
-        CHECK_HARD (back.start);
-        CHECK_HARD (back.stop);
-        CHECK_HARD (back.start <= back.stop);
+        CHECK (back.start);
+        CHECK (back.stop);
+        CHECK_LE (back.start, back.stop);
 
         errno = 0;
         char *end;
@@ -137,17 +137,17 @@ struct parse_context {
     }
 
     action new_null    {
-        CHECK_HARD (!nodestack.empty ());
-        CHECK      (!nodestack.back ().value);
+        CHECK (!nodestack.empty ());
+        CHECK (!nodestack.back ().value);
 
         nodestack.back().value = new json::null ();
     }
 
     action new_object_key {
-        CHECK_HARD (!nodestack.empty ());
-        CHECK_HARD (nodestack.back ().root->is_object ());
-        CHECK      (nodestack.back ().value);
-        CHECK      (!nodestack.back ().key);
+        CHECK (!nodestack.empty ());
+        CHECK (nodestack.back ().root->is_object ());
+        CHECK (nodestack.back ().value);
+        CHECK (!nodestack.back ().key);
 
         nodestack.back ().key   = nodestack.back ().value;
         nodestack.back ().value = NULL;

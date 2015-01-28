@@ -44,7 +44,7 @@ matrix::matrix (size_t                                _rows,
 {
     if (size () != _data.size ())
         throw std::runtime_error ("element and initializer size differs");
-    CHECK_HARD (m_rows * m_columns == _data.size());
+    CHECK_EQ (m_rows * m_columns, _data.size());
 
     m_data.reset (new double[size ()]);
     std::copy (_data.begin (), _data.end (), m_data.get ());
@@ -98,14 +98,14 @@ matrix::sanity (void) const {
 
 const double *
 matrix::operator [] (unsigned int row) const {
-    CHECK_HARD (row < m_rows);
+    CHECK_LT (row, m_rows);
     return m_data.get () + row * m_columns;
 }
 
 
 double *
 matrix::operator [] (unsigned int row) {
-    CHECK_HARD (row < m_rows);
+    CHECK_LT (row, m_rows);
     return m_data.get () + row * m_columns;
 }
 
@@ -483,7 +483,7 @@ matrix::identity (size_t diag) {
 
 matrix
 matrix::magic (size_t n) {
-    CHECK_HARD (n > 2);
+    CHECK_GT (n, 2);
 
     if (n % 2 == 1)
         return magic_odd (n);
@@ -499,8 +499,8 @@ matrix::magic (size_t n) {
 // If filled then drop down one row instead. Wrap around indexing.
 matrix
 matrix::magic_odd (size_t n) {
-    CHECK_HARD (n > 2);
-    CHECK_HARD (n % 2 == 1);
+    CHECK_GT (n, 2);
+    CHECK_EQ (n % 2, 1);
 
     matrix val (zeroes (n));
     for (unsigned int i = 1, x = n / 2, y = 0; i <= n * n; ++i) {

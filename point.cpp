@@ -148,9 +148,9 @@ util::point<S,T>::operator== (const util::point<S,T> &rhs) const
 template <size_t S, typename T>
 void
 util::point<S,T>::sanity (void) const {
-    CHECK_SOFT (std::all_of (begin (this->data),
-                             end   (this->data),
-                             [] (double i) { return !std::isnan (i); }));
+    CHECK (std::all_of (begin (this->data),
+                        end   (this->data),
+                        [] (double i) { return !std::isnan (i); }));
 }
 
 

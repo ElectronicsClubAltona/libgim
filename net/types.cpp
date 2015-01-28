@@ -39,7 +39,7 @@ protocol
 net::string_to_protocol (const char *_name) {
     struct protoent *entry = getprotobyname (_name);
     // TODO: Throw an exception...
-    CHECK_HARD (entry);
+    CHECK (entry);
     return (protocol)entry->p_proto;
 }
 
@@ -47,7 +47,7 @@ net::string_to_protocol (const char *_name) {
 std::string
 net::protocol_to_string (protocol _protocol) {
     struct protoent *entry = getprotobynumber ((int)_protocol);
-    CHECK_HARD (entry);
+    CHECK (entry);
     return entry->p_name;
 }
 

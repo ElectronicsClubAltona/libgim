@@ -60,7 +60,7 @@ ieee_float<E, S>::operator==(floating_t _floating) const {
     // TODO: This method really shouldn't be generated if there's no
     // representative native floating point type. But I'm sick of
     // C++'s template bullshit for tonight.
-    CHECK_HARD (bits_type<TOTAL_BITS>::has_floating);
+    CHECK (bits_type<TOTAL_BITS>::has_floating);
 
     union {
         floating_t _floating;

@@ -44,7 +44,7 @@ main (int, char **) {
         if (i->parts.size () > 2) CHECK (v.point () == i->parts[2]);
         if (i->parts.size () > 3) CHECK (v.build () == i->parts[3]);
 
-        CHECK_HARD (i->parts.size () <= 4);
+        CHECK_LE (i->parts.size (), 4);
     }
 
     return EXIT_SUCCESS;

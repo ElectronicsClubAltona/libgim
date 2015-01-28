@@ -25,7 +25,7 @@ check_unique_ptr (void) {
     // Take all pointers out, checking they are unique, then replace for destruction.
     for (unsigned int i = 0; i < uintpool.capacity (); ++i) {
         bool success = uintset.insert (uintpool.acquire ()).second;
-        CHECK_HARD (success);
+        CHECK (success);
     }
 
     for (auto i = uintset.begin (); i != uintset.end (); ++i) 
@@ -35,7 +35,7 @@ check_unique_ptr (void) {
     // Do the above one more time to ensure that releasing works right
     for (unsigned int i = 0; i < uintpool.capacity (); ++i) {
         bool success = uintset.insert (uintpool.acquire ()).second;
-        CHECK_HARD (success);
+        CHECK (success);
     }
 
     for (auto i = uintset.begin (); i != uintset.end (); ++i) 
@@ -57,19 +57,19 @@ check_keep_value (void) {
 
         uintvector.push_back(item);
     }
-    CHECK (uintvector.size () == uintpool.capacity ());
+    CHECK_EQ (uintvector.size (), uintpool.capacity ());
 
     // Ensure they're all still present
     vector<bool> present(uintpool.capacity (), false);
     for (auto i = uintvector.begin (); i != uintvector.end (); ++i) {
-        CHECK_HARD (**i < uintpool.capacity ());
-        CHECK_HARD (present[**i] != true);
+        CHECK (**i < uintpool.capacity ());
+        CHECK (present[**i] != true);
 
         present[**i] = true;
     }
 
     // All must have been marked as present...
-    CHECK_HARD (find (present.begin (), present.end (), false) == present.end ());
+    CHECK (find (present.begin (), present.end (), false) == present.end ());
 
     // Release all back into the pool for destruction
     for (auto i = uintvector.begin (); i != uintvector.end (); ++i)

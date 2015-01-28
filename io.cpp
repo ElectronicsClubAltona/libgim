@@ -73,7 +73,7 @@ util::slurp (const boost::filesystem::path& path)  {
     unique_ptr <char []> buffer (new char[size + 1]);
     buffer.get()[size] = '\0';
 
-    CHECK_HARD (size >= 0);
+    CHECK_GE (size, 0);
     size_t remaining = (size_t)size;
     char *cursor = buffer.get();
 
@@ -81,8 +81,8 @@ util::slurp (const boost::filesystem::path& path)  {
         ssize_t consumed = ::read (fd, cursor, remaining);
         if (consumed == -1)
             throw errno_error();
-        CHECK_HARD (        consumed >  0);
-        CHECK_HARD ((size_t)consumed <= remaining);
+        CHECK_GT (        consumed, 0);
+        CHECK_LE ((size_t)consumed, remaining);
 
         remaining -= (size_t)consumed;
         cursor    += consumed;
@@ -95,8 +95,8 @@ util::slurp (const boost::filesystem::path& path)  {
 template <typename T>
 void
 util::write (const boost::filesystem::path &path, const T *data, size_t len) {
-    CHECK_SOFT (len > 0);
-    CHECK_HARD (data);
+    CHECK_GT (len, 0);
+    CHECK (data);
 
     fd_ref fd (path, ACCESS_WRITE);
     const char *cursor = reinterpret_cast<const char*> (data);

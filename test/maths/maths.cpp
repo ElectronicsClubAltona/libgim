@@ -13,15 +13,15 @@ main (int, char **) {
     std::cerr.precision (15);
     std::cout.precision (15);
 
-    CHECK_HARD (!almost_equal (-2.0, 0.0));
-    CHECK_HARD (!almost_equal (-2.f, 0.f));
-    CHECK_HARD ( almost_equal ( 0.0, 0.0));
+    CHECK (!almost_equal (-2.0, 0.0));
+    CHECK (!almost_equal (-2.f, 0.f));
+    CHECK ( almost_equal ( 0.0, 0.0));
     //CHECK_HARD ( almost_equal ( 0.0, numeric_limits<double>::min ()));
-    CHECK_HARD ( almost_equal (numeric_limits<double>::infinity (),
-                               numeric_limits<double>::infinity ()));
-    CHECK_HARD (!almost_equal (numeric_limits<double>::infinity (), 0.0));
-    CHECK_HARD (!almost_equal (numeric_limits<double>::quiet_NaN (),
-                               numeric_limits<double>::quiet_NaN ()));
+    CHECK ( almost_equal (numeric_limits<double>::infinity (),
+                          numeric_limits<double>::infinity ()));
+    CHECK (!almost_equal (numeric_limits<double>::infinity (), 0.0));
+    CHECK (!almost_equal (numeric_limits<double>::quiet_NaN (),
+                          numeric_limits<double>::quiet_NaN ()));
 
 
     CHECK_EQ (min (-2, 0, 2), -2);

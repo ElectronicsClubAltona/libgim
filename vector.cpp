@@ -346,9 +346,9 @@ util::vector<S,T>::ZERO (T{0});
 template <size_t S, typename T>
 void
 util::vector<S,T>::sanity (void) const {
-    CHECK_SOFT (std::all_of (begin (this->data),
-                             end   (this->data),
-                             [] (T i) { return !std::isnan (i); }));
+    CHECK (std::all_of (begin (this->data),
+                        end   (this->data),
+                        [] (T i) { return !std::isnan (i); }));
 }
 
 

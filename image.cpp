@@ -34,10 +34,10 @@ write_netpbm (const uint8_t *restrict pixels,
               size_t stride,
               const boost::filesystem::path &path,
               const char* MAGIC) {
-    CHECK_HARD (pixels);
-    CHECK_HARD (width > 0);
-    CHECK_HARD (stride >= width);
-    CHECK_HARD (height > 0);
+    CHECK (pixels);
+    CHECK_GT (width, 0);
+    CHECK_GE (stride, width);
+    CHECK_GT (height, 0);
 
     // Establish an output stream
     std::ofstream output (path.string ());

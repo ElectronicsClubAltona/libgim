@@ -42,7 +42,7 @@ debug::backtrace::backtrace (void):
     while ((last = ::backtrace (&m_frames[0], m_frames.size ())) == size)
         m_frames.resize (size = m_frames.size () * 2);
 
-    CHECK_HARD (last > 0);
+    CHECK_GT (last, 0);
     m_frames.resize (last);
 }
 

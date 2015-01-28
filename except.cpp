@@ -34,7 +34,7 @@ errno_error::errno_error (int _errno):
     runtime_error (strerror (_errno)),
     id            (_errno)
 {
-    CHECK_HARD (_errno != 0);
+    CHECK_NEQ (_errno, 0);
 }
 
 
@@ -44,7 +44,7 @@ errno_error::errno_error ():
     runtime_error (strerror (errno)),
     id            (errno)
 {
-    CHECK_HARD (errno != 0);
+    CHECK_NEQ (errno, 0);
 }
 
 
@@ -69,7 +69,7 @@ errno_error::throw_code (void)
 
 void
 errno_error::throw_code (int code) {
-    CHECK_HARD (code != 0);
+    CHECK_NEQ (code, 0);
     throw errno_error (code);
 }
 

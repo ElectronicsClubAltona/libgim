@@ -34,7 +34,7 @@ test_double (void) {
     for (unsigned int i = 0; i < elems (tests); ++i) {
         ieee_double val;
         val.set_bits (tests[i].bits);
-        CHECK_HARD (val == tests[i].floating);
+        CHECK (val == tests[i].floating);
     }
 }
 
@@ -63,7 +63,7 @@ test_single (void) {
     for (unsigned int i = 0; i < elems (tests); ++i) {
         ieee_single val;
         val.set_bits (tests[i].bits);
-        CHECK_HARD (val == tests[i].floating);
+        CHECK (val == tests[i].floating);
     }
 }
 

@@ -55,21 +55,6 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-#define VERIFY_SOFT(C, COND) ({     \
-    const auto __DEBUG_value = (C); \
-    CHECK_SOFT(__DEBUG_value COND); \
-    __DEBUG_value;                  \
-})
-
-
-#define VERIFY_HARD(C, COND) ({     \
-    const auto __DEBUG_value = (C); \
-    CHECK_HARD(__DEBUG_value COND); \
-    __DEBUG_value;                  \
-})
-
-
-///////////////////////////////////////////////////////////////////////////////
 #define _CHECK_META(C, SUCCESS, FAILURE) do {                       \
     const auto __DEBUG_value = (C);                                 \
     if (!__DEBUG_value)            {                                \
@@ -87,16 +72,8 @@
 } while (0)
 
 
-#if defined(ENABLE_DEBUGGING)
-    #define CHECK_HARD(C) _CHECK_META((C), { ; }, { panic ();      })
-    #define CHECK_SOFT(C) _CHECK_META((C), { ; }, { breakpoint (); })
-    #define CHECK(C) CHECK_HARD(C)
-#else
-    #define CHECK_HARD(C) { };
-    #define CHECK_SOFT(C) { };
-    #define CHECK(C) CHECK_SOFT(C)
-#endif
-
+///////////////////////////////////////////////////////////////////////////////
+#define CHECK(C) do { DEBUG_ONLY(_CHECK_META((C), { ; }, { panic (); });); } while (0)
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_EQ(A,B) do {                           \

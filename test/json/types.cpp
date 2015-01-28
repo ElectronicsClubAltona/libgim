@@ -25,24 +25,24 @@ main (int, char**) {
         "}";
 
     std::unique_ptr<json::node> ptr = json::parse (TEST_STRING);
-    CHECK_HARD (ptr->is_object ());
+    CHECK (ptr->is_object ());
 
     const json::node &ref = *ptr;
 
-    CHECK_HARD ( ref["string"].is_string ());
-    CHECK_HARD (!ref["string"].is_array ());
-    CHECK_HARD (!ref["string"].is_boolean ());
-    CHECK_HARD (!ref["string"].is_null ());
-    CHECK_HARD (!ref["string"].is_number ());
-    CHECK_HARD (!ref["string"].is_object ());
+    CHECK ( ref["string"].is_string ());
+    CHECK (!ref["string"].is_array ());
+    CHECK (!ref["string"].is_boolean ());
+    CHECK (!ref["string"].is_null ());
+    CHECK (!ref["string"].is_number ());
+    CHECK (!ref["string"].is_object ());
     CHECK_EQ   ( ref["string"].as_string (), "brad");
 
-    CHECK_HARD ( ref["integer"].is_number ());
-    CHECK_HARD (!ref["integer"].is_array ());
-    CHECK_HARD (!ref["integer"].is_boolean ());
-    CHECK_HARD (!ref["integer"].is_null ());
-    CHECK_HARD (!ref["integer"].is_object ());
-    CHECK_HARD (!ref["integer"].is_string ());
+    CHECK ( ref["integer"].is_number ());
+    CHECK (!ref["integer"].is_array ());
+    CHECK (!ref["integer"].is_boolean ());
+    CHECK (!ref["integer"].is_null ());
+    CHECK (!ref["integer"].is_object ());
+    CHECK (!ref["integer"].is_string ());
     CHECK (
         exactly_equal (
             (unsigned)ref["integer"].as_number ().native (),
@@ -50,35 +50,35 @@ main (int, char**) {
         )
     );
 
-    CHECK_HARD ( ref["null"].is_null ());
-    CHECK_HARD (!ref["null"].is_array ());
-    CHECK_HARD (!ref["null"].is_boolean ());
-    CHECK_HARD (!ref["null"].is_number ());
-    CHECK_HARD (!ref["null"].is_object ());
-    CHECK_HARD (!ref["null"].is_string ());
+    CHECK ( ref["null"].is_null ());
+    CHECK (!ref["null"].is_array ());
+    CHECK (!ref["null"].is_boolean ());
+    CHECK (!ref["null"].is_number ());
+    CHECK (!ref["null"].is_object ());
+    CHECK (!ref["null"].is_string ());
 
-    CHECK_HARD ( ref["false"].is_boolean ());
-    CHECK_HARD (!ref["false"].is_array ());
-    CHECK_HARD (!ref["false"].is_null ());
-    CHECK_HARD (!ref["false"].is_number ());
-    CHECK_HARD (!ref["false"].is_object ());
-    CHECK_HARD (!ref["false"].is_string ());
+    CHECK ( ref["false"].is_boolean ());
+    CHECK (!ref["false"].is_array ());
+    CHECK (!ref["false"].is_null ());
+    CHECK (!ref["false"].is_number ());
+    CHECK (!ref["false"].is_object ());
+    CHECK (!ref["false"].is_string ());
     CHECK_EQ   ( ref["false"].as_boolean (), false);
 
-    CHECK_HARD ( ref["true"].is_boolean ());
-    CHECK_HARD (!ref["true"].is_array ());
-    CHECK_HARD (!ref["true"].is_null ());
-    CHECK_HARD (!ref["true"].is_number ());
-    CHECK_HARD (!ref["true"].is_object ());
-    CHECK_HARD (!ref["true"].is_string ());
+    CHECK ( ref["true"].is_boolean ());
+    CHECK (!ref["true"].is_array ());
+    CHECK (!ref["true"].is_null ());
+    CHECK (!ref["true"].is_number ());
+    CHECK (!ref["true"].is_object ());
+    CHECK (!ref["true"].is_string ());
     CHECK_EQ   ( ref["true"].as_boolean (), true);
 
-    CHECK_HARD ( ref["double"].is_number ());
-    CHECK_HARD (!ref["double"].is_array ());
-    CHECK_HARD (!ref["double"].is_boolean ());
-    CHECK_HARD (!ref["double"].is_null ());
-    CHECK_HARD (!ref["double"].is_object ());
-    CHECK_HARD (!ref["double"].is_string ());
+    CHECK ( ref["double"].is_number ());
+    CHECK (!ref["double"].is_array ());
+    CHECK (!ref["double"].is_boolean ());
+    CHECK (!ref["double"].is_null ());
+    CHECK (!ref["double"].is_object ());
+    CHECK (!ref["double"].is_string ());
     CHECK (
         exactly_equal (
             ref["double"].as_number ().native (),
@@ -86,19 +86,19 @@ main (int, char**) {
         )
     );
 
-    CHECK_HARD ( ref["object"].is_object ());
-    CHECK_HARD (!ref["object"].is_array ());
-    CHECK_HARD (!ref["object"].is_boolean ());
-    CHECK_HARD (!ref["object"].is_null ());
-    CHECK_HARD (!ref["object"].is_number ());
-    CHECK_HARD (!ref["object"].is_string ());
+    CHECK ( ref["object"].is_object ());
+    CHECK (!ref["object"].is_array ());
+    CHECK (!ref["object"].is_boolean ());
+    CHECK (!ref["object"].is_null ());
+    CHECK (!ref["object"].is_number ());
+    CHECK (!ref["object"].is_string ());
 
-    CHECK_HARD ( ref["array"].is_array ());
-    CHECK_HARD (!ref["array"].is_boolean ());
-    CHECK_HARD (!ref["array"].is_null ());
-    CHECK_HARD (!ref["array"].is_number ());
-    CHECK_HARD (!ref["array"].is_object ());
-    CHECK_HARD (!ref["array"].is_string ());
+    CHECK ( ref["array"].is_array ());
+    CHECK (!ref["array"].is_boolean ());
+    CHECK (!ref["array"].is_null ());
+    CHECK (!ref["array"].is_number ());
+    CHECK (!ref["array"].is_object ());
+    CHECK (!ref["array"].is_string ());
 
     return EXIT_SUCCESS;
 }

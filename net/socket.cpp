@@ -43,7 +43,7 @@ socket_domain<D>::socket_domain (socket_t _fd):
 {
 #ifdef __WIN32
 #else
-    CHECK_HARD (m_fd >= 0);
+    CHECK_GE (m_fd, 0);
 #endif
 }
 
@@ -166,8 +166,8 @@ net::socket<D, type::STREAM>::socket (const socket_type &rhs):
 template <domain D>
 void
 net::socket<D, type::STREAM>::send (const uint8_t *restrict data, size_t len) {
-    CHECK_HARD (data != NULL);
-    CHECK      (len   >    0);
+    CHECK (data != NULL);
+    CHECK_GT (len, 0);
 
     for (size_t sent = 0; sent < len; ) {
         ssize_t result = ::send (this->m_fd, static_cast<const void *>(data + sent), len - sent, 0);
@@ -183,8 +183,8 @@ net::socket<D, type::STREAM>::send (const uint8_t *restrict data, size_t len) {
 template <domain D>
 size_t
 net::socket<D, type::STREAM>::recv (uint8_t *restrict data, size_t len) {
-    CHECK_HARD (data != NULL);
-    CHECK      (len   >    0);
+    CHECK (data != NULL);
+    CHECK_GT (len, 0);
 
     ssize_t received = ::recv (this->m_fd, data, len, 0);
     if (received < 0)
@@ -263,8 +263,8 @@ void
 net::socket<D, type::DGRAM>::send_addr (const address_type      &addr,
                                         const uint8_t *restrict  data,
                                         size_t                   len) {
-    CHECK_HARD (data != NULL);
-    CHECK      (len  >     0);
+    CHECK (data != NULL);
+    CHECK_GT (len, 0);
 
     typename address_type::sockaddr_type addr_in = addr.to_sockaddr ();
 
@@ -272,7 +272,7 @@ net::socket<D, type::DGRAM>::send_addr (const address_type      &addr,
     if (sent < 0)
         net::error::throw_code ();
 
-    CHECK_HARD (sign_cast<size_t>(sent) == len);
+    CHECK_EQ (sign_cast<size_t>(sent), len);
 }
 
 
@@ -280,14 +280,14 @@ template <domain D>
 typename net::socket<D, type::DGRAM>::address_type
 net::socket<D, type::DGRAM>::recv_addr (uint8_t *restrict data,
                                         size_t            len) {
-    CHECK_HARD (data != NULL);
-    CHECK      (len  >    0);
+    CHECK (data != NULL);
+    CHECK_GT (len, 0);
 
     typename address_type::sockaddr_type addr_in;
     socklen_t                            addr_len = sizeof (addr_in);
 
     ssize_t recvd = recvfrom (this->m_fd, data, len, 0, (sockaddr *)&addr_in, &addr_len);
-    CHECK_HARD (sizeof (addr_in) == addr_len);
+    CHECK_EQ (sizeof (addr_in), addr_len);
     if (recvd < 0)
         net::error::throw_code ();
 

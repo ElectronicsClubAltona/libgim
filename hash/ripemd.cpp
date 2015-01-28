@@ -43,7 +43,7 @@ RIPEMD::reset (void) {
 ///////////////////////////////////////////////////////////////////////////////
 void
 RIPEMD::update (const uint8_t *data, size_t len) {
-    CHECK_HARD (data);
+    CHECK (data);
 
     size_t cursor = 0;
 

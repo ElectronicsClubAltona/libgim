@@ -206,7 +206,7 @@ matrix<T>::inverse_affine (void) const {
 template <typename T>
 matrix<T>&
 matrix<T>::invert_affine (void) {
-    CHECK_HARD (is_affine ());
+    CHECK (is_affine ());
 
     // inv ([ M b ]  == [ inv(M) -inv(M).b ]
     //      [ 0 1 ])    [     0       1    ]
