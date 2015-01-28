@@ -38,8 +38,8 @@ pow2 [[gnu::pure]] (T value)
 
 
 template <typename T>
-T
-pow (T x, unsigned y);
+constexpr T
+pow [[gnu::pure]] (T x, unsigned y);
 
 
 template <typename T>
@@ -79,8 +79,8 @@ round_pow2 [[gnu::pure]] (T value);
 
 
 template <typename T, typename U>
-T
-divup (const T a, const U b)
+constexpr T
+divup [[gnu::pure]] (const T a, const U b)
     { return (a + b - 1) / b; }
 
 
@@ -100,25 +100,25 @@ digits [[gnu::pure]] (const T& value);
 
 //-----------------------------------------------------------------------------
 template <typename T>
-int sign (T val);
+int sign [[gnu::pure]] (T val);
 
 
 //-----------------------------------------------------------------------------
 // Comparisons
 template <typename T>
 bool
-almost_equal (const T &a, const T &b)
+almost_equal [[gnu::pure]] (const T &a, const T &b)
     { return a == b; }
 
 
 template <>
 bool
-almost_equal (const float &a, const float &b);
+almost_equal [[gnu::pure]] (const float &a, const float &b);
 
 
 template <>
 bool
-almost_equal (const double &a, const double &b);
+almost_equal [[gnu::pure]] (const double &a, const double &b);
 
 
 template <typename Ta, typename Tb>
@@ -126,7 +126,7 @@ typename std::enable_if<
     std::is_arithmetic<Ta>::value && std::is_arithmetic<Tb>::value,
     bool
 >::type
-almost_equal (Ta a, Tb b) {
+almost_equal [[gnu::pure]] (Ta a, Tb b) {
     return almost_equal <decltype(a + b)> (static_cast<decltype(a + b)>(a),
                                            static_cast<decltype(a + b)>(b));
 }
@@ -137,7 +137,7 @@ typename std::enable_if<
     !std::is_arithmetic<Ta>::value || !std::is_arithmetic<Tb>::value,
     bool
 >::type
-almost_equal (const Ta &a, const Tb &b)
+almost_equal [[gnu::pure]] (const Ta &a, const Tb &b)
     { return a == b; }
 
 
@@ -146,20 +146,20 @@ almost_equal (const Ta &a, const Tb &b)
 #pragma GCC diagnostic ignored "-Wfloat-equal"
 template <typename T, typename U>
 bool
-exactly_equal (const T &a, const U &b)
+exactly_equal [[gnu::pure]] (const T &a, const U &b)
     { return a == b; }
 #pragma GCC diagnostic pop
 
 
 template <typename T>
 bool
-almost_zero (T a)
+almost_zero [[gnu::pure]] (T a)
     { return almost_equal (a, 0); }
 
 
 template <typename T>
 bool
-exactly_zero (T a)
+exactly_zero [[gnu::pure]] (T a)
     { return exactly_equal (a, static_cast<T> (0)); }
 
 
@@ -170,26 +170,26 @@ constexpr float  PI_f = 3.141592653589793238462643f;
 
 //-----------------------------------------------------------------------------
 constexpr double
-to_degrees (double radians) {
+to_degrees [[gnu::pure]] (double radians) {
     return radians * 180 / PI_d;
 }
 
 
 constexpr float
-to_degrees (float radians) {
+to_degrees [[gnu::pure]] (float radians) {
     return radians * 180 / PI_f;
 }
 
 
 //-----------------------------------------------------------------------------
 constexpr float
-to_radians (float degrees) {
+to_radians [[gnu::pure]] (float degrees) {
     return degrees / 180 * static_cast<float> (PI_f);
 }
 
 
 constexpr double
-to_radians (double degrees) {
+to_radians [[gnu::pure]] (double degrees) {
     return degrees / 180 * PI_d;
 }
 
@@ -198,7 +198,7 @@ to_radians (double degrees) {
 /// Variadic minimum
 template <typename T>
 constexpr T
-min (const T a)
+min [[gnu::pure]] (const T a)
     { return a; }
 
 
@@ -208,7 +208,7 @@ constexpr typename std::enable_if<
     std::is_integral<typename std::decay<T>::type>::value == std::is_integral<typename std::decay<U>::type>::value,
     typename std::common_type<T,U>::type
 >::type
-min (const T a, const U b, Args ...args)
+min [[gnu::pure]] (const T a, const U b, Args ...args)
 {
     return min (a < b ? a : b, std::forward<Args> (args)...);
 }
@@ -218,7 +218,7 @@ min (const T a, const U b, Args ...args)
 /// Variadic maximum
 template <typename T>
 constexpr T
-max (const T a)
+max [[gnu::pure]] (const T a)
     { return a; }
 
 
@@ -228,7 +228,7 @@ constexpr typename std::enable_if<
     std::is_integral<typename std::decay<T>::type>::value == std::is_integral<typename std::decay<U>::type>::value,
     typename std::common_type<T,U>::type
 >::type
-max (const T a, const U b, Args ...args)
+max [[gnu::pure]] (const T a, const U b, Args ...args)
 {
     return max (a > b ? a : b, std::forward<Args> (args)...);
 }
@@ -237,7 +237,7 @@ max (const T a, const U b, Args ...args)
 //-----------------------------------------------------------------------------
 template <typename T, typename U, typename V>
 T
-limit (const T val, const U hi, const V lo)
+limit [[gnu::pure]] (const T val, const U hi, const V lo)
 {
     return val > hi ? hi:
            val < lo ? lo:
