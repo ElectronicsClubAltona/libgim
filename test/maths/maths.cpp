@@ -26,6 +26,10 @@ main (int, char **) {
     CHECK (almost_equal (0.f, -0.f));
     CHECK (almost_equal (0.,  -0.));
 
+    CHECK ( almost_zero (1e-45f));
+    CHECK (!almost_zero (1e-40f));
+    CHECK (!exactly_zero (1e-45f));
+
     CHECK_EQ (min (-2, 0, 2), -2);
     CHECK_EQ (max (-2, 0, 2),  2);
 
