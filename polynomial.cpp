@@ -24,6 +24,10 @@
 
 #include <limits>
 #include <cmath>
+#include <iostream>
+
+static const size_t NEWTON_ITERATIONS = 1u;
+
 
 //-----------------------------------------------------------------------------
 namespace util { namespace polynomial {
@@ -130,18 +134,20 @@ namespace util { namespace polynomial {
         for (auto &i: s)
             i -= sub;
 
-        // Run an iteration of Newtons method to make the results slightly
+        // Run some iterations of Newtons method to make the results slightly
         // more accurate, they're a little loose straight out of the bat.
-        const float da = 3;
-        const float db = 2 * a;
-        const float dc = b;
+        const float da = 3 * _a;
+        const float db = 2 * _b;
+        const float dc = 1 * _c;
 
         for (auto &i: s) {
-            float deriv = da * i * i + db * i + dc;
-            if (almost_zero (deriv))
-                continue;
+            for (size_t j = 0; j < NEWTON_ITERATIONS; ++j) {
+                float deriv = da * i * i + db * i + dc;
+                if (almost_zero (deriv))
+                    continue;
 
-            i = i - eval (coeffs, i) / deriv;
+                i = i - eval (coeffs, i) / deriv;
+            }
         }
 
         return s;
