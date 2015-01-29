@@ -31,6 +31,13 @@ namespace util {
         bezier (const util::point2f (&)[S+1]);
 
         point2f eval (float t) const;
+
+        // Calculate the expanded polynomial coeffecients in terms of t
+        std::array<vector2f,S+1>
+        coeffs (void) const;
+
+        size_t intersections (point2f from, point2f to) const;
+
         float distance (point2f) const;
 
         point2f& operator[] (size_t idx);

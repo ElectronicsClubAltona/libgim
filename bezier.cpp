@@ -140,6 +140,110 @@ namespace util {
 
 //-----------------------------------------------------------------------------
 namespace util {
+    template <>
+    std::array<util::vector2f,4>
+    bezier<3>::coeffs (void) const
+    {
+        auto &v = reinterpret_cast<const util::vector2f(&)[4]> (m_points);
+
+        return {
+            -1 * v[0] +3 * v[1] -3 * v[2] +1 * v[3],
+             3 * v[0] -6 * v[1] +3 * v[2],
+            -3 * v[0] +3 * v[1],
+             1 * v[0]
+        };
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+namespace util {
+    template <>
+    std::array<util::vector2f,3>
+    bezier<2>::coeffs (void) const
+    {
+        auto &v = reinterpret_cast<const util::vector2f(&)[3]> (m_points);
+
+        return {
+            +1 * v[2] -2 * v[1] + 1 * v[0],
+            -2 * v[2] +2 * v[1],
+            +1 * v[2]
+        };
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+namespace util {
+    template <>
+    std::array<util::vector2f,2>
+    bezier<1>::coeffs (void) const
+    {
+        auto &v = reinterpret_cast<const util::vector2f(&)[2]> (m_points);
+
+        return {
+            -1 * v[1] + 1 * v[0],
+            +1 * v[1],
+        };
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+// XXX: If the line is co-linear we'll have no solutions. But we return 1
+// anyway as this function is used to find any point that intersects as part
+// of other more comprehensive tests.
+template <size_t S>
+size_t
+util::bezier<S>::intersections (point2f p0, point2f p1) const
+{
+    float A = p1.y - p0.y;              // A = y2 - y1
+    float B = p0.x - p1.x;              // B = x1 - x2
+    float C = p0.x * (p0.y - p1.y) +    // C = x1 (y1 - y2) + y1 (x2 - x1)
+              p0.y * (p1.x - p0.x);
+
+    // Build the intersection polynomial
+    const std::array<vector2f,S+1> bcoeff = coeffs ();
+
+    std::array<float,S+1> pcoeff;
+    for (size_t i = 0; i < pcoeff.size (); ++i)
+        pcoeff[i] = A * bcoeff[i].x + B * bcoeff[i].y;
+    pcoeff.back () += C;
+
+    const auto r = polynomial::solve<S> (pcoeff);
+
+    // The curve and line are colinear
+    if (std::all_of (r.begin (), r.end (), [] (auto i) { return std::isnan (i); }))
+        return 1;
+
+    size_t count = 0;
+    for (size_t i = 0; i < S; ++i) {
+        // Ensure the solutions are on the curve
+        const auto t = r[i];
+        if (std::isnan (t))
+            break;
+
+        if (t < 0.f || t > 1.f)
+            continue;
+
+        // Find the line's intersection point
+        const util::vector2f q = polynomial::eval (bcoeff, t);
+
+        const auto s = almost_equal (p0.x, p1.x)   ?
+                          (q.y-p0.y) / (p1.y-p0.y) :
+                          (q.x-p0.x) / (p1.x-p0.x) ; // vertical
+
+        // Check if the point is on the line
+        if (s >= 0.f && s <= 1.f)
+            ++count;
+    }
+
+    return count;
+}
+
+
+//-----------------------------------------------------------------------------
+namespace util {
     // TODO: use a more reliable method like [Xiao-Dia Chen 2010]
     template <>
     float
