@@ -156,26 +156,3 @@ namespace util { namespace polynomial {
         return s;
     }
 } }
-
-
-//-----------------------------------------------------------------------------
-template <size_t S>
-float
-util::polynomial::eval (const std::array<float,S> coeffs, const float x)
-{
-    float x_ = 1.f;
-    float sum = 0.f;
-    for (size_t i = 0; i < S; ++i) {
-        sum += coeffs[S-i-1] * x_;
-        x_ *= x;
-    }
-
-    return sum;
-}
-
-
-//-----------------------------------------------------------------------------
-template float util::polynomial::eval (std::array<float,1>, float);
-template float util::polynomial::eval (std::array<float,2>, float);
-template float util::polynomial::eval (std::array<float,3>, float);
-template float util::polynomial::eval (std::array<float,4>, float);

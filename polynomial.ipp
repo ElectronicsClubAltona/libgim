@@ -17,27 +17,27 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_POLYNOMIAL_HPP
-#define __UTIL_POLYNOMIAL_HPP
 
-#include <array>
-#include <cstdlib>
+#ifdef __UTIL_POLYNOMIAL_IPP
+#error "twice included ipp"
+#endif
 
-namespace util {
-    namespace polynomial {
-        // Invalid solutions are represented by NaN. They are guaranteed to
-        // be at the end of the solution list, so they are safe to skip on the
-        // first instance.
-        template <size_t S>
-        std::array<float,S>
-        solve (std::array<float,S+1>);
+#define __UTIL_POLYNOMIAL_IPP
 
-        template <size_t S, typename T, typename U>
-        T
-        eval (std::array<T,S>, U x);
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T, typename U>
+T
+util::polynomial::eval (const std::array<T,S> coeffs, const U x)
+{
+    U x_ = 1.f;
+    T sum {0.f};
+
+    for (size_t i = 0; i < S; ++i) {
+        sum += coeffs[S-i-1] * x_;
+        x_ *= x;
     }
+
+    return sum;
 }
 
-#include "polynomial.ipp"
-
-#endif

@@ -118,6 +118,7 @@ UTIL_FILES   =		\
     point.ipp		\
     polynomial.cpp	\
     polynomial.hpp	\
+    polynomial.ipp	\
     pool.cpp		\
     pool.hpp		\
     pool.ipp		\
