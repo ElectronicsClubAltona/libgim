@@ -25,6 +25,9 @@
 
 namespace util {
     namespace polynomial {
+        // Invalid solutions are represented by NaN. They are guaranteed to
+        // be at the end of the solution list, so they are safe to skip on the
+        // first instance.
         template <size_t S>
         std::array<float,S>
         solve (std::array<float,S+1>);

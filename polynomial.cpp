@@ -79,6 +79,9 @@ namespace util { namespace polynomial {
         const float _c = coeffs[2];
         const float _d = coeffs[3];
 
+        // Take care of degenerate quadratic cases. We can also pass off if 'd'
+        // is zero, but the benefit isn't clear given we have to merge results
+        // at the end anyway.
         if (almost_zero (_a)) {
             auto s = solve<2> ({_b, _c, _d});
             return {s[0], s[1], std::numeric_limits<float>::quiet_NaN () };
