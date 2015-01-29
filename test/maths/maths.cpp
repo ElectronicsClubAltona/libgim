@@ -23,6 +23,8 @@ main (int, char **) {
     CHECK (!almost_equal (numeric_limits<double>::quiet_NaN (),
                           numeric_limits<double>::quiet_NaN ()));
 
+    CHECK (almost_equal (0.f, -0.f));
+    CHECK (almost_equal (0.,  -0.));
 
     CHECK_EQ (min (-2, 0, 2), -2);
     CHECK_EQ (max (-2, 0, 2),  2);

@@ -126,6 +126,12 @@ ieee_float<E, S>::almost_equal (floating_t _a,
     if (a.s == b.s)
         return true;
 
+    // Order as twos complement to avoid negative zero/zero comparison issues
+    if (a.s < 0)
+        a.s = (1L << (TOTAL_BITS - 1)) - a.s;
+    if (b.s < 0)
+        b.s = (1L << (TOTAL_BITS - 1)) - b.s;
+
     uint_t diff = std::abs (a.s - b.s);
     return diff <= ulps;
 }
