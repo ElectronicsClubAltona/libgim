@@ -51,7 +51,7 @@ class ieee_float {
         bool operator==   (floating_t) const;
 
         static bool almost_equal (floating_t, floating_t);
-        static bool almost_equal (floating_t, floating_t, uint_t ulps);
+        static bool almost_equal (floating_t, floating_t, unsigned ulps);
 };
 
 
