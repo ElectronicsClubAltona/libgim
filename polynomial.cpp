@@ -80,11 +80,7 @@ namespace util { namespace polynomial {
             return {s[0], s[1], std::numeric_limits<float>::quiet_NaN () };
         }
 
-        std::array<float,3> s = {
-            std::numeric_limits<float>::quiet_NaN (),
-            std::numeric_limits<float>::quiet_NaN (),
-            std::numeric_limits<float>::quiet_NaN ()
-        };
+        std::array<float,3> s;
 
         // Normalise to x^3 + ax^2 + bx + c = 0
         const float a = _b / _a;
@@ -103,10 +99,13 @@ namespace util { namespace polynomial {
         {
             if (almost_zero (q)) {
                 s[0] = 0.f;
+                s[1] = std::numeric_limits<float>::quiet_NaN ();
+                s[2] = std::numeric_limits<float>::quiet_NaN ();
             } else {
                 const float u = std::cbrt (-q);
                 s[0] = 2 * u;
                 s[1] = -u;
+                s[2] = std::numeric_limits<float>::quiet_NaN ();
             }
         } else if (D < 0) {
             const float phi = std::acos (-q / std::sqrt (-p * p * p)) / 3.f;
@@ -116,11 +115,14 @@ namespace util { namespace polynomial {
             s[1] = -t * std::cos (phi + PI_f / 3.f);
             s[2] = -t * std::cos (phi - PI_f / 3.f);
         } else {
-            float u = std::cbrt (std::sqrt (D) + std::fabs (q));
+            float u = std::cbrt (std::sqrt (D) + abs (q));
             if (q > 0.f)
                 s[0] = -u + p / u;
             else
                 s[0] =  u - p / u;
+
+            s[1] = std::numeric_limits<float>::quiet_NaN ();
+            s[2] = std::numeric_limits<float>::quiet_NaN ();
         }
 
         // Resubstitute a / 3 from above
