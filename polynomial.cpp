@@ -92,24 +92,25 @@ namespace util { namespace polynomial {
         const float c = _d / _a;
 
         // Substituate x = y - a / 3 to eliminate the quadric. Now: x^3 + px + q = 0
-        float p = (-a * a / 3.f + b) / 3.f;
-        float q = (2 * a * a * a / 27.f - a * b /3.f + c) / 2.f;
+        const float p = (-a * a / 3.f + b) / 3.f;
+        const float q = (2 * a * a * a / 27.f - a * b /3.f + c) / 2.f;
+
+        // Polynomial descriminant
+        const float D = q * q + p * p * p;
 
         // Solve using Cardano's method
-        float D = q * q + p * p * p;
-
         if (almost_zero (D))
         {
             if (almost_zero (q)) {
                 s[0] = 0.f;
             } else {
-                float u = std::cbrt (-q);
+                const float u = std::cbrt (-q);
                 s[0] = 2 * u;
                 s[1] = -u;
             }
         } else if (D < 0) {
-            float phi = std::acos (-q / std::sqrt (-p * p * p)) / 3.f;
-            float t   = 2 * std::sqrt (-p);
+            const float phi = std::acos (-q / std::sqrt (-p * p * p)) / 3.f;
+            const float t   = 2 * std::sqrt (-p);
 
             s[0] =  t * std::cos (phi);
             s[1] = -t * std::cos (phi + PI_f / 3.f);
@@ -123,15 +124,15 @@ namespace util { namespace polynomial {
         }
 
         // Resubstitute a / 3 from above
-        float sub = a / 3.f;
+        const float sub = a / 3.f;
         for (auto &i: s)
             i -= sub;
 
         // Run an iteration of Newtons method to make the results slightly
         // more accurate, they're a little loose straight out of the bat.
-        float da = 3;
-        float db = 2 * a;
-        float dc = b;
+        const float da = 3;
+        const float db = 2 * a;
+        const float dc = b;
 
         for (auto &i: s) {
             float deriv = da * i * i + db * i + dc;
