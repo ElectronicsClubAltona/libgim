@@ -19,8 +19,6 @@ AC_LANG([C++])
 AC_PROG_CXX
 AC_PROG_CXXCPP
 
-AX_APPEND_COMPILE_FLAGS([-std=c++1y])
-
 AX_COMPILER_VENDOR
 
 AM_INIT_AUTOMAKE([1.14 dist-bzip2 dist-xz foreign subdir-objects])
@@ -28,107 +26,11 @@ AM_SILENT_RULES([yes])
 
 AC_CONFIG_HEADERS([config.h])
 
-###############################################################################
-## Major compilation options
-
-AC_ARG_ENABLE([debugging],
-    [AS_HELP_STRING([--enable-debugging], [enables developer debugging support])]
-)
-
-AC_ARG_ENABLE([sanitizer], [
-    AS_HELP_STRING([--enable-sanitizer], [enable memory sanitizer])
-])
-
-###############################################################################
-## Warnings
-##
-## Note: GCC will silently accept warnings that it doesn't handle but then
-## complain about them at the first legitimate warning discovered in a source
-## file. To work around this we have to detect GCC.
-
-# Compound warnings
-AX_APPEND_COMPILE_FLAGS([-Wall], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wextra], [], [-Werror])
-
-# General warnings
-AX_APPEND_COMPILE_FLAGS([-Wcast-align], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wcast-qual], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wfloat-conversion], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wfloat-equal], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-aggressive-loop-optimizations], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wnoexcept], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wnon-virtual-dtor], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-parentheses], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wpointer-arith], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wredundant-decls], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wshadow], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wsign-compare], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wsign-promo], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wstrict-aliasing], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wstrict-overflow], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wtype-limits], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wunused-but-set-variable], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wunused-parameter], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wuseless-cast], [], [-Werror])
-
-# Required extensions
-#AX_APPEND_COMPILE_FLAGS([-Wgnu-flexible-array-union-member], [], [-Werror])
-#AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
-#AX_APPEND_COMPILE_FLAGS([-Wno-vla-extension], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-Wno-vla], [], [-Werror])
-
-AS_IF([test "x$ax_cv_cxx_compiler_vendor" != "xgnu"], [
-    AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-Wno-flexible-array-extensions], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-Wno-gnu-conditional-omitted-operand], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-Wno-gnu-empty-struct], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-Wno-gnu-flexible-array-union-member], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-Wno-gnu-zero-variadic-macro-arguments], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-Wno-vla-extension], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-Wno-zero-length-array], [], [-Werror])
-])
-
-# Excessive warnings
-AX_APPEND_COMPILE_FLAGS([-Wno-missing-braces], [], [-Werror])
-
-AS_IF([test "x$ax_cv_cxx_compiler_vendor" != "xgnu"], [
-    AX_APPEND_COMPILE_FLAGS([-Wno-nested-anon-types], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-Wno-unused-const-variable], [], [-Werror])
-])
-
-#AX_APPEND_COMPILE_FLAGS([-Wunsafe-loop-optimizations], [], [-Werror])
-#AX_APPEND_COMPILE_FLAGS([-Winline], [], [-Werror])
-#AX_APPEND_COMPILE_FLAGS([-Wconversion], [], [-Werror])
-#AX_APPEND_COMPILE_FLAGS([-Wdouble-promotion], [], [-Werror])
-#AX_APPEND_COMPILE_FLAGS([-Wold-style-cast], [], [-Werror])
-#AX_APPEND_COMPILE_FLAGS([-Woverloaded-virtual], [], [-Werror])
-#AX_APPEND_COMPILE_FLAGS([-Wsign-conversion], [], [-Werror])
-
-# Strict warnings
-AX_APPEND_COMPILE_FLAGS([-pedantic], [], [-Werror])
-
-######################################################################
-## Platform compilation helpers
-
-AX_APPEND_COMPILE_FLAGS([-fno-common], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-fno-nonansi-builtins], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-fno-deduce-init-list], [], [-Werror])
-
-###############################################################################
-## Compiler features
-
-AC_C_CONST
-AC_C_RESTRICT
-AC_C_INLINE
-
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([struct A     { virtual void C (void) = 0;  };
-                                    struct B : A { void C (void) override; }; ],
-                                   [])],
-                  [], [AC_DEFINE([override], [], [Pretend about override keyword support])])
-
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([struct A final { }; ],
-                                   [])],
-                  [], [AC_DEFINE([final], [], [Pretend about final keyword support])])
+NC_CXX
+NC_PLATFORM
+NC_WARNINGS
+NC_DEBUGGING
+NC_OPTIMISATION
 
 ###############################################################################
 ## Architecture features
@@ -143,23 +45,6 @@ AC_TYPE_SSIZE_T
 
 ###############################################################################
 ## Platform features
-
-AS_CASE([$host_os],
-    [mingw32], [
-        AM_CONDITIONAL([PLATFORM_WIN32], [true])
-        AM_CONDITIONAL([PLATFORM_LINUX], [false])
-
-        AC_CHECK_HEADERS([winsock2.h ws2tcpip.h])
-        AC_SUBST([NET_LIBS], [-lws2_32])
-    ],
-
-    [linux-gnu], [
-        AM_CONDITIONAL([PLATFORM_WIN32], [false])
-        AM_CONDITIONAL([PLATFORM_LINUX], [true])
-    ],
-
-    [AC_ERROR([Unknown host_os])]
-)
 
 AC_FUNC_MMAP
 
@@ -177,59 +62,6 @@ AS_IF([test "x$ac_cv_search_clock_gettime" == "x-*"], [
 
 ###############################################################################
 ## Debug features
-
-AS_IF([test "x$enable_debugging" = "xyes"], [
-    AS_IF([test "x$enable_sanitizer" = "xyes"], [
-        AX_APPEND_COMPILE_FLAGS([-fsanitize=address], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-fsanitize=undefined], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-fsanitize=leak], [], [-Werror])
-
-        AX_APPEND_LINK_FLAGS([-fsanitize=address], [], [-Werror])
-        AX_APPEND_LINK_FLAGS([-fsanitize=undefined], [], [-Werror])
-        AX_APPEND_LINK_FLAGS([-fsanitize=leak], [], [-Werror])
-
-        AX_APPEND_LINK_FLAGS([-lasan], [], [-Werror])
-        AX_APPEND_LINK_FLAGS([-lubsan], [], [-Werror])
-    ])
-
-    AX_APPEND_COMPILE_FLAGS([-ggdb], [], [-Werror])
-    AX_APPEND_LINK_FLAGS([-rdynamic])
-
-    AC_DEFINE([ENABLE_DEBUGGING], [], [Debugging support enabled], [], [-Werror])
-    AC_DEFINE([_GLIBCXX_DEBUG],   [], [Use glibcxx debugging mode], [], [-Werror])
-
-    AX_APPEND_COMPILE_FLAGS([-O0], [], [-Werror])
-], [
-    AX_APPEND_COMPILE_FLAGS([-O2], [], [-Werror])
-
-    AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribute-patterns], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-ftree-loop-if-convert-stores], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-ftree-vectorize], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-funsafe-loop-optimizations], [], [-Werror])
-
-    # gcc >= 4.8 defaults to enabling stack-protector, we care more about
-    # performance than security.
-    AX_APPEND_COMPILE_FLAGS([-fno-stack-protector], [], [-Werror])
-
-    # mingw LTO support currently appears to be broken
-    AS_IF([test x"${host_os}" != x"mingw32"], [
-        AX_APPEND_COMPILE_FLAGS([-flto])
-        AX_APPEND_LINK_FLAGS([-fuse-linker-plugin], [], [-Werror])
-    ])
-])
-
-AS_CASE([$host_os],
-    [mingw32], [
-        AX_APPEND_COMPILE_FLAGS([-gstabs], [], [-Werror])
-    ],
-
-    [linux-gnu], [
-        AX_APPEND_COMPILE_FLAGS([-g], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-ggdb], [], [-Werror])
-    ],
-
-    [AC_MSG_WARN([Unknown host_os])]
-)
 
 ###############################################################################
 ## Documentation
@@ -265,26 +97,6 @@ AC_SUBST(ZLIB_LIBS)
 
 ###############################################################################
 ## Performance and build optimisations
-
-AS_CASE([$host_cpu],
-    [x86_64], [
-        AX_APPEND_COMPILE_FLAGS([-mtune=generic], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-msse], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-msse2], [], [-Werror])
-    ],
-
-    [i686], [
-        AX_APPEND_COMPILE_FLAGS([-march=prescott], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-mtune=generic], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-mcmov], [], [-Werror])
-    ],
-
-    [AC_MSG_WARN([unknown host_cpu])]
-)
-
-AX_APPEND_COMPILE_FLAGS([-pipe], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-mfpmath=sse], [], [-Werror])
-AX_APPEND_COMPILE_FLAGS([-msahf], [], [-Werror])
 
 ###############################################################################
 ## Output
