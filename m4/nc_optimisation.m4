@@ -9,7 +9,7 @@ AC_DEFUN([NC_OPTIMISATION],[
     ])
 
     AS_IF([test "x$enable_lto" == "xyes"], [
-        AS_IF([test x"${host_os}" != x"mingw32"], [
+        AS_IF([test x"${host_os}" == x"mingw32"], [
             AC_ERROR([mingw32 link-time optimisation is currently broken])
         ])
 
