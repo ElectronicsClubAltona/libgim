@@ -146,6 +146,7 @@ UTIL_FILES   =		\
     string.hpp		\
     stringid.cpp	\
     stringid.hpp	\
+    tap.hpp		\
     time.cpp		\
     time.hpp		\
     types.hpp		\
@@ -168,7 +169,8 @@ UTIL_FILES   =		\
 if PLATFORM_LINUX
 UTIL_FILES += 			\
     backtrace_execinfo.cpp	\
-    io_posix.cpp
+    io_posix.cpp		\
+    io_posix.hpp
 endif
 
 if PLATFORM_WIN32
