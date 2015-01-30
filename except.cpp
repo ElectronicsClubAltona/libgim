@@ -79,7 +79,7 @@ win32_error::win32_error (DWORD _id):
     runtime_error ("Win32 error"),
     id (_id)
 {
-    CHECK_SOFT (id != ERROR_SUCCESS);
+    CHECK_NEQ (id, ERROR_SUCCESS);
 }
 
 
@@ -87,7 +87,7 @@ win32_error::win32_error (void):
     runtime_error ("Win32 error"),
     id (GetLastError ())
 {
-    CHECK_SOFT (id != ERROR_SUCCESS);
+    CHECK_NEQ (id, ERROR_SUCCESS);
 }
 
 

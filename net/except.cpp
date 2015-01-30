@@ -48,7 +48,7 @@ net::error::code_to_string (int code) {
     // It should be fine to signcast the code here as Windows guarantees all
     // error messages are positive but appears to use int for compatibility
     DWORD output = FormatMessage (0, NULL, sign_cast<unsigned> (code), 0, message, sizeof (message), NULL);
-    CHECK_HARD (output != 0);
+    CHECK_NEQ (output, 0);
 
     return std::string (message);
 #else
