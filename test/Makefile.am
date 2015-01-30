@@ -10,9 +10,9 @@ TEST_BIN = 		\
 	float		\
 	hton		\
 	ip 		\
-	json/types	\
-	maths/maths 	\
-	maths/matrix 	\
+	json_types	\
+	maths		\
+	maths_matrix 	\
 	matrix		\
 	md2		\
 	md4		\
