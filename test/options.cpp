@@ -210,9 +210,8 @@ test_bytes_opt(void) {
 
 void
 test_insert_remove_opt (void) {
-    unique_ptr<processor> p(new processor ());
-
     {
+        unique_ptr<processor> p(new processor ());
         auto opt = make_unique<nulloption> ('n', "null-option", "null testing action");
         auto cmp = opt.get ();
         p->add_option (move (opt));
@@ -220,6 +219,7 @@ test_insert_remove_opt (void) {
     }
 
     {
+        unique_ptr<processor> p(new processor ());
         auto opt = make_unique<nulloption> ('n', "null-option", "null testing action");
         auto cmp = opt.get ();
         p->add_option (move (opt));
@@ -227,6 +227,7 @@ test_insert_remove_opt (void) {
     }
 
     {
+        unique_ptr<processor> p(new processor ());
         auto opt1 = make_unique<nulloption> ('n', "null-option", "null testing action");
         auto opt2 = make_unique<nulloption> ('n', "null-option", "null testing action");
         p->add_option (move (opt1));
