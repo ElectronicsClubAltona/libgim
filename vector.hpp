@@ -100,7 +100,7 @@ namespace util {
     template <size_t S, typename T> std::ostream& operator<< (std::ostream&, const vector<S,T>&);
 
     template <size_t S, typename T>
-    const json::node& operator>> (const json::node&, vector<S,T>&);
+    const json::tree::node& operator>> (const json::tree::node&, vector<S,T>&);
 
     // convenience typedefs
     typedef vector<2,size_t> vector2u;

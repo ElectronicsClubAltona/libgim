@@ -414,9 +414,9 @@ util::operator<< (std::ostream &os, const util::vector<S,T> &v) {
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-const json::node&
-util::operator>> (const json::node &node, util::vector<S,T> &v) {
-    const json::array &array = node.as_array ();
+const json::tree::node&
+util::operator>> (const json::tree::node &node, util::vector<S,T> &v) {
+    const json::tree::array &array = node.as_array ();
     if (array.size () != S)
         throw std::runtime_error ("Invalid dimensionality for json-to-vector");
 
@@ -440,7 +440,7 @@ template util::vector<S,T> util::operator* (float, const util::vector<S,T>&);   
 template util::vector<S,T> util::operator+ (T, const util::vector<S,T>&);           \
 template util::vector<S,T> util::operator- (T, const util::vector<S,T>&);           \
 template std::ostream& util::operator<< (std::ostream&, const util::vector<S,T> &v);\
-template const json::node& util::operator>> (const json::node&, util::vector<S,T>&);
+template const json::tree::node& util::operator>> (const json::tree::node&, util::vector<S,T>&);
 
 
 #define INSTANTIATE(T)  \

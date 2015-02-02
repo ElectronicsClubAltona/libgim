@@ -24,10 +24,10 @@ main (int, char**) {
         "   ]"
         "}";
 
-    std::unique_ptr<json::node> ptr = json::parse (TEST_STRING);
+    std::unique_ptr<json::tree::node> ptr = json::tree::parse (TEST_STRING);
     CHECK (ptr->is_object ());
 
-    const json::node &ref = *ptr;
+    const json::tree::node &ref = *ptr;
 
     CHECK ( ref["string"].is_string ());
     CHECK (!ref["string"].is_array ());

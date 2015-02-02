@@ -55,7 +55,7 @@ print_usage (int argc, char **argv) {
 
 
 const char*
-type_to_string (const json::node &node) {
+type_to_string (const json::tree::node &node) {
     if (node.is_array   ()) return "array";
     if (node.is_boolean ()) return "boolean";
     if (node.is_null    ()) return "null";
@@ -68,13 +68,13 @@ type_to_string (const json::node &node) {
 
 
 bool
-is_node_valid (const json::node   &node,
-               const json::object &schema);
+is_node_valid (const json::tree::node   &node,
+               const json::tree::object &schema);
 
 
 bool
-is_type_valid (const json::node &node,
-               const json::node &type) {
+is_type_valid (const json::tree::node &node,
+               const json::tree::node &type) {
     if (type.is_array ()) {
         return any_of (type.as_array ().begin (),
                        type.as_array ().end (),
@@ -82,20 +82,20 @@ is_type_valid (const json::node &node,
     }
 
     if (!type.is_string ())
-        throw json::schema_error ("schema type requires array, string, or object");
+        throw json::tree::schema_error ("schema type requires array, string, or object");
 
-    static const auto ANY_VALIDATOR = [] (const json::node &) { return true; };
-    static const auto INT_VALIDATOR = [] (const json::node &n) {
+    static const auto ANY_VALIDATOR = [] (const json::tree::node &) { return true; };
+    static const auto INT_VALIDATOR = [] (const json::tree::node &n) {
         return n.is_number () && is_integer (n.as_number ());
     };
 
-    static const map<string, function<bool(const json::node&)>> TYPE_VALIDATORS ({
-        { "array",   bind (&json::node::is_array,   _1) },
-        { "boolean", bind (&json::node::is_boolean, _1) },
-        { "null",    bind (&json::node::is_null,    _1) },
-        { "number",  bind (&json::node::is_number,  _1) },
-        { "object",  bind (&json::node::is_object,  _1) },
-        { "string",  bind (&json::node::is_string,  _1) },
+    static const map<string, function<bool(const json::tree::node&)>> TYPE_VALIDATORS ({
+        { "array",   bind (&json::tree::node::is_array,   _1) },
+        { "boolean", bind (&json::tree::node::is_boolean, _1) },
+        { "null",    bind (&json::tree::node::is_null,    _1) },
+        { "number",  bind (&json::tree::node::is_number,  _1) },
+        { "object",  bind (&json::tree::node::is_object,  _1) },
+        { "string",  bind (&json::tree::node::is_string,  _1) },
         { "any",     ANY_VALIDATOR },
         { "integer", INT_VALIDATOR },
     });
@@ -111,18 +111,18 @@ is_type_valid (const json::node &node,
 
 
 bool
-is_disallow_valid (const json::node &node,
-                   const json::node &constraint)
+is_disallow_valid (const json::tree::node &node,
+                   const json::tree::node &constraint)
     { return !is_type_valid (node, constraint); }
 
 
 bool
-is_enum_valid (const json::node &node,
-               const json::node &constraint) {
+is_enum_valid (const json::tree::node &node,
+               const json::tree::node &constraint) {
     if (!constraint.is_array ())
-        throw json::schema_error ("enum validation requires an array");
+        throw json::tree::schema_error ("enum validation requires an array");
 
-    const json::array &valids = constraint.as_array ();
+    const json::tree::array &valids = constraint.as_array ();
     return valids.end () != std::find (valids.begin (),
                                        valids.end   (),
                                        node);
@@ -130,15 +130,15 @@ is_enum_valid (const json::node &node,
 
 
 bool
-is_enum_valid (const json::string &node,
-               const json::node   &constraint) {
-    return is_enum_valid (static_cast<const json::node&> (node), constraint);
+is_enum_valid (const json::tree::string &node,
+               const json::tree::node   &constraint) {
+    return is_enum_valid (static_cast<const json::tree::node&> (node), constraint);
 }
 
 
 bool
-is_always_valid (const json::node &,
-                 const json::node &)
+is_always_valid (const json::tree::node &,
+                 const json::tree::node &)
     { return true; }
 
 
@@ -153,14 +153,14 @@ is_always_valid (const json::node &,
 
 
 bool
-is_boolean_valid (const json::node   &node,
-                  const json::object &)
+is_boolean_valid (const json::tree::node   &node,
+                  const json::tree::object &)
     { return node.is_boolean (); }
 
 
 bool
-is_null_valid (const json::node   &node,
-               const json::object &)
+is_null_valid (const json::tree::node   &node,
+               const json::tree::object &)
     { return node.is_null (); }
 
 
@@ -169,36 +169,36 @@ is_null_valid (const json::node   &node,
 //
 
 bool
-is_minimum_valid (const json::number &node,
-                  const json::node   &constraint) {
+is_minimum_valid (const json::tree::number &node,
+                  const json::tree::node   &constraint) {
     return constraint["minimum"].as_number () <= node;
 }
 
 
 bool
-is_maximum_valid (const json::number &node,
-                  const json::node   &constraint) {
+is_maximum_valid (const json::tree::number &node,
+                  const json::tree::node   &constraint) {
     return constraint["maximum"].as_number () >= node;
 }
 
 
 bool
-is_exclusive_minimum_valid (const json::number &node,
-                            const json::node   &constraint) {
+is_exclusive_minimum_valid (const json::tree::number &node,
+                            const json::tree::node   &constraint) {
     return constraint["exclusiveMinimum"].as_number () < node;
 }
 
 
 bool
-is_exclusive_maximum_valid (const json::number &node,
-                            const json::node   &constraint) {
+is_exclusive_maximum_valid (const json::tree::number &node,
+                            const json::tree::node   &constraint) {
     return constraint["exclusiveMaximum"].as_number () > node;
 }
 
 
 bool
-is_divisible_by_valid (const json::number &node,
-                       const json::node   &constraint) {
+is_divisible_by_valid (const json::tree::number &node,
+                       const json::tree::node   &constraint) {
     return exactly_equal (fmod (node.native (),
                                 constraint["divisibleBy"].as_number ()),
                           0.0);
@@ -206,9 +206,9 @@ is_divisible_by_valid (const json::number &node,
 
 
 bool
-is_number_valid (const json::number &node,
-                 const json::object &schema) {
-    typedef bool (*number_validator_t)(const json::number&, const json::node&);
+is_number_valid (const json::tree::number &node,
+                 const json::tree::object &schema) {
+    typedef bool (*number_validator_t)(const json::tree::number&, const json::tree::node&);
     static const map<string, number_validator_t> VALIDATORS = {
         { "minimum",          &is_minimum_valid }, 
         { "maximum",          &is_maximum_valid }, 
@@ -239,8 +239,8 @@ is_number_valid (const json::number &node,
 
 
 bool
-is_min_length_valid (const json::string &node,
-                     const json::node   &constraint) {
+is_min_length_valid (const json::tree::string &node,
+                     const json::tree::node   &constraint) {
     if (!is_integer (constraint))
         return false;
 
@@ -249,8 +249,8 @@ is_min_length_valid (const json::string &node,
 
 
 bool
-is_max_length_valid (const json::string &node,
-                     const json::node   &constraint) {
+is_max_length_valid (const json::tree::string &node,
+                     const json::tree::node   &constraint) {
     if (!is_integer (constraint))
         return false;
 
@@ -259,8 +259,8 @@ is_max_length_valid (const json::string &node,
 
 
 bool
-is_pattern_valid (const json::string &node,
-                  const json::node   &constraint) {
+is_pattern_valid (const json::tree::string &node,
+                  const json::tree::node   &constraint) {
     if (!constraint.is_string ())
         return false;
 
@@ -271,9 +271,9 @@ is_pattern_valid (const json::string &node,
 
 
 bool
-is_string_valid (const json::string &node,
-                 const json::object &schema) {
-    typedef bool (*string_validator_t)(const json::string&, const json::node&);
+is_string_valid (const json::tree::string &node,
+                 const json::tree::object &schema) {
+    typedef bool (*string_validator_t)(const json::tree::string&, const json::tree::node&);
     static const map<std::string, string_validator_t> VALIDATORS  = {
         { "minLength", &is_min_length_valid },
         { "maxLength", &is_max_length_valid },
@@ -281,9 +281,9 @@ is_string_valid (const json::string &node,
         { "enum",      &is_enum_valid },
     };
 
-    for (const json::object::const_iterator::value_type &i: schema) {
+    for (const json::tree::object::const_iterator::value_type &i: schema) {
         const std::string &key        =  i.first;
-        const json::node  &constraint = *i.second;
+        const json::tree::node  &constraint = *i.second;
 
         auto validator = VALIDATORS.find (key);
         if (validator == VALIDATORS.end ()) {
@@ -302,8 +302,8 @@ is_string_valid (const json::string &node,
 
 
 bool
-is_string_valid (const json::node   &node,
-                 const json::object &schema) {
+is_string_valid (const json::tree::node   &node,
+                 const json::tree::object &schema) {
     if (!node.is_string ())
         return false;
     return is_string_valid (node.as_string (), schema);
@@ -315,36 +315,36 @@ is_string_valid (const json::node   &node,
 
 
 bool
-is_max_items_valid (const json::array &node,
-                    const json::node  &constraint) {
+is_max_items_valid (const json::tree::array &node,
+                    const json::tree::node  &constraint) {
     if (!constraint.is_number () && is_integer (constraint.as_number ()))
-        throw json::schema_error ("max_items should be an integer");
+        throw json::tree::schema_error ("max_items should be an integer");
 
     return node.size () <= constraint.as_number ();
 }
 
 
 bool
-is_min_items_valid (const json::array &node,
-                    const json::node  &constraint) {
+is_min_items_valid (const json::tree::array &node,
+                    const json::tree::node  &constraint) {
     if (!constraint.is_number () && is_integer (constraint.as_number ()))
-        throw json::schema_error ("min_items should be an integer");
+        throw json::tree::schema_error ("min_items should be an integer");
 
     return node.size () >= constraint.as_number ();
 }
 
 
 bool
-is_unique_items_valid (const json::array &node,
-                       const json::node  &constraint) {
+is_unique_items_valid (const json::tree::array &node,
+                       const json::tree::node  &constraint) {
     if (!constraint.is_boolean ())
-        throw json::schema_error ("uniqueItems must be a boolean");
+        throw json::tree::schema_error ("uniqueItems must be a boolean");
 
     if (node.size () < 2) 
         return true;
 
 
-    for (json::array::const_iterator i = node.begin (); i != node.end () - 1; ++i) {
+    for (json::tree::array::const_iterator i = node.begin (); i != node.end () - 1; ++i) {
         if (find (i + 1, node.end (), *i) != node.end ())
             return false;
     }
@@ -354,13 +354,13 @@ is_unique_items_valid (const json::array &node,
 
 
 bool
-is_items_valid (const json::array &node,
-                const json::node  &_schema) {
+is_items_valid (const json::tree::array &node,
+                const json::tree::node  &_schema) {
     if (!_schema.is_object ())
-        throw json::schema_error ("array_items constraint must be an object");
-    const json::object &schema = _schema.as_object ();
+        throw json::tree::schema_error ("array_items constraint must be an object");
+    const json::tree::object &schema = _schema.as_object ();
 
-    for (const json::node &i: node)
+    for (const json::tree::node &i: node)
         if (!is_node_valid (i, schema))
             return false;
 
@@ -372,19 +372,19 @@ is_items_valid (const json::array &node,
 
 
 bool
-is_additional_items_valid (const json::array &,
-                           const json::node  &) {
+is_additional_items_valid (const json::tree::array &,
+                           const json::tree::node  &) {
     not_implemented ();
     return false;
 }
 
 
 bool
-is_array_valid (const json::array  &node,
-                const json::object &schema) {
+is_array_valid (const json::tree::array  &node,
+                const json::tree::object &schema) {
     CHECK (node.is_array ());
 
-    typedef bool (*array_validator_t)(const json::array&, const json::node&);
+    typedef bool (*array_validator_t)(const json::tree::array&, const json::tree::node&);
     static const map<string, array_validator_t> VALIDATORS ({
         { "items",           &is_items_valid            },
         { "minItems",        &is_min_items_valid        },
@@ -393,9 +393,9 @@ is_array_valid (const json::array  &node,
         { "additionalItems", &is_additional_items_valid },
     });
 
-    for (const json::object::const_iterator::value_type &i: schema) {
+    for (const json::tree::object::const_iterator::value_type &i: schema) {
         const std::string &key        = i.first;
-        const json::node  &constraint = *i.second;
+        const json::tree::node  &constraint = *i.second;
 
         auto validator = VALIDATORS.find (key);
         if (validator == VALIDATORS.end ()) {
@@ -418,11 +418,11 @@ is_array_valid (const json::array  &node,
 //
 
 bool
-is_properties_valid (const json::object &node,
-                     const json::object &schema) {
-    for (const json::object::const_iterator::value_type &element: node) {
+is_properties_valid (const json::tree::object &node,
+                     const json::tree::object &schema) {
+    for (const json::tree::object::const_iterator::value_type &element: node) {
         const std::string &key =  element.first;
-        const json::node  &val = *element.second;
+        const json::tree::node  &val = *element.second;
 
         if (!schema.has (key)) {
             std::cerr << "[warning]  no constraint found for key: " << key << "\n";
@@ -440,30 +440,30 @@ is_properties_valid (const json::object &node,
 
 
 bool
-is_properties_valid (const json::object &node,
-                     const json::node   &constraint) {
+is_properties_valid (const json::tree::object &node,
+                     const json::tree::node   &constraint) {
     CHECK (node.is_object ());
 
     if (!constraint.is_object ())
-        throw json::schema_error ("properties needs an object");
+        throw json::tree::schema_error ("properties needs an object");
 
     return is_properties_valid (node, constraint.as_object ());
 }
 
 
 bool
-is_object_valid (const json::object &node,
-                 const json::object &schema) {
-    typedef bool (*object_validator_t)(const json::object&, const json::node&);
+is_object_valid (const json::tree::object &node,
+                 const json::tree::object &schema) {
+    typedef bool (*object_validator_t)(const json::tree::object&, const json::tree::node&);
     static const map<string, object_validator_t> VALIDATORS = {
         { "properties",  &is_properties_valid },
         //{ "patternProperties", &is_pattern_properties_valid },
         //{ "additionalProperties", &is_additionaL_properties_valid },
     };
 
-    for (const json::object::const_iterator::value_type &i: schema) {
+    for (const json::tree::object::const_iterator::value_type &i: schema) {
         const std::string &name       =  i.first;
-        const json::node  &constraint = *i.second;
+        const json::tree::node  &constraint = *i.second;
 
         auto validator = VALIDATORS.find (name);
         if (validator == VALIDATORS.end ()) {
@@ -482,8 +482,8 @@ is_object_valid (const json::object &node,
 
 
 bool
-is_object_valid (const json::node   &node,
-                 const json::object &schema) {
+is_object_valid (const json::tree::node   &node,
+                 const json::tree::object &schema) {
     if (!node.is_object ())
         return false;
 
@@ -496,8 +496,8 @@ is_object_valid (const json::node   &node,
 //
 
 bool
-is_node_valid (const json::node   &node,
-               const json::object &schema) {
+is_node_valid (const json::tree::node   &node,
+               const json::tree::object &schema) {
     if (schema.has ("$ref")) {
         const std::string &uri = schema["$ref"].as_string ();
         std::cerr << "loading referenced schema: " << uri << "\n";
@@ -507,7 +507,7 @@ is_node_valid (const json::node   &node,
             return false;
         }
 
-        auto referenced = json::parse (boost::filesystem::path (uri));
+        auto referenced = json::tree::parse (boost::filesystem::path (uri));
         return is_node_valid (node, referenced->as_object ());
     }
 
@@ -558,8 +558,8 @@ is_node_valid (const json::node   &node,
 
 
 bool
-is_root_valid (const json::node   &node,
-               const json::object &schema) {
+is_root_valid (const json::tree::node   &node,
+               const json::tree::object &schema) {
     if (!node.is_array () && !node.is_object ())
         return false;
     return is_node_valid (node, schema);
@@ -579,11 +579,11 @@ main (int argc, char **argv) {
     }
     
     // Load the schema and input
-    unique_ptr<json::node> schema, input;
+    unique_ptr<json::tree::node> schema, input;
     try {
-        schema = json::parse (boost::filesystem::path (argv[ARG_SCHEMA]));
-        input  = json::parse (boost::filesystem::path (argv[ARG_INPUT]));
-    } catch (const json::parse_error &err) {
+        schema = json::tree::parse (boost::filesystem::path (argv[ARG_SCHEMA]));
+        input  = json::tree::parse (boost::filesystem::path (argv[ARG_INPUT]));
+    } catch (const json::tree::parse_error &err) {
         std::cerr << "malformed json for schema or input. " << err.what () << "\n";
         return EXIT_FAILURE;
     }
@@ -594,7 +594,7 @@ main (int argc, char **argv) {
         return EXIT_FAILURE;
     }
     
-    const json::object &schema_object = schema->as_object ();
+    const json::tree::object &schema_object = schema->as_object ();
 
     // Check input is valid
     if (!is_node_valid (*input, schema_object)) {

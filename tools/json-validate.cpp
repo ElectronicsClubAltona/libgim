@@ -23,8 +23,8 @@ main (int argc, char ** argv) {
     }
 
     try {
-       json::parse (boost::filesystem::path (argv[ARG_PATH]));
-    } catch (json::error &x) {
+       json::tree::parse (boost::filesystem::path (argv[ARG_PATH]));
+    } catch (json::tree::error &x) {
         std::cerr << "Error: " << x.what () << std::endl;
         return EXIT_FAILURE;
     }

@@ -186,10 +186,10 @@ namespace util {
 
 
 //-----------------------------------------------------------------------------
-namespace json {
+namespace json { namespace tree {
     template <>
     util::range<double>
-    io<util::range<double>>::deserialise (const json::node &node) {
+    io<util::range<double>>::deserialise (const json::tree::node &node) {
         if (node.is_string () && (node == "UNIT" ||
                                   node == "unit")) {
             return util::range<double>::UNIT;
@@ -203,4 +203,4 @@ namespace json {
             };
         }
     }
-}
+} }

@@ -41,7 +41,7 @@ namespace util {
 
     typedef colour<float> colour4f;
 
-    const json::node& operator>> (const json::node&, util::colour4f&);
+    const json::tree::node& operator>> (const json::tree::node&, util::colour4f&);
     std::ostream& operator<< (std::ostream&, const util::colour4f&);
 }
 

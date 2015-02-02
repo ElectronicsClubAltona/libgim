@@ -44,7 +44,7 @@ using namespace util;
 // Parsing
 
 struct parse_context {
-    parse_context(json::node *_root):
+    parse_context(json::tree::node *_root):
         root  (_root),
         value (NULL),
         key   (NULL),
@@ -52,7 +52,7 @@ struct parse_context {
         stop  (NULL)
     { ; }
 
-    json::node *root,
+    json::tree::node *root,
                *value,
                *key;
     const char *start,
@@ -76,8 +76,8 @@ struct parse_context {
     }
 
 
-    action new_object { nodestack.push_back (parse_context(new json::object));  }
-    action new_array  { nodestack.push_back (parse_context(new json::array));  }
+    action new_object { nodestack.push_back (parse_context(new json::tree::object));  }
+    action new_array  { nodestack.push_back (parse_context(new json::tree::array));  }
 
     action new_object_value {
         CHECK (nodestack.back ().root->is_object ());
@@ -87,9 +87,9 @@ struct parse_context {
         if (!nodestack.back ().key->is_string ())
             throw parse_error ("object keys must be strings");
 
-        json::object *object = (json::object*)nodestack.back ().root;
+        json::tree::object *object = (json::tree::object*)nodestack.back ().root;
         object->insert (nodestack.back ().key->as_string (),
-                        unique_ptr<json::node> (nodestack.back ().value));
+                        unique_ptr<json::tree::node> (nodestack.back ().value));
         nodestack.back ().key   = NULL;
         nodestack.back ().value = NULL;
     }
@@ -98,8 +98,8 @@ struct parse_context {
         CHECK (nodestack.back ().root->is_array ());
         CHECK (nodestack.back ().value);
 
-        json::array *array = (json::array *)nodestack.back ().root;
-        array->insert (unique_ptr<json::node> (nodestack.back ().value));
+        json::tree::array *array = (json::tree::array *)nodestack.back ().root;
+        array->insert (unique_ptr<json::tree::node> (nodestack.back ().value));
         nodestack.back ().value = NULL;
     }
 
@@ -109,7 +109,7 @@ struct parse_context {
 
         std::string value (std::string (nodestack.back ().start,
                                         nodestack.back ().stop));
-        nodestack.back ().value = new json::string(value);
+        nodestack.back ().value = new json::tree::string(value);
     }
 
     action new_boolean {
@@ -133,14 +133,14 @@ struct parse_context {
         double value = strtod (back.start, &end);
         if (end == back.start || errno)
             throw parse_error ("unable to parse number");
-        back.value = new json::number (value);
+        back.value = new json::tree::number (value);
     }
 
     action new_null    {
         CHECK (!nodestack.empty ());
         CHECK (!nodestack.back ().value);
 
-        nodestack.back().value = new json::null ();
+        nodestack.back().value = new json::tree::null ();
     }
 
     action new_object_key {
@@ -199,8 +199,8 @@ struct parse_context {
 
     ## other
     boolean =
-          'true'  @{ nodestack.back ().value = new json::boolean ( true); }
-        | 'false' @{ nodestack.back ().value = new json::boolean (false); };
+          'true'  @{ nodestack.back ().value = new json::tree::boolean ( true); }
+        | 'false' @{ nodestack.back ().value = new json::tree::boolean (false); };
 
     ## components
     object   = '{' @{ fhold; fcall _object; } '}';
@@ -242,14 +242,14 @@ struct parse_context {
 
 template <>
 bool
-is_integer (const json::number &node) {
+is_integer (const json::tree::number &node) {
     return is_integer (node.native ());
 }
 
 
 template <>
 bool
-is_integer (const json::node &node) {
+is_integer (const json::tree::node &node) {
     return node.is_number () &&
            is_integer (node.as_number ());
 }
@@ -258,22 +258,22 @@ is_integer (const json::node &node) {
 //-----------------------------------------------------------------------------
 // Node
 
-std::unique_ptr<json::node>
-json::parse (const boost::filesystem::path &path) {
+std::unique_ptr<json::tree::node>
+json::tree::parse (const boost::filesystem::path &path) {
     auto data = slurp (path);
     return parse (static_cast <const char *> (data.get ()));
 }
 
 
-std::unique_ptr<json::node>
-json::parse (const std::string &path)
+std::unique_ptr<json::tree::node>
+json::tree::parse (const std::string &path)
     { return parse (path.c_str (), path.c_str () + path.size ()); }
 
-std::unique_ptr<json::node>
-json::parse (const char *start,
+std::unique_ptr<json::tree::node>
+json::tree::parse (const char *start,
              const char *stop) {
     bool __success = true;
-    json::node *__root = nullptr;
+    json::tree::node *__root = nullptr;
     size_t top = 0;
     int cs;
     deque <int> fsmstack;
@@ -292,50 +292,50 @@ json::parse (const char *start,
         throw parse_error (os.str ());
     }
 
-    return std::unique_ptr<json::node> (__root);
+    return std::unique_ptr<json::tree::node> (__root);
 }
 
 
-std::unique_ptr<json::node>
-json::parse (const char *start)
+std::unique_ptr<json::tree::node>
+json::tree::parse (const char *start)
     { return parse (start, start + strlen (start)); }
 
 
 void
-json::write (const json::node &node, std::ostream &os)
+json::tree::write (const json::tree::node &node, std::ostream &os)
     { node.write (os); }
 
 
 //-----------------------------------------------------------------------------
 // Type conversion
 
-const json::object&
-json::node::as_object  (void) const
+const json::tree::object&
+json::tree::node::as_object  (void) const
         { throw type_error ("node is not an object"); }
 
 
-const json::array&
-json::node::as_array   (void) const
+const json::tree::array&
+json::tree::node::as_array   (void) const
         { throw type_error ("node is not an array"); }
 
 
-const json::string&
-json::node::as_string  (void) const
+const json::tree::string&
+json::tree::node::as_string  (void) const
         { throw type_error ("node is not a string"); }
 
 
-const json::number&
-json::node::as_number  (void) const
+const json::tree::number&
+json::tree::node::as_number  (void) const
         { throw type_error ("node is not a number"); }
 
 
-const json::boolean&
-json::node::as_boolean (void) const
+const json::tree::boolean&
+json::tree::node::as_boolean (void) const
         { throw type_error ("node is not a boolean"); }
 
 
-const json::null&
-json::node::as_null (void) const
+const json::tree::null&
+json::tree::node::as_null (void) const
         { throw type_error ("node is not a null"); }
 
 
@@ -343,38 +343,38 @@ json::node::as_null (void) const
 // Global operatoers
 
 bool
-json::node::operator!= (const node &rhs) const
+json::tree::node::operator!= (const node &rhs) const
     { return !(*this == rhs); }
 
 
-bool json::node::operator==(const char *rhs) const {
+bool json::tree::node::operator==(const char *rhs) const {
     try {
         return as_string ().native () == rhs;
-    } catch (const json::type_error&) {
+    } catch (const json::tree::type_error&) {
         return false;
     }
 }
 
 
-const json::node&
-json::node::operator[] (const std::string &key) const
+const json::tree::node&
+json::tree::node::operator[] (const std::string &key) const
     { return as_object ()[key]; }
 
 
-const json::node&
-json::node::operator[] (unsigned int idx) const
+const json::tree::node&
+json::tree::node::operator[] (unsigned int idx) const
     { return as_array()[idx]; }
 
 
 //-----------------------------------------------------------------------------
 // Object
 
-json::object::~object ()
+json::tree::object::~object ()
     { ; }
 
 
 bool
-json::object::operator ==(const json::object &rhs) const {
+json::tree::object::operator ==(const json::tree::object &rhs) const {
     for (auto i = rhs.m_values.begin (), j = m_values.begin ();
          i != rhs.m_values.end () && j != m_values.end ();
          ++i, ++j)
@@ -390,17 +390,17 @@ json::object::operator ==(const json::object &rhs) const {
 
 
 void
-json::object::insert (const std::string &_key, unique_ptr<json::node> &&value)
+json::tree::object::insert (const std::string &_key, unique_ptr<json::tree::node> &&value)
         { m_values[_key] = move(value); }
 
 
-const json::node&
-json::object::operator[](const std::string &key) const {
+const json::tree::node&
+json::tree::object::operator[](const std::string &key) const {
     auto value = m_values.find (key);
     if (value == m_values.end ()) {
         ostringstream ss;
         ss << "no key: " << key;
-        throw json::error (ss.str());
+        throw json::tree::error (ss.str());
     }
 
     return *value->second;
@@ -408,38 +408,38 @@ json::object::operator[](const std::string &key) const {
 
 
 bool
-json::object::has (const std::string &key) const {
+json::tree::object::has (const std::string &key) const {
     return m_values.find (key) != m_values.end ();
 }
 
 
 void
-json::object::clear (void)
+json::tree::object::clear (void)
     { m_values.clear (); }
 
 
 void
-json::object::erase (const std::string &key) {
+json::tree::object::erase (const std::string &key) {
     auto pos = m_values.find (key);
     if (pos == m_values.end ())
-        throw json::error ("erasing invalid key");
+        throw json::tree::error ("erasing invalid key");
 
     m_values.erase (key);
 }
 
 
-json::object::const_iterator
-json::object::begin (void) const
+json::tree::object::const_iterator
+json::tree::object::begin (void) const
     { return m_values.begin (); }
 
 
-json::object::const_iterator
-json::object::end (void) const
+json::tree::object::const_iterator
+json::tree::object::end (void) const
     { return m_values.end (); }
 
 
 std::ostream&
-json::object::write (std::ostream &os) const {
+json::tree::object::write (std::ostream &os) const {
     os << "{\n";
     {
         indenter raii(os);
@@ -460,17 +460,21 @@ json::object::write (std::ostream &os) const {
 //-----------------------------------------------------------------------------
 // Array
 
-json::array::~array()
-    { ; }
+json::tree::array::~array()
+{
+    m_values.clear ();
+}
 
 
 void
-json::array::insert (unique_ptr<json::node> &&_value)
-        { m_values.push_back (move (_value)); }
+json::tree::array::insert (unique_ptr<json::tree::node> &&_value)
+{
+    m_values.push_back (move (_value));
+}
 
 
 bool
-json::array::operator ==(const json::array &rhs) const {
+json::tree::array::operator ==(const json::tree::array &rhs) const {
     for (auto i = rhs.m_values.begin (), j = m_values.begin ();
          i != rhs.m_values.end () && j != m_values.end ();
          ++i, ++j)
@@ -481,7 +485,7 @@ json::array::operator ==(const json::array &rhs) const {
 
 
 std::ostream&
-json::array::write (std::ostream &os) const {
+json::tree::array::write (std::ostream &os) const {
     os << "[\n";
     {
         indenter raii(os);
@@ -502,19 +506,19 @@ json::array::write (std::ostream &os) const {
 // String
 
 std::ostream&
-json::string::write (std::ostream &os) const {
+json::tree::string::write (std::ostream &os) const {
     os << '"' << m_value << '"';
     return os;
 }
 
 
 bool
-json::string::operator ==(const json::string &rhs) const
+json::tree::string::operator ==(const json::tree::string &rhs) const
     { return rhs.m_value == m_value; }
 
 
 bool
-json::string::operator ==(const char *rhs) const
+json::tree::string::operator ==(const char *rhs) const
     { return rhs == m_value; }
 
 
@@ -522,14 +526,14 @@ json::string::operator ==(const char *rhs) const
 // Number
 
 std::ostream&
-json::number::write (std::ostream &os) const {
+json::tree::number::write (std::ostream &os) const {
     os << setprecision (numeric_limits<double>::digits10) << m_value;
     return os;
 }
 
 
 bool
-json::number::operator ==(const json::number &rhs) const
+json::tree::number::operator ==(const json::tree::number &rhs) const
     { return almost_equal (rhs.m_value, m_value); }
 
 
@@ -537,13 +541,13 @@ json::number::operator ==(const json::number &rhs) const
 // Boolean
 
 std::ostream&
-json::boolean::write (std::ostream &os) const {
+json::tree::boolean::write (std::ostream &os) const {
     os << (m_value ? "true" : "false");
     return os;
 }
 
 bool
-json::boolean::operator ==(const json::boolean &rhs) const
+json::tree::boolean::operator ==(const json::tree::boolean &rhs) const
     { return rhs.m_value == m_value; }
 
 
@@ -551,20 +555,20 @@ json::boolean::operator ==(const json::boolean &rhs) const
 // Null
 
 std::ostream&
-json::null::write (std::ostream &os) const {
+json::tree::null::write (std::ostream &os) const {
     os << "null";
     return os;
 }
 
 ostream&
-json::operator <<(ostream &os, const json::node &n)
+json::tree::operator <<(ostream &os, const json::tree::node &n)
     { return n.write (os); }
 
 
 //-----------------------------------------------------------------------------
 // to_json
 
-namespace json {
+namespace json { namespace tree {
     template <>
     std::unique_ptr<node>
     io<bool>::serialise (const bool &b) {
@@ -600,4 +604,4 @@ namespace json {
     io<float>::serialise (const float &f) {
         return std::unique_ptr<node> (new number (f));
     }
-}
+} }

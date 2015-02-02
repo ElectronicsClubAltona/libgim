@@ -52,9 +52,9 @@ util::colour<T>::BLUE (0.f, 0.f, 1.f, 1.f);
 //! Extract a colour object from a JSON node.
 //! 
 //! Data must be an array or 3 or 4 numbers. Guarantees success, or throws a
-//! json::type_error.
-const json::node&
-operator>> (const json::node &node, colour4f &c) {
+//! json::tree::type_error.
+const json::tree::node&
+operator>> (const json::tree::node &node, colour4f &c) {
     c.r = static_cast<float> (node[0].as_number ());
     c.g = static_cast<float> (node[1].as_number ());
     c.b = static_cast<float> (node[2].as_number ());

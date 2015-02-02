@@ -48,8 +48,8 @@ main (int argc, char **argv) {
 
     try {
         boost::filesystem::path input (argv[ARG_INPUT]);
-        std::cout << *json::parse (input) << "\n";
-    } catch (const json::error& err) {
+        std::cout << *json::tree::parse (input) << "\n";
+    } catch (const json::tree::error& err) {
         std::cerr << err.what () << "\n";
         return EXIT_FAILURE;
     }
