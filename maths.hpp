@@ -20,8 +20,10 @@
 #ifndef __MATHS_HPP
 #define __MATHS_HPP
 
+#include <cstdint>
 #include <type_traits>
 #include <utility>
+#include <cmath>
 
 template <typename T>
 T
@@ -168,7 +170,8 @@ exactly_zero [[gnu::pure]] (T a)
 constexpr double PI_d = 3.141592653589793238462643;
 constexpr float  PI_f = 3.141592653589793238462643f;
 
-//-----------------------------------------------------------------------------
+constexpr float E_f = 2.71828182845904523536028747135266250f;
+
 constexpr double
 to_degrees [[gnu::pure]] (double radians) {
     return radians * 180 / PI_d;
@@ -191,6 +194,28 @@ to_radians [[gnu::pure]] (float degrees) {
 constexpr double
 to_radians [[gnu::pure]] (double degrees) {
     return degrees / 180 * PI_d;
+}
+
+
+//-----------------------------------------------------------------------------
+constexpr uintmax_t
+factorial [[gnu::pure]] (unsigned i)
+{
+    return i <= 1 ? 0 : i * factorial (i - 1);
+}
+
+
+constexpr uintmax_t
+stirling [[gnu::pure]] (unsigned n)
+{
+    return static_cast<uintmax_t> (std::sqrt (2 * PI_f * n) * std::pow (n / E_f, n));
+}
+
+
+constexpr uintmax_t
+combination [[gnu::pure]] (unsigned n, unsigned k)
+{
+    return factorial (n) / (factorial (k) / (factorial (n - k)));
 }
 
 
