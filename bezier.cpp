@@ -244,7 +244,6 @@ util::bezier<S>::intersections (point2f p0, point2f p1) const
 
 //-----------------------------------------------------------------------------
 namespace util {
-    // TODO: use a more reliable method like [Xiao-Dia Chen 2010]
     template <>
     float
     bezier<2>::distance (util::point2f target) const
@@ -275,23 +274,15 @@ namespace util {
         const auto M  = target;
         const auto M_ = p0 - M;
 
-        //float a = dot (B, B);
-        //float b = 3.f * dot (A, B);
-        //float c = 2.f * dot (A, A) + dot (M_, B);
-        //float d = dot (M_, A);
+        float a = dot (B, B);
+        float b = 3.f * dot (A, B);
+        float c = 2.f * dot (A, A) + dot (M_, B);
+        float d = dot (M_, A);
 
-        const util::vector2f p102 = {
-            2 * p1.x - p0.x - p2.x,
-            2 * p1.y - p0.y - p2.y
-        };
-
-        const float a = dot (B, 2.f * p102);
-        const float b = dot (B, 4.f * (p0 - p1)) + dot (A, 2.f * p102);
-        const float c = dot (B, 2.f * (M - p0)) + dot (A, 4.f * (p0 - p1));
-        const float d = dot (A, 2.f * (M - p0));
-
+        // We have our cubic, so pass off to the solver
         auto solutions = util::polynomial::solve<3> ({a, b, c, d});
 
+        // Find the smallest distance and return
         float dist = std::numeric_limits<float>::infinity ();
 
         for (auto t: solutions) {
@@ -343,6 +334,7 @@ float refine_cubic (util::bezier<3> b,
 
 //-----------------------------------------------------------------------------
 namespace util {
+    // TODO: use a more reliable method like [Xiao-Dia Chen 2010]
     template <>
     float
     bezier<3>::distance (util::point2f target) const
