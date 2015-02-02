@@ -44,7 +44,12 @@ namespace util {
         const point2f& operator[] (size_t idx) const;
 
     private:
-        point2f m_points[S+1];
+        // HACK: allow easy access to component-wise arithmetic using
+        // vector2f rather than point2f in the implementation.
+        union {
+            point2f  m_points[S+1];
+            vector2f m_coeffs[S+1];
+        };
     };
 
     template <size_t S>

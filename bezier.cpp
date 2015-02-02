@@ -144,7 +144,7 @@ namespace util {
     std::array<util::vector2f,4>
     bezier<3>::coeffs (void) const
     {
-        auto &v = reinterpret_cast<const util::vector2f(&)[4]> (m_points);
+        const auto &v = m_coeffs;
 
         return {
             -1 * v[0] +3 * v[1] -3 * v[2] +1 * v[3],
@@ -162,7 +162,7 @@ namespace util {
     std::array<util::vector2f,3>
     bezier<2>::coeffs (void) const
     {
-        auto &v = reinterpret_cast<const util::vector2f(&)[3]> (m_points);
+        auto &v = m_coeffs;
 
         return {
             +1 * v[2] -2 * v[1] + 1 * v[0],
@@ -179,7 +179,7 @@ namespace util {
     std::array<util::vector2f,2>
     bezier<1>::coeffs (void) const
     {
-        auto &v = reinterpret_cast<const util::vector2f(&)[2]> (m_points);
+        auto &v = m_coeffs;
 
         return {
             -1 * v[1] + 1 * v[0],
