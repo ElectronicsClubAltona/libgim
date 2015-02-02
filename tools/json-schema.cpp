@@ -18,10 +18,11 @@
  */
 
 
-#include "../json.hpp"
+#include "json/except.hpp"
+#include "json/tree.hpp"
 
-#include "../debug.hpp"
-#include "../maths.hpp"
+#include "debug.hpp"
+#include "maths.hpp"
 
 #include <cmath>
 #include <cstdlib>
@@ -82,7 +83,7 @@ is_type_valid (const json::tree::node &node,
     }
 
     if (!type.is_string ())
-        throw json::tree::schema_error ("schema type requires array, string, or object");
+        throw json::schema_error ("schema type requires array, string, or object");
 
     static const auto ANY_VALIDATOR = [] (const json::tree::node &) { return true; };
     static const auto INT_VALIDATOR = [] (const json::tree::node &n) {
@@ -120,7 +121,7 @@ bool
 is_enum_valid (const json::tree::node &node,
                const json::tree::node &constraint) {
     if (!constraint.is_array ())
-        throw json::tree::schema_error ("enum validation requires an array");
+        throw json::schema_error ("enum validation requires an array");
 
     const json::tree::array &valids = constraint.as_array ();
     return valids.end () != std::find (valids.begin (),
@@ -318,7 +319,7 @@ bool
 is_max_items_valid (const json::tree::array &node,
                     const json::tree::node  &constraint) {
     if (!constraint.is_number () && is_integer (constraint.as_number ()))
-        throw json::tree::schema_error ("max_items should be an integer");
+        throw json::schema_error ("max_items should be an integer");
 
     return node.size () <= constraint.as_number ();
 }
@@ -328,7 +329,7 @@ bool
 is_min_items_valid (const json::tree::array &node,
                     const json::tree::node  &constraint) {
     if (!constraint.is_number () && is_integer (constraint.as_number ()))
-        throw json::tree::schema_error ("min_items should be an integer");
+        throw json::schema_error ("min_items should be an integer");
 
     return node.size () >= constraint.as_number ();
 }
@@ -338,7 +339,7 @@ bool
 is_unique_items_valid (const json::tree::array &node,
                        const json::tree::node  &constraint) {
     if (!constraint.is_boolean ())
-        throw json::tree::schema_error ("uniqueItems must be a boolean");
+        throw json::schema_error ("uniqueItems must be a boolean");
 
     if (node.size () < 2)
         return true;
@@ -357,7 +358,7 @@ bool
 is_items_valid (const json::tree::array &node,
                 const json::tree::node  &_schema) {
     if (!_schema.is_object ())
-        throw json::tree::schema_error ("array_items constraint must be an object");
+        throw json::schema_error ("array_items constraint must be an object");
     const json::tree::object &schema = _schema.as_object ();
 
     for (const json::tree::node &i: node)
@@ -445,7 +446,7 @@ is_properties_valid (const json::tree::object &node,
     CHECK (node.is_object ());
 
     if (!constraint.is_object ())
-        throw json::tree::schema_error ("properties needs an object");
+        throw json::schema_error ("properties needs an object");
 
     return is_properties_valid (node, constraint.as_object ());
 }
@@ -583,7 +584,7 @@ main (int argc, char **argv) {
     try {
         schema = json::tree::parse (boost::filesystem::path (argv[ARG_SCHEMA]));
         input  = json::tree::parse (boost::filesystem::path (argv[ARG_INPUT]));
-    } catch (const json::tree::parse_error &err) {
+    } catch (const json::parse_error &err) {
         std::cerr << "malformed json for schema or input. " << err.what () << "\n";
         return EXIT_FAILURE;
     }

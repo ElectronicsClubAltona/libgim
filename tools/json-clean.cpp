@@ -17,7 +17,8 @@
  * Copyright 2012 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "../json.hpp"
+#include "json/except.hpp"
+#include "json/tree.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -49,7 +50,7 @@ main (int argc, char **argv) {
     try {
         boost::filesystem::path input (argv[ARG_INPUT]);
         std::cout << *json::tree::parse (input) << "\n";
-    } catch (const json::tree::error& err) {
+    } catch (const json::error& err) {
         std::cerr << err.what () << "\n";
         return EXIT_FAILURE;
     }

@@ -71,8 +71,12 @@ UTIL_FILES   =		\
     ip.cpp		\
     ip.hpp		\
     iterator.hpp	\
-    json.cpp		\
-    json.hpp		\
+    json/except.cpp	\
+    json/except.hpp	\
+    json/flat.cpp	\
+    json/flat.hpp	\
+    json/tree.cpp	\
+    json/tree.hpp	\
     lerp.cpp		\
     lerp.hpp		\
     log.cpp		\

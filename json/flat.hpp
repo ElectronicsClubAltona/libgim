@@ -17,32 +17,43 @@
  * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COLOUR_HPP
-#define __UTIL_COLOUR_HPP
+#ifndef __UTIL_JSON_FLAT_HPP
+#define __UTIL_JSON_FLAT_HPP
 
-#include "detail/coord.hpp"
-
-#include "json/tree.hpp"
-
+#include <boost/filesystem/path.hpp>
 #include <iostream>
 
-namespace util {
-    /// An RGBA colour POD type.
-    template <typename T>
-    struct colour : public detail::coord<4, T> {
-        using detail::coord<4,T>::coord;
+namespace json { namespace flat {
+    enum class type {
+        UNKNOWN,
 
-        static const colour WHITE;
-        static const colour BLACK;
-        static const colour RED;
-        static const colour BLUE;
-        static const colour GREEN;
+        NUL,
+        BOOLEAN,
+        STRING,
+        INTEGER,
+        REAL,
+
+        OBJECT_BEGIN,
+        OBJECT_END,
+
+        ARRAY_BEGIN,
+        ARRAY_END
     };
 
-    typedef colour<float> colour4f;
+    struct item {
+        type tag;
+        const char *first;
+        const char *last;
 
-    const json::tree::node& operator>> (const json::tree::node&, util::colour4f&);
-    std::ostream& operator<< (std::ostream&, const util::colour4f&);
-}
+        template <typename T>
+        T as (void) const;
+    };
+
+    std::vector<item> parse (const char *first, const char *last);
+    std::vector<item> parse (const char *first);
+    std::vector<item> parse (const boost::filesystem::path&);
+
+    std::ostream& operator<< (std::ostream&, type);
+} }
 
 #endif

@@ -20,7 +20,7 @@
 #ifndef __UTIL_VECTOR_HPP
 #define __UTIL_VECTOR_HPP
 
-#include "json.hpp"
+#include "json/tree.hpp"
 #include "detail/coord.hpp"
 
 #include <array>
