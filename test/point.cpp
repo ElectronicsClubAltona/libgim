@@ -29,7 +29,7 @@ main (int, char**) {
     // Redim to higher dimension with fill
     {
         static const point4f FILL (1.f, 2.f, 3.f, 4.f);
-        const point2f p (0.1, 1.f);
+        const point2f p (0.1f, 1.f);
         const point4f q = p.template redim<4> (FILL);
 
         CHECK_EQ (q.data[0], p.data[0]);
