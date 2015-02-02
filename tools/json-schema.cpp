@@ -5,12 +5,12 @@
  * terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
- * 
+ *
  * libgim is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -210,11 +210,11 @@ is_number_valid (const json::tree::number &node,
                  const json::tree::object &schema) {
     typedef bool (*number_validator_t)(const json::tree::number&, const json::tree::node&);
     static const map<string, number_validator_t> VALIDATORS = {
-        { "minimum",          &is_minimum_valid }, 
-        { "maximum",          &is_maximum_valid }, 
-        { "exclusiveMinimum", &is_exclusive_minimum_valid }, 
-        { "exclusiveMaximum", &is_exclusive_maximum_valid }, 
-        { "divisibleBy",      &is_divisible_by_valid  }, 
+        { "minimum",          &is_minimum_valid },
+        { "maximum",          &is_maximum_valid },
+        { "exclusiveMinimum", &is_exclusive_minimum_valid },
+        { "exclusiveMaximum", &is_exclusive_maximum_valid },
+        { "divisibleBy",      &is_divisible_by_valid  },
     };
 
     for (const auto &i: schema) {
@@ -340,7 +340,7 @@ is_unique_items_valid (const json::tree::array &node,
     if (!constraint.is_boolean ())
         throw json::tree::schema_error ("uniqueItems must be a boolean");
 
-    if (node.size () < 2) 
+    if (node.size () < 2)
         return true;
 
 
@@ -511,7 +511,7 @@ is_node_valid (const json::tree::node   &node,
         return is_node_valid (node, referenced->as_object ());
     }
 
-    if (schema.has ("type") && 
+    if (schema.has ("type") &&
        !is_type_valid (node, schema["type"]))
     {
         std::cerr << "node type is \"" << type_to_string (node) << "\", expected " << schema["type"] << "\n";
@@ -539,7 +539,7 @@ is_node_valid (const json::tree::node   &node,
 #undef IS_VALID
 
     return false;
-    
+
 
     /*static const map<string, validator_t> VALIDATORS ({
         { "description", &is_always_valid   },
@@ -549,7 +549,7 @@ is_node_valid (const json::tree::node   &node,
         { "type",        &is_type_valid     },
     });*/
 
-    
+
 
     //"required";
 
@@ -577,7 +577,7 @@ main (int argc, char **argv) {
         print_usage (argc, argv);
         return EXIT_FAILURE;
     }
-    
+
     // Load the schema and input
     unique_ptr<json::tree::node> schema, input;
     try {
@@ -593,7 +593,7 @@ main (int argc, char **argv) {
         std::cerr << "Schema should be an object\n";
         return EXIT_FAILURE;
     }
-    
+
     const json::tree::object &schema_object = schema->as_object ();
 
     // Check input is valid

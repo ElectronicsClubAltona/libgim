@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -41,200 +41,155 @@ using namespace std;
 using namespace util;
 
 //-----------------------------------------------------------------------------
-// Parsing
-
-struct parse_context {
-    parse_context(json::tree::node *_root):
-        root  (_root),
-        value (NULL),
-        key   (NULL),
-        start (NULL),
-        stop  (NULL)
-    { ; }
-
-    json::tree::node *root,
-               *value,
-               *key;
-    const char *start,
-               *stop;
-};
-
-
 %%{
+    # JSON (rfc7159)
     machine json;
 
-    ## Record whether parsing was successful for future use
-    action success
-    { __success = true; }
+    action trace { if (false) std::cerr << *p; }
+    action success { __success = true; }
+    action failure { }
 
-    action failure {
-        __success = false;
-        /*std::cerr << std::endl
-                  << "Failure on: '" << fc << "' in level " << top << " at " << fpc - p
-                  << std::endl;
-        */
-    }
+    action new_line { ++line; }
+
+    action first { parsed.push_back ({ type::UNKNOWN, p, p}); }
+    action last  { parsed.back ().last  = p; }
+
+    action tag_nul     { parsed.back ().tag = type::NUL; }
+    action tag_boolean { parsed.back ().tag = type::BOOLEAN; }
+    action tag_string  { parsed.back ().tag = type::STRING; }
+    action tag_integer { parsed.back ().tag = type::INTEGER; }
+    action tag_real    { parsed.back ().tag = type::REAL; }
+
+    action tag_object_begin { parsed.push_back ({ type::OBJECT_BEGIN,   p, p + 1 }); }
+    action tag_object_end   { parsed.push_back ({ type::OBJECT_END,     p, p + 1 }); }
+    action tag_array_begin  { parsed.push_back ({ type::ARRAY_BEGIN,    p, p + 1 }); }
+    action tag_array_end    { parsed.push_back ({ type::ARRAY_END,      p, p + 1 }); }
+
+    # Line counter
+    lines = (
+          any | '\n' @new_line
+    )*;
+
+    # UTF-8 (rfc3629)
+    utf8_tail = 0x80..0xbf;
+
+    utf8_1 =      0x00..0x7f;
+    utf8_2 =      0xc2..0xdf utf8_tail;
+    utf8_3 = 0xe0 0xa0..0xbf utf8_tail      |
+                  0xe1..0xec utf8_tail{2}   |
+             0xed 0x80..0x9f utf8_tail      |
+                  0xee..0xef utf8_tail{2};
+    utf8_4 = 0xf0 0x90..0xbf utf8_tail{2}   |
+                  0xf1..0xf3 utf8_tail{3}   |
+             0xf4 0x80..0x8f utf8_tail{2};
 
 
-    action new_object { nodestack.push_back (parse_context(new json::tree::object));  }
-    action new_array  { nodestack.push_back (parse_context(new json::tree::array));  }
+    utf8 = utf8_1 | utf8_2 | utf8_3 | utf8_4;
 
-    action new_object_value {
-        CHECK (nodestack.back ().root->is_object ());
-        CHECK (nodestack.back ().key);
-        CHECK (nodestack.back ().value);
+    # Utility
+    ws = 0x20 | 0x09 | 0x0A | 0x0D;
+    array_start  = '[';
+    array_end    = ']';
+    object_start = '{';
+    object_end   = '}';
 
-        if (!nodestack.back ().key->is_string ())
-            throw parse_error ("object keys must be strings");
+    # Strings
+    char =
+          (utf8 - ["\\])
+        | "\\" (
+              [\\"/bfnrt]
+            | "u" xdigit{4}
+        )
+    ;
 
-        json::tree::object *object = (json::tree::object*)nodestack.back ().root;
-        object->insert (nodestack.back ().key->as_string (),
-                        unique_ptr<json::tree::node> (nodestack.back ().value));
-        nodestack.back ().key   = NULL;
-        nodestack.back ().value = NULL;
-    }
+    string = ('"' char* '"') >first >tag_string %*last;
 
-    action new_array_value {
-        CHECK (nodestack.back ().root->is_array ());
-        CHECK (nodestack.back ().value);
+    # numbers
+    int = '0' | [1-9] digit*;
 
-        json::tree::array *array = (json::tree::array *)nodestack.back ().root;
-        array->insert (unique_ptr<json::tree::node> (nodestack.back ().value));
-        nodestack.back ().value = NULL;
-    }
+    frac = '.' digit+;
+    e    = 'e'i[+\-]?;
+    exp  = e digit+;
 
-    action new_string  {
-        CHECK (!nodestack.empty ());
-        CHECK (!nodestack.back ().value);
+    number = (
+        '-'?
+        int
+        (frac >tag_real)?
+        exp?
+    ) >tag_integer;
 
-        std::string value (std::string (nodestack.back ().start,
-                                        nodestack.back ().stop));
-        nodestack.back ().value = new json::tree::string(value);
-    }
+    # wrapper types
+    array  = array_start  @{ fhold; fcall array_members;  } array_end;
+    object = object_start @{ fhold; fcall object_members; } object_end;
 
-    action new_boolean {
-        CHECK (!nodestack.empty ());
-        CHECK (!nodestack.back ().value);
+    # simple types; case sensitive literals
+    bool = ("true" | "false") >tag_boolean;
+    nul  = "null" >tag_nul;
+    literal = bool | nul;
 
-        throw parse_error ("unable to parse boolean");
-    }
+    value = object | array | (number | string | literal) >first %last;
 
-    action new_number  {
-        CHECK (!nodestack.empty ());
+    # Complex
+    member  = string ws* ':' ws* value;
 
-        parse_context &back = nodestack.back ();
-        CHECK (!back.value);
-        CHECK (back.start);
-        CHECK (back.stop);
-        CHECK_LE (back.start, back.stop);
+    array_members  := ((
+        array_start >tag_array_begin ws* (value  ws* (',' ws* value  ws*)*)? array_end >tag_array_end
+    ) & lines)
+    @{ fhold; fret; } $trace $!failure;
 
-        errno = 0;
-        char *end;
-        double value = strtod (back.start, &end);
-        if (end == back.start || errno)
-            throw parse_error ("unable to parse number");
-        back.value = new json::tree::number (value);
-    }
+    object_members := ((
+        object_start >tag_object_begin ws* (member ws* (',' ws* member ws*)*)? object_end >tag_object_end
+    ) & lines)
+    @{ fhold; fret; } $trace $!failure;
 
-    action new_null    {
-        CHECK (!nodestack.empty ());
-        CHECK (!nodestack.back ().value);
+    # meta types
+    document := ((ws* value ws*) & lines)
+    %success
+    $!failure
+    $trace;
 
-        nodestack.back().value = new json::tree::null ();
-    }
-
-    action new_object_key {
-        CHECK (!nodestack.empty ());
-        CHECK (nodestack.back ().root->is_object ());
-        CHECK (nodestack.back ().value);
-        CHECK (!nodestack.back ().key);
-
-        nodestack.back ().key   = nodestack.back ().value;
-        nodestack.back ().value = NULL;
-    }
-
-    prepush {
-        fsmstack.push_back  (0);
-    }
-
-    postpop {
-        fsmstack.pop_back ();
-        __root = nodestack.back ().root;
-        if (nodestack.size () > 1)
-            (nodestack.rbegin () + 1)->value = nodestack.back ().root;
-        nodestack.pop_back ();
-    }
-
-    variable stack fsmstack;
-
-    alphtype char;
-
-    ## numerical
-    exp      =   [eE]('-' | '+')? digit+;
-    frac     =   '.' digit+;
-    int      =   '-'? [1-9]? digit+;
-
-    number   =   int (  frac
-                      | exp
-                      | frac exp)?;
-
-    ## textual
-    char     =
-          any - (cntrl | '\"' | '\\')
-        | '\\\"'
-        | '\\\\'
-        | '\\/'
-        | '\\b'
-        | '\\f'
-        | '\\n'
-        | '\\r'
-        | '\\t'
-        | '\\u' xdigit{4};
-
-    string = ('"'
-              char* >{ nodestack.back ().start = fpc; }
-                    %{ nodestack.back ().stop  = fpc; })
-              '"'
-              @new_string;
-
-    ## other
-    boolean =
-          'true'  @{ nodestack.back ().value = new json::tree::boolean ( true); }
-        | 'false' @{ nodestack.back ().value = new json::tree::boolean (false); };
-
-    ## components
-    object   = '{' @{ fhold; fcall _object; } '}';
-    array    = '[' @{ fhold; fcall  _array; } ']';
-
-    value    =
-          string
-        | boolean
-        | number  >{ nodestack.back ().start = fpc; } %{ nodestack.back ().stop = fpc; } %new_number
-        | object
-        | array
-        | 'null'  %new_null;
-
-    ## compound data types
-    _array   := ('[' @new_array
-                  space* ((value %new_array_value space* ',' space*)* value %new_array_value space*)?
-              ']')
-              $!failure
-              @{ fhold; fret; };
-
-    pair     = string %new_object_key space* ':' space* value %new_object_value;
-    _object := ('{' @new_object
-                 space* ((pair space* ',' space*)* pair space*)?
-             '}')
-             $!failure
-             @{ fhold; fret; };
-
-    json := (space* (object | array) space*)
-            $!failure
-            %success
-            >{ __success = false; };
+    variable stack ragelstack;
+    prepush { ragelstack.push_back (0); }
+    postpop { ragelstack.pop_back (); }
 
     write data;
 }%%
+
+
+std::ostream& operator<< (std::ostream &os, json::flat::type);
+
+
+//-----------------------------------------------------------------------------
+std::vector<json::flat::item>
+json::flat::parse (const char *first, const char *last)
+{
+    const char *p   = first;
+    const char *pe  = last;
+    const char *eof = pe;
+
+    std::deque<int> ragelstack;
+    std::vector<item> parsed;
+
+    size_t line = 0;
+    int cs, top;
+    bool __success = false;
+
+    %%write init;
+    %%write exec;
+
+    if (!__success)
+        throw parse_error (line, "parse error");
+
+    return parsed;
+}
+
+
+std::vector<json::flat::item>
+json::flat::parse (const boost::filesystem::path &path)
+{
+    util::mapped_file f (path);
+    return parse ((const char *)f.cbegin (), (const char*)f.cend ());
+}
 
 
 //-----------------------------------------------------------------------------
@@ -242,14 +197,16 @@ struct parse_context {
 
 template <>
 bool
-is_integer (const json::tree::number &node) {
+is_integer (const json::tree::number &node)
+{
     return is_integer (node.native ());
 }
 
 
 template <>
 bool
-is_integer (const json::tree::node &node) {
+is_integer (const json::tree::node &node)
+{
     return node.is_number () &&
            is_integer (node.as_number ());
 }
@@ -257,43 +214,116 @@ is_integer (const json::tree::node &node) {
 
 //-----------------------------------------------------------------------------
 // Node
+static std::vector<json::flat::item>::const_iterator
+parse (std::vector<json::flat::item>::const_iterator first,
+       std::vector<json::flat::item>::const_iterator last,
+       std::unique_ptr<json::tree::node> &output);
 
+
+//-----------------------------------------------------------------------------
+static std::vector<json::flat::item>::const_iterator
+parse (std::vector<json::flat::item>::const_iterator first,
+       std::vector<json::flat::item>::const_iterator last,
+       json::tree::array &parent)
+{
+    for (auto cursor = first; cursor != last; ) {
+        if (cursor->tag == json::flat::type::ARRAY_END)
+            return cursor + 1;
+
+        std::unique_ptr<json::tree::node> value;
+        cursor = ::parse (cursor, last, value);
+        parent.insert (std::move (value));
+    }
+
+    unreachable ();
+}
+
+
+//-----------------------------------------------------------------------------
+static std::vector<json::flat::item>::const_iterator
+parse (std::vector<json::flat::item>::const_iterator first,
+       std::vector<json::flat::item>::const_iterator last,
+       json::tree::object &parent)
+{
+    for (auto cursor = first; cursor != last; ) {
+        if (cursor->tag == json::flat::type::OBJECT_END)
+            return cursor + 1;
+
+        CHECK_EQ (cursor->tag, json::flat::type::STRING);
+
+        std::string key (cursor->first + 1, cursor->last - 1);
+        ++cursor;
+
+        std::unique_ptr<json::tree::node> val;
+        cursor = ::parse (cursor, last, val);
+
+        parent.insert (key, std::move (val));
+    }
+
+    unreachable ();
+}
+
+
+//-----------------------------------------------------------------------------
+static std::vector<json::flat::item>::const_iterator
+parse (std::vector<json::flat::item>::const_iterator first,
+       std::vector<json::flat::item>::const_iterator last,
+       std::unique_ptr<json::tree::node> &output)
+{
+    CHECK (first != last);
+    CHECK (output.get () == nullptr);
+
+    switch (first->tag) {
+        case json::flat::type::NUL:
+            output.reset (new json::tree::null ());
+            return first + 1;
+
+        case json::flat::type::BOOLEAN:
+            CHECK (*first->first == 't' || *first->first == 'f');
+            output.reset (new json::tree::boolean (*first->first == 't'));
+            return first + 1;
+
+        case json::flat::type::STRING:
+            CHECK_NEQ (first->first, first->last);
+            output.reset (new json::tree::string (first->first + 1, first->last - 1));
+            return first + 1;
+
+        case json::flat::type::INTEGER:
+        case json::flat::type::REAL:
+            output.reset (new json::tree::number (std::atof (first->first)));
+            return first + 1;
+
+        case json::flat::type::ARRAY_BEGIN: {
+            auto value = std::make_unique<json::tree::array> ();
+            auto cursor = ::parse (first + 1, last, *value);
+            output = std::move (value);
+            return cursor;
+        }
+
+        case json::flat::type::OBJECT_BEGIN: {
+            auto value = std::make_unique<json::tree::object> ();
+            auto cursor = ::parse (first + 1, last, *value);
+            output = std::move (value);
+            return cursor;
+        }
+
+        default:
+            unreachable ();
+    }
+}
+
+//-----------------------------------------------------------------------------
 std::unique_ptr<json::tree::node>
-json::tree::parse (const boost::filesystem::path &path) {
-    auto data = slurp (path);
-    return parse (static_cast <const char *> (data.get ()));
+json::tree::parse (const boost::filesystem::path &path)
+{
+    util::mapped_file f (path);
+    return parse ((const char*)f.cbegin (), (const char*)f.cend ());
 }
 
 
 std::unique_ptr<json::tree::node>
 json::tree::parse (const std::string &path)
     { return parse (path.c_str (), path.c_str () + path.size ()); }
-
-std::unique_ptr<json::tree::node>
-json::tree::parse (const char *start,
-             const char *stop) {
-    bool __success = true;
-    json::tree::node *__root = nullptr;
-    size_t top = 0;
-    int cs;
-    deque <int> fsmstack;
-    deque <parse_context> nodestack;
-
-    const char *p   = start,
-               *pe  = stop,
-               *eof = stop;
-
-    %%write init;
-    %%write exec;
-
-    if (!__success) {
-        std::ostringstream os;
-        os << "unable to parse json at char " << (p - start);
-        throw parse_error (os.str ());
-    }
-
-    return std::unique_ptr<json::tree::node> (__root);
-}
 
 
 std::unique_ptr<json::tree::node>
@@ -304,6 +334,20 @@ json::tree::parse (const char *start)
 void
 json::tree::write (const json::tree::node &node, std::ostream &os)
     { node.write (os); }
+
+
+std::unique_ptr<json::tree::node>
+json::tree::parse (const char *first, const char *last)
+{
+    std::unique_ptr<json::tree::node> output;
+    auto data = json::flat::parse (first, last);
+    auto end  = ::parse (data.cbegin (), data.cend (), output);
+
+    CHECK (end == data.cend ());
+    (void)end;
+
+    return output;
+}
 
 
 //-----------------------------------------------------------------------------
@@ -605,3 +649,27 @@ namespace json { namespace tree {
         return std::unique_ptr<node> (new number (f));
     }
 } }
+
+
+//-----------------------------------------------------------------------------
+std::ostream&
+operator<< (std::ostream &os, json::flat::type t)
+{
+    switch (t) {
+    case json::flat::type::STRING:  os << "STRING";     break;
+    case json::flat::type::NUL:     os << "NUL";        break;
+    case json::flat::type::BOOLEAN: os << "BOOLEAN";    break;
+    case json::flat::type::INTEGER: os << "INTEGER";    break;
+    case json::flat::type::REAL:    os << "REAL";       break;
+
+    case json::flat::type::OBJECT_BEGIN:    os << "OBJECT_BEGIN";   break;
+    case json::flat::type::OBJECT_END:      os << "OBJECT_END";     break;
+    case json::flat::type::ARRAY_BEGIN:     os << "ARRAY_BEGIN";    break;
+    case json::flat::type::ARRAY_END:       os << "ARRAY_END";      break;
+
+    default:
+        unreachable ();
+    }
+
+    return os;
+}

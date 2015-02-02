@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_JSON_HPP
@@ -286,6 +286,62 @@ namespace json {
             static std::unique_ptr<json::tree::node> serialise (const T&);
             static T deserialise (const json::tree::node&);
         };
+    }
+
+    namespace flat {
+        enum class type {
+            UNKNOWN,
+
+            NUL,
+            BOOLEAN,
+            STRING,
+            INTEGER,
+            REAL,
+
+            OBJECT_BEGIN,
+            OBJECT_END,
+
+            ARRAY_BEGIN,
+            ARRAY_END
+        };
+
+        struct item {
+            type tag;
+            const char *first;
+            const char *last;
+
+            template <typename T>
+            T as (void) const;
+        };
+
+        std::vector<item> parse (const char *first, const char *last);
+        std::vector<item> parse (const char *first);
+        std::vector<item> parse (const boost::filesystem::path&);
+
+        //-----------------------------------------------------------------------------
+        struct error : public std::runtime_error {
+            error (const std::string &&_what):
+                runtime_error (std::move (_what))
+            { ; }
+        };
+
+
+        struct parse_error : public error {
+            parse_error (size_t _line, const std::string &&_what):
+                error (std::move (_what)),
+                line (_line)
+            { ; }
+
+            size_t line;
+        };
+
+
+        struct value_error : public error {
+            value_error (const std::string &&_what):
+                error (std::move (_what))
+            { ; }
+        };
+
     }
 }
 
