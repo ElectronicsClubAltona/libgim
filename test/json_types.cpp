@@ -8,21 +8,21 @@
 
 int
 main (int, char**) {
-    static const char TEST_STRING[] =
-        "{"
-        "   \"string\" :  \"brad\","
-        "   \"integer\":  1,       "
-        "   \"null\":     null,    "
-        "   \"false\":    false,   "
-        "   \"true\":     true,    "
-        "   \"double\":   3.14,    "
-        "   \"object\":   {        "
-        "       \"test\": \"test\" "
-        "   },                     "
-        "   \"array\":     [       "
-        "       1, 2, 3, 4         "
-        "   ]"
-        "}";
+    static const char TEST_STRING[] = R"_(
+        {
+           "string":"brad",
+           "integer":1,
+           "null":null,
+           "false":false,
+           "true":true,
+           "double":3.14,
+           "object":{
+               "test": "test"
+           },
+           "array":[
+               1, 2, 3, 4
+           ]
+        })_";
 
     std::unique_ptr<json::tree::node> ptr = json::tree::parse (TEST_STRING);
     CHECK (ptr->is_object ());
