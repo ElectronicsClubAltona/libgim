@@ -1,5 +1,9 @@
 AC_DEFUN([NC_CXX],[
-    AX_APPEND_COMPILE_FLAGS([-std=c++1y])
+    AX_CHECK_COMPILE_FLAG(
+        [-std=c++1y],
+        [AX_APPEND_FLAG([-std=c++1y], [CXXFLAGS])],
+        [AC_ERROR([Unable to enable c++1y])]
+    )
 
     AX_APPEND_COMPILE_FLAGS([-fno-deduce-init-list], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-fno-deduce-init-list], [], [-Werror])
