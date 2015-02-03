@@ -8,6 +8,7 @@
 //-----------------------------------------------------------------------------
 template <size_t> void test_eval (void);
 template <size_t> void test_intersect (void);
+template <size_t> void test_region (void);
 
 
 //-----------------------------------------------------------------------------
@@ -162,6 +163,45 @@ test_intersect<3> (void)
 
 
 //-----------------------------------------------------------------------------
+template <>
+void
+test_region<1> (void)
+{
+    static const util::bezier<1> upright ({{0.f, 0.f}, {100.f, 100.f}});
+    static const util::bezier<1> downleft ({{100.f, 100.f}, {0.f, 0.f}});
+    static const util::bezier<1> vertical ({{0.f, 0.f}, {0.f, 100.f}});
+    static const util::bezier<1> horizontal ({{0.f, 0.f}, {100.f, 0.f}});
+
+    CHECK_EQ (upright.region (), util::region2f (0.f, 0.f, 100.f, 100.f));
+    CHECK_EQ (downleft.region (), util::region2f (0.f, 0.f, 100.f, 100.f));
+    CHECK_EQ (vertical.region (), util::region2f (0.f, 0.f, 0.f, 100.f));
+    CHECK_EQ (horizontal.region (), util::region2f (0.f, 0.f, 100.f, 0.f));
+}
+
+
+//-----------------------------------------------------------------------------
+template <>
+void
+test_region<2> (void)
+{
+    static const util::bezier<2> upright({{0.f, 0.f}, {50.f, 50.f}, {100.f, 100.f}});
+
+    CHECK_EQ (upright.region (), util::region2f (0.0f, 0.f, 100.f, 100.0f));
+}
+
+
+//-----------------------------------------------------------------------------
+template <>
+void
+test_region<3> (void)
+{
+    static const util::bezier<3> upright({{0.f, 0.f}, {33.f, 33.f}, {67.f, 67.f}, {100.f, 100.f}});
+
+    CHECK_EQ (upright.region (), util::region2f (0.0f, 0.f, 100.f, 100.0f));
+}
+
+
+//-----------------------------------------------------------------------------
 int
 main (int, char**)
 {
@@ -172,6 +212,10 @@ main (int, char**)
     test_intersect<1> ();
     test_intersect<2> ();
     test_intersect<3> ();
+
+    test_region<1> ();
+    test_region<2> ();
+    test_region<3> ();
 
     return EXIT_SUCCESS;
 }

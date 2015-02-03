@@ -361,6 +361,36 @@ namespace util {
 
 //-----------------------------------------------------------------------------
 template <size_t S>
+util::region2f
+util::bezier<S>::region (void) const
+{
+    util::region2f r;
+
+    float x0 = m_points[0].x;
+    float y0 = m_points[0].y;
+
+    float x1 = x0;
+    float y1 = y0;
+
+    for (size_t i = 1; i < S+1; ++i) {
+        x0 = min (x0, m_points[i].x);
+        y0 = min (y0, m_points[i].y);
+
+        x1 = max (x1, m_points[i].x);
+        y1 = max (y1, m_points[i].y);
+    }
+
+    return {
+        x0,
+        y0,
+        x1 - x0,
+        y1 - y0
+    };
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S>
 util::point2f&
 util::bezier<S>::operator[] (size_t idx)
 {

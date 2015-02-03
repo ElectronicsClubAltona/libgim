@@ -21,6 +21,7 @@
 #define __UTIL_BEZIER_HPP
 
 #include "point.hpp"
+#include "region.hpp"
 
 #include <iostream>
 
@@ -39,6 +40,8 @@ namespace util {
         size_t intersections (point2f from, point2f to) const;
 
         float distance (point2f) const;
+
+        region2f region (void) const;
 
         point2f& operator[] (size_t idx);
         const point2f& operator[] (size_t idx) const;
