@@ -28,8 +28,8 @@
 
 #include <boost/filesystem.hpp>
 
-#include "iterator.hpp"
-#include "json/flat.hpp"
+#include "../iterator.hpp"
+#include "./flat.hpp"
 
 namespace json { namespace tree {
     class node;
