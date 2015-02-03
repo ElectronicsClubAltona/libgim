@@ -101,7 +101,7 @@ ieee_float<E, S>::almost_equal (floating_t a,
 }
 
 
-// Based on the cynus `AlmostEqualUlps`
+// Based on the cynus `AlmostEqual2sComplement`
 template <unsigned int E, unsigned int S>
 bool
 ieee_float<E, S>::almost_equal (floating_t _a,
@@ -115,29 +115,39 @@ ieee_float<E, S>::almost_equal (floating_t _a,
     union {
         floating_t f;
         sint_t     s;
+        uint_t     u;
     } a, b;
 
     a.f = _a;
     b.f = _b;
 
+    // Special case the NaNs early so simplify diffs
     if (std::isnan (a.f) || std::isnan (b.f))
         return false;
 
+    // Early out, as identity comparisons are reasonably common
     if (a.s == b.s)
         return true;
 
-    // Order as twos complement to avoid negative zero/zero comparison issues
-    if (a.s < 0)
-        a.s = (1L << (TOTAL_BITS - 1)) - a.s;
-    if (b.s < 0)
-        b.s = (1L << (TOTAL_BITS - 1)) - b.s;
+    // Re-base negative floats to be continuous against +ve/-ve 0
+    static const union {
+        floating_t f;
+        sint_t     s;
+    } NEG_ZERO { -floating_t {0} };
 
-    uint_t diff = std::abs (a.s - b.s);
+    if (a.s < 0)
+        a.s = NEG_ZERO.s - a.s;
+    if (b.s < 0)
+        b.s = NEG_ZERO.s - b.s;
+
+    // Calculate ULP difference, but don't use abs(a.s - b.s) as it may cause
+    // signed overflow
+    uint_t diff = a.u > b.u ? a.u - b.u : b.u - a.u;
     return diff <= ulps;
 }
 
 
-
+//-----------------------------------------------------------------------------
 template class ieee_float< 5,  10>; // ieee_half
 template class ieee_float< 8,  23>; // ieee_single;
 template class ieee_float<11,  52>; // ieee_double;

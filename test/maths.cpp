@@ -8,27 +8,56 @@
 using std::sqrt;
 using std::numeric_limits;
 
-int
-main (int, char **) {
-    std::cerr.precision (15);
-    std::cout.precision (15);
 
-    CHECK (!almost_equal (-2.0, 0.0));
-    CHECK (!almost_equal (-2.f, 0.f));
-    CHECK ( almost_equal ( 0.0, 0.0));
-    //CHECK_HARD ( almost_equal ( 0.0, numeric_limits<double>::min ()));
-    CHECK ( almost_equal (numeric_limits<double>::infinity (),
-                          numeric_limits<double>::infinity ()));
-    CHECK (!almost_equal (numeric_limits<double>::infinity (), 0.0));
-    CHECK (!almost_equal (numeric_limits<double>::quiet_NaN (),
-                          numeric_limits<double>::quiet_NaN ()));
+void
+test_comparisons (void)
+{
+    // Check pos/neg zeroes
+    CHECK (almost_equal ( 0.f,  0.f));
+    CHECK (almost_equal ( 0.f, -0.f));
+    CHECK (almost_equal (-0.f,  0.f));
+    CHECK (almost_equal (-0.f, -0.f));
 
-    CHECK (almost_equal (0.f, -0.f));
-    CHECK (almost_equal (0.,  -0.));
+    CHECK (almost_equal ( 0.,  0.));
+    CHECK (almost_equal ( 0., -0.));
+    CHECK (almost_equal (-0.,  0.));
+    CHECK (almost_equal (-0., -0.));
 
+    // Check zero comparison with values near the expected cutoff
     CHECK ( almost_zero (1e-45f));
     CHECK (!almost_zero (1e-40f));
     CHECK (!exactly_zero (1e-45f));
+
+    // Compare values a little away from zero
+    CHECK (!almost_equal (-2.0, 0.0));
+    CHECK (!almost_equal (-2.f, 0.f));
+
+    // Compare values at the maximum extreme
+    CHECK (!almost_equal (-std::numeric_limits<float>::max (), 0.f));
+    CHECK (!almost_equal (-std::numeric_limits<float>::max (),
+                           std::numeric_limits<float>::max ()));
+
+    // Compare infinity values
+    CHECK ( almost_equal (numeric_limits<double>::infinity (),
+                          numeric_limits<double>::infinity ()));
+    CHECK (!almost_equal (numeric_limits<double>::infinity (), 0.0));
+
+    // Compare NaNs
+    CHECK (!almost_equal (0., numeric_limits<double>::quiet_NaN ()));
+    CHECK (!almost_equal (numeric_limits<double>::quiet_NaN (), 0.));
+
+    CHECK (!almost_equal (numeric_limits<double>::quiet_NaN (),
+                          numeric_limits<double>::quiet_NaN ()));
+}
+
+
+int
+main (int, char **) {
+    // Max out the precision in case we trigger debug output
+    std::cerr.precision (std::numeric_limits<double>::digits10);
+    std::cout.precision (std::numeric_limits<double>::digits10);
+
+    test_comparisons ();
 
     CHECK_EQ (min (-2, 0, 2), -2);
     CHECK_EQ (max (-2, 0, 2),  2);
