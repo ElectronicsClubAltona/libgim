@@ -114,7 +114,9 @@ template <typename T>
 util::image::buffer<T>
 util::image::buffer<T>::downsample (unsigned factor)
 {
-    CHECK_GT (factor, 1);
+    CHECK_GE (factor, 1);
+    if (factor == 1)
+        return clone<T> ();
 
     size_t w_ = w / factor;
     size_t h_ = h / factor;
@@ -128,13 +130,12 @@ util::image::buffer<T>::downsample (unsigned factor)
     // Do a really shitty nearest neighbour average in src-space.
     for (size_t y = 0; y < out.h; ++y)
         for (size_t x = 0; x < out.w; ++x) {
-            size_t src00 = ((y * factor) + 0) * s + (x * factor) + 0;
-            size_t src01 = ((y * factor) + 0) * s + (x * factor) + 1;
-            size_t src10 = ((y * factor) + 1) * s + (x * factor) + 0;
-            size_t src11 = ((y * factor) + 1) * s + (x * factor) + 1;
+            size_t src00 = (y + 0) * s * factor + (x * factor) + 0;
+            size_t src01 = (y + 0) * s * factor + (x * factor) + 1;
+            size_t src10 = (y + 1) * s * factor + (x * factor) + 0;
+            size_t src11 = (y + 1) * s * factor + (x * factor) + 1;
 
-            size_t dst_offset = y * out.s + x;
-            out.data[dst_offset] = (src00 + src01 + src10 + src11) / 4;
+            out.data[x + y * out.s] = (data[src00] + data[src01] + data[src10] + data[src11]) / 4;
         }
 
     return out;
