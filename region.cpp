@@ -225,14 +225,37 @@ util::region<T>::inset (T mag)
 //-----------------------------------------------------------------------------
 template <typename T>
 util::region<T>&
-util::region<T>::expand (T mag)
+util::region<T>::expand (T _w, T _h)
 {
-    x -= mag;
-    y -= mag;
-    w += mag * 2;
-    h += mag * 2;
+    x -= _w;
+    y -= _h;
+    w += _w * 2;
+    h += _h * 2;
 
     return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+util::region<T>&
+util::region<T>::expand (T mag)
+{
+    return expand (mag, mag);
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+util::region<T>
+util::region<T>::expanded (T _w, T _h) const
+{
+    return {
+        x - _w,
+        y - _h,
+        w + _w * 2,
+        h + _h * 2,
+    };
 }
 
 
@@ -241,12 +264,7 @@ template <typename T>
 util::region<T>
 util::region<T>::expanded (T mag) const
 {
-    return {
-        x - mag,
-        y - mag,
-        w + mag * 2,
-        h + mag * 2,
-    };
+    return expanded (mag, mag);
 }
 
 //-----------------------------------------------------------------------------
