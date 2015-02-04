@@ -193,16 +193,21 @@ to_radians [[gnu::pure]] (T degrees)
 }
 
 
-//-----------------------------------------------------------------------------
-constexpr float
-to_radians [[gnu::pure]] (float degrees) {
-    return degrees / 180 * static_cast<float> (PI_f);
+//! Normalised sinc function
+template <typename T>
+constexpr T
+sincn [[gnu::pure]] (T x)
+{
+    return std::sin (constants<T>::PI * x) / (constants<T>::PI * x);
 }
 
 
-constexpr double
-to_radians [[gnu::pure]] (double degrees) {
-    return degrees / 180 * PI_d;
+//! Unnormalised sinc function
+template <typename T>
+constexpr T
+sincu [[gnu::pure]] (T x)
+{
+    return std::sin (x) / x;
 }
 
 
