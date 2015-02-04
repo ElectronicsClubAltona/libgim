@@ -167,20 +167,29 @@ exactly_zero [[gnu::pure]] (T a)
 
 //-----------------------------------------------------------------------------
 // angles, trig
+
+template <typename T>
+struct constants { };
+
 constexpr double PI_d = 3.141592653589793238462643;
 constexpr float  PI_f = 3.141592653589793238462643f;
 
-constexpr float E_f = 2.71828182845904523536028747135266250f;
+constexpr float  E_f = 2.71828182845904523536028747135266250f;
+constexpr double E_d = 2.71828182845904523536028747135266250;
 
-constexpr double
-to_degrees [[gnu::pure]] (double radians) {
-    return radians * 180 / PI_d;
+template <typename T>
+constexpr T
+to_degrees [[gnu::pure]] (T radians)
+{
+    return radians * 180 / constants<T>::PI;
 }
 
 
-constexpr float
-to_degrees [[gnu::pure]] (float radians) {
-    return radians * 180 / PI_f;
+template <typename T>
+constexpr T
+to_radians [[gnu::pure]] (T degrees)
+{
+    return degrees / 180 * constants<T>::PI;
 }
 
 

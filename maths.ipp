@@ -43,3 +43,20 @@ pow (T x, unsigned y)
 {
     return y == 0 ? 1 : x * pow (x, y - 1);
 }
+
+
+//-----------------------------------------------------------------------------
+template <>
+struct constants<float>
+{
+    static constexpr float PI = PI_f;
+    static constexpr float E  = E_f;
+};
+
+
+template <>
+struct constants<double>
+{
+    static constexpr double PI = PI_d;
+    static constexpr double E  = E_d;
+};
