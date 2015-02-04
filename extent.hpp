@@ -56,6 +56,7 @@ namespace util {
         void sanity (void) const;
     };
 
+    typedef extent<int> extent2i;
     typedef extent<size_t> extent2u;
     typedef extent<float> extent2f;
 
