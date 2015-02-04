@@ -2,6 +2,9 @@ AC_DEFUN([NC_OPTIMISATION],[
     ##-------------------------------------------------------------------------
     AX_REQUIRE_DEFINED([AX_APPEND_COMPILE_FLAGS])
     AX_REQUIRE_DEFINED([AC_CANONICAL_HOST])
+    AX_REQUIRE_DEFINED([AX_COMPILER_VENDOR])
+
+    AX_COMPILER_VENDOR
 
     ##-------------------------------------------------------------------------
     AC_ARG_ENABLE([lto], [
@@ -11,6 +14,12 @@ AC_DEFUN([NC_OPTIMISATION],[
     AS_IF([test "x$enable_lto" == "xyes"], [
         AS_IF([test x"${host_os}" == x"mingw32"], [
             AC_ERROR([mingw32 link-time optimisation is currently broken])
+        ])
+
+        AS_IF([test "x$ax_cv_cxx_compiler_vendor" == "xgnu"], [
+            AC_CHECK_TOOLS([RANLIB], [gcc-ranlib ranlib])
+            AC_CHECK_TOOLS([AR], [gcc-ar ar])
+            AC_CHECK_TOOLS([NM], [gcc-nm nm])
         ])
 
         AX_APPEND_COMPILE_FLAGS([-flto], [], [-Werror])

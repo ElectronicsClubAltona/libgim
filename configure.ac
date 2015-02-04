@@ -14,23 +14,21 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_USE_SYSTEM_EXTENSIONS
 AC_CANONICAL_HOST
 
-LT_INIT
 AC_LANG([C++])
-AC_PROG_CXX
-AC_PROG_CXXCPP
 
-AX_COMPILER_VENDOR
+NC_CXX
+NC_PLATFORM
+NC_OPTIMISATION
+NC_WARNINGS
+NC_DEBUGGING
+
+LT_INIT
 
 AM_INIT_AUTOMAKE([1.14 dist-bzip2 dist-xz foreign subdir-objects])
 AM_SILENT_RULES([yes])
 
 AC_CONFIG_HEADERS([config.h])
 
-NC_CXX
-NC_PLATFORM
-NC_WARNINGS
-NC_DEBUGGING
-NC_OPTIMISATION
 
 ###############################################################################
 ## Architecture features
