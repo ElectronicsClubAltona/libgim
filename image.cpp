@@ -19,11 +19,107 @@
 
 
 #include "image.hpp"
-
 #include "debug.hpp"
+
 #include "except.hpp"
+#include "io.hpp"
 
 #include <fstream>
+
+
+//-----------------------------------------------------------------------------
+struct box {
+    static constexpr float support = 0.5f;
+
+    static constexpr float weight [[gnu::pure]] (float x)
+    {
+        return (x >= -0.5f && x <= 0.5f) ? 1.f : 0.f;
+    }
+};
+
+
+//-----------------------------------------------------------------------------
+// XXX: Known to cause hard black ringing
+template <size_t S>
+struct lanczos {
+    static constexpr float support = float {S};
+
+    static float weight [[gnu::pure]] (float x)
+    {
+        if (x < 0.f)
+            x = -x;
+
+        if (x <= S)
+            return sincn (x) * sincn (x / S);
+
+        return 0.f;
+    }
+};
+
+template struct lanczos< 3>;
+template struct lanczos< 4>;
+template struct lanczos< 6>;
+template struct lanczos<12>;
+
+
+//-----------------------------------------------------------------------------
+struct bspline {
+    static constexpr float support = 2.f;
+
+    static float weight [[gnu::pure]] (float x)
+    {
+        if (x < 0.f)
+            x = -x;
+
+        if (x < 1.f)
+            return .5f * x * x * x - x * x + (2.f / 3.f);
+
+        if (x < 2.f) {
+            x = 2.f - x;
+            return (1.f / 6.f) * x * x * x;
+        }
+
+        return 0.f;
+    }
+};
+
+
+//-----------------------------------------------------------------------------
+// XXX: Known to cause hard black ringing
+struct mitchell {
+    static constexpr float support = 2.f;
+
+    static float weight [[gnu::pure]] (float x)
+    {
+        return eval (x, 1.f / 3.f, 1.f / 3.f);
+    }
+
+private:
+    static float eval (float x, float B, float C)
+    {
+        if (x < 0.f)
+            x = -x;
+
+        if (x < 1.f) {
+            x =   ( 12.f -  9.f * B - 6.f * C) * x * x * x
+                + (-18.f + 12.f * B + 6.f * C) * x * x
+                +    6.f -  2.f * B;
+
+            return x / 6.f;
+        }
+
+        if (x < 2.f) {
+            x =   ( -1.f * B -  6.f * C) * x * x * x
+                + (  6.f * B + 30.f * C) * x * x
+                + (-12.f * B - 48.f * C) * x
+                +    8.f * B + 24.f * C;
+
+            return x / 6.f;
+        }
+
+        return 0.f;
+    }
+};
 
 
 //-----------------------------------------------------------------------------
@@ -110,37 +206,100 @@ util::image::buffer<T>::clone (void) const
 
 
 //-----------------------------------------------------------------------------
+// HACK: This code hasn't really been tested with multiple filters (it is
+// known to produce dark ringing artefacts with sinc) or robustly with
+// fractional factors. But... it works more or less.
 template <typename T>
 util::image::buffer<T>
-util::image::buffer<T>::downsample (unsigned factor)
+util::image::buffer<T>::downsample (float factor) const
 {
-    CHECK_GE (factor, 1);
-    if (factor == 1)
-        return clone<T> ();
+    CHECK_GE (factor, 0);
 
-    size_t w_ = w / factor;
-    size_t h_ = h / factor;
-    size_t s_ = w_;
+    using filter = bspline;
 
-    CHECK_NEQ (w_, 0);
-    CHECK_NEQ (h_, 0);
+    const buffer &src = *this;
+    buffer dst (static_cast<size_t> (w / factor),
+                static_cast<size_t> (h / factor));
 
-    buffer out { w_, h_, s_, std::make_unique<T[]> (w_ * h_) };
+    const float scale = float (dst.w) / src.w;
+    const float half_width = filter::support / scale;
+    const int half_pixels = int (std::ceil (half_width));
 
-    // Do a really shitty nearest neighbour average in src-space.
-    for (size_t y = 0; y < out.h; ++y)
-        for (size_t x = 0; x < out.w; ++x) {
-            size_t src00 = (y + 0) * s * factor + (x * factor) + 0;
-            size_t src01 = (y + 0) * s * factor + (x * factor) + 1;
-            size_t src10 = (y + 1) * s * factor + (x * factor) + 0;
-            size_t src11 = (y + 1) * s * factor + (x * factor) + 1;
+    // Calculate the weighted sum of the src pixels for each dst pixel
+    for (size_t d_y = 0; d_y < dst.h; ++d_y)
+        for (size_t d_x = 0; d_x < dst.w; ++d_x) {
+            // Initialise value and weight sums
+            float v = 0.f;
+            float m = 0.f;
 
-            out.data[x + y * out.s] = (data[src00] + data[src01] + data[src10] + data[src11]) / 4;
+            // Find the centre of the src pixel
+            float o_y = (d_y + 0.5f) / scale;
+            float o_x = (d_x + 0.5f) / scale;
+
+            // Do a full summation across the window. This isn't using
+            // seperable filtering because:
+            //    a) we need high precision with fractional factors
+            //    b) it's much easier to implement as is
+            //
+            // TODO: seperable filters
+            for (int s_y = -half_pixels; s_y <= half_pixels; ++s_y)
+                for (int s_x = -half_pixels; s_x <= half_pixels; ++s_x) {
+                    float m_x = filter::weight (s_x * scale);
+                    float m_y = filter::weight (s_y * scale);
+                    float m_  = m_x * m_y;
+
+                    // Simple clamp to border for edges
+                    int x = int (limit (o_x + s_x - 0.5f, 0, src.w));
+                    int y = int (limit (o_y + s_y - 0.5f, 0, src.h));
+
+                    // Collection the contribution
+                    v += m_ * src.data[y * src.s + x];
+                    m += m_;
+                }
+
+            CHECK_NEZ (m);
+
+            dst.data[d_y * dst.s + d_x] = uint8_t (v / m);
         }
+
+    return dst;
+}
+
+
+//-----------------------------------------------------------------------------
+// HACK: This does not support the full header structure with any robustness.
+// In particular it will abort when it sees a comment. If you want better
+// support use waif, or port its implementation.
+util::image::buffer<uint8_t>
+util::pgm::read (const boost::filesystem::path &path)
+{
+    util::mapped_file raw (path);
+
+    std::ifstream cooked (path.c_str (), std::ios::binary);
+    char magic[2];
+    size_t width, height, scale;
+    char space;
+
+    cooked >> magic[0] >> magic[1] >> width >> height >> scale >> space;
+
+    if (magic[0] != 'P' && magic[1] != '5')
+        throw std::runtime_error ("invalid header magic");
+
+    if (width == 0 || height == 0 || scale == 0)
+        throw std::runtime_error ("zero width, height, or scale");
+
+    size_t expected = width * height;
+    size_t remain   = raw.size () - cooked.tellg ();
+    if (expected != remain)
+        throw std::runtime_error ("expected data size mismatch");
+
+    util::image::buffer<uint8_t> out (width, height);
+
+    CHECK_EQ (out.w, out.s);
+    std::copy (raw.begin () + cooked.tellg () - 1, raw.end (), out.data.get ());
 
     return out;
 }
-
 
 //-----------------------------------------------------------------------------
 static void
@@ -171,6 +330,15 @@ write_netpbm (const uint8_t *restrict pixels,
         for (size_t x = 0; x < width; ++x)
             output << pixels[y * stride + x];
     }
+}
+
+
+//-----------------------------------------------------------------------------
+void
+util::pgm::write (const util::image::buffer<uint8_t> &src,
+                  const boost::filesystem::path &path)
+{
+    write (src.data.get (), src.w, src.h, src.s, path);
 }
 
 

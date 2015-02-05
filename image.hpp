@@ -45,7 +45,7 @@ namespace util {
             template <typename U>
             buffer<U> clone (void) const;
 
-            buffer<T> downsample (unsigned factor);
+            buffer<T> downsample (float factor) const;
 
             size_t w;
             size_t h;
@@ -57,6 +57,11 @@ namespace util {
 
 
     struct pgm {
+        static image::buffer<uint8_t> read (const boost::filesystem::path&);
+
+        static void write (const image::buffer<uint8_t> &src,
+                           const boost::filesystem::path &);
+
         static void write (const uint8_t *restrict pixels,
                            size_t width,
                            size_t height,
