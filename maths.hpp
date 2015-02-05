@@ -276,10 +276,18 @@ max [[gnu::pure]] (const T a, const U b, Args ...args)
 
 
 //-----------------------------------------------------------------------------
+// Limiting functions
+
+// min/max clamping
 template <typename T, typename U, typename V>
 T
-limit [[gnu::pure]] (const T val, const U hi, const V lo)
+limit [[gnu::pure]] (const T val, const U lo, const V hi)
 {
+    CHECK_LE(
+        decltype (lo+hi) (lo),
+        decltype (hi+lo) (hi)
+    );
+
     return val > hi ? hi:
            val < lo ? lo:
            val;

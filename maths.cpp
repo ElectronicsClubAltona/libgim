@@ -182,5 +182,7 @@ template int sign (int);
 // so it's easier to instantiate early and check for broken code at library
 // build time.
 
+template float limit (float, float, float);
+
 template float smoothstep (float, float, float);
 template double smoothstep (double, double, double);
