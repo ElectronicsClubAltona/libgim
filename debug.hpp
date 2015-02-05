@@ -20,8 +20,7 @@
 #ifndef __DEBUG_HPP
 #define __DEBUG_HPP
 
-#include "maths.hpp"
-
+//#include "maths.hpp" // XXX: See notes at the end of file for maths.hpp inclusion
 #include <stdexcept>
 #include <iostream>
 #include <sstream>
@@ -268,5 +267,12 @@ void disable_fpe (void);
 namespace debug {
     void init (void);
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+// XXX: maths needs to be included so that CHECK_EQ/NEQ can call almost_equal,
+// but maths.hpp might be using CHECK_ macros so we must include maths.hpp
+// after we define the CHECK_ macros so the preprocessor can resolve them.
+#include "maths.hpp"
 
 #endif // __DEBUG_HPP
