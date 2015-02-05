@@ -198,7 +198,7 @@ template <typename T>
 constexpr T
 sincn [[gnu::pure]] (T x)
 {
-    return std::sin (constants<T>::PI * x) / (constants<T>::PI * x);
+    return almost_zero (x) ? 1 : std::sin (constants<T>::PI * x) / (constants<T>::PI * x);
 }
 
 
@@ -207,7 +207,7 @@ template <typename T>
 constexpr T
 sincu [[gnu::pure]] (T x)
 {
-    return std::sin (x) / x;
+    return almost_zero (x) ? 1 : std::sin (x) / x;
 }
 
 
