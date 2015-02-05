@@ -186,7 +186,7 @@ endif
 ###############################################################################
 ## Local build rules
 CLEANFILES = json.cpp version.cpp ip.cpp
-EXTRA_DIST = json.cpp.rl version.cpp.rl ip.cpp.rl
+EXTRA_DIST = json/flat.cpp.rl version.cpp.rl ip.cpp.rl
 
 RAGELFLAGS      = -F1
 SUFFIXES = .cpp .cpp.rl
