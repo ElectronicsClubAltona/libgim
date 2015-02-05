@@ -200,6 +200,23 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
+#define CHECK_NEZ(A) do {                                   \
+    DEBUG_ONLY(                                             \
+        const auto __a = (A);                               \
+        _CHECK_META (!almost_zero (__a),                    \
+                     { ; },                                 \
+                     {                                      \
+            std::ostringstream __debug_nez_os;              \
+            __debug_nez_os << "unexpected zero.\n"          \
+               << "__a: " << #A << " is " << __a << ")";    \
+            panic (__debug_nez_os.str ());                  \
+        });                                                 \
+    );                                                      \
+} while (0)
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 #define CHECK_THROWS(E,C) do {                  \
     DEBUG_ONLY(                                 \
         bool caught = false;                    \
