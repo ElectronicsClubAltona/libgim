@@ -20,6 +20,8 @@
 #ifndef __MATHS_HPP
 #define __MATHS_HPP
 
+#include "debug.hpp"
+
 #include <cstdint>
 #include <type_traits>
 #include <utility>
@@ -281,6 +283,17 @@ limit [[gnu::pure]] (const T val, const U hi, const V lo)
     return val > hi ? hi:
            val < lo ? lo:
            val;
+}
+
+
+// clamped cubic hermite interpolation
+template <typename T>
+T
+smoothstep [[gnu::pure]] (T a, T b, T x)
+{
+    CHECK_LE(a, b);
+    x = limit ((x - a) / (b - a), T{0}, T{1});
+    return x * x * (3 - 2 * x);
 }
 
 

@@ -19,6 +19,8 @@
 
 #include "maths.hpp"
 
+#include "debug.hpp"
+
 #include "float.hpp"
 
 #include <cmath>
@@ -174,3 +176,11 @@ sign (double val) {
 
 template int sign (int);
 
+
+//-----------------------------------------------------------------------------
+// Simple instantiations. Some functions aren't used internally to the library
+// so it's easier to instantiate early and check for broken code at library
+// build time.
+
+template float smoothstep (float, float, float);
+template double smoothstep (double, double, double);
