@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011, 2014 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2014 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_FIXED_HPP
@@ -25,47 +25,46 @@
 #include <cstdint>
 
 namespace util {
-    template <unsigned int INT, unsigned int FRAC>
+    template <unsigned I, unsigned E>
     class fixed {
         public:
-            typedef typename bits_type<INT + FRAC>::uint combined_type;
-            typedef typename bits_type<INT + FRAC>::uint integral_type;
+            typedef typename bits_type<I+E>::uint uint_t;
 
-            combined_type m_value;
+            fixed (double);
+            fixed (float);
+            fixed (uint_t);
 
-        public:
-            explicit fixed(double);
-            explicit fixed(float);
-            fixed(integral_type);
+            double to_double   (void) const;
+            float  to_float    (void) const;
+            uint_t to_integral (void) const;
+            uint_t to_native   (void) const;
 
-            double        to_double   (void) const;
-            float         to_float    (void) const;
-            integral_type to_integral (void) const;
-            combined_type to_native   (void) const;
+            static fixed<I,E> from_native (uint_t);
 
-            static fixed<INT,FRAC> from_native (integral_type);
+            static uint_t to_integral (uint_t);
 
-            static integral_type to_integral (integral_type);
+            fixed<I,E>& operator +=(const fixed<I,E>);
+            fixed<I,E>& operator -=(const fixed<I,E>);
+            fixed<I,E>& operator *=(const fixed<I,E>);
+            fixed<I,E>& operator /=(const fixed<I,E>);
 
-            fixed<INT, FRAC>& operator +=(const fixed<INT, FRAC>);
-            fixed<INT, FRAC>& operator -=(const fixed<INT, FRAC>);
-            fixed<INT, FRAC>& operator *=(const fixed<INT, FRAC>);
-            fixed<INT, FRAC>& operator /=(const fixed<INT, FRAC>);
+            fixed<I,E>  operator +(const fixed<I,E>) const;
+            fixed<I,E>  operator -(const fixed<I,E>) const;
+            fixed<I,E>  operator *(const fixed<I,E>) const;
+            fixed<I,E>  operator /(const fixed<I,E>) const;
 
-            fixed<INT, FRAC>  operator +(const fixed<INT, FRAC>) const;
-            fixed<INT, FRAC>  operator -(const fixed<INT, FRAC>) const;
-            fixed<INT, FRAC>  operator *(const fixed<INT, FRAC>) const;
-            fixed<INT, FRAC>  operator /(const fixed<INT, FRAC>) const;
+            fixed<I,E>& operator +=(uint_t);
+            fixed<I,E>& operator -=(uint_t);
+            fixed<I,E>& operator *=(uint_t);
+            fixed<I,E>& operator /=(uint_t);
 
-            fixed<INT, FRAC>& operator +=(integral_type);
-            fixed<INT, FRAC>& operator -=(integral_type);
-            fixed<INT, FRAC>& operator *=(integral_type);
-            fixed<INT, FRAC>& operator /=(integral_type);
+            fixed<I,E>  operator +(uint_t) const;
+            fixed<I,E>  operator -(uint_t) const;
+            fixed<I,E>  operator *(uint_t) const;
+            fixed<I,E>  operator /(uint_t) const;
 
-            fixed<INT, FRAC>  operator +(integral_type) const;
-            fixed<INT, FRAC>  operator -(integral_type) const;
-            fixed<INT, FRAC>  operator *(integral_type) const;
-            fixed<INT, FRAC>  operator /(integral_type) const;
+        private:
+            uint_t m_value;
     };
 }
 

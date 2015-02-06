@@ -14,138 +14,162 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011, 2014 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "fixed.hpp"
+
+#include "maths.hpp"
 
 #include <cmath>
 
 using namespace util;
 
-/*
- * Constructors
- */
-template <unsigned int INT, unsigned int FRAC>
-fixed<INT, FRAC>::fixed (integral_type val):
-    m_value (val << FRAC)
+///////////////////////////////////////////////////////////////////////////////
+// Constructors
+template <unsigned I, unsigned E>
+fixed<I,E>::fixed (uint_t val):
+    m_value (val << E)
 {
-    static_assert (INT  > 0, "must use positive integer bits");
-    static_assert (FRAC > 0, "must use positive fractional bits");
-    static_assert (INT + FRAC == sizeof (m_value) * 8,
-                   "underlying storage must be exactly int:frac sized");
+    static_assert (I > 0, "must use positive integer bits");
+    static_assert (E > 0, "must use positive fractional bits");
+    static_assert (I + E == sizeof (m_value) * 8,
+                   "underlying storage must be exactly I+E sized");
 }
 
 
-/*
- * Conversions
- */
+///////////////////////////////////////////////////////////////////////////////
+// Conversions
 
-template <unsigned int INT, unsigned int FRAC>
+template <unsigned I, unsigned E>
 double
-fixed<INT, FRAC>::to_double (void) const
-    { return m_value / std::pow (2.0, FRAC); }
+fixed<I,E>::to_double (void) const
+{
+    return static_cast<double> (m_value) / pow (2, E);
+}
 
 
-template <unsigned int INT, unsigned int FRAC>
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
 float
-fixed<INT, FRAC>::to_float (void) const {
-    return static_cast<float> (
-        m_value / std::pow (2.0f, FRAC)
-    );
-}
-
-
-template <unsigned int INT, unsigned int FRAC>
-typename fixed<INT, FRAC>::integral_type
-fixed<INT, FRAC>::to_integral (void) const
-    { return m_value >> FRAC; }
-
-
-template <unsigned int INT, unsigned int FRAC>
-typename fixed<INT, FRAC>::combined_type
-fixed<INT, FRAC>::to_native (void) const
-    { return m_value; }
-
-
-//-----------------------------------------------------------------------------
-template <unsigned INT, unsigned FRAC>
-fixed<INT,FRAC>
-fixed<INT,FRAC>::from_native (integral_type i)
+fixed<I,E>::to_float (void) const
 {
-    fixed<INT,FRAC> out (integral_type {0u});
-    out.m_value = i;
-    return out;
+    return static_cast<float> (m_value) / pow (2, E);
 }
 
 
 //-----------------------------------------------------------------------------
-template <unsigned INT, unsigned FRAC>
-typename fixed<INT,FRAC>::integral_type
-fixed<INT,FRAC>::to_integral (integral_type v)
+template <unsigned I, unsigned E>
+typename fixed<I,E>::uint_t
+fixed<I,E>::to_integral (void) const
 {
-    return v >> FRAC;
+    return m_value >> E;
 }
 
 
-/*
- * Integral operators
- */
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
+typename fixed<I,E>::uint_t
+fixed<I,E>::to_native (void) const
+{
+    return m_value;
+}
 
-template <unsigned int INT, unsigned int FRAC>
-fixed<INT, FRAC>&
-fixed<INT, FRAC>::operator +=(integral_type val) {
-    m_value += val << FRAC;
+
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
+fixed<I,E>
+fixed<I,E>::from_native (uint_t i)
+{
+    return fixed<I,E> {i};
+}
+
+
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
+typename fixed<I,E>::uint_t
+fixed<I,E>::to_integral (uint_t v)
+{
+    return v >> E;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Integer operators
+
+template <unsigned I, unsigned E>
+fixed<I,E>&
+fixed<I,E>::operator+= (uint_t val)
+{
+    m_value += val << E;
     return *this;
 }
 
 
-template <unsigned int INT, unsigned int FRAC>
-fixed<INT, FRAC>&
-fixed<INT, FRAC>::operator -=(integral_type val) {
-    m_value -= val << FRAC;
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
+fixed<I,E>&
+fixed<I,E>::operator-= (uint_t val)
+{
+    m_value -= val << E;
     return *this;
 }
 
 
-template <unsigned int INT, unsigned int FRAC>
-fixed<INT, FRAC>&
-fixed<INT, FRAC>::operator *=(integral_type val) {
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
+fixed<I,E>&
+fixed<I,E>::operator*= (uint_t val)
+{
     m_value *= val;
     return *this;
 }
 
 
-template <unsigned int INT, unsigned int FRAC>
-fixed<INT, FRAC>&
-fixed<INT, FRAC>::operator /=(integral_type val) {
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
+fixed<I,E>&
+fixed<I,E>::operator/= (uint_t val)
+{
     m_value /= val;
     return *this;
 }
 
 
-template <unsigned int INT, unsigned int FRAC>
-fixed<INT, FRAC>
-fixed<INT, FRAC>::operator +(integral_type val) const
-    { return fixed<INT, FRAC>(m_value + val << FRAC); }
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
+fixed<I,E>
+fixed<I,E>::operator+ (uint_t val) const
+{
+    return fixed<I,E> (m_value + val << E);
+}
 
 
-template <unsigned int INT, unsigned int FRAC>
-fixed<INT, FRAC>
-fixed<INT, FRAC>::operator -(integral_type val) const
-    { return fixed<INT, FRAC>(m_value - val << FRAC); }
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
+fixed<I,E>
+fixed<I,E>::operator- (uint_t val) const
+{
+    return fixed<I,E> (m_value - val << E);
+}
 
 
-template <unsigned int INT, unsigned int FRAC>
-fixed<INT, FRAC>
-fixed<INT, FRAC>::operator *(integral_type val) const
-    { return fixed<INT, FRAC>(m_value * val); }
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
+fixed<I,E>
+fixed<I,E>::operator* (uint_t val) const
+{
+    return fixed<I,E> (m_value * val);
+}
 
 
-template <unsigned int INT, unsigned int FRAC>
-fixed<INT, FRAC>
-fixed<INT, FRAC>::operator /(integral_type val) const
-    { return fixed<INT, FRAC>(m_value / val); }
+//-----------------------------------------------------------------------------
+template <unsigned I, unsigned E>
+fixed<I,E>
+fixed<I,E>::operator /(uint_t val) const
+{
+    return fixed<I,E> (m_value / val);
+}
 
 
 //-----------------------------------------------------------------------------
