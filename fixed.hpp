@@ -66,6 +66,15 @@ namespace util {
         private:
             uint_t m_value;
     };
+
+
+    template <unsigned I, unsigned E> bool operator== (util::fixed<I,E>, util::fixed<I,E>);
+    template <unsigned I, unsigned E> bool operator!= (util::fixed<I,E>, util::fixed<I,E>);
+
+    template <unsigned I, unsigned E> bool operator<  (util::fixed<I,E>, util::fixed<I,E>);
+    template <unsigned I, unsigned E> bool operator<= (util::fixed<I,E>, util::fixed<I,E>);
+    template <unsigned I, unsigned E> bool operator>  (util::fixed<I,E>, util::fixed<I,E>);
+    template <unsigned I, unsigned E> bool operator>= (util::fixed<I,E>, util::fixed<I,E>);
 }
 
 #endif // __UTIL_FIXED_HPP 

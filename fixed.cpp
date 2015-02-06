@@ -172,7 +172,38 @@ fixed<I,E>::operator /(uint_t val) const
 }
 
 
-//-----------------------------------------------------------------------------
-template class util::fixed<16,16>;
-template class util::fixed<32,32>;
-template class util::fixed<26, 6>;
+///////////////////////////////////////////////////////////////////////////////
+// logical operators
+
+#define LOGIC_OP(OP)                            \
+template <unsigned I, unsigned E>               \
+bool                                            \
+util::operator OP (util::fixed<I,E> a,          \
+             util::fixed<I,E> b)                \
+{                                               \
+    return a.to_native () OP b.to_native ();    \
+}
+
+LOGIC_OP(==)
+LOGIC_OP(!=)
+LOGIC_OP(<)
+LOGIC_OP(<=)
+LOGIC_OP(>)
+LOGIC_OP(>=)
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Instantiations
+
+#define INSTANTIATE(I,E)                                                        \
+template class util::fixed<(I),(E)>;                                            \
+template bool util::operator== (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
+template bool util::operator!= (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
+template bool util::operator<  (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
+template bool util::operator<= (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
+template bool util::operator>  (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
+template bool util::operator>= (util::fixed<(I),(E)>, util::fixed<(I),(E)>);
+
+INSTANTIATE(16,16)
+INSTANTIATE(26, 6)
+INSTANTIATE(32,32)
