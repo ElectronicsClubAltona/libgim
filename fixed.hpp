@@ -23,6 +23,7 @@
 #include "types/bits.hpp"
 
 #include <cstdint>
+#include <iostream>
 
 namespace util {
     template <unsigned I, unsigned E>
@@ -75,6 +76,10 @@ namespace util {
     template <unsigned I, unsigned E> bool operator<= (util::fixed<I,E>, util::fixed<I,E>);
     template <unsigned I, unsigned E> bool operator>  (util::fixed<I,E>, util::fixed<I,E>);
     template <unsigned I, unsigned E> bool operator>= (util::fixed<I,E>, util::fixed<I,E>);
+
+
+    template <unsigned I, unsigned E>
+    std::ostream& operator<< (std::ostream&, fixed<I,E>);
 }
 
 #endif // __UTIL_FIXED_HPP 

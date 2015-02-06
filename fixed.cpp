@@ -191,12 +191,22 @@ LOGIC_OP(<=)
 LOGIC_OP(>)
 LOGIC_OP(>=)
 
+///////////////////////////////////////////////////////////////////////////////
+// iostream operators
+template <unsigned I, unsigned E>
+std::ostream&
+util::operator<< (std::ostream &os, fixed<I,E> v)
+{
+    return os << v.to_double ();
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Instantiations
 
 #define INSTANTIATE(I,E)                                                        \
 template class util::fixed<(I),(E)>;                                            \
+template std::ostream& util::operator<< (std::ostream&, fixed<(I),(E)>);        \
 template bool util::operator== (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
 template bool util::operator!= (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
 template bool util::operator<  (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
