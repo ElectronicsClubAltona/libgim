@@ -97,6 +97,33 @@ fixed<I,E>::to_integer (uint_t n)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+// Fixed operators
+#define SIMPLE_FIXED_REF(OP)                            \
+template <unsigned I, unsigned E>                       \
+util::fixed<I,E>&                                       \
+util::fixed<I,E>::operator OP (const fixed<I,E> rhs)    \
+{                                                       \
+    m_value OP rhs.m_value;                             \
+    return *this;                                       \
+}
+
+SIMPLE_FIXED_REF(-=)
+SIMPLE_FIXED_REF(+=)
+
+
+#define SIMPLE_FIXED_LIT(OP)                                \
+template <unsigned I, unsigned E>                           \
+util::fixed<I,E>                                            \
+util::fixed<I,E>::operator OP (const fixed<I,E> rhs) const  \
+{                                                           \
+    return fixed<I,E> {m_value OP rhs.m_value};             \
+}
+
+SIMPLE_FIXED_LIT(-)
+SIMPLE_FIXED_LIT(+)
+
+
+///////////////////////////////////////////////////////////////////////////////
 // Integer operators
 
 template <unsigned I, unsigned E>
