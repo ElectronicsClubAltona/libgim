@@ -30,6 +30,8 @@ namespace util {
     namespace image {
         template <typename T>
         struct buffer {
+            typedef T value_type;
+
             buffer (size_t w, size_t h);
             buffer (size_t w, size_t h, size_t s);
             buffer (size_t w, size_t h, size_t s, std::unique_ptr<T[]> &&data);
