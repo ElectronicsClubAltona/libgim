@@ -81,7 +81,9 @@ template <unsigned I, unsigned E>
 fixed<I,E>
 fixed<I,E>::from_native (uint_t i)
 {
-    return fixed<I,E> {i};
+    fixed<I,E> v;
+    v.m_value = i;
+    return v;
 }
 
 

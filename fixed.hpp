@@ -64,6 +64,8 @@ namespace util {
             fixed<I,E>  operator /(uint_t) const;
 
         private:
+            fixed () = default;
+
             uint_t m_value;
     };
 
