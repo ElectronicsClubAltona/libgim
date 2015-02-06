@@ -82,4 +82,4 @@ namespace util {
     std::ostream& operator<< (std::ostream&, fixed<I,E>);
 }
 
-#endif // __UTIL_FIXED_HPP 
+#endif // __UTIL_FIXED_HPP
