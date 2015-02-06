@@ -27,8 +27,8 @@ using namespace util;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Constructors
-template <unsigned I, unsigned E>
-fixed<I,E>::fixed (uint_t val):
+template <typename T, unsigned I, unsigned E>
+fixed<T,I,E>::fixed (native_t val):
     m_value (val << E)
 {
     static_assert (I > 0, "must use positive integer bits");
@@ -41,56 +41,56 @@ fixed<I,E>::fixed (uint_t val):
 ///////////////////////////////////////////////////////////////////////////////
 // Conversions
 
-template <unsigned I, unsigned E>
+template <typename T, unsigned I, unsigned E>
 double
-fixed<I,E>::to_double (void) const
+fixed<T,I,E>::to_double (void) const
 {
     return static_cast<double> (m_value) / pow (2, E);
 }
 
 
 //-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
+template <typename T, unsigned I, unsigned E>
 float
-fixed<I,E>::to_float (void) const
+fixed<T,I,E>::to_float (void) const
 {
     return static_cast<float> (m_value) / pow (2, E);
 }
 
 
 //-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-typename fixed<I,E>::uint_t
-fixed<I,E>::to_integer (void) const
+template <typename T, unsigned I, unsigned E>
+typename fixed<T,I,E>::native_t
+fixed<T,I,E>::to_integer (void) const
 {
     return m_value >> E;
 }
 
 
 //-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-typename fixed<I,E>::uint_t
-fixed<I,E>::to_native (void) const
+template <typename T, unsigned I, unsigned E>
+typename fixed<T,I,E>::native_t
+fixed<T,I,E>::to_native (void) const
 {
     return m_value;
 }
 
 
 //-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-fixed<I,E>
-fixed<I,E>::from_native (uint_t i)
+template <typename T, unsigned I, unsigned E>
+fixed<T,I,E>
+fixed<T,I,E>::from_native (native_t i)
 {
-    fixed<I,E> v;
+    fixed<T,I,E> v;
     v.m_value = i;
     return v;
 }
 
 
 //-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-typename fixed<I,E>::uint_t
-fixed<I,E>::to_integer (uint_t n)
+template <typename T, unsigned I, unsigned E>
+typename fixed<T,I,E>::native_t
+fixed<T,I,E>::to_integer (native_t n)
 {
     return n >> E;
 }
@@ -98,25 +98,27 @@ fixed<I,E>::to_integer (uint_t n)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Fixed operators
-#define SIMPLE_FIXED_REF(OP)                            \
-template <unsigned I, unsigned E>                       \
-util::fixed<I,E>&                                       \
-util::fixed<I,E>::operator OP (const fixed<I,E> rhs)    \
-{                                                       \
-    m_value OP rhs.m_value;                             \
-    return *this;                                       \
+#define SIMPLE_FIXED_REF(OP)                                \
+template <typename T, unsigned I, unsigned E>               \
+util::fixed<T,I,E>&                                         \
+util::fixed<T,I,E>::operator OP (const fixed<T,I,E> rhs)    \
+{                                                           \
+    m_value OP rhs.m_value;                                 \
+    return *this;                                           \
 }
 
 SIMPLE_FIXED_REF(-=)
 SIMPLE_FIXED_REF(+=)
 
 
-#define SIMPLE_FIXED_LIT(OP)                                \
-template <unsigned I, unsigned E>                           \
-util::fixed<I,E>                                            \
-util::fixed<I,E>::operator OP (const fixed<I,E> rhs) const  \
-{                                                           \
-    return fixed<I,E> {m_value OP rhs.m_value};             \
+#define SIMPLE_FIXED_LIT(OP)                                    \
+template <typename T, unsigned I, unsigned E>                   \
+util::fixed<T,I,E>                                              \
+util::fixed<T,I,E>::operator OP (const fixed<T,I,E> rhs) const  \
+{                                                               \
+    fixed<T,I,E> v;                                             \
+    v.m_value = m_value OP rhs.m_value;                         \
+    return v;                                                   \
 }
 
 SIMPLE_FIXED_LIT(-)
@@ -125,90 +127,44 @@ SIMPLE_FIXED_LIT(+)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Integer operators
-
-template <unsigned I, unsigned E>
-fixed<I,E>&
-fixed<I,E>::operator+= (uint_t val)
-{
-    m_value += val << E;
-    return *this;
+#define SIMPLE_INTEGER_REF(OP)                  \
+template <typename T, unsigned I, unsigned E>   \
+fixed<T,I,E>&                                   \
+fixed<T,I,E>::operator OP (native_t val)        \
+{                                               \
+    m_value OP val << E;                        \
+    return *this;                               \
 }
+
+SIMPLE_INTEGER_REF(+=)
+SIMPLE_INTEGER_REF(-=)
+SIMPLE_INTEGER_REF(*=)
+SIMPLE_INTEGER_REF(/=)
 
 
 //-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-fixed<I,E>&
-fixed<I,E>::operator-= (uint_t val)
-{
-    m_value -= val << E;
-    return *this;
+#define SIMPLE_INTEGER_LIT(OP)                               \
+template <typename T, unsigned I, unsigned E>               \
+fixed<T,I,E>                                                \
+fixed<T,I,E>::operator OP (native_t val) const              \
+{                                                           \
+    return fixed<T,I,E>::from_native (m_value OP val << E); \
 }
 
-
-//-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-fixed<I,E>&
-fixed<I,E>::operator*= (uint_t val)
-{
-    m_value *= val;
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-fixed<I,E>&
-fixed<I,E>::operator/= (uint_t val)
-{
-    m_value /= val;
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-fixed<I,E>
-fixed<I,E>::operator+ (uint_t val) const
-{
-    return fixed<I,E> (m_value + val << E);
-}
-
-
-//-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-fixed<I,E>
-fixed<I,E>::operator- (uint_t val) const
-{
-    return fixed<I,E> (m_value - val << E);
-}
-
-
-//-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-fixed<I,E>
-fixed<I,E>::operator* (uint_t val) const
-{
-    return fixed<I,E> (m_value * val);
-}
-
-
-//-----------------------------------------------------------------------------
-template <unsigned I, unsigned E>
-fixed<I,E>
-fixed<I,E>::operator /(uint_t val) const
-{
-    return fixed<I,E> (m_value / val);
-}
+SIMPLE_INTEGER_LIT(+)
+SIMPLE_INTEGER_LIT(-)
+SIMPLE_INTEGER_LIT(*)
+SIMPLE_INTEGER_LIT(/)
 
 
 ///////////////////////////////////////////////////////////////////////////////
 // logical operators
 
 #define LOGIC_OP(OP)                            \
-template <unsigned I, unsigned E>               \
+template <typename T, unsigned I, unsigned E>   \
 bool                                            \
-util::operator OP (util::fixed<I,E> a,          \
-             util::fixed<I,E> b)                \
+util::operator OP (util::fixed<T,I,E> a,        \
+                   util::fixed<T,I,E> b)        \
 {                                               \
     return a.to_native () OP b.to_native ();    \
 }
@@ -222,9 +178,9 @@ LOGIC_OP(>=)
 
 ///////////////////////////////////////////////////////////////////////////////
 // iostream operators
-template <unsigned I, unsigned E>
+template <typename T, unsigned I, unsigned E>
 std::ostream&
-util::operator<< (std::ostream &os, fixed<I,E> v)
+util::operator<< (std::ostream &os, fixed<T,I,E> v)
 {
     return os << v.to_double ();
 }
@@ -233,16 +189,21 @@ util::operator<< (std::ostream &os, fixed<I,E> v)
 ///////////////////////////////////////////////////////////////////////////////
 // Instantiations
 
-#define INSTANTIATE(I,E)                                                        \
-template class util::fixed<(I),(E)>;                                            \
-template std::ostream& util::operator<< (std::ostream&, fixed<(I),(E)>);        \
-template bool util::operator== (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
-template bool util::operator!= (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
-template bool util::operator<  (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
-template bool util::operator<= (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
-template bool util::operator>  (util::fixed<(I),(E)>, util::fixed<(I),(E)>);    \
-template bool util::operator>= (util::fixed<(I),(E)>, util::fixed<(I),(E)>);
+#define INSTANTIATE(T,I,E)                                                  \
+template class util::fixed<T,I,E>;                                          \
+template std::ostream& util::operator<< (std::ostream&, fixed<T,I,E>);      \
+template bool util::operator== (util::fixed<T,I,E>, util::fixed<T,I,E>);    \
+template bool util::operator!= (util::fixed<T,I,E>, util::fixed<T,I,E>);    \
+template bool util::operator<  (util::fixed<T,I,E>, util::fixed<T,I,E>);    \
+template bool util::operator<= (util::fixed<T,I,E>, util::fixed<T,I,E>);    \
+template bool util::operator>  (util::fixed<T,I,E>, util::fixed<T,I,E>);    \
+template bool util::operator>= (util::fixed<T,I,E>, util::fixed<T,I,E>);
 
-INSTANTIATE(16,16)
-INSTANTIATE(26, 6)
-INSTANTIATE(32,32)
+template class util::fixed<signed,8,8>;
+
+INSTANTIATE(signed,16,16)
+INSTANTIATE(signed,26, 6)
+INSTANTIATE(signed,32,32)
+INSTANTIATE(unsigned,16,16)
+INSTANTIATE(unsigned,26, 6)
+INSTANTIATE(unsigned,32,32)

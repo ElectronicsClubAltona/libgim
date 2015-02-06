@@ -26,61 +26,67 @@
 #include <iostream>
 
 namespace util {
-    template <unsigned I, unsigned E>
+    template <typename T, unsigned I, unsigned E>
     class fixed {
         public:
-            typedef typename bits_type<I+E>::uint uint_t;
+            typedef typename std::conditional<
+                std::is_signed<T>::value,
+                typename bits_type<I+E>::sint,
+                typename bits_type<I+E>::uint
+            >::type native_t;
+
+            typedef native_t integer_t;
 
             fixed (double);
             fixed (float);
-            fixed (uint_t);
+            fixed (native_t);
 
-            double to_double  (void) const;
-            float  to_float   (void) const;
-            uint_t to_integer (void) const;
-            uint_t to_native  (void) const;
+            double    to_double  (void) const;
+            float     to_float   (void) const;
+            integer_t to_integer (void) const;
+            native_t  to_native  (void) const;
 
-            static fixed<I,E> from_native (uint_t);
-            static uint_t to_integer (uint_t);
+            static fixed<T,I,E> from_native (native_t);
+            static integer_t to_integer (native_t);
 
-            fixed<I,E>& operator +=(const fixed<I,E>);
-            fixed<I,E>& operator -=(const fixed<I,E>);
-            fixed<I,E>& operator *=(const fixed<I,E>);
-            fixed<I,E>& operator /=(const fixed<I,E>);
+            fixed<T,I,E>& operator +=(const fixed<T,I,E>);
+            fixed<T,I,E>& operator -=(const fixed<T,I,E>);
+            fixed<T,I,E>& operator *=(const fixed<T,I,E>);
+            fixed<T,I,E>& operator /=(const fixed<T,I,E>);
 
-            fixed<I,E>  operator +(const fixed<I,E>) const;
-            fixed<I,E>  operator -(const fixed<I,E>) const;
-            fixed<I,E>  operator *(const fixed<I,E>) const;
-            fixed<I,E>  operator /(const fixed<I,E>) const;
+            fixed<T,I,E>  operator +(const fixed<T,I,E>) const;
+            fixed<T,I,E>  operator -(const fixed<T,I,E>) const;
+            fixed<T,I,E>  operator *(const fixed<T,I,E>) const;
+            fixed<T,I,E>  operator /(const fixed<T,I,E>) const;
 
-            fixed<I,E>& operator +=(uint_t);
-            fixed<I,E>& operator -=(uint_t);
-            fixed<I,E>& operator *=(uint_t);
-            fixed<I,E>& operator /=(uint_t);
+            fixed<T,I,E>& operator +=(integer_t);
+            fixed<T,I,E>& operator -=(integer_t);
+            fixed<T,I,E>& operator *=(integer_t);
+            fixed<T,I,E>& operator /=(integer_t);
 
-            fixed<I,E>  operator +(uint_t) const;
-            fixed<I,E>  operator -(uint_t) const;
-            fixed<I,E>  operator *(uint_t) const;
-            fixed<I,E>  operator /(uint_t) const;
+            fixed<T,I,E>  operator +(integer_t) const;
+            fixed<T,I,E>  operator -(integer_t) const;
+            fixed<T,I,E>  operator *(integer_t) const;
+            fixed<T,I,E>  operator /(integer_t) const;
 
         private:
             fixed () = default;
 
-            uint_t m_value;
+            native_t m_value;
     };
 
 
-    template <unsigned I, unsigned E> bool operator== (util::fixed<I,E>, util::fixed<I,E>);
-    template <unsigned I, unsigned E> bool operator!= (util::fixed<I,E>, util::fixed<I,E>);
+    template <typename T, unsigned I, unsigned E> bool operator== (util::fixed<T,I,E>, util::fixed<T,I,E>);
+    template <typename T, unsigned I, unsigned E> bool operator!= (util::fixed<T,I,E>, util::fixed<T,I,E>);
 
-    template <unsigned I, unsigned E> bool operator<  (util::fixed<I,E>, util::fixed<I,E>);
-    template <unsigned I, unsigned E> bool operator<= (util::fixed<I,E>, util::fixed<I,E>);
-    template <unsigned I, unsigned E> bool operator>  (util::fixed<I,E>, util::fixed<I,E>);
-    template <unsigned I, unsigned E> bool operator>= (util::fixed<I,E>, util::fixed<I,E>);
+    template <typename T, unsigned I, unsigned E> bool operator<  (util::fixed<T,I,E>, util::fixed<T,I,E>);
+    template <typename T, unsigned I, unsigned E> bool operator<= (util::fixed<T,I,E>, util::fixed<T,I,E>);
+    template <typename T, unsigned I, unsigned E> bool operator>  (util::fixed<T,I,E>, util::fixed<T,I,E>);
+    template <typename T, unsigned I, unsigned E> bool operator>= (util::fixed<T,I,E>, util::fixed<T,I,E>);
 
 
-    template <unsigned I, unsigned E>
-    std::ostream& operator<< (std::ostream&, fixed<I,E>);
+    template <typename T, unsigned I, unsigned E>
+    std::ostream& operator<< (std::ostream&, fixed<T,I,E>);
 }
 
 #endif // __UTIL_FIXED_HPP

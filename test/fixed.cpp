@@ -2,15 +2,15 @@
 
 #include "debug.hpp"
 
-template <unsigned I, unsigned E>
+template <typename T, unsigned I, unsigned E>
 void
 test_simple (void)
 {
-    using fixed_t = util::fixed<I,E>;
-    using uint_t  = typename fixed_t::uint_t;
+    using fixed_t = util::fixed<T,I,E>;
+    using integer_t = typename fixed_t::integer_t;
 
-    const fixed_t lo = uint_t{0};
-    const fixed_t hi = uint_t{1};
+    const fixed_t lo = integer_t{0};
+    const fixed_t hi = integer_t{1};
 
     CHECK_EQ (lo, lo);
     CHECK_EQ (hi, hi);
@@ -31,7 +31,11 @@ test_simple (void)
 int
 main (void)
 {
-    test_simple<16,16> ();
-    test_simple<26, 6> ();
-    test_simple<32,32> ();
+    test_simple<signed,16,16> ();
+    test_simple<signed,26, 6> ();
+    test_simple<signed,32,32> ();
+
+    test_simple<unsigned,16,16> ();
+    test_simple<unsigned,26, 6> ();
+    test_simple<unsigned,32,32> ();
 }
