@@ -35,14 +35,13 @@ namespace util {
             fixed (float);
             fixed (uint_t);
 
-            double to_double   (void) const;
-            float  to_float    (void) const;
-            uint_t to_integral (void) const;
-            uint_t to_native   (void) const;
+            double to_double  (void) const;
+            float  to_float   (void) const;
+            uint_t to_integer (void) const;
+            uint_t to_native  (void) const;
 
             static fixed<I,E> from_native (uint_t);
-
-            static uint_t to_integral (uint_t);
+            static uint_t to_integer (uint_t);
 
             fixed<I,E>& operator +=(const fixed<I,E>);
             fixed<I,E>& operator -=(const fixed<I,E>);

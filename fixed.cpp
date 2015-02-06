@@ -61,7 +61,7 @@ fixed<I,E>::to_float (void) const
 //-----------------------------------------------------------------------------
 template <unsigned I, unsigned E>
 typename fixed<I,E>::uint_t
-fixed<I,E>::to_integral (void) const
+fixed<I,E>::to_integer (void) const
 {
     return m_value >> E;
 }
@@ -88,9 +88,9 @@ fixed<I,E>::from_native (uint_t i)
 //-----------------------------------------------------------------------------
 template <unsigned I, unsigned E>
 typename fixed<I,E>::uint_t
-fixed<I,E>::to_integral (uint_t v)
+fixed<I,E>::to_integer (uint_t n)
 {
-    return v >> E;
+    return n >> E;
 }
 
 
