@@ -30,6 +30,7 @@ TEST_BIN = 		\
 	sha2		\
 	signal		\
 	stringid	\
+	uri		\
 	version
 
 AM_DEFAULT_SOURCE_EXT = .cpp

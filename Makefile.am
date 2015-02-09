@@ -161,6 +161,8 @@ UTIL_FILES   =		\
     types/string.cpp	\
     types/string.hpp	\
     types/traits.hpp	\
+    uri.hpp		\
+    uri.cpp		\
     vector.cpp		\
     vector.hpp		\
     vector.ipp		\
@@ -186,7 +188,7 @@ endif
 ###############################################################################
 ## Local build rules
 CLEANFILES = json.cpp version.cpp ip.cpp
-EXTRA_DIST = json/flat.cpp.rl version.cpp.rl ip.cpp.rl
+EXTRA_DIST = json/flat.cpp.rl version.cpp.rl ip.cpp.rl uri.cpp.rl
 
 RAGELFLAGS      = -F1
 SUFFIXES = .cpp .cpp.rl
