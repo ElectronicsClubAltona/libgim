@@ -21,6 +21,8 @@ AC_DEFUN([NC_DEBUGGING],[
 
         AX_APPEND_LINK_FLAGS([-lasan], [], [-Werror])
         AX_APPEND_LINK_FLAGS([-lubsan], [], [-Werror])
+
+        AX_APPEND_COMPILE_FLAGS([-ftrapv], [], [-Werror])
     ])
 
     ##-------------------------------------------------------------------------
