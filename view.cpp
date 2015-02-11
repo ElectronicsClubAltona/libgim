@@ -91,6 +91,23 @@ util::view::operator[] (size_t idx) const
 
 
 //-----------------------------------------------------------------------------
+bool
+util::view::operator== (const char *restrict rhs) const
+{
+    return strlen (rhs) == size () &&
+           0 == strncmp (rhs, m_begin, size ());
+}
+
+
+//-----------------------------------------------------------------------------
+bool
+util::view::operator== (view v) const
+{
+    return std::equal (m_begin, m_end, v.begin ());
+}
+
+
+//-----------------------------------------------------------------------------
 std::ostream&
 util::operator<< (std::ostream &os, util::view s)
 {
@@ -98,3 +115,10 @@ util::operator<< (std::ostream &os, util::view s)
     return os;
 }
 
+
+//-----------------------------------------------------------------------------
+bool
+util::operator== (const char *str, view v)
+{
+    return v == str;
+}

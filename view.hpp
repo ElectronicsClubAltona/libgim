@@ -38,6 +38,9 @@ namespace util {
         size_t size (void) const;
         const char& operator[] (size_t) const;
 
+        bool operator== (const char *restrict str) const;
+        bool operator== (view) const;
+
     private:
         const char *m_begin;
         const char *m_end;
@@ -45,5 +48,6 @@ namespace util {
 
 
     std::ostream& operator<< (std::ostream&, view);
+    bool operator== (const char*, view);
 }
 #endif
