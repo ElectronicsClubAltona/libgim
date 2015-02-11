@@ -28,7 +28,7 @@
 %%{
     machine uri;
 
-    action trace { std::cerr << *p; }
+    action trace { if (0) std::cerr << *p; }
     action success {__success = true; }
     action failure {__success = false; }
 
