@@ -25,17 +25,24 @@
 #include <iostream>
 
 namespace util {
-    struct view {
+    class view {
+    public:
         view ();
-        view (const char*);
+        view (const char *str);
+        view (const char *first, const char *last);
 
-        const char *begin;
-        const char *end;
+        const char *begin (void) const;
+        const char *end   (void) const;
 
         bool empty () const;
         size_t size (void) const;
         const char& operator[] (size_t) const;
+
+    private:
+        const char *m_begin;
+        const char *m_end;
     };
+
 
     std::ostream& operator<< (std::ostream&, view);
 }

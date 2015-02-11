@@ -27,25 +27,49 @@
 
 //-----------------------------------------------------------------------------
 util::view::view ():
-    begin (nullptr),
-    end   (nullptr)
+    m_begin (nullptr),
+    m_end   (nullptr)
 { ; }
 
 
 //-----------------------------------------------------------------------------
 util::view::view (const char *str):
-    begin (str),
-    end   (str + strlen (str))
+    m_begin (str),
+    m_end   (str + strlen (str))
 { ; }
+
+
+//-----------------------------------------------------------------------------
+util::view::view (const char *_begin,
+                  const char *_end):
+    m_begin (_begin),
+    m_end   (_end)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+const char*
+util::view::begin (void) const
+{
+    return m_begin;
+}
+
+
+//-----------------------------------------------------------------------------
+const char*
+util::view::end (void) const
+{
+    return m_end;
+}
 
 
 //-----------------------------------------------------------------------------
 bool
 util::view::view::empty (void) const
 {
-    return begin == nullptr ||
-           end   == nullptr ||
-           begin == end;
+    return m_begin == nullptr ||
+           m_end   == nullptr ||
+           m_begin == m_end;
 }
 
 
@@ -53,7 +77,7 @@ util::view::view::empty (void) const
 size_t
 util::view::size (void) const
 {
-    return end - begin;
+    return m_end - m_begin;
 }
 
 
@@ -61,8 +85,8 @@ util::view::size (void) const
 const char&
 util::view::operator[] (size_t idx) const
 {
-    CHECK_LT (begin + idx, end);
-    return begin[idx];
+    CHECK_LT (m_begin + idx, m_end);
+    return m_begin[idx];
 }
 
 
@@ -70,7 +94,7 @@ util::view::operator[] (size_t idx) const
 std::ostream&
 util::operator<< (std::ostream &os, util::view s)
 {
-    std::copy (s.begin, s.end, std::ostream_iterator<char> (os));
+    std::copy (s.begin (), s.end (), std::ostream_iterator<char> (os));
     return os;
 }
 

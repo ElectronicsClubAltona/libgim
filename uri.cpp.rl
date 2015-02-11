@@ -32,20 +32,20 @@
     action success {__success = true; }
     action failure {__success = false; }
 
-    action scheme_begin { m_views[SCHEME].begin = p; }
-    action scheme_end   { m_views[SCHEME].end   = p; }
+    action scheme_begin { m_views[SCHEME] = { p, nullptr }; }
+    action scheme_end   { m_views[SCHEME] = { m_views[SCHEME].begin (), p }; }
 
-    action authority_begin { m_views[AUTHORITY].begin = p; }
-    action authority_end   { m_views[AUTHORITY].end   = p; }
+    action authority_begin { m_views[AUTHORITY] = { p, nullptr}; }
+    action authority_end   { m_views[AUTHORITY] = { m_views[AUTHORITY].begin (), p }; }
 
-    action path_begin { m_views[PATH].begin = p; }
-    action path_end   { m_views[PATH].end   = p; }
+    action path_begin { m_views[PATH] = { p, nullptr}; }
+    action path_end   { m_views[PATH] = { m_views[PATH].begin (), p }; }
 
-    action query_begin { m_views[QUERY].begin = p; }
-    action query_end   { m_views[QUERY].end   = p; }
+    action query_begin { m_views[QUERY] = { p, nullptr}; }
+    action query_end   { m_views[QUERY] = { m_views[QUERY].begin (), p }; }
 
-    action fragment_begin { m_views[FRAGMENT].begin = p; }
-    action fragment_end   { m_views[FRAGMENT].end   = p; }
+    action fragment_begin { m_views[FRAGMENT] = { p, nullptr}; }
+    action fragment_end   { m_views[FRAGMENT] = { m_views[FRAGMENT].begin (), p }; }
 
     ## Characters
     unreserved = alpha | digit | "-" | "." | "_" | "~";
@@ -224,11 +224,11 @@ util::uri::percent_decode (view s)
 
     // Early check for late percent-encoding so we can simplify the decode loop
     {
-        auto tail = std::find (s.size () < 3 ? s.begin
-                                             : s.end - 2,
-                               s.end,
+        auto tail = std::find (s.size () < 3 ? s.begin ()
+                                             : s.end () - 2,
+                               s.end (),
                                '%');
-        if (tail != s.end)
+        if (tail != s.end ())
             throw parse_error ("triple overlaps end");
     }
 
@@ -240,11 +240,11 @@ util::uri::percent_decode (view s)
     // Find the percent, copy until that, decode, advance, repeat.
     auto out_cursor = out.begin ();
 
-    for (auto i = s.begin; i < s.end; ++i) {
-        auto cursor = std::find (i, s.end, '%');
+    for (auto i = s.begin (); i < s.end (); ++i) {
+        auto cursor = std::find (i, s.end (), '%');
 
-        if (cursor == s.end) {
-            out_cursor = std::copy (i, s.end, out_cursor);
+        if (cursor == s.end ()) {
+            out_cursor = std::copy (i, s.end (), out_cursor);
             break;
         }
 
