@@ -22,9 +22,7 @@
 #include "debug.hpp"
 
 #include <algorithm>
-#include <cstring>
 #include <iostream>
-#include <iterator>
 
 
 %%{
@@ -34,20 +32,20 @@
     action success {__success = true; }
     action failure {__success = false; }
 
-    action scheme_begin { m_spans[SCHEME].begin = p; }
-    action scheme_end   { m_spans[SCHEME].end   = p; }
+    action scheme_begin { m_views[SCHEME].begin = p; }
+    action scheme_end   { m_views[SCHEME].end   = p; }
 
-    action authority_begin { m_spans[AUTHORITY].begin = p; }
-    action authority_end   { m_spans[AUTHORITY].end   = p; }
+    action authority_begin { m_views[AUTHORITY].begin = p; }
+    action authority_end   { m_views[AUTHORITY].end   = p; }
 
-    action path_begin { m_spans[PATH].begin = p; }
-    action path_end   { m_spans[PATH].end   = p; }
+    action path_begin { m_views[PATH].begin = p; }
+    action path_end   { m_views[PATH].end   = p; }
 
-    action query_begin { m_spans[QUERY].begin = p; }
-    action query_end   { m_spans[QUERY].end   = p; }
+    action query_begin { m_views[QUERY].begin = p; }
+    action query_end   { m_views[QUERY].end   = p; }
 
-    action fragment_begin { m_spans[FRAGMENT].begin = p; }
-    action fragment_end   { m_spans[FRAGMENT].end   = p; }
+    action fragment_begin { m_views[FRAGMENT].begin = p; }
+    action fragment_end   { m_views[FRAGMENT].end   = p; }
 
     ## Characters
     unreserved = alpha | digit | "-" | "." | "_" | "~";
@@ -158,49 +156,6 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// Span
-
-util::uri::span::span ():
-    begin (nullptr),
-    end   (nullptr)
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-util::uri::span::span (const char *str):
-    begin (str),
-    end   (str + strlen (str))
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-bool
-util::uri::span::span::empty (void) const
-{
-    return begin == nullptr ||
-           end   == nullptr ||
-           begin == end;
-}
-
-
-//-----------------------------------------------------------------------------
-size_t
-util::uri::span::size (void) const
-{
-    return end - begin;
-}
-
-
-//-----------------------------------------------------------------------------
-const char&
-util::uri::span::operator[] (size_t idx) const
-{
-    CHECK_LT (begin + idx, end);
-    return begin[idx];
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 // URI
 
 util::uri::uri (const char *str):
@@ -235,11 +190,11 @@ util::uri::uri (std::string &&_value):
 
 
 //-----------------------------------------------------------------------------
-util::uri::span
+util::view
 util::uri::get (util::uri::component c)
 {
     CHECK_NEQ (c, NUM_COMPONENTS);
-    return m_spans[c];
+    return m_views[c];
 }
 
 
@@ -262,7 +217,7 @@ hex_to_uint (char c)
 
 //-----------------------------------------------------------------------------
 std::string
-util::uri::percent_decode (span s)
+util::uri::percent_decode (view s)
 {
     if (s.size () == 0)
         return std::string ();
@@ -303,14 +258,6 @@ util::uri::percent_decode (span s)
     return out;
 }
 
-
-//-----------------------------------------------------------------------------
-std::ostream&
-util::operator<< (std::ostream &os, util::uri::span s)
-{
-    std::copy (s.begin, s.end, std::ostream_iterator<char> (os));
-    return os;
-}
 
 //-----------------------------------------------------------------------------
 std::ostream&

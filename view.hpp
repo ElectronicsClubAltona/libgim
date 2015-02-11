@@ -18,46 +18,25 @@
  */
 
 
-#ifndef __UTIL_URI_HPP
-#define __UTIL_URI_HPP
+#ifndef __UTIL_VIEW_HPP
+#define __UTIL_VIEW_HPP
 
-#include "view.hpp"
-
-#include <string>
-#include <stdexcept>
-
+#include <cstdlib>
+#include <iostream>
 
 namespace util {
-    class uri {
-    public:
-        uri (std::string &&);
-        uri (const char *str);
-        uri (const char *first, const char *last);
+    struct view {
+        view ();
+        view (const char*);
 
-        class parse_error : public std::runtime_error
-        { using runtime_error::runtime_error; };
+        const char *begin;
+        const char *end;
 
-        enum component : unsigned {
-            SCHEME,
-            AUTHORITY,
-            PATH,
-            QUERY,
-            FRAGMENT,
-
-            NUM_COMPONENTS
-        };
-
-        view get (component);
-
-        static std::string percent_decode (view);
-
-    private:
-        view m_views[NUM_COMPONENTS];
-        std::string m_value;
+        bool empty () const;
+        size_t size (void) const;
+        const char& operator[] (size_t) const;
     };
 
-    std::ostream& operator<< (std::ostream&, uri::component);
+    std::ostream& operator<< (std::ostream&, view);
 }
-
-
 #endif

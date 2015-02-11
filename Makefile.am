@@ -168,6 +168,8 @@ UTIL_FILES   =		\
     vector.ipp		\
     version.cpp		\
     version.hpp		\
+    view.cpp		\
+    view.hpp		\
     zlib.cpp		\
     zlib.hpp
 
