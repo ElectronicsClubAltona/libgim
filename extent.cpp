@@ -81,8 +81,16 @@ extent<T>::expanded (util::vector<2,T> size) const
 }
 
 
-
 //-----------------------------------------------------------------------------
+template <typename T>
+extent<T>
+extent<T>::expanded (T t) const
+{
+    return expanded (util::vector<2,T> {t});
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 float
 extent<T>::aspect (void) const

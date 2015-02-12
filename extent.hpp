@@ -41,6 +41,7 @@ namespace util {
         T diameter (void) const;
 
         extent<T> expanded (util::vector<2,T>) const;
+        extent<T> expanded (T) const;
 
         float aspect (void) const;
 
