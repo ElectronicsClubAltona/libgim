@@ -29,7 +29,8 @@ namespace util {
     //-------------------------------------------------------------------------
     template<size_t S, typename T>
     template<size_t D>
-    vector<D,T> vector<S,T>::redim (void) const {
+    vector<D,T> vector<S,T>::redim (void) const
+    {
         vector<D,T> out;
         std::copy_n (std::begin (this->data),
                      min (S, D),
@@ -41,7 +42,8 @@ namespace util {
     //-------------------------------------------------------------------------
     template<size_t S, typename T>
     template<size_t D>
-    vector<D,T> vector<S,T>::redim (const vector<D,T> &fill) const {
+    vector<D,T> vector<S,T>::redim (const vector<D,T> &fill) const
+    {
         vector<D,T> out;
 
         static constexpr auto L1 = min (S, D);
@@ -54,6 +56,22 @@ namespace util {
         std::copy_n (fill.data + L1,
                      L2,
                      out.data + L1);
+        return out;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T>
+    template <size_t D>
+    vector<D,T> vector<S,T>::redim (T fill) const
+    {
+        vector<D,T> out;
+
+        auto cursor = std::copy_n (std::begin (this->data),
+                                   min (S, D),
+                                   std::begin (out.data));
+        std::fill (cursor, std::end (out.data), fill);
+
         return out;
     }
 }

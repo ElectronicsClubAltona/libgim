@@ -78,6 +78,7 @@ namespace util {
         // size operations
         template <size_t D> vector<D,T> redim (void) const;
         template <size_t D> vector<D,T> redim (const util::vector<D,T> &fill) const;
+        template <size_t D> vector<D,T> redim (T fill) const;
 
         // constants
         static const vector<S,T> ZERO;
