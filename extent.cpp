@@ -27,7 +27,7 @@
 using namespace util;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 extent<T>::extent (const T  _width, const T  _height):
         w (_width),
@@ -35,6 +35,7 @@ extent<T>::extent (const T  _width, const T  _height):
 { ; }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 extent<T>::extent (const extent<T> &rhs):
         w (rhs.w),
@@ -42,6 +43,7 @@ extent<T>::extent (const extent<T> &rhs):
 { ; }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 extent<T>&
 extent<T>::operator= (const extent<T> &rhs) {
@@ -52,7 +54,7 @@ extent<T>::operator= (const extent<T> &rhs) {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 T
 extent<T>::diameter (void) const {
@@ -60,13 +62,14 @@ extent<T>::diameter (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 T
 extent<T>::area (void) const
     { return w * h; }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 extent<T>
 extent<T>::expanded (util::vector<2,T> size) const
@@ -88,14 +91,14 @@ extent<T>::aspect (void) const
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
 extent<T>::empty (void) const
     { return almost_equal (area(), 0); }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
 extent<T>::operator ==(const extent& rhs) const {
@@ -104,13 +107,14 @@ extent<T>::operator ==(const extent& rhs) const {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 void
 extent<T>::sanity (void) const
     { CHECK (w >= 0 && h >= 0); }
 
 
+//-----------------------------------------------------------------------------
 namespace util {
     template <>
     void
@@ -123,7 +127,7 @@ namespace util {
         { return; }
 }
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 std::ostream&
 util::operator<< (std::ostream &os, util::extent<T> e) {
@@ -135,6 +139,7 @@ util::operator<< (std::ostream &os, util::extent<T> e) {
 template std::ostream& util::operator<< (std::ostream&, util::extent<uint16_t>);
 template std::ostream& util::operator<< (std::ostream&, util::extent<uint32_t>);
 template std::ostream& util::operator<< (std::ostream&, util::extent<uint64_t>);
+
 
 //-----------------------------------------------------------------------------
 namespace util {
