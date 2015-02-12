@@ -147,6 +147,8 @@ util::operator<< (std::ostream &os, util::extent<T> e) {
 template std::ostream& util::operator<< (std::ostream&, util::extent<uint16_t>);
 template std::ostream& util::operator<< (std::ostream&, util::extent<uint32_t>);
 template std::ostream& util::operator<< (std::ostream&, util::extent<uint64_t>);
+template std::ostream& util::operator<< (std::ostream&, util::extent<float>);
+template std::ostream& util::operator<< (std::ostream&, util::extent<double>);
 
 
 //-----------------------------------------------------------------------------
