@@ -43,7 +43,8 @@ util::extent<T>::extent (const util::extent<T> &rhs):
 //-----------------------------------------------------------------------------
 template <typename T>
 util::extent<T>&
-util::extent<T>::operator= (const util::extent<T> &rhs) {
+util::extent<T>::operator= (const util::extent<T> &rhs)
+{
     w = rhs.w;
     h = rhs.h;
 
@@ -54,7 +55,8 @@ util::extent<T>::operator= (const util::extent<T> &rhs) {
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 T
-util::extent<T>::diameter (void) const {
+util::extent<T>::diameter (void) const
+{
     return static_cast<T> (sqrt (w * w + h * h));
 }
 
@@ -63,7 +65,9 @@ util::extent<T>::diameter (void) const {
 template <typename T>
 T
 util::extent<T>::area (void) const
-    { return w * h; }
+{
+    return w * h;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -100,13 +104,16 @@ util::extent<T>::aspect (void) const
 template <typename T>
 bool
 util::extent<T>::empty (void) const
-    { return almost_equal (area(), 0); }
+{
+    return almost_equal (area(), 0);
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
-util::extent<T>::operator ==(const extent& rhs) const {
+util::extent<T>::operator ==(const extent& rhs) const
+{
     return almost_equal (w, rhs.w) &&
            almost_equal (h, rhs.h);
 }
@@ -135,7 +142,8 @@ namespace util {
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 std::ostream&
-util::operator<< (std::ostream &os, util::extent<T> e) {
+util::operator<< (std::ostream &os, util::extent<T> e)
+{
     os << "[" << e.w << ", " << e.h << "]";
     return os;
 }
