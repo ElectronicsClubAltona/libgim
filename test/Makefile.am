@@ -7,6 +7,7 @@ TEST_BIN = 		\
 	bitwise		\
 	checksum	\
 	colour		\
+	extent		\
 	fixed		\
 	float		\
 	hton		\
