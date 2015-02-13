@@ -120,24 +120,22 @@ util::extent<T>::operator ==(const extent& rhs) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-void
-util::extent<T>::sanity (void) const
-    { CHECK (w >= 0 && h >= 0); }
-
-
-//-----------------------------------------------------------------------------
-namespace util {
-    template <>
-    void
-    extent<unsigned int>::sanity (void) const
-        { return; }
-
-    template <>
-    void
-    extent<unsigned long>::sanity (void) const
-        { return; }
+namespace debug {
+    template <typename T>
+    struct validator<util::extent,T> {
+        static bool is_valid (const util::extent<T> &e)
+        {
+            return e.w >= 0 && e.h >= 0;
+        }
+    };
 }
+
+template bool debug::valid (const util::extent<float>&);
+template bool debug::valid (const util::extent<double>&);
+template bool debug::valid (const util::extent<uint16_t>&);
+template bool debug::valid (const util::extent<uint32_t>&);
+template bool debug::valid (const util::extent<uint64_t>&);
+
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>

@@ -53,8 +53,6 @@ namespace util {
 
         template <typename U>
         extent<U> cast (void) const;
-
-        void sanity (void) const;
     };
 
     typedef extent<int> extent2i;
