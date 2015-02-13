@@ -24,12 +24,9 @@
 
 #include <cmath>
 
-using namespace util;
-
-
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-extent<T>::extent (const T  _width, const T  _height):
+util::extent<T>::extent (const T  _width, const T  _height):
         w (_width),
         h (_height)
 { ; }
@@ -37,7 +34,7 @@ extent<T>::extent (const T  _width, const T  _height):
 
 //-----------------------------------------------------------------------------
 template <typename T>
-extent<T>::extent (const extent<T> &rhs):
+util::extent<T>::extent (const util::extent<T> &rhs):
         w (rhs.w),
         h (rhs.h)
 { ; }
@@ -45,8 +42,8 @@ extent<T>::extent (const extent<T> &rhs):
 
 //-----------------------------------------------------------------------------
 template <typename T>
-extent<T>&
-extent<T>::operator= (const extent<T> &rhs) {
+util::extent<T>&
+util::extent<T>::operator= (const util::extent<T> &rhs) {
     w = rhs.w;
     h = rhs.h;
 
@@ -57,7 +54,7 @@ extent<T>::operator= (const extent<T> &rhs) {
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 T
-extent<T>::diameter (void) const {
+util::extent<T>::diameter (void) const {
     return static_cast<T> (sqrt (w * w + h * h));
 }
 
@@ -65,14 +62,14 @@ extent<T>::diameter (void) const {
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-extent<T>::area (void) const
+util::extent<T>::area (void) const
     { return w * h; }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-extent<T>
-extent<T>::expanded (util::vector<2,T> size) const
+util::extent<T>
+util::extent<T>::expanded (util::vector<2,T> size) const
 {
     return {
         w + size.x,
@@ -83,8 +80,8 @@ extent<T>::expanded (util::vector<2,T> size) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
-extent<T>
-extent<T>::expanded (T t) const
+util::extent<T>
+util::extent<T>::expanded (T t) const
 {
     return expanded (util::vector<2,T> {t});
 }
@@ -93,7 +90,7 @@ extent<T>::expanded (T t) const
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 float
-extent<T>::aspect (void) const
+util::extent<T>::aspect (void) const
 {
     return static_cast<float> (w) / static_cast<float> (h);
 }
@@ -102,14 +99,14 @@ extent<T>::aspect (void) const
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
-extent<T>::empty (void) const
+util::extent<T>::empty (void) const
     { return almost_equal (area(), 0); }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
-extent<T>::operator ==(const extent& rhs) const {
+util::extent<T>::operator ==(const extent& rhs) const {
     return almost_equal (w, rhs.w) &&
            almost_equal (h, rhs.h);
 }
@@ -118,7 +115,7 @@ extent<T>::operator ==(const extent& rhs) const {
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 void
-extent<T>::sanity (void) const
+util::extent<T>::sanity (void) const
     { CHECK (w >= 0 && h >= 0); }
 
 
