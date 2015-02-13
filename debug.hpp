@@ -283,6 +283,31 @@ void disable_fpe (void);
 ///////////////////////////////////////////////////////////////////////////////
 namespace debug {
     void init (void);
+
+
+    template <typename T>
+    bool valid (const T&);
+
+
+    template <template<typename> class T, typename ...Args>
+    struct validator {
+        static bool is_valid (const T<Args...>&);
+    };
+
+
+    template <template<typename> class T, typename ...Args>
+    bool valid (const T<Args...> &v)
+    { return validator<T,Args...>::is_valid (v); }
+
+
+    template <typename T>
+    void sanity (const T &t)
+    { CHECK (valid (t)); }
+
+
+    template <template<typename> class T, typename ...Args>
+    void sanity (const T<Args...> &t)
+    { CHECK (valid (t)); }
 }
 
 
