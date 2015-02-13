@@ -1,6 +1,6 @@
 #!/bin/sh
 
-tests=($(find . -type f -executable | grep -v test))
+tests=($(find "@abs_top_builddir@/test/" -type f -executable | grep -v ".test$"))
 
 echo 1..$((${#tests[@]}))
 

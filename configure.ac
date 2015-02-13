@@ -108,5 +108,6 @@ AC_CONFIG_FILES([
     Makefile
     test/Makefile
 ])
-AC_CONFIG_FILES([test/json.test], [chmod a+x test/json.test])
+AC_CONFIG_FILES([test/json.test],   [chmod a+x test/json.test])
+AC_CONFIG_FILES([test/static.test], [chmod a+x test/static.test])
 AC_OUTPUT

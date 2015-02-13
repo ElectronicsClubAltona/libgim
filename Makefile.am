@@ -5,8 +5,6 @@ ACLOCAL_AMFLAGS = -I m4
 
 AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(ZLIB_CFLAGS)
 
-SUBDIRS = test
-
 ###############################################################################
 ## Source definitions
 
@@ -209,7 +207,6 @@ libutil_a_CXXFLAGS = $(AM_CXXFLAGS)
 AM_DEFAULT_SOURCE_EXT = .cpp
 
 AM_LDFLAGS  = $(BOOST_LDFLAGS)
-LDADD = $(top_builddir)/libutil.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
 
 bin_PROGRAMS = 				\
     tools/hash				\
@@ -217,4 +214,54 @@ bin_PROGRAMS = 				\
     tools/json-validate			\
     tools/json-schema
 
-tools_hash_LDADD = $(top_builddir)/libutil.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
+LDADD = $(top_builddir)/libutil.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
+
+
+##-----------------------------------------------------------------------------
+## Tests
+
+AM_LDFLAGS  += $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB)
+AM_CXXFLAGS += -I$(top_srcdir)
+
+TEST_BIN = 			\
+    test/backtrace 		\
+    test/bezier			\
+    test/bitwise		\
+    test/checksum		\
+    test/colour			\
+    test/extent			\
+    test/fixed			\
+    test/float			\
+    test/hton			\
+    test/ip 			\
+    test/json_types		\
+    test/maths			\
+    test/maths_matrix 		\
+    test/matrix			\
+    test/md2			\
+    test/md4			\
+    test/md5			\
+    test/options		\
+    test/point			\
+    test/polynomial		\
+    test/pool			\
+    test/rand			\
+    test/range 			\
+    test/region			\
+    test/ripemd			\
+    test/sha1			\
+    test/sha2			\
+    test/signal			\
+    test/stringid		\
+    test/uri			\
+    test/version
+
+
+if PLATFORM_WIN32
+test_hton_LDFLAGS = -lws2_32
+endif
+
+TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
+TESTS = $(top_builddir)/test/static.test $(top_builddir)/test/json.test
+check_PROGRAMS = $(TEST_BIN)
+EXTRA_DIST += static.test json.test json
