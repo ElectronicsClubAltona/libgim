@@ -26,6 +26,7 @@
 #include "debug.hpp"
 #include "io.hpp"
 #include "maths.hpp"
+#include "types/casts.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -233,6 +234,35 @@ json::tree::node::as_boolean (void) const
 const json::tree::null&
 json::tree::node::as_null (void) const
         { throw json::type_error ("node is not a null"); }
+
+
+///////////////////////////////////////////////////////////////////////////////
+float
+json::tree::node::as_float (void) const
+{
+    return static_cast<float> (as_number ().native ());
+}
+
+
+//-----------------------------------------------------------------------------
+double
+json::tree::node::as_double (void) const
+{
+    return as_number ().native ();
+}
+
+
+//-----------------------------------------------------------------------------
+size_t
+json::tree::node::as_uint (void) const
+{
+    auto val = as_number ().native ();
+    if (!is_integer (val))
+        throw json::type_error ("cast fractional value to uint");
+
+    // TODO: use trunc_cast
+    return static_cast<size_t> (val);
+}
 
 
 //-----------------------------------------------------------------------------

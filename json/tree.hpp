@@ -60,6 +60,10 @@ namespace json { namespace tree {
             virtual const boolean& as_boolean (void) const;
             virtual const null&    as_null    (void) const;
 
+            virtual float  as_float  (void) const;
+            virtual double as_double (void) const;
+            virtual size_t as_uint   (void) const;
+
             virtual bool is_object  (void) const { return false; }
             virtual bool is_array   (void) const { return false; }
             virtual bool is_string  (void) const { return false; }
