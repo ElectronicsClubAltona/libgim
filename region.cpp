@@ -307,15 +307,16 @@ namespace util {
 }
 
 
-//-----------------------------------------------------------------------------
+///----------------------------------------------------------------------------
+/// The largest specifiable finite region. Specifically does not allow infinities.
 template <typename T>
 const util::region<T>
-util::region<T>::MAX (std::numeric_limits<T>::lowest (),
-                std::numeric_limits<T>::lowest (),
-                std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity () :
-                                                       std::numeric_limits<T>::max (),
-                std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity () :
-                                                       std::numeric_limits<T>::max ());
+util::region<T>::MAX (
+    std::numeric_limits<T>::lowest (),
+    std::numeric_limits<T>::lowest (),
+    std::numeric_limits<T>::max (),
+    std::numeric_limits<T>::max ()
+);
 
 
 template  <typename T>
