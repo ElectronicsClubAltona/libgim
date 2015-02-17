@@ -326,12 +326,18 @@ namespace util {
 
 
 ///----------------------------------------------------------------------------
-/// The largest specifiable finite region. Specifically does not allow infinities.
+/// The largest specifiable finite region.
+///
+/// Starts at half the minimum value to allow the width to cover some positive
+/// range rather than just cancelling out the lowest value for signed types.
+///
+/// Specifically does not allow infinities. Use/define INFINITE when required.
+
 template <typename T>
 const util::region<T>
 util::region<T>::MAX (
-    std::numeric_limits<T>::lowest (),
-    std::numeric_limits<T>::lowest (),
+    std::numeric_limits<T>::lowest () / 2,
+    std::numeric_limits<T>::lowest () / 2,
     std::numeric_limits<T>::max (),
     std::numeric_limits<T>::max ()
 );
