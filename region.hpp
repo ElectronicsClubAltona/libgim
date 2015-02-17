@@ -31,8 +31,8 @@ namespace util {
      */
     template <typename T>
     struct region {
-        typedef T position_type;
-        typedef T size_type;
+        using position_type = T;
+        using size_type = typename try_unsigned<T>::type;
 
         static constexpr size_t dimension = 2u;
         static constexpr size_t elements = dimension * 2;

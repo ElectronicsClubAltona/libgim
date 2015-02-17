@@ -21,13 +21,13 @@ main (int, char **) {
     CHECK_EQ (region<double>::UNIT.area (), 1.0);
     CHECK_EQ (region< float>::UNIT.area (), 1.0f);
 
-    CHECK (region<int> (0, 0, 2, 2).includes (point<2,int>(1, 1)));
-    CHECK (region<int> (0, 0, 2, 2).includes (point<2,int>(0, 0)));
-    CHECK (region<int> (0, 0, 2, 2).includes (point<2,int>(2, 2)));
+    CHECK (region<unsigned> (0, 0, 2, 2).includes (point<2,unsigned>(1, 1)));
+    CHECK (region<unsigned> (0, 0, 2, 2).includes (point<2,unsigned>(0, 0)));
+    CHECK (region<unsigned> (0, 0, 2, 2).includes (point<2,unsigned>(2, 2)));
 
-    CHECK ( region<int> (0, 0, 2, 2).contains (point<2,int>(1, 1)));
-    CHECK (!region<int> (0, 0, 2, 2).contains (point<2,int>(0, 0)));
-    CHECK (!region<int> (0, 0, 2, 2).contains (point<2,int>(2, 2)));
+    CHECK ( region<unsigned> (0, 0, 2, 2).contains (point<2,unsigned>(1, 1)));
+    CHECK (!region<unsigned> (0, 0, 2, 2).contains (point<2,unsigned>(0, 0)));
+    CHECK (!region<unsigned> (0, 0, 2, 2).contains (point<2,unsigned>(2, 2)));
 
     //CHECK (region<intmax_t> (0, 0, 10, 10).includes (point2d (0.4, 0.01)));
     //CHECK (region<intmax_t> (0, 0, 10, 10).contains (point2d (0.4, 0.01)));

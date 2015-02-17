@@ -335,8 +335,6 @@ util::operator<< (std::ostream &os, const util::region<T> &rhs) {
 
 //-----------------------------------------------------------------------------
 namespace util {
-    template struct region<int32_t>;
-    template struct region<int64_t>;
     template struct region<uint32_t>;
     template struct region<uint64_t>;
     template struct region<float>;
