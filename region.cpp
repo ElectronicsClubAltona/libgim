@@ -40,6 +40,19 @@ util::region<T>::region (point<2,T> _point,
 
 //-----------------------------------------------------------------------------
 template <typename T>
+util::region<T>::region (point<2,T> _a,
+                         point<2,T> _b):
+    x (_a.x),
+    y (_a.y),
+    w (_b.x - _a.x),
+    h (_b.y - _a.y)
+{
+    CHECK_GE (_b.x, _a.x);
+    CHECK_GE (_b.y, _a.y);
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
 util::region<T>::region (position_type _x,
                          position_type _y,
                          size_type _w,

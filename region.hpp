@@ -43,6 +43,7 @@ namespace util {
 
         region () = default;
         region (util::point<2,T>, util::extent<size_type>);
+        region (util::point<2,T>, util::point<2,T>);
         region (T _x, T _y, size_type _w, size_type _h);
 
         size_type area     (void) const;
