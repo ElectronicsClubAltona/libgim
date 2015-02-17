@@ -126,6 +126,7 @@ namespace util {
 
             typedef T value_type;
             static constexpr size_t dimension = S;
+            static constexpr size_t elements = S;
 
             using coord_data<S,T>::coord_data;
             coord () = default;

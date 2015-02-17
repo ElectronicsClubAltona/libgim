@@ -35,7 +35,8 @@ namespace util {
         typedef T size_type;
 
         static constexpr size_t dimension = 2u;
-        typedef T value_type;
+        static constexpr size_t elements = dimension * 2;
+        using value_type = T;
 
         position_type x, y;
         size_type w, h;
