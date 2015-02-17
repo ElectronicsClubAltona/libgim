@@ -56,6 +56,7 @@ namespace detail {
         { return v; }
 }
 
+
 /// Safely cast a numeric type to its (un)signed counterpart, aborting if the
 /// dynamically checked result is not representable. May be optimised out if
 /// NDEBUG is defined.
@@ -65,60 +66,29 @@ sign_cast (const V v)
     { return detail::_sign_cast<T,V>(v); }
 
 
-//-----------------------------------------------------------------------------
-namespace detail {
-    // Same sign, no possibility of truncation with larger target type
-    template <typename T, typename V>
-    T
-    _trunc_cast (const typename std::enable_if<sizeof (T) >= sizeof (V) &&
-                                               std::is_signed<T>::value == std::is_signed<V>::value, V>::type v)
-        { return v; }
+///----------------------------------------------------------------------------
+/// assert if the value cannot be cast loslessly from U to T, else return the
+/// converted value.Note: this is only a debug-time check and is compiled out
+/// in optimised builds.
 
+template <typename T, typename U>
+T
+trunc_cast (U u)
+{
+    auto t = static_cast<T> (u);
+    if (u == u)
+        CHECK_EQ (t, u);
+    else
+        CHECK_NEQ (t, t);
 
-    template <typename T, typename V>
-    T
-    _trunc_cast (const typename std::enable_if<sizeof (T) < sizeof (V) &&
-                                               std::is_signed<T>::value == std::is_signed<V>::value &&
-                                               std::is_integral<T>::value, V>::type v) {
-        CHECK_LE (v, std::numeric_limits<T>::max    ());
-        CHECK_GE (v, std::numeric_limits<T>::lowest ());
-
-        return static_cast<T> (v);
-    }
-
-
-    template <typename T, typename V>
-    T
-    _trunc_cast (const typename std::enable_if<sizeof (T) < sizeof (V) &&
-                                               std::is_signed<T>::value == std::is_signed<V>::value &&
-                                               std::is_floating_point<T>::value, V>::type v) {
-        CHECK_LE (v, std::numeric_limits<T>::max    ());
-        CHECK_GE (v, std::numeric_limits<T>::lowest ());
-        CHECK_EQ (remainder (v, 1), 0.0);
-
-        return static_cast<T> (v);
-    }
+    return t;
 }
 
 
-template <typename T, typename V>
-T
-trunc_cast (V v)
-    { return detail::_trunc_cast<T, V> (v); }
-
-
-//-----------------------------------------------------------------------------
-template <typename T, typename V>
-T
-size_cast (const V v) {
-    CHECK_LE (std::numeric_limits<T>::lowest (), v);
-    CHECK_GE (std::numeric_limits<T>::max    (), v);
-    
-    return static_cast<T> (v);
-}
-
-
-//-----------------------------------------------------------------------------
+///----------------------------------------------------------------------------
+/// assert if the value is not a pointer to a subclass of T, else return the
+/// converted value. Note: this is only a debug-time check and is compiled out
+/// in optimised builds.
 template <typename T, typename V>
 T*
 known_cast (V *v) {
@@ -127,6 +97,7 @@ known_cast (V *v) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T, typename V>
 T&
 known_cast (V &v) {
