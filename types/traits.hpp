@@ -46,7 +46,8 @@ template <typename T> struct dereferenced_type<std::weak_ptr<T>>   { typedef T t
 template <typename T> struct dereferenced_type<std::auto_ptr<T>>   { typedef T type; };
 
 
-//-----------------------------------------------------------------------------
+///----------------------------------------------------------------------------
+/// find the unsigned version of a type if one exists
 template <typename T>
 struct try_unsigned
 {
@@ -58,7 +59,8 @@ template <> struct try_unsigned<double> { typedef double type; };
 template <> struct try_unsigned<float > { typedef float  type; };
 
 
-//-----------------------------------------------------------------------------
+///----------------------------------------------------------------------------
+/// checks if a type can be converted in all cases without modification
 template <typename T, typename U> struct is_lossless_cast : std::enable_if<
     std::is_integral<T>::value &&
     std::is_integral<U>::value &&
