@@ -47,6 +47,8 @@ namespace util {
 
         size_type area     (void) const;
         size_type diameter (void) const;
+        util::extent<size_type>  size (void) const;
+
         void scale (T factor);
 
         bool empty (void) const;

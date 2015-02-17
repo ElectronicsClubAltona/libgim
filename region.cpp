@@ -71,6 +71,15 @@ util::region<T>::diameter (void) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
+util::extent<typename util::region<T>::size_type>
+util::region<T>::size (void) const
+{
+    return { w, h };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 void
 util::region<T>::scale (T factor)
 {
