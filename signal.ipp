@@ -14,102 +14,144 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2013 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_SIGNAL_HPP
 #error
 #endif
 
+#include "debug.hpp"
+
+#include <algorithm>
+
 namespace util {
-    template <typename Ret, typename ...Args>
-    signal<Ret, Args...>::scoped_cookie::scoped_cookie (cookie _cookie,
-                   signal<Ret, Args...> &_parent):
-        m_cookie (_cookie),
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename F>
+    struct signal<F>::cookie : public nocopy {
+        cookie (typename group::iterator, signal<F> &parent);
+        cookie (cookie &&rhs);
+        ~cookie ();
+
+        void reset (callback &&cb);
+        void reset (void);
+
+        typename group::iterator m_position;
+        signal<F> &m_parent;
+    };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename F>
+    signal<F>::cookie::cookie (typename group::iterator _position,
+                               signal<F> &_parent):
+        m_position (_position),
         m_parent (_parent)
     { ; }
 
 
-    template <typename Ret, typename ...Args>
-    signal<Ret, Args...>::scoped_cookie::scoped_cookie (scoped_cookie &&rhs):
-        m_cookie (rhs.m_cookie),
+    //-------------------------------------------------------------------------
+    template <typename F>
+    signal<F>::cookie::cookie (cookie &&rhs):
+        m_position (rhs.m_position),
         m_parent (rhs.m_parent)
     {
-        rhs.m_cookie = rhs.m_parent.m_children.end ();
+        rhs.m_position = rhs.m_parent.m_children.end ();
     }
 
 
-    template <typename Ret, typename ...Args>
-    signal<Ret, Args...>::scoped_cookie::~scoped_cookie () {
-        if (m_parent.m_children.end () != m_cookie)
-            m_parent.disconnect (m_cookie);
+    //-------------------------------------------------------------------------
+    template <typename F>
+    signal<F>::cookie::~cookie ()
+    {
+        if (m_parent.m_children.end () != m_position)
+            m_parent.disconnect (*this);
     }
 
 
-    template <typename Ret, typename ...Args>
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename F>
     void
-    signal<Ret, Args...>::scoped_cookie::renew (callback_object &&cb)
-        { *m_cookie = std::move (cb); }
+    signal<F>::cookie::reset (callback &&cb)
+    {
+        *m_position = std::move (cb);
+    }
 
 
-    template <typename Ret, typename ...Args>
+    //-------------------------------------------------------------------------
+    template <typename F>
     void
-    signal<Ret, Args...>::scoped_cookie::release (void)
-        { m_cookie = m_parent.m_children.end (); }
+    signal<F>::cookie::reset (void)
+    {
+        m_position = m_parent.m_children.end ();
+    }
 
 
-    template <typename Ret, typename ...Args>
-    signal<Ret, Args...>::signal ()
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename F>
+    signal<F>::signal ()
     { ; }
 
 
-    template <typename Ret, typename ...Args>
-    typename signal<Ret, Args...>::cookie
-    signal<Ret, Args...>::connect (const callback_object &_cb)
-        { return m_children.insert (m_children.end (), _cb); }
+    //-------------------------------------------------------------------------
+    template <typename F>
+    signal<F>::~signal ()
+    {
+        CHECK (empty ());
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename F>
+    typename signal<F>::cookie
+    signal<F>::connect (const callback &_cb)
+    {
+        return cookie (m_children.insert (m_children.end (), _cb), *this);
+    }
 
 
-    template <typename Ret, typename ...Args>
-    typename signal<Ret, Args...>::scoped_cookie
-    signal<Ret, Args...>::scoped_connect (const callback_object &_cb)
-        { return scoped_cookie (connect (_cb), *this); }
-
-
-    /// Add a callback to the list.
-    //const cookie
-    //connect (const callback_function &_cb)
-    //    { return m_children.insert (m_children.end (), _cb); }
-
-
-    template <typename Ret, typename ...Args>
+    //-------------------------------------------------------------------------
+    template <typename F>
     void
-    signal<Ret, Args...>::disconnect (const cookie _cb)
-        { m_children.erase (_cb); }
+    signal<F>::disconnect (const cookie &c)
+    {
+        m_children.erase (c.m_position);
+    }
 
 
+    //-------------------------------------------------------------------------
     /// Disconnect all callbacks
-    template <typename Ret, typename ...Args>
+    template <typename F>
     void
-    signal<Ret, Args...>::clear (void) 
-        { m_children.clear (); }
+    signal<F>::clear (void) 
+    {
+        m_children.clear ();
+    }
 
 
+    ///////////////////////////////////////////////////////////////////////////
     /// Returns the number of callbacks connected.
-    template <typename Ret, typename ...Args>
+    template <typename F>
     unsigned int
-    signal<Ret, Args...>::size (void) const
-        { return m_children.size (); }
+    signal<F>::size (void) const
+    {
+        return m_children.size ();
+    }
 
 
-    template <typename Ret, typename ...Args>
+    //-------------------------------------------------------------------------
+    template <typename F>
     bool
-    signal<Ret, Args...>::empty (void) const
-        { return m_children.empty (); }
+    signal<F>::empty (void) const
+    {
+        return m_children.empty ();
+    }
 
 
-    template <typename Ret, typename ...Args>
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename F>
+    template <typename ...Args>
     void
-    signal<Ret, Args...>::operator () (Args... tail) {
+    signal<F>::operator () (Args&&... tail) {
         if (m_children.empty ())
             return;
 
@@ -117,11 +159,12 @@ namespace util {
         bool looping;
 
         do {
-            // Increment before we execute so that the caller is able to deregister during execution.
+            // Increment before we execute so that the caller is able to
+            // deregister during execution.
             auto current = i++;
             looping = m_children.cend () != i;
 
-            (*current)(tail...);
+            (*current)(std::forward<Args> (tail)...);
         } while (looping);
     }
 }

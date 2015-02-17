@@ -14,52 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011-2013 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_SIGNAL_HPP
 #define __UTIL_SIGNAL_HPP
 
-#include "debug.hpp"
 #include "nocopy.hpp"
 
-#include <algorithm>
-#include <list>
 #include <functional>
+#include <list>
+#include <type_traits>
 
 namespace util {
-    template <typename Ret, typename ...Args>
+    template <typename F>
     class signal {
         public:
-            //typedef Ret (*callback_function)(Args...);
-            typedef std::function<Ret(Args...)> callback_object;
+            using R = std::result_of<F>;
+            using callback = std::function<F>;
 
-        protected:
-            typedef std::list<callback_object> group;
-            group m_children;
-
-        public:
-            typedef typename group::iterator cookie;
-            struct scoped_cookie : public nocopy {
-                cookie                m_cookie;
-                signal<Ret, Args...>& m_parent;
-
-                scoped_cookie (cookie _cookie, signal<Ret, Args...> &_parent);
-                scoped_cookie (scoped_cookie &&rhs);
-                ~scoped_cookie ();
-
-                void renew (callback_object &&cb);
-                void release (void);
-            };
+            struct cookie;
 
         public:
             signal ();
+            ~signal ();
 
             /// Add a callback to list.
-            cookie connect (const callback_object &_cb);
-            scoped_cookie scoped_connect (const callback_object &_cb);
+            cookie connect (const callback&);
 
-            void disconnect (const cookie _cb);
+            void disconnect (const cookie&);
+
             /// Disconnect all callbacks
             void clear (void);
 
@@ -67,8 +51,14 @@ namespace util {
             unsigned int size (void) const;
             bool empty (void) const;
 
-            /// Execute all callbacks, ignoring the return parameters. Does not combine results.
-            void operator () (Args... tail);
+            /// Execute all callbacks, ignoring the return parameters. Does
+            /// not combine results.
+            template <typename ...Args>
+            void operator () (Args&&... tail);
+
+        private:
+            typedef std::list<callback> group;
+            group m_children;
     };
 }
 

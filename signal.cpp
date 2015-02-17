@@ -21,4 +21,4 @@
 #include "signal.hpp"
 
 // Instance something probably useful here so that we generate early compile/link errors.
-template class util::signal <void>;
+template class util::signal <void(void)>;
