@@ -93,7 +93,7 @@ util::region<T>::scale (T factor)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-bool 
+bool
 util::region<T>::empty (void) const
 {
     return almost_zero (area ());
@@ -224,7 +224,6 @@ util::region<T>::intersection (const util::region<T> &rhs) const
     size_type nw = sign_cast<size_type> (newx2 - newx1);
     size_type nh = sign_cast<size_type> (newy2 - newy1);
     return util::region<T> (newx1, newy1, nw, nh);
-    
 }
 
 
