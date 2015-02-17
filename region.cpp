@@ -112,6 +112,15 @@ util::region<T>::base (void) const
 //-----------------------------------------------------------------------------
 template <typename T>
 util::point<2,T>
+util::region<T>::far (void) const
+{
+    return { x + w, y + h };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+util::point<2,T>
 util::region<T>::centre (void) const
 {
     T cx = x + w / T{2},
