@@ -46,11 +46,16 @@ template <typename T> struct dereferenced_type<std::weak_ptr<T>>   { typedef T t
 template <typename T> struct dereferenced_type<std::auto_ptr<T>>   { typedef T type; };
 
 
-template <typename T> struct always_unsigned {
+//-----------------------------------------------------------------------------
+template <typename T>
+struct try_unsigned
+{
     typedef typename std::make_unsigned<T>::type type;
 };
-template <> struct always_unsigned<double> { typedef double type; };
-template <> struct always_unsigned<float > { typedef float  type; };
+
+
+template <> struct try_unsigned<double> { typedef double type; };
+template <> struct try_unsigned<float > { typedef float  type; };
 
 
 //-----------------------------------------------------------------------------
