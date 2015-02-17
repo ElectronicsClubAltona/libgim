@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -52,7 +52,8 @@ namespace util {
         /// Normalise a number to [0, 1] within the range. Does not check
         /// bounds, it is the caller's responsibility to clamp the result if
         /// needed.
-        double normalise (T val) const;
+        template <typename U>
+        U normalise (T val) const;
 
         range& operator*= (T);
         range  operator*  (T) const;
@@ -91,5 +92,7 @@ namespace util {
         return os;
     }
 }
+
+#include "range.ipp"
 
 #endif

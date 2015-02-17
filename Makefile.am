@@ -135,6 +135,7 @@ UTIL_FILES   =		\
     rational.hpp	\
     region.cpp		\
     region.hpp		\
+    region.ipp		\
     si.cpp		\
     signal.cpp		\
     signal.hpp		\

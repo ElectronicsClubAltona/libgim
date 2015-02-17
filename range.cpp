@@ -88,14 +88,6 @@ range<T>::expand (T val) {
 
 
 template <typename T>
-double
-range<T>::normalise (T val) const {
-    return ((double)val - min) /
-           ((double)max - min);
-}
-
-
-template <typename T>
 range<T>&
 range<T>::operator*= (T val) {
     min *= val;
