@@ -275,7 +275,7 @@ util::pgm::read (const boost::filesystem::path &path)
 {
     util::mapped_file raw (path);
 
-    std::ifstream cooked (path.c_str (), std::ios::binary);
+    std::ifstream cooked (path.string (), std::ios::binary);
     char magic[2];
     size_t width, height, scale;
     char space;
