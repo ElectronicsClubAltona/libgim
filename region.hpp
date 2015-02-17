@@ -55,7 +55,7 @@ namespace util {
         bool empty (void) const;
 
         point<2,T> base    (void) const;
-        point<2,T> far     (void) const;
+        point<2,T> away    (void) const;
         point<2,T> centre  (void) const;
         point<2,T> closest (point<2,T>) const;
 

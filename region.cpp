@@ -125,7 +125,7 @@ util::region<T>::base (void) const
 //-----------------------------------------------------------------------------
 template <typename T>
 util::point<2,T>
-util::region<T>::far (void) const
+util::region<T>::away (void) const
 {
     return { x + w, y + h };
 }
