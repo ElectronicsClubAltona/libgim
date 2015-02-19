@@ -77,6 +77,8 @@ UTIL_FILES   =		\
     json/tree.hpp	\
     lerp.cpp		\
     lerp.hpp		\
+    line.cpp		\
+    line.hpp		\
     log.cpp		\
     log.hpp		\
     log.ipp		\
@@ -239,6 +241,7 @@ TEST_BIN = 			\
     test/hton			\
     test/ip 			\
     test/json_types		\
+    test/line			\
     test/maths			\
     test/maths_matrix 		\
     test/matrix			\
