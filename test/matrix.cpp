@@ -59,8 +59,6 @@ main (int, char **) {
 
         auto res = a * b;
 
-        std::cout << a << "\nx\n" << b << "\n=\n" << (res / 4) << '\n';
-
         CHECK_EQ (ab, res);
     }
 
