@@ -31,6 +31,7 @@ namespace util {
               util::vector<S,T> direction);
 
         T intersect (plane<S,T>) const;
+        T closest (point<S,T>) const;
 
         util::point<S,T> at (T) const;
 

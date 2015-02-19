@@ -34,15 +34,26 @@ util::line<S,T>::line (util::point<S,T> _p,
 
 
 ///----------------------------------------------------------------------------
-/// returns the distance alone the line in a line-plane intersection
+/// returns the distance along the line in a line-plane intersection
 ///
 /// returns inf if parallel
 /// returns 0   if colinear
 template <size_t S, typename T>
 T
-util::line<S,T>::intersect (plane<S,T> rhs) const
+util::line<S,T>::intersect (plane<S,T> q) const
 {
-    return dot (rhs.p - p, rhs.n) / dot (d, rhs.n);
+    return dot (q.p - p, q.n) / dot (d, q.n);
+}
+
+
+///----------------------------------------------------------------------------
+/// returns the closest parameter along the line to a given point
+template <size_t S, typename T>
+T
+util::line<S,T>::closest (point<S,T> q) const
+{
+    // project the origin-point difference onto the direction
+    return dot (p - q, d);
 }
 
 
