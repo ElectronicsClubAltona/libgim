@@ -85,6 +85,7 @@ UTIL_FILES   =		\
     maths.ipp		\
     maths/matrix.cpp	\
     maths/matrix.hpp	\
+    maths/matrix.ipp	\
     maths/vector.cpp  	\
     maths/vector.hpp  	\
     matrix.cpp		\

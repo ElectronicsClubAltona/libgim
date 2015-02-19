@@ -57,6 +57,9 @@ namespace util {
 
         bool is_affine (void) const;
 
+        template <typename U>
+        matrix<U> cast (void) const;
+
         // Perspective matrices
         static matrix<T> ortho   (T left, T right, T bottom, T top, T near, T far);
         static matrix<T> ortho2D (T left, T right, T bottom, T top);
@@ -81,5 +84,6 @@ namespace util {
     std::ostream& operator<< (std::ostream&, const matrix<T>&);
 }
 
+#include "matrix.ipp"
 
 #endif
