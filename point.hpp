@@ -44,6 +44,7 @@ namespace util {
         // arithetic operators
         point<S,T>& operator*= (T);
         point<S,T>  operator*  (T) const;
+        point<S,T>& operator/= (T);
         point<S,T>  operator/  (T) const;
 
         vector<S,T>  operator- (const point<S,T>&) const;
