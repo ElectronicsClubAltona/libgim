@@ -113,6 +113,8 @@ UTIL_FILES   =		\
     options.hpp		\
     pascal.cpp		\
     pascal.hpp		\
+    plane.cpp		\
+    plane.hpp		\
     platform.hpp	\
     point.cpp		\
     point.hpp		\
