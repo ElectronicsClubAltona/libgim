@@ -139,6 +139,12 @@ namespace util {
 
             T& operator[] (size_t i)       { return this->data[i]; }
             T  operator[] (size_t i) const { return this->data[i]; }
+
+            const T* begin (void) const { return std::begin (this->data); }
+            const T* end   (void) const { return std::end   (this->data); }
+
+            T* begin (void) { return std::begin (this->data); }
+            T* end   (void) { return std::end   (this->data); }
         };
 
 
