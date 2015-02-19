@@ -37,4 +37,14 @@ main (int, char**) {
         CHECK_EQ (q.data[2], FILL.data[2]);
         CHECK_EQ (q.data[3], FILL.data[3]);
     }
+
+    {
+        const point2f p (3, 4);
+        const point4f q = p.homog<4> ();
+
+        CHECK_EQ (q.x, 3);
+        CHECK_EQ (q.y, 4);
+        CHECK_EQ (q.z, 0);
+        CHECK_EQ (q.w, 1);
+    }
 }

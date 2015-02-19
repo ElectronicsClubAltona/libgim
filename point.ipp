@@ -111,6 +111,33 @@ namespace util {
     }
 
 
+    ///------------------------------------------------------------------------
+    /// expand point to use homogenous coordinates of a higher dimension.
+    /// ie, fill with (0,..,0,1)
+    template <size_t S, typename T>
+    template <size_t D>
+    point<D,T>
+    point<S,T>::homog (void) const
+    {
+        static_assert (D > S, "homog will not overwrite data");
+
+        point<D,T> out;
+
+        // Copy the existing data
+        auto c = std::copy (this->begin (),
+                            this->end (),
+                            out.begin ());
+
+        // Fill until the second last element with zeros
+        auto f = std::fill_n (c, D - S - 1, T{0});
+
+        // Last element should be one
+        *f = T{1};
+
+        return out;
+    }
+
+
     //-------------------------------------------------------------------------
     template <size_t S, typename T>
     template <typename U>
