@@ -34,8 +34,6 @@
 
 //-----------------------------------------------------------------------------
 using namespace util;
-using std::begin;
-using std::end;
 
 
 //-----------------------------------------------------------------------------
@@ -204,7 +202,7 @@ util::vector<S,T>::operator-= (T rhs) {
 template <size_t S, typename T>
 util::vector<S,T>&
 util::vector<S,T>::operator= (const util::vector<S,T> &rhs) {
-    std::copy (begin (rhs.data), end (rhs.data), begin (this->data));
+    std::copy (std::begin (rhs.data), std::end (rhs.data), std::begin (this->data));
 
     return *this;
 }
@@ -351,8 +349,8 @@ util::cartesian_to_spherical (const util::vector<3,T> &c) {
 template <size_t S, typename T>
 bool
 util::vector<S,T>::is_zero (void) const {
-    return std::all_of (begin (this->data),
-                        end   (this->data),
+    return std::all_of (std::begin (this->data),
+                        std::end   (this->data),
                         [] (T i) { return almost_zero (i); });
 }
 
@@ -367,13 +365,13 @@ util::vector<S,T>::ZERO (T{0});
 template <size_t S, typename T>
 void
 util::vector<S,T>::sanity (void) const {
-    CHECK (std::all_of (begin (this->data),
-                        end   (this->data),
+    CHECK (std::all_of (std::begin (this->data),
+                        std::end   (this->data),
                         [] (T i) { return !std::isnan (i); }));
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T, typename U>
 util::vector<S,T>
 util::operator* (U a, const util::vector<S,T> &b)
