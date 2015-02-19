@@ -58,127 +58,74 @@ matrix<T>::transpose (void)
 template <typename T>
 matrix<T>
 matrix<T>::inverse (void) const {
-    matrix<T> m;
+    // GLM's implementation of 4x4 matrix inversion. Should allow use of
+    // vector instructions.
+    const auto &m = values;
 
-    T d = det ();
-    if (almost_zero (d))
-        throw std::runtime_error ("non-singular matrix");
-    auto v = values;
+    T Coef00 = m[2][2] * m[3][3] - m[3][2] * m[2][3];
+    T Coef02 = m[1][2] * m[3][3] - m[3][2] * m[1][3];
+    T Coef03 = m[1][2] * m[2][3] - m[2][2] * m[1][3];
 
-    m.values[0][0] = v[1][2] * v[2][3] * v[3][1] -
-                     v[1][3] * v[2][2] * v[3][1] +
-                     v[1][3] * v[2][1] * v[3][2] -
-                     v[1][1] * v[2][3] * v[3][2] -
-                     v[1][2] * v[2][1] * v[3][3] +
-                     v[1][1] * v[2][2] * v[3][3];
+    T Coef04 = m[2][1] * m[3][3] - m[3][1] * m[2][3];
+    T Coef06 = m[1][1] * m[3][3] - m[3][1] * m[1][3];
+    T Coef07 = m[1][1] * m[2][3] - m[2][1] * m[1][3];
 
-    m.values[0][1] = v[0][3] * v[2][2] * v[3][1] -
-                     v[0][2] * v[2][3] * v[3][1] -
-                     v[0][3] * v[2][1] * v[3][2] +
-                     v[0][1] * v[2][3] * v[3][2] +
-                     v[0][2] * v[2][1] * v[3][3] -
-                     v[0][1] * v[2][2] * v[3][3];
+    T Coef08 = m[2][1] * m[3][2] - m[3][1] * m[2][2];
+    T Coef10 = m[1][1] * m[3][2] - m[3][1] * m[1][2];
+    T Coef11 = m[1][1] * m[2][2] - m[2][1] * m[1][2];
 
-    m.values[0][2] = v[0][2] * v[1][3] * v[3][1] -
-                     v[0][3] * v[1][2] * v[3][1] +
-                     v[0][3] * v[1][1] * v[3][2] -
-                     v[0][1] * v[1][3] * v[3][2] -
-                     v[0][2] * v[1][1] * v[3][3] +
-                     v[0][1] * v[1][2] * v[3][3];
+    T Coef12 = m[2][0] * m[3][3] - m[3][0] * m[2][3];
+    T Coef14 = m[1][0] * m[3][3] - m[3][0] * m[1][3];
+    T Coef15 = m[1][0] * m[2][3] - m[2][0] * m[1][3];
 
-    m.values[0][3] = v[0][3] * v[1][2] * v[2][1] -
-                     v[0][2] * v[1][3] * v[2][1] -
-                     v[0][3] * v[1][1] * v[2][2] +
-                     v[0][1] * v[1][3] * v[2][2] +
-                     v[0][2] * v[1][1] * v[2][3] -
-                     v[0][1] * v[1][2] * v[2][3];
+    T Coef16 = m[2][0] * m[3][2] - m[3][0] * m[2][2];
+    T Coef18 = m[1][0] * m[3][2] - m[3][0] * m[1][2];
+    T Coef19 = m[1][0] * m[2][2] - m[2][0] * m[1][2];
 
-    m.values[1][0] = v[1][3] * v[2][2] * v[3][0] -
-                     v[1][2] * v[2][3] * v[3][0] -
-                     v[1][3] * v[2][0] * v[3][2] +
-                     v[1][0] * v[2][3] * v[3][2] +
-                     v[1][2] * v[2][0] * v[3][3] -
-                     v[1][0] * v[2][2] * v[3][3];
+    T Coef20 = m[2][0] * m[3][1] - m[3][0] * m[2][1];
+    T Coef22 = m[1][0] * m[3][1] - m[3][0] * m[1][1];
+    T Coef23 = m[1][0] * m[2][1] - m[2][0] * m[1][1];
 
-    m.values[1][1] = v[0][2] * v[2][3] * v[3][0] -
-                     v[0][3] * v[2][2] * v[3][0] +
-                     v[0][3] * v[2][0] * v[3][2] -
-                     v[0][0] * v[2][3] * v[3][2] -
-                     v[0][2] * v[2][0] * v[3][3] +
-                     v[0][0] * v[2][2] * v[3][3];
 
-    m.values[1][2] = v[0][3] * v[1][2] * v[3][0] -
-                     v[0][2] * v[1][3] * v[3][0] -
-                     v[0][3] * v[1][0] * v[3][2] +
-                     v[0][0] * v[1][3] * v[3][2] +
-                     v[0][2] * v[1][0] * v[3][3] -
-                     v[0][0] * v[1][2] * v[3][3];
+    vector<4,T> Fac0(Coef00, Coef00, Coef02, Coef03);
+    vector<4,T> Fac1(Coef04, Coef04, Coef06, Coef07);
+    vector<4,T> Fac2(Coef08, Coef08, Coef10, Coef11);
+    vector<4,T> Fac3(Coef12, Coef12, Coef14, Coef15);
+    vector<4,T> Fac4(Coef16, Coef16, Coef18, Coef19);
+    vector<4,T> Fac5(Coef20, Coef20, Coef22, Coef23);
 
-    m.values[1][3] = v[0][2] * v[1][3] * v[2][0] -
-                     v[0][3] * v[1][2] * v[2][0] +
-                     v[0][3] * v[1][0] * v[2][2] -
-                     v[0][0] * v[1][3] * v[2][2] -
-                     v[0][2] * v[1][0] * v[2][3] +
-                     v[0][0] * v[1][2] * v[2][3];
+    vector<4,T> Vec0(m[1][0], m[0][0], m[0][0], m[0][0]);
+    vector<4,T> Vec1(m[1][1], m[0][1], m[0][1], m[0][1]);
+    vector<4,T> Vec2(m[1][2], m[0][2], m[0][2], m[0][2]);
+    vector<4,T> Vec3(m[1][3], m[0][3], m[0][3], m[0][3]);
 
-    m.values[2][0] = v[1][1] * v[2][3] * v[3][0] -
-                     v[1][3] * v[2][1] * v[3][0] +
-                     v[1][3] * v[2][0] * v[3][1] -
-                     v[1][0] * v[2][3] * v[3][1] -
-                     v[1][1] * v[2][0] * v[3][3] +
-                     v[1][0] * v[2][1] * v[3][3];
+    vector<4,T> Inv0(Vec1 * Fac0 - Vec2 * Fac1 + Vec3 * Fac2);
+    vector<4,T> Inv1(Vec0 * Fac0 - Vec2 * Fac3 + Vec3 * Fac4);
+    vector<4,T> Inv2(Vec0 * Fac1 - Vec1 * Fac3 + Vec3 * Fac5);
+    vector<4,T> Inv3(Vec0 * Fac2 - Vec1 * Fac4 + Vec2 * Fac5);
 
-    m.values[2][1] = v[0][3] * v[2][1] * v[3][0] -
-                     v[0][1] * v[2][3] * v[3][0] -
-                     v[0][3] * v[2][0] * v[3][1] +
-                     v[0][0] * v[2][3] * v[3][1] +
-                     v[0][1] * v[2][0] * v[3][3] -
-                     v[0][0] * v[2][1] * v[3][3];
+    vector<4,T> SignA(+1, -1, +1, -1);
+    vector<4,T> SignB(-1, +1, -1, +1);
+    //matrix<T>   Inverse(Inv0 * SignA, Inv1 * SignB, Inv2 * SignA, Inv3 * SignB);
+    matrix<T>   Inverse = { { { Inv0.x * SignA.x, Inv0.y * SignA.y, Inv0.z * SignA.z, Inv0.w * SignA.w },
+                              { Inv1.x * SignB.x, Inv1.y * SignB.y, Inv1.z * SignB.z, Inv1.w * SignB.w },
+                              { Inv2.x * SignA.x, Inv2.y * SignA.y, Inv2.z * SignA.z, Inv2.w * SignA.w },
+                              { Inv3.x * SignB.x, Inv3.y * SignB.y, Inv3.z * SignB.z, Inv3.w * SignB.w } } };
 
-    m.values[2][2] = v[0][1] * v[1][3] * v[3][0] -
-                     v[0][3] * v[1][1] * v[3][0] +
-                     v[0][3] * v[1][0] * v[3][1] -
-                     v[0][0] * v[1][3] * v[3][1] -
-                     v[0][1] * v[1][0] * v[3][3] +
-                     v[0][0] * v[1][1] * v[3][3];
+    vector<4,T> Row0(Inverse.values[0][0], Inverse.values[1][0], Inverse.values[2][0], Inverse.values[3][0]);
 
-    m.values[2][3] = v[0][3] * v[1][1] * v[2][0] -
-                     v[0][1] * v[1][3] * v[2][0] -
-                     v[0][3] * v[1][0] * v[2][1] +
-                     v[0][0] * v[1][3] * v[2][1] +
-                     v[0][1] * v[1][0] * v[2][3] -
-                     v[0][0] * v[1][1] * v[2][3];
+    vector<4,T> Dot0(
+        m[0][0] * Row0.x,
+        m[0][1] * Row0.y,
+        m[0][2] * Row0.z,
+        m[0][3] * Row0.w
+    );
+    T Dot1 = (Dot0.x + Dot0.y) + (Dot0.z + Dot0.w);
 
-    m.values[3][0] = v[1][2] * v[2][1] * v[3][0] -
-                     v[1][1] * v[2][2] * v[3][0] -
-                     v[1][2] * v[2][0] * v[3][1] +
-                     v[1][0] * v[2][2] * v[3][1] +
-                     v[1][1] * v[2][0] * v[3][2] -
-                     v[1][0] * v[2][1] * v[3][2];
+    T OneOverDeterminant = static_cast<T>(1) / Dot1;
 
-    m.values[3][1] = v[0][1] * v[2][2] * v[3][0] -
-                     v[0][2] * v[2][1] * v[3][0] +
-                     v[0][2] * v[2][0] * v[3][1] -
-                     v[0][0] * v[2][2] * v[3][1] -
-                     v[0][1] * v[2][0] * v[3][2] +
-                     v[0][0] * v[2][1] * v[3][2];
+    return Inverse * OneOverDeterminant;
 
-    m.values[3][2] = v[0][2] * v[1][1] * v[3][0] -
-                     v[0][1] * v[1][2] * v[3][0] -
-                     v[0][2] * v[1][0] * v[3][1] +
-                     v[0][0] * v[1][2] * v[3][1] +
-                     v[0][1] * v[1][0] * v[3][2] -
-                     v[0][0] * v[1][1] * v[3][2];
-
-    m.values[3][3] = v[0][1] * v[1][2] * v[2][0] -
-                     v[0][2] * v[1][1] * v[2][0] +
-                     v[0][2] * v[1][0] * v[2][1] -
-                     v[0][0] * v[1][2] * v[2][1] -
-                     v[0][1] * v[1][0] * v[2][2] +
-                     v[0][0] * v[1][1] * v[2][2];
-
-    m /= d;
-    return m;
 }
 
 
