@@ -340,6 +340,21 @@ matrix<T>::operator* (const point<4,T> &rhs) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
+matrix<T>
+matrix<T>::operator* (T f) const
+{
+    matrix<T> out;
+
+    for (size_t i = 0; i < 4; ++i)
+        for (size_t j = 0; j < 4; ++j)
+            out.values[i][j] = values[i][j] * f;
+
+    return out;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 matrix<T>&
 matrix<T>::operator*= (T f){
     for (size_t i = 0; i < 4; ++i)
