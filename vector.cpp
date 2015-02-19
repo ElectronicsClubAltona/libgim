@@ -49,6 +49,7 @@ util::vector<S,T>::operator* (T rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>&
 util::vector<S,T>::operator*= (T rhs) {
@@ -59,6 +60,7 @@ util::vector<S,T>::operator*= (T rhs) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>
 util::vector<S,T>::operator* (const vector<S,T> &rhs) const {
@@ -71,6 +73,7 @@ util::vector<S,T>::operator* (const vector<S,T> &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>&
 util::vector<S,T>::operator*= (const vector<S,T> &rhs) {
@@ -93,6 +96,7 @@ util::vector<S,T>::operator/ (T rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>&
 util::vector<S,T>::operator/= (T rhs) {
@@ -114,6 +118,7 @@ util::vector<S,T>::operator+ (const util::vector<S,T> &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>
 util::vector<S,T>::operator+ (T rhs) const {
@@ -125,6 +130,7 @@ util::vector<S,T>::operator+ (T rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>&
 util::vector<S,T>::operator+= (const util::vector<S,T> &rhs) {
@@ -135,6 +141,7 @@ util::vector<S,T>::operator+= (const util::vector<S,T> &rhs) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>&
 util::vector<S,T>::operator+= (T rhs) {
@@ -156,6 +163,7 @@ util::vector<S,T>::operator- (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>
 util::vector<S,T>::operator- (const util::vector<S,T> &rhs) const {
@@ -167,6 +175,7 @@ util::vector<S,T>::operator- (const util::vector<S,T> &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>&
 util::vector<S,T>::operator-= (const util::vector<S,T> &rhs) {
@@ -177,6 +186,7 @@ util::vector<S,T>::operator-= (const util::vector<S,T> &rhs) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>
 util::vector<S,T>::operator- (T rhs) const {
@@ -188,6 +198,7 @@ util::vector<S,T>::operator- (T rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>&
 util::vector<S,T>::operator-= (T rhs) {
@@ -208,6 +219,7 @@ util::vector<S,T>::operator= (const util::vector<S,T> &rhs) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 bool
 util::vector<S,T>::operator== (const util::vector<S,T> &rhs) const {
@@ -271,6 +283,7 @@ util::vector<S,T>::normalise (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>
 util::vector<S,T>::normalised (void) const {
@@ -304,6 +317,7 @@ util::vector<S,T>::dot (const util::vector<S,T> &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 util::vector<3,T>
 util::cross (const util::vector<3,T> &a,
@@ -332,6 +346,7 @@ util::spherical_to_cartesian (const util::vector<3,T> &s) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 util::vector<3,T>
 util::cartesian_to_spherical (const util::vector<3,T> &c) {
