@@ -60,6 +60,17 @@ namespace util {
             typedef std::list<callback> group;
             group m_children;
     };
+
+    template <typename T>
+    class value_signal : public signal<void(T)> {
+    public:
+        operator const T&() const;
+
+        value_signal<T>& operator= (const T&);
+
+    private:
+        T m_value;
+    };
 }
 
 #include "signal.ipp"

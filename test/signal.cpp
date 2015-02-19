@@ -61,12 +61,26 @@ test_linking_pointers (void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+void
+test_value_signal (void)
+{
+    util::value_signal<unsigned> val;
+    auto raii = val.connect ([] (unsigned v) { CHECK_EQ (v, 42); });
+    val = 42u;
+
+    unsigned check = val;
+    CHECK_EQ (check, 42);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 int
 main (int, char **)
 {
     test_null   ();
     test_single ();
     test_double ();
+    test_value_signal ();
 
     return EXIT_SUCCESS;
 }

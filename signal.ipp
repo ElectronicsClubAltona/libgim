@@ -167,5 +167,23 @@ namespace util {
             (*current)(std::forward<Args> (tail)...);
         } while (looping);
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    value_signal<T>::operator const T&() const
+    {
+        return m_value;
+    }
+
+
+    template <typename T>
+    value_signal<T>&
+    value_signal<T>::operator= (const T &t)
+    {
+        m_value = t;
+        (*this) (m_value);
+        return *this;
+    }
 }
 
