@@ -97,6 +97,22 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <size_t S, typename T>
+    template <size_t D>
+    point<D,T> point<S,T>::redim (T fill) const
+    {
+        point<D,T> out;
+
+        auto cursor = std::copy_n (std::begin (this->data),
+                                   min (S, D),
+                                   std::begin (out.data));
+        std::fill (cursor, std::end (out.data), fill);
+
+        return out;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T>
     template <typename U>
     point<S,U>
     point<S,T>::cast (void) const

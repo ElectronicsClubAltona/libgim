@@ -59,6 +59,7 @@ namespace util {
 
         template <size_t D> point<D,T> redim (void) const;
         template <size_t D> point<D,T> redim (const util::point<D,T> &fill) const;
+        template <size_t D> point<D,T> redim (T fill) const;
 
         static const point<S,T> ORIGIN;
 
