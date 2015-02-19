@@ -97,6 +97,8 @@ namespace util {
     template <size_t S, typename T, typename U> vector<S,T> operator+ (U, const vector<S,T>&);
     template <size_t S, typename T, typename U> vector<S,T> operator- (U, const vector<S,T>&);
 
+    template <size_t S, typename T> T dot (vector<S,T>, vector<S,T>);
+
     // output and serialisation operators
     template <size_t S, typename T> std::ostream& operator<< (std::ostream&, const vector<S,T>&);
 

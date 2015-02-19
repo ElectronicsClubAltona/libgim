@@ -400,6 +400,19 @@ util::operator- (U a, const util::vector<S,T> &b)
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
+T
+util::dot (vector<S,T> a, vector<S,T> b)
+{
+    return std::inner_product (std::begin (a),
+                               std::end (a),
+                               std::begin (b),
+                               T{0});
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// ostream
+
+template <size_t S, typename T>
 std::ostream&
 util::operator<< (std::ostream &os, const util::vector<S,T> &v) {
     os << "vec" << S << "(" << v.data[0];
@@ -437,6 +450,7 @@ template util::vector<S,T> util::operator* (unsigned, const util::vector<S,T>&);
 template util::vector<S,T> util::operator* (float, const util::vector<S,T>&);       \
 template util::vector<S,T> util::operator+ (T, const util::vector<S,T>&);           \
 template util::vector<S,T> util::operator- (T, const util::vector<S,T>&);           \
+template T util::dot (util::vector<S,T>, util::vector<S,T>);                        \
 template std::ostream& util::operator<< (std::ostream&, const util::vector<S,T> &v);\
 template const json::tree::node& util::operator>> (const json::tree::node&, util::vector<S,T>&);
 
