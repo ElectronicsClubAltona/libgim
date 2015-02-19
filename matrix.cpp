@@ -479,7 +479,7 @@ matrix<T>::look_at (util::point<3,T> eye,
                     util::point<3,T> centre,
                     util::vector<3,T> up)
 {
-    const auto f = eye.to (centre).normalise ();
+    const auto f = (centre - eye).normalise ();
     const auto s = cross (f, up).normalise ();
     const auto u = cross (s, f);
 
