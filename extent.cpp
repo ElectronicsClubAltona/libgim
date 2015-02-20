@@ -29,6 +29,16 @@ template <typename T>
 util::extent<T>::extent (const T  _width, const T  _height):
         w (_width),
         h (_height)
+{
+    CHECK_GE (w, 0);
+    CHECK_GE (h, 0);
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+util::extent<T>::extent (vector<2,T> _v):
+    extent (_v.x, _v.y)
 { ; }
 
 

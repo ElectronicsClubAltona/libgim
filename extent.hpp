@@ -24,6 +24,7 @@
 
 #include <iostream>
 
+
 namespace util {
     /**
      * A pure two-dimensional size, without positioning
@@ -33,6 +34,7 @@ namespace util {
         T w, h;
 
         extent (const T  _width, const T  _height);
+        extent (vector<2,T>);
         extent (const extent&);
         extent& operator= (const extent&);
         extent () = default;
