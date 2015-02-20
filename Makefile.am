@@ -271,4 +271,4 @@ endif
 TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
 TESTS = $(top_builddir)/test/static.test $(top_builddir)/test/json.test
 check_PROGRAMS = $(TEST_BIN)
-EXTRA_DIST += static.test json.test json
+EXTRA_DIST += test/static.test test/json.test test/json
