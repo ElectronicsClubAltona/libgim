@@ -42,24 +42,28 @@ range<T>::range (T _min, T _max):
     { sanity (); }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 bool
 range<T>::contains (T val) const
     { return val >= min && val <= max; }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 bool
 range<T>::contains (const range <T> &r) const
     { return r.min >= min && r.max <= max; }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 void
 range<T>::sanity (void) const
     { CHECK (min <= max); }
 
 
+//-----------------------------------------------------------------------------
 namespace util {
     template <>
     void
@@ -71,12 +75,14 @@ namespace util {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 T
 range<T>::clamp (T val) const
     { return std::max (min, std::min (val, max)); }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 void
 range<T>::expand (T val) {
@@ -87,6 +93,7 @@ range<T>::expand (T val) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 range<T>&
 range<T>::operator*= (T val) {
@@ -97,6 +104,7 @@ range<T>::operator*= (T val) {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 range<T>
 range<T>::operator* (T val) const {
@@ -104,6 +112,7 @@ range<T>::operator* (T val) const {
 }
 
 
+//-----------------------------------------------------------------------------
 namespace util {
     template <>
     double
@@ -120,6 +129,8 @@ namespace util {
     }
 }
 
+
+//-----------------------------------------------------------------------------
 template <typename T>
 T
 range<T>::random (void) const {
@@ -127,6 +138,7 @@ range<T>::random (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
 namespace util {
     template <>
     bool
@@ -143,12 +155,14 @@ namespace util {
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 bool
 range<T>::operator ==(const range<T> &rhs) const
     { return min == rhs.min && max == rhs.max; }
 
 
+//-----------------------------------------------------------------------------
 template <typename T> 
 const range<T>
 range<T>::UNLIMITED (numeric_limits<T>::has_infinity ? -numeric_limits<T>::infinity () :
@@ -156,17 +170,20 @@ range<T>::UNLIMITED (numeric_limits<T>::has_infinity ? -numeric_limits<T>::infin
                      numeric_limits<T>::has_infinity ?  numeric_limits<T>::infinity () :
                                                         numeric_limits<T>::max      ());
 
+//-----------------------------------------------------------------------------
 template <typename T>
 const range<T>
 range<T>::MAX (numeric_limits<T>::lowest (),
                numeric_limits<T>::max ());
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 const range<T>
 range<T>::UNIT (0.0, 1.0);
 
 
+//-----------------------------------------------------------------------------
 namespace util {
     template struct range<double>;
     template struct range<float>;
