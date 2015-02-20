@@ -171,12 +171,20 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
+    value_signal<T>::value_signal (T &&t):
+        m_value (std::forward<T> (t))
+    { ; }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
     value_signal<T>::operator const T&() const
     {
         return m_value;
     }
 
 
+    //-------------------------------------------------------------------------
     template <typename T>
     value_signal<T>&
     value_signal<T>::operator= (const T &t)
