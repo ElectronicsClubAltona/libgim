@@ -23,6 +23,7 @@
 
 #include "extent.hpp"
 #include "point.hpp"
+#include "vector.hpp"
 #include "types/traits.hpp"
 
 namespace util {
@@ -79,6 +80,9 @@ namespace util {
 
         region& expand (T mag);
         region& expand (T w, T h);
+
+        // arithmetic operators
+        region operator+ (vector<2,T>) const;
 
         // Logical comparison operators
         bool operator ==(const region<T>& rhs) const;
