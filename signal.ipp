@@ -171,8 +171,8 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    value_signal<T>::value_signal (T &&t):
-        m_value (std::forward<T> (t))
+    value_signal<T>::value_signal (T t):
+        m_value (t)
     { ; }
 
 
