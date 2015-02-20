@@ -364,8 +364,6 @@ template <size_t S>
 util::region2f
 util::bezier<S>::region (void) const
 {
-    util::region2f r;
-
     float x0 = m_points[0].x;
     float y0 = m_points[0].y;
 
