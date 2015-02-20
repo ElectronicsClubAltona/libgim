@@ -21,8 +21,8 @@
 #ifndef __UTIL_RANGE_HPP
 #define __UTIL_RANGE_HPP
 
+#include <cstdint>
 #include <iostream>
-
 
 namespace util {
     /**
@@ -87,6 +87,12 @@ namespace util {
     };
 
 
+    // convenience typedefs
+    typedef util::range<float> rangef;
+    typedef util::range<uintmax_t> rangeu;
+    typedef util::range<intmax_t> rangei;
+
+    // ostream operators
     template <typename T>
     std::ostream&
     operator <<(std::ostream &os, const range<T> &rhs) {
