@@ -43,13 +43,14 @@ namespace util {
         size_type w, h;
 
         region () = default;
+        region (util::extent<size_type>);
         region (util::point<2,T>, util::extent<size_type>);
         region (util::point<2,T>, util::point<2,T>);
         region (T _x, T _y, size_type _w, size_type _h);
 
         size_type area     (void) const;
         size_type diameter (void) const;
-        util::extent<size_type>  size (void) const;
+        util::extent<size_type>  magnitude (void) const;
 
         void scale (T factor);
 

@@ -29,6 +29,13 @@
 
 //-----------------------------------------------------------------------------
 template <typename T>
+util::region<T>::region (util::extent<size_type> _extent):
+    region (util::point<2,T>::ORIGIN, _extent)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 util::region<T>::region (point<2,T> _point,
                          extent<size_type> _size):
     x (_point.x),
@@ -42,10 +49,7 @@ util::region<T>::region (point<2,T> _point,
 template <typename T>
 util::region<T>::region (point<2,T> _a,
                          point<2,T> _b):
-    x (_a.x),
-    y (_a.y),
-    w (_b.x - _a.x),
-    h (_b.y - _a.y)
+    region (_a, _b - _a)
 {
     CHECK_GE (_b.x, _a.x);
     CHECK_GE (_b.y, _a.y);
@@ -57,10 +61,7 @@ util::region<T>::region (position_type _x,
                          position_type _y,
                          size_type _w,
                          size_type _h):
-    x (_x),
-    y (_y),
-    w (_w),
-    h (_h)
+    region (point<2,T> {_x, _y}, extent<T> {_w, _h})
 { ; }
 
 
@@ -85,7 +86,7 @@ util::region<T>::diameter (void) const
 //-----------------------------------------------------------------------------
 template <typename T>
 util::extent<typename util::region<T>::size_type>
-util::region<T>::size (void) const
+util::region<T>::magnitude (void) const
 {
     return { w, h };
 }
