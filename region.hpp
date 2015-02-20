@@ -83,6 +83,7 @@ namespace util {
 
         // arithmetic operators
         region operator+ (vector<2,T>) const;
+        region operator- (vector<2,T>) const;
 
         // Logical comparison operators
         bool operator ==(const region<T>& rhs) const;

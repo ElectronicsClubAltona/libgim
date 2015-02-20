@@ -307,6 +307,15 @@ util::region<T>::operator+ (vector<2,T> rhs) const
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
+util::region<T>
+util::region<T>::operator- (vector<2,T> rhs) const
+{
+    return { x - rhs.x, y - rhs.y, w, h };
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
