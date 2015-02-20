@@ -36,6 +36,8 @@ namespace util {
 
         range (T _min, T _max);
 
+        T magnitude (void) const;
+
         /// Check whether value falls within this range (inclusive)
         bool contains (T val) const;
         /// Check whether a range falls completely within (inclusive) this range
