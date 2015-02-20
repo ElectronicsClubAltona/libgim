@@ -87,11 +87,11 @@ UTIL_FILES   =		\
     maths.ipp		\
     maths/matrix.cpp	\
     maths/matrix.hpp	\
-    maths/matrix.ipp	\
     maths/vector.cpp  	\
     maths/vector.hpp  	\
     matrix.cpp		\
     matrix.hpp		\
+    matrix.ipp		\
     memory.cpp		\
     memory.hpp		\
     net/address.cpp	\
@@ -136,11 +136,11 @@ UTIL_FILES   =		\
     random.ipp		\
     range.cpp		\
     range.hpp		\
+    range.ipp		\
     rational.cpp	\
     rational.hpp	\
     region.cpp		\
     region.hpp		\
-    region.ipp		\
     si.cpp		\
     signal.cpp		\
     signal.hpp		\
