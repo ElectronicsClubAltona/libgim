@@ -20,13 +20,16 @@
 #ifndef __UTIL_HASH_HMAC_HPP
 #define __UTIL_HASH_HMAC_HPP
 
-#include "md5.hpp"
+#include <array>
+#include <cstdint>
+#include <cstdlib>
 
 namespace util { namespace hash {
+    template <class T>
     /// RFC 2104 key-hashing for message authentication
     class HMAC {
     public:
-        using digest_t = MD5::digest_t;
+        using digest_t = typename T::digest_t;
 
         HMAC (const uint8_t *key, size_t);
 
@@ -37,10 +40,10 @@ namespace util { namespace hash {
         digest_t digest (void);
 
     private:
-        std::array<uint8_t,64> m_ikey;
-        std::array<uint8_t,64> m_okey;
+        std::array<uint8_t,T::BLOCK_SIZE> m_ikey;
+        std::array<uint8_t,T::BLOCK_SIZE> m_okey;
 
-        MD5 m_hash;
+        T m_hash;
     };
 } }
 

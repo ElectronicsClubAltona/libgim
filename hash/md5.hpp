@@ -29,6 +29,8 @@ namespace util {
         class MD5 {
             public:
                 typedef std::array<uint8_t,16> digest_t;
+                static const size_t BLOCK_SIZE  = 64;
+                static const size_t DIGEST_SIZE = 16;
 
             public:
                 MD5();

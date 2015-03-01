@@ -32,14 +32,15 @@ static const uint8_t OFILL = 0x5C;
 
 
 //-----------------------------------------------------------------------------
-HMAC::HMAC (const uint8_t *restrict key, size_t len)
+template <class T>
+HMAC<T>::HMAC (const uint8_t *restrict key, size_t len)
 {
     CHECK (key);
 
     static_assert (sizeof (m_ikey) == sizeof (m_okey), "key padding must match");
 
     // If the key is larger than the blocklength, use the hash of the key
-    if (len > 64) {
+    if (len > T::BLOCK_SIZE) {
         m_hash.update (key, len);
         m_hash.finish ();
 
@@ -74,16 +75,18 @@ HMAC::HMAC (const uint8_t *restrict key, size_t len)
 
 
 //-----------------------------------------------------------------------------
+template <class T>
 void
-HMAC::update (const void *restrict data, size_t len)
+HMAC<T>::update (const void *restrict data, size_t len)
 {
     m_hash.update ((const uint8_t*)data, len);
 }
 
 
 //-----------------------------------------------------------------------------
+template <class T>
 void
-HMAC::finish (void)
+HMAC<T>::finish (void)
 {
     m_hash.finish ();
     auto d = m_hash.digest ();
@@ -96,8 +99,9 @@ HMAC::finish (void)
 
 
 //-----------------------------------------------------------------------------
+template <class T>
 void
-HMAC::reset (void)
+HMAC<T>::reset (void)
 {
     m_hash.reset ();
     m_hash.update (m_ikey.data (), m_ikey.size ());
@@ -105,8 +109,17 @@ HMAC::reset (void)
 
 
 //-----------------------------------------------------------------------------
-HMAC::digest_t
-HMAC::digest (void)
+template <class T>
+typename HMAC<T>::digest_t
+HMAC<T>::digest (void)
 {
     return m_hash.digest ();
 }
+
+
+//-----------------------------------------------------------------------------
+#include "md5.hpp"
+#include "sha1.hpp"
+
+template class HMAC<util::hash::MD5>;
+template class HMAC<util::hash::SHA1>;

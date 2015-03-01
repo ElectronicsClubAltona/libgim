@@ -31,6 +31,8 @@ namespace util { namespace hash {
     class SHA1 {
     public:
         typedef std::array<uint8_t,20> digest_t;
+        static const size_t BLOCK_SIZE  = 64;
+        static const size_t DIGEST_SIZE = 20;
 
     public:
         SHA1();
