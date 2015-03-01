@@ -115,7 +115,7 @@ MD5::update (const uint8_t *data, size_t size) {
     size_t offset = m_total % sizeof (Xb);
     size_t remain = sizeof (Xb) - offset;
 
-    if (size > remain) {
+    if (size >= remain) {
         memcpy (Xb + offset, data, remain);
         transform ();
 
