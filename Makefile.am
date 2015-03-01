@@ -47,6 +47,8 @@ UTIL_FILES   =		\
     hash/fletcher.hpp	\
     hash/hmac.cpp	\
     hash/hmac.hpp	\
+    hash/hotp.cpp	\
+    hash/hotp.hpp	\
     hash/md2.cpp	\
     hash/md2.hpp	\
     hash/md4.cpp	\
@@ -241,6 +243,7 @@ TEST_BIN = 			\
     test/fixed			\
     test/float			\
     test/hmac			\
+    test/hotp			\
     test/hton			\
     test/ip 			\
     test/json_types		\
