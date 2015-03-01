@@ -35,13 +35,24 @@ static const uint8_t OFILL = 0x5C;
 HMAC::HMAC (const uint8_t *restrict key, size_t len)
 {
     CHECK (key);
-    CHECK_LE (len, m_ikey.size ());
-    CHECK_LE (len, m_okey.size ());
 
     static_assert (sizeof (m_ikey) == sizeof (m_okey), "key padding must match");
 
-    
-    std::copy (key, key + len, m_ikey.begin ());
+    // If the key is larger than the blocklength, use the hash of the key
+    if (len > 64) {
+        m_hash.update (key, len);
+        m_hash.finish ();
+
+        auto d = m_hash.digest ();
+        m_hash.reset ();
+
+        std::copy (d.begin (), d.end (), m_ikey.begin ());
+        len = d.size ();
+    // Use the key directly
+    } else {
+        std::copy (key, key + len, m_ikey.begin ());
+    }
+
     std::fill (m_ikey.begin () + len,
                m_ikey.end (),
                0);
@@ -60,7 +71,6 @@ HMAC::HMAC (const uint8_t *restrict key, size_t len)
 
     m_hash.update (m_ikey.data (), m_ikey.size ());
 }
-
 
 
 //-----------------------------------------------------------------------------
