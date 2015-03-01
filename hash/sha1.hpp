@@ -26,39 +26,38 @@
 #include <array>
 
 
-namespace util {
-    namespace hash {
-        class SHA1 {
-            public:
-                typedef std::array<uint8_t,20> digest_t;
+//-----------------------------------------------------------------------------
+namespace util { namespace hash {
+    class SHA1 {
+    public:
+        typedef std::array<uint8_t,20> digest_t;
 
-            public:
-                SHA1();
+    public:
+        SHA1();
 
-                void update (const uint8_t *, size_t);
-                void finish (void);
-                digest_t digest (void) const;
-                void reset  (void);
+        void update (const uint8_t *, size_t);
+        void finish (void);
+        digest_t digest (void) const;
+        void reset  (void);
 
-                enum state_t {
-                    READY,
-                    FINISHED
-                };
-
-            protected:
-                void process (void);
-
-                state_t state;
-
-                uint64_t total;
-                uint32_t H[5];
-
-                union {
-                    uint8_t  c[16*4+64*4];
-                    uint32_t W[16  +64  ];
-                };
+        enum state_t {
+            READY,
+            FINISHED
         };
-    }
-}
+
+    protected:
+        void process (void);
+
+        state_t state;
+
+        uint64_t total;
+        uint32_t H[5];
+
+        union {
+            uint8_t  c[16*4+64*4];
+            uint32_t W[16  +64  ];
+        };
+    };
+} }
 
 #endif
