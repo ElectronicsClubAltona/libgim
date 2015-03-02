@@ -37,6 +37,13 @@ util::extent<T>::extent (const T  _width, const T  _height):
 
 //-----------------------------------------------------------------------------
 template <typename T>
+util::extent<T>::extent (T t):
+    extent (t, t)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 util::extent<T>::extent (vector<2,T> _v):
     extent (_v.x, _v.y)
 { ; }
