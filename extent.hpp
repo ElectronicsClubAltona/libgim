@@ -50,6 +50,11 @@ namespace util {
 
         bool empty (void) const;
 
+        T& operator[] (size_t idx);
+        const T& operator[] (size_t idx) const;
+
+        size_t size (void) const;
+
         bool operator ==(const extent& rhs) const;
         bool operator !=(const extent& rhs) const
             { return !(*this == rhs); }

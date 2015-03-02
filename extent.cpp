@@ -90,11 +90,11 @@ util::extent<T>::area (void) const
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 util::extent<T>
-util::extent<T>::expanded (util::vector<2,T> size) const
+util::extent<T>::expanded (util::vector<2,T> mag) const
 {
     return {
-        w + size.x,
-        h + size.y
+        w + mag.x,
+        h + mag.y
     };
 }
 
@@ -123,6 +123,45 @@ bool
 util::extent<T>::empty (void) const
 {
     return almost_equal (area(), 0);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+T&
+util::extent<T>::operator[] (size_t idx)
+{
+    switch (idx) {
+    case 0: return w;
+    case 1: return h;
+
+    default:
+        unreachable ();
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+const T&
+util::extent<T>::operator[] (size_t idx) const
+{
+    switch (idx) {
+    case 0: return w;
+    case 1: return h;
+
+    default:
+        unreachable ();
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+size_t
+util::extent<T>::size (void) const
+{
+    return 2u;
 }
 
 
