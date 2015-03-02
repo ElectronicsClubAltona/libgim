@@ -4,5 +4,6 @@
 int
 main (void)
 {
-    debug::sanity (util::extent<float> {0, 0});
+    // Simple symbol visibility check
+    util::extent2f instance;
 }

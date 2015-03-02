@@ -304,15 +304,23 @@ namespace debug {
     bool valid (const T&);
 
 
-    template <template<typename> class T, typename ...Args>
+    template <
+        template<size_t, typename...> class T,
+        size_t S,
+        typename ...Args
+    >
     struct validator {
-        static bool is_valid (const T<Args...>&);
+        static bool is_valid (const T<S,Args...>&);
     };
 
 
-    template <template<typename> class T, typename ...Args>
-    bool valid (const T<Args...> &v)
-    { return validator<T,Args...>::is_valid (v); }
+    template <
+        template<size_t,typename...> class T,
+        size_t S,
+        typename ...Args
+    >
+    bool valid (const T<S,Args...> &v)
+    { return validator<T,S,Args...>::is_valid (v); }
 
 
     template <typename T>
@@ -320,7 +328,10 @@ namespace debug {
     { CHECK (valid (t)); }
 
 
-    template <template<typename> class T, typename ...Args>
+    template <
+        template<typename...> class T,
+        typename ...Args
+    >
     void sanity (const T<Args...> &t)
     { CHECK (valid (t)); }
 }

@@ -25,42 +25,44 @@
 #include <cmath>
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-util::extent<T>::extent (const T  _width, const T  _height):
+template <size_t S, typename T>
+util::extent<S,T>::extent (const T  _width, const T  _height):
         w (_width),
         h (_height)
 {
+    static_assert (S == 2, "extents currently only support 2 dimensions");
+
     CHECK_GE (w, 0);
     CHECK_GE (h, 0);
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-util::extent<T>::extent (T t):
+template <size_t S, typename T>
+util::extent<S,T>::extent (T t):
     extent (t, t)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-util::extent<T>::extent (vector<2,T> _v):
+template <size_t S, typename T>
+util::extent<S,T>::extent (vector<S,T> _v):
     extent (_v.x, _v.y)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-util::extent<T>::extent (const util::extent<T> &rhs):
+template <size_t S, typename T>
+util::extent<S,T>::extent (const util::extent<S,T> &rhs):
         w (rhs.w),
         h (rhs.h)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-util::extent<T>&
-util::extent<T>::operator= (const util::extent<T> &rhs)
+template <size_t S, typename T>
+util::extent<S,T>&
+util::extent<S,T>::operator= (extent<S,T> rhs)
 {
     w = rhs.w;
     h = rhs.h;
@@ -70,27 +72,27 @@ util::extent<T>::operator= (const util::extent<T> &rhs)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <size_t S, typename T>
 T
-util::extent<T>::diameter (void) const
+util::extent<S,T>::diameter (void) const
 {
     return static_cast<T> (sqrt (w * w + h * h));
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t S, typename T>
 T
-util::extent<T>::area (void) const
+util::extent<S,T>::area (void) const
 {
     return w * h;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-util::extent<T>
-util::extent<T>::expanded (util::vector<2,T> mag) const
+template <size_t S, typename T>
+util::extent<S,T>
+util::extent<S,T>::expanded (util::vector<S,T> mag) const
 {
     return {
         w + mag.x,
@@ -100,36 +102,36 @@ util::extent<T>::expanded (util::vector<2,T> mag) const
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-util::extent<T>
-util::extent<T>::expanded (T t) const
+template <size_t S, typename T>
+util::extent<S,T>
+util::extent<S,T>::expanded (T t) const
 {
-    return expanded (util::vector<2,T> {t});
+    return expanded (util::vector<S,T> {t});
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <size_t S, typename T>
 float
-util::extent<T>::aspect (void) const
+util::extent<S,T>::aspect (void) const
 {
     return static_cast<float> (w) / static_cast<float> (h);
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <size_t S, typename T>
 bool
-util::extent<T>::empty (void) const
+util::extent<S,T>::empty (void) const
 {
     return almost_equal (area(), 0);
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <size_t S, typename T>
 T&
-util::extent<T>::operator[] (size_t idx)
+util::extent<S,T>::operator[] (size_t idx)
 {
     switch (idx) {
     case 0: return w;
@@ -142,9 +144,9 @@ util::extent<T>::operator[] (size_t idx)
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t S, typename T>
 const T&
-util::extent<T>::operator[] (size_t idx) const
+util::extent<S,T>::operator[] (size_t idx) const
 {
     switch (idx) {
     case 0: return w;
@@ -157,18 +159,18 @@ util::extent<T>::operator[] (size_t idx) const
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t S, typename T>
 size_t
-util::extent<T>::size (void) const
+util::extent<S,T>::size (void) const
 {
-    return 2u;
+    return S;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <size_t S, typename T>
 bool
-util::extent<T>::operator ==(const extent& rhs) const
+util::extent<S,T>::operator ==(const extent& rhs) const
 {
     return almost_equal (w, rhs.w) &&
            almost_equal (h, rhs.h);
@@ -176,15 +178,15 @@ util::extent<T>::operator ==(const extent& rhs) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-const util::extent<T> util::extent<T>::MIN {
+template <size_t S, typename T>
+const util::extent<S,T> util::extent<S,T>::MIN {
     0, 0
 };
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-const util::extent<T> util::extent<T>::MAX {
+template <size_t S, typename T>
+const util::extent<S,T> util::extent<S,T>::MAX {
     std::numeric_limits<T>::max (),
     std::numeric_limits<T>::max ()
 };
@@ -192,43 +194,43 @@ const util::extent<T> util::extent<T>::MAX {
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace debug {
-    template <typename T>
-    struct validator<util::extent,T> {
-        static bool is_valid (const util::extent<T> &e)
+    template <size_t S, typename T>
+    struct validator<util::extent,S,T> {
+        static bool is_valid (const util::extent<S,T> &e)
         {
             return e.w >= 0 && e.h >= 0;
         }
     };
 }
 
-template bool debug::valid (const util::extent<float>&);
-template bool debug::valid (const util::extent<double>&);
-template bool debug::valid (const util::extent<uint16_t>&);
-template bool debug::valid (const util::extent<uint32_t>&);
-template bool debug::valid (const util::extent<uint64_t>&);
+template bool debug::valid (const util::extent<2,float>&);
+template bool debug::valid (const util::extent<2,double>&);
+template bool debug::valid (const util::extent<2,uint16_t>&);
+template bool debug::valid (const util::extent<2,uint32_t>&);
+template bool debug::valid (const util::extent<2,uint64_t>&);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, util::extent<T> e)
+util::operator<< (std::ostream &os, util::extent<S,T> e)
 {
     os << "[" << e.w << ", " << e.h << "]";
     return os;
 }
 
 
-template std::ostream& util::operator<< (std::ostream&, util::extent<uint16_t>);
-template std::ostream& util::operator<< (std::ostream&, util::extent<uint32_t>);
-template std::ostream& util::operator<< (std::ostream&, util::extent<uint64_t>);
-template std::ostream& util::operator<< (std::ostream&, util::extent<float>);
-template std::ostream& util::operator<< (std::ostream&, util::extent<double>);
+template std::ostream& util::operator<< (std::ostream&, util::extent<2,uint16_t>);
+template std::ostream& util::operator<< (std::ostream&, util::extent<2,uint32_t>);
+template std::ostream& util::operator<< (std::ostream&, util::extent<2,uint64_t>);
+template std::ostream& util::operator<< (std::ostream&, util::extent<2,float>);
+template std::ostream& util::operator<< (std::ostream&, util::extent<2,double>);
 
 
 //-----------------------------------------------------------------------------
 namespace util {
-    template struct extent<uint32_t>;
-    template struct extent<uint64_t>;
-    template struct extent<float>;
-    template struct extent<double>;
+    template struct extent<2,uint32_t>;
+    template struct extent<2,uint64_t>;
+    template struct extent<2,float>;
+    template struct extent<2,double>;
 }

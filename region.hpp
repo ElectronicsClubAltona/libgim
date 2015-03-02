@@ -30,25 +30,25 @@ namespace util {
     /**
      * A two-dimensional rectangle, with size and position.
      */
-    template <typename T>
+    template <size_t S, typename T>
     struct region {
         using position_type = T;
         using size_type = typename try_unsigned<T>::type;
 
-        static constexpr size_t dimension = 2u;
+        static constexpr size_t dimension = S;
         static constexpr size_t elements = dimension * 2;
         using value_type = T;
 
-        using extent_t = util::extent<size_type>;
-        using point_t  = util::point<2,T>;
+        using extent_t = util::extent<S,size_type>;
+        using point_t  = util::point<S,position_type>;
 
         position_type x, y;
         size_type w, h;
 
         region () = default;
-        region (util::extent<size_type>);
-        region (util::point<2,T>, util::extent<size_type>);
-        region (util::point<2,T>, util::point<2,T>);
+        region (extent_t);
+        region (point_t, extent_t);
+        region (point_t, point_t);
         region (T _x, T _y, size_type _w, size_type _h);
 
         size_type area     (void) const;
@@ -60,24 +60,24 @@ namespace util {
 
         bool empty (void) const;
 
-        point<2,T> rebase (util::point<2,T>);
+        point_t rebase (point_t);
 
-        point<2,T> base    (void) const;
-        point<2,T> away    (void) const;
-        point<2,T> centre  (void) const;
-        point<2,T> closest (point<2,T>) const;
+        point_t base    (void) const;
+        point_t away    (void) const;
+        point_t centre  (void) const;
+        point_t closest (point_t) const;
 
         // Point and region relation queries
-        bool includes (const point<2,T>&) const; // inclusive of borders
-        bool contains (const point<2,T>&) const; // exclusive of borders
-        bool intersects (const region<T>&) const;  // exclusive of borders
+        bool includes (point_t) const; // inclusive of borders
+        bool contains (point_t) const; // exclusive of borders
+        bool intersects (region<S,T>) const;  // exclusive of borders
 
         // Move a point to be within the region bounds
-        void constrain (point<2,T>&) const;
-        point<2,T> constrained (const point<2,T>&) const;
+        void constrain (point_t&) const;
+        point_t constrained (point_t) const;
 
         // Compute binary region combinations
-        region intersection (const region<T>&) const;
+        region intersection (region<S,T>) const;
 
         // Compute a region `mag` units into the region
         region inset (T mag);
@@ -89,27 +89,28 @@ namespace util {
         region& expand (T w, T h);
 
         // arithmetic operators
-        region operator+ (vector<2,T>) const;
-        region operator- (vector<2,T>) const;
+        region operator+ (vector<S,T>) const;
+        region operator- (vector<S,T>) const;
 
         // Logical comparison operators
-        bool operator ==(const region<T>& rhs) const;
-        bool operator !=(const region<T>& rhs) const
+        bool operator ==(region<S,T> rhs) const;
+        bool operator !=(region<S,T> rhs) const
             { return !(*this == rhs); }
 
         // Utility constants
-        static const region<T> MAX;
-        static const region<T> UNIT;
+        static const region<S,T> MAX;
+        static const region<S,T> UNIT;
 
         void sanity (void) const;
     };
 
-    typedef region<size_t>   region2u;
-    typedef region<intmax_t> region2i;
-    typedef region<float>    region2f;
+    typedef region<2,size_t>   region2u;
+    typedef region<2,intmax_t> region2i;
+    typedef region<2,float>    region2f;
+    typedef region<2,double>   region2d;
 
-    template <typename T>
-    std::ostream& operator<< (std::ostream&, const util::region<T>&);
+    template <size_t S, typename T>
+    std::ostream& operator<< (std::ostream&, const util::region<S,T>&);
 }
 
 

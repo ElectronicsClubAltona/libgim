@@ -29,22 +29,22 @@ namespace util {
     /**
      * A pure two-dimensional size, without positioning
      */
-    template <typename T>
+    template <size_t S, typename T>
     struct extent {
         T w, h;
 
         extent (const T  _width, const T  _height);
         extent (T);
-        extent (vector<2,T>);
+        extent (vector<S,T>);
         extent (const extent&);
-        extent& operator= (const extent&);
+        extent& operator= (extent);
         extent () = default;
 
         T    area  (void) const;
         T diameter (void) const;
 
-        extent<T> expanded (util::vector<2,T>) const;
-        extent<T> expanded (T) const;
+        extent expanded (vector<S,T>) const;
+        extent expanded (T) const;
 
         float aspect (void) const;
 
@@ -60,18 +60,18 @@ namespace util {
             { return !(*this == rhs); }
 
         template <typename U>
-        extent<U> cast (void) const;
+        extent<S,U> cast (void) const;
 
-        static const extent<T> MAX;
-        static const extent<T> MIN;
+        static const extent MAX;
+        static const extent MIN;
     };
 
-    typedef extent<int> extent2i;
-    typedef extent<size_t> extent2u;
-    typedef extent<float> extent2f;
+    typedef extent<2,int> extent2i;
+    typedef extent<2,size_t> extent2u;
+    typedef extent<2,float> extent2f;
 
-    template <typename T>
-    std::ostream& operator<< (std::ostream&, util::extent<T>);
+    template <size_t S, typename T>
+    std::ostream& operator<< (std::ostream&, util::extent<S,T>);
 }
 
 

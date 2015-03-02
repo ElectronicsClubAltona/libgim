@@ -25,10 +25,10 @@
 #define __UTIL_EXTENT_IPP
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t S, typename T>
 template <typename U>
-util::extent<U>
-util::extent<T>::cast (void) const
+util::extent<S,U>
+util::extent<S,T>::cast (void) const
 {
     return {
         static_cast<U> (w),
