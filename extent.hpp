@@ -56,6 +56,9 @@ namespace util {
 
         template <typename U>
         extent<U> cast (void) const;
+
+        static const extent<T> MAX;
+        static const extent<T> MIN;
     };
 
     typedef extent<int> extent2i;

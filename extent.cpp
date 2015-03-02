@@ -137,6 +137,21 @@ util::extent<T>::operator ==(const extent& rhs) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+const util::extent<T> util::extent<T>::MIN {
+    0, 0
+};
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+const util::extent<T> util::extent<T>::MAX {
+    std::numeric_limits<T>::max (),
+    std::numeric_limits<T>::max ()
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
 namespace debug {
     template <typename T>
     struct validator<util::extent,T> {
