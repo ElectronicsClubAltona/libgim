@@ -39,6 +39,9 @@ namespace util {
         static constexpr size_t elements = dimension * 2;
         using value_type = T;
 
+        using extent_t = util::extent<size_type>;
+        using point_t  = util::point<2,T>;
+
         position_type x, y;
         size_type w, h;
 
@@ -50,7 +53,8 @@ namespace util {
 
         size_type area     (void) const;
         size_type diameter (void) const;
-        util::extent<size_type>  magnitude (void) const;
+        extent_t magnitude (void) const;
+        extent_t magnitude (extent_t);
 
         void scale (T factor);
 

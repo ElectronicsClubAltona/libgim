@@ -85,10 +85,22 @@ util::region<T>::diameter (void) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
-util::extent<typename util::region<T>::size_type>
+typename util::region<T>::extent_t
 util::region<T>::magnitude (void) const
 {
     return { w, h };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+typename util::region<T>::extent_t
+util::region<T>::magnitude (extent_t e)
+{
+    w = e.w;
+    h = e.h;
+
+    return magnitude ();
 }
 
 
