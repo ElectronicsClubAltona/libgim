@@ -129,6 +129,18 @@ util::region<T>::empty (void) const
 //-----------------------------------------------------------------------------
 template <typename T>
 util::point<2,T>
+util::region<T>::rebase (util::point<2,T> p)
+{
+    x = p.x;
+    y = p.y;
+
+    return base ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+util::point<2,T>
 util::region<T>::base (void) const
 {
     return { x, y };
