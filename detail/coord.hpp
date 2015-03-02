@@ -41,101 +41,179 @@ namespace util {
 #endif
 
         //---------------------------------------------------------------------
+        // tags for accessor names
+        struct rgba { };
+        struct xyzw { };
+        struct stpq { };
+        struct whd  { };
+
+
+        template <size_t S, typename T, typename...>
+        struct coord_base {
+            T data[S];
+        };
+
+
+        template <typename T>
+        struct coord_base<3,T,rgba> {
+            union {
+                T data[3];
+                struct { T r,g,b; };
+            };
+        };
+
+        template <typename T>
+        struct coord_base<4,T,rgba> {
+            union {
+                T data[4];
+                struct { T r,g,b,a; };
+            };
+        };
+
+
+        template <typename T>
+        struct coord_base<2,T,xyzw> {
+            union {
+                T data[2];
+                struct { T x,y; };
+            };
+        };
+
+
+        template <typename T>
+        struct coord_base<3,T,xyzw> {
+            union {
+                T data[3];
+                struct { T x,y,z; };
+            };
+        };
+
+
+        template <typename T>
+        struct coord_base<4,T,xyzw> {
+            union {
+                T data[4];
+                struct { T x,y,z,w; };
+            };
+        };
+
+
+        template <typename T>
+        struct coord_base<2,T,xyzw,stpq> {
+            union {
+                T data[2];
+                struct { T x,y; };
+                struct { T s,t; };
+            };
+        };
+
+
+        template <typename T>
+        struct coord_base<3,T,xyzw,stpq> {
+            union {
+                T data[3];
+                struct { T x,y,z; };
+                struct { T s,t,p; };
+            };
+        };
+
+
+        template <typename T>
+        struct coord_base<4,T,xyzw,stpq> {
+            union {
+                T data[4];
+                struct { T x,y,z,w; };
+                struct { T s,t,p,q; };
+            };
+        };
+
+
+        template <typename T>
+        struct coord_base<2,T,whd> {
+            union {
+                T data[2];
+                struct { T w,h; };
+            };
+        };
+
+
+        template <typename T>
+        struct coord_base<3,T,whd> {
+            union {
+                T data[3];
+                struct { T w,h,d; };
+            };
+        };
+
+
+        //---------------------------------------------------------------------
         // coord types are not really intended to have arbitrary dimension, so
         // don't add specialisations (or a general case) without a decent
         // reason.
-        template <size_t S, typename T>
-        struct coord_data;
+        template <size_t S, typename T, typename...>
+        struct coord_init;
 
-        //---------------------------------------------------------------------
-        template <typename T>
-        struct coord_data<1, T>
+        ////---------------------------------------------------------------------
+        template <typename T, typename ...tags>
+        struct coord_init<1,T,tags...> : public coord_base<1,T,tags...>
         {
-            coord_data () = default;
-            coord_data (T v0):
-                data { v0 }
+            coord_init () = default;
+            coord_init (T v0):
+                coord_base<1,T,tags...> ({v0})
             { ; }
-
-            union {
-                T data[1];
-                T x;
-            };
         };
 
 
-        //---------------------------------------------------------------------
-        template <typename T>
-        struct coord_data<2,T>
+        ////---------------------------------------------------------------------
+        template <typename T, typename ...tags>
+        struct coord_init<2,T,tags...> : public coord_base<2,T,tags...>
         {
-            coord_data () = default;
-            coord_data (T v0, T v1):
-                data { v0, v1 }
+            coord_init () = default;
+            coord_init (T v0, T v1):
+                coord_base<2,T,tags...> ({ v0, v1 })
             { ; }
-
-            union {
-                T data[2];
-
-                struct { T x, y; };
-                struct { T s, t; };
-            };
         };
 
 
-        //---------------------------------------------------------------------
-        template <typename T>
-        struct coord_data<3,T>
+        ////---------------------------------------------------------------------
+        template <typename T, typename ...tags>
+        struct coord_init<3,T,tags...> : public coord_base<3,T,tags...>
         {
-            coord_data () = default;
-            coord_data (T v0, T v1, T v2):
-                data { v0, v1, v2 }
+            coord_init () = default;
+            coord_init (T v0, T v1, T v2):
+                coord_base<3,T,tags...> ({v0, v1, v2})
             { ; }
-
-            union {
-                T data[3];
-
-                struct { T x, y, z; };
-                struct { T s, t, p; };
-                struct { T r, g, b; };
-            };
         };
 
 
-        //---------------------------------------------------------------------
-        template <typename T>
-        struct coord_data<4,T>
+        ////---------------------------------------------------------------------
+        template <typename T, typename ...tags>
+        struct coord_init<4,T,tags...> : public coord_base<4,T,tags...>
         {
-            coord_data () = default;
-            coord_data (T v0, T v1, T v2, T v3):
-                data { v0, v1, v2, v3 }
+            coord_init () = default;
+            coord_init (T v0, T v1, T v2, T v3):
+                coord_base<4,T,tags...> ({ v0, v1, v2, v3 })
             { ; }
-
-            union {
-                T data[4];
-
-                struct { T x, y, z, w; };
-                struct { T s, t, p, q; };
-                struct { T r, g, b, a; };
-            };
         };
 
 
-        //---------------------------------------------------------------------
-        template <size_t S, typename T>
-        struct coord : public coord_data<S,T> {
+        ////---------------------------------------------------------------------
+        template <size_t S, typename T, typename ...tags>
+        struct coord : public coord_init<S,T,tags...> {
             static_assert (S > 0, "coord dimensions must be strictly positive");
 
             typedef T value_type;
             static constexpr size_t dimension = S;
             static constexpr size_t elements = S;
 
-            using coord_data<S,T>::coord_data;
+            using coord_init<S,T,tags...>::coord_init;
             coord () = default;
 
             explicit coord (T v)
             { std::fill (std::begin (this->data), std::end (this->data), v); }
 
-            coord (const coord<S,T> &rhs) = default;
-            coord& operator= (const coord<S,T> &rhs) = default;
+            coord (const coord<S,T,tags...> &rhs) = default;
+            coord& operator= (const coord<S,T,tags...> &rhs) = default;
 
             T& operator[] (size_t i)       { return this->data[i]; }
             T  operator[] (size_t i) const { return this->data[i]; }
@@ -148,12 +226,12 @@ namespace util {
         };
 
 
-        //---------------------------------------------------------------------
+        ////---------------------------------------------------------------------
         // XXX: Unsure whether this should really be defined for arbitrary
         // types in a semantic sense, but practicality suggestes this is the
         // best option; point/vector dot product is too useful.
-        template <size_t S, typename T>
-        T dot (const coord<S,T> &a, const coord<S,T> &b)
+        template <size_t S, typename T, typename ...tag_a, typename ...tag_b>
+        T dot (const coord<S,T,tag_a...> &a, const coord<S,T,tag_b...> &b)
         {
             return std::inner_product (std::begin (a.data),
                                        std::end   (a.data),

@@ -29,8 +29,8 @@
 
 namespace util {
     template <size_t S, typename T>
-    struct vector : public detail::coord<S, T> {
-        using detail::coord<S,T>::coord;
+    struct vector : public detail::coord<S,T,detail::xyzw,detail::stpq> {
+        using detail::coord<S,T,detail::xyzw,detail::stpq>::coord;
 
         // arithmetic operators
         vector<S,T>  operator* (T) const;

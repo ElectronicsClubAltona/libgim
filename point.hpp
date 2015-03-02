@@ -31,8 +31,8 @@
 namespace util {
     /// An n-dimensional position in space.
     template <size_t S, typename T>
-    struct point : public detail::coord<S,T> {
-        using detail::coord<S,T>::coord;
+    struct point : public detail::coord<S,T,detail::xyzw> {
+        using detail::coord<S,T,detail::xyzw>::coord;
 
         // point operators
         template <typename U> typename std::common_type<T,U>::type distance  (const point<S,U> &) const;

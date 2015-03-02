@@ -29,8 +29,8 @@
 namespace util {
     /// An RGBA colour POD type.
     template <typename T>
-    struct colour : public detail::coord<4, T> {
-        using detail::coord<4,T>::coord;
+    struct colour : public detail::coord<4,T,detail::rgba> {
+        using detail::coord<4,T,detail::rgba>::coord;
 
         static const colour WHITE;
         static const colour BLACK;
