@@ -209,6 +209,8 @@ namespace util {
             using coord_init<S,T,tags...>::coord_init;
             coord () = default;
 
+            size_t size (void) const { return S; }
+
             explicit coord (T v)
             { std::fill (std::begin (this->data), std::end (this->data), v); }
 

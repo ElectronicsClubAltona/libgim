@@ -37,7 +37,7 @@ util::region<S,T>::region (extent_t _extent):
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::region<S,T>::region (point_t _point,
-                         extent_t _size):
+                           extent_t _size):
     x (_point.x),
     y (_point.y),
     w (_size.w),
@@ -48,7 +48,7 @@ util::region<S,T>::region (point_t _point,
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::region<S,T>::region (point_t _a,
-                         point_t _b):
+                           point_t _b):
     region (_a, _b - _a)
 {
     CHECK_GE (_b.x, _a.x);

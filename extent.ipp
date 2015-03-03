@@ -19,10 +19,12 @@
 
 
 #ifdef __UTIL_EXTENT_IPP
-#error "twice included ipp"
+#error
 #endif
 
 #define __UTIL_EXTENT_IPP
+
+#include <algorithm>
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
@@ -30,8 +32,16 @@ template <typename U>
 util::extent<S,U>
 util::extent<S,T>::cast (void) const
 {
-    return {
-        static_cast<U> (w),
-        static_cast<U> (h)
-    };
+    util::extent<S,U> out;
+    std::copy (std::begin (this->data), std::end (this->data), std::begin (out.data));
+    return out;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename U, typename T>
+U
+util::aspect (util::extent<2,T> e)
+{
+    return static_cast<U> (e.w) / e.h;
 }

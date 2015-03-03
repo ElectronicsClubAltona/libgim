@@ -24,51 +24,12 @@
 
 #include <cmath>
 
+
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-util::extent<S,T>::extent (const T  _width, const T  _height):
-        w (_width),
-        h (_height)
-{
-    static_assert (S == 2, "extents currently only support 2 dimensions");
-
-    CHECK_GE (w, 0);
-    CHECK_GE (h, 0);
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::extent<S,T>::extent (T t):
-    extent (t, t)
-{ ; }
-
-
-//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::extent<S,T>::extent (vector<S,T> _v):
     extent (_v.x, _v.y)
 { ; }
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::extent<S,T>::extent (const util::extent<S,T> &rhs):
-        w (rhs.w),
-        h (rhs.h)
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::extent<S,T>&
-util::extent<S,T>::operator= (extent<S,T> rhs)
-{
-    w = rhs.w;
-    h = rhs.h;
-
-    return *this;
-}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -76,7 +37,14 @@ template <size_t S, typename T>
 T
 util::extent<S,T>::diameter (void) const
 {
-    return static_cast<T> (sqrt (w * w + h * h));
+    return static_cast<T> (
+        std::sqrt (
+            std::accumulate (std::begin (this->data),
+                             std::end   (this->data),
+                             T {0},
+                             [] (auto a, auto b) { return a + b * b; })
+        )
+    );
 }
 
 
@@ -85,7 +53,10 @@ template <size_t S, typename T>
 T
 util::extent<S,T>::area (void) const
 {
-    return w * h;
+    return std::accumulate (std::begin (this->data),
+                            std::end   (this->data),
+                            T {1},
+                            std::multiplies<T> ());
 }
 
 
@@ -94,10 +65,7 @@ template <size_t S, typename T>
 util::extent<S,T>
 util::extent<S,T>::expanded (util::vector<S,T> mag) const
 {
-    return {
-        w + mag.x,
-        h + mag.y
-    };
+    return *this + mag;
 }
 
 
@@ -112,15 +80,6 @@ util::extent<S,T>::expanded (T t) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-float
-util::extent<S,T>::aspect (void) const
-{
-    return static_cast<float> (w) / static_cast<float> (h);
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
 bool
 util::extent<S,T>::empty (void) const
 {
@@ -130,40 +89,15 @@ util::extent<S,T>::empty (void) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-T&
-util::extent<S,T>::operator[] (size_t idx)
+util::extent<S,T>
+util::extent<S,T>::operator+ (vector<S,T> rhs) const
 {
-    switch (idx) {
-    case 0: return w;
-    case 1: return h;
-
-    default:
-        unreachable ();
-    }
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-const T&
-util::extent<S,T>::operator[] (size_t idx) const
-{
-    switch (idx) {
-    case 0: return w;
-    case 1: return h;
-
-    default:
-        unreachable ();
-    }
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-size_t
-util::extent<S,T>::size (void) const
-{
-    return S;
+    extent<S,T> out;
+    std::adjacent_difference (std::begin (this->data),
+                              std::end   (this->data),
+                              std::begin (rhs.data),
+                              std::plus<T> ());
+    return out;
 }
 
 
@@ -172,22 +106,21 @@ template <size_t S, typename T>
 bool
 util::extent<S,T>::operator ==(const extent& rhs) const
 {
-    return almost_equal (w, rhs.w) &&
-           almost_equal (h, rhs.h);
+    return std::equal (std::begin (this->data),
+                       std::end   (this->data),
+                       std::begin (rhs.data),
+                       almost_equal<T>);
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-const util::extent<S,T> util::extent<S,T>::MIN {
-    0, 0
-};
+const util::extent<S,T> util::extent<S,T>::MIN { 0 };
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 const util::extent<S,T> util::extent<S,T>::MAX {
-    std::numeric_limits<T>::max (),
     std::numeric_limits<T>::max ()
 };
 

@@ -20,8 +20,8 @@
 #ifndef __UTIL_EXTENT_HPP
 #define __UTIL_EXTENT_HPP
 
+#include "detail/coord.hpp"
 #include "vector.hpp"
-
 #include <iostream>
 
 
@@ -30,15 +30,10 @@ namespace util {
      * A pure two-dimensional size, without positioning
      */
     template <size_t S, typename T>
-    struct extent {
-        T w, h;
-
-        extent (const T  _width, const T  _height);
-        extent (T);
-        extent (vector<S,T>);
-        extent (const extent&);
-        extent& operator= (extent);
+    struct extent : public detail::coord<S,T,detail::whd> {
+        using detail::coord<S,T,detail::whd>::coord;
         extent () = default;
+        extent (vector<S,T>);
 
         T    area  (void) const;
         T diameter (void) const;
@@ -46,14 +41,9 @@ namespace util {
         extent expanded (vector<S,T>) const;
         extent expanded (T) const;
 
-        float aspect (void) const;
-
         bool empty (void) const;
 
-        T& operator[] (size_t idx);
-        const T& operator[] (size_t idx) const;
-
-        size_t size (void) const;
+        extent<S,T> operator+ (vector<S,T>) const;
 
         bool operator ==(const extent& rhs) const;
         bool operator !=(const extent& rhs) const
@@ -65,6 +55,10 @@ namespace util {
         static const extent MAX;
         static const extent MIN;
     };
+
+    template <typename U, typename T>
+    U
+    aspect (extent<2,T>);
 
     typedef extent<2,int> extent2i;
     typedef extent<2,size_t> extent2u;
