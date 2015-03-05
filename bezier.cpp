@@ -27,22 +27,6 @@
 
 
 //-----------------------------------------------------------------------------
-// HACK: point multiplication isn't defined, but it's way more convenient than
-// casting between vector/coord
-namespace util {
-    template <typename T>
-    util::point2f
-    operator* (T a, util::point2f b)
-    {
-        return {
-            a * b.data[0],
-            a * b.data[1]
-        };
-    }
-}
-
-
-//-----------------------------------------------------------------------------
 template <size_t S>
 util::bezier<S>::bezier (const util::point2f (&_points)[S+1])
 {
@@ -147,10 +131,10 @@ namespace util {
         const auto &v = m_coeffs;
 
         return {
-            -1 * v[0] +3 * v[1] -3 * v[2] +1 * v[3],
-             3 * v[0] -6 * v[1] +3 * v[2],
-            -3 * v[0] +3 * v[1],
-             1 * v[0]
+            -1.f * v[0] +3.f * v[1] -3.f * v[2] +1.f * v[3],
+             3.f * v[0] -6.f * v[1] +3.f * v[2],
+            -3.f * v[0] +3.f * v[1],
+             1.f * v[0]
         };
     }
 }
@@ -165,9 +149,9 @@ namespace util {
         auto &v = m_coeffs;
 
         return {
-            +1 * v[2] -2 * v[1] + 1 * v[0],
-            -2 * v[2] +2 * v[1],
-            +1 * v[2]
+            +1.f * v[2] -2.f * v[1] + 1.f * v[0],
+            -2.f * v[2] +2.f * v[1],
+            +1.f * v[2]
         };
     }
 }
@@ -182,8 +166,8 @@ namespace util {
         auto &v = m_coeffs;
 
         return {
-            -1 * v[1] + 1 * v[0],
-            +1 * v[1],
+            -1.f * v[1] + 1.f * v[0],
+            +1.f * v[1],
         };
     }
 }
@@ -378,12 +362,10 @@ util::bezier<S>::region (void) const
         y1 = max (y1, m_points[i].y);
     }
 
-    return {
-        x0,
-        y0,
-        x1 - x0,
-        y1 - y0
-    };
+    util::point2f p0 { x0, y0 };
+    util::point2f p1 { x1, y1 };
+
+    return { p0, p1 };
 }
 
 

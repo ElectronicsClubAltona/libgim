@@ -27,9 +27,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-util::extent<S,T>::extent (vector<S,T> _v):
-    extent (_v.x, _v.y)
-{ ; }
+util::extent<S,T>::extent (vector<S,T> _v)
+{
+    std::copy (std::begin (_v.data),
+               std::end   (_v.data),
+               std::begin (this->data));
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,32 +92,6 @@ util::extent<S,T>::empty (void) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-util::extent<S,T>
-util::extent<S,T>::operator+ (vector<S,T> rhs) const
-{
-    extent<S,T> out;
-    std::adjacent_difference (std::begin (this->data),
-                              std::end   (this->data),
-                              std::begin (rhs.data),
-                              std::plus<T> ());
-    return out;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-bool
-util::extent<S,T>::operator ==(const extent& rhs) const
-{
-    return std::equal (std::begin (this->data),
-                       std::end   (this->data),
-                       std::begin (rhs.data),
-                       almost_equal<T>);
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
 const util::extent<S,T> util::extent<S,T>::MIN { 0 };
 
 
@@ -131,7 +108,9 @@ namespace debug {
     struct validator<util::extent,S,T> {
         static bool is_valid (const util::extent<S,T> &e)
         {
-            return e.w >= 0 && e.h >= 0;
+            return std::all_of (std::begin (e.data),
+                                std::end   (e.data),
+                                [] (auto i) { return i >= 0; });
         }
     };
 }
@@ -148,7 +127,11 @@ template <size_t S, typename T>
 std::ostream&
 util::operator<< (std::ostream &os, util::extent<S,T> e)
 {
-    os << "[" << e.w << ", " << e.h << "]";
+    os << "[";
+    std::copy (std::begin (e.data),
+               std::end   (e.data),
+               std::ostream_iterator<T> (os, ", "));
+    os << "]";
     return os;
 }
 

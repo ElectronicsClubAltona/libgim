@@ -167,15 +167,20 @@ template <>
 void
 test_region<1> (void)
 {
-    static const util::bezier<1> upright ({{0.f, 0.f}, {100.f, 100.f}});
-    static const util::bezier<1> downleft ({{100.f, 100.f}, {0.f, 0.f}});
-    static const util::bezier<1> vertical ({{0.f, 0.f}, {0.f, 100.f}});
-    static const util::bezier<1> horizontal ({{0.f, 0.f}, {100.f, 0.f}});
+    util::point2f p0 {   0,   0 },
+                  p1 { 100,   0 },
+                  p2 { 100, 100 },
+                  p3 {   0, 100 };
 
-    CHECK_EQ (upright.region (), util::region2f (0.f, 0.f, 100.f, 100.f));
-    CHECK_EQ (downleft.region (), util::region2f (0.f, 0.f, 100.f, 100.f));
-    CHECK_EQ (vertical.region (), util::region2f (0.f, 0.f, 0.f, 100.f));
-    CHECK_EQ (horizontal.region (), util::region2f (0.f, 0.f, 100.f, 0.f));
+    static const util::bezier<1> upright    ({p0, p2});
+    static const util::bezier<1> downleft   ({p2, p0});
+    static const util::bezier<1> vertical   ({p0, p3});
+    static const util::bezier<1> horizontal ({p0, p2});
+
+    CHECK_EQ (upright.region (),    util::region2f (p0, p2));
+    CHECK_EQ (downleft.region (),   util::region2f (p0, p2));
+    CHECK_EQ (vertical.region (),   util::region2f (p0, p3));
+    CHECK_EQ (horizontal.region (), util::region2f (p0, p2));
 }
 
 
@@ -184,9 +189,13 @@ template <>
 void
 test_region<2> (void)
 {
-    static const util::bezier<2> upright({{0.f, 0.f}, {50.f, 50.f}, {100.f, 100.f}});
+    util::point2f p0 {   0,   0 },
+                  p1 {  50,  50 },
+                  p2 { 100, 100 };
 
-    CHECK_EQ (upright.region (), util::region2f (0.0f, 0.f, 100.f, 100.0f));
+    static const util::bezier<2> upright({p0, p1, p2});
+
+    CHECK_EQ (upright.region (), util::region2f (p0, p2));
 }
 
 
@@ -195,9 +204,14 @@ template <>
 void
 test_region<3> (void)
 {
-    static const util::bezier<3> upright({{0.f, 0.f}, {33.f, 33.f}, {67.f, 67.f}, {100.f, 100.f}});
+    util::point2f p0 {   0,   0 },
+                  p1 {  33,  33 },
+                  p2 {  67,  67 },
+                  p3 { 100, 100 };
 
-    CHECK_EQ (upright.region (), util::region2f (0.0f, 0.f, 100.f, 100.0f));
+    static const util::bezier<3> upright({p0, p1, p2, p3});
+
+    CHECK_EQ (upright.region (), util::region2f (p0, p3));
 }
 
 

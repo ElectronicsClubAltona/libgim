@@ -20,6 +20,7 @@
 #ifndef __UTIL_POINT_HPP
 #define __UTIL_POINT_HPP
 
+#include "extent.hpp"
 #include "vector.hpp"
 #include "detail/coord.hpp"
 
@@ -31,7 +32,8 @@
 namespace util {
     /// An n-dimensional position in space.
     template <size_t S, typename T>
-    struct point : public detail::coord<S,T,detail::xyzw> {
+    struct point : public detail::coord<S,T,detail::xyzw>
+    {
         using detail::coord<S,T,detail::xyzw>::coord;
 
         // point operators
@@ -40,22 +42,6 @@ namespace util {
         template <typename U> typename std::common_type<T,U>::type manhattan (const point<S,U> &) const;
 
         vector<S,T> to (const point&) const;
-
-        // arithetic operators
-        point<S,T>& operator*= (T);
-        point<S,T>  operator*  (T) const;
-        point<S,T>& operator/= (T);
-        point<S,T>  operator/  (T) const;
-
-        vector<S,T>  operator- (const point<S,T>&) const;
-
-        point<S,T>  operator-  (const vector<S,T>&) const;
-        point<S,T>& operator-= (const vector<S,T>&);
-        point<S,T>  operator+  (const vector<S,T>&) const;
-        point<S,T>& operator+= (const vector<S,T>&);
-
-        // logical operators
-        bool operator== (const point<S,T>&) const;
 
         template <size_t D> point<D,T> redim (void) const;
         template <size_t D> point<D,T> redim (const util::point<D,T> &fill) const;

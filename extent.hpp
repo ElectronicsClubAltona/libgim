@@ -30,8 +30,10 @@ namespace util {
      * A pure two-dimensional size, without positioning
      */
     template <size_t S, typename T>
-    struct extent : public detail::coord<S,T,detail::whd> {
+    struct extent : public detail::coord<S,T,detail::whd>
+    {
         using detail::coord<S,T,detail::whd>::coord;
+
         extent () = default;
         extent (vector<S,T>);
 
@@ -42,12 +44,6 @@ namespace util {
         extent expanded (T) const;
 
         bool empty (void) const;
-
-        extent<S,T> operator+ (vector<S,T>) const;
-
-        bool operator ==(const extent& rhs) const;
-        bool operator !=(const extent& rhs) const
-            { return !(*this == rhs); }
 
         template <typename U>
         extent<S,U> cast (void) const;
@@ -63,6 +59,7 @@ namespace util {
     typedef extent<2,int> extent2i;
     typedef extent<2,size_t> extent2u;
     typedef extent<2,float> extent2f;
+    typedef extent<2,double> extent2d;
 
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, util::extent<S,T>);

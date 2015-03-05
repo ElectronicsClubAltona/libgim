@@ -28,207 +28,9 @@
 #include <limits>
 #include <numeric>
 
-#if defined(COMPILER_GCC)
-#pragma GCC optimize("-O3")
-#endif
 
 //-----------------------------------------------------------------------------
 using namespace util;
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>
-util::vector<S,T>::operator* (T rhs) const {
-    util::vector<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] * rhs;
-
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>&
-util::vector<S,T>::operator*= (T rhs) {
-    for (auto &i: this->data)
-        i *= rhs;
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>
-util::vector<S,T>::operator* (const vector<S,T> &rhs) const {
-    util::vector<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] * rhs.data[i];
-
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>&
-util::vector<S,T>::operator*= (const vector<S,T> &rhs) {
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] *= rhs.data[i];
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>
-util::vector<S,T>::operator/ (T rhs) const {
-    util::vector<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] / rhs;
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>&
-util::vector<S,T>::operator/= (T rhs) {
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] /= rhs;
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>
-util::vector<S,T>::operator+ (const util::vector<S,T> &rhs) const {
-    util::vector<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] + rhs.data[i];
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>
-util::vector<S,T>::operator+ (T rhs) const {
-    util::vector<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] + rhs;
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>&
-util::vector<S,T>::operator+= (const util::vector<S,T> &rhs) {
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] += rhs.data[i];
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>&
-util::vector<S,T>::operator+= (T rhs) {
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] += rhs;
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>
-util::vector<S,T>::operator- (void) const {
-    util::vector<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = -this->data[i];
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>
-util::vector<S,T>::operator- (const util::vector<S,T> &rhs) const {
-    util::vector<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] - rhs.data[i];
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>&
-util::vector<S,T>::operator-= (const util::vector<S,T> &rhs) {
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] -= rhs.data[i];
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>
-util::vector<S,T>::operator- (T rhs) const {
-    util::vector<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] - rhs;
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>&
-util::vector<S,T>::operator-= (T rhs) {
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] -= rhs;
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>&
-util::vector<S,T>::operator= (const util::vector<S,T> &rhs) {
-    std::copy (std::begin (rhs.data), std::end (rhs.data), std::begin (this->data));
-
-    return *this;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-bool
-util::vector<S,T>::operator== (const util::vector<S,T> &rhs) const {
-    for (size_t i = 0; i < S; ++i)
-        if (!almost_equal (this->data[i], rhs.data[i]))
-            return false;
-
-    return true;
-}
 
 
 //-----------------------------------------------------------------------------
@@ -306,16 +108,6 @@ util::polar_to_cartesian (const util::vector<2,T> &v) {
     };
 }
 
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-T
-util::vector<S,T>::dot (const util::vector<S,T> &rhs) const {
-    T total { 0 };
-    for (size_t i = 0; i < S; ++i)
-        total += this->data[i] * rhs.data[i];
-    return total;
-}
-
 
 //-----------------------------------------------------------------------------
 template <typename T>
@@ -387,44 +179,6 @@ util::vector<S,T>::sanity (void) const {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T, typename U>
-util::vector<S,T>
-util::operator* (U a, const util::vector<S,T> &b)
-{
-    return b * T(a);
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T, typename U>
-util::vector<S,T>
-util::operator+ (U a, const util::vector<S,T> &b)
-{
-    return b + T(a);
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T, typename U>
-util::vector<S,T>
-util::operator- (U a, const util::vector<S,T> &b)
-{
-    return a + (-b);
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-T
-util::dot (vector<S,T> a, vector<S,T> b)
-{
-    return std::inner_product (std::begin (a),
-                               std::end (a),
-                               std::begin (b),
-                               T{0});
-}
-
-///////////////////////////////////////////////////////////////////////////////
 // ostream
 
 template <size_t S, typename T>
@@ -460,12 +214,6 @@ util::operator>> (const json::tree::node &node, util::vector<S,T> &v) {
 
 #define INSTANTIATE_S_T(S,T)                                                        \
 template struct util::vector<S,T>;                                                  \
-template util::vector<S,T> util::operator* (int, const util::vector<S,T>&);         \
-template util::vector<S,T> util::operator* (unsigned, const util::vector<S,T>&);    \
-template util::vector<S,T> util::operator* (float, const util::vector<S,T>&);       \
-template util::vector<S,T> util::operator+ (T, const util::vector<S,T>&);           \
-template util::vector<S,T> util::operator- (T, const util::vector<S,T>&);           \
-template T util::dot (util::vector<S,T>, util::vector<S,T>);                        \
 template std::ostream& util::operator<< (std::ostream&, const util::vector<S,T> &v);\
 template const json::tree::node& util::operator>> (const json::tree::node&, util::vector<S,T>&);
 

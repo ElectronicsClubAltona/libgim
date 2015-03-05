@@ -27,112 +27,6 @@
 
 using namespace std;
 
-#if defined(COMPILER_GCC)
-    #pragma GCC optimize("-O3")
-#endif
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::point<S,T>&
-util::point<S,T>::operator*= (T f) {
-    for (auto &i: this->data)
-        i *= f;
-
-    return *this;
-}
-
-
-template <size_t S, typename T>
-util::point<S,T>
-util::point<S,T>::operator* (T f) const {
-    util::point<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] * f;
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::point<S,T>&
-util::point<S,T>::operator/= (T f)
-{
-    std::transform (std::begin (this->data),
-                    std::end   (this->data),
-                    std::begin (this->data),
-                    [f] (auto i) { return i / f; });
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::point<S,T>
-util::point<S,T>::operator/ (T f) const
-{
-    point<S,T> out;
-
-    std::transform (std::begin (this->data),
-                    std::end   (this->data),
-                    std::begin (out.data),
-                    [f] (auto i) { return i / f; });
-
-    return out;
-}
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::point<S,T>
-util::point<S,T>::operator- (const vector<S,T> &rhs) const {
-    util::point<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] - rhs.data[i];
-    return out;
-}
-
-
-template <size_t S, typename T>
-util::point<S,T>&
-util::point<S,T>::operator-= (const util::vector<S,T> &rhs) {
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] -= rhs.data[i];
-    return *this;
-}
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::point<S,T>
-util::point<S,T>::operator+ (const vector<S,T> &rhs) const {
-    util::point<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] + rhs.data[i];
-    return out;
-}
-
-
-template <size_t S, typename T>
-util::point<S,T>&
-util::point<S,T>::operator+= (const util::vector<S,T> &rhs) {
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] += rhs.data[i];
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>
-util::point<S,T>::operator- (const point<S,T> &rhs) const {
-    util::vector<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] - rhs.data[i];
-    return out;
-}
-
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
@@ -143,17 +37,6 @@ util::point<S,T>::to (const point<S,T> &rhs) const {
     for (size_t i = 0; i < S; ++i)
         out.data[i] = rhs.data[i] - this->data[i];
     return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-util::point<S,T>::operator== (const util::point<S,T> &rhs) const
-{
-    return std::equal (std::begin (this->data),
-                       std::end   (this->data),
-                       std::begin (rhs.data));
 }
 
 

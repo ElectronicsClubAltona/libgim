@@ -35,22 +35,43 @@ namespace util {
         using position_type = T;
         using size_type = typename try_unsigned<T>::type;
 
-        static constexpr size_t dimension = S;
-        static constexpr size_t elements = dimension * 2;
-        using value_type = T;
-
         using extent_t = util::extent<S,size_type>;
         using point_t  = util::point<S,position_type>;
 
-        position_type x, y;
-        size_type w, h;
+        using value_type = T;
 
+        //---------------------------------------------------------------------
+        static constexpr size_t dimension = S;
+        static constexpr size_t elements = extent_t::elements + point_t::elements;
+
+#pragma GCC diagnostic push
+#if defined(COMPILER_GCC)
+    #pragma GCC diagnostic ignored "-pedantic"
+#endif
+#if defined(COMPILER_CLANG)
+    #pragma GCC diagnostic ignored "-Wgnu"
+#endif
+        union {
+            struct {
+                point_t  p;
+                extent_t e;
+            };
+            struct {
+                T x, y;
+                T w, h;
+            };
+        };
+#pragma GCC diagnostic pop
+
+        //---------------------------------------------------------------------
         region () = default;
         region (extent_t);
         region (point_t, extent_t);
         region (point_t, point_t);
-        region (T _x, T _y, size_type _w, size_type _h);
+        region (std::array<T,S*2>);
+        region (position_type, size_type);
 
+        //---------------------------------------------------------------------
         size_type area     (void) const;
         size_type diameter (void) const;
         extent_t magnitude (void) const;
@@ -60,13 +81,13 @@ namespace util {
 
         bool empty (void) const;
 
-        point_t rebase (point_t);
-
+        //---------------------------------------------------------------------
         point_t base    (void) const;
         point_t away    (void) const;
         point_t centre  (void) const;
         point_t closest (point_t) const;
 
+        //---------------------------------------------------------------------
         // Point and region relation queries
         bool includes (point_t) const; // inclusive of borders
         bool contains (point_t) const; // exclusive of borders
@@ -79,14 +100,17 @@ namespace util {
         // Compute binary region combinations
         region intersection (region<S,T>) const;
 
+        //---------------------------------------------------------------------
+        region& resize (extent<S,T>);
+
         // Compute a region `mag` units into the region
         region inset (T mag);
 
         region expanded (T mag) const;
-        region expanded (T w, T h) const;
+        region expanded (vector<S,T>) const;
 
         region& expand (T mag);
-        region& expand (T w, T h);
+        region& expand (vector<S,T>);
 
         // arithmetic operators
         region operator+ (vector<S,T>) const;

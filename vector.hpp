@@ -32,35 +32,6 @@ namespace util {
     struct vector : public detail::coord<S,T,detail::xyzw,detail::stpq> {
         using detail::coord<S,T,detail::xyzw,detail::stpq>::coord;
 
-        // arithmetic operators
-        vector<S,T>  operator* (T) const;
-        vector<S,T>& operator*=(T);
-
-        vector<S,T>  operator/ (T) const;
-        vector<S,T>& operator/=(T);
-
-        vector<S,T>  operator+ (T) const;
-        vector<S,T>& operator+=(T);
-
-        vector<S,T>  operator- (T) const;
-        vector<S,T>& operator-=(T);
-
-        // element operators
-        vector<S,T>  operator* (const vector<S,T>&) const;
-        vector<S,T>& operator*=(const vector<S,T>&);
-
-        vector<S,T>  operator+ (const vector<S,T>&) const;
-        vector<S,T>& operator+=(const vector<S,T>&);
-
-        vector<S,T>  operator- (void) const;
-        vector<S,T>  operator- (const vector<S,T>&) const;
-        vector<S,T>& operator-=(const vector<S,T>&);
-
-        vector<S, T>& operator =(const vector<S,T>&);
-
-        // logical operators
-        bool operator== (const vector<S,T>&) const;
-
         bool is_zero (void) const;
 
         // vector operators
@@ -69,8 +40,6 @@ namespace util {
 
         T difference  (const vector<S,T>&) const;
         T difference2 (const vector<S,T>&) const;
-
-        T dot (const vector<S,T>&) const;
 
         vector<S,T>& normalise  (void);
         vector<S,T>  normalised [[gnu::warn_unused_result]] (void) const;
@@ -92,12 +61,6 @@ namespace util {
     template <typename T> vector<3,T> cross (const vector<3,T>&, const vector<3,T>&);
     template <typename T> vector<3,T> spherical_to_cartesian (const vector<3,T>&);
     template <typename T> vector<3,T> cartesian_to_spherical (const vector<3,T>&);
-
-    template <size_t S, typename T, typename U> vector<S,T> operator* (U, const vector<S,T>&);
-    template <size_t S, typename T, typename U> vector<S,T> operator+ (U, const vector<S,T>&);
-    template <size_t S, typename T, typename U> vector<S,T> operator- (U, const vector<S,T>&);
-
-    template <size_t S, typename T> T dot (vector<S,T>, vector<S,T>);
 
     // output and serialisation operators
     template <size_t S, typename T> std::ostream& operator<< (std::ostream&, const vector<S,T>&);

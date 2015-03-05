@@ -236,8 +236,8 @@ cellular::eval (double x, double y) const {
         for (signed x_off = -1; x_off <= 1; ++x_off) {
             auto pos = point2d (double (x_off), double (y_off));
             auto off = generate<vector2d> (x_int + x_off, y_int + y_off, this->seed);
-            off += 1;
-            off /= 2;
+            off += 1.;
+            off /= 2.;
 
             CHECK (off.x >= 0 && off.x <= 1.0);
             CHECK (off.y >= 0 && off.y <= 1.0);

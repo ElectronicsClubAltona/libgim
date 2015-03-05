@@ -52,7 +52,7 @@ quaternion<T>::rotation (vector<3,T> from, vector<3,T> to) {
     auto v = util::cross (from, to);
 
     return {
-        std::acos (from.dot (to)),
+        std::acos (dot (from, to)),
         v.x,
         v.y,
         v.z
