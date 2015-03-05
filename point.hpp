@@ -32,9 +32,9 @@
 namespace util {
     /// An n-dimensional position in space.
     template <size_t S, typename T>
-    struct point : public coord<S,T,detail::xyzw>
+    struct point : public coord::base<S,T,coord::xyzw>
     {
-        using coord<S,T,detail::xyzw>::coord;
+        using coord::base<S,T,coord::xyzw>::base;
 
         // point operators
         template <typename U> typename std::common_type<T,U>::type distance  (const point<S,U> &) const;

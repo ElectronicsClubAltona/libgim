@@ -16,7 +16,12 @@ UTIL_FILES   =		\
     bitwise.hpp		\
     colour.cpp		\
     colour.hpp		\
-    detail/coord.hpp	\
+    coord.hpp		\
+    coord/base.hpp	\
+    coord/init.hpp	\
+    coord/names.hpp	\
+    coord/ops.hpp	\
+    coord/store.hpp	\
     debug.cpp   	\
     debug.hpp   	\
     endian.cpp		\

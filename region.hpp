@@ -137,5 +137,4 @@ namespace util {
     std::ostream& operator<< (std::ostream&, const util::region<S,T>&);
 }
 
-
 #endif

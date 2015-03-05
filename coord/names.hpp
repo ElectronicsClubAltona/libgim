@@ -14,13 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COORD_HPP
-#define __UTIL_COORD_HPP
+#ifndef __UTIL_COORD_NAMES_HPP
+#define __UTIL_COORD_NAMES_HPP
 
-#include "coord/base.hpp"
-#include "coord/ops.hpp"
+namespace util { namespace coord {
+    ///////////////////////////////////////////////////////////////////////
+    // tags for accessor names
+    struct rgba { };
+    struct xyzw { };
+    struct stpq { };
+    struct whd  { };
+} }
 
 #endif
