@@ -22,7 +22,7 @@
 
 #include "extent.hpp"
 #include "vector.hpp"
-#include "detail/coord.hpp"
+#include "coord.hpp"
 
 #include <array>
 #include <initializer_list>
@@ -32,9 +32,9 @@
 namespace util {
     /// An n-dimensional position in space.
     template <size_t S, typename T>
-    struct point : public detail::coord<S,T,detail::xyzw>
+    struct point : public coord<S,T,detail::xyzw>
     {
-        using detail::coord<S,T,detail::xyzw>::coord;
+        using coord<S,T,detail::xyzw>::coord;
 
         // point operators
         template <typename U> typename std::common_type<T,U>::type distance  (const point<S,U> &) const;

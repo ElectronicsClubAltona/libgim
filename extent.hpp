@@ -20,7 +20,7 @@
 #ifndef __UTIL_EXTENT_HPP
 #define __UTIL_EXTENT_HPP
 
-#include "detail/coord.hpp"
+#include "coord.hpp"
 #include "vector.hpp"
 #include <iostream>
 
@@ -30,9 +30,9 @@ namespace util {
      * A pure two-dimensional size, without positioning
      */
     template <size_t S, typename T>
-    struct extent : public detail::coord<S,T,detail::whd>
+    struct extent : public coord<S,T,detail::whd>
     {
-        using detail::coord<S,T,detail::whd>::coord;
+        using coord<S,T,detail::whd>::coord;
 
         extent () = default;
         extent (vector<S,T>);

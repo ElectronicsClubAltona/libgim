@@ -20,8 +20,8 @@
 #ifndef __UTIL_COORD_HPP
 #define __UTIL_COORD_HPP
 
-#include "../preprocessor.hpp"
-#include "../platform.hpp"
+#include "platform.hpp"
+#include "preprocessor.hpp"
 
 #include <algorithm>
 #include <iterator>
@@ -30,10 +30,6 @@
 #include <cstdlib>
 
 namespace util {
-    template <size_t,typename> class point;
-    template <size_t,typename> class extent;
-    template <size_t,typename> class vector;
-
     namespace detail {
         ///////////////////////////////////////////////////////////////////////
         // tags for accessor names
@@ -207,56 +203,62 @@ namespace util {
                 coord_base<4,T,tags...> ({ v0, v1, v2, v3 })
             { ; }
         };
-
-        /////////////////////////////////////////////////////////////////////////
-        template <size_t S, typename T, typename ...tags>
-        struct coord : public coord_init<S,T,tags...> {
-            static_assert (S > 0, "coord dimensions must be strictly positive");
-
-            typedef T value_type;
-            static constexpr size_t dimension = S;
-            static constexpr size_t elements = S;
-
-            size_t size (void) const { return S; }
-
-            // constructors
-            using coord_init<S,T,tags...>::coord_init;
-            coord () = default;
-
-            explicit coord (T v)
-            { std::fill (std::begin (this->data), std::end (this->data), v); }
-
-            coord (const coord<S,T,tags...> &rhs) = default;
-            coord& operator= (const coord<S,T,tags...> &rhs) = default;
-
-            // element accessors
-            T& operator[] (size_t i)       { return this->data[i]; }
-            T  operator[] (size_t i) const { return this->data[i]; }
-
-            const T* begin (void) const { return std::begin (this->data); }
-            const T* end   (void) const { return std::end   (this->data); }
-
-            T* begin (void) { return std::begin (this->data); }
-            T* end   (void) { return std::end   (this->data); }
-        };
-
-
-        ///////////////////////////////////////////////////////////////////////
-        template <
-            size_t S,
-            typename T,
-            template <size_t,typename> class A,
-            template <size_t,typename> class B
-        >
-        struct coord_traits { };
-
-
-        template <size_t S, typename T> struct coord_traits<S,T,extent,extent> { typedef extent<S,T> result; };
-        template <size_t S, typename T> struct coord_traits<S,T,extent,vector> { typedef extent<S,T> result; };
-        template <size_t S, typename T> struct coord_traits<S,T,point,extent>  { typedef point<S,T> result; };
-        template <size_t S, typename T> struct coord_traits<S,T,point,vector>  { typedef point<S,T> result; };
-        template <size_t S, typename T> struct coord_traits<S,T,vector,vector> { typedef vector<S,T> result; };
     }
+
+
+    /////////////////////////////////////////////////////////////////////////
+    template <size_t S, typename T, typename ...tags>
+    struct coord : public detail::coord_init<S,T,tags...> {
+        static_assert (S > 0, "coord dimensions must be strictly positive");
+
+        typedef T value_type;
+        static constexpr size_t dimension = S;
+        static constexpr size_t elements = S;
+
+        size_t size (void) const { return S; }
+
+        // constructors
+        using detail::coord_init<S,T,tags...>::coord_init;
+        coord () = default;
+
+        explicit coord (T v)
+        { std::fill (std::begin (this->data), std::end (this->data), v); }
+
+        coord (const coord<S,T,tags...> &rhs) = default;
+        coord& operator= (const coord<S,T,tags...> &rhs) = default;
+
+        // element accessors
+        T& operator[] (size_t i)       { return this->data[i]; }
+        T  operator[] (size_t i) const { return this->data[i]; }
+
+        const T* begin (void) const { return std::begin (this->data); }
+        const T* end   (void) const { return std::end   (this->data); }
+
+        T* begin (void) { return std::begin (this->data); }
+        T* end   (void) { return std::end   (this->data); }
+    };
+
+
+    ///////////////////////////////////////////////////////////////////////
+    // operation traits
+    template <size_t,typename> class point;
+    template <size_t,typename> class extent;
+    template <size_t,typename> class vector;
+
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class A,
+        template <size_t,typename> class B
+    >
+    struct coord_traits { };
+
+
+    template <size_t S, typename T> struct coord_traits<S,T,extent,extent> { typedef extent<S,T> result; };
+    template <size_t S, typename T> struct coord_traits<S,T,extent,vector> { typedef extent<S,T> result; };
+    template <size_t S, typename T> struct coord_traits<S,T,point,extent>  { typedef point<S,T> result; };
+    template <size_t S, typename T> struct coord_traits<S,T,point,vector>  { typedef point<S,T> result; };
+    template <size_t S, typename T> struct coord_traits<S,T,vector,vector> { typedef vector<S,T> result; };
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -268,10 +270,10 @@ namespace util {
         template <size_t,typename> class A,                     \
         template <size_t,typename> class B                      \
     >                                                           \
-    typename detail::coord_traits<S,T,A,B>::result              \
+    typename coord_traits<S,T,A,B>::result                      \
     operator OP (A<S,T> a, B<S,T> b)                            \
     {                                                           \
-        typename detail::coord_traits<S,T,A,B>::result out;     \
+        typename coord_traits<S,T,A,B>::result out;             \
         for (size_t i = 0; i < S; ++i)                          \
             out[i] = a[i] OP b[i];                              \
         return out;                                             \
@@ -283,7 +285,7 @@ namespace util {
         template <size_t,typename> class A,                     \
         template <size_t,typename> class B                      \
     >                                                           \
-    typename detail::coord_traits<S,T,A,B>::result&             \
+    typename coord_traits<S,T,A,B>::result&                     \
     operator PASTE(OP,=) (A<S,T>& a, B<S,T> b)                  \
     {                                                           \
         for (size_t i = 0; i < S; ++i)                          \

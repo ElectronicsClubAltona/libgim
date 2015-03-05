@@ -20,7 +20,7 @@
 #ifndef __UTIL_COLOUR_HPP
 #define __UTIL_COLOUR_HPP
 
-#include "detail/coord.hpp"
+#include "coord.hpp"
 
 #include "json/tree.hpp"
 
@@ -29,8 +29,8 @@
 namespace util {
     /// An RGBA colour POD type.
     template <typename T>
-    struct colour : public detail::coord<4,T,detail::rgba> {
-        using detail::coord<4,T,detail::rgba>::coord;
+    struct colour : public coord<4,T,detail::rgba> {
+        using coord<4,T,detail::rgba>::coord;
 
         static const colour WHITE;
         static const colour BLACK;

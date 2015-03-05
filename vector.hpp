@@ -21,7 +21,7 @@
 #define __UTIL_VECTOR_HPP
 
 #include "json/tree.hpp"
-#include "detail/coord.hpp"
+#include "coord.hpp"
 
 #include <array>
 #include <iostream>
@@ -29,8 +29,8 @@
 
 namespace util {
     template <size_t S, typename T>
-    struct vector : public detail::coord<S,T,detail::xyzw,detail::stpq> {
-        using detail::coord<S,T,detail::xyzw,detail::stpq>::coord;
+    struct vector : public coord<S,T,detail::xyzw,detail::stpq> {
+        using coord<S,T,detail::xyzw,detail::stpq>::coord;
 
         bool is_zero (void) const;
 
