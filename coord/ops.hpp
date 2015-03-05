@@ -26,9 +26,9 @@
 
 namespace util {
     // forward declerations for traits
-    template <size_t,typename> class point;
-    template <size_t,typename> class extent;
-    template <size_t,typename> class vector;
+    template <size_t,typename> struct point;
+    template <size_t,typename> struct extent;
+    template <size_t,typename> struct vector;
 
     ///////////////////////////////////////////////////////////////////////
     // operation traits
