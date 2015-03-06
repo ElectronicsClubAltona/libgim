@@ -53,10 +53,10 @@ util::line<S,T>::intersect (plane<S,T> q) const
 /// returns -ve if behind
 template <size_t S, typename T>
 T
-util::line<S,T>::intersect (region<S,T> r) const
+util::line<S,T>::intersect (AABB<S,T> r) const
 {
-    auto t1 = (r.base () - p) / d;
-    auto t2 = (r.away () - p) / d;
+    auto t1 = (r.p0 - p) / d;
+    auto t2 = (r.p1 - p) / d;
 
     auto vmin = min (t1, t2);
     auto vmax = max (t1, t2);

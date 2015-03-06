@@ -23,16 +23,16 @@
 #include "point.hpp"
 #include "vector.hpp"
 #include "plane.hpp"
-#include "region.hpp"
+#include "aabb.hpp"
 
 namespace util {
     template <size_t S, typename T>
     struct line {
-        line (util::point<S,T> place,
+        line (util::point<S,T> origin,
               util::vector<S,T> direction);
 
         T intersect (plane<S,T>) const;
-        T intersect (region<S,T>) const;
+        T intersect (AABB<S,T>) const;
 
         T closest (point<S,T>) const;
 
