@@ -42,6 +42,7 @@ namespace util {
         template <typename U> typename std::common_type<T,U>::type manhattan (const point<S,U> &) const;
 
         vector<S,T> to (const point&) const;
+        vector<S,T> from (const point&) const;
 
         template <size_t D> point<D,T> redim (void) const;
         template <size_t D> point<D,T> redim (const util::point<D,T> &fill) const;

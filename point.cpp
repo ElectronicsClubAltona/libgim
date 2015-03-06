@@ -28,10 +28,11 @@
 using namespace std;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 util::vector<S,T>
-util::point<S,T>::to (const point<S,T> &rhs) const {
+util::point<S,T>::to (const point<S,T> &rhs) const
+{
     util::vector<S,T> out;
 
     for (size_t i = 0; i < S; ++i)
@@ -41,6 +42,18 @@ util::point<S,T>::to (const point<S,T> &rhs) const {
 
 
 //-----------------------------------------------------------------------------
+template <size_t S, typename T>
+util::vector<S,T>
+util::point<S,T>::from (const point<S,T> &rhs) const
+{
+    util::vector<S,T> out;
+    for (size_t i = 0; i < S; ++i)
+        out.data[i] = this->data[i] - rhs.data[i];
+    return out;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 void
 util::point<S,T>::sanity (void) const {
