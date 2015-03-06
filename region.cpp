@@ -31,7 +31,9 @@
 template <size_t S, typename T>
 util::region<S,T>::region (extent_t _extent):
     region (point_t::ORIGIN, _extent)
-{ ; }
+{
+    debug::sanity (*this);
+}
 
 
 //-----------------------------------------------------------------------------
@@ -40,7 +42,9 @@ util::region<S,T>::region (point_t  _p,
                            extent_t _e):
     p (_p),
     e (_e)
-{ ; }
+{
+    debug::sanity (*this);
+}
 
 
 //-----------------------------------------------------------------------------
@@ -48,7 +52,9 @@ template <size_t S, typename T>
 util::region<S,T>::region (point_t _a,
                            point_t _b):
     region (_a, _b - _a)
-{ ; }
+{
+    debug::sanity (*this);
+}
 
 
 //-----------------------------------------------------------------------------
@@ -65,7 +71,7 @@ util::region<S,T>::region (position_type _p,
                            size_type     _e):
     region (point_t {_p}, extent_t {_e})
 {
-
+    debug::sanity (*this);
 }
 
 
@@ -266,9 +272,7 @@ util::region<S,T>
 util::region<S,T>::inset (T mag)
 {
     // ensure we have enough space to inset
-    CHECK (std::all_of (std::begin (e.data),
-                        std::end   (e.data),
-                        [mag] (auto i) { return i >= 2 * mag; }));
+    CHECK (min (e) >= 2 * mag);
 
     return {
         p + mag,
@@ -346,18 +350,6 @@ util::region<S,T>::operator== (region rhs) const
 }
 
 
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-void
-util::region<S,T>::sanity (void) const {
-    CHECK_GE (e.area (), 0);
-
-    if (std::is_floating_point<T>::value) {
-        CHECK_GE (min (e), 0);
-    }
-}
-
-
 ///----------------------------------------------------------------------------
 /// The largest specifiable finite region.
 ///
@@ -388,18 +380,34 @@ util::operator<< (std::ostream &os, const util::region<S,T> &rhs) {
 }
 
 
-//-----------------------------------------------------------------------------
-namespace util {
-#define INSTANTIATE_S_T(S,T)                                                    \
-    template struct region<S,T>;                                            \
-    template std::ostream& operator<< (std::ostream&, const region<S,T>&);
+///////////////////////////////////////////////////////////////////////////////
+namespace debug {
+    template <size_t S, typename T>
+    struct validator<util::region,S,T> {
+        static bool is_valid (const util::region<S,T> &r)
+        {
+            CHECK_GE (r.area (), 0);
+            CHECK_GE (min (r.e), 0);
 
-#define INSTANTIATE(T)      \
-    INSTANTIATE_S_T(2,T)    \
-    INSTANTIATE_S_T(3,T)
-
-    INSTANTIATE(uint32_t)
-    INSTANTIATE(uint64_t)
-    INSTANTIATE(float)
-    INSTANTIATE(double)
+            return r.area () >= 0 && min (r.e) >= 0;
+        }
+    };
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+#define INSTANTIATE_S_T(S,T)                                                \
+namespace util {                                                            \
+    template struct region<S,T>;                                            \
+    template std::ostream& operator<< (std::ostream&, const region<S,T>&);  \
+}                                                                           \
+namespace debug { template struct debug::validator<util::region,S,T>; }
+
+#define INSTANTIATE(T)  \
+INSTANTIATE_S_T(2,T)    \
+INSTANTIATE_S_T(3,T)
+
+INSTANTIATE(uint32_t)
+INSTANTIATE(uint64_t)
+INSTANTIATE(float)
+INSTANTIATE(double)
