@@ -21,6 +21,7 @@
 #define __UTIL_COORDS_OPS
 
 #include "../preprocessor.hpp"
+#include "../maths.hpp"
 
 #include <cstdlib>
 
@@ -206,6 +207,51 @@ namespace util {
             sum += a[i] * b[i];
         return sum;
     }
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K
+    >
+    K<S,T>
+    min (K<S,T> a, K<S,T> b)
+    {
+        K<S,T> out;
+        for (size_t i = 0; i < S; ++i)
+            out[i] = min (a[i], b[i]);
+        return out;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K
+    >
+    K<S,T>
+    max (K<S,T> a, K<S,T> b)
+    {
+        K<S,T> out;
+        for (size_t i = 0; i < S; ++i)
+            out[i] = max (a[i], b[i]);
+        return out;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T, template<size_t,typename> class K>
+    T
+    min (K<S,T> k)
+    { return *std::min_element (k.begin (), k.end ()); }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T, template<size_t,typename> class K>
+    T
+    max (K<S,T> k)
+    { return *std::max_element (k.begin (), k.end ()); }
 }
 
 #endif

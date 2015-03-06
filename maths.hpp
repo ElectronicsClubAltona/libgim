@@ -237,43 +237,44 @@ combination [[gnu::pure]] (unsigned n, unsigned k)
 
 //-----------------------------------------------------------------------------
 /// Variadic minimum
-template <typename T>
-constexpr T
-min [[gnu::pure]] (const T a)
-    { return a; }
+namespace util {
+    template <typename T>
+    constexpr T
+    min [[gnu::pure]] (const T a)
+        { return a; }
 
 
-template <typename T, typename U, typename ...Args>
-constexpr typename std::enable_if<
-    std::is_unsigned<typename std::decay<T>::type>::value == std::is_unsigned<typename std::decay<U>::type>::value &&
-    std::is_integral<typename std::decay<T>::type>::value == std::is_integral<typename std::decay<U>::type>::value,
-    typename std::common_type<T,U>::type
->::type
-min [[gnu::pure]] (const T a, const U b, Args ...args)
-{
-    return min (a < b ? a : b, std::forward<Args> (args)...);
-}
+    template <typename T, typename U, typename ...Args>
+    constexpr typename std::enable_if<
+        std::is_unsigned<typename std::decay<T>::type>::value == std::is_unsigned<typename std::decay<U>::type>::value &&
+        std::is_integral<typename std::decay<T>::type>::value == std::is_integral<typename std::decay<U>::type>::value,
+        typename std::common_type<T,U>::type
+    >::type
+    min [[gnu::pure]] (const T a, const U b, Args ...args)
+    {
+        return min (a < b ? a : b, std::forward<Args> (args)...);
+    }
 
 
 //-----------------------------------------------------------------------------
-/// Variadic maximum
-template <typename T>
-constexpr T
-max [[gnu::pure]] (const T a)
-    { return a; }
+    /// Variadic maximum
+    template <typename T>
+    constexpr T
+    max [[gnu::pure]] (const T a)
+        { return a; }
 
 
-template <typename T, typename U, typename ...Args>
-constexpr typename std::enable_if<
-    std::is_unsigned<typename std::decay<T>::type>::value == std::is_unsigned<typename std::decay<U>::type>::value &&
-    std::is_integral<typename std::decay<T>::type>::value == std::is_integral<typename std::decay<U>::type>::value,
-    typename std::common_type<T,U>::type
->::type
-max [[gnu::pure]] (const T a, const U b, Args ...args)
-{
-    return max (a > b ? a : b, std::forward<Args> (args)...);
+    template <typename T, typename U, typename ...Args>
+    constexpr typename std::enable_if<
+        std::is_unsigned<typename std::decay<T>::type>::value == std::is_unsigned<typename std::decay<U>::type>::value &&
+        std::is_integral<typename std::decay<T>::type>::value == std::is_integral<typename std::decay<U>::type>::value,
+        typename std::common_type<T,U>::type
+    >::type
+    max [[gnu::pure]] (const T a, const U b, Args ...args)
+    {
+        return max (a > b ? a : b, std::forward<Args> (args)...);
+    }
 }
-
 
 //-----------------------------------------------------------------------------
 // Limiting functions
