@@ -148,6 +148,15 @@ namespace util {
     SCALAR_OP(/=)
 #undef SCALAR_OP
 
+    //-------------------------------------------------------------------------
+    // negation
+    template <size_t S, typename T, template<size_t,typename> class K>
+    K<S,T> operator- (K<S,T> k)
+    {
+        k *= -1;
+        return ;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // logic operators
