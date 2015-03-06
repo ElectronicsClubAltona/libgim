@@ -59,10 +59,10 @@ util::line<S,T>::intersect (region<S,T> r) const
     auto t2 = (r.away () - p) / d;
 
     auto vmin = min (t1, t2);
-    auto vmax = min (t1, t2);
+    auto vmax = max (t1, t2);
 
-    auto tmin = min (vmax);
-    auto tmax = max (vmin);
+    auto tmin = max (vmin);
+    auto tmax = min (vmax);
 
     if (tmax < 0)
         return tmax;
