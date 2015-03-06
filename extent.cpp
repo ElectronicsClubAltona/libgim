@@ -136,17 +136,18 @@ util::operator<< (std::ostream &os, util::extent<S,T> e)
 }
 
 
-template std::ostream& util::operator<< (std::ostream&, util::extent<2,uint16_t>);
-template std::ostream& util::operator<< (std::ostream&, util::extent<2,uint32_t>);
-template std::ostream& util::operator<< (std::ostream&, util::extent<2,uint64_t>);
-template std::ostream& util::operator<< (std::ostream&, util::extent<2,float>);
-template std::ostream& util::operator<< (std::ostream&, util::extent<2,double>);
-
-
 //-----------------------------------------------------------------------------
 namespace util {
-    template struct extent<2,uint32_t>;
-    template struct extent<2,uint64_t>;
-    template struct extent<2,float>;
-    template struct extent<2,double>;
+    #define INSTANTIATE_S_T(S,T)                                        \
+    template struct extent<S,T>;                                        \
+    template std::ostream& operator<< (std::ostream&, extent<S,T>);
+
+    #define INSTANTIATE(T)  \
+    INSTANTIATE_S_T(2,T)    \
+    INSTANTIATE_S_T(3,T)
+
+    INSTANTIATE(uint32_t)
+    INSTANTIATE(uint64_t)
+    INSTANTIATE(float)
+    INSTANTIATE(double)
 }

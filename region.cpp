@@ -352,22 +352,8 @@ void
 util::region<S,T>::sanity (void) const {
     CHECK_GE (e.area (), 0);
 
-    static_assert(!std::is_floating_point<T>::value,
-                  "Floating point types need width and height checks");
-}
-
-
-//-----------------------------------------------------------------------------
-namespace util {
-    template <>
-    void region<2,double>::sanity (void) const {
-        CHECK_GE (e.area (), 0);
-    }
-
-
-    template <>
-    void region<2,float>::sanity (void) const {
-        CHECK_GE (e.area (), 0);
+    if (std::is_floating_point<T>::value) {
+        CHECK_GE (min (e), 0);
     }
 }
 
@@ -404,15 +390,16 @@ util::operator<< (std::ostream &os, const util::region<S,T> &rhs) {
 
 //-----------------------------------------------------------------------------
 namespace util {
-    template struct region<2,uint32_t>;
-    template struct region<2,uint64_t>;
-    template struct region<2,float>;
-    template struct region<2,double>;
+#define INSTANTIATE_S_T(S,T)                                                    \
+    template struct region<S,T>;                                            \
+    template std::ostream& operator<< (std::ostream&, const region<S,T>&);
 
-    template std::ostream& operator<< (std::ostream&, const region<2, int32_t>&);
-    template std::ostream& operator<< (std::ostream&, const region<2, int64_t>&);
-    template std::ostream& operator<< (std::ostream&, const region<2,uint32_t>&);
-    template std::ostream& operator<< (std::ostream&, const region<2,uint64_t>&);
-    template std::ostream& operator<< (std::ostream&, const region<2,   float>&);
-    template std::ostream& operator<< (std::ostream&, const region<2,  double>&);
+#define INSTANTIATE(T)      \
+    INSTANTIATE_S_T(2,T)    \
+    INSTANTIATE_S_T(3,T)
+
+    INSTANTIATE(uint32_t)
+    INSTANTIATE(uint64_t)
+    INSTANTIATE(float)
+    INSTANTIATE(double)
 }
