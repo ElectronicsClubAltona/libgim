@@ -116,7 +116,7 @@ namespace util {
     {                                           \
         K<S,T> out;                             \
         for (size_t i = 0; i < S; ++i)          \
-            out[i] = t OP k[i];                 \
+            out[i] = k[i] OP t;                 \
         return out;                             \
     }
 
