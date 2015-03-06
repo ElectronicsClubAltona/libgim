@@ -23,6 +23,7 @@
 #include "point.hpp"
 #include "vector.hpp"
 #include "plane.hpp"
+#include "region.hpp"
 
 namespace util {
     template <size_t S, typename T>
@@ -31,6 +32,8 @@ namespace util {
               util::vector<S,T> direction);
 
         T intersect (plane<S,T>) const;
+        T intersect (region<S,T>) const;
+
         T closest (point<S,T>) const;
 
         util::point<S,T> at (T) const;

@@ -47,6 +47,34 @@ util::line<S,T>::intersect (plane<S,T> q) const
 
 
 ///----------------------------------------------------------------------------
+/// returns the distance from origin to AABB intersection
+///
+/// returns NaN on miss
+/// returns -ve if behind
+template <size_t S, typename T>
+T
+util::line<S,T>::intersect (region<S,T> r) const
+{
+    auto t1 = (r.base () - p) / d;
+    auto t2 = (r.away () - p) / d;
+
+    auto vmin = min (t1, t2);
+    auto vmax = min (t1, t2);
+
+    auto tmin = min (vmax);
+    auto tmax = max (vmin);
+
+    if (tmax < 0)
+        return tmax;
+
+    if (tmin > tmax)
+        return std::numeric_limits<T>::quiet_NaN ();
+
+    return tmin;
+}
+
+
+///----------------------------------------------------------------------------
 /// returns the closest parameter along the line to a given point
 template <size_t S, typename T>
 T
