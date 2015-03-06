@@ -59,8 +59,8 @@ main (int, char **) {
 
     test_comparisons ();
 
-    CHECK_EQ (min (-2, 0, 2), -2);
-    CHECK_EQ (max (-2, 0, 2),  2);
+    CHECK_EQ (util::min (-2, 0, 2), -2);
+    CHECK_EQ (util::max (-2, 0, 2),  2);
 
     CHECK_EQ (pow2 (2),  4);
     CHECK_EQ (pow2 (4), 16);
