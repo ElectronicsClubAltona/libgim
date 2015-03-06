@@ -128,6 +128,7 @@ namespace util {
 #undef SCALAR_OP
 
 
+    //-------------------------------------------------------------------------
 #define SCALAR_OP(OP)                           \
     template <                                  \
         size_t S,                               \
@@ -160,6 +161,8 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     // logic operators
+
+    /// elementwise equality operator
     template <
         size_t S,
         typename T,
@@ -173,7 +176,8 @@ namespace util {
                            std::begin (b));
     }
 
-    //-------------------------------------------------------------------------
+    ///------------------------------------------------------------------------
+    /// elementwise inquality operator
     template <
         size_t S,
         typename T,
@@ -188,6 +192,8 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     // special operators
+
+    /// point-point subtraction giving a vector difference
     template <
         size_t S,
         typename T
@@ -199,6 +205,17 @@ namespace util {
         for (size_t i = 0; i < S; ++i)
             out[i] = a[i] - b[i];
         return out;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T
+    >
+    vector<S,T> operator- (T t, point<S,T> p)
+    {
+        return point<S,T> {t} - p;
     }
 
 
@@ -217,7 +234,10 @@ namespace util {
         return sum;
     }
 
-    //-------------------------------------------------------------------------
+    ///////////////////////////////////////////////////////////////////////////
+    // logical element operators
+
+    /// return a coord type containing the max element at each offset
     template <
         size_t S,
         typename T,
@@ -233,7 +253,8 @@ namespace util {
     }
 
 
-    //-------------------------------------------------------------------------
+    ///------------------------------------------------------------------------
+    // /return a coord type containing the max element at each offset
     template <
         size_t S,
         typename T,
@@ -249,14 +270,16 @@ namespace util {
     }
 
 
-    //-------------------------------------------------------------------------
+    ///------------------------------------------------------------------------
+    /// return the minimum element of the coordinate type
     template <size_t S, typename T, template<size_t,typename> class K>
     T
     min (K<S,T> k)
     { return *std::min_element (k.begin (), k.end ()); }
 
 
-    //-------------------------------------------------------------------------
+    ///------------------------------------------------------------------------
+    /// return the maximum element of the coordinate type
     template <size_t S, typename T, template<size_t,typename> class K>
     T
     max (K<S,T> k)
