@@ -20,6 +20,7 @@
 #ifndef __UTIL_TYPES_TRAITS_HPP
 #define __UTIL_TYPES_TRAITS_HPP
 
+#include <memory>
 #include <type_traits>
 
 //-----------------------------------------------------------------------------
@@ -69,5 +70,24 @@ template <typename T, typename U> struct is_lossless_cast : std::enable_if<
 
     std::true_type
 >::value { };
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+struct func_traits : public func_traits<decltype(&T::operator())>
+{ };
+
+
+template <typename C, typename R, typename ...Args>
+struct func_traits<R(C::*)(Args...) const> {
+    typedef R return_type;
+};
+
+
+template <typename R, typename ...Args>
+struct func_traits<R(Args...)> {
+    typedef R return_type;
+};
+
 
 #endif
