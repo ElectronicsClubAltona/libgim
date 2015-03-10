@@ -91,7 +91,7 @@ util::operator<< (std::ostream &os, AABB<S,T> b)
 
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)                    \
-template struct AABB<S,T>;                      \
+namespace util { template struct AABB<S,T>; }   \
 template bool debug::valid (const AABB<S,T>&);  \
 template std::ostream& util::operator<< (std::ostream&, AABB<S,T>);
 
