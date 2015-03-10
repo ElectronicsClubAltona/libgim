@@ -74,6 +74,51 @@ test_value_signal (void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+void
+test_combiner (void)
+{
+    {
+        util::signal<bool(void), util::combine::logical_and> sig;
+
+        unsigned count = 0;
+        auto raii = sig.connect ([&] (void) { ++count; return true; });
+        auto raii = sig.connect ([&] (void) { ++count; return true; });
+        auto raii = sig.connect ([&] (void) { ++count; return true; });
+
+        CHECK (sig ());
+        CHECK_EQ (count, 3);
+    }
+
+    {
+        util::signal<bool(void), util::combine::logical_and> sig;
+
+        unsigned count = 0;
+        auto raii = sig.connect ([&] (void) { ++count; return true; });
+        auto raii = sig.connect ([&] (void) { ++count; return false; });
+        auto raii = sig.connect ([&] (void) { ++count; return true; });
+
+        CHECK (!sig ());
+        CHECK_EQ (count, 2);
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+void
+test_disconnect (void)
+{
+    util::signal<void(void)> sig;
+
+    util::signal<void(void)>::cookie a = sig.connect ([&] (void) { sig.disconnect (a); });
+    util::signal<void(void)>::cookie b = sig.connect ([&] (void) { sig.disconnect (b); });
+    util::signal<void(void)>::cookie c = sig.connect ([&] (void) { sig.disconnect (c); });
+    util::signal<void(void)>::cookie d = sig.connect ([&] (void) { sig.disconnect (d); });
+
+    sig ();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 int
 main (int, char **)
 {
@@ -81,6 +126,8 @@ main (int, char **)
     test_single ();
     test_double ();
     test_value_signal ();
+    test_combiner ();
+    test_disconnect ();
 
     return EXIT_SUCCESS;
 }

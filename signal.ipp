@@ -27,9 +27,9 @@
 
 namespace util {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename F>
-    struct signal<F>::cookie : public nocopy {
-        cookie (typename group::iterator, signal<F> &parent);
+    template <typename F, template <typename> class C>
+    struct signal<F,C>::cookie : public nocopy {
+        cookie (typename group::iterator, signal<F,C> &parent);
         cookie (cookie &&rhs);
         ~cookie ();
 
@@ -37,22 +37,22 @@ namespace util {
         void reset (void);
 
         typename group::iterator m_position;
-        signal<F> &m_parent;
+        signal<F,C> &m_parent;
     };
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename F>
-    signal<F>::cookie::cookie (typename group::iterator _position,
-                               signal<F> &_parent):
+    template <typename F, template <typename> class C>
+    signal<F,C>::cookie::cookie (typename group::iterator _position,
+                                 signal<F,C> &_parent):
         m_position (_position),
         m_parent (_parent)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <typename F>
-    signal<F>::cookie::cookie (cookie &&rhs):
+    template <typename F, template <typename> class C>
+    signal<F,C>::cookie::cookie (cookie &&rhs):
         m_position (rhs.m_position),
         m_parent (rhs.m_parent)
     {
@@ -61,8 +61,8 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-    template <typename F>
-    signal<F>::cookie::~cookie ()
+    template <typename F, template <typename> class C>
+    signal<F,C>::cookie::~cookie ()
     {
         if (m_parent.m_children.end () != m_position)
             m_parent.disconnect (*this);
@@ -70,59 +70,81 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename F>
+    template <typename F, template <typename> class C>
     void
-    signal<F>::cookie::reset (callback &&cb)
+    signal<F,C>::cookie::reset (callback &&cb)
     {
         *m_position = std::move (cb);
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename F>
+    template <typename F, template <typename> class C>
     void
-    signal<F>::cookie::reset (void)
+    signal<F,C>::cookie::reset (void)
     {
         m_position = m_parent.m_children.end ();
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename F>
-    signal<F>::signal ()
+    template <typename F, template <typename> class C>
+    signal<F,C>::signal ()
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <typename F>
-    signal<F>::~signal ()
+    template <typename F, template <typename> class C>
+    signal<F,C>::~signal ()
     {
         CHECK (empty ());
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename F>
-    typename signal<F>::cookie
-    signal<F>::connect (const callback &_cb)
+    template <typename F, template <typename> class C>
+    typename signal<F,C>::cookie
+    signal<F,C>::connect (const callback &_cb)
     {
-        return cookie (m_children.insert (m_children.end (), _cb), *this);
+        return cookie (
+            m_children.insert (
+                m_children.end (),
+                std::move (_cb)
+            ),
+            *this
+        );
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename F>
+    template <typename F, template <typename> class C>
+    typename signal<F,C>::cookie
+    signal<F,C>::connect (callback &&_cb)
+    {
+        return cookie (
+            m_children.insert (
+                m_children.end (),
+                std::move (_cb)
+            ),
+            *this
+        );
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename F, template <typename> class C>
     void
-    signal<F>::disconnect (const cookie &c)
+    signal<F,C>::disconnect (cookie &c)
     {
         m_children.erase (c.m_position);
+        c.m_position = m_children.end ();
     }
 
 
     //-------------------------------------------------------------------------
     /// Disconnect all callbacks
-    template <typename F>
+    template <typename F, template <typename> class C>
     void
-    signal<F>::clear (void) 
+    signal<F,C>::clear (void) 
     {
         m_children.clear ();
     }
@@ -130,42 +152,45 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     /// Returns the number of callbacks connected.
-    template <typename F>
+    template <typename F, template <typename> class C>
     unsigned int
-    signal<F>::size (void) const
+    signal<F,C>::size (void) const
     {
         return m_children.size ();
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename F>
+    template <typename F, template <typename> class C>
     bool
-    signal<F>::empty (void) const
+    signal<F,C>::empty (void) const
     {
         return m_children.empty ();
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename F>
+    template <typename F, template <typename> class C>
     template <typename ...Args>
-    void
-    signal<F>::operator () (Args&&... tail) {
+    typename signal<F,C>::R
+    signal<F,C>::operator () (Args&&... tail) {
         if (m_children.empty ())
-            return;
+            return R();
 
-        auto i = m_children.cbegin ();
-        bool looping;
+        //auto i = m_children.cbegin ();
+        //bool looping;
 
-        do {
-            // Increment before we execute so that the caller is able to
-            // deregister during execution.
-            auto current = i++;
-            looping = m_children.cend () != i;
+        C<F> combiner;
+        return combiner (m_children.begin (), m_children.end (), std::forward<Args> (tail)...);
 
-            (*current)(std::forward<Args> (tail)...);
-        } while (looping);
+        //do {
+        //    // Increment before we execute so that the caller is able to
+        //    // deregister themselves during execution.
+        //    auto current = i++;
+        //    looping = m_children.cend () != i;
+
+        //    (*current)(std::forward<Args> (tail)...);
+        //} while (looping);
     }
 
 

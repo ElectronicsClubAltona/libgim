@@ -21,16 +21,62 @@
 #define __UTIL_SIGNAL_HPP
 
 #include "nocopy.hpp"
+#include "types/traits.hpp"
 
 #include <functional>
 #include <list>
 #include <type_traits>
 
 namespace util {
-    template <typename F>
+    namespace combine {
+        template <typename F>
+        struct logical_and {
+            using R = typename func_traits<F>::return_type;
+
+            template <typename T, typename ...Args>
+            R operator() (T first, T last, Args&&... args)
+            {
+                while (first != last)
+                    if (!(*first++)(std::forward<Args> (args)...))
+                        return false;
+
+                return true;
+            }
+        };
+
+        template <typename F>
+        struct logical_or {
+            using R = typename func_traits<F>::return_type;
+
+            template <typename T, typename ...Args>
+            R operator() (T first, T last, Args&&... args)
+            {
+                while (first != last)
+                    if ((*first++)(std::forward<Args> (args)...))
+                        return true;
+
+                return false;
+            }
+        };
+
+        template <typename F>
+        struct noop {
+            using R = void;
+
+            template <typename T, typename ...Args>
+            R operator() (T first, T last, Args&&... args)
+            {
+                while (first != last) {
+                    (*first++)(std::forward<Args> (args)...);
+                }
+            }
+        };
+    }
+
+    template <typename F, template <typename> class C = combine::noop>
     class signal {
         public:
-            using R = std::result_of<F>;
+            using R = typename C<F>::R;
             using callback = std::function<F>;
 
             struct cookie;
@@ -40,9 +86,10 @@ namespace util {
             ~signal ();
 
             /// Add a callback to list.
+            cookie connect (callback&&);
             cookie connect (const callback&);
 
-            void disconnect (const cookie&);
+            void disconnect (cookie&);
 
             /// Disconnect all callbacks
             void clear (void);
@@ -51,16 +98,19 @@ namespace util {
             unsigned int size (void) const;
             bool empty (void) const;
 
-            /// Execute all callbacks, ignoring the return parameters. Does
-            /// not combine results.
+            /// Execute all callbacks
             template <typename ...Args>
-            void operator () (Args&&... tail);
+            R
+            operator() (Args&&... tail);
 
         private:
             typedef std::list<callback> group;
             group m_children;
     };
 
+    ///////////////////////////////////////////////////////////////////////////
+    // wrap a value in a signal and trigger on assignment
+    //template <typename T, template <typename> class C>
     template <typename T>
     class value_signal : public signal<void(T)> {
     public:
