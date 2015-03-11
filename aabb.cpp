@@ -47,6 +47,16 @@ AABB<S,T>::magnitude (void) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
+void
+AABB<S,T>::expand (point<S,T> p)
+{
+    p0 = min (p, p0);
+    p1 = max (p, p1);
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
 AABB<S,T>
 AABB<S,T>::operator+ (vector<S,T> v) const
 {

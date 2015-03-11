@@ -34,6 +34,8 @@ namespace util {
 
         extent<S,T> magnitude (void) const;
 
+        void expand (point<S,T>);
+
         AABB<S,T> operator+ (vector<S,T>) const;
         AABB<S,T> operator- (vector<S,T>) const;
 
