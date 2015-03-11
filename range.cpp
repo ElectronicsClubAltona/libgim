@@ -69,6 +69,15 @@ util::range<T>::contains (const range <T> &r) const
 //-----------------------------------------------------------------------------
 template <typename T>
 T
+util::range<T>::at (float t) const
+{
+    return static_cast<T> (min + (max - min) * t);
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+T
 util::range<T>::clamp (T val) const
 {
     return std::max (min, std::min (val, max));

@@ -45,6 +45,9 @@ namespace util {
         /// Check whether a range falls partially within (inclusive) this range
         //bool includes (const range <T> &r) const;
 
+        /// interpolate between min-max using the unit position
+        T at (float) const;
+
         /// Return the closest number that falls within the range.
         T clamp (T val) const;
 
