@@ -17,8 +17,8 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_LINE_HPP
-#define __UTIL_LINE_HPP
+#ifndef __UTIL_RAY_HPP
+#define __UTIL_RAY_HPP
 
 #include "point.hpp"
 #include "vector.hpp"
@@ -27,8 +27,8 @@
 
 namespace util {
     template <size_t S, typename T>
-    struct line {
-        line (util::point<S,T> origin,
+    struct ray {
+        ray (util::point<S,T> origin,
               util::vector<S,T> direction);
 
         T intersect (plane<S,T>) const;
@@ -43,8 +43,8 @@ namespace util {
     };
 
 
-    typedef line<2,float> line2f;
-    typedef line<3,float> line3f;
+    typedef ray<2,float> ray2f;
+    typedef ray<3,float> ray3f;
 }
 
 #endif

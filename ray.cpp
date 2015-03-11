@@ -17,14 +17,14 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "line.hpp"
+#include "ray.hpp"
 
 #include "debug.hpp"
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::line<S,T>::line (util::point<S,T> _p,
+util::ray<S,T>::ray (util::point<S,T> _p,
                        util::vector<S,T> _d):
     p (_p),
     d (_d)
@@ -34,13 +34,13 @@ util::line<S,T>::line (util::point<S,T> _p,
 
 
 ///----------------------------------------------------------------------------
-/// returns the distance along the line in a line-plane intersection
+/// returns the distance along the ray in a ray-plane intersection
 ///
 /// returns inf if parallel
-/// returns 0   if colinear
+/// returns 0   if corayar
 template <size_t S, typename T>
 T
-util::line<S,T>::intersect (plane<S,T> q) const
+util::ray<S,T>::intersect (plane<S,T> q) const
 {
     return dot (q.p - p, q.n) / dot (d, q.n);
 }
@@ -53,7 +53,7 @@ util::line<S,T>::intersect (plane<S,T> q) const
 /// returns -ve if behind
 template <size_t S, typename T>
 T
-util::line<S,T>::intersect (AABB<S,T> r) const
+util::ray<S,T>::intersect (AABB<S,T> r) const
 {
     auto t1 = (r.p0 - p) / d;
     auto t2 = (r.p1 - p) / d;
@@ -75,10 +75,10 @@ util::line<S,T>::intersect (AABB<S,T> r) const
 
 
 ///----------------------------------------------------------------------------
-/// returns the closest parameter along the line to a given point
+/// returns the closest parameter along the ray to a given point
 template <size_t S, typename T>
 T
-util::line<S,T>::closest (point<S,T> q) const
+util::ray<S,T>::closest (point<S,T> q) const
 {
     // project the origin-point difference onto the direction
     return dot (p - q, d);
@@ -88,12 +88,12 @@ util::line<S,T>::closest (point<S,T> q) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::point<S,T>
-util::line<S,T>::at (T t) const
+util::ray<S,T>::at (T t) const
 {
     return p + d * t;
 }
 
 
 //-----------------------------------------------------------------------------
-template struct util::line<2,float>;
-template struct util::line<3,float>;
+template struct util::ray<2,float>;
+template struct util::ray<3,float>;

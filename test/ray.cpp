@@ -1,4 +1,4 @@
-#include "line.hpp"
+#include "ray.hpp"
 #include "plane.hpp"
 #include "debug.hpp"
 #include "aabb.hpp"
@@ -7,8 +7,8 @@
 void
 test_intersect_plane (void)
 {
-    // trivial case: origin line facing z, plane at unit z facing -z.
-    util::line3f  l ({0,0,0}, {0,0, 1});
+    // trivial case: origin ray facing z, plane at unit z facing -z.
+    util::ray3f  l ({0,0,0}, {0,0, 1});
     util::plane3f p ({0,0,1}, {0,0,-1});
 
     CHECK_EQ (l.intersect (p), 1);
@@ -24,7 +24,7 @@ test_intersect_aabb (void)
         { 1.f, 1.f }
     };
 
-    util::line2f l {
+    util::ray2f l {
         { 0.5f, -0.5f },
         { 0.f,   1.f }
     };
