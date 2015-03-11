@@ -56,6 +56,15 @@ namespace util { namespace coord {
 
         T* begin (void) { return std::begin (this->data); }
         T* end   (void) { return std::end   (this->data); }
+
+        // conversions
+        template <template <size_t, typename> class K>
+        K<S,T> as (void) const
+        {
+            K<S,T> k;
+            std::copy (begin (), end (), k.begin ());
+            return k;
+        }
     };
 } }
 
