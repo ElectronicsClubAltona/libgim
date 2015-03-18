@@ -266,6 +266,13 @@ json::tree::node::as_uint (void) const
 
 
 //-----------------------------------------------------------------------------
+const char*
+json::tree::node::as_chars (void) const
+{
+    return as_string ().native ().c_str ();
+}
+
+//-----------------------------------------------------------------------------
 // Global operatoers
 
 bool

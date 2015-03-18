@@ -66,6 +66,7 @@ namespace json { namespace tree {
             virtual float  as_float  (void) const;
             virtual double as_double (void) const;
             virtual size_t as_uint   (void) const;
+            virtual const char* as_chars (void) const;
 
             virtual bool is_object  (void) const { return false; }
             virtual bool is_array   (void) const { return false; }
