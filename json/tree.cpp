@@ -203,32 +203,32 @@ json::tree::parse (const char *first, const char *last)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Type conversion
 
 const json::tree::object&
 json::tree::node::as_object  (void) const
-        { throw json::type_error ("node is not an object"); }
+    { throw json::type_error ("node is not an object"); }
 
 
 const json::tree::array&
 json::tree::node::as_array   (void) const
-        { throw json::type_error ("node is not an array"); }
+    { throw json::type_error ("node is not an array"); }
 
 
 const json::tree::string&
 json::tree::node::as_string  (void) const
-        { throw json::type_error ("node is not a string"); }
+    { throw json::type_error ("node is not a string"); }
 
 
 const json::tree::number&
 json::tree::node::as_number  (void) const
-        { throw json::type_error ("node is not a number"); }
+    { throw json::type_error ("node is not a number"); }
 
 
 const json::tree::boolean&
 json::tree::node::as_boolean (void) const
-        { throw json::type_error ("node is not a boolean"); }
+    { throw json::type_error ("node is not a boolean"); }
 
 
 const json::tree::null&
@@ -338,12 +338,13 @@ json::tree::node::operator[] (const std::string &key) const
     { return as_object ()[key]; }
 
 
+//-----------------------------------------------------------------------------
 const json::tree::node&
 json::tree::node::operator[] (unsigned int idx) const
     { return as_array()[idx]; }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Object
 
 json::tree::object::~object ()
@@ -365,7 +366,8 @@ json::tree::object::clone (void) const
 
 //-----------------------------------------------------------------------------
 bool
-json::tree::object::operator ==(const json::tree::object &rhs) const {
+json::tree::object::operator ==(const json::tree::object &rhs) const
+{
     for (auto i = rhs.m_values.begin (), j = m_values.begin ();
          i != rhs.m_values.end () && j != m_values.end ();
          ++i, ++j)
@@ -380,9 +382,13 @@ json::tree::object::operator ==(const json::tree::object &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 json::tree::object::insert (const std::string &_key, unique_ptr<json::tree::node> &&value)
-        { m_values[_key] = move(value); }
+{
+    m_values[_key] = move(value);
+}
+
 
 //-----------------------------------------------------------------------------
 json::tree::node&
@@ -408,8 +414,10 @@ json::tree::object::operator[](const std::string &key) const
 }
 
 
+//-----------------------------------------------------------------------------
 bool
-json::tree::object::has (const std::string &key) const {
+json::tree::object::has (const std::string &key) const
+{
     return m_values.find (key) != m_values.end ();
 }
 
@@ -429,18 +437,21 @@ json::tree::object::erase (const std::string &key) {
 }
 
 
+//-----------------------------------------------------------------------------
 json::tree::object::const_iterator
 json::tree::object::begin (void) const
     { return m_values.begin (); }
 
 
+//-----------------------------------------------------------------------------
 json::tree::object::const_iterator
 json::tree::object::end (void) const
     { return m_values.end (); }
 
 
 std::ostream&
-json::tree::object::write (std::ostream &os) const {
+json::tree::object::write (std::ostream &os) const
+{
     os << "{\n";
     {
         indenter raii(os);
@@ -458,7 +469,7 @@ json::tree::object::write (std::ostream &os) const {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Array
 
 json::tree::array::~array()
@@ -488,8 +499,10 @@ json::tree::array::insert (unique_ptr<json::tree::node> &&_value)
 }
 
 
+//-----------------------------------------------------------------------------
 bool
-json::tree::array::operator ==(const json::tree::array &rhs) const {
+json::tree::array::operator==(const json::tree::array &rhs) const
+{
     for (auto i = rhs.m_values.begin (), j = m_values.begin ();
          i != rhs.m_values.end () && j != m_values.end ();
          ++i, ++j)
@@ -534,7 +547,7 @@ json::tree::array::write (std::ostream &os) const {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // String
 
 std::unique_ptr<json::tree::node>
@@ -546,23 +559,26 @@ json::tree::string::clone (void) const
 
 //-----------------------------------------------------------------------------
 std::ostream&
-json::tree::string::write (std::ostream &os) const {
+json::tree::string::write (std::ostream &os) const
+{
     os << '"' << m_value << '"';
     return os;
 }
 
 
+//-----------------------------------------------------------------------------
 bool
-json::tree::string::operator ==(const json::tree::string &rhs) const
+json::tree::string::operator== (const json::tree::string &rhs) const
     { return rhs.m_value == m_value; }
 
 
+//-----------------------------------------------------------------------------
 bool
-json::tree::string::operator ==(const char *rhs) const
+json::tree::string::operator== (const char *rhs) const
     { return rhs == m_value; }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Number
 
 std::unique_ptr<json::tree::node>
@@ -574,18 +590,20 @@ json::tree::number::clone (void) const
 
 //-----------------------------------------------------------------------------
 std::ostream&
-json::tree::number::write (std::ostream &os) const {
+json::tree::number::write (std::ostream &os) const
+{
     os << setprecision (numeric_limits<double>::digits10) << m_value;
     return os;
 }
 
 
+//-----------------------------------------------------------------------------
 bool
 json::tree::number::operator ==(const json::tree::number &rhs) const
     { return almost_equal (rhs.m_value, m_value); }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Boolean
 
 std::unique_ptr<json::tree::node>
@@ -597,17 +615,20 @@ json::tree::boolean::clone (void) const
 
 //-----------------------------------------------------------------------------
 std::ostream&
-json::tree::boolean::write (std::ostream &os) const {
+json::tree::boolean::write (std::ostream &os) const
+{
     os << (m_value ? "true" : "false");
     return os;
 }
 
+
+//-----------------------------------------------------------------------------
 bool
 json::tree::boolean::operator ==(const json::tree::boolean &rhs) const
     { return rhs.m_value == m_value; }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Null
 
 std::unique_ptr<json::tree::node>
@@ -619,11 +640,14 @@ json::tree::null::clone (void) const
 
 //-----------------------------------------------------------------------------
 std::ostream&
-json::tree::null::write (std::ostream &os) const {
+json::tree::null::write (std::ostream &os) const
+{
     os << "null";
     return os;
 }
 
+
+//-----------------------------------------------------------------------------
 ostream&
 json::tree::operator <<(ostream &os, const json::tree::node &n)
     { return n.write (os); }
