@@ -7,6 +7,8 @@ AC_DEFUN([NC_OPTIMISATION],[
     AX_COMPILER_VENDOR
 
     ##-------------------------------------------------------------------------
+    ## Enable LTO
+
     AC_ARG_ENABLE([lto], [
         AS_HELP_STRING([--enable-lto], [enable link-time optimisation])
     ])
@@ -28,6 +30,8 @@ AC_DEFUN([NC_OPTIMISATION],[
     ])
 
     ##-------------------------------------------------------------------------
+    ## Choose the most performant processor architecture and features
+
     AC_CANONICAL_HOST
 
     AS_CASE([$host_cpu],
@@ -50,6 +54,9 @@ AC_DEFUN([NC_OPTIMISATION],[
     AX_APPEND_COMPILE_FLAGS([-mfpmath=sse], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-msahf], [], [-Werror])
 
+    ##-------------------------------------------------------------------------
+    ## Enable aggressive code generation optimisations
+
     AS_IF([test "x$enable_debugging" != "xyes"], [
         AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribute-patterns], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-ftree-loop-if-convert-stores], [], [-Werror])
@@ -59,5 +66,16 @@ AC_DEFUN([NC_OPTIMISATION],[
         # gcc >= 4.8 defaults to enabling stack-protector, we care more about
         # performance than security.
         AX_APPEND_COMPILE_FLAGS([-fno-stack-protector], [], [-Werror])
+    ])
+
+    ##-------------------------------------------------------------------------
+    ## Enable code size optimisations (that don't impact performance)
+    ## Note: we assume CXX, and that CXXLINK is g++ not ld, hence the -Wl opt
+    AS_IF([test "x$enable_debugging" != "xyes"], [
+        AX_CHECK_LINK_FLAG([-Wl,--gc-sections], [
+            AX_APPEND_COMPILE_FLAGS([-fdata-sections], [], [-Werror])
+            AX_APPEND_COMPILE_FLAGS([-ffunction-sections], [], [-Werror])
+            AX_APPEND_LINK_FLAGS([-Wl,--gc-sections], [], [-Werror])
+        ])
     ])
 ])
