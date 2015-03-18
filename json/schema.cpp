@@ -211,10 +211,12 @@ validate (json::tree::number &node,
     // check maximum holds. exclusive requires max condition.
     auto max = schema.find ("maximum");
     auto exclusiveMax = schema.find ("exclusiveMaximum");
-    if (max != schema.cend ()) {
+    if (max != schema.end ()) {
         auto cmp = max->second->as_number ().native ();
 
-        if (exclusiveMax->second->as_boolean () ? (val <= cmp) : (val < cmp))
+        if (exclusiveMax != schema.end () && exclusiveMax->second->as_boolean () && val <= cmp)
+            return false;
+        else if (val < cmp)
             return false;
     } else {
         if (exclusiveMax != schema.cend ())
@@ -224,10 +226,12 @@ validate (json::tree::number &node,
     // check minimum holds. exclusive requires min condition
     auto min = schema.find ("minimum");
     auto exclusiveMin = schema.find ("exclusiveMinimum");
-    if (min != schema.cend ()) {
+    if (min != schema.end ()) {
         auto cmp = min->second->as_number ().native ();
 
-        if (exclusiveMin->second->as_boolean () ? val >= cmp : val > cmp)
+        if (exclusiveMin != schema.end () && exclusiveMin->second->as_boolean () && val >= cmp)
+            return false;
+        else if (val > cmp)
             return false;
     } else {
         if (exclusiveMin != schema.cend ())
