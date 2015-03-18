@@ -422,18 +422,11 @@ json::tree::object::has (const std::string &key) const
 }
 
 
-void
-json::tree::object::clear (void)
-    { m_values.clear (); }
-
-
-void
-json::tree::object::erase (const std::string &key) {
-    auto pos = m_values.find (key);
-    if (pos == m_values.end ())
-        throw json::error ("erasing invalid key");
-
-    m_values.erase (key);
+//-----------------------------------------------------------------------------
+json::tree::object::const_iterator
+json::tree::object::find (const std::string &key) const
+{
+    return m_values.find (key);
 }
 
 
@@ -449,6 +442,35 @@ json::tree::object::end (void) const
     { return m_values.end (); }
 
 
+//-----------------------------------------------------------------------------
+size_t
+json::tree::object::size (void) const
+{
+    return m_values.size ();
+}
+
+
+//-----------------------------------------------------------------------------
+void
+json::tree::object::clear (void)
+{
+    m_values.clear ();
+}
+
+
+//-----------------------------------------------------------------------------
+void
+json::tree::object::erase (const std::string &key)
+{
+    auto pos = m_values.find (key);
+    if (pos == m_values.end ())
+        throw json::error ("erasing invalid key");
+
+    m_values.erase (key);
+}
+
+
+//-----------------------------------------------------------------------------
 std::ostream&
 json::tree::object::write (std::ostream &os) const
 {

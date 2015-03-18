@@ -134,13 +134,17 @@ namespace json { namespace tree {
             virtual node& operator[](const std::string &key);
             virtual bool has (const std::string&) const;
 
-            virtual void clear (void);
-            virtual void erase (const std::string &key);
+            virtual const_iterator find (const std::string&) const;
 
             virtual const_iterator begin (void) const;
             virtual const_iterator end   (void) const;
             virtual const_iterator cbegin (void) const { return begin (); }
             virtual const_iterator cend   (void) const { return end   (); }
+
+            virtual size_t size (void) const;
+
+            virtual void clear (void);
+            virtual void erase (const std::string &key);
 
             virtual std::ostream& write (std::ostream &os) const;
     };
