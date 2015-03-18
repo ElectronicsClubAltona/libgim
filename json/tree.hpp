@@ -33,6 +33,14 @@
 #include "./fwd.hpp"
 
 namespace json { namespace tree {
+    enum type_t {
+        OBJECT,
+        ARRAY,
+        STRING,
+        NUMBER,
+        BOOLEAN,
+        NONE
+    };
 
     /// Parse an encoded form of JSON into a tree structure
     extern std::unique_ptr<node> parse (const boost::filesystem::path &path);
@@ -65,6 +73,8 @@ namespace json { namespace tree {
             virtual bool is_number  (void) const { return false; }
             virtual bool is_boolean (void) const { return false; }
             virtual bool is_null    (void) const { return false; }
+
+            virtual type_t type (void) const = 0;
 
             virtual bool operator==(const node &rhs) const = 0;
             virtual bool operator!=(const node &rhs) const;
@@ -102,6 +112,8 @@ namespace json { namespace tree {
 
             virtual const object& as_object  (void) const { return *this; }
             virtual bool          is_object  (void) const { return  true; }
+            virtual type_t type (void) const { return OBJECT; }
+
             virtual bool operator==(const object &rhs) const;
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
@@ -139,6 +151,8 @@ namespace json { namespace tree {
 
             virtual const array&  as_array   (void) const { return *this; }
             virtual bool          is_array   (void) const { return  true; }
+            virtual type_t type (void) const { return ARRAY; }
+
             virtual bool operator==(const array &rhs) const;
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
@@ -172,6 +186,9 @@ namespace json { namespace tree {
 
             virtual const string& as_string  (void) const { return *this; }
             virtual bool          is_string  (void) const { return  true; }
+
+            virtual type_t type (void) const { return STRING; }
+
             virtual bool operator==(const char   *rhs) const;
             virtual bool operator==(const string &rhs) const;
             virtual bool operator==(const node   &rhs) const
@@ -199,6 +216,9 @@ namespace json { namespace tree {
 
             virtual const number& as_number  (void) const { return *this; }
             virtual bool          is_number  (void) const { return  true; }
+
+            virtual type_t type (void) const { return NUMBER; }
+
             virtual bool operator==(const number &rhs) const;
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
@@ -221,6 +241,9 @@ namespace json { namespace tree {
 
             virtual const boolean& as_boolean (void) const { return *this; }
             virtual bool           is_boolean (void) const { return  true; }
+
+            virtual type_t type (void) const { return BOOLEAN; }
+
             virtual bool operator==(const boolean &rhs) const;
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
@@ -235,6 +258,7 @@ namespace json { namespace tree {
     /// Represents a JSON null value.
     class null final : public node {
         public:
+            virtual type_t type (void) const { return NONE; }
             virtual std::unique_ptr<node> clone (void) const;
 
             virtual bool operator==(const null&) const { return true; }
