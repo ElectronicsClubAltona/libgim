@@ -92,7 +92,7 @@ namespace json { namespace tree {
 
 
     /// Represents a JSON object, and contains its children.
-    class object : public node {
+    class object final : public node {
         protected:
             typedef std::map<std::string, std::unique_ptr<node>> value_store;
         public:
@@ -127,7 +127,7 @@ namespace json { namespace tree {
 
 
     /// Represents a JSON array, and contains its children.
-    class array : public node {
+    class array final : public node {
         protected:
             typedef std::vector<std::unique_ptr<node>>::iterator       pointer_array_iterator;
             typedef std::vector<std::unique_ptr<node>>::const_iterator const_pointer_array_iterator;
@@ -166,7 +166,7 @@ namespace json { namespace tree {
 
 
     /// Represents a JSON string literal.
-    class string : public node {
+    class string final : public node {
         protected:
             std::string m_value;
 
@@ -193,7 +193,7 @@ namespace json { namespace tree {
 
 
     /// Represents a JSON integer/float literal.
-    class number : public node {
+    class number final : public node {
         protected:
             double m_value;
 
@@ -217,7 +217,7 @@ namespace json { namespace tree {
 
 
     /// Represents a JSON boolean literal.
-    class boolean : public node {
+    class boolean final : public node {
         protected:
             bool m_value;
 
@@ -239,7 +239,7 @@ namespace json { namespace tree {
 
 
     /// Represents a JSON null value.
-    class null : public node {
+    class null final : public node {
         public:
             virtual std::unique_ptr<node> clone (void) const;
 
