@@ -529,6 +529,58 @@ json::tree::array::operator[] (unsigned int idx) const
 
 
 //-----------------------------------------------------------------------------
+json::tree::array::iterator
+json::tree::array::begin (void)
+{
+    return iterator (m_values.begin ());
+}
+
+
+
+//-----------------------------------------------------------------------------
+json::tree::array::iterator
+json::tree::array::end (void)
+{
+    return iterator (m_values.end ());
+}
+
+
+
+//-----------------------------------------------------------------------------
+json::tree::array::const_iterator
+json::tree::array::begin (void) const
+{
+    return const_iterator (m_values.begin ());
+}
+
+
+
+//-----------------------------------------------------------------------------
+json::tree::array::const_iterator
+json::tree::array::end (void) const
+{
+    return const_iterator (m_values.end ());
+}
+
+
+
+//-----------------------------------------------------------------------------
+json::tree::array::const_iterator
+json::tree::array::cbegin (void) const
+{
+    return const_iterator (m_values.cbegin ());
+}
+
+
+//-----------------------------------------------------------------------------
+json::tree::array::const_iterator
+json::tree::array::cend (void) const
+{
+    return const_iterator (m_values.cend ());
+}
+
+
+//-----------------------------------------------------------------------------
 std::ostream&
 json::tree::array::write (std::ostream &os) const {
     os << "[\n";

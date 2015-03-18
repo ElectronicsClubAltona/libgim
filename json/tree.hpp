@@ -139,6 +139,8 @@ namespace json { namespace tree {
 
             virtual const_iterator begin (void) const;
             virtual const_iterator end   (void) const;
+            virtual const_iterator cbegin (void) const { return begin (); }
+            virtual const_iterator cend   (void) const { return end   (); }
 
             virtual std::ostream& write (std::ostream &os) const;
     };
@@ -175,8 +177,12 @@ namespace json { namespace tree {
             virtual node& operator [](unsigned int idx);
             virtual const node& operator [](unsigned int idx) const;
 
-            virtual const_iterator begin (void) const   { return const_iterator (m_values.begin ()); }
-            virtual const_iterator end   (void) const   { return const_iterator (m_values.end   ()); }
+            virtual iterator begin (void);
+            virtual iterator end   (void);
+            virtual const_iterator begin (void) const;
+            virtual const_iterator end   (void) const;
+            virtual const_iterator cbegin (void) const;
+            virtual const_iterator cend   (void) const;
 
             virtual void insert (std::unique_ptr<json::tree::node> &&_value);
 
