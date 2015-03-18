@@ -85,6 +85,8 @@ UTIL_FILES   =		\
     json/except.hpp	\
     json/flat.cpp	\
     json/flat.hpp	\
+    json/schema.cpp	\
+    json/schema.hpp	\
     json/tree.cpp	\
     json/tree.hpp	\
     lerp.cpp		\
@@ -283,6 +285,6 @@ test_hton_LDFLAGS = -lws2_32
 endif
 
 TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
-TESTS = $(top_builddir)/test/static.test $(top_builddir)/test/json.test
+TESTS = $(top_builddir)/test/static.test $(top_builddir)/test/json.test $(top_builddir)/test/json-schema.test
 check_PROGRAMS = $(TEST_BIN)
-EXTRA_DIST += test/static.test test/json.test test/json
+EXTRA_DIST += test/static.test test/json.test test/json test/json-schema

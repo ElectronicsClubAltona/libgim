@@ -17,35 +17,17 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
+#ifndef __UTIL_JSON_SCHEMA_HPP
+#define __UTIL_JSON_SCHEMA_HPP
 
-#include "json/except.hpp"
-#include "json/tree.hpp"
-#include "json/schema.hpp"
+#include "./fwd.hpp"
 
-#include <boost/filesystem.hpp>
+#include <memory>
 
-namespace fs = boost::filesystem;
+namespace json { namespace schema {
+    bool
+    validate (json::tree::node &data,
+              const json::tree::object &schema);
+} }
 
-enum {
-    ARG_CMD,
-    ARG_SCHEMA,
-    ARG_INPUT,
-
-    NUM_ARGS
-};
-
-
-int
-main (int argc, char **argv) {
-    if (argc != NUM_ARGS) {
-        std::cerr << argv[ARG_CMD] << " <schema> <json>\n";
-        return EXIT_FAILURE;
-    }
-
-    auto schema = json::tree::parse (fs::path (argv[ARG_SCHEMA]));
-    auto input  = json::tree::parse (fs::path (argv[ARG_INPUT]));
-
-    bool success = json::schema::validate (*input, schema->as_object ());
-    std::cerr << (success ? "success\n" : "failure\n");
-    return success ? EXIT_SUCCESS : EXIT_FAILURE;
-}
+#endif
