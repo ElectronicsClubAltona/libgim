@@ -233,7 +233,38 @@ json::tree::node::as_boolean (void) const
 
 const json::tree::null&
 json::tree::node::as_null (void) const
-        { throw json::type_error ("node is not a null"); }
+    { throw json::type_error ("node is not a null"); }
+
+
+//-----------------------------------------------------------------------------
+json::tree::object&
+json::tree::node::as_object  (void)
+{ throw json::type_error ("node is not an object"); }
+
+
+json::tree::array&
+json::tree::node::as_array   (void)
+    { throw json::type_error ("node is not an array"); }
+
+
+json::tree::string&
+json::tree::node::as_string  (void)
+    { throw json::type_error ("node is not a string"); }
+
+
+json::tree::number&
+json::tree::node::as_number  (void)
+    { throw json::type_error ("node is not a number"); }
+
+
+json::tree::boolean&
+json::tree::node::as_boolean (void)
+    { throw json::type_error ("node is not a boolean"); }
+
+
+json::tree::null&
+json::tree::node::as_null (void)
+    { throw json::type_error ("node is not a null"); }
 
 
 ///////////////////////////////////////////////////////////////////////////////

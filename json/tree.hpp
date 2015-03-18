@@ -63,6 +63,13 @@ namespace json { namespace tree {
             virtual const boolean& as_boolean (void) const;
             virtual const null&    as_null    (void) const;
 
+            virtual object&  as_object  (void);
+            virtual array&   as_array   (void);
+            virtual string&  as_string  (void);
+            virtual number&  as_number  (void);
+            virtual boolean& as_boolean (void);
+            virtual null&    as_null    (void);
+
             virtual float  as_float  (void) const;
             virtual double as_double (void) const;
             virtual size_t as_uint   (void) const;
@@ -112,6 +119,7 @@ namespace json { namespace tree {
             virtual std::unique_ptr<node> clone (void) const;
 
             virtual const object& as_object  (void) const { return *this; }
+            virtual       object& as_object  (void)       { return *this; }
             virtual bool          is_object  (void) const { return  true; }
             virtual type_t type (void) const { return OBJECT; }
 
@@ -151,6 +159,7 @@ namespace json { namespace tree {
             virtual std::unique_ptr<node> clone (void) const;
 
             virtual const array&  as_array   (void) const { return *this; }
+            virtual       array&  as_array   (void)       { return *this; }
             virtual bool          is_array   (void) const { return  true; }
             virtual type_t type (void) const { return ARRAY; }
 
@@ -186,6 +195,7 @@ namespace json { namespace tree {
             virtual std::unique_ptr<node> clone (void) const;
 
             virtual const string& as_string  (void) const { return *this; }
+            virtual       string& as_string  (void)       { return *this; }
             virtual bool          is_string  (void) const { return  true; }
 
             virtual type_t type (void) const { return STRING; }
@@ -216,6 +226,7 @@ namespace json { namespace tree {
             virtual std::unique_ptr<node> clone (void) const;
 
             virtual const number& as_number  (void) const { return *this; }
+            virtual       number& as_number  (void)       { return *this; }
             virtual bool          is_number  (void) const { return  true; }
 
             virtual type_t type (void) const { return NUMBER; }
@@ -241,6 +252,7 @@ namespace json { namespace tree {
             virtual std::unique_ptr<node> clone (void) const;
 
             virtual const boolean& as_boolean (void) const { return *this; }
+            virtual       boolean& as_boolean (void)       { return *this; }
             virtual bool           is_boolean (void) const { return  true; }
 
             virtual type_t type (void) const { return BOOLEAN; }
@@ -268,6 +280,7 @@ namespace json { namespace tree {
 
             virtual bool        is_null (void) const { return  true; }
             virtual const null& as_null (void) const { return *this; }
+            virtual       null& as_null (void)       { return *this; }
 
             virtual std::ostream& write (std::ostream &os) const;
     };
