@@ -319,15 +319,25 @@ void
 json::tree::object::insert (const std::string &_key, unique_ptr<json::tree::node> &&value)
         { m_values[_key] = move(value); }
 
-
-const json::tree::node&
-json::tree::object::operator[](const std::string &key) const {
+//-----------------------------------------------------------------------------
+json::tree::node&
+json::tree::object::operator[](const std::string &key)
+{
     auto value = m_values.find (key);
-    if (value == m_values.end ()) {
-        ostringstream ss;
-        ss << "no key: " << key;
-        throw json::error (ss.str());
-    }
+    if (value == m_values.end ())
+        throw json::key_error (key);
+
+    return *value->second;
+}
+
+
+//-----------------------------------------------------------------------------
+const json::tree::node&
+json::tree::object::operator[](const std::string &key) const
+{
+    auto value = m_values.find (key);
+    if (value == m_values.end ())
+        throw json::key_error (key);
 
     return *value->second;
 }

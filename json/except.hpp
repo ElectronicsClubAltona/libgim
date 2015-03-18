@@ -31,10 +31,12 @@ namespace json {
         using runtime_error::runtime_error;
     };
 
+
     /// Base class for all type conversion errors
     struct type_error : public error {
         using error::error;
     };
+
 
     /// Base class for errors thrown during parsing
     struct parse_error : public error {
@@ -45,9 +47,16 @@ namespace json {
         size_t line;
     };
 
+
     /// Base class for errors thrown during schema validation
     struct schema_error : public error {
         using error::error;
+    };
+
+
+    /// Exception class for invalid object indexing
+    struct key_error : public error {
+        key_error (std::string);
     };
 }
 

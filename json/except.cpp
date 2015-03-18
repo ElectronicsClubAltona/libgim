@@ -26,3 +26,9 @@ json::parse_error::parse_error (const std::string &_what, size_t _line):
     error (_what),
     line  (_line)
 { ; }
+
+
+//-----------------------------------------------------------------------------
+json::key_error::key_error (std::string _what):
+    error (std::move (_what))
+{ ; }
