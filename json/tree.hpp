@@ -211,8 +211,11 @@ namespace json { namespace tree {
 
             virtual bool operator==(const char   *rhs) const;
             virtual bool operator==(const string &rhs) const;
+            virtual bool operator==(const std::string &rhs) const;
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }
+
+            virtual bool operator!= (const std::string &rhs) const { return !(*this == rhs); }
 
             virtual size_t size (void) const { return m_value.size (); }
 

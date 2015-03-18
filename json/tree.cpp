@@ -668,6 +668,11 @@ json::tree::string::operator== (const char *rhs) const
     { return rhs == m_value; }
 
 
+//-----------------------------------------------------------------------------
+bool
+json::tree::string::operator== (const std::string &rhs) const
+    { return rhs == m_value; }
+
 ///////////////////////////////////////////////////////////////////////////////
 // Number
 
