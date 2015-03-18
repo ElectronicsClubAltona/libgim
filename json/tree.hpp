@@ -96,6 +96,8 @@ namespace json { namespace tree {
             virtual bool operator==(const char *rhs) const;
             virtual bool operator!=(const char *rhs) const { return !(*this == rhs); }
 
+            virtual node& operator[] (const std::string&);
+            virtual node& operator[] (unsigned int);
             virtual const node& operator[] (const std::string&) const;
             virtual const node& operator[] (unsigned int) const;
 
@@ -130,6 +132,7 @@ namespace json { namespace tree {
             virtual void        insert (const std::string &key, std::unique_ptr<node>&& value);
             virtual const node& operator[](const std::string &key) const;
             virtual bool        has (const std::string&) const;
+            virtual node& operator[](const std::string &key);
 
             virtual void clear (void);
             virtual void erase (const std::string &key);
@@ -169,10 +172,8 @@ namespace json { namespace tree {
 
             virtual size_t size (void) const
                 { return m_values.size (); }
-            virtual node& operator [](unsigned int idx)
-                { return *m_values[idx]; }
-            virtual const node& operator [](unsigned int idx) const
-                { return *m_values[idx]; }
+            virtual node& operator [](unsigned int idx);
+            virtual const node& operator [](unsigned int idx) const;
 
             virtual const_iterator begin (void) const   { return const_iterator (m_values.begin ()); }
             virtual const_iterator end   (void) const   { return const_iterator (m_values.end   ()); }

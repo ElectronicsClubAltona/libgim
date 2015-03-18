@@ -320,6 +320,19 @@ bool json::tree::node::operator==(const char *rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
+json::tree::node&
+json::tree::node::operator[] (const std::string &key)
+    { return as_object ()[key]; }
+
+
+//-----------------------------------------------------------------------------
+json::tree::node&
+json::tree::node::operator[] (unsigned int idx)
+    { return as_array()[idx]; }
+
+
+//-----------------------------------------------------------------------------
 const json::tree::node&
 json::tree::node::operator[] (const std::string &key) const
     { return as_object ()[key]; }
@@ -486,6 +499,23 @@ json::tree::array::operator ==(const json::tree::array &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
+json::tree::node&
+json::tree::array::operator[] (unsigned int idx)
+{
+    return *m_values[idx];
+}
+
+
+//-----------------------------------------------------------------------------
+const json::tree::node&
+json::tree::array::operator[] (unsigned int idx) const
+{
+    return *m_values[idx];
+}
+
+
+//-----------------------------------------------------------------------------
 std::ostream&
 json::tree::array::write (std::ostream &os) const {
     os << "[\n";
