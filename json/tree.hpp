@@ -52,6 +52,7 @@ namespace json { namespace tree {
     class node {
         public:
             virtual ~node () { ; }
+            virtual std::unique_ptr<node> clone (void) const = 0;
 
             virtual const object&  as_object  (void) const;
             virtual const array&   as_array   (void) const;
@@ -103,6 +104,7 @@ namespace json { namespace tree {
 
         public:
             virtual ~object ();
+            virtual std::unique_ptr<node> clone (void) const;
 
             virtual const object& as_object  (void) const { return *this; }
             virtual bool          is_object  (void) const { return  true; }
@@ -139,6 +141,7 @@ namespace json { namespace tree {
 
         public:
             virtual ~array();
+            virtual std::unique_ptr<node> clone (void) const;
 
             virtual const array&  as_array   (void) const { return *this; }
             virtual bool          is_array   (void) const { return  true; }
@@ -171,6 +174,7 @@ namespace json { namespace tree {
             explicit string (const std::string &_value): m_value (_value) { ; }
             explicit string (const char        *_value): m_value (_value) { ; }
             string (const char *_first, const char *_last): m_value (_first, _last) { ; }
+            virtual std::unique_ptr<node> clone (void) const;
 
             virtual const string& as_string  (void) const { return *this; }
             virtual bool          is_string  (void) const { return  true; }
@@ -197,6 +201,7 @@ namespace json { namespace tree {
             explicit number (double _value): m_value (_value) { ; }
             explicit number (int    _value): m_value (_value) { ; }
             explicit number (size_t _value): m_value (_value) { ; }
+            virtual std::unique_ptr<node> clone (void) const;
 
             virtual const number& as_number  (void) const { return *this; }
             virtual bool          is_number  (void) const { return  true; }
@@ -218,6 +223,7 @@ namespace json { namespace tree {
 
         public:
             explicit boolean (bool _value): m_value (_value) { ; }
+            virtual std::unique_ptr<node> clone (void) const;
 
             virtual const boolean& as_boolean (void) const { return *this; }
             virtual bool           is_boolean (void) const { return  true; }
@@ -235,6 +241,8 @@ namespace json { namespace tree {
     /// Represents a JSON null value.
     class null : public node {
         public:
+            virtual std::unique_ptr<node> clone (void) const;
+
             virtual bool operator==(const null&) const { return true; }
             virtual bool operator==(const node   &rhs) const
                 { return rhs == *this; }

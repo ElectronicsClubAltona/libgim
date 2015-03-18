@@ -299,6 +299,20 @@ json::tree::object::~object ()
     { ; }
 
 
+//-----------------------------------------------------------------------------
+std::unique_ptr<json::tree::node>
+json::tree::object::clone (void) const
+{
+    auto obj = std::make_unique<json::tree::object> ();
+
+    for (auto &i: *this)
+        obj->insert (i.first, i.second->clone ());
+
+    return std::move (obj);
+}
+
+
+//-----------------------------------------------------------------------------
 bool
 json::tree::object::operator ==(const json::tree::object &rhs) const {
     for (auto i = rhs.m_values.begin (), j = m_values.begin ();
@@ -402,6 +416,20 @@ json::tree::array::~array()
 }
 
 
+//-----------------------------------------------------------------------------
+std::unique_ptr<json::tree::node>
+json::tree::array::clone (void) const
+{
+    auto ret = std::make_unique<array> ();
+
+    for (const auto &i: *this)
+        ret->insert (i.clone ());
+
+    return std::move (ret);
+}
+
+
+//-----------------------------------------------------------------------------
 void
 json::tree::array::insert (unique_ptr<json::tree::node> &&_value)
 {
@@ -441,6 +469,14 @@ json::tree::array::write (std::ostream &os) const {
 //-----------------------------------------------------------------------------
 // String
 
+std::unique_ptr<json::tree::node>
+json::tree::string::clone (void) const
+{
+    return std::make_unique<json::tree::string> (m_value);
+}
+
+
+//-----------------------------------------------------------------------------
 std::ostream&
 json::tree::string::write (std::ostream &os) const {
     os << '"' << m_value << '"';
@@ -461,6 +497,14 @@ json::tree::string::operator ==(const char *rhs) const
 //-----------------------------------------------------------------------------
 // Number
 
+std::unique_ptr<json::tree::node>
+json::tree::number::clone (void) const
+{
+    return std::make_unique<json::tree::number> (m_value);
+}
+
+
+//-----------------------------------------------------------------------------
 std::ostream&
 json::tree::number::write (std::ostream &os) const {
     os << setprecision (numeric_limits<double>::digits10) << m_value;
@@ -476,6 +520,14 @@ json::tree::number::operator ==(const json::tree::number &rhs) const
 //-----------------------------------------------------------------------------
 // Boolean
 
+std::unique_ptr<json::tree::node>
+json::tree::boolean::clone (void) const
+{
+    return std::make_unique<json::tree::boolean> (m_value);
+}
+
+
+//-----------------------------------------------------------------------------
 std::ostream&
 json::tree::boolean::write (std::ostream &os) const {
     os << (m_value ? "true" : "false");
@@ -490,6 +542,14 @@ json::tree::boolean::operator ==(const json::tree::boolean &rhs) const
 //-----------------------------------------------------------------------------
 // Null
 
+std::unique_ptr<json::tree::node>
+json::tree::null::clone (void) const
+{
+    return std::make_unique<json::tree::null> ();
+}
+
+
+//-----------------------------------------------------------------------------
 std::ostream&
 json::tree::null::write (std::ostream &os) const {
     os << "null";
