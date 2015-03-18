@@ -80,6 +80,7 @@ UTIL_FILES   =		\
     ip.cpp		\
     ip.hpp		\
     iterator.hpp	\
+    json/fwd.hpp	\
     json/except.cpp	\
     json/except.hpp	\
     json/flat.cpp	\

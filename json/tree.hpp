@@ -30,15 +30,9 @@
 
 #include "../iterator.hpp"
 #include "./flat.hpp"
+#include "./fwd.hpp"
 
 namespace json { namespace tree {
-    class node;
-    class object;
-    class array;
-    class string;
-    class number;
-    class boolean;
-    class null;
 
     /// Parse an encoded form of JSON into a tree structure
     extern std::unique_ptr<node> parse (const boost::filesystem::path &path);
