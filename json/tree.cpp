@@ -535,6 +535,22 @@ json::tree::array::operator==(const json::tree::array &rhs) const
 
 
 //-----------------------------------------------------------------------------
+bool
+json::tree::array::operator== (const node &rhs) const
+{
+    return rhs == *this;
+}
+
+
+//-----------------------------------------------------------------------------
+size_t
+json::tree::array::size (void) const
+{
+    return m_values.size ();
+}
+
+
+//-----------------------------------------------------------------------------
 json::tree::node&
 json::tree::array::operator[] (unsigned int idx)
 {

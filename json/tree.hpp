@@ -173,11 +173,9 @@ namespace json { namespace tree {
             virtual type_t type (void) const { return ARRAY; }
 
             virtual bool operator==(const array &rhs) const;
-            virtual bool operator==(const node   &rhs) const
-                { return rhs == *this; }
+            virtual bool operator==(const node  &rhs) const;
 
-            virtual size_t size (void) const
-                { return m_values.size (); }
+            virtual size_t size (void) const;
             virtual node& operator [](unsigned int idx);
             virtual const node& operator [](unsigned int idx) const;
 
