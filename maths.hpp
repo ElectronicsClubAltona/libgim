@@ -21,6 +21,7 @@
 #define __MATHS_HPP
 
 #include "debug.hpp"
+#include "types/traits.hpp"
 
 #include <cstdint>
 #include <type_traits>
@@ -104,7 +105,8 @@ digits [[gnu::pure]] (const T& value);
 
 //-----------------------------------------------------------------------------
 template <typename T>
-int sign [[gnu::pure]] (T val);
+typename try_signed<T>::type
+sign [[gnu::pure]] (T val);
 
 
 //-----------------------------------------------------------------------------

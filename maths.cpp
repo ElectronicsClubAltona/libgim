@@ -153,31 +153,6 @@ template uint64_t round_pow2 (uint64_t);
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-int
-sign (T val) {
-    return val >= 0 ? 1 : -1;
-}
-
-
-template <>
-int
-sign (float val) {
-    return static_cast<int> (copysign (1.0f, val));
-}
-
-
-template <>
-int
-sign (double val) {
-    return static_cast<int> (copysign (1.0, val));
-}
-
-
-template int sign (int);
-
-
-//-----------------------------------------------------------------------------
 // Simple instantiations. Some functions aren't used internally to the library
 // so it's easier to instantiate early and check for broken code at library
 // build time.

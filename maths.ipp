@@ -45,6 +45,18 @@ pow (T x, unsigned y)
 }
 
 
+///----------------------------------------------------------------------------
+/// Return a unit type with a sign that matches the provided value
+///
+/// This really needs to be inline for performance as it's used in a few inner
+/// loops where the possibility of a function call is a deal breaker.
+template <typename T>
+typename try_signed<T>::type
+sign (T val) {
+    return val >= 0 ? T{1} : T{-1};
+}
+
+
 //-----------------------------------------------------------------------------
 template <>
 struct constants<float>
