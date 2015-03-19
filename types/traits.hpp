@@ -61,6 +61,17 @@ template <> struct try_unsigned<float > { typedef float  type; };
 
 
 ///----------------------------------------------------------------------------
+/// find the signed version of a type if one exists
+template <typename T>
+struct try_signed
+{
+    typedef typename std::make_signed<T>::type type;
+};
+
+template <> struct try_signed<double> { typedef double type; };
+template <> struct try_signed<float > { typedef float  type; };
+
+///----------------------------------------------------------------------------
 /// checks if a type can be converted in all cases without modification
 template <typename T, typename U> struct is_lossless_cast : std::enable_if<
     std::is_integral<T>::value &&
