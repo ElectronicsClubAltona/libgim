@@ -44,6 +44,8 @@ AC_TYPE_SSIZE_T
 ###############################################################################
 ## Platform features
 
+AC_DEFINE([_XOPEN_SOURCE], [700], [use POSIX 2008])
+
 AC_FUNC_MMAP
 
 AC_CHECK_FUNC([strndup], [
