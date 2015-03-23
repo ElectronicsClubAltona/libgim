@@ -268,6 +268,15 @@ json::tree::node::as_null (void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+
+bool
+json::tree::node::as_bool (void) const
+{
+    return !!as_boolean ();
+}
+
+
+//-----------------------------------------------------------------------------
 float
 json::tree::node::as_float (void) const
 {
