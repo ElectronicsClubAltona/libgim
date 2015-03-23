@@ -21,6 +21,7 @@
 #include "json/except.hpp"
 #include "json/tree.hpp"
 #include "json/schema.hpp"
+#include "json/except.hpp"
 
 #include <boost/filesystem.hpp>
 
@@ -45,7 +46,12 @@ main (int argc, char **argv) {
     auto schema = json::tree::parse (fs::path (argv[ARG_SCHEMA]));
     auto input  = json::tree::parse (fs::path (argv[ARG_INPUT]));
 
-    bool success = json::schema::validate (*input, schema->as_object ());
-    std::cerr << (success ? "success\n" : "failure\n");
-    return success ? EXIT_SUCCESS : EXIT_FAILURE;
+    try {
+        json::schema::validate (*input, schema->as_object ());
+    } catch (const json::error &e) {
+        std::cerr << "error: " << e.what () << '\n';
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }

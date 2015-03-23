@@ -25,7 +25,7 @@
 #include <memory>
 
 namespace json { namespace schema {
-    bool
+    void
     validate (json::tree::node &data,
               const json::tree::object &schema);
 } }
