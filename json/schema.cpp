@@ -63,15 +63,27 @@ validate (json::tree::object &node,
                     continue;
                 } catch (const json::key_error&)
                 { ; }
+
+                if (additional != schema.cend ()) {
+                    if (additional->second->is_boolean () && !additional->second->as_bool ())
+                        throw json::schema_error ("additionalProperties");
+
+                    validate (*p->second, additional->second->as_object ());
+                }
             }
         }
     }
 
-    if (pattern != schema.cend ())
-        not_implemented ();
+    if (pattern != schema.cend ()) {
+        for (auto &cond: pattern->second->as_object ()) {
+            std::regex expr (cond.first, std::regex_constants::ECMAScript);
 
-    if (additional != schema.cend ())
-        not_implemented ();
+            for (auto &props: node) {
+                if (std::regex_search (props.first, expr))
+                    validate (*props.second, cond.second->as_object ());
+            }
+        }
+    }
 
     if (schema.has ("dependencies"))
         not_implemented ();
