@@ -104,9 +104,9 @@ digits [[gnu::pure]] (const T& value);
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-typename try_signed<T>::type
-sign [[gnu::pure]] (T val);
+constexpr int sign (int);
+constexpr float sign (float);
+constexpr double sign (double);
 
 
 //-----------------------------------------------------------------------------
