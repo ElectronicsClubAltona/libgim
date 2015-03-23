@@ -39,9 +39,10 @@ util::extent<S,T>::cast (void) const
 
 
 //-----------------------------------------------------------------------------
-template <typename U, typename T>
+template <size_t S, typename T>
+template <typename U>
 U
-util::aspect (util::extent<2,T> e)
+util::extent<S,T>::aspect (void) const
 {
-    return static_cast<U> (e.w) / e.h;
+    return static_cast<U> (this->w) / this->h;
 }

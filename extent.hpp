@@ -40,6 +40,9 @@ namespace util {
         T    area  (void) const;
         T diameter (void) const;
 
+        template <typename U = float>
+        U aspect (void) const;
+
         extent expanded (vector<S,T>) const;
         extent expanded (T) const;
 
@@ -51,10 +54,6 @@ namespace util {
         static const extent MAX;
         static const extent MIN;
     };
-
-    template <typename U, typename T>
-    U
-    aspect (extent<2,T>);
 
     typedef extent<2,int> extent2i;
     typedef extent<2,size_t> extent2u;
