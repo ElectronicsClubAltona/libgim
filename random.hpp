@@ -38,7 +38,7 @@ namespace util {
         typename T::iterator  cursor = container.begin ();
         typename T::size_type size   = container.size ();
         typename T::size_type offset = random<typename T::size_type> () % size;
-        
+
         std::advance (cursor, offset);
         return *cursor;
     }
