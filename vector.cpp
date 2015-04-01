@@ -101,10 +101,10 @@ util::vector<S,T>::normalised (void) const {
 //-----------------------------------------------------------------------------
 template <typename T>
 util::vector<2,T>
-util::polar_to_cartesian (const util::vector<2,T> &v) {
+util::polar_to_cartesian (util::vector<2,T> v) {
     return util::vector<2,T> {
-        v.r * std::cos (v.t),
-        v.r * std::sin (v.t)
+        v[0] * std::cos (v[1]),
+        v[0] * std::sin (v[1])
     };
 }
 
@@ -232,8 +232,11 @@ INSTANTIATE(int64_t)
 INSTANTIATE(float)
 INSTANTIATE(double)
 
+
 //-----------------------------------------------------------------------------
 namespace util {
+    template vector<2,float> polar_to_cartesian (util::vector<2,float>);
+
     template <> vector<1,float> random (void) { util::vector<1,float> out; randomise (out.data); return out; }
     template <> vector<2,float> random (void) { util::vector<2,float> out; randomise (out.data); return out; }
     template <> vector<3,float> random (void) { util::vector<3,float> out; randomise (out.data); return out; }
