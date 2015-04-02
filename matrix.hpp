@@ -67,6 +67,7 @@ namespace util {
         static matrix<T> look_at (point<3,T> eye, point<3,T> centre, vector<3,T> up);
 
         // Affine matrices
+        static matrix<T> translate (util::vector<2,T>);
         static matrix<T> translate (util::vector<3,T>);
         static matrix<T> scale     (util::vector<3,T>);
         static matrix<T> scale     (T);

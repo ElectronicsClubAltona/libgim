@@ -442,6 +442,15 @@ matrix<T>::look_at (util::point<3,T> eye,
 //-----------------------------------------------------------------------------
 template <typename T>
 matrix<T>
+matrix<T>::translate (util::vector<2,T> v)
+{
+    return translate ({v.x, v.y, 0});
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+matrix<T>
 matrix<T>::translate (util::vector<3,T> v)
 {
     return { {
