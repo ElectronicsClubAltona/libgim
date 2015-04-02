@@ -69,7 +69,6 @@ namespace util {
         region (point_t, extent_t);
         region (point_t, point_t);
         region (std::array<T,S*2>);
-        region (position_type, size_type);
 
         //---------------------------------------------------------------------
         size_type area     (void) const;

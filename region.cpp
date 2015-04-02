@@ -65,15 +65,6 @@ util::region<S,T>::region (std::array<T,S*2> args)
     std::copy (&args[S], &args[S*2], e.data);
 }
 
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::region<S,T>::region (position_type _p,
-                           size_type     _e):
-    region (point_t {_p}, extent_t {_e})
-{
-    debug::sanity (*this);
-}
-
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
@@ -361,14 +352,14 @@ util::region<S,T>::operator== (region rhs) const
 template <size_t S, typename T>
 const util::region<S,T>
 util::region<S,T>::MAX (
-    std::numeric_limits<T>::lowest () / 2,
-    std::numeric_limits<T>::max ()
+    util::point<S,T> {std::numeric_limits<T>::lowest () / 2},
+    util::extent<S,T> {std::numeric_limits<T>::max ()}
 );
 
 
 template  <size_t S, typename T>
 const util::region<S,T>
-util::region<S,T>::UNIT ({0}, {1});
+util::region<S,T>::UNIT (util::point<S,T>{0}, util::extent<S,T>{1});
 
 
 //-----------------------------------------------------------------------------
