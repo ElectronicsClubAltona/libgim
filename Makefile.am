@@ -277,6 +277,7 @@ TEST_BIN = 			\
     test/signal			\
     test/stringid		\
     test/uri			\
+    test/vector			\
     test/version
 
 

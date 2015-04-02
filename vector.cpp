@@ -98,10 +98,12 @@ util::vector<S,T>::normalised (void) const {
     return out;
 }
 
-//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 util::vector<2,T>
-util::polar_to_cartesian (util::vector<2,T> v) {
+util::polar_to_cartesian (util::vector<2,T> v)
+{
     return util::vector<2,T> {
         v[0] * std::cos (v[1]),
         v[0] * std::sin (v[1])
@@ -110,6 +112,18 @@ util::polar_to_cartesian (util::vector<2,T> v) {
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
+util::vector<2,T>
+util::cartesian_to_polar (util::vector<2,T> v)
+{
+    return util::vector<2,T> {
+        std::hypot (v.x, v.y),
+        std::atan2 (v.y, v.x)
+    };
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 util::vector<3,T>
 util::cross (const util::vector<3,T> &a,
@@ -236,6 +250,7 @@ INSTANTIATE(double)
 //-----------------------------------------------------------------------------
 namespace util {
     template vector<2,float> polar_to_cartesian (util::vector<2,float>);
+    template vector<2,float> cartesian_to_polar (util::vector<2,float>);
 
     template <> vector<1,float> random (void) { util::vector<1,float> out; randomise (out.data); return out; }
     template <> vector<2,float> random (void) { util::vector<2,float> out; randomise (out.data); return out; }

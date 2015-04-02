@@ -57,6 +57,7 @@ namespace util {
 
     // free vector operators
     template <typename T> vector<2,T> polar_to_cartesian (vector<2,T>);
+    template <typename T> vector<2,T> cartesian_to_polar (vector<2,T>);
 
     template <typename T> vector<3,T> cross (const vector<3,T>&, const vector<3,T>&);
     template <typename T> vector<3,T> spherical_to_cartesian (const vector<3,T>&);
