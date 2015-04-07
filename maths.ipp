@@ -48,25 +48,26 @@ pow (T x, unsigned y)
 ///----------------------------------------------------------------------------
 /// Return a unit type with a sign that matches the provided value
 ///
-/// This really needs to be inline for performance as it's used in a few inner
-/// loops where the possibility of a function call is a deal breaker.
+/// We were using __builtin_signbit for the potential speedboost, but it causes
+/// problems with constexpr under clang. If you need speed then you'll probably
+/// have to handcode something.
 constexpr int
 sign (int v)
 {
-    return __builtin_signbitl (v) ? -1 : 1;
+    return std::signbit (v) ? -1 : 1;
 }
 
 constexpr float
 sign (float v)
 {
-    return __builtin_signbitf (v) ? -1.f : 1.f;
+    return std::signbit (v) ? -1.f : 1.f;
 }
 
 
 constexpr double
 sign (double v)
 {
-    return __builtin_signbit (v) ? -1. : 1.f;
+    return std::signbit (v) ? -1. : 1.f;
 }
 
 
