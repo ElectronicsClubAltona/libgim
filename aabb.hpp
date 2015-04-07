@@ -35,6 +35,8 @@ namespace util {
 
         extent<S,T> magnitude (void) const;
 
+        bool overlaps (point<S,T>) const;
+
         void expand (point<S,T>);
 
         AABB<S,T> operator+ (vector<S,T>) const;
