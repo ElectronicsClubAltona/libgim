@@ -34,7 +34,6 @@ namespace util {
         ~cookie ();
 
         void reset (callback &&cb);
-        void reset (void);
 
         typename group::iterator m_position;
         signal<F,C> &m_parent;
@@ -75,15 +74,6 @@ namespace util {
     signal<F,C>::cookie::reset (callback &&cb)
     {
         *m_position = std::move (cb);
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <typename F, template <typename> class C>
-    void
-    signal<F,C>::cookie::reset (void)
-    {
-        m_position = m_parent.m_children.end ();
     }
 
 
