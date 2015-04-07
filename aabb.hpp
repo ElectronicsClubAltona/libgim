@@ -45,12 +45,12 @@ namespace util {
     };
 
     typedef AABB<2,float> AABB2f;
-    typedef AABB<2,uint32_t> AABB2u;
-    typedef AABB<2,int32_t> AABB2i;
+    typedef AABB<2,size_t> AABB2u;
+    typedef AABB<2,intmax_t> AABB2i;
 
     typedef AABB<3,float> AABB3f;
-    typedef AABB<3,uint32_t> AABB3u;
-    typedef AABB<3,uint32_t> AABB3i;
+    typedef AABB<3,size_t> AABB3u;
+    typedef AABB<3,intmax_t> AABB3i;
 
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, AABB<S,T>);

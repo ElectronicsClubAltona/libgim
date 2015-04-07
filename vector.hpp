@@ -71,7 +71,7 @@ namespace util {
 
     // convenience typedefs
     typedef vector<2,size_t> vector2u;
-    typedef vector<2,long> vector2i;
+    typedef vector<2,intmax_t> vector2i;
 
     typedef vector<2,float> vector2f;
     typedef vector<3,float> vector3f;

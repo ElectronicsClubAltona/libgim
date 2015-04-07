@@ -55,7 +55,7 @@ namespace util {
         static const extent MIN;
     };
 
-    typedef extent<2,int> extent2i;
+    typedef extent<2,intmax_t> extent2i;
     typedef extent<2,size_t> extent2u;
     typedef extent<2,float> extent2f;
     typedef extent<2,double> extent2d;

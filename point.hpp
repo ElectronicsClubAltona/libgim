@@ -70,6 +70,7 @@ namespace util {
     typedef point<3,double> point3d;
 
     typedef point<2,size_t> point2u;
+    typedef point<2,intmax_t> point2i;
 }
 
 #include <functional>
