@@ -48,6 +48,7 @@ namespace util {
         template <size_t S, typename T> struct traits<S,T,extent,vector> { typedef extent<S,T> result; };
         template <size_t S, typename T> struct traits<S,T,point,extent>  { typedef point<S,T> result; };
         template <size_t S, typename T> struct traits<S,T,point,vector>  { typedef point<S,T> result; };
+        template <size_t S, typename T> struct traits<S,T,vector,point>  { typedef point<S,T> result; };
         template <size_t S, typename T> struct traits<S,T,vector,vector> { typedef vector<S,T> result; };
     }
 
