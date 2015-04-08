@@ -52,6 +52,8 @@ namespace util {
         // constants
         static const vector<S,T> ZERO;
 
+        template<typename U> vector<S,U> cast (void) const;
+
         void sanity (void) const;
     };
 

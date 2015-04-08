@@ -74,4 +74,18 @@ namespace util {
 
         return out;
     }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T>
+    template <typename U>
+    vector<S,U>
+    vector<S,T>::cast (void) const
+    {
+        vector<S,U> out;
+        std::copy (std::begin (this->data),
+                   std::end   (this->data),
+                   std::begin (out.data));
+        return out;
+    }
 }
