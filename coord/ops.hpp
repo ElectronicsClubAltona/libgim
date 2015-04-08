@@ -155,8 +155,7 @@ namespace util {
     template <size_t S, typename T, template<size_t,typename> class K>
     K<S,T> operator- (K<S,T> k)
     {
-        k *= -1;
-        return ;
+        return k * T{-1};
     }
 
 
