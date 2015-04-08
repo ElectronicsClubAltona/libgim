@@ -60,6 +60,63 @@ AABB<S,T>::overlaps (point<S,T> p) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
+util::point<S,T>
+AABB<S,T>::closest (point<S,T> q) const
+{
+    point<S,T> res;
+
+    for (size_t i = 0; i < S; ++i)
+        res[i] = q[i] < p0[i] ? p0[i] :
+                 q[i] > p1[i] ? p1[i] :
+                 q[i];
+
+    return res;
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+AABB<S,T>&
+AABB<S,T>::contract (util::vector<S,T> mag)
+{
+    p0 -= mag / T{2};
+    p1 += mag / T{2};
+
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+AABB<S,T>&
+AABB<S,T>::contract (T mag)
+{
+    return contract (util::vector<S,T> {mag});
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+AABB<S,T>
+AABB<S,T>::contracted (util::vector<S,T> mag) const
+{
+    AABB<S,T> res = *this;
+    res.contract (mag);
+    return res;
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+AABB<S,T>
+AABB<S,T>::contracted (T mag) const
+{
+    return contracted (vector<S,T> {mag});
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
 void
 AABB<S,T>::cover (point<S,T> p)
 {

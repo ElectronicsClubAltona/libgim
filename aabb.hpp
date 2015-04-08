@@ -37,6 +37,13 @@ namespace util {
 
         bool overlaps (point<S,T>) const;
 
+        point<S,T> closest (point<S,T>) const;
+
+        AABB<S,T>& contract (util::vector<S,T>);
+        AABB<S,T>& contract (T);
+        AABB<S,T>  contracted (util::vector<S,T>) const;
+        AABB<S,T>  contracted (T) const;
+
         void cover (point<S,T>);
 
         AABB<S,T> operator+ (vector<S,T>) const;
