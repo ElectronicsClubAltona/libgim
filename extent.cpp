@@ -77,7 +77,25 @@ template <size_t S, typename T>
 util::extent<S,T>
 util::extent<S,T>::expanded (T t) const
 {
-    return expanded (util::vector<S,T> {t});
+    return *this + util::vector<S,T> {t};
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+util::extent<S,T>
+util::extent<S,T>::contracted (vector<S,T> t) const
+{
+    return *this - t;
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+util::extent<S,T>
+util::extent<S,T>::contracted (T t) const
+{
+    return *this - vector<S,T> {-t};
 }
 
 

@@ -45,6 +45,8 @@ namespace util {
 
         extent expanded (vector<S,T>) const;
         extent expanded (T) const;
+        extent contracted (vector<S,T>) const;
+        extent contracted (T) const;
 
         bool empty (void) const;
 
