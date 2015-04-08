@@ -57,7 +57,7 @@ namespace util {
         void sanity (void) const;
     };
 
-    // free vector operators
+    // polar/cartesian conversions; assumes (mag, angle) form.
     template <typename T> vector<2,T> polar_to_cartesian (vector<2,T>);
     template <typename T> vector<2,T> cartesian_to_polar (vector<2,T>);
 
