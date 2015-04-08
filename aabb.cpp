@@ -61,7 +61,7 @@ AABB<S,T>::overlaps (point<S,T> p) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 void
-AABB<S,T>::expand (point<S,T> p)
+AABB<S,T>::cover (point<S,T> p)
 {
     p0 = min (p, p0);
     p1 = max (p, p1);

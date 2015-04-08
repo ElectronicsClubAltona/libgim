@@ -37,7 +37,7 @@ namespace util {
 
         bool overlaps (point<S,T>) const;
 
-        void expand (point<S,T>);
+        void cover (point<S,T>);
 
         AABB<S,T> operator+ (vector<S,T>) const;
         AABB<S,T> operator- (vector<S,T>) const;
