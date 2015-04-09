@@ -18,4 +18,8 @@ main (int, char**)
         CHECK_EQ (f.cast<uint8_t> (), u);
         CHECK_EQ (u.cast<float> (), f);
     }
+
+    // Check lookups are working
+    CHECK_EQ (util::colour4f::from_html ("white"), util::colour4f::WHITE);
+    CHECK_EQ (util::colour4f::from_x11  ("white"), util::colour4f::WHITE);
 }
