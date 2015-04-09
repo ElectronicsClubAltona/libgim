@@ -74,13 +74,58 @@ AABB<S,T>::closest (point<S,T> q) const
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+AABB<S,T>&
+AABB<S,T>::expand (util::vector<S,T> mag)
+{
+    p0 -= mag / T{2};
+    p1 += mag / T{2};
+
+    return *this;
+}
+
+
 //-----------------------------------------------------------------------------
+template <size_t S, typename T>
+AABB<S,T>&
+AABB<S,T>::expand (T t)
+{
+    return expand (vector<S,T> {t});
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+AABB<S,T>
+AABB<S,T>::expanded (vector<S,T> mag)
+{
+    auto ret = *this;
+    ret.expand (mag);
+    return ret;
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+AABB<S,T>
+AABB<S,T>::expanded (T t)
+{
+    return expanded (vector<S,T> {t});
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 AABB<S,T>&
 AABB<S,T>::contract (util::vector<S,T> mag)
 {
-    p0 -= mag / T{2};
-    p1 += mag / T{2};
+    // Avoid contracting magnitudes larger than our extent
+    auto diff = p1 - p0;
+    auto delta = min (diff, mag);
+
+    p0 += delta / T{2};
+    p1 -= delta / T{2};
 
     return *this;
 }

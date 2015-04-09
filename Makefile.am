@@ -244,6 +244,7 @@ AM_LDFLAGS  += $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB)
 AM_CXXFLAGS += -I$(top_srcdir)
 
 TEST_BIN = 			\
+    test/aabb			\
     test/backtrace 		\
     test/bezier			\
     test/bitwise		\
