@@ -29,9 +29,9 @@
 namespace util {
     /// An RGBA colour POD type.
     template <size_t S, typename T>
-    struct colour : public coord::base<S,T,colour,coord::rgba> {
-        using coord::base<S,T,util::colour,coord::rgba>::base;
-        using base_t = coord::base<S,T,util::colour,coord::rgba>;
+    struct colour : public coord::base<S,T,colour,coord::rgba,coord::hsv> {
+        using coord::base<S,T,util::colour,coord::rgba,coord::hsv>::base;
+        using base_t = coord::base<S,T,util::colour,coord::rgba,coord::hsv>;
 
         template <typename U>
         colour<S,U>

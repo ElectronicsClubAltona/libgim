@@ -42,8 +42,8 @@ namespace util { namespace coord {
         using init<S,T,tags...>::init;
         base () = default;
 
-        explicit base (T v)
-        { std::fill (std::begin (this->data), std::end (this->data), v); }
+        explicit base (T val)
+        { std::fill (std::begin (this->data), std::end (this->data), val); }
 
         base (const base<S,T,KLASS,tags...> &rhs) = default;
         base& operator= (const base<S,T,KLASS,tags...> &rhs) = default;

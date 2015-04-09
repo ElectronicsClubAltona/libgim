@@ -24,6 +24,7 @@ namespace util { namespace coord {
     ///////////////////////////////////////////////////////////////////////
     // tags for accessor names
     struct rgba { };
+    struct hsv  { };
     struct xyzw { };
     struct stpq { };
     struct whd  { };

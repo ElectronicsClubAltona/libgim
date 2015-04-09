@@ -48,18 +48,20 @@ namespace util { namespace coord {
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    struct store<3,T,rgba> {
+    struct store<3,T,rgba,hsv> {
         union {
             T data[3];
             struct { T r,g,b; };
+            struct { T h,s,v; };
         };
     };
 
     template <typename T>
-    struct store<4,T,rgba> {
+    struct store<4,T,rgba,hsv> {
         union {
             T data[4];
             struct { T r,g,b,a; };
+            struct { T h,s,v;   };
         };
     };
 
