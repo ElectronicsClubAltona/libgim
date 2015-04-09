@@ -329,7 +329,7 @@ renormalise [[gnu::pure]] (T t)
     }
 
     if (U_float)
-        return U (t) / T_max;
+        return U(U (t) / T_max);
 
     if (shrinking)
         return U (t / (sizeof (T) / sizeof (U)));
