@@ -50,9 +50,6 @@ namespace util {
 
         bool empty (void) const;
 
-        template <typename U>
-        extent<S,U> cast (void) const;
-
         static const extent MAX;
         static const extent MIN;
     };

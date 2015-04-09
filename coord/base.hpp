@@ -21,6 +21,7 @@
 #define __UTIL_COORD_BASE_HPP
 
 #include "init.hpp"
+#include "../maths.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -65,6 +66,67 @@ namespace util { namespace coord {
             K<S,T> k;
             std::copy (begin (), end (), k.begin ());
             return k;
+        }
+
+        //---------------------------------------------------------------------
+        template <typename U>
+        KLASS<S,U>
+        cast (void) const
+        {
+            KLASS<S,U> out;
+            std::copy (std::begin (this->data),
+                       std::end   (this->data),
+                       std::begin (out.data));
+            return out;
+        }
+
+        ///////////////////////////////////////////////////////////////////////
+        // redimension
+        template <size_t D>
+        KLASS<D,T>
+        redim (void) const
+        {
+            KLASS<D,T> out;
+            std::copy_n (std::begin (this->data),
+                         min (S, D),
+                         std::begin (out.data));
+            return out;
+        }
+
+
+        //---------------------------------------------------------------------
+        template<size_t D>
+        KLASS<D,T>
+        redim (const KLASS<D,T> fill) const
+        {
+            KLASS<D,T> out;
+
+            static constexpr auto L1 = min (S, D);
+            static constexpr auto L2 = D - L1;
+
+            std::copy_n (std::begin (this->data),
+                         L1,
+                         std::begin (out.data));
+
+            std::copy_n (fill.data + L1,
+                         L2,
+                         out.data + L1);
+            return out;
+        }
+
+        //---------------------------------------------------------------------
+        template <size_t D>
+        KLASS<D,T>
+        redim (T fill) const
+        {
+            KLASS<D,T> out;
+
+            auto cursor = std::copy_n (std::begin (this->data),
+                                       min (S, D),
+                                       std::begin (out.data));
+            std::fill (cursor, std::end (out.data), fill);
+
+            return out;
         }
     };
 } }

@@ -44,15 +44,9 @@ namespace util {
         vector<S,T> to (const point&) const;
         vector<S,T> from (const point&) const;
 
-        template <size_t D> point<D,T> redim (void) const;
-        template <size_t D> point<D,T> redim (const util::point<D,T> &fill) const;
-        template <size_t D> point<D,T> redim (T fill) const;
-
         template <size_t D> point<D,T> homog (void) const;
 
         static const point<S,T> ORIGIN;
-
-        template<typename U> point<S,U> cast (void) const;
 
         void sanity (void) const;
     };

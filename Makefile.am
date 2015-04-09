@@ -183,7 +183,6 @@ UTIL_FILES   =		\
     uri.cpp		\
     vector.cpp		\
     vector.hpp		\
-    vector.ipp		\
     version.cpp		\
     version.hpp		\
     view.cpp		\

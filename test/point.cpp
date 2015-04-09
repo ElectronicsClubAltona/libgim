@@ -38,6 +38,14 @@ main (int, char**) {
         CHECK_EQ (q.data[3], FILL.data[3]);
     }
 
+    // Simple linking check for coord type casting. Relies on truncation.
+    {
+        const point2f pf (0.5f, 0.2f);
+        const point2u pu (0,    0);
+
+        CHECK_EQ (pf.template cast<point2u::value_type> (), pu);
+    }
+
     {
         const point2f p (3, 4);
         const point4f q = p.homog<4> ();

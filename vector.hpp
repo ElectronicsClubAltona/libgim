@@ -45,15 +45,8 @@ namespace util {
         vector<S,T>& normalise  (void);
         vector<S,T>  normalised [[gnu::warn_unused_result]] (void) const;
 
-        // size operations
-        template <size_t D> vector<D,T> redim (void) const;
-        template <size_t D> vector<D,T> redim (const util::vector<D,T> &fill) const;
-        template <size_t D> vector<D,T> redim (T fill) const;
-
         // constants
         static const vector<S,T> ZERO;
-
-        template<typename U> vector<S,U> cast (void) const;
 
         void sanity (void) const;
     };
@@ -84,8 +77,6 @@ namespace util {
     typedef vector<3,double> vector3d;
     typedef vector<3,double> vector4d;
 }
-
-#include "vector.ipp"
 
 #endif
 

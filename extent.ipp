@@ -26,17 +26,6 @@
 
 #include <algorithm>
 
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-template <typename U>
-util::extent<S,U>
-util::extent<S,T>::cast (void) const
-{
-    util::extent<S,U> out;
-    std::copy (std::begin (this->data), std::end (this->data), std::begin (out.data));
-    return out;
-}
-
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
