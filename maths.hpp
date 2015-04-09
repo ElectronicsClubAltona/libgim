@@ -23,10 +23,11 @@
 #include "debug.hpp"
 #include "types/traits.hpp"
 
+#include <cmath>
 #include <cstdint>
+#include <limits>
 #include <type_traits>
 #include <utility>
-#include <cmath>
 
 template <typename T>
 T
@@ -307,6 +308,34 @@ smoothstep [[gnu::pure]] (T a, T b, T x)
     return x * x * (3 - 2 * x);
 }
 
+#include "types/string.hpp"
+
+//-----------------------------------------------------------------------------
+template <typename T, typename U>
+U
+renormalise [[gnu::pure]] (T t)
+{
+    static const T T_max = std::numeric_limits<T>::max ();
+    static const U U_max = std::numeric_limits<U>::max ();
+    static const bool shrinking = sizeof (U) < sizeof (T);
+    static const bool T_float = std::is_floating_point<T>::value;
+    static const bool U_float = std::is_floating_point<U>::value;
+
+    if (T_float && U_float)
+        return U (t);
+
+    if (T_float) {
+        return U (limit (t, 0, 1) * U_max);
+    }
+
+    if (U_float)
+        return U (t) / T_max;
+
+    if (shrinking)
+        return U (t / (sizeof (T) / sizeof (U)));
+    else
+        return U (t) * (sizeof (U) / sizeof (T));
+}
 
 #include "maths.ipp"
 

@@ -51,6 +51,39 @@ test_comparisons (void)
 }
 
 
+void
+test_normalisations (void)
+{
+    // u8 to float
+    {
+        auto a = renormalise<uint8_t,float> (255);
+        CHECK_EQ (a, 1.f);
+
+        auto b = renormalise<uint8_t,float> (0);
+        CHECK_EQ (b, 0.f);
+    }
+
+    // float to u8
+    {
+        struct {
+            float   a;
+            uint8_t b;
+        } TESTS[] = {
+            {  1.f, 255 },
+            {  0.f,   0 },
+            {  2.f, 255 },
+            { -1.f,   0 }
+        };
+
+        for (auto i: TESTS) {
+            std::cerr << "x";
+            auto v = renormalise<decltype(i.a),decltype(i.b)> (i.a);
+            CHECK_EQ ((unsigned)v, (unsigned)i.b);
+        }
+    }
+}
+
+
 int
 main (int, char **) {
     // Max out the precision in case we trigger debug output
@@ -58,6 +91,8 @@ main (int, char **) {
     std::cout.precision (std::numeric_limits<double>::digits10);
 
     test_comparisons ();
+
+    test_normalisations ();
 
     CHECK_EQ (util::min (-2, 0, 2), -2);
     CHECK_EQ (util::max (-2, 0, 2),  2);
