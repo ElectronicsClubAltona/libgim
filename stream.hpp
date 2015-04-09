@@ -21,9 +21,37 @@
 #define __UTIL_STREAM_HPP
 
 #include <iostream>
+#include "types/bits.hpp"
 
 namespace util {
     namespace stream {
+        //---------------------------------------------------------------------
+        template <typename T>
+        struct numeric
+        {
+            numeric (T _val): val (_val) { ; }
+            T val;
+        };
+
+        template <typename T>
+        std::ostream& operator<< (std::ostream &os, numeric<T> n)
+        {
+            static_assert (std::is_fundamental<T>::value,
+                           "numeric streamer is intended for chars");
+
+            using integral_t = typename std::conditional<
+                std::is_floating_point<T>::value,
+                T,
+                typename std::conditional<
+                    std::is_signed<T>::value,
+                    sized_type< intmax_t>::sint,
+                    sized_type<uintmax_t>::uint
+                >::type
+            >::type;
+
+            return os << (integral_t)n.val;
+        }
+
         //---------------------------------------------------------------------
         class null : public std::ostream {
             public:
