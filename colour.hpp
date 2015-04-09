@@ -28,9 +28,10 @@
 
 namespace util {
     /// An RGBA colour POD type.
-    template <typename T>
-    struct colour : public coord::base<4,T,colour,coord::rgba> {
-        using coord::base<4,T,util::colour,coord::rgba>::base;
+    template <size_t S, typename T>
+    struct colour : public coord::base<S,T,colour,coord::rgba>
+    {
+        using coord::base<S,T,util::colour,coord::rgba>::base;
 
         static const colour WHITE;
         static const colour BLACK;
@@ -39,8 +40,10 @@ namespace util {
         static const colour GREEN;
     };
 
-    typedef colour<float> colour4f;
+    // Convenience types
+    typedef colour<4,float> colour4f;
 
+    // Serialisation
     const json::tree::node& operator>> (const json::tree::node&, util::colour4f&);
     std::ostream& operator<< (std::ostream&, const util::colour4f&);
 }

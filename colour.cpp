@@ -24,37 +24,36 @@
 
 
 //-----------------------------------------------------------------------------
-using namespace util;
+using util::colour;
+using util::colour4f;
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-const util::colour<T>
-util::colour<T>::WHITE (1.f, 1.f, 1.f, 1.f);
+#define CONSTANT_COLOUR(NAME,R,G,B)     \
+template <size_t S, typename T>         \
+const util::colour<S,T>                 \
+util::colour<S,T>::NAME =               \
+    util::colour<4,float> (R,G,B,1)     \
+    .template redim<S> ()               \
+    .template cast<T> ();
 
-template <typename T>
-const util::colour<T>
-util::colour<T>::BLACK (0.f, 0.f, 0.f, 1.f);
-
-template <typename T>
-const util::colour<T>
-util::colour<T>::RED (1.f, 0.f, 0.f, 1.f);
-
-template <typename T>
-const util::colour<T>
-util::colour<T>::GREEN (0.f, 1.f, 0.f, 1.f);
-
-template <typename T>
-const util::colour<T>
-util::colour<T>::BLUE (0.f, 0.f, 1.f, 1.f);
+CONSTANT_COLOUR(WHITE,1,1,1);
+CONSTANT_COLOUR(BLACK,0,0,0);
+CONSTANT_COLOUR(RED,  1,0,0);
+CONSTANT_COLOUR(GREEN,0,1,0);
+CONSTANT_COLOUR(BLUE, 0,0,1);
 
 
+
+
+
+///----------------------------------------------------------------------------
 //! Extract a colour object from a JSON node.
-//! 
+//!
 //! Data must be an array or 3 or 4 numbers. Guarantees success, or throws a
 //! json::tree::type_error.
 const json::tree::node&
-operator>> (const json::tree::node &node, colour4f &c) {
+operator>> (const json::tree::node &node, util::colour4f &c) {
     c.r = static_cast<float> (node[0].as_number ());
     c.g = static_cast<float> (node[1].as_number ());
     c.b = static_cast<float> (node[2].as_number ());
@@ -96,5 +95,7 @@ util::operator<< (std::ostream &os, const util::colour4f &c) {
 
 
 //-----------------------------------------------------------------------------
-template struct util::colour<float>;
-template struct util::colour<double>;
+template struct util::colour<3,float>;
+template struct util::colour<3,double>;
+template struct util::colour<4,float>;
+template struct util::colour<4,double>;
