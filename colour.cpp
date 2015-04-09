@@ -26,6 +26,7 @@
 
 //-----------------------------------------------------------------------------
 using util::colour;
+using util::colour3f;
 using util::colour4f;
 
 
@@ -268,6 +269,78 @@ colour<S,T>
 colour<S,T>::from_x11 (const std::string &name)
 {
     return lookup_colour<S,T> (name, X11_COLOURS);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+colour3f
+util::rgb_to_hsv (colour3f rgb)
+{
+    // Calculate chroma
+    auto M = max (rgb);
+    auto m = min (rgb);
+    auto C = M - m;
+
+    // Undefined for zero chroma
+    if (almost_zero (C))
+        return { -1.f, 0.f, M };
+
+    // Calculate hue
+    float H = exactly_equal (rgb.r, M) ?     (rgb.g - rgb.b) :
+              exactly_equal (rgb.g, M) ? 2 + (rgb.b - rgb.r) :
+              exactly_equal (rgb.b, M) ? 4 + (rgb.r - rgb.g) :
+                                                           0 ;
+
+    H /=  C;
+    H *= 60;
+
+    if (H < 0)
+        H += 360;
+
+    // Calculate value
+    auto V = M;
+
+    // Calculate saturation
+    auto S = almost_zero (V) ? 0.f : C / V;
+
+    return { H, S, V };
+}
+
+
+//-----------------------------------------------------------------------------
+colour3f
+util::hsv_to_rgb (colour3f hsv)
+{
+    CHECK_GE (hsv.h,   0);
+    CHECK_LT (hsv.h, 360);
+    CHECK_GE (hsv.s,   0);
+    CHECK_LE (hsv.s,   1);
+    CHECK_GE (hsv.v,   0);
+    CHECK_LE (hsv.v,   1);
+
+    float C = hsv.v * hsv.s;
+    float H = hsv.h / 60;
+    float X = C * (1 - std::abs (std::fmod (H, 2.f) - 1));
+
+    // monochromatic'ish
+    if (almost_zero (hsv.s))
+        return colour3f { hsv.v };
+
+    colour3f rgb;
+
+    unsigned hex = (unsigned)H;
+    switch (hex) {
+    case 0: rgb = { C, X, 0 }; break;
+    case 1: rgb = { X, C, 0 }; break;
+    case 2: rgb = { 0, C, X }; break;
+    case 3: rgb = { 0, X, C }; break;
+    case 4: rgb = { X, 0, C }; break;
+    case 5: rgb = { C, 0, X }; break;
+    }
+
+    auto m = hsv.v - C;
+
+    return rgb + m;
 }
 
 
