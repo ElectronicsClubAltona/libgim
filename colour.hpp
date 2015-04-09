@@ -31,6 +31,11 @@ namespace util {
     template <size_t S, typename T>
     struct colour : public coord::base<S,T,colour,coord::rgba> {
         using coord::base<S,T,util::colour,coord::rgba>::base;
+        using base_t = coord::base<S,T,util::colour,coord::rgba>;
+
+        template <typename U>
+        colour<S,U>
+        cast (void) const;
 
         static const colour WHITE;
         static const colour BLACK;
@@ -48,5 +53,7 @@ namespace util {
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, util::colour<S,T>);
 }
+
+#include "colour.ipp"
 
 #endif

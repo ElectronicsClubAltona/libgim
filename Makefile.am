@@ -18,6 +18,7 @@ UTIL_FILES   =		\
     bitwise.hpp		\
     colour.cpp		\
     colour.hpp		\
+    colour.ipp		\
     coord.hpp		\
     coord/base.hpp	\
     coord/init.hpp	\
