@@ -30,9 +30,9 @@ namespace util {
      * A pure two-dimensional size, without positioning
      */
     template <size_t S, typename T>
-    struct extent : public coord::base<S,T,coord::whd>
+    struct extent : public coord::base<S,T,extent,coord::whd>
     {
-        using coord::base<S,T,coord::whd>::base;
+        using coord::base<S,T,util::extent,coord::whd>::base;
 
         extent () = default;
         extent (vector<S,T>);

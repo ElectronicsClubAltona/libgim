@@ -29,8 +29,9 @@
 
 namespace util {
     template <size_t S, typename T>
-    struct vector : public coord::base<S,T,coord::xyzw,coord::stpq> {
-        using coord::base<S,T,coord::xyzw,coord::stpq>::base;
+    struct vector : public coord::base<S,T,vector,coord::xyzw,coord::stpq>
+    {
+        using coord::base<S,T,util::vector,coord::xyzw,coord::stpq>::base;
 
         bool is_zero (void) const;
 

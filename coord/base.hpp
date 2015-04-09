@@ -27,7 +27,7 @@
 
 namespace util { namespace coord {
     /////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename ...tags>
+    template <size_t S, typename T, template <size_t, typename> class KLASS, typename ...tags>
     struct base : public init <S,T,tags...> {
         static_assert (S > 0, "coord dimensions must be strictly positive");
 
@@ -44,8 +44,8 @@ namespace util { namespace coord {
         explicit base (T v)
         { std::fill (std::begin (this->data), std::end (this->data), v); }
 
-        base (const base<S,T,tags...> &rhs) = default;
-        base& operator= (const base<S,T,tags...> &rhs) = default;
+        base (const base<S,T,KLASS,tags...> &rhs) = default;
+        base& operator= (const base<S,T,KLASS,tags...> &rhs) = default;
 
         // element accessors
         T& operator[] (size_t i)       { return this->data[i]; }
@@ -57,6 +57,7 @@ namespace util { namespace coord {
         T* begin (void) { return std::begin (this->data); }
         T* end   (void) { return std::end   (this->data); }
 
+        ///////////////////////////////////////////////////////////////////////
         // conversions
         template <template <size_t, typename> class K>
         K<S,T> as (void) const
