@@ -21,6 +21,7 @@
 
 #include "range.hpp"
 #include "random.hpp"
+#include "stream.hpp"
 
 
 //-----------------------------------------------------------------------------
@@ -87,15 +88,25 @@ namespace util {
 
 
 //-----------------------------------------------------------------------------
+template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, const util::colour4f &c) {
-    os << "colour(" << c.r << ", " << c.g << ", " << c.b << ", " << c.a << ")";
+util::operator<< (std::ostream &os, util::colour<S,T> c) {
+    os << "colour(";
+    for (size_t i = 0; i < S - 1; ++i)
+        os << stream::numeric<T> (c[i]) << ", ";
+    os << stream::numeric<T> (c[S-1]) << ")";
     return os;
 }
 
-
 //-----------------------------------------------------------------------------
-template struct util::colour<3,float>;
-template struct util::colour<3,double>;
-template struct util::colour<4,float>;
-template struct util::colour<4,double>;
+#define INSTANTIATE_S_T(S,T)        \
+template struct util::colour<S,T>;  \
+template std::ostream& util::operator<< (std::ostream&, util::colour<S,T>);
+
+#define INSTANTIATE_S(S)    \
+INSTANTIATE_S_T(S,uint8_t)  \
+INSTANTIATE_S_T(S,float)    \
+INSTANTIATE_S_T(S,double)
+
+INSTANTIATE_S(3)
+INSTANTIATE_S(4)

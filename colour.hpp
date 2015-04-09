@@ -29,8 +29,7 @@
 namespace util {
     /// An RGBA colour POD type.
     template <size_t S, typename T>
-    struct colour : public coord::base<S,T,colour,coord::rgba>
-    {
+    struct colour : public coord::base<S,T,colour,coord::rgba> {
         using coord::base<S,T,util::colour,coord::rgba>::base;
 
         static const colour WHITE;
@@ -45,7 +44,9 @@ namespace util {
 
     // Serialisation
     const json::tree::node& operator>> (const json::tree::node&, util::colour4f&);
-    std::ostream& operator<< (std::ostream&, const util::colour4f&);
+
+    template <size_t S, typename T>
+    std::ostream& operator<< (std::ostream&, util::colour<S,T>);
 }
 
 #endif
