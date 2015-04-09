@@ -53,7 +53,7 @@ bits::bits (uintmax_t _value, unsigned _count):
 
 //-----------------------------------------------------------------------------
 std::ostream&
-operator<< (std::ostream &os, util::stream::bits b) {
+util::stream::operator<< (std::ostream &os, util::stream::bits b) {
     char digits[sizeof (b.value) * 8 + 1] = { 0 };
     char *cursor = std::end (digits) - 1;
 

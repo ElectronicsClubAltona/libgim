@@ -52,9 +52,10 @@ namespace util {
             uintmax_t value;
             unsigned  count;
         };
+
+        std::ostream& operator<< (std::ostream&, bits);
     }
 }
 
-std::ostream& operator<< (std::ostream&, util::stream::bits);
 
 #endif
