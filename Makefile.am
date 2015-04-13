@@ -161,6 +161,8 @@ UTIL_FILES   =		\
     signal.hpp		\
     signal.ipp		\
     si.hpp		\
+    sphere.cpp		\
+    sphere.hpp		\
     stats.cpp		\
     stats.hpp		\
     stream.cpp		\
