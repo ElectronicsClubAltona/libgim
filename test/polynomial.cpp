@@ -31,7 +31,7 @@ main (int, char**)
         { "cubic 1 uniq",   {  1, -3,  3, -1 }, { 1, nan, nan } },
     };
 
-    TAP_PLAN(elems (CUBICS));
+    util::TAP::logger test;
 
     for (auto &i: CUBICS) {
         std::array<float,3> s = util::polynomial::solve<3> (i.coeffs);
@@ -52,7 +52,7 @@ main (int, char**)
                 ok = false;
         }
 
-        TAP (ok, i.name);
+        test.expect (ok, i.name);
     }
 
     return 0;

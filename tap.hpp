@@ -20,33 +20,51 @@
 #ifndef __UTIL_TAP_HPP
 #define __UTIL_TAP_HPP
 
-#include <iostream>
+#include <functional>
+#include <vector>
+#include <initializer_list>
 
-#define TAP_PLAN(N) do {                                            \
-    std::cout << "1.." << (N) << '\n';                              \
-} while (0)
+namespace util { namespace TAP {
+    /// A simple TAP (Test Anything Protocol) test case output
+    class logger {
+    public:
+        enum {
+            PASS,
+            FAIL,
+            SKIP,
+            TODO
+        };
 
+        logger ();
+        ~logger ();
 
-#define TAP(OK, MSG) do {                                           \
-    std::cout << ((OK) ? "ok - " : "not ok - ") << (MSG) << '\n';   \
-} while (0)
+        void expect (bool, const std::string &msg);
 
+        template <typename T, typename U>
+        void expect (std::function<bool(const T&, const U&)> test, const T&, const U&, const std::string &msg);
 
-#define TAP_EQ(A,B,MSG) do {                                        \
-    const auto &&__tap_eq_a = (A);                                  \
-    const auto &&__tap_eq_b = (B);                                  \
-                                                                    \
-    TAP (almost_equal (__tap_eq_a, __tap_eq_b), (MSG));             \
-} while (0)
+        template <typename T, typename U>
+        void expect_eq (const T&, const U&, const std::string &msg = "equality");
+        template <typename T, typename U>
+        void expect_neq (const T&, const U&, const std::string &msg = "inequality");
 
+        template <typename T, typename U> void expect_gt (const T&, const U&, const std::string &msg = "gt");
+        template <typename T, typename U> void expect_ge (const T&, const U&, const std::string &msg = "ge");
+        template <typename T, typename U> void expect_lt (const T&, const U&, const std::string &msg = "lt");
+        template <typename T, typename U> void expect_le (const T&, const U&, const std::string &msg = "le");
 
-#define TAP_SKIP(MSG) do {                                          \
-    std::cout << "ok # skip " << (MSG) << '\n';                     \
-} while (0)
+        void skip (const std::string &msg);
+        void todo (const std::string &msg);
+        void noop (void);
 
+        int status (void) const;
 
-#define TAP_BAIL(MSG) do {                                          \
-    std::cout << "Bail out! " << (MSG) << '\n';                     \
-} while (0)
+    private:
+        int m_status;
+        size_t m_size;
+    };
+} }
+
+#include "tap.ipp"
 
 #endif

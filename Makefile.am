@@ -169,7 +169,9 @@ UTIL_FILES   =		\
     string.hpp		\
     stringid.cpp	\
     stringid.hpp	\
+    tap.cpp		\
     tap.hpp		\
+    tap.ipp		\
     time.cpp		\
     time.hpp		\
     types.hpp		\
