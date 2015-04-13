@@ -77,3 +77,13 @@ TAP_TEST(lt, < )
 TAP_TEST(le, <=)
 
 #undef TAP_TEST
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+void
+util::TAP::logger::expect_nan (const T &t, const std::string &msg)
+{
+    bool(*func)(T) = std::isnan;
+    expect<const T&> (func, t, msg);
+}
