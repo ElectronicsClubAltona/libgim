@@ -45,7 +45,7 @@ namespace ipv4 {
         static const ip ANY;
     };
 
-    
+
     typedef uint16_t port;
     typedef uint32_t mask;
 

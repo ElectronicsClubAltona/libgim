@@ -35,7 +35,7 @@ main (void)
         CHECK_EQ (i.query,      u.get (util::uri::QUERY));
         CHECK_EQ (i.fragment,   u.get (util::uri::FRAGMENT));
     }
-    
+
     static const char* BAD[] = {
         "www.google.com.au",
     };

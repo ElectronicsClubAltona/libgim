@@ -1,5 +1,5 @@
 #include "hash/hotp.hpp"
- 
+
 #include "debug.hpp"
 #include "tap.hpp"
 #include "types.hpp"

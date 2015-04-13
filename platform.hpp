@@ -25,7 +25,7 @@
     #error "Unknown platform"
 #endif
 
-// Clang needs to be checked before GCC as it pretends to be GCC 
+// Clang needs to be checked before GCC as it pretends to be GCC
 #if defined(__clang__)
     #define COMPILER_CLANG
 #elif defined(__GNUC__)

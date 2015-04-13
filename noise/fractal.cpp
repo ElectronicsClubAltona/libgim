@@ -129,7 +129,7 @@ util::noise::musgrave<B>::eval (double x, double y) const {
     for (size_t i = 1; i < this->octaves; ++i) {
         f         *= 2.0;
         a         *= this->lacunarity;
-        
+
         weight = signal * gain;
         weight = max (0.0, min (1.0, weight));
 

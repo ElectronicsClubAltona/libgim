@@ -1,4 +1,4 @@
-/* 
+/*
  * This file is part of libgim
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -110,7 +110,7 @@ RIPEMD::transform (void) {
     #define R2a(a,b,c,d,e,x,s) ROUND(f2,a,b,c,d,e,0x5A827999u,x,s)
     #define R3a(a,b,c,d,e,x,s) ROUND(f3,a,b,c,d,e,0x6ED9EBA1u,x,s)
     #define R4a(a,b,c,d,e,x,s) ROUND(f4,a,b,c,d,e,0x8F1BBCDCu,x,s)
-    #define R5a(a,b,c,d,e,x,s) ROUND(f5,a,b,c,d,e,0xA953FD4Eu,x,s) 
+    #define R5a(a,b,c,d,e,x,s) ROUND(f5,a,b,c,d,e,0xA953FD4Eu,x,s)
 
     #define R1b(a,b,c,d,e,x,s) ROUND(f5,a,b,c,d,e,0x50A28BE6u,x,s)
     #define R2b(a,b,c,d,e,x,s) ROUND(f4,a,b,c,d,e,0x5C4DD124u,x,s)
@@ -236,7 +236,7 @@ RIPEMD::transform (void) {
     R1b(a2, b2, c2, d2, e2, 12,  6);
 
     // Right round 2
-    R2b(e2, a2, b2, c2, d2,  6,  9); 
+    R2b(e2, a2, b2, c2, d2,  6,  9);
     R2b(d2, e2, a2, b2, c2, 11, 13);
     R2b(c2, d2, e2, a2, b2,  3, 15);
     R2b(b2, c2, d2, e2, a2,  7,  7);
@@ -351,7 +351,7 @@ RIPEMD::finish (void) {
     memset (d32, 0, sizeof (d32));
     d32[14] = length & 0xFFFFFFFF;
     d32[15] = length >> 32u;
-    
+
     // Do the final update
     size_t offset = sizeof(d08) - remaining;
     update (d08 + offset, remaining);

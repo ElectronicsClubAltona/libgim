@@ -14,7 +14,7 @@
 #endif
 
 
-int 
+int
 main (int, char **) {
 
     uint16_t u16 = 0x1358;

@@ -1,4 +1,4 @@
-/* 
+/*
  * This file is part of libgim
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -267,7 +267,7 @@ SHA256::process (void) {
 SHA256::digest_t
 SHA256::digest (void) const {
     digest_t out;
-    
+
     auto cursor = out.begin ();
     for (auto i: H) {
         *cursor++ = (i >> 24) & 0xFF;

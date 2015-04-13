@@ -155,7 +155,7 @@ namespace util {
                 m_data (_data)
             { ; }
 
-            virtual void execute(void) 
+            virtual void execute(void)
                 { option::execute(); }
             virtual void execute(const std::string& data) {
                 get_arg(data, m_data);
@@ -253,7 +253,7 @@ namespace util {
      *
      * parse_args will perform minimal interpretation of the arguments to allow
      * dispatch to registered options. No direct actions upon any input is
-     * performed within this class, merely dispatch and tokenisation. 
+     * performed within this class, merely dispatch and tokenisation.
      */
     class processor {
         protected:

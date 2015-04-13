@@ -29,7 +29,7 @@ check_unique_ptr (void) {
         CHECK (success);
     }
 
-    for (auto i = uintset.begin (); i != uintset.end (); ++i) 
+    for (auto i = uintset.begin (); i != uintset.end (); ++i)
         uintpool.release (*i);
     uintset.clear ();
 
@@ -39,7 +39,7 @@ check_unique_ptr (void) {
         CHECK (success);
     }
 
-    for (auto i = uintset.begin (); i != uintset.end (); ++i) 
+    for (auto i = uintset.begin (); i != uintset.end (); ++i)
         uintpool.release (*i);
 }
 
@@ -79,7 +79,7 @@ check_keep_value (void) {
 }
 
 
-int 
+int
 main (int, char **) {
     check_single ();
     check_unique_ptr ();

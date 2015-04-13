@@ -40,7 +40,7 @@ test_double (void) {
 }
 
 
-void 
+void
 test_single (void) {
     struct sized_test {
         ieee_single::uint_t bits;
@@ -57,7 +57,7 @@ test_single (void) {
 
         { 0x7f800000,  numeric_limits<float>::infinity () },
         { 0xff800000, -numeric_limits<float>::infinity () },
-                                        
+
         { 0x3eaaaaab,  1.0f / 3.0f }
     };
 

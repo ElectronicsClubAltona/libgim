@@ -15,7 +15,7 @@ void
 test_bool (void) {
     static const unsigned ITERATIONS = 8192;
     static const unsigned THRESHOLD  = ITERATIONS / 10;
-    
+
     unsigned counts[2] = { 0, 0 };
     for (unsigned i = 0; i < ITERATIONS; ++i)
         ++counts[util::random<bool> () ? 0 : 1];

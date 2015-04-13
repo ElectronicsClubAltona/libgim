@@ -38,7 +38,6 @@ util::image_path (void) {
         // We can't use lstat to check the size of the link in proc, as Linux
         // will return 0 for most entries under proc. Instead we've got to
         // iterate for a correct size.
-        
         std::vector<char> resolved (256);
 
 retry:

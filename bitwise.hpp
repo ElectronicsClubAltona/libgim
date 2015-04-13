@@ -66,5 +66,5 @@ reverse (T value) {
     return out;
 }
 
-#endif 
+#endif
 

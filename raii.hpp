@@ -36,7 +36,7 @@ namespace util {
         T &counter;
     };
 
-    
+
     /// Executes a function upon object destruction
     template <typename T>
     struct scoped_function {

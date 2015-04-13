@@ -6,7 +6,7 @@ using namespace std;
 
 
 debug::backtrace::backtrace (void):
-    m_frames (DEFAULT_DEPTH) 
+    m_frames (DEFAULT_DEPTH)
 { ; }
 
 

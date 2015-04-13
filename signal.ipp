@@ -131,7 +131,7 @@ namespace util {
     /// Disconnect all callbacks
     template <typename F, template <typename> class C>
     void
-    signal<F,C>::clear (void) 
+    signal<F,C>::clear (void)
     {
         m_children.clear ();
     }

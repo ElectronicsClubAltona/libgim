@@ -43,7 +43,7 @@ vector::~vector (void)
 /* element accessors */
 
 const double*
-vector::data (void) const 
+vector::data (void) const
     { return &m_data[0]; }
 
 
@@ -72,7 +72,7 @@ double vector::dot (const double *restrict A,
 
 vector vector::cross (const double *restrict A,
                       const double *restrict B,
-                      unsigned int size) { 
+                      unsigned int size) {
     CHECK_EQ (size, 3);
     (void)size;
     return vector ({ A[1] * B[2] - A[2] * B[1],

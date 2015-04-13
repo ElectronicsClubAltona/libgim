@@ -27,4 +27,4 @@ uintmax_t from_KiB (uintmax_t bytes);
 uintmax_t from_MiB (uintmax_t bytes);
 uintmax_t from_GiB (uintmax_t bytes);
 
-#endif 
+#endif

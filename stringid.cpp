@@ -37,7 +37,7 @@ stringid::add (const std::string key) {
 
     id_t id = m_map.size ();
     m_map[key] = id;
-    return id;   
+    return id;
 }
 
 

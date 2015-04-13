@@ -68,7 +68,7 @@ main (int, char**) {
 
         CHECK (obj.digest () == i.output);
     }
- 
+
     util::TAP::logger tap;
     tap.skip ("convert to TAP");
 }

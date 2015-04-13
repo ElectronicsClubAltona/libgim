@@ -24,7 +24,7 @@
 
 //-----------------------------------------------------------------------------
 /// Returns the number of elements of a statically allocated array
-template <typename T, size_t N>  
+template <typename T, size_t N> 
 constexpr size_t elems(const T (&)[N])
     { return N; }
 

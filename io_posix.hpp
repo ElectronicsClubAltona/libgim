@@ -50,7 +50,6 @@ namespace util {
                 const uint8_t* cbegin (void) const;
                 const uint8_t* cend   (void) const;
         };
-        
     } }
 
     typedef detail::posix::mapped_file mapped_file;

@@ -168,8 +168,8 @@ net::socket<D, type::STREAM>::send (const uint8_t *restrict data, size_t len) {
 
     for (size_t sent = 0; sent < len; ) {
         ssize_t result = ::send (this->m_fd, static_cast<const void *>(data + sent), len - sent, 0);
-        
-        if (result < 0) 
+
+        if (result < 0)
             net::error::throw_code ();
 
         sent += sign_cast<size_t> (result);

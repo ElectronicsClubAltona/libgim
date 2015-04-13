@@ -92,7 +92,7 @@ value<L>::bounds (void) const
 
 
 template <lerp_function L>
-double 
+double
 value<L>::eval (double x, double y) const {
     intmax_t x_int = static_cast<intmax_t> (x);
     intmax_t y_int = static_cast<intmax_t> (y);
@@ -146,7 +146,7 @@ gradient<L>::bounds (void) const
 
 
 template <lerp_function L>
-double 
+double
 gradient<L>::eval (double x, double y) const {
     intmax_t x_int = static_cast<intmax_t> (x);
     intmax_t y_int = static_cast<intmax_t> (y);

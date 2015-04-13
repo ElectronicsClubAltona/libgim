@@ -27,4 +27,4 @@ namespace lerp {
     double trunc   (double a, double b, double weight);
 }
 
-#endif 
+#endif

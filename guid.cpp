@@ -196,7 +196,7 @@ operator>> (std::istream &is, guid &g) {
     g.data4[5] = data4 & 0xFF; data4 >>= 8u;
     g.data4[6] = data4 & 0xFF; data4 >>= 8u;
     g.data4[7] = data4 & 0xFF;
-        
+
     if (braces)
         is.get ();
 

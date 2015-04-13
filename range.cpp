@@ -122,7 +122,7 @@ namespace util {
     {
         double pos = ::rand () / (double)(RAND_MAX);
         return (max - min) * pos + min;
-    } 
+    }
 
     template <>
     float
@@ -174,7 +174,7 @@ util::range<T>::operator ==(const util::range<T> &rhs) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T> 
+template <typename T>
 const util::range<T>
 util::range<T>::UNLIMITED (std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity () :
                                                                    std::numeric_limits<T>::lowest   (),

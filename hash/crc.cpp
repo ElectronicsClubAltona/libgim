@@ -39,13 +39,13 @@ crc32 (const void *restrict, size_t) {
         case 2:     bits |= static_cast<uint64_t>(data[1]) << 48U;
         case 1:     bits |= static_cast<uint64_t>(data[0]) << 56U;
     }
-    
+
     for (size_t i = 0; i < size; ++i) {
         for (unsigned j = 0; j < 32; ++j) {
             bool mix = bits 0x7000000000000000ULL;
             bits <<= 1;
 
-            if (mix) 
+            if (mix)
                 bits ^= POLYNOMIAL << 32;
         }
 

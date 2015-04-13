@@ -61,7 +61,7 @@ namespace net {
             last_code (void);
     };
 
-    
+
     template <int CODE>
     class error_code : public error {
         public:

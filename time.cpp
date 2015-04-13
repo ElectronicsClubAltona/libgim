@@ -36,7 +36,7 @@ uint64_t
 util::nanoseconds (void) {
     LARGE_INTEGER freq, count;
     QueryPerformanceFrequency (&freq);
-    QueryPerformanceCounter   (&count); 
+    QueryPerformanceCounter   (&count);
 
     return ((double)count.QuadPart / freq.QuadPart) * SECOND;
 }
@@ -131,7 +131,7 @@ util::rate_limiter::poll (void) {
 util::polled_duration::polled_duration (std::string name, uint64_t interval):
     m_name     (name),
     m_interval (interval),
-    m_next     (nanoseconds () + interval) 
+    m_next     (nanoseconds () + interval)
 { ; }
 
 

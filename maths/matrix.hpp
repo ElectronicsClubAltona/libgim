@@ -52,7 +52,7 @@ namespace maths {
             double *       operator [] (unsigned int row);
 
             const double * data (void) const;
-            
+
             matrix& operator  =(const matrix &rhs);
             matrix  operator * (double        scalar) const;
             matrix& operator *=(double        scalar);
@@ -65,7 +65,7 @@ namespace maths {
             bool    operator ==(const matrix &rhs)    const;
 
             //matrix  transpose (void) const { ; }
-            
+
             size_t rows    (void) const;
             size_t columns (void) const;
             size_t size    (void) const;
@@ -107,7 +107,7 @@ namespace maths {
 
     class not_invertible : public std::runtime_error {
         public:
-            not_invertible (): 
+            not_invertible ():
                 std::runtime_error ("not_invertible")
             { ; }
     };

@@ -19,7 +19,7 @@ ieee_float<E, S>::ieee_float (floating_t _floating):
 
 
 template <unsigned int E, unsigned int S>
-ieee_float<E, S>::ieee_float (const ieee_float &rhs): 
+ieee_float<E, S>::ieee_float (const ieee_float &rhs):
     m_bits (rhs.m_bits)
 { ; }
 
@@ -56,7 +56,7 @@ ieee_float<E, S>::is_nan (void) const {
 
 template <unsigned int E, unsigned int S>
 bool
-ieee_float<E, S>::operator==(floating_t _floating) const { 
+ieee_float<E, S>::operator==(floating_t _floating) const {
     // TODO: This method really shouldn't be generated if there's no
     // representative native floating point type. But I'm sick of
     // C++'s template bullshit for tonight.
@@ -79,7 +79,7 @@ ieee_float<E, S>::operator==(floating_t _floating) const {
 //template <unsigned int E, unsigned int S>
 //bool
 //ieee_float<E, S>::almost_equal (floating_t a,
-//                                floating_t b) { 
+//                                floating_t b) {
 //    // Static cast to avoid integer casting warnings when using uint16_t for half
 //    static const floating_t epsilon = static_cast<floating_t> (0.001);
 //    const floating_t diff = static_cast<floating_t> (std::fabs (a - b));

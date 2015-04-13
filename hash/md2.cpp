@@ -134,7 +134,7 @@ MD2::transform (void) {
     for (size_t i = 0; i < 18; ++i) {
         for (size_t j = 0; j < 48; ++j)
             t = X[j] = X[j] ^ S[t];
-        
+
         t = (t + i) % 256;
     }
 }

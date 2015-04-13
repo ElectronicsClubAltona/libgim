@@ -79,7 +79,7 @@ unreachable (void) {
 
 void
 unreachable (const std::string& what) {
-    panic (" Unreachable code executed: " + what); 
+    panic (" Unreachable code executed: " + what);
 }
 
 

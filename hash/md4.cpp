@@ -110,7 +110,7 @@ MD4::digest_t
 MD4::digest (void) const {
     digest_t d;
     memcpy (d.data (), ABCD.data(), sizeof (ABCD));
-    return d; 
+    return d;
 }
 
 
@@ -130,17 +130,17 @@ MD4::transform (void) {
     ROUND1(D,A,B,C,  1,  7);
     ROUND1(C,D,A,B,  2, 11);
     ROUND1(B,C,D,A,  3, 19);
-    
+
     ROUND1(A,B,C,D,  4,  3);
     ROUND1(D,A,B,C,  5,  7);
     ROUND1(C,D,A,B,  6, 11);
     ROUND1(B,C,D,A,  7, 19);
-    
+
     ROUND1(A,B,C,D,  8,  3);
     ROUND1(D,A,B,C,  9,  7);
     ROUND1(C,D,A,B, 10, 11);
     ROUND1(B,C,D,A, 11, 19);
-    
+
     ROUND1(A,B,C,D, 12,  3);
     ROUND1(D,A,B,C, 13,  7);
     ROUND1(C,D,A,B, 14, 11);

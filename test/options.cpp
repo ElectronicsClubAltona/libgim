@@ -186,7 +186,7 @@ test_bytes_opt(void) {
 
     };
 
-    static const char *argv[] = { 
+    static const char *argv[] = {
         "./foo",
         "-b",
         NULL
@@ -197,7 +197,7 @@ test_bytes_opt(void) {
         p->add_option(make_unique<bytesoption> (
            'b', "bytes",
            "testing sizeof bytes", &size, commands[i].type,
-           commands[i].mod 
+           commands[i].mod
         ));
 
         argv[elems (argv) - 1] = commands[i].param;

@@ -70,7 +70,7 @@ namespace util {
         range  operator-  (T) const;
 
         /// Return a pseudo-random uniformly distributed value within the range.
-        /// There are no statistical randomness guarantees whatsoever. 
+        /// There are no statistical randomness guarantees whatsoever.
         T random (void) const;
 
         bool operator ==(const range<T>& rhs) const;

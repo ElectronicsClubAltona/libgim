@@ -1,4 +1,4 @@
-/* 
+/*
  * This file is part of libgim
  *
  * This Source Code Form is subject to the terms of the Mozilla Public

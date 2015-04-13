@@ -121,5 +121,5 @@ net::error_code<CODE>::error_code (void):
 
 template <int CODE>
 int
-net::error_code<CODE>::code (void) const 
+net::error_code<CODE>::code (void) const
     { return CODE; }

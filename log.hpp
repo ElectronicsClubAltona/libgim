@@ -36,7 +36,7 @@ namespace util {
         ALERT,                  /** action must be taken immediately */
         CRITICAL,               /** critical conditions */
         ERROR,                  /** error conditions */
-        WARNING,                
+        WARNING,
         WARN = WARNING,         /** warning conditions */
         NOTICE,                 /** normal but significant condition */
         INFORMATIONAL,

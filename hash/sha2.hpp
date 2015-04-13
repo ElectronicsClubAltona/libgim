@@ -1,4 +1,4 @@
-/* 
+/*
  * This file is part of libgim
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -39,7 +39,6 @@ namespace util {
                     std::array<uint32_t, 16> M;
                     std::array<uint8_t,  64> C;
                 };
-                
         };
     }
 }

@@ -79,7 +79,7 @@ namespace net {
 
 
     /// Indicates the wire transmission protocol to use.
-    /// 
+    ///
     /// This DOES NOT mean what you think it does! It is included for completeness sake, and unless
     /// you're doing something funky with the C API you really just want DEFAULT.
     /// Values retrieved from /etc/protocols

@@ -37,7 +37,7 @@ test_intersect_aabb (void)
 void
 test_intersect_sphere (void)
 {
-    
+    ;
 }
 
 

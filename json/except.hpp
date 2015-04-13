@@ -13,7 +13,6 @@
  *
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
- 
 
 #ifndef __UTIL_JSON_EXCEPT_HPP
 #define __UTIL_JSON_EXCEPT_HPP

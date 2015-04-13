@@ -53,7 +53,7 @@ const char* inet_ntop(int af, const void* src, char* dst, int size){
 //-----------------------------------------------------------------------------
 template <domain D>
 typename address<D>::port_type
-address<D>::port (void) const 
+address<D>::port (void) const
     { return m_port; }
 
 

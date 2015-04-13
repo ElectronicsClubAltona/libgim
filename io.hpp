@@ -38,7 +38,7 @@ namespace util {
         ACCESS_WRITE     = 1 << 1,
         ACCESS_READWRITE = ACCESS_READ | ACCESS_WRITE
     };
-    
+
     /// Reads an entire file into memory. Caller frees the result. Guarantees a
     /// null trailing byte.
     std::unique_ptr<char []>
@@ -130,7 +130,6 @@ namespace util {
 
     void set_cwd (const boost::filesystem::path &);
 
-    
     //-------------------------------------------------------------------------
     class path_error : public std::runtime_error {
         public:

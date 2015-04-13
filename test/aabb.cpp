@@ -30,7 +30,7 @@ main (int, char**)
         };
 
         box.expand (2.f);
-        
+
         tap.expect_eq<util::AABB2f, util::AABB2f> (box, { { 1, 1 }, { 9, 9 }}, "expansion");
     }
 
