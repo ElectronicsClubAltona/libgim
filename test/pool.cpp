@@ -1,6 +1,7 @@
 
 #include "debug.hpp"
 #include "pool.hpp"
+#include "tap.hpp"
 
 #include <set>
 #include <vector>
@@ -83,4 +84,7 @@ main (int, char **) {
     check_single ();
     check_unique_ptr ();
     check_keep_value ();
+
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }

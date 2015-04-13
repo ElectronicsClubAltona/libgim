@@ -1,6 +1,7 @@
 #include "vector.hpp"
 
 #include "maths.hpp"
+#include "tap.hpp"
 
 using util::vector;
 using util::vector2f;
@@ -64,4 +65,7 @@ int
 main ()
 {
     test_polar ();
+
+    util::TAP::logger test;
+    test.skip ("convert to TAP");
 }

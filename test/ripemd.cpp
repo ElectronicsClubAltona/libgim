@@ -1,6 +1,8 @@
-#include "../debug.hpp"
-#include "../types.hpp"
-#include "../hash/ripemd.hpp"
+#include "hash/ripemd.hpp"
+
+#include "debug.hpp"
+#include "tap.hpp"
+#include "types.hpp"
 
 #include <cstdlib>
 #include <cstring>
@@ -132,5 +134,6 @@ main(int, char**) {
     };
     CHECK (obj.digest () == MILLION);
 
-    return EXIT_SUCCESS;
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }

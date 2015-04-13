@@ -1,6 +1,8 @@
-#include "../debug.hpp"
-#include "../maths/matrix.hpp"
-#include "../maths.hpp"
+#include "maths/matrix.hpp"
+
+#include "debug.hpp"
+#include "maths.hpp"
+#include "tap.hpp"
 
 #include <iostream>
 #include <cmath>
@@ -52,7 +54,7 @@ test_identity (const matrix &m) {
 
 
 int
-main (int, char **) {
+main (void) {
     for (unsigned int i = 1; i < 10; ++i) {
         test_zeroes   (matrix::zeroes   (i));
         test_identity (matrix::identity (i));
@@ -129,5 +131,6 @@ main (int, char **) {
     CHECK ( matrix::identity (3).is_homogeneous ());
     CHECK (invertible4.is_homogeneous ());
 
-    return EXIT_SUCCESS;
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }

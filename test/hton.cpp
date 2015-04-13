@@ -1,8 +1,9 @@
 
-#include "../endian.hpp"
+#include "endian.hpp"
 
-#include "../debug.hpp"
-#include "../platform.hpp"
+#include "debug.hpp"
+#include "tap.hpp"
+#include "platform.hpp"
 
 #include <cstdlib>
 #if defined(PLATFORM_WIN32)
@@ -11,8 +12,6 @@
     #include <arpa/inet.h>
     #include <netinet/in.h>
 #endif
-
-using namespace std;
 
 
 int 
@@ -27,5 +26,6 @@ main (int, char **) {
     CHECK_EQ (ntohs (u16), hton (u16));
     CHECK_EQ (ntohl (u32), hton (u32));
 
-    return EXIT_SUCCESS;
+    util::TAP::logger tap;
+    tap.todo ("convert to TAP");
 }

@@ -2,6 +2,7 @@
 #include "point.hpp"
 
 #include "debug.hpp"
+#include "tap.hpp"
 #include "types.hpp"
 
 using namespace util;
@@ -55,4 +56,7 @@ main (int, char**) {
         CHECK_EQ (q.z, 0);
         CHECK_EQ (q.w, 1);
     }
+
+    util::TAP::logger tap;
+    tap.todo ("convert to TAP");
 }

@@ -2,6 +2,7 @@
 #include "hash/adler.hpp"
 #include "hash/bsdsum.hpp"
 #include "types.hpp"
+#include "tap.hpp"
 #include "debug.hpp"
 
 #include <cstdlib>
@@ -25,9 +26,11 @@ static const struct {
 
 int
 main (int, char**) {
+    util::TAP::logger tap;
+
     for (unsigned i = 0; i < elems (TESTS); ++i) {
-        CHECK_EQ (TESTS[i].adler, adler32 (TESTS[i].data, TESTS[i].size));
-        CHECK_EQ (TESTS[i].bsd,   bsdsum  (TESTS[i].data, TESTS[i].size));
+        tap.expect_eq (TESTS[i].adler, adler32 (TESTS[i].data, TESTS[i].size), "adler checksum");
+        tap.expect_eq (TESTS[i].bsd,   bsdsum  (TESTS[i].data, TESTS[i].size), "bsdsum checksum");
     }
 
     return EXIT_SUCCESS;

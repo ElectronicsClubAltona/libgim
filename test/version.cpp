@@ -1,6 +1,7 @@
+#include "version.hpp"
 
-#include "../version.hpp"
-#include "../debug.hpp"
+#include "debug.hpp"
+#include "tap.hpp"
 
 #include <string>
 #include <vector>
@@ -17,7 +18,7 @@ struct parsed_version {
 
 
 int
-main (int, char **) {
+main () {
     vector <parsed_version> tests ({
         { "1",          { 1          } },
 
@@ -47,5 +48,6 @@ main (int, char **) {
         CHECK_LE (i->parts.size (), 4);
     }
 
-    return EXIT_SUCCESS;
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }

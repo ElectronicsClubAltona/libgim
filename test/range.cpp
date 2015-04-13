@@ -1,8 +1,9 @@
+#include "debug.hpp"
+#include "range.hpp"
+#include "tap.hpp"
+
 #include <cstdlib>
 #include <limits>
-
-#include "../debug.hpp"
-#include "../range.hpp"
 
 using namespace std;
 using namespace util;
@@ -49,6 +50,7 @@ main (int, char **) {
         CHECK_EQ (initial_nan.max, 1.0);
     }
 
-    return EXIT_SUCCESS;
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }
 

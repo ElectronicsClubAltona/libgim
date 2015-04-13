@@ -1,8 +1,8 @@
-#include <cstdlib>
-
 #include "signal.hpp"
+
 #include "debug.hpp"
 #include "raii.hpp"
+#include "tap.hpp"
 
 
 //-----------------------------------------------------------------------------
@@ -129,5 +129,6 @@ main (int, char **)
     test_combiner ();
     test_disconnect ();
 
-    return EXIT_SUCCESS;
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }

@@ -1,9 +1,10 @@
 #include "extent.hpp"
-#include "debug.hpp"
+#include "tap.hpp"
 
 int
 main (void)
 {
-    // Simple symbol visibility check
+    util::TAP::logger tap;
     util::extent2f instance;
+    tap.todo ("instancing test");
 }

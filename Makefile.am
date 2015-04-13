@@ -288,7 +288,7 @@ if PLATFORM_WIN32
 test_hton_LDFLAGS = -lws2_32
 endif
 
-TEST_LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
-TESTS = $(top_builddir)/test/static.test $(top_builddir)/test/json.test $(top_builddir)/test/json-schema.test
+LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
+TESTS = $(top_builddir)/test/json-parse $(top_builddir)/test/json-schema $(TEST_BIN)
 check_PROGRAMS = $(TEST_BIN)
-EXTRA_DIST += test/static.test test/json.test test/json test/json-schema
+EXTRA_DIST += test/json test/json-parse test/json-schema

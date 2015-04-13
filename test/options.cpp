@@ -1,6 +1,7 @@
 #include "options.hpp"
 
 #include "debug.hpp"
+#include "tap.hpp"
 #include "types.hpp"
 
 #include <cassert>
@@ -271,4 +272,7 @@ main (int, char **) {
     test_bytes_opt ();
     test_insert_remove_opt ();
     test_required ();
+
+    util::TAP::logger tap;
+    tap.todo ("convert to TAP");
 }

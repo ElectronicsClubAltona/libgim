@@ -1,7 +1,8 @@
 #include "hash/hotp.hpp"
  
-#include "types.hpp"
 #include "debug.hpp"
+#include "tap.hpp"
+#include "types.hpp"
 
 using util::hash::HOTP;
 
@@ -25,4 +26,7 @@ main (int, char**)
 
     for (size_t i = 0; i < elems (EXPECTED); ++i)
         CHECK_EQ (EXPECTED[i], h.value ());
+
+    util::TAP::logger tap;
+    tap.todo ("convert to TAP");
 }

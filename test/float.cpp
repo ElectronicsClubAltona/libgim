@@ -1,7 +1,8 @@
-#include "../float.hpp"
+#include "float.hpp"
 
-#include "../debug.hpp"
-#include "../types.hpp"
+#include "debug.hpp"
+#include "tap.hpp"
+#include "types.hpp"
 
 #include <limits>
 
@@ -72,4 +73,7 @@ int
 main (int, char **) {
     test_single ();
     test_double ();
+
+    util::TAP::logger tap;
+    tap.todo ("convert to TAP");
 }

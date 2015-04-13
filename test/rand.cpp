@@ -1,5 +1,6 @@
-#include "../random.hpp"
-#include "../debug.hpp"
+#include "random.hpp"
+#include "debug.hpp"
+#include "tap.hpp"
 
 #include <iostream>
 #include <cmath>
@@ -55,5 +56,6 @@ main (int, char **) {
     test_bool ();
     test_float ();
 
-    return EXIT_SUCCESS;
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }

@@ -1,6 +1,7 @@
-#include "../hash/sha2.hpp"
+#include "hash/sha2.hpp"
 
-#include "../debug.hpp"
+#include "debug.hpp"
+#include "tap.hpp"
 
 #include <cstring>
 
@@ -56,5 +57,6 @@ main (int, char **) {
         CHECK (obj.digest () == i.output);
     }
 
-    return 0;
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }

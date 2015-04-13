@@ -1,8 +1,15 @@
 #include "aabb.hpp"
 
+#include "tap.hpp"
+
+#include <tuple>
+
+
 int
 main (int, char**)
 {
+    util::TAP::logger tap;
+
     {
         // Test contraction
         util::AABB2f box {
@@ -12,10 +19,7 @@ main (int, char**)
 
         box.contract (2.f);
 
-        CHECK_EQ (box.p0.x, 3);
-        CHECK_EQ (box.p0.y, 3);
-        CHECK_EQ (box.p1.x, 7);
-        CHECK_EQ (box.p1.y, 7);
+        tap.expect_eq<util::AABB2f, util::AABB2f> (box, { { 3, 3 }, { 7, 7 }}, "over contraction");
     }
 
     {
@@ -27,10 +31,7 @@ main (int, char**)
 
         box.expand (2.f);
         
-        CHECK_EQ (box.p0.x, 1);
-        CHECK_EQ (box.p0.y, 1);
-        CHECK_EQ (box.p1.x, 9);
-        CHECK_EQ (box.p1.y, 9);
+        tap.expect_eq<util::AABB2f, util::AABB2f> (box, { { 1, 1 }, { 9, 9 }}, "expansion");
     }
 
 
@@ -43,9 +44,6 @@ main (int, char**)
 
         small.contract (10);
 
-        CHECK_EQ (small.p0.x, 0.5f);
-        CHECK_EQ (small.p0.y, 0.5f);
-        CHECK_EQ (small.p1.x, 0.5f);
-        CHECK_EQ (small.p1.y, 0.5f);
+        tap.expect_eq<util::AABB2f, util::AABB2f> (small, { { 0.5f, 0.5f }, { 0.5f, 0.5f }}, "unsigned over-contract");
     }
 }

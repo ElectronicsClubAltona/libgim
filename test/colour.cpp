@@ -1,53 +1,51 @@
 #include "colour.hpp"
  
-#include "debug.hpp"
+#include "tap.hpp"
 
 int
 main (int, char**)
 {
+    util::TAP::logger tap;
+
     // Simple check for symbol visibility
-    CHECK_EQ (util::colour4f::WHITE.r, 1.f);
-    CHECK_EQ (util::colour4f::WHITE.g, 1.f);
-    CHECK_EQ (util::colour4f::WHITE.b, 1.f);
-    CHECK_EQ (util::colour4f::WHITE.a, 1.f);
+    tap.expect_eq (util::colour4f::WHITE, util::colour4f (1), "WHITE available");
 
     // Check casting works between intergral and floating formats
     {
         util::colour4f f (1);
         util::colour<4,uint8_t> u (255);
-        CHECK_EQ (f.cast<uint8_t> (), u);
-        CHECK_EQ (u.cast<float> (), f);
+        tap.expect_eq (f.cast<uint8_t> (), u, "cast float to u8");
+        tap.expect_eq (u.cast<float> (), f, "cast u8 to float");
     }
 
     // Check lookups are working
-    CHECK_EQ (util::colour4f::from_html ("white"), util::colour4f::WHITE);
-    CHECK_EQ (util::colour4f::from_x11  ("white"), util::colour4f::WHITE);
+    tap.expect_eq (util::colour4f::from_html ("white"), util::colour4f::WHITE, "HTML lookup");
+    tap.expect_eq ( util::colour4f::from_x11  ("white"), util::colour4f::WHITE, "X11 lookup");
 
     // Check HSV conversions
     {
         // white: hue is undefined
         auto white = util::rgb_to_hsv ({1,1,1});
-        CHECK_EQ (white.s, 0);
-        CHECK_EQ (white.v, 1);
+        tap.expect (exactly_equal (white.s, 0) && exactly_equal (white.v, 1), "white hsv");
 
         // black: hue is undefined
         auto black = util::rgb_to_hsv ({0,0,0});
-        CHECK_EQ (black.s, 0);
-        CHECK_EQ (black.v, 0);
+        tap.expect (exactly_equal (black.s, 0) && exactly_equal (black.v, 0), "black hsv");
 
         struct {
+            const char *name;
             util::colour3f rgb;
             util::colour3f hsv;
         } TESTS[] = {
-            { { 1,     0,     0,    }, {   0, 1,     1,    } }, // red
-            { { 0,     1,     0,    }, { 120, 1,     1,    } }, // green
-            { { 0,     0,     1,    }, { 240, 1,     1,    } }, // blue
-            { { 0.75f, 0.25f, 0.75f }, { 300, 2/3.f, 0.75f } },
+            { "red",   { 1,     0,     0,    }, {   0, 1,     1,    } }, // red
+            { "green", { 0,     1,     0,    }, { 120, 1,     1,    } }, // green
+            { "blue",  { 0,     0,     1,    }, { 240, 1,     1,    } }, // blue
+            { "misc",  { 0.75f, 0.25f, 0.75f }, { 300, 2/3.f, 0.75f } },
         };
 
         for (auto i: TESTS) {
-            CHECK_EQ (util::rgb_to_hsv (i.rgb), i.hsv);
-            CHECK_EQ (util::hsv_to_rgb (i.hsv), i.rgb);
+            tap.expect_eq (util::rgb_to_hsv (i.rgb), i.hsv, i.name);
+            tap.expect_eq (util::hsv_to_rgb (i.hsv), i.rgb, i.name);
         }
     }
 }

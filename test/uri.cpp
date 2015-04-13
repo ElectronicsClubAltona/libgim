@@ -1,6 +1,7 @@
 #include "uri.hpp"
 
 #include "debug.hpp"
+#include "tap.hpp"
 
 int
 main (void)
@@ -41,4 +42,7 @@ main (void)
 
     for (auto i: BAD)
         CHECK_THROWS (util::uri::parse_error, util::uri foo (i));
+
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }

@@ -1,6 +1,8 @@
-#include "../region.hpp"
-#include "../point.hpp"
-#include "../debug.hpp"
+#include "region.hpp"
+
+#include "debug.hpp"
+#include "point.hpp"
+#include "tap.hpp"
 
 using namespace util;
 
@@ -39,5 +41,6 @@ main (int, char **) {
     //CHECK (region<2,intmax_t> (0, 0, 10, 10).includes (point2d (0.4, 0.01)));
     //CHECK (region<2,intmax_t> (0, 0, 10, 10).contains (point2d (0.4, 0.01)));
 
-    return 0;
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }

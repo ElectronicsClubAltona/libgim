@@ -1,9 +1,10 @@
 
-#include "../ip.hpp"
+#include "ip.hpp"
 
-#include "../debug.hpp"
-#include "../platform.hpp"
-#include "../types.hpp"
+#include "debug.hpp"
+#include "platform.hpp"
+#include "tap.hpp"
+#include "types.hpp"
 
 #include <cstdlib>
 
@@ -26,5 +27,6 @@ main (int, char **) {
         CHECK (parsed == data[i].ip);
     }
 
-    return EXIT_SUCCESS;
+    util::TAP::logger tap;
+    tap.todo ("convert to TAP");
 }

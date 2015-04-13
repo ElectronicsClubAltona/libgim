@@ -1,7 +1,8 @@
-#include "ray.hpp"
-#include "plane.hpp"
-#include "debug.hpp"
 #include "aabb.hpp"
+#include "debug.hpp"
+#include "plane.hpp"
+#include "ray.hpp"
+#include "tap.hpp"
 
 
 void
@@ -33,9 +34,19 @@ test_intersect_aabb (void)
 }
 
 
+void
+test_intersect_sphere (void)
+{
+    
+}
+
+
 int
 main (void)
 {
     test_intersect_plane ();
     test_intersect_aabb ();
+
+    util::TAP::logger tap;
+    tap.todo ("convert to TAP");
 }

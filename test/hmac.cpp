@@ -3,6 +3,7 @@
 #include "debug.hpp"
 #include "hash/md5.hpp"
 #include "hash/sha1.hpp"
+#include "tap.hpp"
 #include "types.hpp"
 
 #include <cstring>
@@ -278,6 +279,9 @@ main (int, char**)
         if (!t.fun (t.key, t.dat, t.res))
             return EXIT_FAILURE;
     }
+
+    util::TAP::logger tap;
+    tap.todo ("convert to TAP");
 
     return EXIT_SUCCESS;
 }

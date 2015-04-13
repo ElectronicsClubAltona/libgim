@@ -1,11 +1,13 @@
 #include "matrix.hpp"
-#include "vector.hpp"
+
 #include "debug.hpp"
+#include "tap.hpp"
+#include "vector.hpp"
 
 #include <cstdlib>
 
 int
-main (int, char **) {
+main (void) {
     {
         // Identity matrix-vector multiplication
         auto v = util::vector<4,float> { 1.f, 2.f, 3.f, 4.f };
@@ -93,5 +95,6 @@ main (int, char **) {
         CHECK_EQ (m.inverse (), r / 40.f);
     }
 
-    return EXIT_SUCCESS;
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }

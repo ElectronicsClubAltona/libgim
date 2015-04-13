@@ -1,4 +1,6 @@
-#include "../hash/md5.hpp"
+#include "hash/md5.hpp"
+
+#include "tap.hpp"
 
 #include <iostream>
 #include <cstring>
@@ -55,5 +57,7 @@ main (int, char**) {
         }
     }
 
-    return success ? 0 : 1;
+    util::TAP::logger tap;
+    tap.expect (success, "test vectors");
+    return tap.status ();
 }

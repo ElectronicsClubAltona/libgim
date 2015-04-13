@@ -1,13 +1,14 @@
+#include "json/tree.hpp"
 
-#include "../debug.hpp"
-#include "../json/tree.hpp"
-#include "../maths.hpp"
+#include "debug.hpp"
+#include "maths.hpp"
+#include "tap.hpp"
 
 #include <memory>
 #include <cstdlib>
 
 int
-main (int, char**) {
+main (void) {
     static const char TEST_STRING[] = R"_(
         {
            "string":"brad",
@@ -100,5 +101,6 @@ main (int, char**) {
     CHECK (!ref["array"].is_object ());
     CHECK (!ref["array"].is_string ());
 
-    return EXIT_SUCCESS;
+    util::TAP::logger tap;
+    tap.skip ("convert to TAP");
 }
