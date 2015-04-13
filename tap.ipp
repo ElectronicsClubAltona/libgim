@@ -24,27 +24,26 @@
 #include <cstdlib>
 #include <algorithm>
 
-//-----------------------------------------------------------------------------
-template <typename T, typename U>
-void
-util::TAP::logger::expect (std::function<bool(const T&, const U&)> test,
-                           const T &a,
-                           const U &b,
-                           const std::string &msg)
-{
-    bool success = test (a, b);
-    std::cout << (success ? "ok " : "not ok ") << ++m_size << " - " << msg << '\n';
 
-    if (!success)
-        m_status = EXIT_FAILURE;
+//-----------------------------------------------------------------------------
+template <typename... Args>
+void
+util::TAP::logger::expect (std::function<bool(Args...)> test, Args&&... args, const std::string &msg)
+{
+    expect (test (std::forward<Args> (args)...), msg);
 }
+
 
 //-----------------------------------------------------------------------------
 template <typename T, typename U>
 void
 util::TAP::logger::expect_eq (const T&a, const U &b, const std::string &msg)
 {
-    expect (almost_equal<T,U>, a, b, msg);
+    static const auto TEST = [] (const T &t, const U &u) -> bool {
+        return almost_equal (t, u);
+    };
+
+    expect<const T&, const U&> (TEST, a, b, msg);
 }
 
 
@@ -53,11 +52,11 @@ template <typename T, typename U>
 void
 util::TAP::logger::expect_neq (const T&a, const U &b, const std::string &msg)
 {
-    static const std::function<bool(const T&, const U&)> TEST = [] (const T &t, const U &u) -> bool {
+    static const auto TEST = [] (const T &t, const U &u) -> bool {
         return !almost_equal (t, u);
     };
 
-    expect (TEST, a, b, msg);
+    expect<const T&, const U&> (TEST, a, b, msg);
 }
 
 
@@ -69,7 +68,7 @@ util::TAP::logger::expect_ ## SUFFIX (const T &a,               \
                                       const U &b,               \
                                       const std::string &msg)   \
 {                                                               \
-    std::cout << ((a OP b) ? "ok " : "not ok ") << ++m_size << " - " << msg << '\n'; \
+    expect<const T&, const U&> ([] (const T&t, const U&u) { return t OP u; }, a, b, msg); \
 }
 
 TAP_TEST(gt, > )

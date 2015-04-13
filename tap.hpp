@@ -32,19 +32,21 @@ namespace util { namespace TAP {
             TODO
         };
 
+        //---------------------------------------------------------------------
         logger ();
         ~logger ();
 
+        //---------------------------------------------------------------------
         void expect (bool, const std::string &msg);
 
-        template <typename T, typename U>
-        void expect (std::function<bool(const T&, const U&)> test, const T&, const U&, const std::string &msg);
+        template <typename ...Args>
+        void expect (std::function<bool(Args...)>, Args&&..., const std::string& msg);
 
-        template <typename T, typename U>
-        void expect_eq (const T&, const U&, const std::string &msg = "equality");
-        template <typename T, typename U>
-        void expect_neq (const T&, const U&, const std::string &msg = "inequality");
+        //---------------------------------------------------------------------
+        template <typename T, typename U> void expect_eq (const T&, const U&, const std::string &msg = "equality");
+        template <typename T, typename U> void expect_neq (const T&, const U&, const std::string &msg = "inequality");
 
+        //---------------------------------------------------------------------
         template <typename T, typename U> void expect_gt (const T&, const U&, const std::string &msg = "gt");
         template <typename T, typename U> void expect_ge (const T&, const U&, const std::string &msg = "ge");
         template <typename T, typename U> void expect_lt (const T&, const U&, const std::string &msg = "lt");
@@ -54,6 +56,7 @@ namespace util { namespace TAP {
         void todo (const std::string &msg);
         void noop (void);
 
+        //---------------------------------------------------------------------
         int status (void) const;
 
     private:
