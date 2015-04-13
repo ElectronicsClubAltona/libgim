@@ -72,6 +72,31 @@ util::ray<S,T>::intersect (AABB<S,T> r) const
 
 
 ///----------------------------------------------------------------------------
+/// returns the smallest distance from ray origin to a sphere intersection
+///
+/// returns NaN on miss
+template <size_t S, typename T>
+T
+util::ray<S,T>::intersect (sphere<S,T> s) const
+{
+    T b = dot (d, p - s.c);
+    T c = dot (p - s.c, p - s.c) - s.r * s.r;
+
+    T D = b * b - c;
+    if (D < 0)
+        return std::numeric_limits<T>::quiet_NaN ();
+
+    auto t_ = std::sqrt (D);
+    auto t0 = -b + t_;
+    auto t1 = -b - t_;
+
+    return t1 >= 0 ? t1 :
+           t0 >= 0 ? t0 :
+           std::numeric_limits<T>::quiet_NaN ();
+}
+
+
+///----------------------------------------------------------------------------
 /// returns the closest parameter along the ray to a given point
 template <size_t S, typename T>
 T

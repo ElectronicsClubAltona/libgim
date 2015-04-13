@@ -18,9 +18,11 @@
 #define __UTIL_RAY_HPP
 
 #include "point.hpp"
-#include "vector.hpp"
-#include "plane.hpp"
+
 #include "aabb.hpp"
+#include "plane.hpp"
+#include "sphere.hpp"
+#include "vector.hpp"
 
 namespace util {
     template <size_t S, typename T>
@@ -30,6 +32,7 @@ namespace util {
 
         T intersect (plane<S,T>) const;
         T intersect (AABB<S,T>) const;
+        T intersect (sphere<S,T>) const;
 
         T closest (point<S,T>) const;
 

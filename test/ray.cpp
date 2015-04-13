@@ -40,7 +40,16 @@ test_intersect_aabb (util::TAP::logger &tap)
 void
 test_intersect_sphere (util::TAP::logger &tap)
 {
-    ;
+    const util::sphere3f s = {{0.f, 0.f, 0.f}, 1.f};
+
+    const util::ray3f r0 {{0.f, 2.f, 0.f}, {0.f, -1.f, 0.f}};
+    tap.expect_eq (r0.intersect (s), 1.f, "ray-sphere simple");
+
+    const util::ray3f r1 {{0.f, 1.f, 0.f}, {0.f, 1.f, 0.f}};
+    tap.expect_eq (r1.intersect (s), 0.f, "ray-sphere adjacent");
+
+    const util::ray3f r2 {{0.f, 2.f, 0.f}, {0.f, 1.f, 0.f}};
+    tap.expect_nan (r2.intersect (s), "ray-sphere no-intersect");
 }
 
 
