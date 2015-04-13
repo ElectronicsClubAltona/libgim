@@ -170,7 +170,7 @@ AABB<S,T>::cover (point<S,T> p)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 AABB<S,T>
 AABB<S,T>::operator+ (vector<S,T> v) const
@@ -186,6 +186,16 @@ AABB<S,T>::operator- (vector<S,T> v) const
 {
     return { p0 - v, p1 - v };
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+bool
+AABB<S,T>::operator== (const AABB<S,T> rhs) const
+{
+    return rhs.p0 == p0 && rhs.p1 == p1;
+}
+
 
 
 //-----------------------------------------------------------------------------

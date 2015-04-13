@@ -54,6 +54,8 @@ namespace util {
         AABB<S,T> operator+ (vector<S,T>) const;
         AABB<S,T> operator- (vector<S,T>) const;
 
+        bool operator== (AABB) const;
+
         point<S,T> p0;
         point<S,T> p1;
     };
