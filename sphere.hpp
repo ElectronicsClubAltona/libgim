@@ -22,10 +22,13 @@
 namespace util {
     template <size_t S, typename T>
     struct sphere {
+        sphere (point<S,T> centre, T radius);
+
         point<S,T> centre;
         T radius;
     };
 
+    typedef sphere<2,float> sphere2f;
     typedef sphere<3,float> sphere3f;
 }
 

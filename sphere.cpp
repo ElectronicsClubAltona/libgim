@@ -19,4 +19,14 @@
 using util::sphere;
 
 //-----------------------------------------------------------------------------
+template <size_t S, typename T>
+sphere<S,T>::sphere (point<S,T> _centre, T _radius):
+    centre (_centre),
+    radius (_radius)
+{
+    CHECK_GE (_radius, 0);
+}
+
+//-----------------------------------------------------------------------------
+template struct util::sphere<2,float>;
 template struct util::sphere<3,float>;
