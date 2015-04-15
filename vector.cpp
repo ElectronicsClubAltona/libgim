@@ -26,6 +26,8 @@
 #include <numeric>
 
 using util::vector;
+using util::vector3f;
+using util::vector3d;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,7 +55,7 @@ util::vector<S,T>::magnitude2 (void) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 T
-util::vector<S,T>::difference (const util::vector<S,T> &rhs) const
+util::vector<S,T>::difference (vector<S,T> rhs) const
 {
     // TODO: change the signature to ensure it does not truncate
     return static_cast<T> (std::sqrt (difference2 (rhs)));
@@ -63,7 +65,7 @@ util::vector<S,T>::difference (const util::vector<S,T> &rhs) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 T
-util::vector<S,T>::difference2 (const util::vector<S,T> &rhs) const
+util::vector<S,T>::difference2 (vector<S,T> rhs) const
 {
     T sum {0};
     for (size_t i = 0; i < S; ++i)
@@ -112,8 +114,8 @@ util::vector<S,T>::normalised (void) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-util::vector<2,T>
-util::polar_to_cartesian (util::vector<2,T> v)
+vector<2,T>
+util::polar_to_cartesian (vector<2,T> v)
 {
     return util::vector<2,T> {
         v[0] * std::cos (v[1]),
@@ -124,8 +126,8 @@ util::polar_to_cartesian (util::vector<2,T> v)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-util::vector<2,T>
-util::cartesian_to_polar (util::vector<2,T> v)
+vector<2,T>
+util::cartesian_to_polar (vector<2,T> v)
 {
     return util::vector<2,T> {
         std::hypot (v.x, v.y),
@@ -136,9 +138,9 @@ util::cartesian_to_polar (util::vector<2,T> v)
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-util::vector<3,T>
-util::cross (const util::vector<3,T> &a,
-             const util::vector<3,T> &b)
+vector<3,T>
+util::cross (vector<3,T> a,
+             vector<3,T> b)
 {
     return util::vector<3,T> {
         a.y * b.z - a.z * b.y,
@@ -147,16 +149,16 @@ util::cross (const util::vector<3,T> &a,
     };
 }
 
-template util::vector3f util::cross(const util::vector3f&, const util::vector3f&);
-template util::vector3d util::cross(const util::vector3d&, const util::vector3d&);
+template vector3f util::cross(vector3f, vector3f);
+template vector3d util::cross(vector3d, vector3d);
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
-util::vector<3,T>
-util::spherical_to_cartesian (const util::vector<3,T> &s)
+vector<3,T>
+util::spherical_to_cartesian (vector<3,T> s)
 {
-    return util::vector<3,T> {
+    return vector<3,T> {
         s.x * sin (s.y) * cos (s.z),
         s.x * sin (s.y) * sin (s.z),
         s.x * cos (s.y),
@@ -166,12 +168,12 @@ util::spherical_to_cartesian (const util::vector<3,T> &s)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-util::vector<3,T>
-util::cartesian_to_spherical (const util::vector<3,T> &c)
+vector<3,T>
+util::cartesian_to_spherical (vector<3,T> c)
 {
     T mag = c.magnitude ();
 
-    return util::vector<3,T> {
+    return vector<3,T> {
         mag,
         acos  (c.z / mag),
         atan2 (c.y, c.x)
@@ -217,7 +219,7 @@ util::vector<S,T>::sanity (void) const
 
 template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, const util::vector<S,T> &v)
+util::operator<< (std::ostream &os, util::vector<S,T> v)
 {
     os << "vec" << S << "(" << v.data[0];
     for (size_t i = 1; i < S; ++i)
@@ -247,9 +249,9 @@ util::operator>> (const json::tree::node &node, util::vector<S,T> &v)
 
 
 //-----------------------------------------------------------------------------
-#define INSTANTIATE_S_T(S,T)                                                        \
-template struct util::vector<S,T>;                                                  \
-template std::ostream& util::operator<< (std::ostream&, const util::vector<S,T> &v);\
+#define INSTANTIATE_S_T(S,T)                                                    \
+template struct util::vector<S,T>;                                              \
+template std::ostream& util::operator<< (std::ostream&, util::vector<S,T> v);   \
 template const json::tree::node& util::operator>> (const json::tree::node&, util::vector<S,T>&);
 
 

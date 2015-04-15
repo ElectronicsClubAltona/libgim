@@ -36,8 +36,8 @@ namespace util {
         T magnitude  (void) const;
         T magnitude2 (void) const;
 
-        T difference  (const vector<S,T>&) const;
-        T difference2 (const vector<S,T>&) const;
+        T difference  (vector<S,T>) const;
+        T difference2 (vector<S,T>) const;
 
         // normalisation
         bool is_normalised (void) const;
@@ -56,12 +56,12 @@ namespace util {
     template <typename T> vector<2,T> polar_to_cartesian (vector<2,T>);
     template <typename T> vector<2,T> cartesian_to_polar (vector<2,T>);
 
-    template <typename T> vector<3,T> cross (const vector<3,T>&, const vector<3,T>&);
-    template <typename T> vector<3,T> spherical_to_cartesian (const vector<3,T>&);
-    template <typename T> vector<3,T> cartesian_to_spherical (const vector<3,T>&);
+    template <typename T> vector<3,T> cross (vector<3,T>, vector<3,T>);
+    template <typename T> vector<3,T> spherical_to_cartesian (vector<3,T>);
+    template <typename T> vector<3,T> cartesian_to_spherical (vector<3,T>);
 
     // output and serialisation operators
-    template <size_t S, typename T> std::ostream& operator<< (std::ostream&, const vector<S,T>&);
+    template <size_t S, typename T> std::ostream& operator<< (std::ostream&, vector<S,T>);
 
     template <size_t S, typename T>
     const json::tree::node& operator>> (const json::tree::node&, vector<S,T>&);
