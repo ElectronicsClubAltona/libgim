@@ -27,19 +27,22 @@
 namespace util {
     template <size_t S, typename T>
     struct ray {
-        ray (util::point<S,T> origin,
-              util::vector<S,T> direction);
+        ray (point<S,T> origin,
+             vector<S,T> direction);
 
+        // intersection tests
         T intersect (plane<S,T>) const;
         T intersect (AABB<S,T>) const;
         T intersect (sphere<S,T>) const;
 
+        // queries
         T closest (point<S,T>) const;
 
         util::point<S,T> at (T) const;
 
-        util::point<S,T> p;
-        util::vector<S,T> d;
+        // data members
+        point<S,T>  origin;
+        vector<S,T> direction;
     };
 
 

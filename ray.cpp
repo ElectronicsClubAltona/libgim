@@ -19,18 +19,18 @@
 #include "debug.hpp"
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-util::ray<S,T>::ray (util::point<S,T> _p,
-                       util::vector<S,T> _d):
-    p (_p),
-    d (_d)
+util::ray<S,T>::ray (util::point<S,T> _origin,
+                     util::vector<S,T> _direction):
+    origin (_origin),
+    direction (_direction)
 {
-    CHECK_EQ (d.magnitude2 (), 1);
+    CHECK (direction.is_normalised ());
 }
 
 
-///----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 /// returns the distance along the ray in a ray-plane intersection
 ///
 /// returns inf if parallel
@@ -39,7 +39,7 @@ template <size_t S, typename T>
 T
 util::ray<S,T>::intersect (plane<S,T> q) const
 {
-    return dot (q.p - p, q.n) / dot (d, q.n);
+    return dot (q.p - origin, q.n) / dot (direction, q.n);
 }
 
 
@@ -52,8 +52,8 @@ template <size_t S, typename T>
 T
 util::ray<S,T>::intersect (AABB<S,T> r) const
 {
-    auto t1 = (r.p0 - p) / d;
-    auto t2 = (r.p1 - p) / d;
+    auto t1 = (r.p0 - origin) / direction;
+    auto t2 = (r.p1 - origin) / direction;
 
     auto vmin = min (t1, t2);
     auto vmax = max (t1, t2);
@@ -82,8 +82,8 @@ template <size_t S, typename T>
 T
 util::ray<S,T>::intersect (sphere<S,T> s) const
 {
-    T b = dot (d, p - s.c);
-    T c = dot (p - s.c, p - s.c) - s.r * s.r;
+    T b = dot (direction, origin - s.c);
+    T c = dot (origin - s.c, origin - s.c) - s.r * s.r;
 
     T D = b * b - c;
     if (D < 0)
@@ -99,14 +99,14 @@ util::ray<S,T>::intersect (sphere<S,T> s) const
 }
 
 
-///----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 /// returns the closest parameter along the ray to a given point
 template <size_t S, typename T>
 T
 util::ray<S,T>::closest (point<S,T> q) const
 {
     // project the origin-point difference onto the direction
-    return dot (p - q, d);
+    return dot (origin - q, direction);
 }
 
 
@@ -115,10 +115,10 @@ template <size_t S, typename T>
 util::point<S,T>
 util::ray<S,T>::at (T t) const
 {
-    return p + d * t;
+    return origin + direction * t;
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template struct util::ray<2,float>;
 template struct util::ray<3,float>;
