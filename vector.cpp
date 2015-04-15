@@ -71,6 +71,16 @@ util::vector<S,T>::difference2 (const util::vector<S,T> &rhs) const
     return sum;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+bool
+vector<S,T>::is_normalised (void) const
+{
+    return almost_equal (magnitude (), 1.f);
+}
+
+
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>&

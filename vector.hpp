@@ -30,14 +30,17 @@ namespace util {
     {
         using coord::base<S,T,util::vector,coord::xyzw,coord::stpq>::base;
 
+        // vector size
         bool is_zero (void) const;
 
-        // vector operators
         T magnitude  (void) const;
         T magnitude2 (void) const;
 
         T difference  (const vector<S,T>&) const;
         T difference2 (const vector<S,T>&) const;
+
+        // normalisation
+        bool is_normalised (void) const;
 
         vector<S,T>& normalise  (void);
         vector<S,T>  normalised [[gnu::warn_unused_result]] (void) const;

@@ -64,8 +64,13 @@ test_polar (void)
 int
 main ()
 {
+    util::TAP::logger test;
+
+    test.skip ("convert to TAP");
     test_polar ();
 
-    util::TAP::logger test;
-    test.skip ("convert to TAP");
+    test.expect (!util::vector3f::ZERO.is_normalised (), "zero isn't normalised");
+    test.expect (!util::vector3f::UNIT.is_normalised (), "unit is normalised");
+
+    return test.status ();
 }
