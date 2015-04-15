@@ -23,7 +23,8 @@ namespace util {
     template <size_t S, typename T>
     template <typename U>
     typename std::common_type<T,U>::type
-    util::point<S,T>::distance (const point<S,U> &rhs) const {
+    util::point<S,T>::distance (point<S,U> rhs) const
+    {
         return std::sqrt (distance2 (rhs));
     }
 
@@ -32,7 +33,8 @@ namespace util {
     template <size_t S, typename T>
     template <typename U>
     typename std::common_type<T,U>::type
-    util::point<S,T>::distance2 (const point<S,U> &rhs) const {
+    util::point<S,T>::distance2 (point<S,U> rhs) const
+    {
         typedef typename std::common_type<T,U>::type result_t;
 
         result_t sum { 0 };
@@ -48,7 +50,8 @@ namespace util {
     template <size_t S, typename T>
     template <typename U>
     typename std::common_type<T,U>::type
-    util::point<S,T>::manhattan (const point<S,U> &rhs) const {
+    util::point<S,T>::manhattan (point<S,U> rhs) const
+    {
         typedef typename std::common_type<T,U>::type result_t;
 
         result_t sum { 0 };

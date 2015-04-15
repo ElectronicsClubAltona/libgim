@@ -22,16 +22,15 @@
 #include <cmath>
 #include <cstdlib>
 
-using namespace std;
+using util::point;
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 util::vector<S,T>
-util::point<S,T>::to (const point<S,T> &rhs) const
+util::point<S,T>::to (point<S,T> rhs) const
 {
     util::vector<S,T> out;
-
     for (size_t i = 0; i < S; ++i)
         out.data[i] = rhs.data[i] - this->data[i];
     return out;
@@ -41,7 +40,7 @@ util::point<S,T>::to (const point<S,T> &rhs) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>
-util::point<S,T>::from (const point<S,T> &rhs) const
+util::point<S,T>::from (point<S,T> rhs) const
 {
     util::vector<S,T> out;
     for (size_t i = 0; i < S; ++i)
@@ -53,10 +52,11 @@ util::point<S,T>::from (const point<S,T> &rhs) const
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 void
-util::point<S,T>::sanity (void) const {
-    CHECK (std::all_of (begin (this->data),
-                        end   (this->data),
-                        [] (double i) { return !std::isnan (i); }));
+util::point<S,T>::sanity (void) const
+{
+    CHECK (std::all_of (this->begin (),
+                        this->end (),
+                        [] (auto i) { return !std::isnan (i); }));
 }
 
 
@@ -68,7 +68,7 @@ const util::point<S,T> util::point<S,T>::ORIGIN (T {0});
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, const util::point<S,T> &p) {
+util::operator<< (std::ostream &os, util::point<S,T> p) {
     os << "point" << S << "(";
     os << p.data[0];
 
@@ -81,9 +81,9 @@ util::operator<< (std::ostream &os, const util::point<S,T> &p) {
 
 
 //-----------------------------------------------------------------------------
-#define INSTANTIATE_S_T(S,T)                                                            \
-template struct util::point<S,T>;                                                       \
-template std::ostream& util::operator<< (std::ostream &os, const util::point<S,T>&);    \
+#define INSTANTIATE_S_T(S,T)                                                    \
+template struct util::point<S,T>;                                               \
+template std::ostream& util::operator<< (std::ostream &os, util::point<S,T>);   \
 
 #define INSTANTIATE(T)  \
 INSTANTIATE_S_T(1,T)    \

@@ -34,12 +34,12 @@ namespace util {
         using coord::base<S,T,util::point,coord::xyzw>::base;
 
         // point operators
-        template <typename U> typename std::common_type<T,U>::type distance  (const point<S,U> &) const;
-        template <typename U> typename std::common_type<T,U>::type distance2 (const point<S,U> &) const;
-        template <typename U> typename std::common_type<T,U>::type manhattan (const point<S,U> &) const;
+        template <typename U> typename std::common_type<T,U>::type distance  (point<S,U>) const;
+        template <typename U> typename std::common_type<T,U>::type distance2 (point<S,U>) const;
+        template <typename U> typename std::common_type<T,U>::type manhattan (point<S,U>) const;
 
-        vector<S,T> to (const point&) const;
-        vector<S,T> from (const point&) const;
+        vector<S,T> to (point) const;
+        vector<S,T> from (point) const;
 
         template <size_t D> point<D,T> homog (void) const;
 
@@ -50,7 +50,7 @@ namespace util {
 
     // iostream operators
     template <size_t S, typename T>
-    std::ostream& operator<< (std::ostream&, const point<S,T>&);
+    std::ostream& operator<< (std::ostream&, point<S,T>);
 
     // Convenience typedefs
     typedef point<2,float> point2f;
@@ -69,7 +69,7 @@ namespace util {
 namespace std {
     template <size_t S, typename T>
     struct hash<util::point<S,T>> {
-        size_t operator() (const util::point<S,T> &p) const {
+        size_t operator() (util::point<S,T> p) const {
             std::hash<T> h;
 
             size_t k = 0;
