@@ -22,17 +22,24 @@ void
 test_intersect_aabb (util::TAP::logger &tap)
 {
     // trivial case: unit aabb at origin, ray from (0.5,-0.5) upwards
-    const util::AABB2f b {
+    const util::AABB2f box {
         { 0.f, 0.f },
         { 1.f, 1.f }
     };
 
-    const util::ray2f l {
+    const util::ray2f forward {
         { 0.5f, -0.5f },
         { 0.f,   1.f }
     };
 
-    tap.expect_eq (l.intersect (b), 0.5f, "ray-aabb intersect");
+    tap.expect_eq (forward.intersect (box), 0.5f, "ray-aabb intersect");
+
+    const util::ray2f behind {
+        { 0.5f, 2.f },
+        { 0.f, 1.f }
+    };
+
+    tap.expect_nan (behind.intersect (box), "ray-aabb intersect behind");
 }
 
 

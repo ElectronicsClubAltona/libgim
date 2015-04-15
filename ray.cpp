@@ -47,7 +47,7 @@ util::ray<S,T>::intersect (plane<S,T> q) const
 /// returns the distance from origin to AABB intersection
 ///
 /// returns NaN on miss
-/// returns -ve if behind
+/// returns NaN if behind
 template <size_t S, typename T>
 T
 util::ray<S,T>::intersect (AABB<S,T> r) const
@@ -61,9 +61,11 @@ util::ray<S,T>::intersect (AABB<S,T> r) const
     auto tmin = max (vmin);
     auto tmax = min (vmax);
 
+    // closest intersection is behind us
     if (tmax < 0)
-        return tmax;
+        return std::numeric_limits<T>::quiet_NaN ();
 
+    // missed intersection
     if (tmin > tmax)
         return std::numeric_limits<T>::quiet_NaN ();
 
@@ -75,6 +77,7 @@ util::ray<S,T>::intersect (AABB<S,T> r) const
 /// returns the smallest distance from ray origin to a sphere intersection
 ///
 /// returns NaN on miss
+/// returns NaN if behind
 template <size_t S, typename T>
 T
 util::ray<S,T>::intersect (sphere<S,T> s) const
