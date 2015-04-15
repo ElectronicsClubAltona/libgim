@@ -43,6 +43,7 @@ namespace util {
         vector<S,T>  normalised [[gnu::warn_unused_result]] (void) const;
 
         // constants
+        static const vector<S,T> UNIT;
         static const vector<S,T> ZERO;
 
         void sanity (void) const;

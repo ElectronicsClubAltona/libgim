@@ -183,6 +183,11 @@ util::vector<S,T>::is_zero (void) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 const util::vector<S,T>
+util::vector<S,T>::UNIT (T{1});
+
+
+template <size_t S, typename T>
+const util::vector<S,T>
 util::vector<S,T>::ZERO (T{0});
 
 
