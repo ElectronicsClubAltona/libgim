@@ -24,6 +24,8 @@
 #include "sphere.hpp"
 #include "vector.hpp"
 
+#include <iostream>
+
 namespace util {
     template <size_t S, typename T>
     struct ray {
@@ -45,6 +47,8 @@ namespace util {
         vector<S,T> direction;
     };
 
+    template <size_t S, typename T>
+    std::ostream& operator<< (std::ostream&, ray<S,T>);
 
     typedef ray<2,float> ray2f;
     typedef ray<3,float> ray3f;

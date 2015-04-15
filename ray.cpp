@@ -122,5 +122,17 @@ ray<S,T>::at (T t) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+std::ostream&
+util::operator<< (std::ostream &os, ray<S,T> r)
+{
+    return os << "ray(" << r.origin << ',' << r.direction << ')';
+}
+
+template std::ostream& util::operator<< (std::ostream&, ray<3,float>);
+template std::ostream& util::operator<< (std::ostream&, ray<3,double>);
+
+
+///////////////////////////////////////////////////////////////////////////////
 template struct util::ray<2,float>;
 template struct util::ray<3,float>;
