@@ -32,6 +32,15 @@ AABB<S,T>::AABB (point<S,T> _p0, point<S,T> _p1):
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
+T
+AABB<S,T>::diameter (void) const
+{
+    return magnitude ().diameter ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
 util::extent<S,T>
 AABB<S,T>::magnitude (void) const
 {

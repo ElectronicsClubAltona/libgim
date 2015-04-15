@@ -30,6 +30,7 @@ namespace util {
         AABB () = default;
         AABB (point<S,T>, point<S,T>);
 
+        T diameter (void) const;
         extent<S,T> magnitude (void) const;
 
         bool overlaps (point<S,T>) const;
