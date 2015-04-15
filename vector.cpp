@@ -25,15 +25,14 @@
 #include <limits>
 #include <numeric>
 
-
-//-----------------------------------------------------------------------------
-using namespace util;
+using util::vector;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 T
-util::vector<S,T>::magnitude (void) const {
+util::vector<S,T>::magnitude (void) const
+{
     // TODO: this should not truncate for integral types
     return static_cast<T> (std::sqrt (magnitude2 ()));
 }
@@ -42,7 +41,8 @@ util::vector<S,T>::magnitude (void) const {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 T
-util::vector<S,T>::magnitude2 (void) const {
+util::vector<S,T>::magnitude2 (void) const
+{
     T total { 0 };
     for (size_t i = 0; i < S; ++i)
         total += pow2 (this->data[i]);
@@ -53,7 +53,8 @@ util::vector<S,T>::magnitude2 (void) const {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 T
-util::vector<S,T>::difference (const util::vector<S,T> &rhs) const {
+util::vector<S,T>::difference (const util::vector<S,T> &rhs) const
+{
     // TODO: change the signature to ensure it does not truncate
     return static_cast<T> (std::sqrt (difference2 (rhs)));
 }
@@ -62,7 +63,8 @@ util::vector<S,T>::difference (const util::vector<S,T> &rhs) const {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 T
-util::vector<S,T>::difference2 (const util::vector<S,T> &rhs) const {
+util::vector<S,T>::difference2 (const util::vector<S,T> &rhs) const
+{
     T sum {0};
     for (size_t i = 0; i < S; ++i)
         sum += pow2 (this->data[i] - rhs.data[i]);
@@ -72,7 +74,8 @@ util::vector<S,T>::difference2 (const util::vector<S,T> &rhs) const {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>&
-util::vector<S,T>::normalise (void) {
+util::vector<S,T>::normalise (void)
+{
     T mag = magnitude ();
 
     for (size_t i = 0; i < S; ++i)
@@ -85,7 +88,8 @@ util::vector<S,T>::normalise (void) {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::vector<S,T>
-util::vector<S,T>::normalised (void) const {
+util::vector<S,T>::normalised (void) const
+{
     T mag = magnitude ();
     util::vector<S,T> out;
 
@@ -140,7 +144,8 @@ template util::vector3d util::cross(const util::vector3d&, const util::vector3d&
 //-----------------------------------------------------------------------------
 template <typename T>
 util::vector<3,T>
-util::spherical_to_cartesian (const util::vector<3,T> &s) {
+util::spherical_to_cartesian (const util::vector<3,T> &s)
+{
     return util::vector<3,T> {
         s.x * sin (s.y) * cos (s.z),
         s.x * sin (s.y) * sin (s.z),
@@ -152,7 +157,8 @@ util::spherical_to_cartesian (const util::vector<3,T> &s) {
 //-----------------------------------------------------------------------------
 template <typename T>
 util::vector<3,T>
-util::cartesian_to_spherical (const util::vector<3,T> &c) {
+util::cartesian_to_spherical (const util::vector<3,T> &c)
+{
     T mag = c.magnitude ();
 
     return util::vector<3,T> {
@@ -166,7 +172,8 @@ util::cartesian_to_spherical (const util::vector<3,T> &c) {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 bool
-util::vector<S,T>::is_zero (void) const {
+util::vector<S,T>::is_zero (void) const
+{
     return std::all_of (std::begin (this->data),
                         std::end   (this->data),
                         [] (T i) { return almost_zero (i); });
@@ -182,7 +189,8 @@ util::vector<S,T>::ZERO (T{0});
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 void
-util::vector<S,T>::sanity (void) const {
+util::vector<S,T>::sanity (void) const
+{
     CHECK (std::all_of (std::begin (this->data),
                         std::end   (this->data),
                         [] (T i) { return !std::isnan (i); }));
@@ -194,7 +202,8 @@ util::vector<S,T>::sanity (void) const {
 
 template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, const util::vector<S,T> &v) {
+util::operator<< (std::ostream &os, const util::vector<S,T> &v)
+{
     os << "vec" << S << "(" << v.data[0];
     for (size_t i = 1; i < S; ++i)
         os << ", " << v.data[i];
@@ -206,7 +215,8 @@ util::operator<< (std::ostream &os, const util::vector<S,T> &v) {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 const json::tree::node&
-util::operator>> (const json::tree::node &node, util::vector<S,T> &v) {
+util::operator>> (const json::tree::node &node, util::vector<S,T> &v)
+{
     const json::tree::array &array = node.as_array ();
     if (array.size () != S)
         throw std::runtime_error ("Invalid dimensionality for json-to-vector");
@@ -222,7 +232,6 @@ util::operator>> (const json::tree::node &node, util::vector<S,T> &v) {
 
 
 //-----------------------------------------------------------------------------
-
 #define INSTANTIATE_S_T(S,T)                                                        \
 template struct util::vector<S,T>;                                                  \
 template std::ostream& util::operator<< (std::ostream&, const util::vector<S,T> &v);\
