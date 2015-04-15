@@ -82,8 +82,8 @@ template <size_t S, typename T>
 T
 util::ray<S,T>::intersect (sphere<S,T> s) const
 {
-    T b = dot (direction, origin - s.c);
-    T c = dot (origin - s.c, origin - s.c) - s.r * s.r;
+    T b = dot (direction, origin - s.centre);
+    T c = dot (origin - s.centre, origin - s.centre) - s.radius * s.radius;
 
     T D = b * b - c;
     if (D < 0)
