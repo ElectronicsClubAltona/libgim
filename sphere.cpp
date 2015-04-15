@@ -27,6 +27,19 @@ sphere<S,T>::sphere (point<S,T> _centre, T _radius):
     CHECK_GE (_radius, 0);
 }
 
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+std::ostream&
+util::operator<< (std::ostream &os, sphere<S,T> s)
+{
+    return os << "sphere(" << s.centre << ',' << s.radius << ')';
+}
+
+template std::ostream& util::operator<< (std::ostream&, sphere<2,float>);
+template std::ostream& util::operator<< (std::ostream&, sphere<3,float>);
+
+
 //-----------------------------------------------------------------------------
 template struct util::sphere<2,float>;
 template struct util::sphere<3,float>;

@@ -19,6 +19,8 @@
 
 #include "point.hpp"
 
+#include <iostream>
+
 namespace util {
     template <size_t S, typename T>
     struct sphere {
@@ -27,6 +29,9 @@ namespace util {
         point<S,T> centre;
         T radius;
     };
+
+    template <size_t S, typename T>
+    std::ostream& operator<< (std::ostream&, sphere<S,T>);
 
     typedef sphere<2,float> sphere2f;
     typedef sphere<3,float> sphere3f;
