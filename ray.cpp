@@ -18,11 +18,13 @@
 
 #include "debug.hpp"
 
+using util::ray;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-util::ray<S,T>::ray (util::point<S,T> _origin,
-                     util::vector<S,T> _direction):
+ray<S,T>::ray (util::point<S,T> _origin,
+               util::vector<S,T> _direction):
     origin (_origin),
     direction (_direction)
 {
@@ -37,7 +39,7 @@ util::ray<S,T>::ray (util::point<S,T> _origin,
 /// returns 0   if corayar
 template <size_t S, typename T>
 T
-util::ray<S,T>::intersect (plane<S,T> q) const
+ray<S,T>::intersect (plane<S,T> q) const
 {
     return dot (q.p - origin, q.n) / dot (direction, q.n);
 }
@@ -50,7 +52,7 @@ util::ray<S,T>::intersect (plane<S,T> q) const
 /// returns NaN if behind
 template <size_t S, typename T>
 T
-util::ray<S,T>::intersect (AABB<S,T> r) const
+ray<S,T>::intersect (AABB<S,T> r) const
 {
     auto t1 = (r.p0 - origin) / direction;
     auto t2 = (r.p1 - origin) / direction;
@@ -80,7 +82,7 @@ util::ray<S,T>::intersect (AABB<S,T> r) const
 /// returns NaN if behind
 template <size_t S, typename T>
 T
-util::ray<S,T>::intersect (sphere<S,T> s) const
+ray<S,T>::intersect (sphere<S,T> s) const
 {
     T b = dot (direction, origin - s.centre);
     T c = dot (origin - s.centre, origin - s.centre) - s.radius * s.radius;
@@ -103,7 +105,7 @@ util::ray<S,T>::intersect (sphere<S,T> s) const
 /// returns the closest parameter along the ray to a given point
 template <size_t S, typename T>
 T
-util::ray<S,T>::closest (point<S,T> q) const
+ray<S,T>::closest (point<S,T> q) const
 {
     // project the origin-point difference onto the direction
     return dot (origin - q, direction);
@@ -113,7 +115,7 @@ util::ray<S,T>::closest (point<S,T> q) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::point<S,T>
-util::ray<S,T>::at (T t) const
+ray<S,T>::at (T t) const
 {
     return origin + direction * t;
 }
