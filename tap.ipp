@@ -39,7 +39,7 @@ template <typename T, typename U>
 void
 util::TAP::logger::expect_eq (const T&a, const U &b, const std::string &msg)
 {
-    static const auto TEST = [] (const T &t, const U &u) -> bool {
+    static const std::function<bool(const T&,const U&)> TEST = [] (const T &t, const U &u) -> bool {
         return almost_equal (t, u);
     };
 
@@ -52,7 +52,7 @@ template <typename T, typename U>
 void
 util::TAP::logger::expect_neq (const T&a, const U &b, const std::string &msg)
 {
-    static const auto TEST = [] (const T &t, const U &u) -> bool {
+    static const std::function<bool(const T&,const U&)> TEST = [] (const T &t, const U &u) -> bool {
         return !almost_equal (t, u);
     };
 
@@ -68,7 +68,8 @@ util::TAP::logger::expect_ ## SUFFIX (const T &a,               \
                                       const U &b,               \
                                       const std::string &msg)   \
 {                                                               \
-    expect<const T&, const U&> ([] (const T&t, const U&u) { return t OP u; }, a, b, msg); \
+    static const std::function<bool(const T&,const U&)> TEST = [] (const T&t, const U&u) { return t OP u; }; \
+    expect<const T&, const U&> (TEST, a, b, msg); \
 }
 
 TAP_TEST(gt, > )
@@ -85,5 +86,5 @@ void
 util::TAP::logger::expect_nan (const T &t, const std::string &msg)
 {
     bool(*func)(T) = std::isnan;
-    expect<const T&> (func, t, msg);
+    expect<const T&> (std::function<bool(const T&)> (func), t, msg);
 }
