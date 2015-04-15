@@ -32,6 +32,10 @@ namespace util {
         ray (point<S,T> origin,
              vector<S,T> direction);
 
+        static
+        ray<S,T> make (point<S,T> origin,
+                       point<S,T> target);
+
         // intersection tests
         T intersect (plane<S,T>) const;
         T intersect (AABB<S,T>) const;

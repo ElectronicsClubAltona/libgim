@@ -32,6 +32,19 @@ ray<S,T>::ray (util::point<S,T> _origin,
 }
 
 
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+ray<S,T>
+ray<S,T>::make (util::point<S,T> origin,
+                util::point<S,T> target)
+{
+    return {
+        origin,
+        (target - origin).normalised ()
+    };
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 /// returns the distance along the ray in a ray-plane intersection
 ///
