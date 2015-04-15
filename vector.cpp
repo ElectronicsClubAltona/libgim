@@ -79,7 +79,7 @@ template <size_t S, typename T>
 bool
 vector<S,T>::is_normalised (void) const
 {
-    return almost_equal (magnitude (), 1.f);
+    return almost_equal (magnitude2 (), 1.f);
 }
 
 
