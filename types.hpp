@@ -48,4 +48,16 @@ first (T a, Args&& ...b) {
     return first (std::forward<Args>(b)...);
 }
 
+
+namespace util {
+    ///------------------------------------------------------------------------
+    /// represents a type as a POD struct (but is statically recoverable via
+    /// the 'type' member).
+    template <typename T>
+    struct type_tag
+    {
+        typedef T type;
+    };
+}
+
 #endif
