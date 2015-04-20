@@ -176,6 +176,8 @@ UTIL_FILES   =		\
     tap.ipp		\
     time.cpp		\
     time.hpp		\
+    tuple.cpp		\
+    tuple.hpp		\
     types.hpp		\
     types/bits.hpp	\
     types/casts.hpp	\
@@ -284,6 +286,7 @@ TEST_BIN = 			\
     test/sha2			\
     test/signal			\
     test/stringid		\
+    test/tuple			\
     test/uri			\
     test/vector			\
     test/version
