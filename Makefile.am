@@ -186,6 +186,9 @@ UTIL_FILES   =		\
     types/traits.hpp	\
     uri.hpp		\
     uri.cpp		\
+    variadic.cpp	\
+    variadic.hpp	\
+    variadic.ipp	\
     vector.cpp		\
     vector.hpp		\
     version.cpp		\
