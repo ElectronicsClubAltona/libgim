@@ -75,6 +75,8 @@ UTIL_FILES   =		\
     hash/sha1.hpp	\
     image.cpp		\
     image.hpp		\
+    introspection.cpp	\
+    introspection.hpp	\
     io.cpp		\
     io.hpp		\
     io.ipp		\
@@ -265,6 +267,7 @@ TEST_BIN = 			\
     test/hmac			\
     test/hotp			\
     test/hton			\
+    test/introspection		\
     test/ip 			\
     test/json_types		\
     test/ray 			\
