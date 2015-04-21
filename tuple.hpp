@@ -18,12 +18,13 @@
 #define __UTIL_TUPLE_HPP
 
 #include "types.hpp"
+#include "variadic.hpp"
 
 #include <tuple>
 #include <type_traits>
 
 
-namespace util {
+namespace util { namespace tuple {
     ///////////////////////////////////////////////////////////////////////////
     /// call a provided object with type_tag<T> for each type in a tuple
     template <
@@ -94,7 +95,45 @@ namespace util {
         f (std::get<S> (t));
         for_each<S+1,F,T...> (f, t);
     }
-}
+
+    ///////////////////////////////////////////////////////////////////////////////
+    /// Statically map the member types of a tuple via F<>::type
+    ///
+    /// T: tuple type
+    /// F: type mapping object, conversion uses F<>::type
+    /// I: tuple indexing helper
+    template <
+        typename T,
+        template <
+            typename
+        > class F,
+        typename I = typename make_indices<
+            std::tuple_size<T>::value
+        >::type
+    >
+    struct map;
+
+
+    //-----------------------------------------------------------------------------
+    template <
+        typename T,
+        template <
+            typename
+        > class F,
+        size_t ...I
+    >
+    struct map<
+        T,
+        F,
+        indices<I...>
+    > {
+        typedef std::tuple<
+            typename F<
+                typename std::tuple_element<I, T>::type
+            >::type...
+        > type;
+    };
+} }
 
 
 #endif

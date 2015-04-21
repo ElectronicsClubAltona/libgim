@@ -4,6 +4,12 @@
 
 #include <typeindex>
 
+template <typename T>
+struct int_mapper
+{
+    typedef int type;
+};
+
 int
 main ()
 {
@@ -14,7 +20,7 @@ main ()
         std::vector<int> expected {{ 1, 2, 3, 4 }};
 
         std::vector<int> actual;
-        util::for_each ([&actual] (auto i) { actual.push_back (i); }, tuple);
+        util::tuple::for_each ([&actual] (auto i) { actual.push_back (i); }, tuple);
 
         tap.expect_eq (actual, expected, "value iteration");
     }
@@ -29,10 +35,20 @@ main ()
         };
 
         std::vector<std::type_index> actual;
-        util::for_type<decltype(tuple)> ([&actual] (auto i) {
+        util::tuple::for_type<decltype(tuple)> ([&actual] (auto i) {
             actual.push_back (typeid (typename decltype(i)::type));
         });
 
         tap.expect_eq (actual, expected, "type iteration");
+    }
+
+    {
+        using tuple_t = std::tuple<float>;
+        using mapped_t = typename util::tuple::map<tuple_t, int_mapper>::type;
+
+        bool tuple  = std::is_same<typename std::tuple_element<0, tuple_t >::type, int>::value;
+        bool mapped = std::is_same<typename std::tuple_element<0, mapped_t>::type, int>::value;
+
+        tap.expect (!tuple && mapped, "tuple type mapping");
     }
 }
