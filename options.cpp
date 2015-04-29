@@ -17,8 +17,6 @@
 
 #include "options.hpp"
 
-#include "config.h"
-
 #include "debug.hpp"
 #include "string.hpp"
 #include "types.hpp"
