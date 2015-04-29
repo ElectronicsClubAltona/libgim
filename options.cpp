@@ -446,17 +446,13 @@ processor::parse_long (int pos, int argc, const char ** argv) {
     // Skip past the dashes to the argument name
     arg += 2;
 
-    // If there's an equals it's has a value to extract
+    // If there's an equals it has a value to extract
     const char *data = strchr (arg, '=');
-    if (data) {
-        arg = strndup (arg, sign_cast<size_t> (data - arg));
-        //arg = strndup (arg, data - arg); // Copy just the arg name
-        ++data;                          // Skip the '='
-    }
+    option *o = data ? m_longopt[std::string (arg, data++)]
+                     : m_longopt[arg];
 
-    option *o = m_longopt[arg];
     if (!o)
-        throw runtime_error ("Cannot match option");
+        throw std::runtime_error ("Cannot match option");
 
     if (data)
         o->execute (data);
