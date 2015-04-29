@@ -26,6 +26,7 @@ AC_DEFUN([NC_OPTIMISATION],[
 
         AX_APPEND_COMPILE_FLAGS([-flto], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-fno-fat-lto-objects], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-flto-odr-type-merging], [], [-Werror])
         AX_APPEND_LINK_FLAGS([-fuse-linker-plugin], [], [-Werror])
     ])
 
