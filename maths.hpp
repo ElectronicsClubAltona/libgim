@@ -171,19 +171,17 @@ exactly_zero [[gnu::pure]] (T a)
 // angles, trig
 
 template <typename T>
-struct constants { };
+constexpr T PI = T(3.141592653589793238462643);
 
-constexpr double PI_d = 3.141592653589793238462643;
-constexpr float  PI_f = 3.141592653589793238462643f;
+template <typename T>
+constexpr T E = T(2.71828182845904523536028747135266250);
 
-constexpr float  E_f = 2.71828182845904523536028747135266250f;
-constexpr double E_d = 2.71828182845904523536028747135266250;
 
 template <typename T>
 constexpr T
 to_degrees [[gnu::pure]] (T radians)
 {
-    return radians * 180 / constants<T>::PI;
+    return radians * 180 / PI<T>;
 }
 
 
@@ -191,7 +189,7 @@ template <typename T>
 constexpr T
 to_radians [[gnu::pure]] (T degrees)
 {
-    return degrees / 180 * constants<T>::PI;
+    return degrees / 180 * PI<T>;
 }
 
 
@@ -200,7 +198,7 @@ template <typename T>
 constexpr T
 sincn [[gnu::pure]] (T x)
 {
-    return almost_zero (x) ? 1 : std::sin (constants<T>::PI * x) / (constants<T>::PI * x);
+    return almost_zero (x) ? 1 : std::sin (PI<T> * x) / (PI<T> * x);
 }
 
 
@@ -224,7 +222,7 @@ factorial [[gnu::pure]] (unsigned i)
 constexpr uintmax_t
 stirling [[gnu::pure]] (unsigned n)
 {
-    return static_cast<uintmax_t> (std::sqrt (2 * PI_f * n) * std::pow (n / E_f, n));
+    return static_cast<uintmax_t> (std::sqrt (2 * PI<float> * n) * std::pow (n / E<float>, n));
 }
 
 

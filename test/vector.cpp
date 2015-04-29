@@ -28,13 +28,13 @@ test_polar (void)
         },
 
         {
-            { 1.f, PI_f / 2.f },
+            { 1.f, PI<float> / 2.f },
             { 0.f, 1.f },
             "unit length, rotated"
         },
 
         {
-            { 1.f, 2 * PI_f },
+            { 1.f, 2 * PI<float> },
             { 1.f, 0.f },
             "full rotation, unit length"
         }
@@ -53,8 +53,8 @@ test_polar (void)
         auto in_polar = t.polar;
         auto to_polar = util::cartesian_to_polar (t.cartesian);
 
-        in_polar[1] = std::fmod (in_polar[1], 2 * PI_f);
-        to_polar[1] = std::fmod (to_polar[1], 2 * PI_f);
+        in_polar[1] = std::fmod (in_polar[1], 2 * PI<float>);
+        to_polar[1] = std::fmod (to_polar[1], 2 * PI<float>);
 
         CHECK_EQ (in_polar, to_polar);
     }

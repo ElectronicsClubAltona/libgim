@@ -42,7 +42,7 @@ lerp::linear (double a, double b, double weight) {
 double
 lerp::cosine (double a, double b, double weight) {
     CHECK (weight >= 0.0 && weight <= 1.0);
-    double t  = (1.0 - cos (weight * PI_d)) * 0.5;
+    double t  = (1.0 - cos (weight * PI<double>)) * 0.5;
 
     return a * (1.0 - t) + b * t;
 }

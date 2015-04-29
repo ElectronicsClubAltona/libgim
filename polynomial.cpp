@@ -116,8 +116,8 @@ namespace util { namespace polynomial {
             const float t   = 2 * std::sqrt (-p);
 
             s[0] =  t * std::cos (phi);
-            s[1] = -t * std::cos (phi + PI_f / 3.f);
-            s[2] = -t * std::cos (phi - PI_f / 3.f);
+            s[1] = -t * std::cos (phi + PI<float> / 3.f);
+            s[2] = -t * std::cos (phi - PI<float> / 3.f);
         } else {
             float u = std::cbrt (std::sqrt (D) + abs (q));
             if (q > 0.f)
