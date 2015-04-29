@@ -40,11 +40,9 @@ using util::valueoption;
 using util::bytesoption;
 using util::processor;
 
-/*
- * Generic option operations, failure or default modes
- */
 
-
+///////////////////////////////////////////////////////////////////////////////
+/// Generic option operations, failure or default modes
 option::option (char        _letter,
                 const char *_name,
                 const char *_desc,
@@ -57,17 +55,20 @@ option::option (char        _letter,
 { reset(); }
 
 
-
+//-----------------------------------------------------------------------------
 void
-option::execute (void) {
+option::execute (void)
+{
     throw std::runtime_error(
         "Cannot provide no value for the option '" + m_longopt + "'"
     );
 }
 
 
+//-----------------------------------------------------------------------------
 void
-option::execute (const std::string& data) {
+option::execute (const std::string& data)
+{
     assert(data.size() > 0);
     throw std::runtime_error(
         "Cannot provide a value for the option '" + m_longopt + "'"
@@ -75,8 +76,10 @@ option::execute (const std::string& data) {
 }
 
 
+//-----------------------------------------------------------------------------
 std::ostream&
-operator<< (std::ostream & os, const option& opt) {
+operator<< (std::ostream & os, const option& opt)
+{
     os  << (opt.is_required () ? " -"  : "[-" ) << opt.shortopt ()
         << (opt.is_required () ? " \t" : "]\t") << opt.longopt  ()
         << "\t"   << opt.description ();
@@ -84,17 +87,16 @@ operator<< (std::ostream & os, const option& opt) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
-option::finish (void) {
+option::finish (void)
+{
     if (m_required && !m_found)
         throw std::runtime_error ("Required argument not found: " + m_longopt);
 }
 
 
-/*
- * Nulloption
- */
-
+///////////////////////////////////////////////////////////////////////////////
 nulloption::nulloption (char        _letter,
                         const char *_name,
                         const char *_desc,
@@ -103,11 +105,7 @@ nulloption::nulloption (char        _letter,
 { ; }
 
 
-/*
- * Present option
- */
-
-
+///////////////////////////////////////////////////////////////////////////////
 presentoption::presentoption (char        _letter,
                               const char *_name,
                               const char *_desc,
@@ -118,30 +116,27 @@ presentoption::presentoption (char        _letter,
 { ; }
 
 
+//-----------------------------------------------------------------------------
 void
-presentoption::execute (void) {
+presentoption::execute (void)
+{
     *m_data = true;
     m_found = true;
 }
 
 
-/*
- * Value option
- */
-
-
+///////////////////////////////////////////////////////////////////////////////
 namespace util {
     template<>
     bool&
-    valueoption<bool>::get_arg(const std::string& arg, bool *val) {
-        if      (arg == "true"  || arg == "yes" || arg == "1")
-            *val = true;
-        else if (arg == "false" || arg == "no"  || arg == "0")
-            *val = false;
+    valueoption<bool>::get_arg(const std::string& arg, bool *val)
+    {
+        if (arg == "true" || arg == "yes" || arg == "1")
+            return *val = true;
+        else if (arg == "false" || arg == "no" || arg == "0")
+            return *val = false;
         else
             throw std::domain_error("Invalid form for boolean argument");
-
-        return *val;
     }
 
 
@@ -162,6 +157,7 @@ namespace util {
 }
 
 
+//-----------------------------------------------------------------------------
 template std::string& util::valueoption<std::string>::get_arg (const std::string&, std::string*);
 
 template  int16_t& util::valueoption< int16_t>::get_arg (const std::string&,  int16_t*);
@@ -173,10 +169,7 @@ template uint32_t& util::valueoption<uint32_t>::get_arg (const std::string&, uin
 template uint64_t& util::valueoption<uint64_t>::get_arg (const std::string&, uint64_t*);
 
 
-/*
- * bytesoption
- */
-
+///////////////////////////////////////////////////////////////////////////////
 bytesoption::bytesoption (char           _letter,
                           const char    *_name,
                           const char    *_desc,
@@ -190,8 +183,10 @@ bytesoption::bytesoption (char           _letter,
 { ; }
 
 
+//-----------------------------------------------------------------------------
 bytesoption::bytestype
-bytesoption::type_from_character (char c) {
+bytesoption::type_from_character (char c)
+{
     switch (c) {
         case 'e':
         case 'E':
@@ -223,8 +218,10 @@ bytesoption::type_from_character (char c) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
-bytesoption::execute (const std::string& data) {
+bytesoption::execute (const std::string& data)
+{
     // We shouldn't get this far into processing with a zero sized argument,
     // that's what the null data execute function is for.
     assert (data.size () > 0);
@@ -300,14 +297,16 @@ bytesoption::execute (const std::string& data) {
 }
 
 
-/*
- * Internal helper options. Print help and usage.
- * A callback to the processor which triggers output of the help message.
- *
- * This should never be instanced by a user of the system. The processor will
- * automatically adds this to its available options where needed.
- */
-class helpoption : public option {
+///////////////////////////////////////////////////////////////////////////////
+/// 
+/// Internal helper options. Print help and usage.
+/// A callback to the processor which triggers output of the help message.
+/// 
+/// This should never be instanced by a user of the system. The processor will
+/// automatically adds this to its available options where needed.
+
+class helpoption : public option
+{
     protected:
         static const char  HELP_CHARACTER;
         static const char *HELP_NAME;
@@ -328,34 +327,38 @@ class helpoption : public option {
 };
 
 
+//-----------------------------------------------------------------------------
 const char  helpoption::HELP_CHARACTER   = 'h';
 const char *helpoption::HELP_NAME        = "help";
 const char *helpoption::HELP_DESCRIPTION =
     "display help and usage information";
 
 
+//-----------------------------------------------------------------------------
 void
-helpoption::execute (void) {
+helpoption::execute (void)
+{
     m_processor->print_usage ();
     exit (EXIT_SUCCESS);
 }
 
 
-/*
- * Command line processing options
- */
-
-processor::processor () {
+///////////////////////////////////////////////////////////////////////////////
+processor::processor ()
+{
     add_option (std::make_unique<helpoption> (this));
 }
 
 
+//-----------------------------------------------------------------------------
 processor::~processor ()
 { ; }
 
 
+//-----------------------------------------------------------------------------
 void
-processor::print_usage (void) {
+processor::print_usage (void)
+{
     std::cout << "Usage: " << m_command << " [options]\n";
 
     for (const auto &i: m_options)
@@ -363,21 +366,22 @@ processor::print_usage (void) {
 }
 
 
-/**
- * Parse a single argument in short form. We are given an offset into the
- * argument array, and arguments. Establishes whether a value is present and
- * passes control over to the option.
- *
- * The format of the options are "-f [b]" || "-abcde"
- *
- * @param pos   the current offset into the argument array
- * @param argc  the size of the argument array
- * @param argv  the argument array given to the application
- *
- * @return the number of tokens consumed for this option; must be at least 1.
- */
+///----------------------------------------------------------------------------
+/// Parse a single argument in short form. We are given an offset into the
+/// argument array, and arguments. Establishes whether a value is present and
+/// passes control over to the option.
+/// 
+/// The format of the options are "-f [b]" || "-abcde"
+/// 
+/// @param pos   the current offset into the argument array
+/// @param argc  the size of the argument array
+/// @param argv  the argument array given to the application
+/// 
+/// @return the number of tokens consumed for this option; must be at least 1.
+
 unsigned int
-processor::parse_short (int pos, int argc, const char **argv) {
+processor::parse_short (int pos, int argc, const char **argv)
+{
     assert (pos > 0);
     assert (pos < argc);
 
@@ -418,21 +422,23 @@ processor::parse_short (int pos, int argc, const char **argv) {
 }
 
 
-/**
- * Parse a single argument in long form. We are given an offset into the
- * argument array, and arguments. Establishes whether a value is present and
- * passes control over to the option.
- *
- * The format of the options are "--foo[=bar]"
- *
- * @param pos   the current offset into the argument array
- * @param argc  the size of the argument array
- * @param argv  the argument array given to the application`--foo[=bar]`
- *
- * @return the number of tokens consumed for this option; must be 1.
- */
+///----------------------------------------------------------------------------
+/// 
+/// Parse a single argument in long form. We are given an offset into the
+/// argument array, and arguments. Establishes whether a value is present and
+/// passes control over to the option.
+/// 
+/// The format of the options are "--foo[=bar]"
+/// 
+/// @param pos   the current offset into the argument array
+/// @param argc  the size of the argument array
+/// @param argv  the argument array given to the application`--foo[=bar]`
+/// 
+/// @return the number of tokens consumed for this option; must be 1.
+
 unsigned int
-processor::parse_long (int pos, int argc, const char ** argv) {
+processor::parse_long (int pos, int argc, const char ** argv)
+{
     assert (pos > 0);
     assert (pos < argc);
 
@@ -464,19 +470,20 @@ processor::parse_long (int pos, int argc, const char ** argv) {
 }
 
 
-/**
- * Pass long and short options to specific parsing handlers.
- *
- * Establishes enough context to determine if the argument is long, short, or
- * none. The functions parse_long and parse_short are given the task of
- * dispatching control to the relevant option handlers.
- *
- * @param argc the raw parameter from the application main
- * @param argv the raw parameter from the application main
- */
+///----------------------------------------------------------------------------
+/// 
+/// Pass long and short options to specific parsing handlers.
+/// 
+/// Establishes enough context to determine if the argument is long, short, or
+/// none. The functions parse_long and parse_short are given the task of
+/// dispatching control to the relevant option handlers.
+/// 
+/// @param argc the raw parameter from the application main
+/// @param argv the raw parameter from the application main
 
 void
-processor::parse_args (int argc, const char ** argv) {
+processor::parse_args (int argc, const char ** argv)
+{
     // While technically we can have zero arguments, for practical purposes
     // this is a reasonable method at catching odd errors in the library.
     assert (argc > 0);
@@ -522,6 +529,7 @@ processor::parse_args (int argc, const char ** argv) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 processor::add_option (std::unique_ptr<option> opt) {
     if (m_shortopt.find (opt->shortopt ()) != m_shortopt.end ())
@@ -536,6 +544,7 @@ processor::add_option (std::unique_ptr<option> opt) {
 }
 
 
+//-----------------------------------------------------------------------------
 std::unique_ptr<option>
 processor::remove_option (char letter) {
     // Locate the option by short name
@@ -564,6 +573,7 @@ processor::remove_option (char letter) {
 }
 
 
+//-----------------------------------------------------------------------------
 std::unique_ptr<option>
 processor::remove_option (const char *name) {
     // Locate the option by long name
@@ -590,11 +600,3 @@ processor::remove_option (const char *name) {
 
     return opt;
 }
-
-
-/* Parse args from a stream, one arg per line
-*/
-//void parse_stream (std::istream & is) {
-//    unique_ptr<char[]> buffer (new char [MAX_CHUNK_LENGTH + 1]);
-//}
-
