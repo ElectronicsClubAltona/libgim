@@ -35,9 +35,12 @@
 #include <stdexcept>
 
 
-using namespace std;
-using namespace util;
-
+using util::option;
+using util::nulloption;
+using util::presentoption;
+using util::valueoption;
+using util::bytesoption;
+using util::processor;
 
 /*
  * Generic option operations, failure or default modes
@@ -59,23 +62,23 @@ option::option (char        _letter,
 
 void
 option::execute (void) {
-    throw runtime_error(
+    throw std::runtime_error(
         "Cannot provide no value for the option '" + m_longopt + "'"
     );
 }
 
 
 void
-option::execute (const string& data) {
+option::execute (const std::string& data) {
     assert(data.size() > 0);
-    throw runtime_error(
+    throw std::runtime_error(
         "Cannot provide a value for the option '" + m_longopt + "'"
     );
 }
 
 
-ostream&
-operator<< (ostream & os, const option& opt) {
+std::ostream&
+operator<< (std::ostream & os, const option& opt) {
     os  << (opt.is_required () ? " -"  : "[-" ) << opt.shortopt ()
         << (opt.is_required () ? " \t" : "]\t") << opt.longopt  ()
         << "\t"   << opt.description ();
@@ -86,7 +89,7 @@ operator<< (ostream & os, const option& opt) {
 void
 option::finish (void) {
     if (m_required && !m_found)
-        throw runtime_error ("Required argument not found: " + m_longopt);
+        throw std::runtime_error ("Required argument not found: " + m_longopt);
 }
 
 
@@ -217,7 +220,7 @@ bytesoption::type_from_character (char c) {
             return BYTES_KILO;
 
         default:
-            throw domain_error("Invalid magnitude specifier");
+            throw std::domain_error("Invalid magnitude specifier");
     }
 }
 
@@ -237,7 +240,7 @@ bytesoption::execute (const std::string& data) {
         // Consume an optional trailing `byte' type
         if (data[cursor] == 'B' || data[cursor] == 'b') {
             if (cursor == 0)
-                throw invalid_argument ("Size is too short");
+                throw std::invalid_argument ("Size is too short");
             --cursor;
         }
 
@@ -245,7 +248,7 @@ bytesoption::execute (const std::string& data) {
         if (data[cursor] == 'i') {
             modifier = BYTES_BASE2;
             if (cursor == 0)
-                throw invalid_argument("Size is too short");
+                throw std::invalid_argument("Size is too short");
             --cursor;
         }
 
@@ -272,9 +275,9 @@ bytesoption::execute (const std::string& data) {
             specified = type_from_character (data[cursor]);
             // If the character is a digit, it just means the user skipped the
             // size specifier, which is ok.
-        } catch (domain_error &x) {
+        } catch (std::domain_error &x) {
             if (!isdigit (data[cursor]))
-                throw invalid_argument ("Not a size");
+                throw std::invalid_argument ("Not a size");
 
             // Falsely increment the cursor if there's no size specifier...
             ++cursor;
@@ -345,7 +348,7 @@ helpoption::execute (void) {
  */
 
 processor::processor () {
-    add_option (make_unique<helpoption> (this));
+    add_option (std::make_unique<helpoption> (this));
 }
 
 
@@ -355,10 +358,10 @@ processor::~processor ()
 
 void
 processor::print_usage (void) {
-    cout << "Usage: " << m_command << " [options]" << endl;
+    std::cout << "Usage: " << m_command << " [options]\n";
 
     for (const auto &i: m_options)
-        cout << '\t' << *i << endl;
+        std::cout << '\t' << *i << '\n';
 }
 
 
@@ -396,7 +399,7 @@ processor::parse_short (int pos, int argc, const char **argv) {
         if (pos + 1 < argc && argv[pos+1][0] != '-') {
             option * o = m_shortopt[arg[1]];
             if (!o)
-                throw runtime_error ("Cannot match option");
+                throw std::runtime_error ("Cannot match option");
 
             o->execute (argv[pos+1]);
             return 2;
@@ -409,7 +412,7 @@ processor::parse_short (int pos, int argc, const char **argv) {
         option * o = m_shortopt[arg[i]];
 
         if (!o)
-            throw runtime_error ("Cannot match option");
+            throw std::runtime_error ("Cannot match option");
         o->execute ();
     }
 
@@ -498,7 +501,7 @@ processor::parse_args (int argc, const char ** argv) {
 
             // An argument must consist of at least one non-dash character
             if (strlen (argv[i]) <= 1)
-                throw runtime_error ("Invalid argument");
+                throw std::runtime_error ("Invalid argument");
 
             // Actually hand off args to be parsed. Subtract one from the
             // tokens consumed, as the for loop increments tokens too.
@@ -511,7 +514,7 @@ processor::parse_args (int argc, const char ** argv) {
             assert (consumed >= 1);
             i += sign_cast<int> (consumed - 1);
         }
-    } catch (runtime_error &x) {
+    } catch (std::runtime_error &x) {
         print_usage ();
         exit (EXIT_FAILURE);
     }
@@ -524,9 +527,9 @@ processor::parse_args (int argc, const char ** argv) {
 void
 processor::add_option (std::unique_ptr<option> opt) {
     if (m_shortopt.find (opt->shortopt ()) != m_shortopt.end ())
-        throw logic_error ("Short option already exists");
+        throw std::logic_error ("Short option already exists");
     if (m_longopt.find (opt->longopt   ()) != m_longopt.end ())
-        throw logic_error ("Long option already exists");
+        throw std::logic_error ("Long option already exists");
 
     m_shortopt[opt->shortopt ()] = opt.get ();
     m_longopt [opt->longopt  ()] = opt.get ();
@@ -540,7 +543,7 @@ processor::remove_option (char letter) {
     // Locate the option by short name
     const auto s_candidate = m_shortopt.find (letter);
     if (s_candidate == m_shortopt.end ())
-        throw logic_error ("Cannot remove an option which is not present");
+        throw std::logic_error ("Cannot remove an option which is not present");
     option *target = (*s_candidate).second;
 
     // Locate the long option entry
@@ -568,7 +571,7 @@ processor::remove_option (const char *name) {
     // Locate the option by long name
     const auto l_candidate = m_longopt.find (name);
     if (l_candidate == m_longopt.end ())
-        throw logic_error ("Cannot remove an option which is not present");
+        throw std::logic_error ("Cannot remove an option which is not present");
     option *target = (*l_candidate).second;
 
     // Locate the short option entry
