@@ -11,16 +11,18 @@ AC_DEFUN([NC_DEBUGGING],[
     ])
 
     AS_IF([test "x$enable_sanitizer" = "xyes"], [
-        AX_APPEND_COMPILE_FLAGS([-fsanitize=address], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-fsanitize=undefined], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-fsanitize=leak], [], [-Werror])
+        m4_foreach([NAME], [
+            [address], [undefined],
+            [leak],[float-divide-by-zero],[float-cast-overflow],[bounds,alignment],[object-size],[vptr],
+            [integer],[thread],[undefined-trap],[cfi]dnl
+        ], [
+            AX_APPEND_COMPILE_FLAGS([-fsanitize=[]NAME], [], [-Werror])
+            AX_APPEND_LINK_FLAGS([-fsanitize=[]NAME], [], [-Werror])
+        ])
 
-        AX_APPEND_LINK_FLAGS([-fsanitize=address], [], [-Werror])
-        AX_APPEND_LINK_FLAGS([-fsanitize=undefined], [], [-Werror])
-        AX_APPEND_LINK_FLAGS([-fsanitize=leak], [], [-Werror])
-
-        AX_APPEND_LINK_FLAGS([-lasan], [], [-Werror])
-        AX_APPEND_LINK_FLAGS([-lubsan], [], [-Werror])
+        ## We, and the std library, tend to use unsigned overflow legitimately
+        AX_APPEND_COMPILE_FLAGS([-fno-sanitize=unsigned-integer-overflow], [], [-Werror])
+        AX_APPEND_LINK_FLAGS([-fno-sanitize=unsigned-integer-overflow], [], [-Werror])
 
         AX_APPEND_COMPILE_FLAGS([-ftrapv], [], [-Werror])
     ])
