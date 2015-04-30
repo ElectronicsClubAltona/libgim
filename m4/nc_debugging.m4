@@ -12,9 +12,31 @@ AC_DEFUN([NC_DEBUGGING],[
 
     AS_IF([test "x$enable_sanitizer" = "xyes"], [
         m4_foreach([NAME], [
-            [address], [undefined],
-            [leak],[float-divide-by-zero],[float-cast-overflow],[bounds,alignment],[object-size],[vptr],
-            [integer],[thread],[undefined-trap],[cfi]dnl
+            dnl common top-level names. deliberately does not include
+            dnl 'undefined' due to false positives in some core libraries
+            dnl (eg, boost::format).
+            [address],
+            dnl gcc specific names. do not use vptr or boost::format will die
+            [alignment],
+            [bounds],
+            [enum],
+            [float-cast-overflow],
+            [float-divide-by-zero],
+            [integer-divide-by-zero],
+            [leak],
+            [nonnull-attribute],
+            [object-size],
+            [return],
+            [returns-nonnull-attribute],
+            [shift],
+            [signed-integer-overflow],
+            [unreachable],
+            [vla-bound],
+            dnl clang specific names
+            [integer],
+            [thread],
+            [undefined-trap],
+            [cfi]dnl
         ], [
             AX_APPEND_COMPILE_FLAGS([-fsanitize=[]NAME], [], [-Werror])
             AX_APPEND_LINK_FLAGS([-fsanitize=[]NAME], [], [-Werror])
