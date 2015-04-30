@@ -150,6 +150,11 @@ template uint64_t round_pow2 (uint64_t);
 
 
 //-----------------------------------------------------------------------------
+template float PI<float>;
+template double PI<double>;
+
+
+//-----------------------------------------------------------------------------
 // Simple instantiations. Some functions aren't used internally to the library
 // so it's easier to instantiate early and check for broken code at library
 // build time.

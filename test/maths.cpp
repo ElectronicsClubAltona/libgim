@@ -114,8 +114,8 @@ main (int, char **) {
     CHECK_EQ (sign ( numeric_limits<double>::infinity ()),  1);
     CHECK_EQ (sign (-numeric_limits<double>::infinity ()), -1);
 
-    CHECK_EQ (to_degrees (PI<double>),  180.0);
     CHECK_EQ (to_degrees (PI<float>),  180.f);
+    CHECK_EQ (to_degrees (PI<double>),  180.0);
     CHECK_EQ (to_radians (180.f),  PI<float>);
     CHECK_EQ (to_radians (180.0),  PI<double>);
 
