@@ -43,12 +43,9 @@ main ()
     }
 
     {
-        using tuple_t = std::tuple<float>;
-        using mapped_t = typename util::tuple::map<tuple_t, int_mapper>::type;
+        using src_t = std::tuple<std::string>;
+        using dst_t = typename util::tuple::map<src_t, int_mapper>::type;
 
-        bool tuple  = std::is_same<typename std::tuple_element<0, tuple_t >::type, int>::value;
-        bool mapped = std::is_same<typename std::tuple_element<0, mapped_t>::type, int>::value;
-
-        tap.expect (!tuple && mapped, "tuple type mapping");
+        tap.expect (std::is_same<dst_t, std::tuple<int>>::value, "tuple type mapping");
     }
 }
