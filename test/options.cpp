@@ -14,16 +14,13 @@
 #include <memory>
 
 
-using namespace std;
-using namespace util;
-
-
+//-----------------------------------------------------------------------------
 // Check that null options don't throw anything
 void
 test_null_opt (void) {
-    unique_ptr<processor> p(new processor());
+    std::unique_ptr<util::processor> p(new util::processor());
 
-    p->add_option(make_unique<nulloption> ('n', "null", "testing null option"));
+    p->add_option(std::make_unique<util::nulloption> ('n', "null", "testing null option"));
 
     static const char *argv1[] = { "./foo", "-n", "foo" };
     p->parse_args(elems(argv1), argv1);
@@ -33,14 +30,13 @@ test_null_opt (void) {
 }
 
 
-
-
+//-----------------------------------------------------------------------------
 // Check if presence options can be used successfully
 void
 test_present_opt (void) {
-    unique_ptr<processor> p(new processor());
+    std::unique_ptr<util::processor> p(new util::processor());
     bool is_present;
-    p->add_option(make_unique<presentoption> ('p', "present", "option is present", &is_present));
+    p->add_option(std::make_unique<util::presentoption> ('p', "present", "option is present", &is_present));
 
     // Short option form
     static const char *argv1[] = { "./foo", "-p" };
@@ -62,13 +58,14 @@ test_present_opt (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 // Check all forms of boolean inputs
 void
 test_bool_opt (void) {
-    unique_ptr<processor> p(new processor());
+    std::unique_ptr<util::processor> p(new util::processor());
     bool value = false;
 
-    p->add_option (make_unique<valueoption<bool>> ('b', "bool", "testing boolean actions", &value));
+    p->add_option (std::make_unique<util::valueoption<bool>> ('b', "bool", "testing boolean actions", &value));
 
     // List all legal forms of positive or negative boolean values
     std::array<const char*, 3> argv { "./foo", "-b", NULL };
@@ -103,20 +100,21 @@ test_bool_opt (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 template<typename T>
 void
 test_numeric_opt (void) {
-    unique_ptr<processor> p(new processor ());
+    std::unique_ptr<util::processor> p(new util::processor ());
     T value;
-    p->add_option (make_unique<valueoption<T>> ('t', "type", "testing type option", &value));
+    p->add_option (std::make_unique<util::valueoption<T>> ('t', "type", "testing type option", &value));
 
     T values[] = {
         // TODO: Enable minimum value testing. Currently disabled as
         // a negative numerical value looks just like a proceeding
         // option.
-        //numeric_limits<T>::min(),
+        //std::numeric_limits<T>::min(),
 
-        numeric_limits<T>::max (),
+        std::numeric_limits<T>::max (),
         0
     };
 
@@ -124,8 +122,8 @@ test_numeric_opt (void) {
     const char *  argv_long[] = { "./foo", NULL };
 
     for(size_t i = 0; i < elems (values); ++i) {
-        ostringstream out_short, out_long;
-        string        str_short, str_long;
+        std::ostringstream out_short, out_long;
+        std::string        str_short, str_long;
 
         out_short << values[i];
         str_short = out_short.str ();
@@ -146,42 +144,43 @@ test_numeric_opt (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 test_bytes_opt(void) {
-    unique_ptr<processor> p(new processor ());
+    std::unique_ptr<util::processor> p(new util::processor ());
 
     static const struct {
         const char                *param;
-        bytesoption::bytestype     type;
-        bytesoption::bytesmodifier mod;
+        util::bytesoption::bytestype     type;
+        util::bytesoption::bytesmodifier mod;
         size_t                     size;
     } commands[] = {
-        { "1",  bytesoption::BYTES_MEGA,
-            bytesoption::BYTES_BASE2,
+        { "1",  util::bytesoption::BYTES_MEGA,
+            util::bytesoption::BYTES_BASE2,
             1UL * 1024 * 1024 },
 
-        { "1k", bytesoption::BYTES_KILO,
-            bytesoption::BYTES_BASE2,
+        { "1k", util::bytesoption::BYTES_KILO,
+            util::bytesoption::BYTES_BASE2,
             1UL * 1024 },
 
-        { "1M", bytesoption::BYTES_SINGLE,
-            bytesoption::BYTES_BASE2,
+        { "1M", util::bytesoption::BYTES_SINGLE,
+            util::bytesoption::BYTES_BASE2,
             1UL * 1024 * 1024 },
 
-        { "1G", bytesoption::BYTES_MEGA,
-            bytesoption::BYTES_BASE2,
+        { "1G", util::bytesoption::BYTES_MEGA,
+            util::bytesoption::BYTES_BASE2,
             1UL * 1024 * 1024 * 1024 },
 
-        { "1M", bytesoption::BYTES_SINGLE,
-            bytesoption::BYTES_BASE10,
+        { "1M", util::bytesoption::BYTES_SINGLE,
+            util::bytesoption::BYTES_BASE10,
             1UL * 1000 * 1000 },
 
-        { "1MB", bytesoption::BYTES_SINGLE,
-            bytesoption::BYTES_BASE10,
+        { "1MB", util::bytesoption::BYTES_SINGLE,
+            util::bytesoption::BYTES_BASE10,
             1UL * 1000 * 1000 },
 
-        { "1MiB", bytesoption::BYTES_SINGLE,
-            bytesoption::BYTES_BASE10,
+        { "1MiB", util::bytesoption::BYTES_SINGLE,
+            util::bytesoption::BYTES_BASE10,
             1UL * 1024 * 1024 },
 
     };
@@ -194,7 +193,7 @@ test_bytes_opt(void) {
 
     for (unsigned int i = 0; i < elems (commands); ++i) {
         size_t size = 0;
-        p->add_option(make_unique<bytesoption> (
+        p->add_option(std::make_unique<util::bytesoption> (
            'b', "bytes",
            "testing sizeof bytes", &size, commands[i].type,
            commands[i].mod
@@ -209,38 +208,40 @@ test_bytes_opt(void) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 test_insert_remove_opt (void) {
     {
-        unique_ptr<processor> p(new processor ());
-        auto opt = make_unique<nulloption> ('n', "null-option", "null testing action");
+        std::unique_ptr<util::processor> p(new util::processor ());
+        auto opt = std::make_unique<util::nulloption> ('n', "null-option", "null testing action");
         auto cmp = opt.get ();
         p->add_option (move (opt));
-        CHECK_EQ (p->remove_option ('n').get (), (option*)cmp);
+        CHECK_EQ (p->remove_option ('n').get (), (util::option*)cmp);
     }
 
     {
-        unique_ptr<processor> p(new processor ());
-        auto opt = make_unique<nulloption> ('n', "null-option", "null testing action");
+        std::unique_ptr<util::processor> p(new util::processor ());
+        auto opt = std::make_unique<util::nulloption> ('n', "null-option", "null testing action");
         auto cmp = opt.get ();
         p->add_option (move (opt));
-        CHECK_EQ (p->remove_option ("null-option").get (), (option*)cmp);
+        CHECK_EQ (p->remove_option ("null-option").get (), (util::option*)cmp);
     }
 
     {
-        unique_ptr<processor> p(new processor ());
-        auto opt1 = make_unique<nulloption> ('n', "null-option", "null testing action");
-        auto opt2 = make_unique<nulloption> ('n', "null-option", "null testing action");
+        std::unique_ptr<util::processor> p(new util::processor ());
+        auto opt1 = std::make_unique<util::nulloption> ('n', "null-option", "null testing action");
+        auto opt2 = std::make_unique<util::nulloption> ('n', "null-option", "null testing action");
         p->add_option (move (opt1));
         CHECK_THROWS (std::logic_error, p->add_option (move (opt2)));
     }
 }
 
 
+//-----------------------------------------------------------------------------
 void
 test_required (void) {
-    unique_ptr<processor> p (new processor ());
-    p->add_option (make_unique <nulloption> (
+    std::unique_ptr<util::processor> p (new util::processor ());
+    p->add_option (std::make_unique <util::nulloption> (
         'n',
         "null",
         "null testing",
@@ -258,6 +259,7 @@ test_required (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 int
 main (int, char **) {
     test_null_opt ();
