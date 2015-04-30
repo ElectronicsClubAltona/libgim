@@ -67,10 +67,24 @@ namespace util {
     template <class K>
     struct type { };
 
+
     ///////////////////////////////////////////////////////////////////////////
     /// traits class which converts an introspected type to a tuple
     ///
     /// K: target class
+
+    template <typename K>
+    struct type_tuple;
+
+    template <
+        typename ...T
+    > struct type_tuple<
+        std::tuple<T...>
+    > {
+        typedef std::tuple<T...> type;
+    };
+
+
     template <
         typename K,
         typename I = typename make_indices<
@@ -78,19 +92,15 @@ namespace util {
                 typename type<K>::fields
             >::value
         >::type
-    >
-    struct type_tuple;
-
+    > struct _type_tuple;
 
     template <
         typename K,
         size_t ...I
-    >
-    struct type_tuple<
+    > struct _type_tuple <
         K,
         indices<I...>
-    >
-    {
+    > {
         typedef std::tuple<
             typename std::tuple_element<
                 I,
@@ -98,6 +108,14 @@ namespace util {
             >::type::type...
         > type;
     };
+
+
+    template <
+        typename K
+    > struct type_tuple {
+        typedef typename _type_tuple<K>::type type;
+    };
+
 
     ///////////////////////////////////////////////////////////////////////////
     namespace detail {

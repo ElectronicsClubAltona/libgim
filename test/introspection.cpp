@@ -29,15 +29,25 @@ namespace util
 
 
 //-----------------------------------------------------------------------------
-int
-main ()
+int main ()
 {
     util::TAP::logger tap;
-    
-    foo d_foo { 7, 42.0 };
-    auto f_tuple = util::as_tuple (d_foo);
 
-    tap.expect (exactly_equal (d_foo.a, std::get<0> (f_tuple)) &&
-                exactly_equal (d_foo.b, std::get<1> (f_tuple)),
-                "member access after conversion to tuple");
+    // Ensure tuples are mapped to themselves with type_tuple::type
+    {
+        using src_t = std::tuple<int>;
+        using dst_t = typename util::type_tuple<src_t>::type;
+
+        tap.expect (std::is_same<src_t, dst_t>::value, "static identity type_tuple");
+    }
+
+    // Check member extraction from a simple POD structure.
+    {
+        foo d_foo { 7, 42.0 };
+        auto f_tuple = util::as_tuple (d_foo);
+
+        tap.expect (exactly_equal (d_foo.a, std::get<0> (f_tuple)) &&
+                    exactly_equal (d_foo.b, std::get<1> (f_tuple)),
+                    "dynamic member access after conversion to tuple");
+    }
 }
