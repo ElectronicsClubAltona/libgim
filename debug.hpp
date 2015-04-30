@@ -322,7 +322,10 @@ namespace debug {
 
     template <typename T>
     void sanity (const T &t)
-    { CHECK (valid (t)); }
+    {
+        (void)t;
+        CHECK (valid (t));
+    }
 
 
     template <
@@ -330,7 +333,10 @@ namespace debug {
         typename ...Args
     >
     void sanity (const T<Args...> &t)
-    { CHECK (valid (t)); }
+    {
+        (void)t;
+        CHECK (valid (t));
+    }
 }
 
 
