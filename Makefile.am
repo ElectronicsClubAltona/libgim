@@ -25,6 +25,8 @@ UTIL_FILES   =		\
     coord/names.hpp	\
     coord/ops.hpp	\
     coord/store.hpp	\
+    crypto/arc4.cpp	\
+    crypto/arc4.hpp	\
     debug.cpp   	\
     debug.hpp   	\
     endian.cpp		\
@@ -261,6 +263,7 @@ TEST_BIN = 			\
     test/bitwise		\
     test/checksum		\
     test/colour			\
+    test/crypto/arc4		\
     test/extent			\
     test/fixed			\
     test/float			\
