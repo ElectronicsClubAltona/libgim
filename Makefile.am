@@ -25,6 +25,8 @@ UTIL_FILES   =		\
     coord/names.hpp	\
     coord/ops.hpp	\
     coord/store.hpp	\
+    crypto/tea.cpp	\
+    crypto/tea.hpp	\
     crypto/arc4.cpp	\
     crypto/arc4.hpp	\
     debug.cpp   	\
@@ -264,6 +266,7 @@ TEST_BIN = 			\
     test/checksum		\
     test/colour			\
     test/crypto/arc4		\
+    test/crypto/tea		\
     test/extent			\
     test/fixed			\
     test/float			\
