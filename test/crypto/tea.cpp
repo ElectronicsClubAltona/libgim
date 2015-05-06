@@ -9,8 +9,8 @@ main ()
     // test vectors from 'TeaCrypt', by Logan J. Drews.
     struct {
         std::array<uint32_t,4> key;
-        std::vector<uint32_t> dec;
-        std::vector<uint32_t> enc;
+        std::array<uint32_t,2> dec;
+        std::array<uint32_t,2> enc;
     } TESTS[] = {
 
         {
@@ -44,8 +44,7 @@ main ()
         const auto &t = TESTS[i];
         util::crypto::TEA gen (t.key);
 
-        std::vector<uint32_t> enc (t.dec.size ()),
-                              dec (t.enc.size ());
+        std::array<uint32_t,2> enc, dec;
 
         gen.encrypt (enc.data (), t.dec.data (), t.dec.size ());
         gen.decrypt (dec.data (), t.enc.data (), t.enc.size ());
@@ -53,13 +52,13 @@ main ()
         {
             std::ostringstream os;
             os << "TEA_enc " << i;
-            tap.expect (std::equal (enc.begin (), enc.end (), t.enc.begin ()), os.str ());
+            tap.expect (enc == t.enc, os.str ());
         }
 
         {
             std::ostringstream os;
             os << "TEA_dec " << i;
-            tap.expect (std::equal (dec.begin (), dec.end (), t.dec.begin ()), os.str ());
+            tap.expect (dec == t.dec, os.str ());
         }
     }
 
