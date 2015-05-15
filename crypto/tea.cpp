@@ -37,16 +37,16 @@ TEA::TEA (key_t _key):
 
 //-----------------------------------------------------------------------------
 void
-TEA::encrypt (uint32_t *restrict dst, const uint32_t *restrict src, size_t count)
+TEA::encrypt (uint32_t *restrict data, size_t count)
 {
     if (count % 2)
         throw std::invalid_argument ("TEA requires even data count");
 
-    auto last = src + count;
-    while (src < last) {
+    auto last = data + count;
+    while (data < last) {
         uint32_t sum = 0;
-        uint32_t v0 = src[0];
-        uint32_t v1 = src[1];
+        uint32_t v0 = data[0];
+        uint32_t v1 = data[1];
 
         for (unsigned i = 0; i < ITERATIONS; ++i) {
             sum += MAGIC;
@@ -54,28 +54,25 @@ TEA::encrypt (uint32_t *restrict dst, const uint32_t *restrict src, size_t count
             v1  += ((v0 << 4) + m_key[2]) ^ (v0 + sum) ^ ((v0 >> 5) + m_key[3]);
         }
 
-        dst[0] = v0;
-        dst[1] = v1;
-
-        src += 2;
-        dst += 2;
+        *data++ = v0;
+        *data++ = v1;
     }
 }
 
 
 //-----------------------------------------------------------------------------
 void
-TEA::decrypt (uint32_t *restrict dst, const uint32_t *restrict src, size_t count)
+TEA::decrypt (uint32_t *restrict data, size_t count)
 {
     if (count % 2)
         throw std::invalid_argument ("TEA requires even data count");
 
-    auto last = src + count;
+    auto last = data + count;
 
-    while (src < last) {
+    while (data < last) {
         uint32_t sum = MAGIC << 5;
-        uint32_t v0 = src[0];
-        uint32_t v1 = src[1];
+        uint32_t v0 = data[0];
+        uint32_t v1 = data[1];
 
         for (unsigned i = 0; i < ITERATIONS; ++i) {
             v1  -= ((v0 << 4) + m_key[2]) ^ (v0 + sum) ^ ((v0 >> 5) + m_key[3]);
@@ -83,10 +80,7 @@ TEA::decrypt (uint32_t *restrict dst, const uint32_t *restrict src, size_t count
             sum -= MAGIC;
         }
 
-        dst[0] = v0;
-        dst[1] = v1;
-
-        src += 2;
-        dst += 2;
+        *data++ = v0;
+        *data++ = v1;
     }
 }

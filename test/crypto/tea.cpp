@@ -7,7 +7,7 @@ int
 main ()
 {
     // test vectors from 'TeaCrypt', by Logan J. Drews.
-    struct {
+    static const struct {
         std::array<uint32_t,4> key;
         std::array<uint32_t,2> dec;
         std::array<uint32_t,2> enc;
@@ -44,10 +44,11 @@ main ()
         const auto &t = TESTS[i];
         util::crypto::TEA gen (t.key);
 
-        std::array<uint32_t,2> enc, dec;
+        std::array<uint32_t,2> enc (t.dec);
+        gen.encrypt (enc.data (), enc.size ());
 
-        gen.encrypt (enc.data (), t.dec.data (), t.dec.size ());
-        gen.decrypt (dec.data (), t.enc.data (), t.enc.size ());
+        std::array<uint32_t,2> dec (t.enc);
+        gen.decrypt (dec.data (), dec.size ());
         
         {
             std::ostringstream os;

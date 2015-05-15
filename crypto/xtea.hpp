@@ -29,8 +29,8 @@ namespace util { namespace crypto {
 
         XTEA (key_t);
 
-        void encrypt (uint32_t *restrict dst, const uint32_t *restrict src, size_t count);
-        void decrypt (uint32_t *restrict dst, const uint32_t *restrict src, size_t count);
+        void encrypt (uint32_t *restrict data, size_t count);
+        void decrypt (uint32_t *restrict data, size_t count);
 
     private:
         key_t m_key;
