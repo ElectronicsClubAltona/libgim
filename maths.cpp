@@ -150,8 +150,8 @@ template uint64_t round_pow2 (uint64_t);
 
 
 //-----------------------------------------------------------------------------
-template float PI<float>;
-template double PI<double>;
+template const float PI<float>;
+template const double PI<double>;
 
 
 //-----------------------------------------------------------------------------
