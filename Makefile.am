@@ -29,6 +29,8 @@ UTIL_FILES   =		\
     crypto/tea.hpp	\
     crypto/xtea.cpp	\
     crypto/xtea.hpp	\
+    crypto/xxtea.cpp	\
+    crypto/xxtea.hpp	\
     crypto/arc4.cpp	\
     crypto/arc4.hpp	\
     debug.cpp   	\
@@ -270,6 +272,7 @@ TEST_BIN = 			\
     test/crypto/arc4		\
     test/crypto/tea		\
     test/crypto/xtea		\
+    test/crypto/xxtea		\
     test/extent			\
     test/fixed			\
     test/float			\
