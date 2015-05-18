@@ -18,13 +18,13 @@
 #define __UTIL_NOISE_LERP_HPP
 
 namespace util { namespace lerp {
-    double sigmoid (double val);
+    template <typename T> T sigmoid (T val);
 
-    double linear  (double a, double b, double weight);
-    double cosine  (double a, double b, double weight);
-    double cubic   (double a, double b, double weight);
-    double quintic (double a, double b, double weight);
-    double trunc   (double a, double b, double weight);
+    template <typename T> T linear  (T a, T b, T weight);
+    template <typename T> T cosine  (T a, T b, T weight);
+    template <typename T> T cubic   (T a, T b, T weight);
+    template <typename T> T quintic (T a, T b, T weight);
+    template <typename T> T trunc   (T a, T b, T weight);
 } }
 
 #endif
