@@ -14,10 +14,10 @@
  * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_LERP_HPP
-#define __UTIL_LERP_HPP
+#ifndef __UTIL_NOISE_LERP_HPP
+#define __UTIL_NOISE_LERP_HPP
 
-namespace lerp {
+namespace util { namespace lerp {
     double sigmoid (double val);
 
     double linear  (double a, double b, double weight);
@@ -25,6 +25,6 @@ namespace lerp {
     double cubic   (double a, double b, double weight);
     double quintic (double a, double b, double weight);
     double trunc   (double a, double b, double weight);
-}
+} }
 
 #endif

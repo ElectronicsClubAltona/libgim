@@ -132,9 +132,9 @@ value<L>::eval (double x, double y) const {
 //-----------------------------------------------------------------------------
 namespace util {
     namespace noise {
-        template struct value<lerp::linear>;
-        template struct value<lerp::cubic>;
-        template struct value<lerp::quintic>;
+        template struct value<util::lerp::linear>;
+        template struct value<util::lerp::cubic>;
+        template struct value<util::lerp::quintic>;
     }
 }
 
@@ -196,9 +196,9 @@ gradient<L>::eval (double x, double y) const {
 //-----------------------------------------------------------------------------
 namespace util {
     namespace noise {
-        template struct gradient<lerp::linear>;
-        template struct gradient<lerp::cubic>;
-        template struct gradient<lerp::quintic>;
+        template struct gradient<util::lerp::linear>;
+        template struct gradient<util::lerp::cubic>;
+        template struct gradient<util::lerp::quintic>;
     }
 }
 

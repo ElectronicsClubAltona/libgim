@@ -100,8 +100,6 @@ UTIL_FILES   =		\
     json/schema.hpp	\
     json/tree.cpp	\
     json/tree.hpp	\
-    lerp.cpp		\
-    lerp.hpp		\
     log.cpp		\
     log.hpp		\
     log.ipp		\
@@ -132,6 +130,8 @@ UTIL_FILES   =		\
     noise/basis.hpp	\
     noise/fractal.cpp	\
     noise/fractal.hpp	\
+    noise/lerp.cpp	\
+    noise/lerp.hpp	\
     noise/lut.cpp	\
     noise/lut.hpp	\
     options.cpp		\

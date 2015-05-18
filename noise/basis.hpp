@@ -18,7 +18,7 @@
 #define __UTIL_NOISE_BASIS_HPP
 
 #include <cstdlib>
-#include "../lerp.hpp"
+#include "lerp.hpp"
 #include "../range.hpp"
 
 namespace util {
