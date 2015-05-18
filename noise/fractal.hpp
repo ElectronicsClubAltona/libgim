@@ -21,6 +21,7 @@
 
 namespace util {
     namespace noise {
+        /// Base noise summation
         struct fractal {
             fractal (unsigned      octaves,
                      double        frequency,
@@ -37,6 +38,7 @@ namespace util {
         };
 
 
+        /// Fractal Brownian Motion summation.
         template <typename B>
         struct fbm : public fractal {
             fbm (unsigned octaves,
@@ -49,6 +51,8 @@ namespace util {
             virtual double eval (double x, double y) const;
         };
 
+
+        /// Rigid Multifractal noise summation.
         template <typename B>
         struct musgrave : public fractal {
             musgrave (unsigned octaves,

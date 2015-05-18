@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_NOISE_BASIS_HPP
@@ -39,7 +39,9 @@ namespace util {
         };
 
 
-        template <lerp_function L> struct value : public basis {
+        /// Perlin: single value per grid space
+        template <lerp_function L>
+        struct value : public basis {
             value (seed_t);
             value ();
 
@@ -47,7 +49,10 @@ namespace util {
             virtual double eval (double x, double y) const;
         };
 
-        template <lerp_function L> struct gradient : public basis {
+
+        /// Perlin: interpolated value across each grid space
+        template <lerp_function L>
+        struct gradient : public basis {
             gradient (seed_t);
             gradient ();
 
@@ -55,6 +60,8 @@ namespace util {
             virtual double eval (double x, double y) const;
         };
 
+
+        /// Cellular/Worley/Vornoi of order-1
         struct cellular : public basis {
             cellular (seed_t);
             cellular ();

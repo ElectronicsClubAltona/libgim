@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "noise/basis.hpp"
@@ -24,8 +24,11 @@
 
 #include <algorithm>
 
-using namespace util::noise;
-using util::range;
+using util::noise::basis;
+using util::noise::value;
+using util::noise::gradient;
+using util::noise::cellular;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Generate a type from [-UNIT..UNIT]
@@ -34,21 +37,23 @@ T
 generate (intmax_t x, intmax_t y, basis::seed_t);
 
 
+//-----------------------------------------------------------------------------
 template <>
 double
 generate (intmax_t x, intmax_t y, basis::seed_t seed) {
-    size_t idx = permute (x, y, seed);
-    return LUT[idx];
+    size_t idx = util::noise::permute (x, y, seed);
+    return util::noise::LUT[idx];
 }
 
 
+//-----------------------------------------------------------------------------
 template <>
 util::vector2d
 generate (intmax_t x, intmax_t y, basis::seed_t seed) {
-    auto u = permute (x, y, seed);
-    auto v = permute (u ^ seed);
+    auto u = util::noise::permute (x, y, seed);
+    auto v = util::noise::permute (u ^ seed);
 
-    return util::vector2d (LUT[u], LUT[v]);
+    return util::vector2d (util::noise::LUT[u], util::noise::LUT[v]);
 }
 
 
@@ -58,15 +63,18 @@ basis::basis (seed_t _seed):
 { ; }
 
 
+//-----------------------------------------------------------------------------
 basis::basis ():
     seed (util::random<seed_t> ())
 { ; }
 
 
+//-----------------------------------------------------------------------------
 basis::~basis ()
 { ; }
 
 
+//-----------------------------------------------------------------------------
 double
 basis::eval (double, double) const
 { unreachable (); }
@@ -74,24 +82,27 @@ basis::eval (double, double) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <lerp_function L>
+template <util::noise::lerp_function L>
 value<L>::value (seed_t _seed):
     basis (_seed)
 { ; }
 
 
-template <lerp_function L>
+//-----------------------------------------------------------------------------
+template <util::noise::lerp_function L>
 value<L>::value ()
 { ; }
 
 
-template <lerp_function L>
-range<double>
+//-----------------------------------------------------------------------------
+template <util::noise::lerp_function L>
+util::range<double>
 value<L>::bounds (void) const
     { return { -1.0, 1.0 }; }
 
 
-template <lerp_function L>
+//-----------------------------------------------------------------------------
+template <util::noise::lerp_function L>
 double
 value<L>::eval (double x, double y) const {
     intmax_t x_int = static_cast<intmax_t> (x);
@@ -118,6 +129,7 @@ value<L>::eval (double x, double y) const {
 }
 
 
+//-----------------------------------------------------------------------------
 namespace util {
     namespace noise {
         template struct value<lerp::linear>;
@@ -128,24 +140,27 @@ namespace util {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <lerp_function L>
+template <util::noise::lerp_function L>
 gradient<L>::gradient (seed_t _seed):
     basis (_seed)
 { ; }
 
 
-template <lerp_function L>
+//-----------------------------------------------------------------------------
+template <util::noise::lerp_function L>
 gradient<L>::gradient ()
 { ; }
 
 
-template <lerp_function L>
-range<double>
+//-----------------------------------------------------------------------------
+template <util::noise::lerp_function L>
+util::range<double>
 gradient<L>::bounds (void) const
     { return { -sqrt(2.0) / 2.0, sqrt (2.0) / 2.0 }; }
 
 
-template <lerp_function L>
+//-----------------------------------------------------------------------------
+template <util::noise::lerp_function L>
 double
 gradient<L>::eval (double x, double y) const {
     intmax_t x_int = static_cast<intmax_t> (x);
@@ -178,6 +193,7 @@ gradient<L>::eval (double x, double y) const {
 }
 
 
+//-----------------------------------------------------------------------------
 namespace util {
     namespace noise {
         template struct gradient<lerp::linear>;
@@ -193,15 +209,18 @@ cellular::cellular (seed_t _seed):
 { ; }
 
 
+//-----------------------------------------------------------------------------
 cellular::cellular ()
 { ; }
 
 
-range<double>
+//-----------------------------------------------------------------------------
+util::range<double>
 cellular::bounds (void) const
     { return { 0.0, 1.5 }; }
 
 
+//-----------------------------------------------------------------------------
 double
 cellular::eval (double x, double y) const {
     using util::point2d;

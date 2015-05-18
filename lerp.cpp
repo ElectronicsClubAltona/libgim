@@ -22,16 +22,19 @@
 #include <cmath>
 
 
+//-----------------------------------------------------------------------------
 double
 lerp::sigmoid (double val) {
     return -1.0 + 2.0 / (1.0 + exp (-2.0 * val));
 }
 
 
+//-----------------------------------------------------------------------------
 double lerp::trunc (double a, double, double)
     { return a; }
 
 
+//-----------------------------------------------------------------------------
 double
 lerp::linear (double a, double b, double weight) {
     CHECK (weight >= 0.0 && weight <= 1.0);
@@ -39,6 +42,7 @@ lerp::linear (double a, double b, double weight) {
 }
 
 
+//-----------------------------------------------------------------------------
 double
 lerp::cosine (double a, double b, double weight) {
     CHECK (weight >= 0.0 && weight <= 1.0);
@@ -48,6 +52,7 @@ lerp::cosine (double a, double b, double weight) {
 }
 
 
+//-----------------------------------------------------------------------------
 double
 lerp::cubic (double a, double b, double weight) {
     CHECK (weight >= 0.0 && weight <= 1.0);
@@ -56,6 +61,7 @@ lerp::cubic (double a, double b, double weight) {
 }
 
 
+//-----------------------------------------------------------------------------
 double
 lerp::quintic (double a, double b, double weight) {
     CHECK (weight >= 0.0 && weight <= 1.0);

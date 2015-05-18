@@ -31,6 +31,7 @@ util::noise::fractal::fractal (unsigned      _octaves,
 { ; }
 
 
+//-----------------------------------------------------------------------------
 util::noise::fractal::fractal ():
     octaves    (1),
     frequency  (0.1),
@@ -38,10 +39,12 @@ util::noise::fractal::fractal ():
 { ; }
 
 
+//-----------------------------------------------------------------------------
 util::noise::fractal::~fractal ()
 { ; }
 
 
+//-----------------------------------------------------------------------------
 double
 util::noise::fractal::eval (double, double) const
     { unreachable (); }
@@ -58,11 +61,13 @@ util::noise::fbm<B>::fbm (unsigned _octaves,
 { ; }
 
 
+//-----------------------------------------------------------------------------
 template <typename B>
 util::noise::fbm<B>::fbm ()
 { ; }
 
 
+//-----------------------------------------------------------------------------
 template <typename B>
 double
 util::noise::fbm<B>::eval (double x, double y) const {
@@ -84,6 +89,7 @@ util::noise::fbm<B>::eval (double x, double y) const {
 }
 
 
+//-----------------------------------------------------------------------------
 template struct util::noise::fbm<util::noise::cellular>;
 template struct util::noise::fbm<util::noise::gradient<lerp::linear>>;
 template struct util::noise::fbm<util::noise::gradient<lerp::quintic>>;
@@ -102,11 +108,13 @@ util::noise::musgrave<B>::musgrave (unsigned _octaves,
 { ; }
 
 
+//-----------------------------------------------------------------------------
 template <typename B>
 util::noise::musgrave<B>::musgrave ()
 { ; }
 
 
+//-----------------------------------------------------------------------------
 template <typename B>
 double
 util::noise::musgrave<B>::eval (double x, double y) const {
@@ -146,6 +154,8 @@ util::noise::musgrave<B>::eval (double x, double y) const {
     return total;
 }
 
+
+//-----------------------------------------------------------------------------
 template struct util::noise::musgrave<util::noise::cellular>;
 template struct util::noise::musgrave<util::noise::gradient<lerp::linear>>;
 template struct util::noise::musgrave<util::noise::gradient<lerp::quintic>>;
