@@ -23,7 +23,7 @@
 
 namespace util {
     namespace noise {
-        typedef double (*lerp_function)(double, double, double);
+        template <typename T> using lerp_t = T (*)(T,T,T);
 
         struct basis {
             typedef uint64_t seed_t;
@@ -40,7 +40,7 @@ namespace util {
 
 
         /// Perlin: single value per grid space
-        template <lerp_function L>
+        template <lerp_t<double>>
         struct value : public basis {
             value (seed_t);
             value ();
@@ -51,7 +51,7 @@ namespace util {
 
 
         /// Perlin: interpolated value across each grid space
-        template <lerp_function L>
+        template <lerp_t<double>L>
         struct gradient : public basis {
             gradient (seed_t);
             gradient ();

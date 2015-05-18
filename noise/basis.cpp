@@ -82,27 +82,27 @@ basis::eval (double, double) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <util::noise::lerp_function L>
+template <util::noise::lerp_t<double> L>
 value<L>::value (seed_t _seed):
     basis (_seed)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_function L>
+template <util::noise::lerp_t<double> L>
 value<L>::value ()
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_function L>
+template <util::noise::lerp_t<double> L>
 util::range<double>
 value<L>::bounds (void) const
     { return { -1.0, 1.0 }; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_function L>
+template <util::noise::lerp_t<double> L>
 double
 value<L>::eval (double x, double y) const {
     intmax_t x_int = static_cast<intmax_t> (x);
@@ -140,27 +140,27 @@ namespace util {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <util::noise::lerp_function L>
+template <util::noise::lerp_t<double> L>
 gradient<L>::gradient (seed_t _seed):
     basis (_seed)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_function L>
+template <util::noise::lerp_t<double> L>
 gradient<L>::gradient ()
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_function L>
+template <util::noise::lerp_t<double> L>
 util::range<double>
 gradient<L>::bounds (void) const
     { return { -sqrt(2.0) / 2.0, sqrt (2.0) / 2.0 }; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_function L>
+template <util::noise::lerp_t<double> L>
 double
 gradient<L>::eval (double x, double y) const {
     intmax_t x_int = static_cast<intmax_t> (x);
