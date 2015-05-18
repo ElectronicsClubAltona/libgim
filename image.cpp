@@ -419,5 +419,8 @@ util::ppm::write (const uint8_t *restrict pixels,
 
 //-----------------------------------------------------------------------------
 template struct util::image::buffer<uint8_t>;
+template struct util::image::buffer<float>;
+
 template util::image::buffer<uint8_t> util::image::buffer<uint8_t>::alloc (void) const;
 template util::image::buffer<uint8_t> util::image::buffer<uint8_t>::clone (void) const;
+template util::image::buffer<uint8_t> util::image::buffer<float>::clone (void) const;

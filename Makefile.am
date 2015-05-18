@@ -248,10 +248,11 @@ AM_DEFAULT_SOURCE_EXT = .cpp
 AM_LDFLAGS  = $(BOOST_LDFLAGS)
 
 bin_PROGRAMS = 				\
-    tools/hash				\
     tools/json-clean			\
     tools/json-validate			\
-    tools/json-schema
+    tools/json-schema			\
+    tools/hash				\
+    tools/noise
 
 LDADD = $(top_builddir)/libutil.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
 
