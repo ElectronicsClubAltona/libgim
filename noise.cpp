@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -22,6 +22,22 @@
 #include <iostream>
 #include <limits>
 
+
+//-----------------------------------------------------------------------------
+void
+util::noise::fill (image::buffer<float> &pixels,
+                   const util::noise::fractal &gen)
+{
+    size_t h = pixels.h, s = pixels.s, w = pixels.w;
+    float *data = pixels.data ();
+
+    for (size_t y = 0; y < h; ++y)
+        for (size_t x = 0; x < w; ++x)
+            data[y * s + x] = gen (double(x), double(y));
+}
+
+
+//-----------------------------------------------------------------------------
 void
 util::noise::image2d (uint8_t *restrict pixels,
                       size_t            width,

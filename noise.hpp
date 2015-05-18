@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_PERLIN_HPP
@@ -23,8 +23,12 @@
 #include "noise/basis.hpp"
 #include "noise/fractal.hpp"
 
+#include "image.hpp"
+
 namespace util {
     namespace noise {
+        void fill (image::buffer<float>&, const util::noise::fractal&);
+
         void image2d (uint8_t *restrict pixels, size_t width, size_t height, const util::noise::fractal&);
     }
 }

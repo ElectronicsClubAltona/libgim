@@ -32,6 +32,7 @@ namespace util {
             double   frequency;
             double   lacunarity;
 
+            virtual double operator() (double x, double y) const { return eval (x, y); };
             virtual double eval (double x, double y) const = 0;
         };
 
