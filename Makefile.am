@@ -19,20 +19,20 @@ UTIL_FILES   =		\
     colour.cpp		\
     colour.hpp		\
     colour.ipp		\
-    coord.hpp		\
     coord/base.hpp	\
+    coord.hpp		\
     coord/init.hpp	\
     coord/names.hpp	\
     coord/ops.hpp	\
     coord/store.hpp	\
+    crypto/arc4.cpp	\
+    crypto/arc4.hpp	\
     crypto/tea.cpp	\
     crypto/tea.hpp	\
     crypto/xtea.cpp	\
     crypto/xtea.hpp	\
     crypto/xxtea.cpp	\
     crypto/xxtea.hpp	\
-    crypto/arc4.cpp	\
-    crypto/arc4.hpp	\
     debug.cpp   	\
     debug.hpp   	\
     endian.cpp		\
@@ -52,12 +52,11 @@ UTIL_FILES   =		\
     fourcc.hpp		\
     guid.cpp		\
     guid.hpp		\
-    hash.cpp		\
-    hash.hpp		\
     hash/adler.cpp	\
     hash/adler.hpp	\
-    hash/bsdsum.hpp	\
     hash/bsdsum.cpp	\
+    hash/bsdsum.hpp	\
+    hash.cpp		\
     hash/crc.cpp	\
     hash/crc.hpp	\
     hash/fletcher.hpp	\
@@ -65,6 +64,7 @@ UTIL_FILES   =		\
     hash/hmac.hpp	\
     hash/hotp.cpp	\
     hash/hotp.hpp	\
+    hash.hpp		\
     hash/md2.cpp	\
     hash/md2.hpp	\
     hash/md4.cpp	\
@@ -77,10 +77,10 @@ UTIL_FILES   =		\
     hash/pbkdf2.hpp	\
     hash/ripemd.cpp	\
     hash/ripemd.hpp	\
-    hash/sha2.cpp	\
-    hash/sha2.hpp	\
     hash/sha1.cpp	\
     hash/sha1.hpp	\
+    hash/sha2.cpp	\
+    hash/sha2.hpp	\
     image.cpp		\
     image.hpp		\
     introspection.cpp	\
@@ -119,17 +119,17 @@ UTIL_FILES   =		\
     net/address.hpp	\
     net/except.cpp	\
     net/except.hpp	\
-    net/types.cpp	\
-    net/types.hpp	\
     net/socket.cpp	\
     net/socket.hpp	\
+    net/types.cpp	\
+    net/types.hpp	\
     nocopy.hpp		\
-    noise.cpp		\
-    noise.hpp		\
     noise/basis.cpp	\
     noise/basis.hpp	\
+    noise.cpp		\
     noise/fractal.cpp	\
     noise/fractal.hpp	\
+    noise.hpp		\
     noise/lerp.cpp	\
     noise/lerp.hpp	\
     noise/lut.cpp	\
@@ -188,16 +188,16 @@ UTIL_FILES   =		\
     time.hpp		\
     tuple.cpp		\
     tuple.hpp		\
-    types.hpp		\
     types/bits.hpp	\
     types/casts.hpp	\
     types/comparator.hpp\
     types/comparator.ipp\
+    types.hpp		\
     types/string.cpp	\
     types/string.hpp	\
     types/traits.hpp	\
-    uri.hpp		\
     uri.cpp		\
+    uri.hpp		\
     variadic.cpp	\
     variadic.hpp	\
     variadic.ipp	\
