@@ -36,7 +36,7 @@ namespace util {
             seed_t seed;
 
             virtual range<T> bounds (void) const = 0;
-            virtual T eval (T x, T y) const = 0;
+            virtual T operator() (T x, T y) const = 0;
         };
 
 
@@ -49,7 +49,7 @@ namespace util {
             value ();
 
             virtual range<T> bounds (void) const override;
-            virtual T eval (T x, T y) const override;
+            virtual T operator() (T x, T y) const override;
         };
 
 
@@ -62,7 +62,7 @@ namespace util {
             gradient ();
 
             virtual range<T> bounds (void) const override;
-            virtual T eval (T x, T y) const override;
+            virtual T operator() (T x, T y) const override;
         };
 
 
@@ -75,7 +75,7 @@ namespace util {
             cellular ();
 
             virtual range<T> bounds (void) const override;
-            virtual T eval (T x, T y) const override;
+            virtual T operator() (T x, T y) const override;
         };
     }
 }

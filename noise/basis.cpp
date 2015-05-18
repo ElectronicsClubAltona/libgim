@@ -93,8 +93,10 @@ basis<T>::~basis ()
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-basis<T>::eval (T, T) const
-{ unreachable (); }
+basis<T>::operator() (T, T) const
+{
+    unreachable ();
+}
 
 
 //-----------------------------------------------------------------------------
@@ -121,13 +123,16 @@ value<T,L>::value ()
 template <typename T, util::noise::lerp_t<T> L>
 util::range<T>
 value<T,L>::bounds (void) const
-    { return { -1, 1 }; }
+{
+    return { -1, 1 };
+}
 
 
 //-----------------------------------------------------------------------------
 template <typename T, util::noise::lerp_t<T> L>
 T
-value<T,L>::eval (T x, T y) const {
+value<T,L>::operator() (T x, T y) const
+{
     intmax_t x_int = static_cast<intmax_t> (x);
     intmax_t y_int = static_cast<intmax_t> (y);
     T x_fac = x - x_int;
@@ -187,7 +192,8 @@ gradient<T,L>::bounds (void) const
 //-----------------------------------------------------------------------------
 template <typename T, util::noise::lerp_t<T> L>
 T
-gradient<T,L>::eval (T x, T y) const {
+gradient<T,L>::operator() (T x, T y) const
+{
     intmax_t x_int = static_cast<intmax_t> (x);
     intmax_t y_int = static_cast<intmax_t> (y);
     T x_fac = x - x_int;
@@ -255,7 +261,8 @@ cellular<T>::bounds (void) const
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-cellular<T>::eval (T x, T y) const {
+cellular<T>::operator() (T x, T y) const
+{
     intmax_t x_int = static_cast<intmax_t> (x);
     intmax_t y_int = static_cast<intmax_t> (y);
     T x_fac = x - x_int;

@@ -55,8 +55,10 @@ fractal<T>::~fractal ()
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-fractal<T>::eval (T, T) const
-    { unreachable (); }
+fractal<T>::operator() (T, T) const
+{
+    unreachable ();
+}
 
 
 //-----------------------------------------------------------------------------
@@ -86,14 +88,14 @@ fbm<T,B>::fbm ()
 //-----------------------------------------------------------------------------
 template <typename T, typename B>
 T
-fbm<T,B>::eval (T x, T y) const {
+fbm<T,B>::operator() (T x, T y) const {
     T total = 0;
     T f     = this->frequency;
     T a     = 1;
     T a_sum = 0;
 
     for (size_t i = 0; i < this->octaves; ++i) {
-        total += basis.eval (x * f, y * f) * a;
+        total += basis (x * f, y * f) * a;
 
         f *= 2;
 
@@ -139,7 +141,7 @@ musgrave<T,B>::musgrave ()
 //-----------------------------------------------------------------------------
 template <typename T, typename B>
 T
-musgrave<T,B>::eval (T x, T y) const {
+musgrave<T,B>::operator() (T x, T y) const {
     T total     = 0;
     T f         = this->frequency;
     T a         = 1;
@@ -150,7 +152,7 @@ musgrave<T,B>::eval (T x, T y) const {
 
     T signal;
 
-    signal  = basis.eval (x * f, y * f);
+    signal  = basis (x * f, y * f);
     signal  = std::fabs (signal);
     signal  = offset - signal;
     signal *= signal;
@@ -163,7 +165,7 @@ musgrave<T,B>::eval (T x, T y) const {
         weight = signal * gain;
         weight = limit (weight, 0, 1);
 
-        signal = basis.eval (x * f, y * f);
+        signal = basis (x * f, y * f);
         signal = std::fabs (signal);
         signal = offset - signal;
         signal *= signal;

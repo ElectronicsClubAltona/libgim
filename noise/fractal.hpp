@@ -34,8 +34,7 @@ namespace util {
             T frequency;
             T lacunarity;
 
-            T operator() (T x, T y) const { return eval (x, y); };
-            virtual T eval (T x, T y) const = 0;
+            virtual T operator() (T x, T y) const = 0;
         };
 
 
@@ -51,7 +50,7 @@ namespace util {
             fbm ();
 
             B basis;
-            virtual T eval (T x, T y) const;
+            virtual T operator() (T x, T y) const override;
         };
 
 
@@ -67,7 +66,7 @@ namespace util {
             musgrave ();
 
             B basis;
-            virtual T eval (T x, T y) const;
+            virtual T operator() (T x, T y) const override;
         };
     }
 }
