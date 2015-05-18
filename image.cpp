@@ -24,6 +24,9 @@
 #include <fstream>
 
 
+using util::image::buffer;
+
+
 //-----------------------------------------------------------------------------
 struct box {
     static constexpr float support = 0.5f;
@@ -125,7 +128,7 @@ util::image::buffer<T>::buffer (size_t _w, size_t _h, size_t _s):
     w (_w),
     h (_h),
     s (_s),
-    data (std::make_unique<T[]> (_w * _s))
+    m_data (std::make_unique<T[]> (_w * _s))
 {
     CHECK_NEQ (w * h, 0);
     CHECK_GE (s, w);
@@ -148,7 +151,7 @@ util::image::buffer<T>::buffer (size_t _w,
     w (_w),
     h (_h),
     s (_s),
-    data (std::move (_data))
+    m_data (std::move (_data))
 {
     CHECK_NEQ (w * h, 0);
     CHECK_GE (s, w);
@@ -170,7 +173,7 @@ template <typename T>
 void
 util::image::buffer<T>::fill (const T v)
 {
-    std::fill (data.get (), data.get () + w * s, v);
+    std::fill (begin (), end (), v);
 }
 
 
@@ -191,12 +194,7 @@ util::image::buffer<T>::clone (void) const
 {
     auto out = alloc<U> ();
 
-    std::transform (data.get (),
-                    data.get () + w * s,
-                    out.data.get (),
-                    [] (auto v) {
-        return rescale<T,U> (v);
-    });
+    std::transform (begin (), end (), out.begin (), renormalise<T,U>);
 
     return out;
 }
@@ -250,13 +248,13 @@ util::image::buffer<T>::downsample (float factor) const
                     int y = int (limit (o_y + s_y - 0.5f, 0, src.h));
 
                     // Collection the contribution
-                    v += m_ * src.data[y * src.s + x];
+                    v += m_ * src.m_data[y * src.s + x];
                     m += m_;
                 }
 
             CHECK_NEZ (m);
 
-            dst.data[d_y * dst.s + d_x] = uint8_t (v / m);
+            dst.m_data[d_y * dst.s + d_x] = uint8_t (v / m);
         }
 
     return dst;
@@ -264,6 +262,60 @@ util::image::buffer<T>::downsample (float factor) const
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
+T*
+buffer<T>::data (void)
+{
+    return begin ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+T*
+buffer<T>::begin (void)
+{
+    return m_data.get ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+T*
+buffer<T>::end (void)
+{
+    return begin () + h * s;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+const T*
+buffer<T>::data (void) const
+{
+    return begin ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+const T*
+buffer<T>::begin (void) const
+{
+    return m_data.get ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+const T*
+buffer<T>::end (void) const
+{
+    return begin () + h * s;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 // HACK: This does not support the full header structure with any robustness.
 // In particular it will abort when it sees a comment. If you want better
 // support use waif, or port its implementation.
@@ -293,7 +345,7 @@ util::pgm::read (const boost::filesystem::path &path)
     util::image::buffer<uint8_t> out (width, height);
 
     CHECK_EQ (out.w, out.s);
-    std::copy (raw.begin () + cooked.tellg () - 1, raw.end (), out.data.get ());
+    std::copy (raw.begin () + cooked.tellg () - 1, raw.end (), out.begin ());
 
     return out;
 }
@@ -335,7 +387,7 @@ void
 util::pgm::write (const util::image::buffer<uint8_t> &src,
                   const boost::filesystem::path &path)
 {
-    write (src.data.get (), src.w, src.h, src.s, path);
+    write (src.begin (), src.w, src.h, src.s, path);
 }
 
 

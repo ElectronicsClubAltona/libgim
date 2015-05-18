@@ -50,7 +50,16 @@ namespace util {
             size_t h;
             size_t s;
 
-            std::unique_ptr<T[]> data;
+            T* begin (void);
+            T* end   (void);
+            T* data  (void);
+
+            const T* begin (void) const;
+            const T* end   (void) const;
+            const T* data  (void) const;
+
+        private:
+            std::unique_ptr<T[]> m_data;
         };
     }
 
