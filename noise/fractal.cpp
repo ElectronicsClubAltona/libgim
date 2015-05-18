@@ -55,7 +55,7 @@ template <typename B>
 util::noise::fbm<B>::fbm (unsigned _octaves,
                           double   _frequency,
                           double   _lacunarity,
-                          basis::seed_t _seed):
+                          seed_t   _seed):
     fractal (_octaves, _frequency, _lacunarity),
     basis (_seed)
 { ; }
@@ -90,11 +90,11 @@ util::noise::fbm<B>::eval (double x, double y) const {
 
 
 //-----------------------------------------------------------------------------
-template struct util::noise::fbm<util::noise::cellular>;
-template struct util::noise::fbm<util::noise::gradient<util::lerp::linear>>;
-template struct util::noise::fbm<util::noise::gradient<util::lerp::quintic>>;
-template struct util::noise::fbm<util::noise::value<util::lerp::linear>>;
-template struct util::noise::fbm<util::noise::value<util::lerp::quintic>>;
+template struct util::noise::fbm<util::noise::cellular<double>>;
+template struct util::noise::fbm<util::noise::gradient<double,util::lerp::linear>>;
+template struct util::noise::fbm<util::noise::gradient<double,util::lerp::quintic>>;
+template struct util::noise::fbm<util::noise::value<double,util::lerp::linear>>;
+template struct util::noise::fbm<util::noise::value<double,util::lerp::quintic>>;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ template <typename B>
 util::noise::musgrave<B>::musgrave (unsigned _octaves,
                                     double   _frequency,
                                     double   _lacunarity,
-                                    basis::seed_t _seed):
+                                    seed_t   _seed):
     fractal (_octaves, _frequency, _lacunarity),
     basis (_seed)
 { ; }
@@ -156,9 +156,9 @@ util::noise::musgrave<B>::eval (double x, double y) const {
 
 
 //-----------------------------------------------------------------------------
-template struct util::noise::musgrave<util::noise::cellular>;
-template struct util::noise::musgrave<util::noise::gradient<util::lerp::linear>>;
-template struct util::noise::musgrave<util::noise::gradient<util::lerp::quintic>>;
-template struct util::noise::musgrave<util::noise::value<util::lerp::linear>>;
-template struct util::noise::musgrave<util::noise::value<util::lerp::quintic>>;
+template struct util::noise::musgrave<util::noise::cellular<double>>;
+template struct util::noise::musgrave<util::noise::gradient<double,util::lerp::linear>>;
+template struct util::noise::musgrave<util::noise::gradient<double,util::lerp::quintic>>;
+template struct util::noise::musgrave<util::noise::value<double,util::lerp::linear>>;
+template struct util::noise::musgrave<util::noise::value<double,util::lerp::quintic>>;
 

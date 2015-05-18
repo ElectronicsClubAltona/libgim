@@ -11,9 +11,9 @@ main (void)
     //using basis_t = util::noise::gradient<lerp_t>;
     //using noise_t = util::noise::fbm<basis_t>;
 
-    //using noise_t = util::noise::fbm<util::noise::gradient<util::lerp::quintic>>;
-    //using noise_t = util::noise::musgrave<util::noise::gradient<util::lerp::quintic>>;
-    using noise_t = util::noise::fbm<util::noise::cellular>;
+    using noise_t = util::noise::fbm<util::noise::gradient<double,util::lerp::quintic>>;
+    //using noise_t = util::noise::musgrave<util::noise::gradient<double,util::lerp::quintic>>;
+    //using noise_t = util::noise::fbm<util::noise::cellular<double>>;
 
     util::noise::fill (img, noise_t {});
     

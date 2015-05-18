@@ -34,93 +34,116 @@ using util::noise::cellular;
 // Generate a type from [-UNIT..UNIT]
 template <typename T>
 T
-generate (intmax_t x, intmax_t y, basis::seed_t);
-
-
-//-----------------------------------------------------------------------------
-template <>
-double
-generate (intmax_t x, intmax_t y, basis::seed_t seed) {
+generate (intmax_t x, intmax_t y, uint64_t seed)
+{
     size_t idx = util::noise::permute (x, y, seed);
-    return util::noise::LUT[idx];
+    return T(util::noise::LUT[idx]);
 }
 
 
 //-----------------------------------------------------------------------------
 template <>
 util::vector2d
-generate (intmax_t x, intmax_t y, basis::seed_t seed) {
+generate (intmax_t x, intmax_t y, uint64_t seed)
+{
     auto u = util::noise::permute (x, y, seed);
     auto v = util::noise::permute (u ^ seed);
 
-    return util::vector2d (util::noise::LUT[u], util::noise::LUT[v]);
+    return {
+        util::noise::LUT[u],
+        util::noise::LUT[v]
+    };
+}
+
+//-----------------------------------------------------------------------------
+template <>
+util::vector2f
+generate (intmax_t x, intmax_t y, uint64_t seed)
+{
+    auto u = util::noise::permute (x, y, seed);
+    auto v = util::noise::permute (u ^ seed);
+
+    return {
+        float (util::noise::LUT[u]),
+        float (util::noise::LUT[v])
+    };
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-basis::basis (seed_t _seed):
+template <typename T>
+basis<T>::basis (seed_t _seed):
     seed (_seed)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-basis::basis ():
+template <typename T>
+basis<T>::basis ():
     seed (util::random<seed_t> ())
 { ; }
 
 
 //-----------------------------------------------------------------------------
-basis::~basis ()
+template <typename T>
+basis<T>::~basis ()
 { ; }
 
 
 //-----------------------------------------------------------------------------
-double
-basis::eval (double, double) const
+template <typename T>
+T
+basis<T>::eval (T, T) const
 { unreachable (); }
 
 
+//-----------------------------------------------------------------------------
+namespace util { namespace noise {
+    template struct basis<float>;
+    template struct basis<double>;
+} }
+
 
 ///////////////////////////////////////////////////////////////////////////////
-template <util::noise::lerp_t<double> L>
-value<L>::value (seed_t _seed):
-    basis (_seed)
+template <typename T, util::noise::lerp_t<T> L>
+value<T,L>::value (seed_t _seed):
+    basis<T> (_seed)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_t<double> L>
-value<L>::value ()
+template <typename T, util::noise::lerp_t<T> L>
+value<T,L>::value ()
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_t<double> L>
-util::range<double>
-value<L>::bounds (void) const
-    { return { -1.0, 1.0 }; }
+template <typename T, util::noise::lerp_t<T> L>
+util::range<T>
+value<T,L>::bounds (void) const
+    { return { -1, 1 }; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_t<double> L>
-double
-value<L>::eval (double x, double y) const {
+template <typename T, util::noise::lerp_t<T> L>
+T
+value<T,L>::eval (T x, T y) const {
     intmax_t x_int = static_cast<intmax_t> (x);
     intmax_t y_int = static_cast<intmax_t> (y);
-    double   x_fac = x - x_int;
-    double   y_fac = y - y_int;
+    T x_fac = x - x_int;
+    T y_fac = y - y_int;
 
     // Shift the coordinate system down a little to ensure we get unit weights
     // for the lerp. It's better to do this than abs the fractional portion so
     // we don't get reflections along the origin.
-    if (x < 0) { x_fac = 1.0 + x_fac; x_int -= 1; }
-    if (y < 0) { y_fac = 1.0 + y_fac; y_int -= 1; }
+    if (x < 0) { x_fac = 1 + x_fac; x_int -= 1; }
+    if (y < 0) { y_fac = 1 + y_fac; y_int -= 1; }
 
     // Generate the four corner values
-    double p0 = generate<double> (x_int,     y_int,     this->seed);
-    double p1 = generate<double> (x_int + 1, y_int,     this->seed);
-    double p2 = generate<double> (x_int,     y_int + 1, this->seed);
-    double p3 = generate<double> (x_int + 1, y_int + 1, this->seed);
+    T p0 = generate<T> (x_int,     y_int,     this->seed);
+    T p1 = generate<T> (x_int + 1, y_int,     this->seed);
+    T p2 = generate<T> (x_int,     y_int + 1, this->seed);
+    T p3 = generate<T> (x_int + 1, y_int + 1, this->seed);
 
     // Interpolate on one dimension, then the other.
     return L (L (p0, p1, x_fac),
@@ -130,62 +153,64 @@ value<L>::eval (double x, double y) const {
 
 
 //-----------------------------------------------------------------------------
-namespace util {
-    namespace noise {
-        template struct value<util::lerp::linear>;
-        template struct value<util::lerp::cubic>;
-        template struct value<util::lerp::quintic>;
-    }
-}
+namespace util { namespace noise {
+        template struct value<float, lerp::linear>;
+        template struct value<float, lerp::cubic>;
+        template struct value<float, lerp::quintic>;
+
+        template struct value<double, lerp::linear>;
+        template struct value<double, lerp::cubic>;
+        template struct value<double, lerp::quintic>;
+} }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <util::noise::lerp_t<double> L>
-gradient<L>::gradient (seed_t _seed):
-    basis (_seed)
+template <typename T, util::noise::lerp_t<T> L>
+gradient<T,L>::gradient (seed_t _seed):
+    basis<T> (_seed)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_t<double> L>
-gradient<L>::gradient ()
+template <typename T, util::noise::lerp_t<T> L>
+gradient<T,L>::gradient ()
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_t<double> L>
-util::range<double>
-gradient<L>::bounds (void) const
-    { return { -sqrt(2.0) / 2.0, sqrt (2.0) / 2.0 }; }
+template <typename T, util::noise::lerp_t<T> L>
+util::range<T>
+gradient<T,L>::bounds (void) const
+    { return { -std::sqrt(T{2}) / 2, std::sqrt (T{2}) / 2 }; }
 
 
 //-----------------------------------------------------------------------------
-template <util::noise::lerp_t<double> L>
-double
-gradient<L>::eval (double x, double y) const {
+template <typename T, util::noise::lerp_t<T> L>
+T
+gradient<T,L>::eval (T x, T y) const {
     intmax_t x_int = static_cast<intmax_t> (x);
     intmax_t y_int = static_cast<intmax_t> (y);
-    double   x_fac = x - x_int;
-    double   y_fac = y - y_int;
+    T x_fac = x - x_int;
+    T y_fac = y - y_int;
 
     // Shift the coordinate system down a little to ensure we get unit weights
     // for the lerp. It's better to do this than abs the fractional portion so
     // we don't get reflections along the origin.
-    if (x < 0) { x_fac = 1.0 + x_fac; x_int -= 1; }
-    if (y < 0) { y_fac = 1.0 + y_fac; y_int -= 1; }
+    if (x < 0) { x_fac = 1 + x_fac; x_int -= 1; }
+    if (y < 0) { y_fac = 1 + y_fac; y_int -= 1; }
 
     // Generate the four corner values. It's not strictly necessary to
     // normalise the values, but we get a more consistent and visually
     // appealing range of outputs with normalised values.
-    vector2d p0 = generate<vector2d> (x_int,     y_int,       this->seed).normalise ();
-    vector2d p1 = generate<vector2d> (x_int + 1, y_int,       this->seed).normalise ();
-    vector2d p2 = generate<vector2d> (x_int,     y_int + 1,   this->seed).normalise ();
-    vector2d p3 = generate<vector2d> (x_int + 1, y_int + 1,   this->seed).normalise ();
+    auto p0 = generate<vector<2,T>> (x_int,     y_int,       this->seed).normalise ();
+    auto p1 = generate<vector<2,T>> (x_int + 1, y_int,       this->seed).normalise ();
+    auto p2 = generate<vector<2,T>> (x_int,     y_int + 1,   this->seed).normalise ();
+    auto p3 = generate<vector<2,T>> (x_int + 1, y_int + 1,   this->seed).normalise ();
 
-    double  v0 = p0.x *        x_fac  + p0.y *  y_fac;
-    double  v1 = p1.x * (x_fac - 1.0) + p1.y *  y_fac;
-    double  v2 = p2.x *        x_fac  + p2.y * (y_fac - 1.0);
-    double  v3 = p3.x * (x_fac - 1.0) + p3.y * (y_fac - 1.0);
+    T v0 = p0.x *      x_fac  + p0.y *  y_fac;
+    T v1 = p1.x * (x_fac - 1) + p1.y *  y_fac;
+    T v2 = p2.x *      x_fac  + p2.y * (y_fac - 1);
+    T v3 = p3.x * (x_fac - 1) + p3.y * (y_fac - 1);
 
     return L (L (v0, v1, x_fac),
               L (v2, v3, x_fac),
@@ -196,45 +221,51 @@ gradient<L>::eval (double x, double y) const {
 //-----------------------------------------------------------------------------
 namespace util {
     namespace noise {
-        template struct gradient<util::lerp::linear>;
-        template struct gradient<util::lerp::cubic>;
-        template struct gradient<util::lerp::quintic>;
+        template struct gradient<float, lerp::linear>;
+        template struct gradient<float, lerp::cubic>;
+        template struct gradient<float, lerp::quintic>;
+
+        template struct gradient<double, lerp::linear>;
+        template struct gradient<double, lerp::cubic>;
+        template struct gradient<double, lerp::quintic>;
     }
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-cellular::cellular (seed_t _seed):
-    basis (_seed)
+template <typename T>
+cellular<T>::cellular (seed_t _seed):
+    basis<T> (_seed)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-cellular::cellular ()
+template <typename T>
+cellular<T>::cellular ()
 { ; }
 
 
 //-----------------------------------------------------------------------------
-util::range<double>
-cellular::bounds (void) const
+template <typename T>
+util::range<T>
+cellular<T>::bounds (void) const
     { return { 0.0, 1.5 }; }
 
 
 //-----------------------------------------------------------------------------
-double
-cellular::eval (double x, double y) const {
-    using util::point2d;
-
+template <typename T>
+T
+cellular<T>::eval (T x, T y) const {
     intmax_t x_int = static_cast<intmax_t> (x);
     intmax_t y_int = static_cast<intmax_t> (y);
-    double   x_fac = x - x_int;
-    double   y_fac = y - y_int;
+    T x_fac = x - x_int;
+    T y_fac = y - y_int;
 
     // Generate the four corner values. It's not strictly necessary to
     // normalise the values, but we get a more consistent and visually
     // appealing range of outputs with normalised values.
-    if (x < 0) { x_fac = 1.0 + x_fac; x_int -= 1; }
-    if (y < 0) { y_fac = 1.0 + y_fac; y_int -= 1; }
+    if (x < 0) { x_fac = 1 + x_fac; x_int -= 1; }
+    if (y < 0) { y_fac = 1 + y_fac; y_int -= 1; }
 
     // +---+---+---+
     // | 0 | 1 | 2 |
@@ -244,19 +275,19 @@ cellular::eval (double x, double y) const {
     // | 6 | 7 | 8 |
     // +---+---+---+
 
-    point2d centre = { x_fac, y_fac };
-    double distances[9] = { std::numeric_limits<double>::quiet_NaN () };
-    double *cursor = distances;
+    point<2,T> centre = { x_fac, y_fac };
+    T distances[9] = { std::numeric_limits<T>::quiet_NaN () };
+    T *cursor = distances;
 
     for (signed y_off = -1; y_off <= 1 ; ++y_off)
         for (signed x_off = -1; x_off <= 1; ++x_off) {
-            auto pos = point2d (double (x_off), double (y_off));
-            auto off = generate<vector2d> (x_int + x_off, y_int + y_off, this->seed);
-            off += 1.;
-            off /= 2.;
+            auto pos = point<2,T> (T (x_off), T (y_off));
+            auto off = generate<vector<2,T>> (x_int + x_off, y_int + y_off, this->seed);
+            off += T{1};
+            off /= T{2};
 
-            CHECK (off.x >= 0 && off.x <= 1.0);
-            CHECK (off.y >= 0 && off.y <= 1.0);
+            CHECK (off.x >= 0 && off.x <= 1);
+            CHECK (off.y >= 0 && off.y <= 1);
 
             pos += off;
             *cursor++ = pos.distance2 (centre);
@@ -267,3 +298,10 @@ cellular::eval (double x, double y) const {
     CHECK (bounds ().contains (distances[0]));
     return distances[0];
 }
+
+
+//-----------------------------------------------------------------------------
+namespace util { namespace noise {
+    template struct cellular<float>;
+    template struct cellular<double>;
+} }

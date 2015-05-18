@@ -25,6 +25,7 @@ namespace util {
     namespace noise {
         template <typename T> using lerp_t = T (*)(T,T,T);
 
+        template <typename T>
         struct basis {
             typedef uint64_t seed_t;
 
@@ -34,40 +35,47 @@ namespace util {
 
             seed_t seed;
 
-            virtual range<double> bounds (void) const = 0;
-            virtual double eval (double x, double y) const = 0;
+            virtual range<T> bounds (void) const = 0;
+            virtual T eval (T x, T y) const = 0;
         };
 
 
         /// Perlin: single value per grid space
-        template <lerp_t<double>>
-        struct value : public basis {
+        template <typename T, lerp_t<T>>
+        struct value : public basis<T> {
+            using seed_t = typename basis<T>::seed_t;
+
             value (seed_t);
             value ();
 
-            virtual range<double> bounds (void) const;
-            virtual double eval (double x, double y) const;
+            virtual range<T> bounds (void) const override;
+            virtual T eval (T x, T y) const override;
         };
 
 
         /// Perlin: interpolated value across each grid space
-        template <lerp_t<double>L>
-        struct gradient : public basis {
+        template <typename T, lerp_t<T> L>
+        struct gradient : public basis<T> {
+            using seed_t = typename basis<T>::seed_t;
+
             gradient (seed_t);
             gradient ();
 
-            virtual range<double> bounds (void) const;
-            virtual double eval (double x, double y) const;
+            virtual range<T> bounds (void) const override;
+            virtual T eval (T x, T y) const override;
         };
 
 
         /// Cellular/Worley/Vornoi of order-1
-        struct cellular : public basis {
+        template <typename T>
+        struct cellular : public basis<T> {
+            using seed_t = typename basis<T>::seed_t;
+
             cellular (seed_t);
             cellular ();
 
-            virtual range<double> bounds (void) const;
-            virtual double eval (double x, double y) const;
+            virtual range<T> bounds (void) const override;
+            virtual T eval (T x, T y) const override;
         };
     }
 }

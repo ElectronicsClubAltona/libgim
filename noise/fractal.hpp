@@ -41,10 +41,12 @@ namespace util {
         /// Fractal Brownian Motion summation.
         template <typename B>
         struct fbm : public fractal {
+            using seed_t = typename basis<double>::seed_t;
+
             fbm (unsigned octaves,
                  double frequency,
                  double lacunarity,
-                 basis::seed_t seed);
+                 seed_t seed);
             fbm ();
 
             B basis;
@@ -55,10 +57,12 @@ namespace util {
         /// Rigid Multifractal noise summation.
         template <typename B>
         struct musgrave : public fractal {
+            using seed_t = typename basis<double>::seed_t;
+
             musgrave (unsigned octaves,
                       double frequency,
                       double lacunarity,
-                      basis::seed_t seed);
+                      seed_t seed);
             musgrave ();
 
             B basis;
