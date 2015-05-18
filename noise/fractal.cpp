@@ -21,10 +21,16 @@
 #include <algorithm>
 
 
+using util::noise::fractal;
+using util::noise::fbm;
+using util::noise::musgrave;
+
+
 ///////////////////////////////////////////////////////////////////////////////
-util::noise::fractal::fractal (unsigned      _octaves,
-                               double        _frequency,
-                               double        _lacunarity):
+template <typename T>
+fractal<T>::fractal (unsigned _octaves,
+                     T        _frequency,
+                     T        _lacunarity):
     octaves (_octaves),
     frequency (_frequency),
     lacunarity (_lacunarity)
@@ -32,54 +38,64 @@ util::noise::fractal::fractal (unsigned      _octaves,
 
 
 //-----------------------------------------------------------------------------
-util::noise::fractal::fractal ():
+template <typename T>
+fractal<T>::fractal ():
     octaves    (1),
-    frequency  (0.1),
-    lacunarity (0.6)
+    frequency  (T(0.1)),
+    lacunarity (T(0.6))
 { ; }
 
 
 //-----------------------------------------------------------------------------
-util::noise::fractal::~fractal ()
+template <typename T>
+fractal<T>::~fractal ()
 { ; }
 
 
 //-----------------------------------------------------------------------------
-double
-util::noise::fractal::eval (double, double) const
+template <typename T>
+T
+fractal<T>::eval (T, T) const
     { unreachable (); }
 
 
+//-----------------------------------------------------------------------------
+namespace util { namespace noise {
+    template struct fractal<float>;
+    template struct fractal<double>;
+} }
+
+
 ///////////////////////////////////////////////////////////////////////////////
-template <typename B>
-util::noise::fbm<B>::fbm (unsigned _octaves,
-                          double   _frequency,
-                          double   _lacunarity,
-                          seed_t   _seed):
-    fractal (_octaves, _frequency, _lacunarity),
+template <typename T, typename B>
+fbm<T,B>::fbm (unsigned _octaves,
+               T        _frequency,
+               T        _lacunarity,
+               seed_t   _seed):
+    fractal<T> (_octaves, _frequency, _lacunarity),
     basis (_seed)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <typename B>
-util::noise::fbm<B>::fbm ()
+template <typename T, typename B>
+fbm<T,B>::fbm ()
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <typename B>
-double
-util::noise::fbm<B>::eval (double x, double y) const {
-    double total = 0.0;
-    double f     = this->frequency;
-    double a     = 1.0;
-    double a_sum = 0.0;
+template <typename T, typename B>
+T
+fbm<T,B>::eval (T x, T y) const {
+    T total = 0;
+    T f     = this->frequency;
+    T a     = 1;
+    T a_sum = 0;
 
     for (size_t i = 0; i < this->octaves; ++i) {
         total += basis.eval (x * f, y * f) * a;
 
-        f *= 2.0;
+        f *= 2;
 
         a_sum += a;
         a *= this->lacunarity;
@@ -90,65 +106,71 @@ util::noise::fbm<B>::eval (double x, double y) const {
 
 
 //-----------------------------------------------------------------------------
-template struct util::noise::fbm<util::noise::cellular<double>>;
-template struct util::noise::fbm<util::noise::gradient<double,util::lerp::linear>>;
-template struct util::noise::fbm<util::noise::gradient<double,util::lerp::quintic>>;
-template struct util::noise::fbm<util::noise::value<double,util::lerp::linear>>;
-template struct util::noise::fbm<util::noise::value<double,util::lerp::quintic>>;
+template struct util::noise::fbm<float, util::noise::cellular<float>>;
+template struct util::noise::fbm<float, util::noise::gradient<float,util::lerp::linear>>;
+template struct util::noise::fbm<float, util::noise::gradient<float,util::lerp::quintic>>;
+template struct util::noise::fbm<float, util::noise::value<float,util::lerp::linear>>;
+template struct util::noise::fbm<float, util::noise::value<float,util::lerp::quintic>>;
+
+template struct util::noise::fbm<double, util::noise::cellular<double>>;
+template struct util::noise::fbm<double, util::noise::gradient<double,util::lerp::linear>>;
+template struct util::noise::fbm<double, util::noise::gradient<double,util::lerp::quintic>>;
+template struct util::noise::fbm<double, util::noise::value<double,util::lerp::linear>>;
+template struct util::noise::fbm<double, util::noise::value<double,util::lerp::quintic>>;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename B>
-util::noise::musgrave<B>::musgrave (unsigned _octaves,
-                                    double   _frequency,
-                                    double   _lacunarity,
-                                    seed_t   _seed):
-    fractal (_octaves, _frequency, _lacunarity),
+template <typename T, typename B>
+musgrave<T,B>::musgrave (unsigned _octaves,
+                         T        _frequency,
+                         T        _lacunarity,
+                         seed_t   _seed):
+    fractal<T> (_octaves, _frequency, _lacunarity),
     basis (_seed)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <typename B>
-util::noise::musgrave<B>::musgrave ()
+template <typename T, typename B>
+musgrave<T,B>::musgrave ()
 { ; }
 
 
 //-----------------------------------------------------------------------------
-template <typename B>
-double
-util::noise::musgrave<B>::eval (double x, double y) const {
-    double total     = 0.0;
-    double f         = this->frequency;
-    double a         = 1.0;
+template <typename T, typename B>
+T
+musgrave<T,B>::eval (T x, T y) const {
+    T total     = 0;
+    T f         = this->frequency;
+    T a         = 1;
 
-    double weight    = 1.0;
-    double offset    = 1.0;
-    double gain      = 2.0;
+    T weight    = 1;
+    T offset    = 1;
+    T gain      = 2;
 
-    double signal;
+    T signal;
 
     signal  = basis.eval (x * f, y * f);
-    signal  = fabs (signal);
+    signal  = std::fabs (signal);
     signal  = offset - signal;
     signal *= signal;
     total   = signal;
 
     for (size_t i = 1; i < this->octaves; ++i) {
-        f         *= 2.0;
-        a         *= this->lacunarity;
+        f *= 2;
+        a *= this->lacunarity;
 
         weight = signal * gain;
-        weight = max (0.0, min (1.0, weight));
+        weight = limit (weight, 0, 1);
 
         signal = basis.eval (x * f, y * f);
-        signal = fabs (signal);
+        signal = std::fabs (signal);
         signal = offset - signal;
         signal *= signal;
 
         signal *= weight;
         total += signal * a;
-        total  = min (1.0, max (0.0, total));
+        total  = limit (total, 0, 1);
     }
 
     return total;
@@ -156,9 +178,15 @@ util::noise::musgrave<B>::eval (double x, double y) const {
 
 
 //-----------------------------------------------------------------------------
-template struct util::noise::musgrave<util::noise::cellular<double>>;
-template struct util::noise::musgrave<util::noise::gradient<double,util::lerp::linear>>;
-template struct util::noise::musgrave<util::noise::gradient<double,util::lerp::quintic>>;
-template struct util::noise::musgrave<util::noise::value<double,util::lerp::linear>>;
-template struct util::noise::musgrave<util::noise::value<double,util::lerp::quintic>>;
+template struct util::noise::musgrave<float, util::noise::cellular<float>>;
+template struct util::noise::musgrave<float, util::noise::gradient<float,util::lerp::linear>>;
+template struct util::noise::musgrave<float, util::noise::gradient<float,util::lerp::quintic>>;
+template struct util::noise::musgrave<float, util::noise::value<float,util::lerp::linear>>;
+template struct util::noise::musgrave<float, util::noise::value<float,util::lerp::quintic>>;
+
+template struct util::noise::musgrave<double, util::noise::cellular<double>>;
+template struct util::noise::musgrave<double, util::noise::gradient<double,util::lerp::linear>>;
+template struct util::noise::musgrave<double, util::noise::gradient<double,util::lerp::quintic>>;
+template struct util::noise::musgrave<double, util::noise::value<double,util::lerp::linear>>;
+template struct util::noise::musgrave<double, util::noise::value<double,util::lerp::quintic>>;
 

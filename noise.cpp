@@ -24,17 +24,21 @@
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
 void
-util::noise::fill (image::buffer<float> &pixels,
-                   const util::noise::fractal &gen)
+util::noise::fill (image::buffer<T> &pixels,
+                   const util::noise::fractal<T> &gen)
 {
     size_t h = pixels.h, s = pixels.s, w = pixels.w;
-    float *data = pixels.data ();
+    T *data = pixels.data ();
 
     for (size_t y = 0; y < h; ++y)
         for (size_t x = 0; x < w; ++x)
-            data[y * s + x] = gen (double(x), double(y));
+            data[y * s + x] = gen (x, y);
 }
+
+template void util::noise::fill (image::buffer<float>&, const util::noise::fractal<float>&);
+template void util::noise::fill (image::buffer<double>&, const util::noise::fractal<double>&);
 
 
 //-----------------------------------------------------------------------------
@@ -42,7 +46,7 @@ void
 util::noise::image2d (uint8_t *restrict pixels,
                       size_t            width,
                       size_t            height,
-                      const util::noise::fractal &p) {
+                      const util::noise::fractal<float> &p) {
     for (size_t y = 0; y < height; ++y)
         for (size_t x = 0; x < width; ++x) {
             double v = p.eval (x, y);

@@ -27,9 +27,10 @@
 
 namespace util {
     namespace noise {
-        void fill (image::buffer<float>&, const util::noise::fractal&);
+        template <typename T>
+        void fill (image::buffer<T>&, const util::noise::fractal<T>&);
 
-        void image2d (uint8_t *restrict pixels, size_t width, size_t height, const util::noise::fractal&);
+        void image2d (uint8_t *restrict pixels, size_t width, size_t height, const util::noise::fractal<float>&);
     }
 }
 

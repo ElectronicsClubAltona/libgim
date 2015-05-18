@@ -22,51 +22,52 @@
 namespace util {
     namespace noise {
         /// Base noise summation
+        template <typename T>
         struct fractal {
-            fractal (unsigned      octaves,
-                     double        frequency,
-                     double        lacunarity);
+            fractal (unsigned octaves,
+                     T frequency,
+                     T lacunarity);
             fractal ();
             virtual ~fractal ();
 
             unsigned octaves;
-            double   frequency;
-            double   lacunarity;
+            T frequency;
+            T lacunarity;
 
-            virtual double operator() (double x, double y) const { return eval (x, y); };
-            virtual double eval (double x, double y) const = 0;
+            T operator() (T x, T y) const { return eval (x, y); };
+            virtual T eval (T x, T y) const = 0;
         };
 
 
         /// Fractal Brownian Motion summation.
-        template <typename B>
-        struct fbm : public fractal {
-            using seed_t = typename basis<double>::seed_t;
+        template <typename T, typename B>
+        struct fbm : public fractal<T> {
+            using seed_t = typename basis<T>::seed_t;
 
             fbm (unsigned octaves,
-                 double frequency,
-                 double lacunarity,
+                 T frequency,
+                 T lacunarity,
                  seed_t seed);
             fbm ();
 
             B basis;
-            virtual double eval (double x, double y) const;
+            virtual T eval (T x, T y) const;
         };
 
 
         /// Rigid Multifractal noise summation.
-        template <typename B>
-        struct musgrave : public fractal {
-            using seed_t = typename basis<double>::seed_t;
+        template <typename T, typename B>
+        struct musgrave : public fractal<T> {
+            using seed_t = typename basis<T>::seed_t;
 
             musgrave (unsigned octaves,
-                      double frequency,
-                      double lacunarity,
+                      T frequency,
+                      T lacunarity,
                       seed_t seed);
             musgrave ();
 
             B basis;
-            virtual double eval (double x, double y) const;
+            virtual T eval (T x, T y) const;
         };
     }
 }
