@@ -71,6 +71,15 @@ UTIL_FILES   =		\
     hash/md4.hpp	\
     hash/md5.cpp	\
     hash/md5.hpp	\
+    hash/murmur.hpp	\
+    hash/murmur/common.cpp	\
+    hash/murmur/common.hpp	\
+    hash/murmur/murmur1.cpp	\
+    hash/murmur/murmur1.hpp	\
+    hash/murmur/murmur2.cpp	\
+    hash/murmur/murmur2.hpp	\
+    hash/murmur/murmur3.cpp	\
+    hash/murmur/murmur3.hpp	\
     hash/pbkdf1.cpp	\
     hash/pbkdf1.hpp	\
     hash/pbkdf2.cpp	\
@@ -277,6 +286,7 @@ TEST_BIN = 			\
     test/extent			\
     test/fixed			\
     test/float			\
+    test/hash/murmur		\
     test/hmac			\
     test/hotp			\
     test/hton			\
