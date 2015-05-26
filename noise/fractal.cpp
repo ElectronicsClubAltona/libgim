@@ -25,6 +25,7 @@
 using util::noise::fractal;
 using util::noise::fbm;
 using util::noise::rmf;
+using util::noise::hmf;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -167,7 +168,7 @@ template <typename T, typename B>
 T
 rmf<T,B>::operator() (T x, T y) const {
     const T offset = 1;
-    const T H = 1;
+    const T H = 1.f;
 
     T exponents[octaves];
     for (size_t i = 0; i < octaves; ++i)
@@ -220,3 +221,54 @@ template struct util::noise::rmf<double, util::noise::gradient<double,util::lerp
 template struct util::noise::rmf<double, util::noise::value<double,util::lerp::linear>>;
 template struct util::noise::rmf<double, util::noise::value<double,util::lerp::quintic>>;
 
+
+//-----------------------------------------------------------------------------
+template <typename T, typename B>
+hmf<T,B>::hmf ():
+    H (0.25f),
+    octaves (6),
+    frequency (0.1f),
+    lacunarity (2),
+    offset (0.7f),
+    amplitude (1),
+    gain (1)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+template <typename T, typename B>
+T
+hmf<T,B>::operator() (T x, T y) const
+{
+    T exponents[octaves];
+    for (size_t i = 0; i < octaves; ++i)
+        exponents[i] = std::pow (std::pow (lacunarity, float (i)), -H);
+
+    T result = 0;
+    T signal = 0;
+    T weight = 1;
+
+    x *= frequency;
+    y *= frequency;
+
+    for (size_t i = 0; i < octaves; ++i) {
+        signal = (basis (x, y) + offset) * exponents[i];
+        result += weight * signal;
+
+        weight *= gain * signal;
+        if (weight > 1)
+            weight = 1;
+
+        x *= lacunarity;
+        y *= lacunarity;
+    }
+
+    return result;
+}
+
+
+template struct util::noise::hmf<float, util::noise::cellular<float>>;
+template struct util::noise::hmf<float, util::noise::gradient<float,util::lerp::linear>>;
+template struct util::noise::hmf<float, util::noise::gradient<float,util::lerp::quintic>>;
+template struct util::noise::hmf<float, util::noise::value<float,util::lerp::linear>>;
+template struct util::noise::hmf<float, util::noise::value<float,util::lerp::quintic>>;

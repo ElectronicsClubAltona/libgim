@@ -93,11 +93,11 @@ namespace util {
             static constexpr T DEFAULT_GAIN = 2;
 
             rmf (unsigned octaves,
-                      T frequency,
-                      T lacunarity,
-                      T amplitude,
-                      T gain,
-                      seed_t seed);
+                 T frequency,
+                 T lacunarity,
+                 T amplitude,
+                 T gain,
+                 seed_t seed);
             rmf ();
 
             unsigned octaves;
@@ -109,6 +109,30 @@ namespace util {
             T gain;
 
             B basis;
+            virtual T operator() (T x, T y) const override;
+        };
+
+
+        ///////////////////////////////////////////////////////////////////////
+        template <typename T, typename B>
+        struct hmf : public fractal<T> {
+            using seed_t = typename basis<T>::seed_t;
+
+            hmf ();
+
+            T H;
+            unsigned octaves;
+
+            T frequency;
+            T lacunarity;
+
+            T offset;
+
+            T amplitude;
+            T gain;
+
+            B basis;
+
             virtual T operator() (T x, T y) const override;
         };
     }
