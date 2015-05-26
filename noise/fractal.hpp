@@ -50,6 +50,12 @@ namespace util {
         struct fbm : public fractal<T> {
             using seed_t = typename basis<T>::seed_t;
 
+            static constexpr unsigned DEFAULT_OCTAVES = 8;
+            static constexpr T DEFAULT_FREQUENCY = T(0.1);
+            static constexpr T DEFAULT_LACUNARITY = 2;
+            static constexpr T DEFAULT_AMPLITUDE = 1;
+            static constexpr T DEFAULT_GAIN = 1 / T(2);
+
             fbm (unsigned octaves,
                  T frequency,
                  T lacunarity,
@@ -71,7 +77,7 @@ namespace util {
         };
 
 
-        /// Rigid Multifractal noise summation, based on Musgrave's algorithm
+        /// Rigid Multifractal summation, based on Musgrave's algorithm
         ///
         /// octaves: count of layers to be summed
         /// frequency: point scaling factor for the base octave
@@ -79,6 +85,12 @@ namespace util {
         template <typename T, typename B>
         struct rmf : public fractal<T> {
             using seed_t = typename basis<T>::seed_t;
+
+            static constexpr unsigned DEFAULT_OCTAVES = 5;
+            static constexpr T DEFAULT_FREQUENCY = T(1);
+            static constexpr T DEFAULT_LACUNARITY = 2;
+            static constexpr T DEFAULT_AMPLITUDE = 1;
+            static constexpr T DEFAULT_GAIN = 2;
 
             rmf (unsigned octaves,
                       T frequency,

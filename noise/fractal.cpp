@@ -88,7 +88,12 @@ fbm<T,B>::fbm (unsigned _octaves,
 //-----------------------------------------------------------------------------
 template <typename T, typename B>
 fbm<T,B>::fbm ():
-    fbm<T,B> (8, T(0.1), 2, 1, 1/T(2), rand ())
+    fbm<T,B> (DEFAULT_OCTAVES,
+              DEFAULT_FREQUENCY,
+              DEFAULT_LACUNARITY,
+              DEFAULT_AMPLITUDE,
+              DEFAULT_GAIN,
+              rand ())
 { ; }
 
 
@@ -148,7 +153,12 @@ rmf<T,B>::rmf (unsigned _octaves,
 //-----------------------------------------------------------------------------
 template <typename T, typename B>
 rmf<T,B>::rmf ():
-    rmf<T,B> (6, T(1), 2, 1, T(2), rand ())
+    rmf<T,B> (DEFAULT_OCTAVES,
+              DEFAULT_FREQUENCY,
+              DEFAULT_LACUNARITY,
+              DEFAULT_AMPLITUDE,
+              DEFAULT_GAIN,
+              rand ())
 { ; }
 
 
