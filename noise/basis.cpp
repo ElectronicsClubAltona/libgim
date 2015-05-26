@@ -21,6 +21,7 @@
 #include "../point.hpp"
 #include "../random.hpp"
 #include "../vector.hpp"
+#include "../hash/murmur/murmur2.hpp"
 
 #include <algorithm>
 
@@ -36,8 +37,15 @@ template <typename T>
 T
 generate (intmax_t x, intmax_t y, uint64_t seed)
 {
-    size_t idx = util::noise::permute (x, y, seed);
-    return T(util::noise::LUT[idx]);
+    using util::hash::murmur2::mix;
+
+    T v = mix (seed, mix (uint64_t (y), uint64_t (x))) & 0xffff;
+    v = v / T{0xffff} * 2 - 1;
+
+    CHECK_GE (v, T{0});
+    CHECK_LE (v, T{1});
+
+    return v;
 }
 
 
@@ -46,13 +54,20 @@ template <>
 util::vector2d
 generate (intmax_t x, intmax_t y, uint64_t seed)
 {
-    auto u = util::noise::permute (x, y, seed);
-    auto v = util::noise::permute (u ^ seed);
+    using util::hash::murmur2::mix;
 
-    return {
-        util::noise::LUT[u],
-        util::noise::LUT[v]
-    };
+    auto u = mix (seed, mix (uint64_t (x), uint64_t (y)));
+    auto v = mix (u, seed);
+
+    auto r = util::vector2d {
+        (u & 0xffff) / double{0xffff},
+        (v & 0xffff) / double{0xffff}
+    } * 2.0 - 1.0;
+
+    CHECK_GE (r, double{-1});
+    CHECK_LE (r, double{ 1});
+
+    return r;
 }
 
 //-----------------------------------------------------------------------------
@@ -60,13 +75,20 @@ template <>
 util::vector2f
 generate (intmax_t x, intmax_t y, uint64_t seed)
 {
-    auto u = util::noise::permute (x, y, seed);
-    auto v = util::noise::permute (u ^ seed);
+    using util::hash::murmur2::mix;
 
-    return {
-        float (util::noise::LUT[u]),
-        float (util::noise::LUT[v])
-    };
+    auto u = mix (seed, mix (uint64_t (x), uint64_t (y)));
+    auto v = mix (u, seed);
+
+    auto r = util::vector2f {
+        (u & 0xffff) / float{0xffff},
+        (v & 0xffff) / float{0xffff}
+    } * 2.f - 1.f;
+
+    CHECK_GE (r, float (-1));
+    CHECK_LE (r, float ( 1));
+
+    return r;
 }
 
 
