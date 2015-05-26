@@ -26,6 +26,7 @@ using util::noise::fractal;
 using util::noise::fbm;
 using util::noise::rmf;
 using util::noise::hmf;
+using util::noise::hetero;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -272,3 +273,58 @@ template struct util::noise::hmf<float, util::noise::gradient<float,util::lerp::
 template struct util::noise::hmf<float, util::noise::gradient<float,util::lerp::quintic>>;
 template struct util::noise::hmf<float, util::noise::value<float,util::lerp::linear>>;
 template struct util::noise::hmf<float, util::noise::value<float,util::lerp::quintic>>;
+
+
+//-----------------------------------------------------------------------------
+template <typename T, typename B>
+hetero<T,B>::hetero():
+    H (0.75f),
+    octaves (6),
+    frequency (0.1f),
+    lacunarity (2),
+    offset (0.7f),
+    amplitude (1),
+    gain (1)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+template <typename T, typename B>
+T
+hetero<T,B>::operator() (T x, T y) const
+{
+    T exponents[octaves];
+    for (size_t i = 0; i < octaves; ++i)
+        exponents[i] = std::pow (std::pow (lacunarity, float (i)), -H);
+
+    T result = 0;
+    T increment = 0;
+
+    x *= frequency;
+    y *= frequency;
+
+    result = basis (x, y) + offset;
+
+    x *= lacunarity;
+    y *= lacunarity;
+
+    for (size_t i = 0; i < octaves; ++i) {
+        increment  = basis (x, y) + offset;
+        increment *= exponents[i];
+        increment *= result;
+
+        result += increment;
+
+        x *= lacunarity;
+        y *= lacunarity;
+    }
+
+    return result;
+}
+
+
+template struct util::noise::hetero<float, util::noise::cellular<float>>;
+template struct util::noise::hetero<float, util::noise::gradient<float,util::lerp::linear>>;
+template struct util::noise::hetero<float, util::noise::gradient<float,util::lerp::quintic>>;
+template struct util::noise::hetero<float, util::noise::value<float,util::lerp::linear>>;
+template struct util::noise::hetero<float, util::noise::value<float,util::lerp::quintic>>;

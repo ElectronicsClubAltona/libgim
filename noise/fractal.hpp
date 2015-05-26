@@ -135,6 +135,31 @@ namespace util {
 
             virtual T operator() (T x, T y) const override;
         };
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /// Heterogeneous procedural terrain fucntion: stats by altitude method
+        template <typename T, typename B>
+        struct hetero : public fractal<T>  {
+            using seed_t = typename basis<T>::seed_t;
+
+            hetero ();
+
+            T H;
+            unsigned octaves;
+
+            T frequency;
+            T lacunarity;
+
+            T offset;
+
+            T amplitude;
+            T gain;
+
+            B basis;
+
+            virtual T operator() (T x, T y) const override;
+        };
     }
 }
 
