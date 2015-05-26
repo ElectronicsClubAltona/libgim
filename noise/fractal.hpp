@@ -24,21 +24,28 @@ namespace util {
         /// Base noise summation
         template <typename T>
         struct fractal {
-            fractal (unsigned octaves,
-                     T frequency,
-                     T lacunarity);
+            using seed_t = uint64_t;
+
+            fractal (seed_t);
             fractal ();
             virtual ~fractal ();
 
-            unsigned octaves;
-            T frequency;
-            T lacunarity;
-
             virtual T operator() (T x, T y) const = 0;
+
+            seed_t seed;
         };
 
 
         /// Fractal Brownian Motion summation.
+        ///
+        /// Sum progressive layers of a noise basis with scaling frequency
+        /// and amplitude.
+        ///
+        /// octaves: count of layers to be summed
+        /// frequency: point scaling factor for the base octave
+        /// lacunarity: per octave frequency scaling factor
+        /// amplitude: maximum absolute value of the noise
+        /// gain: per octave amplitude scaling factor. typically 1/f.
         template <typename T, typename B>
         struct fbm : public fractal<T> {
             using seed_t = typename basis<T>::seed_t;
@@ -46,24 +53,48 @@ namespace util {
             fbm (unsigned octaves,
                  T frequency,
                  T lacunarity,
+                 T amplitude,
+                 T gain,
                  seed_t seed);
             fbm ();
+
+            unsigned octaves;
+
+            T frequency;
+            T lacunarity;
+
+            T amplitude;
+            T gain;
 
             B basis;
             virtual T operator() (T x, T y) const override;
         };
 
 
-        /// Rigid Multifractal noise summation.
+        /// Rigid Multifractal noise summation, based on Musgrave's algorithm
+        ///
+        /// octaves: count of layers to be summed
+        /// frequency: point scaling factor for the base octave
+        /// lacunarity: per octave frequency scaling factor
         template <typename T, typename B>
-        struct musgrave : public fractal<T> {
+        struct rmf : public fractal<T> {
             using seed_t = typename basis<T>::seed_t;
 
-            musgrave (unsigned octaves,
+            rmf (unsigned octaves,
                       T frequency,
                       T lacunarity,
+                      T amplitude,
+                      T gain,
                       seed_t seed);
-            musgrave ();
+            rmf ();
+
+            unsigned octaves;
+
+            T frequency;
+            T lacunarity;
+
+            T amplitude;
+            T gain;
 
             B basis;
             virtual T operator() (T x, T y) const override;
