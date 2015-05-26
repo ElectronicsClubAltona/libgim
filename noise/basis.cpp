@@ -181,10 +181,12 @@ value<T,L>::operator() (T x, T y) const
 
 //-----------------------------------------------------------------------------
 namespace util { namespace noise {
+        template struct value<float, lerp::trunc>;
         template struct value<float, lerp::linear>;
         template struct value<float, lerp::cubic>;
         template struct value<float, lerp::quintic>;
 
+        template struct value<double, lerp::trunc>;
         template struct value<double, lerp::linear>;
         template struct value<double, lerp::cubic>;
         template struct value<double, lerp::quintic>;
