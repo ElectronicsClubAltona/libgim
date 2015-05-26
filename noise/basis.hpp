@@ -21,63 +21,62 @@
 #include "lerp.hpp"
 #include "../range.hpp"
 
-namespace util {
-    namespace noise {
-        template <typename T> using lerp_t = T (*)(T,T,T);
-
-        template <typename T>
-        struct basis {
-            typedef uint64_t seed_t;
-
-            basis (seed_t);
-            basis ();
-            virtual ~basis ();
-
-            seed_t seed;
-
-            virtual range<T> bounds (void) const = 0;
-            virtual T operator() (T x, T y) const = 0;
-        };
+namespace util { namespace noise {
+    template <typename T> using lerp_t = T (*)(T,T,T);
 
 
-        /// Single value per grid space
-        template <typename T, lerp_t<T>>
-        struct value : public basis<T> {
-            using seed_t = typename basis<T>::seed_t;
+    template <typename T>
+    struct basis {
+        typedef uint64_t seed_t;
 
-            value (seed_t);
-            value ();
+        basis (seed_t);
+        basis ();
+        virtual ~basis ();
 
-            virtual range<T> bounds (void) const final;
-            virtual T operator() (T x, T y) const final;
-        };
+        seed_t seed;
 
-
-        /// Perlin: interpolated value across each grid space
-        template <typename T, lerp_t<T> L>
-        struct gradient : public basis<T> {
-            using seed_t = typename basis<T>::seed_t;
-
-            gradient (seed_t);
-            gradient ();
-
-            virtual range<T> bounds (void) const final;
-            virtual T operator() (T x, T y) const final;
-        };
+        virtual range<T> bounds (void) const = 0;
+        virtual T operator() (T x, T y) const = 0;
+    };
 
 
-        /// Cellular/Worley/Vornoi of order-1
-        template <typename T>
-        struct cellular : public basis<T> {
-            using seed_t = typename basis<T>::seed_t;
+    /// Single value per grid space
+    template <typename T, lerp_t<T>>
+    struct value : public basis<T> {
+        using seed_t = typename basis<T>::seed_t;
 
-            cellular (seed_t);
-            cellular ();
+        value (seed_t);
+        value ();
 
-            virtual range<T> bounds (void) const final;
-            virtual T operator() (T x, T y) const final;
-        };
-    }
-}
+        virtual range<T> bounds (void) const final;
+        virtual T operator() (T x, T y) const final;
+    };
+
+
+    /// Perlin: interpolated value across each grid space
+    template <typename T, lerp_t<T> L>
+    struct gradient : public basis<T> {
+        using seed_t = typename basis<T>::seed_t;
+
+        gradient (seed_t);
+        gradient ();
+
+        virtual range<T> bounds (void) const final;
+        virtual T operator() (T x, T y) const final;
+    };
+
+
+    /// Cellular/Worley/Vornoi of order-1
+    template <typename T>
+    struct cellular : public basis<T> {
+        using seed_t = typename basis<T>::seed_t;
+
+        cellular (seed_t);
+        cellular ();
+
+        virtual range<T> bounds (void) const final;
+        virtual T operator() (T x, T y) const final;
+    };
+} }
 
 #endif
