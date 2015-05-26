@@ -166,32 +166,37 @@ rmf<T,B>::rmf ():
 template <typename T, typename B>
 T
 rmf<T,B>::operator() (T x, T y) const {
-    T H = 1;
+    const T offset = 1;
+    const T H = 1;
+
     T exponents[octaves];
-    T offset = 1;
+    for (size_t i = 0; i < octaves; ++i)
+        exponents[i] = std::pow (std::pow (lacunarity, float (i)), -H);
 
-    T f = 1.f;
-    for (size_t i = 0; i < octaves; ++i) {
-        exponents[i] = std::pow (f, -H);
-        f *= lacunarity;
-    }
-
-    T signal = 0, result = 0, weight = 1;
+    T signal = 0;
+    T result = 0;
+    T weight = 1;
 
     x *= frequency;
     y *= frequency;
 
     for (size_t i = 0; i < octaves; ++i) {
+        // generates ridged noise
         signal = basis (x, y);
         signal = std::fabs (signal);
         signal = offset - signal;
 
+        // sharpens the ridges
         signal *= signal;
+
+        // influence by sharpness of previous iteration
         signal *= weight;
 
+        // contribute to the weight
         weight = signal * gain;
         weight = limit (weight, 0, 1);
 
+        // record and continue
         result += signal * exponents[i];
 
         x *= lacunarity;
