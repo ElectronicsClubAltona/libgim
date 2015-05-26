@@ -40,7 +40,7 @@ namespace util {
         };
 
 
-        /// Perlin: single value per grid space
+        /// Single value per grid space
         template <typename T, lerp_t<T>>
         struct value : public basis<T> {
             using seed_t = typename basis<T>::seed_t;
@@ -48,8 +48,8 @@ namespace util {
             value (seed_t);
             value ();
 
-            virtual range<T> bounds (void) const override;
-            virtual T operator() (T x, T y) const override;
+            virtual range<T> bounds (void) const final;
+            virtual T operator() (T x, T y) const final;
         };
 
 
@@ -61,8 +61,8 @@ namespace util {
             gradient (seed_t);
             gradient ();
 
-            virtual range<T> bounds (void) const override;
-            virtual T operator() (T x, T y) const override;
+            virtual range<T> bounds (void) const final;
+            virtual T operator() (T x, T y) const final;
         };
 
 
@@ -74,8 +74,8 @@ namespace util {
             cellular (seed_t);
             cellular ();
 
-            virtual range<T> bounds (void) const override;
-            virtual T operator() (T x, T y) const override;
+            virtual range<T> bounds (void) const final;
+            virtual T operator() (T x, T y) const final;
         };
     }
 }
