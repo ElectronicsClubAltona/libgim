@@ -282,6 +282,18 @@ namespace util {
     T
     max (K<S,T> k)
     { return *std::max_element (k.begin (), k.end ()); }
+
+
+    template <size_t S, typename T, template<size_t,typename> class K>
+    bool
+    operator>= (K<S,T> k, T t)
+    { return min (k) >= t; }
+
+
+    template <size_t S, typename T, template<size_t,typename> class K>
+    bool
+    operator<= (K<S,T> k, T t)
+    { return max (k) <= t; }
 }
 
 #endif
