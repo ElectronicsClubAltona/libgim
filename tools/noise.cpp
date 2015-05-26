@@ -1,22 +1,38 @@
 #include "image.hpp"
 #include "noise.hpp"
 #include "noise/lerp.hpp"
+#include "extent.hpp"
     
 int
 main (void)
 {
-    util::image::buffer<float> img (1920, 1080);
+    // setup the output buffer
+    util::extent2u size (1920, 1080);
+    util::image::buffer<float> img (size);
 
-    //static constexpr auto lerp_t = lerp::cubic;
-    //using basis_t = util::noise::gradient<lerp_t>;
-    //using noise_t = util::noise::fbm<basis_t>;
+    // setup the noise generator
+    //util::noise::fbm<float, util::noise::cellular<float>> b;
+    util::noise::rmf<float, util::noise::gradient<float,util::lerp::quintic>> b;
+    b.octaves = 3;
+    b.frequency = 10.f / size.w;
+    b.basis.seed = time (NULL);
 
-    using noise_t = util::noise::fbm<float,util::noise::gradient<float,util::lerp::quintic>>;
-    //using noise_t = util::noise::musgrave<float,util::noise::gradient<float,util::lerp::quintic>>;
-    //using noise_t = util::noise::fbm<float,util::noise::cellular<float>>;
+    // generate the values. offset positions slightly to avoid simple axis issues with perlin basis
+    for (size_t y = 0; y < size.h; ++y)
+        for (size_t x = 0; x < size.w; ++x) {
+            auto v = b (x + 20, y + 20);
+            img.data ()[y * size.w + x] = v;
+        }
 
-    util::noise::fill (img, noise_t {});
+    // rescale into the range [0, 1]
+    auto range = std::minmax_element (img.begin (), img.end ());
+    auto offset = *range.first;
+    auto div    = *range.second - *range.first;
+    std::cerr << "range: [" << *range.first << ", " << *range.second << "]\n";
+
+    std::transform (img.begin (), img.end (), img.begin (), [offset,div] (auto i) { return (i - offset) / div; });
     
+    // write the image to disk
     auto grey = img.clone<uint8_t> ();
     util::pgm::write (grey, "noise.ppm");
 }
