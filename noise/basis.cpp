@@ -242,9 +242,10 @@ gradient<T,L>::operator() (T x, T y) const
     T v2 = p2.x *      x_fac  + p2.y * (y_fac - 1);
     T v3 = p3.x * (x_fac - 1) + p3.y * (y_fac - 1);
 
-    return L (L (v0, v1, x_fac),
-              L (v2, v3, x_fac),
-              y_fac);
+    auto L0 = L (v0, v1, x_fac);
+    auto L1 = L (v2, v3, x_fac);
+    auto L_ = L (L0, L1, y_fac);
+    return L_;
 }
 
 
