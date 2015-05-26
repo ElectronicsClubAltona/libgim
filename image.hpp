@@ -17,6 +17,8 @@
 #ifndef __UTIL_IMAGE_HPP
 #define __UTIL_IMAGE_HPP
 
+#include "extent.hpp"
+
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
@@ -29,6 +31,7 @@ namespace util {
         struct buffer {
             typedef T value_type;
 
+            buffer (util::extent2u);
             buffer (size_t w, size_t h);
             buffer (size_t w, size_t h, size_t s);
             buffer (size_t w, size_t h, size_t s, std::unique_ptr<T[]> &&data);

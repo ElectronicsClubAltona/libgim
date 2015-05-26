@@ -124,6 +124,13 @@ private:
 
 //-----------------------------------------------------------------------------
 template <typename T>
+util::image::buffer<T>::buffer (util::extent2u _size):
+    buffer<T> (_size.w, _size.h)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 util::image::buffer<T>::buffer (size_t _w, size_t _h, size_t _s):
     w (_w),
     h (_h),
