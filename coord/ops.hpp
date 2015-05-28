@@ -35,19 +35,20 @@ namespace util {
         template <
             size_t S,
             typename T,
+            typename U,
             template <size_t,typename> class A,
             template <size_t,typename> class B
         >
         struct traits { };
 
         //-------------------------------------------------------------------------
-        template <size_t S, typename T> struct traits<S,T,colour,colour> { typedef colour<S,T>  result; };
-        template <size_t S, typename T> struct traits<S,T,extent,extent> { typedef extent<S,T>  result; };
-        template <size_t S, typename T> struct traits<S,T,extent,vector> { typedef extent<S,T>  result; };
-        template <size_t S, typename T> struct traits<S,T,point,extent>  { typedef point<S,T>   result; };
-        template <size_t S, typename T> struct traits<S,T,point,vector>  { typedef point<S,T>   result; };
-        template <size_t S, typename T> struct traits<S,T,vector,point>  { typedef point<S,T>   result; };
-        template <size_t S, typename T> struct traits<S,T,vector,vector> { typedef vector<S,T>  result; };
+        template <size_t S, typename T, typename U> struct traits<S,T,U,colour,colour> { typedef colour<S,typename std::common_type<T,U>::type> result; };
+        template <size_t S, typename T, typename U> struct traits<S,T,U,extent,extent> { typedef extent<S,typename std::common_type<T,U>::type> result; };
+        template <size_t S, typename T, typename U> struct traits<S,T,U,extent,vector> { typedef extent<S,typename std::common_type<T,U>::type> result; };
+        template <size_t S, typename T, typename U> struct traits<S,T,U,point,extent>  { typedef point <S,typename std::common_type<T,U>::type> result; };
+        template <size_t S, typename T, typename U> struct traits<S,T,U,point,vector>  { typedef point <S,typename std::common_type<T,U>::type> result; };
+        template <size_t S, typename T, typename U> struct traits<S,T,U,vector,point>  { typedef point <S,typename std::common_type<T,U>::type> result; };
+        template <size_t S, typename T, typename U> struct traits<S,T,U,vector,vector> { typedef vector<S,typename std::common_type<T,U>::type> result; };
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -56,13 +57,14 @@ namespace util {
     template <                                          \
         size_t S,                                       \
         typename T,                                     \
+        typename U,                                     \
         template <size_t,typename> class A,             \
         template <size_t,typename> class B              \
     >                                                   \
-    typename coord::traits<S,T,A,B>::result             \
-    operator OP (A<S,T> a, B<S,T> b)                    \
+    typename coord::traits<S,T,U,A,B>::result           \
+    operator OP (A<S,T> a, B<S,U> b)                    \
     {                                                   \
-        typename coord::traits<S,T,A,B>::result out;    \
+        typename coord::traits<S,T,U,A,B>::result out;  \
         for (size_t i = 0; i < S; ++i)                  \
             out[i] = a[i] OP b[i];                      \
         return out;                                     \
@@ -74,7 +76,7 @@ namespace util {
         template <size_t,typename> class A,             \
         template <size_t,typename> class B              \
     >                                                   \
-    typename coord::traits<S,T,A,B>::result&            \
+    typename coord::traits<S,T,T,A,B>::result&          \
     operator PASTE(OP,=) (A<S,T>& a, B<S,T> b)          \
     {                                                   \
         for (size_t i = 0; i < S; ++i)                  \
@@ -94,28 +96,30 @@ namespace util {
     template <                                          \
         size_t S,                                       \
         typename T,                                     \
+        typename U,                                     \
         template <size_t,typename> class K              \
     >                                                   \
-    K<S,T>                                              \
-    operator OP (T t, K<S,T> k)                         \
+    typename std::enable_if<std::is_fundamental<U>::value, K<S,T>>::type                                              \
+    operator OP (U u, K<S,T> k)                         \
     {                                                   \
         K<S,T> out;                                     \
         for (size_t i = 0; i < S; ++i)                  \
-            out[i] = t OP k[i];                         \
+            out[i] = u OP k[i];                         \
         return out;                                     \
     }                                                   \
                                                         \
     template <                                          \
         size_t S,                                       \
         typename T,                                     \
+        typename U,                                     \
         template <size_t,typename> class K              \
     >                                                   \
-    K<S,T>                                              \
-    operator OP (K<S,T> k, T t)                         \
+    typename std::enable_if<std::is_fundamental<U>::value, K<S,T>>::type                                              \
+    operator OP (K<S,T> k, U u)                         \
     {                                                   \
         K<S,T> out;                                     \
         for (size_t i = 0; i < S; ++i)                  \
-            out[i] = k[i] OP t;                         \
+            out[i] = k[i] OP u;                         \
         return out;                                     \
     }
 
@@ -194,12 +198,13 @@ namespace util {
     /// point-point subtraction giving a vector difference
     template <
         size_t S,
-        typename T
+        typename T,
+        typename U
     >
-    vector<S,T>
-    operator- (point<S,T> a, point<S,T> b)
+    vector<S,typename std::common_type<T,U>::type>
+    operator- (point<S,T> a, point<S,U> b)
     {
-        vector<S,T> out;
+        vector<S,typename std::common_type<T,U>::type> out;
         for (size_t i = 0; i < S; ++i)
             out[i] = a[i] - b[i];
         return out;
@@ -209,11 +214,13 @@ namespace util {
     //-------------------------------------------------------------------------
     template <
         size_t S,
-        typename T
+        typename T,
+        typename U
     >
-    vector<S,T> operator- (T t, point<S,T> p)
+    vector<S,typename std::common_type<T,U>::type>
+    operator- (U u, point<S,T> p)
     {
-        return point<S,T> {t} - p;
+        return point<S,U> {u} - p;
     }
 
 
