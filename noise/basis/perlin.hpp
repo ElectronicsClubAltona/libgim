@@ -14,14 +14,26 @@
  * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_NOISE_BASIS_HPP
-#define __UTIL_NOISE_BASIS_HPP
 
-#include <cstdint>
+#ifndef __UTIL_NOISE_BASIS_PERLIN_HPP
+#define __UTIL_NOISE_BASIS_PERLIN_HPP
 
-namespace util { namespace noise {
-    template <typename T> using lerp_t = T (*)(T,T,T);
-    typedef uint64_t seed_t;
-} }
+#include "../basis.hpp"
+#include "../../point.hpp"
+#include "../../range.hpp"
+
+namespace util { namespace noise { namespace basis {
+    /// Perlin: interpolated value across each grid space
+    template <typename T, lerp_t<T> L>
+    struct perlin {
+        perlin (seed_t);
+        perlin ();
+
+        range<T> bounds (void) const;
+        T operator() (util::point<2,T>) const;
+
+        seed_t seed;
+    };
+} } }
 
 #endif

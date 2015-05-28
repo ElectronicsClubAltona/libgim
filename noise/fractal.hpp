@@ -19,13 +19,13 @@
 
 #include "basis.hpp"
 
+#include "../point.hpp"
+
 namespace util {
     namespace noise {
         /// Base noise summation
         template <typename T>
         struct fractal {
-            using seed_t = uint64_t;
-
             fractal (seed_t);
             fractal ();
             virtual ~fractal ();
@@ -48,8 +48,6 @@ namespace util {
         /// gain: per octave amplitude scaling factor. typically 1/f.
         template <typename T, typename B>
         struct fbm : public fractal<T> {
-            using seed_t = typename basis<T>::seed_t;
-
             static constexpr unsigned DEFAULT_OCTAVES = 8;
             static constexpr T DEFAULT_FREQUENCY = T(0.1);
             static constexpr T DEFAULT_LACUNARITY = 2;
@@ -84,8 +82,6 @@ namespace util {
         /// lacunarity: per octave frequency scaling factor
         template <typename T, typename B>
         struct rmf : public fractal<T> {
-            using seed_t = typename basis<T>::seed_t;
-
             static constexpr unsigned DEFAULT_OCTAVES = 5;
             static constexpr T DEFAULT_FREQUENCY = T(1);
             static constexpr T DEFAULT_LACUNARITY = 2;
@@ -116,8 +112,6 @@ namespace util {
         ///////////////////////////////////////////////////////////////////////
         template <typename T, typename B>
         struct hmf : public fractal<T> {
-            using seed_t = typename basis<T>::seed_t;
-
             hmf ();
 
             T H;
@@ -141,8 +135,6 @@ namespace util {
         /// Heterogeneous procedural terrain fucntion: stats by altitude method
         template <typename T, typename B>
         struct hetero : public fractal<T>  {
-            using seed_t = typename basis<T>::seed_t;
-
             hetero ();
 
             T H;

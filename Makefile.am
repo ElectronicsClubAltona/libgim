@@ -133,8 +133,13 @@ UTIL_FILES   =		\
     net/types.cpp	\
     net/types.hpp	\
     nocopy.hpp		\
-    noise/basis.cpp	\
     noise/basis.hpp	\
+    noise/basis/value.cpp	\
+    noise/basis/value.hpp	\
+    noise/basis/perlin.cpp	\
+    noise/basis/perlin.hpp	\
+    noise/basis/worley.cpp	\
+    noise/basis/worley.hpp	\
     noise.cpp		\
     noise/fractal.cpp	\
     noise/fractal.hpp	\

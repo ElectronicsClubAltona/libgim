@@ -1,6 +1,9 @@
 #include "image.hpp"
 #include "noise.hpp"
 #include "noise/lerp.hpp"
+#include "noise/basis/value.hpp"
+#include "noise/basis/perlin.hpp"
+#include "noise/basis/worley.hpp"
 #include "extent.hpp"
     
 int
@@ -11,10 +14,10 @@ main (void)
     util::image::buffer<float> img (size);
 
     // setup the noise generator
-    //util::noise::fbm<float, util::noise::cellular<float>> b;
-    //util::noise::rmf<float, util::noise::cellular<float>> b;
-    //util::noise::hmf<float, util::noise::gradient<float,util::lerp::quintic>> b;
-    util::noise::hetero<float, util::noise::gradient<float,util::lerp::quintic>> b;
+    //util::noise::fbm<float, util::noise::basis::worley<float>> b;
+    //util::noise::rmf<float, util::noise::basis::worley<float>> b;
+    //util::noise::hmf<float, util::noise::basis::perlin<float,util::lerp::quintic>> b;
+    util::noise::hetero<float, util::noise::basis::perlin<float,util::lerp::quintic>> b;
     //b.octaves = 3;
     b.frequency = 10.f / size.w;
     b.lacunarity = 2;

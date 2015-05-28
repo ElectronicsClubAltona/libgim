@@ -14,14 +14,24 @@
  * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_NOISE_BASIS_HPP
-#define __UTIL_NOISE_BASIS_HPP
 
-#include <cstdint>
+#ifndef __UTIL_NOISE_BASIS_WORLEY_HPP
+#define __UTIL_NOISE_BASIS_WORLEY_HPP
 
-namespace util { namespace noise {
-    template <typename T> using lerp_t = T (*)(T,T,T);
-    typedef uint64_t seed_t;
-} }
+#include "../basis.hpp"
+#include "../../point.hpp"
+#include "../../range.hpp"
 
+namespace util { namespace noise { namespace basis {
+    template <typename T>
+    struct worley {
+        worley (seed_t);
+        worley ();
+
+        range<T> bounds (void) const;
+        T operator() (util::point<2,T>) const;
+
+        seed_t seed;
+    };
+} } }
 #endif

@@ -14,9 +14,14 @@
  * Copyright 2012 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "noise/fractal.hpp"
+#include "fractal.hpp"
 
-#include "debug.hpp"
+#include "basis/value.hpp"
+#include "basis/perlin.hpp"
+#include "basis/worley.hpp"
+#include "lerp.hpp"
+
+#include "../debug.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -119,19 +124,19 @@ fbm<T,B>::operator() (util::point<2,T> p) const {
 
 
 //-----------------------------------------------------------------------------
-template struct util::noise::fbm<float, util::noise::cellular<float>>;
-template struct util::noise::fbm<float, util::noise::gradient<float,util::lerp::linear>>;
-template struct util::noise::fbm<float, util::noise::gradient<float,util::lerp::quintic>>;
-template struct util::noise::fbm<float, util::noise::value<float,util::lerp::trunc>>;
-template struct util::noise::fbm<float, util::noise::value<float,util::lerp::linear>>;
-template struct util::noise::fbm<float, util::noise::value<float,util::lerp::quintic>>;
+template struct util::noise::fbm<float, util::noise::basis::worley<float>>;
+template struct util::noise::fbm<float, util::noise::basis::perlin<float,util::lerp::linear>>;
+template struct util::noise::fbm<float, util::noise::basis::perlin<float,util::lerp::quintic>>;
+template struct util::noise::fbm<float, util::noise::basis::value<float,util::lerp::trunc>>;
+template struct util::noise::fbm<float, util::noise::basis::value<float,util::lerp::linear>>;
+template struct util::noise::fbm<float, util::noise::basis::value<float,util::lerp::quintic>>;
 
-template struct util::noise::fbm<double, util::noise::cellular<double>>;
-template struct util::noise::fbm<double, util::noise::gradient<double,util::lerp::linear>>;
-template struct util::noise::fbm<double, util::noise::gradient<double,util::lerp::quintic>>;
-template struct util::noise::fbm<double, util::noise::value<double,util::lerp::trunc>>;
-template struct util::noise::fbm<double, util::noise::value<double,util::lerp::linear>>;
-template struct util::noise::fbm<double, util::noise::value<double,util::lerp::quintic>>;
+template struct util::noise::fbm<double, util::noise::basis::worley<double>>;
+template struct util::noise::fbm<double, util::noise::basis::perlin<double,util::lerp::linear>>;
+template struct util::noise::fbm<double, util::noise::basis::perlin<double,util::lerp::quintic>>;
+template struct util::noise::fbm<double, util::noise::basis::value<double,util::lerp::trunc>>;
+template struct util::noise::fbm<double, util::noise::basis::value<double,util::lerp::linear>>;
+template struct util::noise::fbm<double, util::noise::basis::value<double,util::lerp::quintic>>;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -208,17 +213,17 @@ rmf<T,B>::operator() (util::point<2,T> p) const {
 
 
 //-----------------------------------------------------------------------------
-template struct util::noise::rmf<float, util::noise::cellular<float>>;
-template struct util::noise::rmf<float, util::noise::gradient<float,util::lerp::linear>>;
-template struct util::noise::rmf<float, util::noise::gradient<float,util::lerp::quintic>>;
-template struct util::noise::rmf<float, util::noise::value<float,util::lerp::linear>>;
-template struct util::noise::rmf<float, util::noise::value<float,util::lerp::quintic>>;
+template struct util::noise::rmf<float, util::noise::basis::worley<float>>;
+template struct util::noise::rmf<float, util::noise::basis::perlin<float,util::lerp::linear>>;
+template struct util::noise::rmf<float, util::noise::basis::perlin<float,util::lerp::quintic>>;
+template struct util::noise::rmf<float, util::noise::basis::value<float,util::lerp::linear>>;
+template struct util::noise::rmf<float, util::noise::basis::value<float,util::lerp::quintic>>;
 
-template struct util::noise::rmf<double, util::noise::cellular<double>>;
-template struct util::noise::rmf<double, util::noise::gradient<double,util::lerp::linear>>;
-template struct util::noise::rmf<double, util::noise::gradient<double,util::lerp::quintic>>;
-template struct util::noise::rmf<double, util::noise::value<double,util::lerp::linear>>;
-template struct util::noise::rmf<double, util::noise::value<double,util::lerp::quintic>>;
+template struct util::noise::rmf<double, util::noise::basis::worley<double>>;
+template struct util::noise::rmf<double, util::noise::basis::perlin<double,util::lerp::linear>>;
+template struct util::noise::rmf<double, util::noise::basis::perlin<double,util::lerp::quintic>>;
+template struct util::noise::rmf<double, util::noise::basis::value<double,util::lerp::linear>>;
+template struct util::noise::rmf<double, util::noise::basis::value<double,util::lerp::quintic>>;
 
 
 //-----------------------------------------------------------------------------
@@ -264,11 +269,11 @@ hmf<T,B>::operator() (util::point<2,T> p) const
 }
 
 
-template struct util::noise::hmf<float, util::noise::cellular<float>>;
-template struct util::noise::hmf<float, util::noise::gradient<float,util::lerp::linear>>;
-template struct util::noise::hmf<float, util::noise::gradient<float,util::lerp::quintic>>;
-template struct util::noise::hmf<float, util::noise::value<float,util::lerp::linear>>;
-template struct util::noise::hmf<float, util::noise::value<float,util::lerp::quintic>>;
+template struct util::noise::hmf<float, util::noise::basis::worley<float>>;
+template struct util::noise::hmf<float, util::noise::basis::perlin<float,util::lerp::linear>>;
+template struct util::noise::hmf<float, util::noise::basis::perlin<float,util::lerp::quintic>>;
+template struct util::noise::hmf<float, util::noise::basis::value<float,util::lerp::linear>>;
+template struct util::noise::hmf<float, util::noise::basis::value<float,util::lerp::quintic>>;
 
 
 //-----------------------------------------------------------------------------
@@ -314,8 +319,8 @@ hetero<T,B>::operator() (util::point<2,T> p) const
 }
 
 
-template struct util::noise::hetero<float, util::noise::cellular<float>>;
-template struct util::noise::hetero<float, util::noise::gradient<float,util::lerp::linear>>;
-template struct util::noise::hetero<float, util::noise::gradient<float,util::lerp::quintic>>;
-template struct util::noise::hetero<float, util::noise::value<float,util::lerp::linear>>;
-template struct util::noise::hetero<float, util::noise::value<float,util::lerp::quintic>>;
+template struct util::noise::hetero<float, util::noise::basis::worley<float>>;
+template struct util::noise::hetero<float, util::noise::basis::perlin<float,util::lerp::linear>>;
+template struct util::noise::hetero<float, util::noise::basis::perlin<float,util::lerp::quintic>>;
+template struct util::noise::hetero<float, util::noise::basis::value<float,util::lerp::linear>>;
+template struct util::noise::hetero<float, util::noise::basis::value<float,util::lerp::quintic>>;

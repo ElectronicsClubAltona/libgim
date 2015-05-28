@@ -14,14 +14,26 @@
  * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_NOISE_BASIS_HPP
-#define __UTIL_NOISE_BASIS_HPP
 
-#include <cstdint>
+#ifndef __UTIL_NOISE_BASIS_VALUE_HPP
+#define __UTIL_NOISE_BASIS_VALUE_HPP
 
-namespace util { namespace noise {
-    template <typename T> using lerp_t = T (*)(T,T,T);
-    typedef uint64_t seed_t;
-} }
+#include "../basis.hpp"
+#include "../../range.hpp"
+#include "../../point.hpp"
+
+namespace util { namespace noise { namespace basis {
+    /// Single value per grid space
+    template <typename T, lerp_t<T>>
+    struct value {
+        value (seed_t);
+        value ();
+
+        range<T> bounds (void) const;
+        T operator() (util::point<2,T>) const;
+
+        seed_t seed;
+    };
+} } }
 
 #endif
