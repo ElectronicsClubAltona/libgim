@@ -19,6 +19,7 @@
 
 #include <cstdlib>
 #include "lerp.hpp"
+#include "../point.hpp"
 #include "../range.hpp"
 
 namespace util { namespace noise {
@@ -36,7 +37,7 @@ namespace util { namespace noise {
         seed_t seed;
 
         virtual range<T> bounds (void) const = 0;
-        virtual T operator() (T x, T y) const = 0;
+        virtual T operator() (util::point<2,T>) const = 0;
     };
 
 
@@ -49,7 +50,7 @@ namespace util { namespace noise {
         value ();
 
         virtual range<T> bounds (void) const final;
-        virtual T operator() (T x, T y) const final;
+        virtual T operator() (util::point<2,T>) const final;
     };
 
 
@@ -62,7 +63,7 @@ namespace util { namespace noise {
         gradient ();
 
         virtual range<T> bounds (void) const final;
-        virtual T operator() (T x, T y) const final;
+        virtual T operator() (util::point<2,T>) const final;
     };
 
 
@@ -75,7 +76,7 @@ namespace util { namespace noise {
         cellular ();
 
         virtual range<T> bounds (void) const final;
-        virtual T operator() (T x, T y) const final;
+        virtual T operator() (util::point<2,T>) const final;
     };
 } }
 

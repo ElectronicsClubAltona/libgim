@@ -12,15 +12,18 @@ main (void)
 
     // setup the noise generator
     //util::noise::fbm<float, util::noise::cellular<float>> b;
-    util::noise::rmf<float, util::noise::gradient<float,util::lerp::quintic>> b;
-    b.octaves = 3;
+    //util::noise::rmf<float, util::noise::cellular<float>> b;
+    //util::noise::hmf<float, util::noise::gradient<float,util::lerp::quintic>> b;
+    util::noise::hetero<float, util::noise::gradient<float,util::lerp::quintic>> b;
+    //b.octaves = 3;
     b.frequency = 10.f / size.w;
+    b.lacunarity = 2;
     b.basis.seed = time (NULL);
 
     // generate the values. offset positions slightly to avoid simple axis issues with perlin basis
     for (size_t y = 0; y < size.h; ++y)
         for (size_t x = 0; x < size.w; ++x) {
-            auto v = b (x + 20, y + 20);
+            auto v = b ({float(x + 20), float(y + 20)});
             img.data ()[y * size.w + x] = v;
         }
 

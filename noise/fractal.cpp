@@ -52,7 +52,7 @@ fractal<T>::~fractal ()
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-fractal<T>::operator() (T, T) const
+fractal<T>::operator() (util::point<2,T>) const
 {
     unreachable ();
 }
@@ -102,13 +102,13 @@ fbm<T,B>::fbm ():
 //-----------------------------------------------------------------------------
 template <typename T, typename B>
 T
-fbm<T,B>::operator() (T x, T y) const {
+fbm<T,B>::operator() (util::point<2,T> p) const {
     T total = 0;
     T f = frequency;
     T a = amplitude;
 
     for (size_t i = 0; i < octaves; ++i) {
-        total += basis (x * f, y * f) * a;
+        total += basis (p * f) * a;
 
         f *= lacunarity;
         a *= gain;
@@ -167,7 +167,7 @@ rmf<T,B>::rmf ():
 //-----------------------------------------------------------------------------
 template <typename T, typename B>
 T
-rmf<T,B>::operator() (T x, T y) const {
+rmf<T,B>::operator() (util::point<2,T> p) const {
     const T offset = 1;
     const T H = 1.f;
 
@@ -179,12 +179,11 @@ rmf<T,B>::operator() (T x, T y) const {
     T result = 0;
     T weight = 1;
 
-    x *= frequency;
-    y *= frequency;
+    p *= frequency;
 
     for (size_t i = 0; i < octaves; ++i) {
         // generates ridged noise
-        signal = basis (x, y);
+        signal = basis (p);
         signal = std::fabs (signal);
         signal = offset - signal;
 
@@ -201,8 +200,7 @@ rmf<T,B>::operator() (T x, T y) const {
         // record and continue
         result += signal * exponents[i];
 
-        x *= lacunarity;
-        y *= lacunarity;
+        p *= lacunarity;
     }
 
     return result;
@@ -239,7 +237,7 @@ hmf<T,B>::hmf ():
 //-----------------------------------------------------------------------------
 template <typename T, typename B>
 T
-hmf<T,B>::operator() (T x, T y) const
+hmf<T,B>::operator() (util::point<2,T> p) const
 {
     T exponents[octaves];
     for (size_t i = 0; i < octaves; ++i)
@@ -249,19 +247,17 @@ hmf<T,B>::operator() (T x, T y) const
     T signal = 0;
     T weight = 1;
 
-    x *= frequency;
-    y *= frequency;
+    p *= frequency;
 
     for (size_t i = 0; i < octaves; ++i) {
-        signal = (basis (x, y) + offset) * exponents[i];
+        signal = (basis (p) + offset) * exponents[i];
         result += weight * signal;
 
         weight *= gain * signal;
         if (weight > 1)
             weight = 1;
 
-        x *= lacunarity;
-        y *= lacunarity;
+        p *= lacunarity;
     }
 
     return result;
@@ -291,7 +287,7 @@ hetero<T,B>::hetero():
 //-----------------------------------------------------------------------------
 template <typename T, typename B>
 T
-hetero<T,B>::operator() (T x, T y) const
+hetero<T,B>::operator() (util::point<2,T> p) const
 {
     T exponents[octaves];
     for (size_t i = 0; i < octaves; ++i)
@@ -300,23 +296,18 @@ hetero<T,B>::operator() (T x, T y) const
     T result = 0;
     T increment = 0;
 
-    x *= frequency;
-    y *= frequency;
-
-    result = basis (x, y) + offset;
-
-    x *= lacunarity;
-    y *= lacunarity;
+    p *= frequency;
+    result = basis (p) + offset;
+    p *= lacunarity;
 
     for (size_t i = 0; i < octaves; ++i) {
-        increment  = basis (x, y) + offset;
+        increment  = basis (p) + offset;
         increment *= exponents[i];
         increment *= result;
 
         result += increment;
 
-        x *= lacunarity;
-        y *= lacunarity;
+        p *= lacunarity;
     }
 
     return result;

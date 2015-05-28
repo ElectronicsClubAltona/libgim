@@ -34,7 +34,7 @@ util::noise::fill (image::buffer<T> &pixels,
 
     for (size_t y = 0; y < h; ++y)
         for (size_t x = 0; x < w; ++x)
-            data[y * s + x] = gen (x, y);
+            data[y * s + x] = gen ({T(x), T(y)});
 }
 
 template void util::noise::fill (image::buffer<float>&, const util::noise::fractal<float>&);
@@ -49,7 +49,7 @@ util::noise::image2d (uint8_t *restrict pixels,
                       const util::noise::fractal<float> &p) {
     for (size_t y = 0; y < height; ++y)
         for (size_t x = 0; x < width; ++x) {
-            double v = p (x, y);
+            float v = p ({float(x), float(y)});
             pixels[x + y * width] = static_cast<uint8_t> (v * std::numeric_limits<uint8_t>::max ());
         }
 }

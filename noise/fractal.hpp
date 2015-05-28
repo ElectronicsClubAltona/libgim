@@ -30,7 +30,7 @@ namespace util {
             fractal ();
             virtual ~fractal ();
 
-            virtual T operator() (T x, T y) const = 0;
+            virtual T operator() (util::point<2,T>) const = 0;
 
             seed_t seed;
         };
@@ -73,7 +73,7 @@ namespace util {
             T gain;
 
             B basis;
-            virtual T operator() (T x, T y) const override;
+            virtual T operator() (util::point<2,T>) const override;
         };
 
 
@@ -109,7 +109,7 @@ namespace util {
             T gain;
 
             B basis;
-            virtual T operator() (T x, T y) const override;
+            virtual T operator() (util::point<2,T>) const override;
         };
 
 
@@ -133,7 +133,7 @@ namespace util {
 
             B basis;
 
-            virtual T operator() (T x, T y) const override;
+            virtual T operator() (util::point<2,T>) const override;
         };
 
 
@@ -158,7 +158,7 @@ namespace util {
 
             B basis;
 
-            virtual T operator() (T x, T y) const override;
+            virtual T operator() (util::point<2,T>) const override;
         };
     }
 }
