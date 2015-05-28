@@ -52,28 +52,29 @@ UTIL_FILES   =		\
     fourcc.hpp		\
     guid.cpp		\
     guid.hpp		\
+    hash.hpp		\
+    hash.cpp		\
     hash/adler.cpp	\
     hash/adler.hpp	\
     hash/bsdsum.cpp	\
     hash/bsdsum.hpp	\
-    hash.cpp		\
     hash/crc.cpp	\
     hash/crc.hpp	\
+    hash/fasthash.cpp	\
     hash/fletcher.hpp	\
     hash/hmac.cpp	\
     hash/hmac.hpp	\
     hash/hotp.cpp	\
     hash/hotp.hpp	\
-    hash.hpp		\
     hash/md2.cpp	\
     hash/md2.hpp	\
     hash/md4.cpp	\
     hash/md4.hpp	\
     hash/md5.cpp	\
     hash/md5.hpp	\
-    hash/murmur.hpp	\
     hash/murmur/common.cpp	\
     hash/murmur/common.hpp	\
+    hash/murmur.hpp	\
     hash/murmur/murmur1.cpp	\
     hash/murmur/murmur1.hpp	\
     hash/murmur/murmur2.cpp	\
@@ -292,6 +293,7 @@ TEST_BIN = 			\
     test/fixed			\
     test/float			\
     test/hash/murmur		\
+    test/hash/fasthash          \
     test/hmac			\
     test/hotp			\
     test/hton			\
