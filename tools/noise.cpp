@@ -1,6 +1,7 @@
 #include "image.hpp"
 #include "noise.hpp"
 #include "noise/lerp.hpp"
+#include "noise/basis/constant.hpp"
 #include "noise/basis/value.hpp"
 #include "noise/basis/perlin.hpp"
 #include "noise/basis/worley.hpp"
@@ -24,11 +25,15 @@ main (void)
     b.basis.seed = time (NULL);
 
     // generate the values. offset positions slightly to avoid simple axis issues with perlin basis
-    for (size_t y = 0; y < size.h; ++y)
-        for (size_t x = 0; x < size.w; ++x) {
-            auto v = b ({float(x + 20), float(y + 20)});
-            img.data ()[y * size.w + x] = v;
-        }
+    {
+        auto offset = util::vector2f { -100 };
+
+        for (size_t y = 0; y < size.h; ++y)
+            for (size_t x = 0; x < size.w; ++x) {
+                auto v = b (util::point2f {float (x), float (y)} + offset); //{x + offset, y + offset});
+                img.data ()[y * size.w + x] = v;
+            }
+    }
 
     // rescale into the range [0, 1]
     auto range = std::minmax_element (img.begin (), img.end ());
