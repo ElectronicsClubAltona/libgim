@@ -19,6 +19,7 @@
 
 #include "../preprocessor.hpp"
 #include "../maths.hpp"
+#include "../types/bits.hpp"
 
 #include <cstdlib>
 
@@ -228,7 +229,7 @@ namespace util {
     template <
         size_t S,
         typename T,
-        template<size_t,typename> class A,
+        template <size_t,typename> class A,
         template <size_t,typename> class B
     >
     T dot (A<S,T> a, B<S,T> b)
@@ -238,6 +239,21 @@ namespace util {
             sum += a[i] * b[i];
         return sum;
     }
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K
+    >
+    K<S,T>
+    abs (K<S,T> k)
+    {
+        for (auto &v: k)
+            v = std::abs (v);
+        return k;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // logical element operators
