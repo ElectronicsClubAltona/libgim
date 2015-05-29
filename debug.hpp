@@ -178,6 +178,26 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
+#define CHECK_LIMIT(VAL,LO,HI) do {                                 \
+    DEBUG_ONLY(                                                     \
+        const auto __val = (VAL);                                   \
+        const auto __hi  = (HI);                                    \
+        const auto __lo  = (LO);                                    \
+                                                                    \
+        _CHECK_META (__val >= __lo && __val <= __hi,                \
+                     { ; },                                         \
+                     {                                              \
+            std::ostringstream __os;                                \
+            __os << "expected satisifies limit\n"                   \
+                 << "__val: " << #VAL << " = " << __val << '\n'     \
+                 << "__lo: " << #LO << " = " << __lo << '\n'        \
+                 << "__hi: " << #HI << " = " << __hi << '\n';       \
+            panic (__os.str ());                                    \
+        });                                                         \
+    );                                                              \
+} while (0)
+
+///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NEQ(A,B) do {                                 \
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
