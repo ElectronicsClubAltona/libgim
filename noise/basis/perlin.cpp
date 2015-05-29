@@ -24,7 +24,7 @@ using util::noise::basis::perlin;
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 util::vector<2,T>
-generate (util::point<2,T> p, uint64_t seed)
+generate (util::point<2,intmax_t> p, uint64_t seed)
 {
     using util::hash::murmur2::mix;
 
@@ -75,31 +75,36 @@ template <typename T, util::noise::lerp_t<T> L>
 T
 perlin<T,L>::operator() (util::point<2,T> p) const
 {
+    // extract integer and fractional parts. be careful to always round down
+    // (particularly with negatives) and avoid rounding errors.
     auto p_int = p.template cast<intmax_t> ();
-    auto p_rem = p - p_int;
+    if (p.x < 0) p_int.x -= 1;
+    if (p.y < 0) p_int.y -= 1;
+    auto p_rem = abs (p - p_int);
 
-    // Shift the coordinate system down a little to ensure we get unit weights
-    // for the lerp. It's better to do this than abs the fractional portion so
-    // we don't get reflections along the origin.
-    if (p.x < 0) { p_rem.x = 1 + p_rem.x; p_int.x -= 1; }
-    if (p.y < 0) { p_rem.y = 1 + p_rem.y; p_int.y -= 1; }
+    // generate the corner positions
+    auto p0 = p_int + util::vector<2,intmax_t> { 0, 0 };
+    auto p1 = p_int + util::vector<2,intmax_t> { 1, 0 };
+    auto p2 = p_int + util::vector<2,intmax_t> { 0, 1 };
+    auto p3 = p_int + util::vector<2,intmax_t> { 1, 1 };
 
-    // Generate the four corner values. It's not strictly necessary to
-    // normalise the values, but we get a more consistent and visually
-    // appealing range of outputs with normalised values.
-    auto p0 = generate<T> (p_int + util::vector<2,T> { 0, 0 }, this->seed).normalise ();
-    auto p1 = generate<T> (p_int + util::vector<2,T> { 1, 0 }, this->seed).normalise ();
-    auto p2 = generate<T> (p_int + util::vector<2,T> { 0, 1 }, this->seed).normalise ();
-    auto p3 = generate<T> (p_int + util::vector<2,T> { 1, 1 }, this->seed).normalise ();
+    // generate the corner gradients
+    auto g0 = generate<T> (p0, this->seed);
+    auto g1 = generate<T> (p1, this->seed);
+    auto g2 = generate<T> (p2, this->seed);
+    auto g3 = generate<T> (p3, this->seed);
 
-    T v0 = p0.x *  p_rem.x      + p0.y *  p_rem.y;
-    T v1 = p1.x * (p_rem.x - 1) + p1.y *  p_rem.y;
-    T v2 = p2.x *  p_rem.x      + p2.y * (p_rem.y - 1);
-    T v3 = p3.x * (p_rem.x - 1) + p3.y * (p_rem.y - 1);
+    // compute the dot products
+    T v0 = dot (g0, p - p0);
+    T v1 = dot (g1, p - p1);
+    T v2 = dot (g2, p - p2);
+    T v3 = dot (g3, p - p3);
 
+    // interpolate the results
     auto L0 = L (v0, v1, p_rem.x);
     auto L1 = L (v2, v3, p_rem.x);
     auto L_ = L (L0, L1, p_rem.y);
+
     return L_;
 }
 
@@ -109,10 +114,14 @@ perlin<T,L>::operator() (util::point<2,T> p) const
 
 namespace util { namespace noise { namespace basis {
     template struct perlin<float, lerp::linear>;
+    template struct perlin<float, lerp::cosine>;
     template struct perlin<float, lerp::cubic>;
     template struct perlin<float, lerp::quintic>;
+    template struct perlin<float, lerp::trunc>;
 
     template struct perlin<double, lerp::linear>;
+    template struct perlin<double, lerp::cosine>;
     template struct perlin<double, lerp::cubic>;
     template struct perlin<double, lerp::quintic>;
+    template struct perlin<double, lerp::trunc>;
 } } }

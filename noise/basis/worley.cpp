@@ -71,14 +71,12 @@ template <typename T>
 T
 worley<T>::operator() (util::point<2,T> p) const
 {
+    // extract integer and fractional parts. be careful to always round down
+    // (particularly with negatives) and avoid rounding errors.
     auto p_int = p.template cast<intmax_t> ();
-    auto p_rem = p - p_int;
-
-    // Generate the four corner values. It's not strictly necessary to
-    // normalise the values, but we get a more consistent and visually
-    // appealing range of outputs with normalised values.
-    if (p.x < 0) { p_rem.x = 1 + p_rem.x; p_int.x -= 1; }
-    if (p.y < 0) { p_rem.y = 1 + p_rem.y; p_int.y -= 1; }
+    if (p.x < 0) p_int.x -= 1;
+    if (p.y < 0) p_int.y -= 1;
+    auto p_rem = abs (p - p_int);
 
     // +---+---+---+
     // | 0 | 1 | 2 |
@@ -102,7 +100,7 @@ worley<T>::operator() (util::point<2,T> p) const
             CHECK (off.y >= 0 && off.y <= 1);
 
             pos += off;
-            *cursor++ = pos.difference2 (p_rem);
+            *cursor++ = pos.difference2 (p_rem.template as<util::vector> ());
         }
 
     std::sort (std::begin (distances), std::end (distances));

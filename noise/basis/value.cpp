@@ -25,15 +25,19 @@ using util::noise::basis::value;
 // Generate a type from [-UNIT..UNIT]
 template <typename T>
 T
-generate (util::point<2,T> p, uint64_t seed)
+generate (util::point<2,intmax_t> p, uint64_t seed)
 {
     using util::hash::murmur2::mix;
 
-    T v = mix (seed, mix (uint64_t (p.y), uint64_t (p.x))) & 0xffff;
-    v = v / T{0xffff} * 2 - 1;
+    T v = mix (
+        seed,
+        mix (
+            uint64_t (p.y),
+            uint64_t (p.x)
+        )
+    ) & 0xffff;
 
-    CHECK_GE (v, T{0});
-    CHECK_LE (v, T{1});
+    v = v / T{0xffff} * 2 - 1;
 
     return v;
 }
@@ -67,25 +71,31 @@ template <typename T, util::noise::lerp_t<T> L>
 T
 value<T,L>::operator() (util::point<2,T> p) const
 {
+    // extract integer and fractional parts. be careful to always round down
+    // (particularly with negatives) and avoid rounding errors.
     auto p_int = p.template cast<intmax_t> ();
-    auto p_rem = p - p_int;
+    if (p.x < 0) p_int.x -= 1;
+    if (p.y < 0) p_int.y -= 1;
+    auto p_rem = abs (p - p_int);
 
-    // Shift the coordinate system down a little to ensure we get unit weights
-    // for the lerp. It's better to do this than abs the fractional portion so
-    // we don't get reflections along the origin.
-    if (p.x < 0) { p_rem.x = 1 + p_rem.x; p_int.x -= 1; }
-    if (p.y < 0) { p_rem.y = 1 + p_rem.y; p_int.y -= 1; }
+    // generate the corner points
+    auto p0 = p_int + util::vector<2,intmax_t> { 0, 0 };
+    auto p1 = p_int + util::vector<2,intmax_t> { 1, 0 };
+    auto p2 = p_int + util::vector<2,intmax_t> { 0, 1 };
+    auto p3 = p_int + util::vector<2,intmax_t> { 1, 1 };
 
     // Generate the four corner values
-    T p0 = generate<T> (p_int + util::vector<2,T>{ 0, 0 }, this->seed);
-    T p1 = generate<T> (p_int + util::vector<2,T>{ 1, 0 }, this->seed);
-    T p2 = generate<T> (p_int + util::vector<2,T>{ 0, 0 }, this->seed);
-    T p3 = generate<T> (p_int + util::vector<2,T>{ 1, 1 }, this->seed);
+    T g0 = generate<T> (p0, this->seed);
+    T g1 = generate<T> (p1, this->seed);
+    T g2 = generate<T> (p2, this->seed);
+    T g3 = generate<T> (p3, this->seed);
 
     // Interpolate on one dimension, then the other.
-    return L (L (p0, p1, p_rem.x),
-              L (p2, p3, p_rem.x),
-              p_rem.y);
+    auto l0 = L (g0, g1, p_rem.x);
+    auto l1 = L (g2, g3, p_rem.x);
+    auto l_ = L (l0, l1, p_rem.y);
+
+    return l_;
 }
 
 
@@ -94,6 +104,7 @@ value<T,L>::operator() (util::point<2,T> p) const
 
 namespace util { namespace noise { namespace basis {
     template struct value<float, lerp::trunc>;
+    template struct value<float, lerp::cosine>;
     template struct value<float, lerp::linear>;
     template struct value<float, lerp::cubic>;
     template struct value<float, lerp::quintic>;

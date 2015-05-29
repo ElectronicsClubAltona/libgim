@@ -16,6 +16,7 @@
 
 #include "fractal.hpp"
 
+#include "basis/constant.hpp"
 #include "basis/value.hpp"
 #include "basis/perlin.hpp"
 #include "basis/worley.hpp"
@@ -125,10 +126,15 @@ fbm<T,B>::operator() (util::point<2,T> p) const {
 
 //-----------------------------------------------------------------------------
 template struct util::noise::fbm<float, util::noise::basis::worley<float>>;
+template struct util::noise::fbm<float, util::noise::basis::constant<float>>;
+template struct util::noise::fbm<float, util::noise::basis::perlin<float,util::lerp::trunc>>;
 template struct util::noise::fbm<float, util::noise::basis::perlin<float,util::lerp::linear>>;
+template struct util::noise::fbm<float, util::noise::basis::perlin<float,util::lerp::cubic>>;
 template struct util::noise::fbm<float, util::noise::basis::perlin<float,util::lerp::quintic>>;
 template struct util::noise::fbm<float, util::noise::basis::value<float,util::lerp::trunc>>;
 template struct util::noise::fbm<float, util::noise::basis::value<float,util::lerp::linear>>;
+template struct util::noise::fbm<float, util::noise::basis::value<float,util::lerp::cosine>>;
+template struct util::noise::fbm<float, util::noise::basis::value<float,util::lerp::cubic>>;
 template struct util::noise::fbm<float, util::noise::basis::value<float,util::lerp::quintic>>;
 
 template struct util::noise::fbm<double, util::noise::basis::worley<double>>;
