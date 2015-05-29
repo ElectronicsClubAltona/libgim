@@ -135,6 +135,9 @@ UTIL_FILES   =		\
     net/types.hpp	\
     nocopy.hpp		\
     noise/basis.hpp	\
+    noise/basis/constant.cpp	\
+    noise/basis/constant.hpp	\
+    noise/basis/constant.ipp	\
     noise/basis/value.cpp	\
     noise/basis/value.hpp	\
     noise/basis/perlin.cpp	\
