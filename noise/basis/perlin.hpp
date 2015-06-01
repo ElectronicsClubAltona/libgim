@@ -30,10 +30,15 @@ namespace util { namespace noise { namespace basis {
         perlin ();
 
         range<T> bounds (void) const;
-        T operator() (util::point<2,T>) const;
+        T operator() (point<2,T>) const;
 
         seed_t seed;
+
+    private:
+        constexpr vector<2,T> gradient (point<2,intmax_t>) const;
     };
 } } }
+
+#include "perlin.ipp"
 
 #endif

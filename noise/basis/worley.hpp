@@ -32,6 +32,12 @@ namespace util { namespace noise { namespace basis {
         T operator() (util::point<2,T>) const;
 
         seed_t seed;
+
+    private:
+        constexpr point<2,T> generate (point<2,intmax_t>) const;
     };
 } } }
+
+#include "worley.ipp"
+
 #endif
