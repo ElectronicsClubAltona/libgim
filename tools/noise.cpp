@@ -26,8 +26,10 @@ main (void)
     //util::noise::fractal::rmf<float, util::noise::basis::perlin<float,util::lerp::cubic>> b;
     //util::noise::fractal::hetero<float, util::noise::basis::perlin<float,util::lerp::quintic>> b;
 
+    b.octaves = 8;
     b.frequency = 10.f / size.w;
-    b.lacunarity = 2;
+    b.lacunarity = 2.f;
+    //b.H = 0.75f;
     b.basis.seed = time (NULL);
 
     // generate the values. offset positions slightly to avoid simple axis issues with perlin basis
