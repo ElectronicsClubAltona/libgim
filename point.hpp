@@ -33,11 +33,6 @@ namespace util {
     {
         using coord::base<S,T,util::point,coord::xyzw>::base;
 
-        // point operators
-        template <typename U> typename std::common_type<T,U>::type distance  (point<S,U>) const;
-        template <typename U> typename std::common_type<T,U>::type distance2 (point<S,U>) const;
-        template <typename U> typename std::common_type<T,U>::type manhattan (point<S,U>) const;
-
         vector<S,T> to (point) const;
         vector<S,T> from (point) const;
 
@@ -47,6 +42,19 @@ namespace util {
 
         void sanity (void) const;
     };
+
+    // distance operators
+    template <size_t S, typename T, typename U>
+    typename std::common_type<T,U>::type distance  (point<S,T>, point<S,U>);
+
+    template <size_t S, typename T, typename U>
+    typename std::common_type<T,U>::type distance2 (point<S,T>, point<S,U>);
+
+    template <size_t S, typename T, typename U>
+    typename std::common_type<T,U>::type manhattan (point<S,T>, point<S,U>);
+
+    template <size_t S, typename T, typename U>
+    typename std::common_type<T,U>::type chebyshev (point<S,T>, point<S,U>);
 
     // iostream operators
     template <size_t S, typename T>

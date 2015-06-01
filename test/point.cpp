@@ -47,6 +47,7 @@ main (int, char**) {
         CHECK_EQ (pf.template cast<point2u::value_type> (), pu);
     }
 
+    // redim to 4-dimension homogenous coords
     {
         const point2f p (3, 4);
         const point4f q = p.homog<4> ();
@@ -57,6 +58,17 @@ main (int, char**) {
         CHECK_EQ (q.w, 1);
     }
 
+    // trivial checks for distance metrics
+    {
+        const point2f a (1, 2);
+        const point2f b (9, 5);
+
+        CHECK_EQ (distance2 (a, b), 73.f);
+        CHECK_EQ (distance  (a, b), std::sqrt (73.f));
+        CHECK_EQ (manhattan (a, b), 11.f);
+        CHECK_EQ (chebyshev (a, b), 8.f);
+    }
+
     util::TAP::logger tap;
-    tap.todo ("convert to TAP");
+    tap.skip ("convert to TAP");
 }

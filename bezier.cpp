@@ -105,16 +105,16 @@ namespace util {
 
         auto c1 = dot (w, v);
         if (c1 <= 0)
-            return m_points[0].distance (target);
+            return util::distance (target, m_points[0]);
 
         auto c2 = dot (v, v);
         if (c2 <= c1)
-            return m_points[1].distance (target);
+            return util::distance (target, m_points[1]);
 
         auto b = c1 / c2;
         auto p = m_points[0] + b * v;
 
-        return p.distance (target);
+        return util::distance (target, p);
     }
 }
 
@@ -271,12 +271,12 @@ namespace util {
                 continue;
 
             if (t <= 0)
-                dist = min (dist, p0.distance (target));
+                dist = min (dist, util::distance (target, p0));
             else if (t > 1)
-                dist = min (p2.distance (target));
+                dist = min (util::distance (target, p2));
             else {
                 auto p = eval (t);
-                dist = min (dist, p.distance (target));
+                dist = min (dist, util::distance (target, p));
             }
         }
 
@@ -303,8 +303,8 @@ float refine_cubic (util::bezier<3> b,
     util::point2f p_l = b.eval (t_l);
     util::point2f p_r = b.eval (t_r);
 
-    float d_l = p_l.distance (target);
-    float d_r = p_r.distance (target);
+    float d_l = util::distance (target, p_l);
+    float d_r = util::distance (target, p_r);
 
     if (d_l < d) { return refine_cubic (b, target, t_l, d_l, p); }
     if (d_r < d) { return refine_cubic (b, target, t_r, d_r, p); }
@@ -327,14 +327,18 @@ namespace util {
             lookup[i] = eval (i / float (SUBDIV - 1));
 
         size_t best = 0;
-        for (size_t i = 1; i < lookup.size (); ++i)
-            if (lookup[i].distance2 (target) < lookup[best].distance2 (target))
+        for (size_t i = 1; i < lookup.size (); ++i) {
+            auto d_i = util::distance2 (target, lookup[i]);
+            auto d_b = util::distance2 (target, lookup[best]);
+
+            if (d_i < d_b)
                 best = i;
+        }
 
         return refine_cubic (*this,
                                target,
                                best / float (SUBDIV - 1),
-                               lookup[best].distance (target),
+                               util::distance (target, lookup[best]),
                                1.f / SUBDIV);
     }
 }

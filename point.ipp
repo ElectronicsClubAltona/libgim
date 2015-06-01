@@ -19,50 +19,6 @@
 #include <algorithm>
 
 namespace util {
-    //-------------------------------------------------------------------------
-    template <size_t S, typename T>
-    template <typename U>
-    typename std::common_type<T,U>::type
-    util::point<S,T>::distance (point<S,U> rhs) const
-    {
-        return std::sqrt (distance2 (rhs));
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <size_t S, typename T>
-    template <typename U>
-    typename std::common_type<T,U>::type
-    util::point<S,T>::distance2 (point<S,U> rhs) const
-    {
-        typedef typename std::common_type<T,U>::type result_t;
-
-        result_t sum { 0 };
-
-        for (size_t i = 0; i < S; ++i)
-            sum += pow2 (this->data[i] - rhs.data[i]);
-
-        return sum;
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <size_t S, typename T>
-    template <typename U>
-    typename std::common_type<T,U>::type
-    util::point<S,T>::manhattan (point<S,U> rhs) const
-    {
-        typedef typename std::common_type<T,U>::type result_t;
-
-        result_t sum { 0 };
-
-        for (size_t i = 0; i < S; ++i)
-            sum += std::abs (this->data[i] - rhs.data[i]);
-
-        return sum;
-    }
-
-
     ///------------------------------------------------------------------------
     /// expand point to use homogenous coordinates of a higher dimension.
     /// ie, fill with (0,..,0,1)
@@ -87,5 +43,51 @@ namespace util {
         *f = T{1};
 
         return out;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T, typename U>
+    typename std::common_type<T,U>::type
+    distance (point<S,T> a, point<S,U> b)
+    {
+        return std::sqrt (distance2 (a, b));
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T, typename U>
+    typename std::common_type<T,U>::type
+    distance2 (point<S,T> a, point<S,U> b)
+    {
+        typename std::common_type<T,U>::type sum {0};
+
+        for (size_t i = 0; i < S; ++i)
+            sum += pow2 (a.data[i] - b.data[i]);
+
+        return sum;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T, typename U>
+    typename std::common_type<T,U>::type
+    manhattan (point<S,T> a, point<S,U> b)
+    {
+        typename std::common_type<T,U>::type sum {0};
+
+        for (size_t i = 0; i < S; ++i)
+            sum += std::abs (a.data[i] - b.data[i]);
+
+        return sum;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T, typename U>
+    typename std::common_type<T,U>::type
+    chebyshev(point<S,T> a, point<S,U> b)
+    {
+        return util::max (abs (a - b));
     }
 }

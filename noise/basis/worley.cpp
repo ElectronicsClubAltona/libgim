@@ -100,8 +100,10 @@ worley<T>::operator() (util::point<2,T> p) const
             CHECK (off.y >= 0 && off.y <= 1);
 
             pos += off;
-            *cursor++ = pos.difference2 (p_rem.template as<util::vector> ());
+            *cursor = distance2 (pos + off, p_rem);
+            cursor++;
         }
+    }
 
     std::sort (std::begin (distances), std::end (distances));
     CHECK_GE (distances[0], 0);
