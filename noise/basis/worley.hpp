@@ -23,7 +23,7 @@
 #include "../../range.hpp"
 
 namespace util { namespace noise { namespace basis {
-    template <typename T>
+    template <typename T, size_t F = 0>
     struct worley {
         worley (seed_t);
         worley ();
