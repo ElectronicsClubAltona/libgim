@@ -45,6 +45,10 @@ namespace util { namespace noise { namespace fractal {
         B basis;
 
         constexpr T operator() (util::point<2,T>) const;
+
+    private:
+        T invAH;
+        T invGH;
     };
 } } }
 

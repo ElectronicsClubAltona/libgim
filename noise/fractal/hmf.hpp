@@ -23,6 +23,7 @@
 
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////
+    /// Musgrave's "Hybrid MultiFractal"
     template <typename T, typename B>
     struct hmf {
         using seed_t = uint64_t;
@@ -44,7 +45,11 @@ namespace util { namespace noise { namespace fractal {
 
         B basis;
 
-        constexpr T operator() (util::point<2,T>) const;
+        constexpr T operator() (point<2,T>) const;
+
+    private:
+        T invAH;
+        T invGH;
     };
 } } }
 

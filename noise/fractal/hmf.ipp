@@ -22,6 +22,7 @@
 
 namespace util { namespace noise { namespace fractal {
     //-------------------------------------------------------------------------
+    // H should be fairly low due to the decreasing weight parameter in eval
     template <typename T, typename B>
     hmf<T,B>::hmf ():
         H (0.25f),
@@ -30,7 +31,9 @@ namespace util { namespace noise { namespace fractal {
         lacunarity (2),
         offset (0.7f),
         amplitude (1),
-        gain (1)
+        gain (1 / lacunarity),
+        invAH (std::pow (amplitude, -H)),
+        invGH (std::pow (gain, H))
     { ; }
 
 
@@ -39,9 +42,7 @@ namespace util { namespace noise { namespace fractal {
     constexpr T
     hmf<T,B>::operator() (util::point<2,T> p) const
     {
-        T exponents[octaves];
-        for (size_t i = 0; i < octaves; ++i)
-            exponents[i] = std::pow (std::pow (lacunarity, float (i)), -H);
+        T scale = invAH;
 
         T result = 0;
         T signal = 0;
@@ -50,13 +51,13 @@ namespace util { namespace noise { namespace fractal {
         p *= frequency;
 
         for (size_t i = 0; i < octaves; ++i) {
-            signal = (basis (p) + offset) * exponents[i];
-            result += weight * signal;
+            signal  = (basis (p) + offset) * scale;
+            result += signal * weight;
 
-            weight *= gain * signal;
-            if (weight > 1)
-                weight = 1;
+            weight *= signal;
+            weight  = min (weight, T{1});
 
+            scale *= invGH;
             p *= lacunarity;
         }
 

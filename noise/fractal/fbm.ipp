@@ -25,6 +25,7 @@ namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename B>
     fbm<T,B>::fbm (unsigned _octaves,
+                   T        _H,
                    T        _frequency,
                    T        _lacunarity,
                    T        _amplitude,
@@ -32,11 +33,14 @@ namespace util { namespace noise { namespace fractal {
                    seed_t   _seed):
         seed (_seed),
         octaves (_octaves),
+        H (_H),
         frequency (_frequency),
         lacunarity (_lacunarity),
         amplitude (_amplitude),
         gain (_gain),
-        basis (_seed)
+        basis (_seed),
+        invAH (std::pow (amplitude, -H)),
+        invGH (std::pow (gain, H))
     {
         CHECK_NEQ (octaves, 0);
         CHECK_NEQ (frequency, 0);
@@ -48,6 +52,7 @@ namespace util { namespace noise { namespace fractal {
     template <typename T, typename B>
     fbm<T,B>::fbm ():
         fbm<T,B> (DEFAULT_OCTAVES,
+                  DEFAULT_H,
                   DEFAULT_FREQUENCY,
                   DEFAULT_LACUNARITY,
                   DEFAULT_AMPLITUDE,
@@ -63,13 +68,13 @@ namespace util { namespace noise { namespace fractal {
     {
         T total = 0;
         T f = frequency;
-        T a = amplitude;
+        T a = invAH;
 
         for (size_t i = 0; i < octaves; ++i) {
             total += basis (p * f) * a;
 
             f *= lacunarity;
-            a *= gain;
+            a *= invGH;
         }
 
         return total;

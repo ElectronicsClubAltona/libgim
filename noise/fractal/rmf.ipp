@@ -24,18 +24,24 @@ namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename B>
     rmf<T,B>::rmf (unsigned _octaves,
-                             T        _frequency,
-                             T        _lacunarity,
-                             T        _amplitude,
-                             T        _gain,
-                             seed_t   _seed):
+                   T        _H,
+                   T        _offset,
+                   T        _frequency,
+                   T        _lacunarity,
+                   T        _amplitude,
+                   T        _gain,
+                   seed_t   _seed):
         seed (_seed),
         octaves (_octaves),
+        H (_H),
+        offset (_offset),
         frequency (_frequency),
         lacunarity (_lacunarity),
         amplitude (_amplitude),
         gain (_gain),
-        basis (_seed)
+        basis (_seed),
+        invAH (std::pow (amplitude, -H)),
+        invGH (std::pow (gain, H))
     { ; }
 
 
@@ -43,6 +49,8 @@ namespace util { namespace noise { namespace fractal {
     template <typename T, typename B>
     rmf<T,B>::rmf ():
         rmf<T,B> (DEFAULT_OCTAVES,
+                  DEFAULT_H,
+                  DEFAULT_OFFSET,
                   DEFAULT_FREQUENCY,
                   DEFAULT_LACUNARITY,
                   DEFAULT_AMPLITUDE,
@@ -52,16 +60,13 @@ namespace util { namespace noise { namespace fractal {
 
 
     //-------------------------------------------------------------------------
+    // we use the name 'amplitude' instead of musgrave's 'gain'.
+    // assumes basis distribution [-1,1] and offset ~= 1
     template <typename T, typename B>
     constexpr T
     rmf<T,B>::operator() (util::point<2,T> p) const
     {
-        const T offset = 1;
-        const T H = 1.f;
-
-        T exponents[octaves];
-        for (size_t i = 0; i < octaves; ++i)
-            exponents[i] = std::pow (std::pow (lacunarity, float (i)), -H);
+        T scale = invAH;
 
         T signal = 0;
         T result = 0;
@@ -82,12 +87,13 @@ namespace util { namespace noise { namespace fractal {
             signal *= weight;
 
             // contribute to the weight
-            weight = signal * gain;
+            weight = signal * amplitude;
             weight = limit (weight, 0, 1);
 
             // record and continue
-            result += signal * exponents[i];
+            result += signal * scale;
 
+            scale *= invGH;
             p *= lacunarity;
         }
 

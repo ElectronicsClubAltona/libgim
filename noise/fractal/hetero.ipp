@@ -29,7 +29,9 @@ namespace util { namespace noise { namespace fractal {
         lacunarity (2),
         offset (0.7f),
         amplitude (1),
-        gain (1)
+        gain (1/lacunarity),
+        invAH (std::pow (amplitude, -H)),
+        invGH (std::pow (gain, H))
     { ; }
 
 
@@ -38,20 +40,19 @@ namespace util { namespace noise { namespace fractal {
     constexpr T
     hetero<T,B>::operator() (util::point<2,T> p) const
     {
-        T exponents[octaves];
-        for (size_t i = 0; i < octaves; ++i)
-            exponents[i] = std::pow (std::pow (lacunarity, float (i)), -H);
-
-        T result = 0;
-        T increment = 0;
+        T scale = invAH;
 
         p *= frequency;
-        result = basis (p) + offset;
+        T result = (basis (p) + offset) * scale;
         p *= lacunarity;
 
-        for (size_t i = 0; i < octaves; ++i) {
+        T increment = 0;
+
+        for (size_t i = 1; i < octaves; ++i) {
+            scale *= invGH;
+
             increment  = basis (p) + offset;
-            increment *= exponents[i];
+            increment *= scale;
             increment *= result;
 
             result += increment;

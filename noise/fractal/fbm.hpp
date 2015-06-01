@@ -36,13 +36,15 @@ namespace util { namespace noise { namespace fractal {
     struct fbm {
         using seed_t = uint64_t;
 
-        static constexpr unsigned DEFAULT_OCTAVES   = 8;
-        static constexpr T DEFAULT_FREQUENCY        = T(0.1);
-        static constexpr T DEFAULT_LACUNARITY       = 2;
-        static constexpr T DEFAULT_AMPLITUDE        = 1;
-        static constexpr T DEFAULT_GAIN             = 1 / T(2);
+        static constexpr unsigned DEFAULT_OCTAVES = 8;
+        static constexpr T DEFAULT_H          = 1;
+        static constexpr T DEFAULT_FREQUENCY  = T(0.1);
+        static constexpr T DEFAULT_LACUNARITY = 2;
+        static constexpr T DEFAULT_AMPLITUDE  = 1;
+        static constexpr T DEFAULT_GAIN       = 1 / DEFAULT_LACUNARITY;
 
         fbm (unsigned octaves,
+             T H,
              T frequency,
              T lacunarity,
              T amplitude,
@@ -52,6 +54,7 @@ namespace util { namespace noise { namespace fractal {
 
         seed_t seed;
         unsigned octaves;
+        T H;
 
         T frequency;
         T lacunarity;
@@ -61,6 +64,10 @@ namespace util { namespace noise { namespace fractal {
 
         B basis;
         constexpr T operator() (util::point<2,T>) const;
+
+    private:
+        T invAH;
+        T invGH;
     };
 } } }
 
