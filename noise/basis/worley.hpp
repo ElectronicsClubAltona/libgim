@@ -29,7 +29,7 @@ namespace util { namespace noise { namespace basis {
         worley ();
 
         range<T> bounds (void) const;
-        T operator() (util::point<2,T>) const;
+        constexpr T operator() (util::point<2,T>) const;
 
         seed_t seed;
 

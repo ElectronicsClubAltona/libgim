@@ -50,7 +50,7 @@ namespace util { namespace noise { namespace basis {
 
     //-------------------------------------------------------------------------
     template <typename T, size_t F>
-    T
+    constexpr T
     worley<T,F>::operator() (util::point<2,T> p) const
     {
         // extract integer and fractional parts. be careful to always round down
@@ -61,8 +61,8 @@ namespace util { namespace noise { namespace basis {
         auto p_rem = abs (p - p_int).template as<point> ();
 
         // setup an array of distances
-        static constexpr size_t RADIUS = 1;
-        static constexpr size_t COUNT = pow2 (RADIUS * 2 + 1);
+        constexpr size_t RADIUS = 1;
+        constexpr size_t COUNT = pow2 (RADIUS * 2 + 1);
         T distances[COUNT] = { std::numeric_limits<T>::quiet_NaN () };
         T *cursor = distances;
 

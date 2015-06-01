@@ -47,7 +47,7 @@ namespace util { namespace noise { namespace basis {
 
     //-------------------------------------------------------------------------
     template <typename T, util::noise::lerp_t<T> L>
-    T
+    constexpr T
     value<T,L>::operator() (util::point<2,T> p) const
     {
         // extract integer and fractional parts. be careful to always round down

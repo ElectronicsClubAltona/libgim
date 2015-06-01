@@ -53,7 +53,7 @@ namespace util { namespace noise { namespace fractal {
 
     //-------------------------------------------------------------------------
     template <typename T, typename B>
-    T
+    constexpr T
     rmf<T,B>::operator() (util::point<2,T> p) const
     {
         const T offset = 1;

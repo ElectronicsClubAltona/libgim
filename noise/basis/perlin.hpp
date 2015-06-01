@@ -30,7 +30,7 @@ namespace util { namespace noise { namespace basis {
         perlin ();
 
         range<T> bounds (void) const;
-        T operator() (point<2,T>) const;
+        constexpr T operator() (point<2,T>) const;
 
         seed_t seed;
 

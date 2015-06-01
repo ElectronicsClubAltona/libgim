@@ -55,7 +55,7 @@ namespace util { namespace noise { namespace fractal {
         T gain;
 
         B basis;
-        T operator() (util::point<2,T>) const;
+        constexpr T operator() (util::point<2,T>) const;
     };
 } } }
 
