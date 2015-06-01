@@ -12,6 +12,12 @@
 #include "noise/basis/worley.hpp"
 #include "extent.hpp"
 
+
+template struct util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::cubic>>;
+template struct util::noise::fractal::hmf<float, util::noise::basis::value<float,util::lerp::cubic>>;
+template struct util::noise::fractal::rmf<float, util::noise::basis::constant<float>>;
+template struct util::noise::fractal::hetero<float, util::noise::basis::worley<float,2>>;
+
 int
 main (void)
 {
