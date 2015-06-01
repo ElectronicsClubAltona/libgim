@@ -22,12 +22,11 @@
 
 #include "image.hpp"
 
-namespace util {
-    namespace noise {
+namespace util { namespace noise {
         template <typename T, typename G>
         void fill (image::buffer<T>&, const G&);
-    }
-}
+} }
 
+#include "noise.ipp"
 
 #endif

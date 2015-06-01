@@ -64,4 +64,6 @@ namespace util { namespace noise { namespace fractal {
     };
 } } }
 
+#include "fbm.ipp"
+
 #endif

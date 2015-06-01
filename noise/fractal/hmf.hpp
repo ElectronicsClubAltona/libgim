@@ -48,5 +48,7 @@ namespace util { namespace noise { namespace fractal {
     };
 } } }
 
+#include "hmf.ipp"
+
 #endif
 

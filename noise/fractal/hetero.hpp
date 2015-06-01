@@ -48,6 +48,8 @@ namespace util { namespace noise { namespace fractal {
     };
 } } }
 
+#include "hetero.ipp"
+
 #endif
 
 

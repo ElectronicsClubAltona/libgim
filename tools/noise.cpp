@@ -11,19 +11,20 @@
 #include "noise/basis/perlin.hpp"
 #include "noise/basis/worley.hpp"
 #include "extent.hpp"
-    
+
 int
 main (void)
 {
     // setup the output buffer
-    util::extent2u size (1920, 1080);
+    util::extent2u size {1920, 1080};
     util::image::buffer<float> img (size);
 
     // setup the noise generator
-    util::noise::fractal::fbm<float, util::noise::basis::worley<float>> b;
+    //util::noise::fractal::fbm<float, util::noise::basis::worley<float>> b;
     //util::noise::fractal::rmf<float, util::noise::basis::worley<float>> b;
     //util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::cubic>> b;
     //util::noise::fractal::rmf<float, util::noise::basis::perlin<float,util::lerp::cubic>> b;
+    util::noise::fractal::hmf<float, util::noise::basis::perlin<float,util::lerp::cubic>> b;
     //util::noise::fractal::hetero<float, util::noise::basis::perlin<float,util::lerp::quintic>> b;
 
     b.octaves = 8;
@@ -50,7 +51,7 @@ main (void)
     std::cerr << "range: [" << *range.first << ", " << *range.second << "]\n";
 
     std::transform (img.begin (), img.end (), img.begin (), [offset,div] (auto i) { return (i - offset) / div; });
-    
+
     // write the image to disk
     auto grey = img.clone<uint8_t> ();
     util::pgm::write (grey, "noise.ppm");
