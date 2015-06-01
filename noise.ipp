@@ -14,20 +14,22 @@
  * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_NOISE_HPP
-#define __UTIL_NOISE_HPP
-
-#include <cstdint>
-#include <cstdlib>
-
-#include "image.hpp"
-
-namespace util {
-    namespace noise {
-        template <typename T, typename G>
-        void fill (image::buffer<T>&, const G&);
-    }
-}
-
-
+#ifdef __UTIL_NOISE_IPP
+#error
 #endif
+#define __UTIL_NOISE_IPP
+
+namespace util { namespace noise {
+    //-------------------------------------------------------------------------
+    template <typename T, typename G>
+    void
+    fill (image::buffer<T> &pixels, const G& gen)
+    {
+        size_t h = pixels.h, s = pixels.s, w = pixels.w;
+        T *data = pixels.data ();
+
+        for (size_t y = 0; y < h; ++y)
+            for (size_t x = 0; x < w; ++x)
+                data[y * s + x] = gen ({T(x), T(y)});
+    }
+} }

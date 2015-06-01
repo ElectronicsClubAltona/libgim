@@ -1,5 +1,10 @@
 #include "image.hpp"
 #include "noise.hpp"
+
+#include "noise/fractal/fbm.hpp"
+#include "noise/fractal/rmf.hpp"
+#include "noise/fractal/hmf.hpp"
+#include "noise/fractal/hetero.hpp"
 #include "noise/lerp.hpp"
 #include "noise/basis/constant.hpp"
 #include "noise/basis/value.hpp"
@@ -15,11 +20,12 @@ main (void)
     util::image::buffer<float> img (size);
 
     // setup the noise generator
-    //util::noise::fbm<float, util::noise::basis::worley<float>> b;
-    //util::noise::rmf<float, util::noise::basis::worley<float>> b;
-    //util::noise::hmf<float, util::noise::basis::perlin<float,util::lerp::quintic>> b;
-    util::noise::hetero<float, util::noise::basis::perlin<float,util::lerp::quintic>> b;
-    //b.octaves = 3;
+    util::noise::fractal::fbm<float, util::noise::basis::worley<float>> b;
+    //util::noise::fractal::rmf<float, util::noise::basis::worley<float>> b;
+    //util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::cubic>> b;
+    //util::noise::fractal::rmf<float, util::noise::basis::perlin<float,util::lerp::cubic>> b;
+    //util::noise::fractal::hetero<float, util::noise::basis::perlin<float,util::lerp::quintic>> b;
+
     b.frequency = 10.f / size.w;
     b.lacunarity = 2;
     b.basis.seed = time (NULL);
@@ -30,7 +36,7 @@ main (void)
 
         for (size_t y = 0; y < size.h; ++y)
             for (size_t x = 0; x < size.w; ++x) {
-                auto v = b (util::point2f {float (x), float (y)} + offset); //{x + offset, y + offset});
+                auto v = b (util::point2f {float (x), float (y)} + offset);
                 img.data ()[y * size.w + x] = v;
             }
     }

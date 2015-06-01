@@ -145,8 +145,14 @@ UTIL_FILES   =			\
     noise/basis/perlin.hpp	\
     noise/basis/worley.cpp	\
     noise/basis/worley.hpp	\
-    noise/fractal.cpp          \
-    noise/fractal.hpp          \
+    noise/fractal/fbm.cpp	\
+    noise/fractal/fbm.hpp	\
+    noise/fractal/hetero.cpp	\
+    noise/fractal/hetero.hpp	\
+    noise/fractal/hmf.cpp	\
+    noise/fractal/hmf.hpp	\
+    noise/fractal/rmf.cpp	\
+    noise/fractal/rmf.hpp	\
     noise/lerp.cpp		\
     noise/lerp.hpp		\
     noise/lut.cpp		\
