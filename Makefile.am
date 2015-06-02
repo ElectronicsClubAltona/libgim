@@ -145,6 +145,8 @@ UTIL_FILES   =			\
     noise/basis/perlin.ipp	\
     noise/basis/worley.hpp	\
     noise/basis/worley.ipp	\
+    noise/fractal/base.hpp	\
+    noise/fractal/base.ipp	\
     noise/fractal/fbm.hpp	\
     noise/fractal/fbm.ipp	\
     noise/fractal/hetero.hpp	\

@@ -20,44 +20,64 @@
 #define __UTIL_NOISE_FRACTAL_HETERO_IPP
 
 namespace util { namespace noise { namespace fractal {
-    //-------------------------------------------------------------------------
+    ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename B>
-    hetero<T,B>::hetero():
-        H (0.75f),
-        octaves (6),
-        frequency (0.1f),
-        lacunarity (2),
-        offset (0.7f),
-        amplitude (1),
-        gain (1/lacunarity),
-        invAH (std::pow (amplitude, -H)),
-        invGH (std::pow (gain, H))
+    hetero<T,B>::hetero(seed_t _seed,
+                        unsigned _octaves,
+                        T _H,
+                        T _frequency,
+                        T _lacunarity,
+                        T _amplitude,
+                        T _gain,
+                        T _offset):
+        base<T,B> (_seed,
+                   _octaves,
+                   _H,
+                   _frequency,
+                   _lacunarity,
+                   _amplitude,
+                   _gain),
+        m_offset (_offset)
     { ; }
 
 
     //-------------------------------------------------------------------------
     template <typename T, typename B>
+    hetero<T,B>::hetero (seed_t _seed):
+        hetero<T,B> (_seed,
+                    DEFAULT_OCTAVES,
+                    DEFAULT_H,
+                    DEFAULT_FREQUENCY,
+                    DEFAULT_LACUNARITY,
+                    DEFAULT_AMPLITUDE,
+                    DEFAULT_GAIN,
+                    DEFAULT_OFFSET)
+    { ; }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T, typename B>
     constexpr T
     hetero<T,B>::operator() (util::point<2,T> p) const
     {
-        T scale = invAH;
+        T scale = this->m_invAH;
 
-        p *= frequency;
-        T result = (basis (p) + offset) * scale;
-        p *= lacunarity;
+        p *= this->m_frequency;
+        T result = (this->m_basis (p) + m_offset) * scale;
+        p *= this->m_lacunarity;
 
         T increment = 0;
 
-        for (size_t i = 1; i < octaves; ++i) {
-            scale *= invGH;
+        for (size_t i = 1; i < this->m_octaves; ++i) {
+            scale *= this->m_invGH;
 
-            increment  = basis (p) + offset;
+            increment  = this->m_basis (p) + m_offset;
             increment *= scale;
             increment *= result;
 
             result += increment;
 
-            p *= lacunarity;
+            p *= this->m_lacunarity;
         }
 
         return result;

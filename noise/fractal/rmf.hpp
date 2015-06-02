@@ -19,6 +19,7 @@
 
 #include <cstdint>
 
+#include "base.hpp"
 #include "../../point.hpp"
 
 namespace util { namespace noise { namespace fractal {
@@ -32,8 +33,8 @@ namespace util { namespace noise { namespace fractal {
     /// amplitude: value scaling factor for the base octave
     /// gain: incremental octave value scaling factor
     template <typename T, typename B>
-    struct rmf {
-        using seed_t = uint64_t;
+    struct rmf : public base<T,B> {
+        using seed_t = typename base<T,B>::seed_t;
 
         static constexpr unsigned DEFAULT_OCTAVES = 5;
         static constexpr T DEFAULT_H = 1;
@@ -43,35 +44,21 @@ namespace util { namespace noise { namespace fractal {
         static constexpr T DEFAULT_AMPLITUDE = 2;
         static constexpr T DEFAULT_GAIN = 1 / DEFAULT_LACUNARITY;
 
-        rmf (unsigned octaves,
+        rmf (seed_t,
+             unsigned octaves,
              T H,
-             T offset,
              T frequency,
              T lacunarity,
              T amplitude,
              T gain,
-             seed_t seed);
-        rmf ();
+             T offset);
 
-        seed_t seed;
-
-        unsigned octaves;
-        T H;
-        T offset;
-
-        T frequency;
-        T lacunarity;
-
-        T amplitude;
-        T gain;
-
-        B basis;
+        rmf (seed_t);
 
         constexpr T operator() (util::point<2,T>) const;
 
     private:
-        T invAH;
-        T invGH;
+        T m_offset;
     };
 } } }
 

@@ -24,57 +24,50 @@
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename B>
-    fbm<T,B>::fbm (unsigned _octaves,
+    fbm<T,B>::fbm (seed_t _seed,
+                   unsigned _octaves,
                    T        _H,
                    T        _frequency,
                    T        _lacunarity,
                    T        _amplitude,
-                   T        _gain,
-                   seed_t   _seed):
-        seed (_seed),
-        octaves (_octaves),
-        H (_H),
-        frequency (_frequency),
-        lacunarity (_lacunarity),
-        amplitude (_amplitude),
-        gain (_gain),
-        basis (_seed),
-        invAH (std::pow (amplitude, -H)),
-        invGH (std::pow (gain, H))
-    {
-        CHECK_NEQ (octaves, 0);
-        CHECK_NEQ (frequency, 0);
-        CHECK_NEQ (amplitude, 0);
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <typename T, typename B>
-    fbm<T,B>::fbm ():
-        fbm<T,B> (DEFAULT_OCTAVES,
-                  DEFAULT_H,
-                  DEFAULT_FREQUENCY,
-                  DEFAULT_LACUNARITY,
-                  DEFAULT_AMPLITUDE,
-                  DEFAULT_GAIN,
-                  rand ())
+                   T        _gain):
+        base<T,B> (_seed,
+                   _octaves,
+                   _H,
+                   _frequency,
+                   _lacunarity,
+                   _amplitude,
+                   _gain)
     { ; }
 
 
     //-------------------------------------------------------------------------
     template <typename T, typename B>
+    fbm<T,B>::fbm (seed_t _seed):
+        fbm<T,B> (_seed,
+                  DEFAULT_OCTAVES,
+                  DEFAULT_H,
+                  DEFAULT_FREQUENCY,
+                  DEFAULT_LACUNARITY,
+                  DEFAULT_AMPLITUDE,
+                  DEFAULT_GAIN)
+    { ; }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T, typename B>
     constexpr T
     fbm<T,B>::operator() (util::point<2,T> p) const
     {
         T total = 0;
-        T f = frequency;
-        T a = invAH;
+        T f = this->m_frequency;
+        T a = this->m_invAH;
 
-        for (size_t i = 0; i < octaves; ++i) {
-            total += basis (p * f) * a;
+        for (size_t i = 0; i < this->m_octaves; ++i) {
+            total += this->m_basis (p * f) * a;
 
-            f *= lacunarity;
-            a *= invGH;
+            f *= this->m_lacunarity;
+            a *= this->m_invGH;
         }
 
         return total;

@@ -23,62 +23,59 @@
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename B>
-    rmf<T,B>::rmf (unsigned _octaves,
+    rmf<T,B>::rmf (seed_t _seed,
+                   unsigned _octaves,
                    T        _H,
                    T        _offset,
                    T        _frequency,
                    T        _lacunarity,
                    T        _amplitude,
-                   T        _gain,
-                   seed_t   _seed):
-        seed (_seed),
-        octaves (_octaves),
-        H (_H),
-        offset (_offset),
-        frequency (_frequency),
-        lacunarity (_lacunarity),
-        amplitude (_amplitude),
-        gain (_gain),
-        basis (_seed),
-        invAH (std::pow (amplitude, -H)),
-        invGH (std::pow (gain, H))
+                   T        _gain):
+        base<T,B> (_seed,
+                   _octaves,
+                   _H,
+                   _frequency,
+                   _lacunarity,
+                   _amplitude,
+                   _gain),
+        m_offset (_offset)
     { ; }
 
 
     //-------------------------------------------------------------------------
     template <typename T, typename B>
-    rmf<T,B>::rmf ():
-        rmf<T,B> (DEFAULT_OCTAVES,
+    rmf<T,B>::rmf (seed_t _seed):
+        rmf<T,B> (_seed,
+                  DEFAULT_OCTAVES,
                   DEFAULT_H,
-                  DEFAULT_OFFSET,
                   DEFAULT_FREQUENCY,
                   DEFAULT_LACUNARITY,
                   DEFAULT_AMPLITUDE,
                   DEFAULT_GAIN,
-                  rand ())
+                  DEFAULT_OFFSET)
     { ; }
 
 
-    //-------------------------------------------------------------------------
+    ///////////////////////////////////////////////////////////////////////////
     // we use the name 'amplitude' instead of musgrave's 'gain'.
     // assumes basis distribution [-1,1] and offset ~= 1
     template <typename T, typename B>
     constexpr T
     rmf<T,B>::operator() (util::point<2,T> p) const
     {
-        T scale = invAH;
+        T scale = this->m_invAH;
 
         T signal = 0;
         T result = 0;
         T weight = 1;
 
-        p *= frequency;
+        p *= this->m_frequency;
 
-        for (size_t i = 0; i < octaves; ++i) {
+        for (size_t i = 0; i < this->m_octaves; ++i) {
             // generates ridged noise
-            signal = basis (p);
+            signal = this->m_basis (p);
             signal = std::fabs (signal);
-            signal = offset - signal;
+            signal = m_offset - signal;
 
             // sharpens the ridges
             signal *= signal;
@@ -87,14 +84,14 @@ namespace util { namespace noise { namespace fractal {
             signal *= weight;
 
             // contribute to the weight
-            weight = signal * amplitude;
+            weight = signal * this->m_amplitude;
             weight = limit (weight, 0, 1);
 
             // record and continue
             result += signal * scale;
 
-            scale *= invGH;
-            p *= lacunarity;
+            scale *= this->m_invGH;
+            p *= this->m_lacunarity;
         }
 
         return result;

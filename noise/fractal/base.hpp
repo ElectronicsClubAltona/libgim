@@ -11,15 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_NOISE_FRACTAL_FBM_HPP
-#define __UTIL_NOISE_FRACTAL_FBM_HPP
+#ifndef __UTIL_NOISE_FRACTAL_BASE_HPP
+#define __UTIL_NOISE_FRACTAL_BASE_HPP
 
 #include <cstdint>
 
-#include "base.hpp"
 #include "../../point.hpp"
 
 namespace util { namespace noise { namespace fractal {
@@ -34,29 +33,52 @@ namespace util { namespace noise { namespace fractal {
     /// amplitude: maximum absolute value of the noise
     /// gain: per octave amplitude scaling factor. typically 1/f.
     template <typename T, typename B>
-    struct fbm : public base<T,B> {
-        using seed_t = typename base<T,B>::seed_t;
+    struct base {
+        using seed_t = uint64_t;
 
-        static constexpr unsigned DEFAULT_OCTAVES = 8;
-        static constexpr T DEFAULT_H          = 1;
-        static constexpr T DEFAULT_FREQUENCY  = T(0.1);
-        static constexpr T DEFAULT_LACUNARITY = 2;
-        static constexpr T DEFAULT_AMPLITUDE  = 1;
-        static constexpr T DEFAULT_GAIN       = 1 / DEFAULT_LACUNARITY;
+        // constructors
+        base (seed_t,
+              unsigned octaves,
+              T H,
+              T frequency,
+              T lacunarity,
+              T amplitude,
+              T gain);
 
-        fbm (seed_t seed,
-             unsigned octaves,
-             T H,
-             T frequency,
-             T lacunarity,
-             T amplitude,
-             T gain);
-        fbm (seed_t);
+        // accessors
+        constexpr unsigned octaves (void) const;
+        unsigned octaves (unsigned);
 
-        constexpr T operator() (util::point<2,T>) const;
+        constexpr T H (void) const;
+        T H (T);
+    
+        constexpr T frequency (void) const;
+        T frequency (T);
+
+        constexpr T lacunarity (void) const;
+        T lacunarity (T);
+
+        constexpr seed_t seed (void) const;
+        seed_t seed (seed_t);
+
+    protected:
+        unsigned m_octaves;
+        T m_H;
+
+        T m_frequency;
+        T m_lacunarity;
+
+        T m_amplitude;
+        T m_gain;
+
+        B m_basis;
+
+        T m_invAH;
+        T m_invGH;
     };
 } } }
 
-#include "fbm.ipp"
+#include "base.ipp"
 
 #endif
+

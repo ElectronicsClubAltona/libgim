@@ -25,31 +25,33 @@ namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////
     /// Musgrave's "Hybrid MultiFractal"
     template <typename T, typename B>
-    struct hmf {
-        using seed_t = uint64_t;
+    struct hmf : public base<T,B> {
+        using seed_t = typename base<T,B>::seed_t;
 
-        hmf ();
+        // H should be fairly low due to the decreasing weight parameter in eval
+        static constexpr unsigned DEFAULT_OCTAVES = 6;
+        static constexpr T DEFAULT_H = T(0.25);
+        static constexpr T DEFAULT_FREQUENCY = T(0.1);
+        static constexpr T DEFAULT_LACUNARITY = 2;
+        static constexpr T DEFAULT_AMPLITUDE = 1;
+        static constexpr T DEFAULT_GAIN = 1 / DEFAULT_LACUNARITY;
+        static constexpr T DEFAULT_OFFSET = T(0.7);
 
-        seed_t seed;
+        hmf (seed_t,
+             unsigned octaves,
+             T H,
+             T frequency,
+             T lacunarity,
+             T amplitude,
+             T gain,
+             T offset);
 
-        T H;
-        unsigned octaves;
-
-        T frequency;
-        T lacunarity;
-
-        T offset;
-
-        T amplitude;
-        T gain;
-
-        B basis;
+        hmf (seed_t);
 
         constexpr T operator() (point<2,T>) const;
 
     private:
-        T invAH;
-        T invGH;
+        T m_offset;
     };
 } } }
 

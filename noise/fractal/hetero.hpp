@@ -19,36 +19,39 @@
 
 #include <cstdint>
 
+#include "base.hpp"
 #include "../../point.hpp"
 
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////
     /// Heterogeneous procedural terrain fucntion: stats by altitude method
     template <typename T, typename B>
-    struct hetero {
-        using seed_t = uint64_t;
+    struct hetero : public base<T,B> {
+        using seed_t = typename base<T,B>::seed_t;
 
-        hetero ();
+        static constexpr T DEFAULT_H = T(0.75);
+        static constexpr T DEFAULT_OCTAVES = 6;
+        static constexpr T DEFAULT_FREQUENCY = T(0.1);
+        static constexpr T DEFAULT_LACUNARITY = 2;
+        static constexpr T DEFAULT_AMPLITUDE = 1;
+        static constexpr T DEFAULT_GAIN = 1 / DEFAULT_LACUNARITY;
+        static constexpr T DEFAULT_OFFSET = T(0.7);
 
-        seed_t seed;
-        T H;
-        unsigned octaves;
+        hetero (seed_t,
+                unsigned octaves,
+                T H,
+                T frequency,
+                T lacunarity,
+                T amplitude,
+                T gain,
+                T offset);
 
-        T frequency;
-        T lacunarity;
-
-        T offset;
-
-        T amplitude;
-        T gain;
-
-        B basis;
+        hetero (seed_t);
 
         constexpr T operator() (util::point<2,T>) const;
 
     private:
-        T invAH;
-        T invGH;
+        T m_offset;
     };
 } } }
 

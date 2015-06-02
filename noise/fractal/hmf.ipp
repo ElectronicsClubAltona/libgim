@@ -21,44 +21,63 @@
 
 
 namespace util { namespace noise { namespace fractal {
-    //-------------------------------------------------------------------------
-    // H should be fairly low due to the decreasing weight parameter in eval
+    ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename B>
-    hmf<T,B>::hmf ():
-        H (0.25f),
-        octaves (6),
-        frequency (0.1f),
-        lacunarity (2),
-        offset (0.7f),
-        amplitude (1),
-        gain (1 / lacunarity),
-        invAH (std::pow (amplitude, -H)),
-        invGH (std::pow (gain, H))
+    hmf<T,B>::hmf (seed_t _seed,
+                   unsigned _octaves,
+                   T _H,
+                   T _frequency,
+                   T _lacunarity,
+                   T _amplitude,
+                   T _gain,
+                   T _offset):
+        base<T,B> (_seed,
+                   _octaves,
+                   _H,
+                   _frequency,
+                   _lacunarity,
+                   _amplitude,
+                   _gain),
+        m_offset (_offset)
     { ; }
 
 
     //-------------------------------------------------------------------------
     template <typename T, typename B>
+    hmf<T,B>::hmf (seed_t _seed):
+        hmf<T,B> (_seed,
+                  DEFAULT_OCTAVES,
+                  DEFAULT_H,
+                  DEFAULT_FREQUENCY,
+                  DEFAULT_LACUNARITY,
+                  DEFAULT_AMPLITUDE,
+                  DEFAULT_GAIN,
+                  DEFAULT_OFFSET)
+    { ; }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T, typename B>
     constexpr T
     hmf<T,B>::operator() (util::point<2,T> p) const
     {
-        T scale = invAH;
+        T scale = this->m_invAH;
 
         T result = 0;
         T signal = 0;
         T weight = 1;
 
-        p *= frequency;
+        p *= this->m_frequency;
 
-        for (size_t i = 0; i < octaves; ++i) {
-            signal  = (basis (p) + offset) * scale;
+        for (size_t i = 0; i < this->m_octaves; ++i) {
+            signal  = (this->m_basis (p) + m_offset) * scale;
             result += signal * weight;
 
             weight *= signal;
             weight  = min (weight, T{1});
 
-            scale *= invGH;
-            p *= lacunarity;
+            scale *= this->m_invGH;
+            p *= this->m_lacunarity;
         }
 
         return result;
