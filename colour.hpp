@@ -46,6 +46,9 @@ namespace util {
     };
 
     // Convenience types
+    typedef colour<3,uint8_t> colour3u;
+    typedef colour<4,uint8_t> colour4u;
+
     typedef colour<4,float> colour4f;
     typedef colour<3,float> colour3f;
 
