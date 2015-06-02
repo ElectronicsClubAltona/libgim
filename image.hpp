@@ -67,6 +67,7 @@ namespace util {
     }
 
 
+    // Portable GrayMap: single component greyscale.
     struct pgm {
         static image::buffer<uint8_t> read (const boost::filesystem::path&);
 
@@ -80,6 +81,7 @@ namespace util {
                            const boost::filesystem::path &path);
     };
 
+    /// Portable PixMap: 3-component colour images.
     struct ppm {
         static void write (const uint8_t *restrict pixels,
                            size_t width,
