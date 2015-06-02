@@ -53,7 +53,6 @@ UTIL_FILES   =			\
     guid.cpp			\
     guid.hpp			\
     hash.hpp			\
-    hash.cpp			\
     hash/adler.cpp		\
     hash/adler.hpp		\
     hash/bsdsum.cpp		\
@@ -62,6 +61,8 @@ UTIL_FILES   =			\
     hash/crc.hpp		\
     hash/fasthash.cpp		\
     hash/fletcher.hpp		\
+    hash/fnv1a.cpp		\
+    hash/fnv1a.hpp		\
     hash/hmac.cpp		\
     hash/hmac.hpp		\
     hash/hotp.cpp		\

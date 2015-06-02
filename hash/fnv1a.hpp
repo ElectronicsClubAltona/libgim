@@ -11,20 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2015, Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_HASH_HPP
-#define __UTIL_HASH_HPP
-
-#include "hash/wang.hpp"
+#ifndef __UTIL_HASH_FNV1A_HPP
+#define __UTIL_HASH_FNV1A_HPP
 
 #include <cstdint>
-#include <cstdlib>
+#include <cstddef>
 
 namespace util { namespace hash {
-    uint32_t mix (uint32_t v) { return wang (key); }
-    uint64_t mix (uint64_t v) { return wang (key); }
+    // Fast and general hashing using FNV-1a
+    uint32_t fnv1a32 (const void *restrict, size_t);
+    uint64_t fnv1a64 (const void *restrict, size_t);
 } }
 
 #endif
