@@ -82,6 +82,15 @@ namespace util { namespace noise { namespace fractal {
 
     //-------------------------------------------------------------------------
     template <typename T, typename B>
+    constexpr T
+    base<T,B>::frequency (void) const
+    {
+        return m_frequency;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
     T
     base<T,B>::lacunarity (T _lacunarity)
     {
