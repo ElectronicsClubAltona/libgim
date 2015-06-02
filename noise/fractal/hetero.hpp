@@ -29,8 +29,8 @@ namespace util { namespace noise { namespace fractal {
     struct hetero : public base<T,B> {
         using seed_t = typename base<T,B>::seed_t;
 
+        static constexpr unsigned DEFAULT_OCTAVES = 6;
         static constexpr T DEFAULT_H = T(0.75);
-        static constexpr T DEFAULT_OCTAVES = 6;
         static constexpr T DEFAULT_FREQUENCY = T(0.1);
         static constexpr T DEFAULT_LACUNARITY = 2;
         static constexpr T DEFAULT_AMPLITUDE = 1;
