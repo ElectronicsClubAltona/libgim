@@ -25,14 +25,7 @@ namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, util::noise::lerp_t<T> L>
     value<T,L>::value (seed_t _seed):
-        seed (_seed)
-    { ; }
-
-
-    //-------------------------------------------------------------------------
-    template <typename T, util::noise::lerp_t<T> L>
-    value<T,L>::value ():
-        seed (time (nullptr))
+        m_seed (_seed)
     { ; }
 
 
@@ -42,6 +35,24 @@ namespace util { namespace noise { namespace basis {
     value<T,L>::bounds (void) const
     {
         return { -1, 1 };
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, lerp_t<T> L>
+    constexpr seed_t
+    value<T,L>::seed (void) const
+    {
+        return m_seed;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, lerp_t<T> L>
+    seed_t
+    value<T,L>::seed (seed_t _seed)
+    {
+        return m_seed = _seed;
     }
 
 
@@ -87,7 +98,7 @@ namespace util { namespace noise { namespace basis {
         using util::hash::murmur2::mix;
 
         T v = mix (
-            seed,
+            m_seed,
             mix (
                 uint64_t (p.y),
                 uint64_t (p.x)

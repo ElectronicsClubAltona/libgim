@@ -90,10 +90,10 @@ namespace util { namespace noise { namespace fractal {
 
 
     //-------------------------------------------------------------------------
-    //template <typename T, typename B>
-    //typename base<T,B>::seed_t
-    //base<T,B>::seed (seed_t _seed)
-    //{
-    //    return basis.seed (_seed);
-    //}
+    template <typename T, typename B>
+    typename base<T,B>::seed_t
+    base<T,B>::seed (seed_t _seed)
+    {
+        return m_basis.seed (_seed);
+    }
 } } }

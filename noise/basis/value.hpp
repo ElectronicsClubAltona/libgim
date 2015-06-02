@@ -27,15 +27,17 @@ namespace util { namespace noise { namespace basis {
     template <typename T, lerp_t<T>>
     struct value {
         value (seed_t);
-        value ();
 
         range<T> bounds (void) const;
         constexpr T operator() (util::point<2,T>) const;
 
-        seed_t seed;
+        constexpr seed_t seed (void) const;
+        seed_t seed (seed_t);
 
     private:
         constexpr T generate (point<2,intmax_t>) const;
+
+        seed_t m_seed;
     };
 } } }
 

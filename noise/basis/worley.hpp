@@ -26,15 +26,16 @@ namespace util { namespace noise { namespace basis {
     template <typename T, size_t F = 0>
     struct worley {
         worley (seed_t);
-        worley ();
 
         range<T> bounds (void) const;
         constexpr T operator() (util::point<2,T>) const;
 
-        seed_t seed;
+        constexpr seed_t seed (void) const;
+        seed_t seed (seed_t);
 
     private:
         constexpr point<2,T> generate (point<2,intmax_t>) const;
+        seed_t m_seed;
     };
 } } }
 

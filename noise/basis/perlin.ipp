@@ -25,14 +25,7 @@ namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, util::noise::lerp_t<T> L>
     perlin<T,L>::perlin (seed_t _seed):
-        seed (_seed)
-    { ; }
-
-
-    //-------------------------------------------------------------------------
-    template <typename T, util::noise::lerp_t<T> L>
-    perlin<T,L>::perlin ():
-        seed (time (nullptr))
+        m_seed (_seed)
     { ; }
 
 
@@ -45,6 +38,24 @@ namespace util { namespace noise { namespace basis {
             -std::sqrt (T{2}) / 2,
              std::sqrt (T{2}) / 2
         };
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, lerp_t<T> L>
+    constexpr seed_t
+    perlin<T,L>::seed (void) const
+    {
+        return m_seed;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, lerp_t<T> L>
+    seed_t
+    perlin<T,L>::seed (seed_t _seed)
+    {
+        return m_seed = _seed;
     }
 
 
@@ -93,8 +104,8 @@ namespace util { namespace noise { namespace basis {
     {
         using util::hash::murmur2::mix;
 
-        auto u = mix (seed, mix (uint64_t (p.x), uint64_t (p.y)));
-        auto v = mix (u, seed);
+        auto u = mix (m_seed, mix (uint64_t (p.x), uint64_t (p.y)));
+        auto v = mix (u, m_seed);
 
         auto r = util::vector<2,T> {
             (u & 0xffff) / T{0xffff},

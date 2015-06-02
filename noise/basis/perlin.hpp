@@ -27,15 +27,16 @@ namespace util { namespace noise { namespace basis {
     template <typename T, lerp_t<T> L>
     struct perlin {
         perlin (seed_t);
-        perlin ();
 
         range<T> bounds (void) const;
         constexpr T operator() (point<2,T>) const;
 
-        seed_t seed;
+        constexpr seed_t seed (void) const;
+        seed_t seed (seed_t);
 
     private:
         constexpr vector<2,T> gradient (point<2,intmax_t>) const;
+        seed_t m_seed;
     };
 } } }
 

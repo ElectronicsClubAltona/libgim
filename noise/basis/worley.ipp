@@ -28,14 +28,7 @@ namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, size_t F>
     worley<T,F>::worley (seed_t _seed):
-        seed (_seed)
-    { ; }
-
-
-    //-------------------------------------------------------------------------
-    template <typename T, size_t F>
-    worley<T,F>::worley ():
-        worley (time (nullptr))
+        m_seed (_seed)
     { ; }
 
 
@@ -45,6 +38,24 @@ namespace util { namespace noise { namespace basis {
     worley<T,F>::bounds (void) const
     {
         return { 0.0, 1.5 };
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, size_t F>
+    constexpr seed_t
+    worley<T,F>::seed (void) const
+    {
+        return m_seed;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, size_t F>
+    seed_t
+    worley<T,F>::seed (seed_t _seed)
+    {
+        return m_seed = _seed;
     }
 
 
@@ -95,8 +106,8 @@ namespace util { namespace noise { namespace basis {
     {
         using util::hash::murmur2::mix;
 
-        auto u = mix (seed, mix (uint64_t (p.x), uint64_t (p.y)));
-        auto v = mix (u, seed);
+        auto u = mix (m_seed, mix (uint64_t (p.x), uint64_t (p.y)));
+        auto v = mix (u, m_seed);
 
         auto r = util::point<2,T> {
             (u & 0xffff) / T{0xffff},

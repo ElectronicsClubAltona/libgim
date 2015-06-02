@@ -28,18 +28,18 @@ main (void)
     uint64_t seed = time (nullptr);
 
     // setup the noise generator
-    util::noise::fractal::fbm<float, util::noise::basis::worley<float>> b (seed);
+    //util::noise::fractal::fbm<float, util::noise::basis::worley<float>> b (seed);
     //util::noise::fractal::rmf<float, util::noise::basis::worley<float>> b (seed);
     //util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::cubic>> b (seed);
     //util::noise::fractal::rmf<float, util::noise::basis::perlin<float,util::lerp::cubic>> b (seed);
     //util::noise::fractal::hmf<float, util::noise::basis::perlin<float,util::lerp::cubic>> b (seed);
-    //util::noise::fractal::hetero<float, util::noise::basis::value<float,util::lerp::quintic>> b (seed);
+    util::noise::fractal::hetero<float, util::noise::basis::value<float,util::lerp::quintic>> b (seed);
 
     b.octaves (8);
     b.frequency (10.f / size.w);
     //b.lacunarity = 2.f;
     //b.H = 1.0f;
-    //b.basis.seed = time (NULL);
+    b.seed (seed);
 
     // generate the values. offset positions slightly to avoid simple axis issues with perlin basis
     {
