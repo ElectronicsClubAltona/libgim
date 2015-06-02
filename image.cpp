@@ -360,12 +360,14 @@ util::pgm::read (const boost::filesystem::path &path)
 //-----------------------------------------------------------------------------
 static void
 write_netpbm (const uint8_t *restrict pixels,
+              size_t components,
               size_t width,
               size_t height,
               size_t stride,
               const boost::filesystem::path &path,
               const char* MAGIC) {
     CHECK (pixels);
+    CHECK_GT (components, 0);
     CHECK_GT (width, 0);
     CHECK_GE (stride, width);
     CHECK_GT (height, 0);
@@ -384,7 +386,8 @@ write_netpbm (const uint8_t *restrict pixels,
     // Write the data rows
     for (size_t y = 0; y < height; ++y) {
         for (size_t x = 0; x < width; ++x)
-            output << pixels[y * stride + x];
+            for (size_t c = 0; c < components; ++c)
+                output << pixels[y * stride + x * components + c];
     }
 }
 
@@ -407,7 +410,7 @@ util::pgm::write (const uint8_t *restrict pixels,
                   const boost::filesystem::path &path) {
     // TODO: We should switch between P2 (ascii) and P5 (binary)
     static const char MAGIC[] = "P5";
-    write_netpbm (pixels, width, height, stride, path, MAGIC);
+    write_netpbm (pixels, 1, width, height, stride, path, MAGIC);
 }
 
 
@@ -420,7 +423,7 @@ util::ppm::write (const uint8_t *restrict pixels,
                   const boost::filesystem::path &path) {
     // TODO: We should switch between P3 (ascii) and P6 (binary)
     static const char MAGIC[] = "P6";
-    write_netpbm (pixels, width, height, stride, path, MAGIC);
+    write_netpbm (pixels, 3, width, height, stride, path, MAGIC);
 }
 
 
