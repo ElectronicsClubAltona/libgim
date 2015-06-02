@@ -17,33 +17,6 @@
 #include "hash.hpp"
 
 
-uint32_t
-util::wang32 (uint32_t key) {
-  uint32_t c2 = 0x27d4eb2d; // a prime or an odd constant
-  key = (key ^ 61) ^ (key >> 16);
-  key = key + (key << 3);
-  key = key ^ (key >> 4);
-  key = key * c2;
-  key = key ^ (key >> 15);
-  return key;
-}
-
-
-uint64_t
-util::wang64 (uint64_t key) {
-  key = (~key) + (key << 21); // key = (key << 21) - key - 1;
-  key = key ^ (key >> 24);
-  key = (key + (key << 3)) + (key << 8); // key * 265
-  key = key ^ (key >> 14);
-  key = (key + (key << 2)) + (key << 4); // key * 21
-  key = key ^ (key >> 28);
-  key = key + (key << 31);
-
-  return key;
-}
-
-
-
 //   32: 2^ 24 + 2^8 + 0x93
 //   64: 2^ 40 + 2^8 + 0xb3
 //  128: 2^ 88 + 2^8 + 0x3B

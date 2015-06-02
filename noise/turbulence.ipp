@@ -19,7 +19,7 @@
 #endif
 #define __UTIL_NOISE_TURBULENCE_IPP
 
-#include "../hash.hpp"
+#include "../hash/wang.hpp"
 
 
 namespace util { namespace noise {
@@ -28,7 +28,7 @@ namespace util { namespace noise {
     turbulence<T,D,P>::turbulence (seed_t _seed,
                                    vector<2,T> _scale):
         data (_seed),
-        perturb { wang64 (_seed), wang64 (wang64 (_seed)) },
+        perturb { hash::wang (_seed), hash::wang (hash::wang (_seed)) },
         scale (_scale)
     { ; }
 

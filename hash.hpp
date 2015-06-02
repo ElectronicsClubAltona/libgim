@@ -22,10 +22,6 @@
 
 // All hashes are unsuitable for cryptographic operations nnless noted.
 namespace util {
-    // Fast integer mixing operations by Thomas Wang.
-    uint32_t  wang32 (uint32_t key);
-    uint64_t  wang64 (uint64_t key);
-
     // Fast and general hashing using FNV-1a
     uint32_t fnv1a32 (const void *, size_t);
     uint64_t fnv1a64 (const void *, size_t);

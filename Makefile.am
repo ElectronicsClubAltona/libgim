@@ -91,6 +91,8 @@ UTIL_FILES   =			\
     hash/sha1.hpp		\
     hash/sha2.cpp		\
     hash/sha2.hpp		\
+    hash/wang.hpp		\
+    hash/wang.ipp		\
     image.cpp			\
     image.hpp			\
     introspection.cpp		\
