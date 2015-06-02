@@ -60,14 +60,15 @@ namespace util { namespace noise { namespace fractal {
     fbm<T,B>::operator() (util::point<2,T> p) const
     {
         T total = 0;
-        T f = this->m_frequency;
-        T a = this->m_invAH;
+        T scale = this->m_invAH;
+
+        p *= this->m_frequency;
 
         for (size_t i = 0; i < this->m_octaves; ++i) {
-            total += this->m_basis (p * f) * a;
+            total += this->m_basis (p) * scale;
 
-            f *= this->m_lacunarity;
-            a *= this->m_invGH;
+            p *= this->m_lacunarity;
+            scale *= this->m_invGH;
         }
 
         return total;
