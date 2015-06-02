@@ -159,6 +159,8 @@ UTIL_FILES   =			\
     noise/lerp.hpp		\
     noise/lut.cpp		\
     noise/lut.hpp		\
+    noise/turbulence.hpp	\
+    noise/turbulence.ipp	\
     options.cpp			\
     options.hpp			\
     pascal.cpp			\

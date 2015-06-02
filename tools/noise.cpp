@@ -10,6 +10,7 @@
 #include "noise/basis/value.hpp"
 #include "noise/basis/perlin.hpp"
 #include "noise/basis/worley.hpp"
+#include "noise/turbulence.hpp"
 #include "extent.hpp"
 
 
@@ -28,6 +29,7 @@ main (void)
     uint64_t seed = time (nullptr);
 
     // setup the noise generator
+#if 0
     //util::noise::fractal::fbm<float, util::noise::basis::worley<float>> b (seed);
     //util::noise::fractal::rmf<float, util::noise::basis::worley<float>> b (seed);
     //util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::cubic>> b (seed);
@@ -37,9 +39,22 @@ main (void)
 
     b.octaves (8);
     b.frequency (10.f / size.w);
-    //b.lacunarity = 2.f;
-    //b.H = 1.0f;
+    b.lacunarity = 2.f;
+    b.H = 1.0f;
     b.seed (seed);
+#else
+    util::noise::turbulence<
+        float,
+        util::noise::fractal::hetero<float, util::noise::basis::perlin<float,util::lerp::cubic>>,
+        util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::quintic>>
+    > b (seed, { 0.13f, 0.13f });
+
+    b.data.frequency (10.f / size.w);
+    b.perturb[0].octaves (4);
+    b.perturb[1].octaves (4);
+    b.perturb[0].frequency (10.f / size.w);
+    b.perturb[1].frequency (10.f / size.w);
+#endif
 
     // generate the values. offset positions slightly to avoid simple axis issues with perlin basis
     {
