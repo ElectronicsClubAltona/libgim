@@ -268,7 +268,43 @@ util::image::buffer<T>::downsample (float factor) const
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+T
+buffer<T>::operator[] (point<2,size_t> p) const
+{
+    return begin ()[p.y * s + p.x];
+}
+
+
 //-----------------------------------------------------------------------------
+template <typename T>
+T&
+buffer<T>::operator[] (point<2,size_t> p)
+{
+    return begin ()[p.y * s + p.x];
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+T
+buffer<T>::operator[] (size_t idx) const
+{
+    return begin ()[idx];
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+T&
+buffer<T>::operator[] (size_t idx)
+{
+    return begin ()[idx];
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 T*
 buffer<T>::data (void)

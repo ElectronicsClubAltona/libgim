@@ -18,6 +18,7 @@
 #define __UTIL_IMAGE_HPP
 
 #include "extent.hpp"
+#include "point.hpp"
 
 #include <cstdint>
 #include <cstdlib>
@@ -52,6 +53,12 @@ namespace util {
             size_t w;
             size_t h;
             size_t s;
+
+            T  operator[] (point<2,size_t>) const;
+            T& operator[] (point<2,size_t>);
+
+            T  operator[] (size_t) const;
+            T& operator[] (size_t);
 
             T* begin (void);
             T* end   (void);
