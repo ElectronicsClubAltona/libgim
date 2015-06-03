@@ -25,52 +25,50 @@
 #include <memory>
 
 
-namespace util {
-    namespace image {
-        template <typename T>
-        struct buffer {
-            typedef T value_type;
+namespace util { namespace image {
+    template <typename T>
+    struct buffer {
+        typedef T value_type;
 
-            buffer (util::extent2u);
-            buffer (size_t w, size_t h);
-            buffer (size_t w, size_t h, size_t s);
-            buffer (size_t w, size_t h, size_t s, std::unique_ptr<T[]> &&data);
+        buffer (util::extent2u);
+        buffer (size_t w, size_t h);
+        buffer (size_t w, size_t h, size_t s);
+        buffer (size_t w, size_t h, size_t s, std::unique_ptr<T[]> &&data);
 
-            buffer (const buffer<T>&) = delete;
-            buffer (buffer<T> &&) = default;
+        buffer (const buffer<T>&) = delete;
+        buffer (buffer<T> &&) = default;
 
-            void fill (T);
+        void fill (T);
 
-            template <typename U>
-            buffer<U> alloc (void) const;
+        template <typename U>
+        buffer<U> alloc (void) const;
 
-            template <typename U>
-            buffer<U> clone (void) const;
+        template <typename U>
+        buffer<U> clone (void) const;
 
-            buffer<T> downsample (float factor) const;
+        buffer<T> downsample (float factor) const;
 
-            size_t w;
-            size_t h;
-            size_t s;
+        size_t w;
+        size_t h;
+        size_t s;
 
-            T  operator[] (point<2,size_t>) const;
-            T& operator[] (point<2,size_t>);
+        T  operator[] (point<2,size_t>) const;
+        T& operator[] (point<2,size_t>);
 
-            T  operator[] (size_t) const;
-            T& operator[] (size_t);
+        T  operator[] (size_t) const;
+        T& operator[] (size_t);
 
-            T* begin (void);
-            T* end   (void);
-            T* data  (void);
+        T* begin (void);
+        T* end   (void);
+        T* data  (void);
 
-            const T* begin (void) const;
-            const T* end   (void) const;
-            const T* data  (void) const;
+        const T* begin (void) const;
+        const T* end   (void) const;
+        const T* data  (void) const;
 
-        private:
-            std::unique_ptr<T[]> m_data;
-        };
-    }
-}
+    private:
+        std::unique_ptr<T[]> m_data;
+    };
+} }
 
 #endif
