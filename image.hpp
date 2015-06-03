@@ -23,7 +23,6 @@
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
-#include <boost/filesystem/path.hpp>
 
 
 namespace util {
@@ -72,30 +71,6 @@ namespace util {
             std::unique_ptr<T[]> m_data;
         };
     }
-
-
-    // Portable GrayMap: single component greyscale.
-    struct pgm {
-        static image::buffer<uint8_t> read (const boost::filesystem::path&);
-
-        static void write (const image::buffer<uint8_t> &src,
-                           const boost::filesystem::path &);
-
-        static void write (const uint8_t *restrict pixels,
-                           size_t width,
-                           size_t height,
-                           size_t stride,
-                           const boost::filesystem::path &path);
-    };
-
-    /// Portable PixMap: 3-component colour images.
-    struct ppm {
-        static void write (const uint8_t *restrict pixels,
-                           size_t width,
-                           size_t height,
-                           size_t stride,
-                           const boost::filesystem::path &path);
-    };
 }
 
 #endif

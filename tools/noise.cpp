@@ -13,6 +13,7 @@
 #include "noise/turbulence.hpp"
 #include "extent.hpp"
 #include "colour.hpp"
+#include "netpbm.hpp"
 
 template struct util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::cubic>>;
 template struct util::noise::fractal::hmf<float, util::noise::basis::value<float,util::lerp::cubic>>;
@@ -23,7 +24,7 @@ int
 main (void)
 {
     // setup the output buffer
-#if ENABLE_DEBUGGING
+#ifdef ENABLE_DEBUGGING
     util::extent2u size {320, 240};
 #else
     util::extent2u size {1920, 1080};

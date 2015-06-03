@@ -136,6 +136,8 @@ UTIL_FILES   =			\
     net/socket.hpp		\
     net/types.cpp		\
     net/types.hpp		\
+    netpbm.cpp			\
+    netpbm.hpp			\
     nocopy.hpp			\
     noise.hpp			\
     noise/basis.hpp		\
