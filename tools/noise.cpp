@@ -50,7 +50,7 @@ main (void)
         util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::quintic>>
     > b (seed, { 0.13f, 0.13f });
 
-    b.data.frequency (10.f / size.w);
+    b.data.frequency (1.f / size.w);
     b.perturb[0].octaves (4);
     b.perturb[1].octaves (4);
     b.perturb[0].frequency (10.f / size.w);
