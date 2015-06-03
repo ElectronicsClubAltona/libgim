@@ -23,7 +23,11 @@ int
 main (void)
 {
     // setup the output buffer
+#if ENABLE_DEBUGGING
+    util::extent2u size {320, 240};
+#else
     util::extent2u size {1920, 1080};
+#endif
     util::image::buffer<float> img (size);
 
     uint64_t seed = time (nullptr);
