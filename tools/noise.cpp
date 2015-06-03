@@ -76,7 +76,7 @@ main (void)
 
     std::transform (img.begin (), img.end (), img.begin (), [offset,div] (auto i) { return (i - offset) / div; });
 
-    // create colour data
+    // create a coloured map with this gradient
     static const struct {
         float scale;
         util::colour3u value;
@@ -89,22 +89,25 @@ main (void)
         { 22 / 32.f, { 224, 224,   0 } },
         { 28 / 32.f, { 128, 128, 128 } },
         { 32 / 32.f, { 255, 255, 255 } },
-        { 32 / 32.f, { 255, 255, 255 } }
+        { 1000000.f, { 255, 255, 255 } },
     };
 
     std::unique_ptr<uint8_t[]> coloured (new uint8_t[size.area () * 3]);
     for (size_t i = 0; i < size.area (); ++i) {
-        auto  v = img.data ()[i] + +8/32.f;
-        auto c0 = std::lower_bound (std::begin (GRADPOINT),
+        auto  v = img.data ()[i] + 0/32.f;
+        auto c1 = std::upper_bound (std::begin (GRADPOINT),
                                     std::end (GRADPOINT),
                                     v,
-                                    [] (auto a, auto b) { return a.scale < b; });
-        auto c1 = c0+1;
+                                    [] (auto a, auto b) { return a < b.scale; });
+        auto c0 = c1-1;
 
+        CHECK_GE (v, c0->scale);
+        CHECK_LT (v, c1->scale);
+        float t = (v - c0->scale) / (c1->scale - c0->scale);
+        CHECK_LIMIT (t, 0, 1);
         auto c = (
-            (c0->value.template cast<float> () +
-             c1->value.template cast<float> ()
-            ) / 2.f
+            (1 - t) * c0->value.template cast<float> () +
+            (    t) * c1->value.template cast<float> ()
         ).template cast<uint8_t> ();
 
         coloured[i*3+0] = c[0];
