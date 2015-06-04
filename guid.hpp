@@ -34,7 +34,7 @@ class guid {
 
     public:
         guid (uint32_t, uint16_t, uint16_t, uint8_t[8]);
-        guid (const char *);
+        explicit guid (const char *);
         guid (const guid&);
 
         guid& operator= (const guid&);

@@ -25,7 +25,7 @@ namespace util {
     class view {
     public:
         view ();
-        view (const char *str);
+        explicit view (const char *str);
         view (const char *first, const char *last);
 
         const char *begin (void) const;

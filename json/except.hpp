@@ -38,7 +38,7 @@ namespace json {
     struct parse_error : public error {
         using error::error;
 
-        parse_error (const std::string &_what, size_t _line = 0);
+        explicit parse_error (const std::string &_what, size_t _line = 0);
 
         size_t line;
     };
@@ -52,7 +52,7 @@ namespace json {
 
     /// Exception class for invalid object indexing
     struct key_error : public error {
-        key_error (std::string);
+        explicit key_error (std::string);
     };
 }
 

@@ -55,7 +55,7 @@ namespace util {
                 static void try_code   (int code);
                 static void throw_code (int code);
 
-                error(const std::string&);
+                explicit error(const std::string&);
         };
 
 

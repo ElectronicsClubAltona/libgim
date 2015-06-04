@@ -26,7 +26,7 @@ namespace util {
         template <typename T>
         struct numeric
         {
-            numeric (T _val): val (_val) { ; }
+            explicit numeric (T _val): val (_val) { ; }
             T val;
         };
 

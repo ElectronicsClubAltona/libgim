@@ -282,7 +282,7 @@ class panic_error {
         std::string m_what;
 
     public:
-        panic_error (const std::string &_what):
+        explicit panic_error (const std::string &_what):
                 m_what (_what)
         { ; }
 };

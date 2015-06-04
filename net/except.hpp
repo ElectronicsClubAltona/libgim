@@ -32,8 +32,8 @@
 namespace net {
     class error : public std::runtime_error {
         protected:
-            error (const std::string &);
-            error (int code);
+            explicit error (const std::string &);
+            explicit error (int code);
 
             static std::string
             code_to_string (int code);

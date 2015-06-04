@@ -34,9 +34,9 @@ namespace util {
 
             typedef native_t integer_t;
 
-            fixed (double);
-            fixed (float);
-            fixed (native_t);
+            explicit fixed (double);
+            explicit fixed (float);
+            explicit fixed (native_t);
 
             double    to_double  (void) const;
             float     to_float   (void) const;

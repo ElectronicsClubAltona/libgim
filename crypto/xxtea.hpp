@@ -28,7 +28,7 @@ namespace util { namespace crypto {
     public:
         using key_t = std::array<uint32_t,4>;
 
-        XXTEA (key_t);
+        explicit XXTEA (key_t);
 
         void encrypt (uint32_t *restrict data, size_t count);
         void decrypt (uint32_t *restrict data, size_t count);

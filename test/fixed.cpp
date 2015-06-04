@@ -9,8 +9,8 @@ test_simple (util::TAP::logger &tap)
     using fixed_t = util::fixed<T,I,E>;
     using integer_t = typename fixed_t::integer_t;
 
-    const fixed_t lo = integer_t{0};
-    const fixed_t hi = integer_t{1};
+    const fixed_t lo {integer_t{0}};
+    const fixed_t hi {integer_t{1}};
 
     std::ostringstream os;
     os << "fixed<" << type_to_string<T> () << ',' << I << ',' << E << '>';

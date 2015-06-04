@@ -20,7 +20,7 @@
 template <typename T>
 class scoped_malloc {
 public:
-    scoped_malloc (T *_data):
+    explicit scoped_malloc (T *_data):
         m_data (_data)
     { ; }
 

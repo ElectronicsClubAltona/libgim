@@ -33,8 +33,8 @@ namespace util {
 
         version ();
         version (unsigned int _major, unsigned int _minor);
-        version (const std::string& str);
-        version (const char *str);
+        explicit version (const std::string& str);
+        explicit version (const char *str);
 
         void sanity (void) const;
 

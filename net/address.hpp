@@ -71,7 +71,7 @@ namespace net {
             static const address<D> LOOPBACK;
             static const address<D> ANY;
 
-            address (const sockaddr_type &);
+            explicit address (const sockaddr_type &);
             address (const std::string &address, port_type);
 
             port_type port (void) const;

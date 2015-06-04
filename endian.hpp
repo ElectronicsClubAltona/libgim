@@ -76,7 +76,7 @@ template <typename T> constexpr T ltoh (T v) { return v; }
 
 //-----------------------------------------------------------------------------
 struct from_endian {
-    from_endian (endian _endian):
+    explicit from_endian (endian _endian):
         src (_endian)
     { ; }
 

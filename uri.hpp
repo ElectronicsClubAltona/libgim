@@ -27,8 +27,8 @@
 namespace util {
     class uri {
     public:
-        uri (std::string &&);
-        uri (const char *str);
+        explicit uri (std::string &&);
+        explicit uri (const char *str);
         uri (const char *first, const char *last);
 
         class parse_error : public std::runtime_error

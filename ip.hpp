@@ -30,8 +30,8 @@ namespace ipv4 {
             uint32_t m_integer;
         };
 
-        ip (const std::string &);
-        ip (uint32_t i);
+        explicit ip (const std::string &);
+        explicit ip (uint32_t i);
         ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d);
 
         ip&  operator  = (const ip &);
@@ -59,7 +59,7 @@ namespace ipv6 {
     struct ip {
         uint32_t m_quads[4];
 
-        ip (const std::string&) { ; }
+        explicit ip (const std::string&) { ; }
     };
 
     typedef uint16_t port;
@@ -67,7 +67,7 @@ namespace ipv6 {
     struct mask {
         uint32_t m_quads[4];
 
-        mask (uint32_t) { ; }
+        explicit mask (uint32_t) { ; }
     };
 }
 

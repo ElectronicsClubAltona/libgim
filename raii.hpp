@@ -26,7 +26,7 @@ namespace util {
     /// Increments a counter for the lifetime of the object
     template <typename T>
     struct scoped_counter {
-        scoped_counter (T &_counter):
+        explicit scoped_counter (T &_counter):
             counter (_counter)
         { ++counter; }
 
@@ -40,7 +40,7 @@ namespace util {
     /// Executes a function upon object destruction
     template <typename T>
     struct scoped_function {
-        scoped_function (T &&_func):
+        explicit scoped_function (T &&_func):
             func  (std::move (_func))
         { ; }
 

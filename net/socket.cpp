@@ -232,7 +232,7 @@ net::socket<D, type::STREAM>::get_peer (void) const {
         net::error::throw_code ();
 
     CHECK (addr_len == sizeof (addr));
-    return addr;
+    return typename net::socket<D,type::STREAM>::address_type (addr);
 }
 
 
@@ -288,7 +288,7 @@ net::socket<D, type::DGRAM>::recv_addr (uint8_t *restrict data,
     if (recvd < 0)
         net::error::throw_code ();
 
-    return addr_in;
+    return net::socket<D,type::DGRAM>::address_type (addr_in);
 }
 
 //-----------------------------------------------------------------------------
