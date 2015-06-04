@@ -22,6 +22,75 @@ template struct util::noise::fractal::rmf<float, util::noise::basis::constant<fl
 template struct util::noise::fractal::hetero<float, util::noise::basis::worley<float,2>>;
 
 
+/// talus: maximum desired slope in radians. [0, 90]
+/// resistance: proportion of world to keep. [1, 0]
+/// scale: horizontal distance scaling factor (relative to vertical)
+void
+thermal_erode (util::image::buffer<float> &height,
+               const float talus,
+               const float scale,
+               const float resistance)
+{
+    CHECK_LIMIT (talus, 0, to_radians (90.f));
+    CHECK_GT (scale, 0);
+    CHECK_LIMIT (resistance, 0, 1);
+
+    // maximum height difference
+    const auto maxdiff = scale * std::atan (talus);
+    float total = 0.f;
+
+    for (size_t y = 1; y < height.h - 1; ++y)
+        for (size_t x = 1; x < height.w - 1; ++x) {
+            float centre = height[y * height.s + x];
+
+            float h[9] = {
+                height[(y - 1) * height.s + (x - 1)],
+                height[(y - 1) * height.s + (x + 0)],
+                height[(y - 1) * height.s + (x + 1)],
+
+                height[(y + 0) * height.s + (x - 1)],
+                height[(y + 0) * height.s + (x + 0)],
+                height[(y + 0) * height.s + (x + 1)],
+
+                height[(y + 1) * height.s + (x - 1)],
+                height[(y + 1) * height.s + (x + 0)],
+                height[(y + 1) * height.s + (x + 1)],
+            };
+
+            float diff = 0.f;
+            unsigned dests = 0;
+            for (size_t i = 0; i < elems (h); ++i) {
+                if (h[i] < centre - maxdiff) {
+                    dests++;
+                    diff = std::max (diff, centre - h[i]);
+                }
+            }
+
+            if (diff < maxdiff)
+                continue;
+
+            float size = diff * (1 - resistance) / 2;
+            float dist = size / dests;
+
+            total += size;
+            height[y * height.s + x] -= size;
+
+            if (h[0] < centre) height[(y - 1) * height.s + (x - 1)] += dist;
+            if (h[1] < centre) height[(y - 1) * height.s + (x + 0)] += dist;
+            if (h[2] < centre) height[(y - 1) * height.s + (x + 1)] += dist;
+
+            if (h[3] < centre) height[(y + 0) * height.s + (x - 1)] += dist;
+            if (h[5] < centre) height[(y + 0) * height.s + (x + 1)] += dist;
+
+            if (h[6] < centre) height[(y + 1) * height.s + (x - 1)] += dist;
+            if (h[7] < centre) height[(y + 1) * height.s + (x + 0)] += dist;
+            if (h[8] < centre) height[(y + 1) * height.s + (x + 1)] += dist;
+        }
+
+    std::cerr << "eroded: " << total << '\n';
+}
+
+
 // create a coloured map with this gradient (from libnoise tut3)
 static const struct {
     float scale;
@@ -76,6 +145,7 @@ write_map (const util::image::buffer<float> &map, boost::filesystem::path name)
 }
 
 
+// offset a map so a fixed percentage of tiles are below the water height
 void
 adjust_ocean (util::image::buffer<float> &height,
               const float percentage = .2f)
@@ -88,22 +158,25 @@ adjust_ocean (util::image::buffer<float> &height,
 
     std::array<unsigned,256> buckets{ 0 };
     for (const auto h: height)
-        buckets[h * 255]++;
+        buckets[size_t (h * 255u)]++;
 
     size_t pivot = 0;
-    for (size_t accum = 0, target = percentage * height.area (); pivot < buckets.size (); ++pivot) {
+    for (size_t accum = 0, target = size_t (percentage * height.area ()); pivot < buckets.size (); ++pivot) {
         accum += buckets[pivot];
         if (accum > target)
             break;
     }
 
-    std::cerr << "pivot: " << pivot << '\n';
+    std::cerr << "ocean pivot: " << pivot << '\n';
 
     float offset = WATER_HEIGHT - pivot / 256.f;
     for (auto &h: height)
         h += offset;
 }
 
+
+
+static const unsigned THERMAL_ITERATIONS = 10;
 
 
 int
@@ -171,6 +244,10 @@ main (void)
     adjust_ocean (img, 0.2f);
 
     // write the images to disk
-    write_map (img, "noise");
+    write_map (img, "raw");
 
+    auto soft = img.clone ();
+    for (size_t i = 0; i < THERMAL_ITERATIONS; ++i)
+        thermal_erode (soft, to_radians (0.f), 1.f / size.w, 0.f);
+    write_map (img, "soft");
 }
