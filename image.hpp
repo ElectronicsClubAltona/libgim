@@ -48,6 +48,9 @@ namespace util { namespace image {
 
         buffer<T> downsample (float factor) const;
 
+        constexpr size_t area (void) const;
+        constexpr bool is_packed (void) const;
+
         size_t w;
         size_t h;
         size_t s;
@@ -70,5 +73,7 @@ namespace util { namespace image {
         std::unique_ptr<T[]> m_data;
     };
 } }
+
+#include "image.ipp"
 
 #endif

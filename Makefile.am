@@ -96,6 +96,7 @@ UTIL_FILES   =			\
     hash/wang.ipp		\
     image.cpp			\
     image.hpp			\
+    image.ipp			\
     introspection.cpp		\
     introspection.hpp		\
     io.cpp			\
