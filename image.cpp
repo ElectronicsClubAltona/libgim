@@ -170,15 +170,6 @@ util::image::buffer<T>::alloc (void) const
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-void
-util::image::buffer<T>::fill (const T v)
-{
-    std::fill (begin (), end (), v);
-}
-
-
-//-----------------------------------------------------------------------------
 template <typename T, typename U>
 static U
 rescale (T v)
@@ -362,4 +353,5 @@ template util::image::buffer<uint8_t> util::image::buffer<uint8_t>::clone (void)
 template util::image::buffer<uint8_t> util::image::buffer<float>::clone (void) const;
 template util::image::buffer<uint8_t> util::image::buffer<double>::clone (void) const;
 
+template util::image::buffer<float> util::image::buffer<float>::alloc (void) const;
 template util::image::buffer<float> util::image::buffer<float>::clone (void) const;

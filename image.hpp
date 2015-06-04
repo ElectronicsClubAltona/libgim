@@ -40,9 +40,6 @@ namespace util { namespace image {
         buffer (buffer<T> &&) = default;
 
         //---------------------------------------------------------------------
-        void fill (T);
-
-        //---------------------------------------------------------------------
         /// allocate and return a buffer of the same dimensions. contents are undefined.
         template <typename U = T> buffer<U> alloc (void) const;
 
