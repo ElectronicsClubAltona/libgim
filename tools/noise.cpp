@@ -22,6 +22,97 @@ template struct util::noise::fractal::rmf<float, util::noise::basis::constant<fl
 template struct util::noise::fractal::hetero<float, util::noise::basis::worley<float,2>>;
 
 
+void
+hydraulic_erode (util::image::buffer<float> &height, const unsigned ticks)
+{
+    CHECK_GT (ticks, 0);
+
+    std::cerr << "hydraulic_erosion\n";
+
+    const float RAINFALL    = 0.001f;  // quantity of water added each tick
+    const float SOLUBILITY  = 0.1001f; // quantity of land picked up by unit rain
+    const float EVAPORATION = RAINFALL * .85f; // quantity of water evaporated each tick
+
+    auto water = height.alloc ();
+    CHECK (water.is_packed ());
+    CHECK (height.is_packed ());
+
+    std::fill (water.begin (), water.end (), 0);
+
+    for (unsigned t = 0; t < ticks; ++t) {
+        // apply new rain and erosion
+        for (auto &w: water)
+            w += RAINFALL;
+        for (auto &h: height)
+            h -= RAINFALL * SOLUBILITY;
+
+        float total = 0.f;
+
+        // move water to lowest neighbour cell
+        for (size_t y = 1; y < height.h - 1; ++y)
+            for (size_t x = 1; x < height.w - 1; ++x) {
+                const size_t indices[9] = {
+                    (y - 1) * height.s + (x - 1),
+                    (y - 1) * height.s + (x + 0),
+                    (y - 1) * height.s + (x + 1),
+
+                    (y + 0) * height.s + (x - 1),
+                    (y + 0) * height.s + (x + 0),
+                    (y + 0) * height.s + (x + 1),
+
+                    (y + 1) * height.s + (x - 1),
+                    (y + 1) * height.s + (x + 0),
+                    (y + 1) * height.s + (x + 1),
+                };
+
+                const float level[9] = {
+                    height[indices[0]] + water[indices[0]],
+                    height[indices[1]] + water[indices[1]],
+                    height[indices[2]] + water[indices[2]],
+
+                    height[indices[3]] + water[indices[3]],
+                    height[indices[4]] + water[indices[4]],
+                    height[indices[5]] + water[indices[5]],
+
+                    height[indices[6]] + water[indices[6]],
+                    height[indices[7]] + water[indices[7]],
+                    height[indices[8]] + water[indices[8]],
+                };
+
+                size_t dst = std::min_element (std::begin (level), std::end (level)) - level;
+                if (dst == 4) // if centre, bail
+                    continue;
+
+                // transfer as much water as possible to even the heights
+                float total_diff = level[4] - level[dst];
+                float transfer;
+                if (total_diff > water[4])
+                    transfer = water[4];
+                else
+                    transfer = (water[4] - total_diff) / 2;
+
+                water[indices[  4]] -= transfer;
+                water[indices[dst]] += transfer;
+
+                total += transfer;
+            }
+
+        // evaporate water, deposit sediment
+        for (size_t i = 0; i < water.area (); ++i) {
+            water[i]  -= EVAPORATION;
+            height[i] += SOLUBILITY * EVAPORATION;
+        }
+
+        std::cerr << "eroded: " << total << '\n';
+    }
+
+    // forcibly evaporate all remaining water.
+    CHECK_EQ (water.area (), height.area ());
+    for (size_t i = 0; i < water.area (); ++i)
+        height[i] += water[i] * SOLUBILITY;
+}
+
+
 /// talus: maximum desired slope in radians. [0, 90]
 /// resistance: proportion of world to keep. [1, 0]
 /// scale: horizontal distance scaling factor (relative to vertical)
@@ -177,6 +268,7 @@ adjust_ocean (util::image::buffer<float> &height,
 
 
 static const unsigned THERMAL_ITERATIONS = 10;
+static const unsigned HYDRAULIC_ITERATIONS = 100;
 
 
 int
@@ -247,7 +339,12 @@ main (void)
     write_map (img, "raw");
 
     auto soft = img.clone ();
+
+    std::cerr << "thermal_erosion\n";
     for (size_t i = 0; i < THERMAL_ITERATIONS; ++i)
-        thermal_erode (soft, to_radians (0.f), 1.f / size.w, 0.f);
-    write_map (img, "soft");
+        thermal_erode (soft, to_radians (30.f), 1.f / size.w, 0.f);
+
+    hydraulic_erode (soft, HYDRAULIC_ITERATIONS);
+
+    write_map (soft, "soft");
 }
