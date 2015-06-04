@@ -55,13 +55,13 @@ XXTEA::encrypt (uint32_t *restrict data, size_t count)
 
     uint32_t sum = 0;
     uint32_t z = data[count - 1];
-    uint32_t y, e, p;
+    uint32_t y, p;
 
     unsigned rounds = 6 + 52 / count;
 
     do {
         sum += MAGIC;
-        e = (sum >> 2) & 3;
+        uint32_t e = (sum >> 2) & 3;
 
         for (p = 0; p < count - 1; p++) {
             y = data[p + 1];
@@ -82,14 +82,14 @@ XXTEA::decrypt (uint32_t *restrict data, size_t count)
         throw std::invalid_argument ("minimum blocksize is 64 bits");
 
     uint32_t y, z, sum;
-    unsigned p, rounds, e;
+    uint32_t p, rounds;
 
     rounds = 6 + 52 / count;
     sum = rounds * MAGIC;
     y = data[0];
 
     do {
-        e = (sum >> 2) & 3;
+        uint32_t e = (sum >> 2) & 3;
 
         for (p = count - 1; p > 0; p--) {
             z = data[p - 1];
