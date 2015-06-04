@@ -30,6 +30,7 @@ namespace util { namespace image {
     struct buffer {
         typedef T value_type;
 
+        //---------------------------------------------------------------------
         buffer (util::extent2u);
         buffer (size_t w, size_t h);
         buffer (size_t w, size_t h, size_t s);
@@ -38,16 +39,19 @@ namespace util { namespace image {
         buffer (const buffer<T>&) = delete;
         buffer (buffer<T> &&) = default;
 
+        //---------------------------------------------------------------------
         void fill (T);
 
-        template <typename U>
-        buffer<U> alloc (void) const;
+        //---------------------------------------------------------------------
+        /// allocate and return a buffer of the same dimensions. contents are undefined.
+        template <typename U = T> buffer<U> alloc (void) const;
 
-        template <typename U>
-        buffer<U> clone (void) const;
+        /// allocate and return a buffer with the same contents
+        template <typename U = T> buffer<U> clone (void) const;
 
         buffer<T> downsample (float factor) const;
 
+        //---------------------------------------------------------------------
         constexpr size_t area (void) const;
         constexpr bool is_packed (void) const;
 
@@ -55,12 +59,14 @@ namespace util { namespace image {
         size_t h;
         size_t s;
 
+        //---------------------------------------------------------------------
         T  operator[] (point<2,size_t>) const;
         T& operator[] (point<2,size_t>);
 
         T  operator[] (size_t) const;
         T& operator[] (size_t);
 
+        //---------------------------------------------------------------------
         T* begin (void);
         T* end   (void);
         T* data  (void);
