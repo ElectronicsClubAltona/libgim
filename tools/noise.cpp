@@ -76,6 +76,36 @@ write_map (const util::image::buffer<float> &map, boost::filesystem::path name)
 }
 
 
+void
+adjust_ocean (util::image::buffer<float> &height,
+              const float percentage = .2f)
+{
+    static const float WATER_HEIGHT = 0.5f;
+
+    CHECK_LIMIT (percentage, 0, 1);
+    // we assume fully packed data for iteration purposes
+    CHECK (height.is_packed ());
+
+    std::array<unsigned,256> buckets{ 0 };
+    for (const auto h: height)
+        buckets[h * 255]++;
+
+    size_t pivot = 0;
+    for (size_t accum = 0, target = percentage * height.area (); pivot < buckets.size (); ++pivot) {
+        accum += buckets[pivot];
+        if (accum > target)
+            break;
+    }
+
+    std::cerr << "pivot: " << pivot << '\n';
+
+    float offset = WATER_HEIGHT - pivot / 256.f;
+    for (auto &h: height)
+        h += offset;
+}
+
+
+
 int
 main (void)
 {
@@ -137,6 +167,8 @@ main (void)
 
     std::transform (img.begin (), img.end (), img.begin (), [offset,div] (auto i) { return (i - offset) / div; });
 
+    // ensure the ocean isn't too big
+    adjust_ocean (img, 0.2f);
 
     // write the images to disk
     write_map (img, "noise");
