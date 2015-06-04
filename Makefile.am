@@ -59,6 +59,7 @@ UTIL_FILES   =			\
     hash/bsdsum.hpp		\
     hash/crc.cpp		\
     hash/crc.hpp		\
+    hash/fasthash.hpp		\
     hash/fasthash.cpp		\
     hash/fletcher.hpp		\
     hash/fnv1a.cpp		\
@@ -141,6 +142,7 @@ UTIL_FILES   =			\
     netpbm.hpp			\
     nocopy.hpp			\
     noise.hpp			\
+    noise.ipp			\
     noise/basis.hpp		\
     noise/basis/constant.cpp	\
     noise/basis/constant.hpp	\
