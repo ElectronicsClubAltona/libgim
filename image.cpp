@@ -361,3 +361,5 @@ template util::image::buffer<uint8_t> util::image::buffer<uint8_t>::alloc (void)
 template util::image::buffer<uint8_t> util::image::buffer<uint8_t>::clone (void) const;
 template util::image::buffer<uint8_t> util::image::buffer<float>::clone (void) const;
 template util::image::buffer<uint8_t> util::image::buffer<double>::clone (void) const;
+
+template util::image::buffer<float> util::image::buffer<float>::clone (void) const;
