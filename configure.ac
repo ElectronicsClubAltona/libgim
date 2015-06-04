@@ -108,7 +108,6 @@ AX_APPEND_FLAG([-include config.h])
 AC_CONFIG_FILES([
     Doxyfile
     Makefile
-    test/Makefile
 ])
 AC_CONFIG_FILES([test/json-parse],  [chmod a+x test/json-parse])
 AC_CONFIG_FILES([test/json-schema], [chmod a+x test/json-schema])
