@@ -43,7 +43,9 @@ util::lerp::trunc (T a, T, T weight)
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
+
     CHECK_LIMIT (weight, 0, 1);
+    (void)weight;
 
     return a;
 }
