@@ -181,6 +181,7 @@ template <typename T>
 constexpr T
 to_degrees [[gnu::pure]] (T radians)
 {
+    static_assert (std::is_floating_point<T>::value, "undefined for integral types");
     return radians * 180 / PI<T>;
 }
 
@@ -189,6 +190,7 @@ template <typename T>
 constexpr T
 to_radians [[gnu::pure]] (T degrees)
 {
+    static_assert (std::is_floating_point<T>::value, "undefined for integral types");
     return degrees / 180 * PI<T>;
 }
 
