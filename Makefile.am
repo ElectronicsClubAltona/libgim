@@ -121,10 +121,6 @@ UTIL_FILES   =			\
     maths.cpp			\
     maths.hpp			\
     maths.ipp			\
-    maths/matrix.cpp		\
-    maths/matrix.hpp		\
-    maths/vector.cpp  		\
-    maths/vector.hpp  		\
     matrix.cpp			\
     matrix.hpp			\
     matrix.ipp			\
@@ -322,7 +318,6 @@ TEST_BIN = 			\
     test/json_types		\
     test/ray 			\
     test/maths			\
-    test/maths_matrix 		\
     test/matrix			\
     test/md2			\
     test/md4			\
