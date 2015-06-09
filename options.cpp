@@ -307,23 +307,23 @@ bytesoption::execute (const std::string& data)
 
 class helpoption : public option
 {
-    protected:
-        static const char  HELP_CHARACTER;
-        static const char *HELP_NAME;
-        static const char *HELP_DESCRIPTION;
+protected:
+    static const char  HELP_CHARACTER;
+    static const char *HELP_NAME;
+    static const char *HELP_DESCRIPTION;
 
-        processor * m_processor;
+    processor * m_processor;
 
-    public:
-        helpoption (processor * _processor):
-            option (HELP_CHARACTER, HELP_NAME, HELP_DESCRIPTION, false),
-            m_processor (_processor)
-        { ; }
+public:
+    helpoption (processor * _processor):
+        option (HELP_CHARACTER, HELP_NAME, HELP_DESCRIPTION, false),
+        m_processor (_processor)
+    { ; }
 
 
-        virtual void execute (void);
-        virtual void execute (const std::string& data)
-            { option::execute (data); }
+    virtual void execute (void);
+    virtual void execute (const std::string& data)
+        { option::execute (data); }
 };
 
 
@@ -531,7 +531,8 @@ processor::parse_args (int argc, const char ** argv)
 
 //-----------------------------------------------------------------------------
 void
-processor::add_option (std::unique_ptr<option> opt) {
+processor::add_option (std::unique_ptr<option> opt)
+{
     if (m_shortopt.find (opt->shortopt ()) != m_shortopt.end ())
         throw std::logic_error ("Short option already exists");
     if (m_longopt.find (opt->longopt   ()) != m_longopt.end ())
@@ -546,7 +547,8 @@ processor::add_option (std::unique_ptr<option> opt) {
 
 //-----------------------------------------------------------------------------
 std::unique_ptr<option>
-processor::remove_option (char letter) {
+processor::remove_option (char letter)
+{
     // Locate the option by short name
     const auto s_candidate = m_shortopt.find (letter);
     if (s_candidate == m_shortopt.end ())
@@ -575,7 +577,8 @@ processor::remove_option (char letter) {
 
 //-----------------------------------------------------------------------------
 std::unique_ptr<option>
-processor::remove_option (const char *name) {
+processor::remove_option (const char *name)
+{
     // Locate the option by long name
     const auto l_candidate = m_longopt.find (name);
     if (l_candidate == m_longopt.end ())

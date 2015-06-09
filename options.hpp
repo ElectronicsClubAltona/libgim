@@ -44,37 +44,37 @@ namespace util {
      * some form of abort action.
      */
     class option {
-            protected:
-                    char              m_shortopt;
-                    const std::string m_longopt;
-                    const std::string m_description;
-                    bool              m_required;
-                    bool              m_found;
+    protected:
+            char              m_shortopt;
+            const std::string m_longopt;
+            const std::string m_description;
+            bool              m_required;
+            bool              m_found;
 
-            public:
-                    option (char        _letter,
-                            const char *_name,
-                            const char *_desc,
-                            bool        _required);
+    public:
+            option (char        _letter,
+                    const char *_name,
+                    const char *_desc,
+                    bool        _required);
 
-                    virtual ~option() { ; }
+            virtual ~option() { ; }
 
-                    virtual void execute (void) = 0;
-                    virtual void execute (const std::string& _data) = 0;
-                    virtual void finish  (void);
+            virtual void execute (void) = 0;
+            virtual void execute (const std::string& _data) = 0;
+            virtual void finish  (void);
 
-                    virtual bool is_required (void) const
-                        { return m_required; }
+            virtual bool is_required (void) const
+                { return m_required; }
 
-                    virtual void reset(void)
-                        { m_found = false; }
+            virtual void reset(void)
+                { m_found = false; }
 
-                    virtual char shortopt(void) const
-                        { return m_shortopt; }
-                    virtual const std::string& longopt(void) const
-                        { return m_longopt; }
-                    virtual const std::string& description(void) const
-                        { return m_description; }
+            virtual char shortopt(void) const
+                { return m_shortopt; }
+            virtual const std::string& longopt(void) const
+                { return m_longopt; }
+            virtual const std::string& description(void) const
+                { return m_description; }
     };
 
 
@@ -86,16 +86,16 @@ namespace util {
      * printed.
      */
     class nulloption : public option {
-        public:
-            nulloption(char        _letter,
-                    const char *_name,
-                    const char *_desc,
-                    bool        _required = false);
+    public:
+        nulloption(char        _letter,
+                const char *_name,
+                const char *_desc,
+                bool        _required = false);
 
-            virtual void execute(void)
-                { m_found = true; }
-            virtual void execute(const std::string&)
-                { m_found = true; }
+        virtual void execute(void)
+            { m_found = true; }
+        virtual void execute(const std::string&)
+            { m_found = true; }
     };
 
 
@@ -109,22 +109,22 @@ namespace util {
      * Throws an exception if a value is specified for the option.
      */
     class presentoption : public option {
-        protected:
-            bool *m_data;
+    protected:
+        bool *m_data;
 
-        public:
-            presentoption(char        _letter,
-                          const char *_name,
-                          const char *_desc,
-                          bool       *_data,
-                          bool        _required = false);
+    public:
+        presentoption(char        _letter,
+                      const char *_name,
+                      const char *_desc,
+                      bool       *_data,
+                      bool        _required = false);
 
-            virtual void execute(void);
-            virtual void execute(const std::string& data)
-                { option::execute(data); }
+        virtual void execute(void);
+        virtual void execute(const std::string& data)
+            { option::execute(data); }
 
-            virtual void reset(void)
-                { *m_data = false; }
+        virtual void reset(void)
+            { *m_data = false; }
     };
 
 
@@ -142,43 +142,42 @@ namespace util {
      */
     template<typename T>
     class valueoption : public option {
-        protected:
-            T *m_data;
+    protected:
+        T *m_data;
 
-        public:
-            valueoption(char        _letter,
-                        const char *_name,
-                        const char *_desc,
-                        T          *_data,
-                        bool        _required = false):
-                option (_letter, _name, _desc, _required),
-                m_data (_data)
-            { ; }
+    public:
+        valueoption(char        _letter,
+                    const char *_name,
+                    const char *_desc,
+                    T          *_data,
+                    bool        _required = false):
+            option (_letter, _name, _desc, _required),
+            m_data (_data)
+        { ; }
 
-            virtual void execute(void)
-                { option::execute(); }
-            virtual void execute(const std::string& data) {
-                get_arg(data, m_data);
-                m_found = true;
+        virtual void execute(void)
+            { option::execute(); }
+        virtual void execute(const std::string& data) {
+            get_arg(data, m_data);
+            m_found = true;
+        }
+
+    protected:
+        // Retrieve string to value conversion
+        static
+        T& get_arg(const std::string &arg,
+                   T                 *val);
+
+        static
+        T& get_arg(const std::string &_arg,
+                   T                 *val,
+                   const T           &defaultval) {
+            try {
+                return get_arg(_arg, val);
+            } catch(...) {
+                return *val = defaultval;
             }
-
-        protected:
-            // Retrieve string to value conversion
-            static
-            T& get_arg(const std::string &arg,
-                       T                 *val);
-
-            static
-            T& get_arg(const std::string &_arg,
-                       T                 *val,
-                       const T           &defaultval) {
-                try {
-                    return get_arg(_arg, val);
-                } catch(...) {
-                    return *val = defaultval;
-                }
-            }
-
+        }
     };
 
 
@@ -192,54 +191,54 @@ namespace util {
      * Recognises various postfixes and modifiers to a numeric value such as MiB.
      */
     class bytesoption : public valueoption<size_t> {
-        public:
-            /* Description of types available for parsing
-            */
-            enum bytestype {
-                BYTES_SINGLE = 0,
-                BYTES_KILO   = 1,
-                BYTES_MEGA   = 2,
-                BYTES_GIGA   = 3,
-                BYTES_TERA   = 4,
-                BYTES_PETA   = 5,
-                BYTES_EXA    = 6,
+    public:
+        /* Description of types available for parsing
+        */
+        enum bytestype {
+            BYTES_SINGLE = 0,
+            BYTES_KILO   = 1,
+            BYTES_MEGA   = 2,
+            BYTES_GIGA   = 3,
+            BYTES_TERA   = 4,
+            BYTES_PETA   = 5,
+            BYTES_EXA    = 6,
 
-                // Currently does not support yota or zeta as there can be
-                // trouble converting them without loss into 64bit quantities.
-                // That and they're fricking huge...
-                //
-                // BYTES_ZETA,
-                // BYTES_YOTA,
+            // Currently does not support yota or zeta as there can be
+            // trouble converting them without loss into 64bit quantities.
+            // That and they're fricking huge...
+            //
+            // BYTES_ZETA,
+            // BYTES_YOTA,
 
-                NUM_BYTESTYPE
-            };
+            NUM_BYTESTYPE
+        };
 
-            enum bytesmodifier {
-                BYTES_BASE2,
-                BYTES_BASE10,
+        enum bytesmodifier {
+            BYTES_BASE2,
+            BYTES_BASE10,
 
-                NUM_BYTESMODIFIER
-            };
+            NUM_BYTESMODIFIER
+        };
 
-        protected:
-            bytestype m_type;
-            bytesmodifier m_modifier;
+    protected:
+        bytestype m_type;
+        bytesmodifier m_modifier;
 
-            static bytestype type_from_character(char c);
+        static bytestype type_from_character(char c);
 
 
-        public:
-            /* Constructors and methods
-            */
-            bytesoption(char           _letter,
-                        const char    *_name,
-                        const char    *_desc,
-                        size_t        *_data,
-                        bytestype      _type     = BYTES_SINGLE,
-                        bytesmodifier  _modifier = BYTES_BASE2,
-                        bool           _required = false);
+    public:
+        /* Constructors and methods
+        */
+        bytesoption(char           _letter,
+                    const char    *_name,
+                    const char    *_desc,
+                    size_t        *_data,
+                    bytestype      _type     = BYTES_SINGLE,
+                    bytesmodifier  _modifier = BYTES_BASE2,
+                    bool           _required = false);
 
-            virtual void execute(const std::string &);
+        virtual void execute(const std::string &);
     };
 
 
@@ -256,40 +255,40 @@ namespace util {
      * performed within this class, merely dispatch and tokenisation.
      */
     class processor {
-        protected:
-            std::map<char, option *> m_shortopt;
-            std::map<std::string, option *> m_longopt;
+    protected:
+        std::map<char, option *> m_shortopt;
+        std::map<std::string, option *> m_longopt;
 
-            std::list<std::unique_ptr<option>> m_options;
+        std::list<std::unique_ptr<option>> m_options;
 
-            // The command to execute the application
-            std::string m_command;
+        // The command to execute the application
+        std::string m_command;
 
-        protected:
-            unsigned int parse_short(int pos, int argc, const char ** argv);
-            unsigned int parse_long(int pos, int argc, const char ** argv);
+    protected:
+        unsigned int parse_short(int pos, int argc, const char ** argv);
+        unsigned int parse_long(int pos, int argc, const char ** argv);
 
-        public:
-            processor();
-            ~processor();
+    public:
+        processor();
+        ~processor();
 
-            void print_usage(void);
+        void print_usage(void);
 
-            // TODO: Use function overloading here...
-            void parse_args(int argc, const char ** argv);
-            void parse_args(int argc, char ** argv)
-                { parse_args(argc, const_cast<const char**>(argv)); }
-            void parse_stream(std::istream & is);
+        // TODO: Use function overloading here...
+        void parse_args(int argc, const char ** argv);
+        void parse_args(int argc, char ** argv)
+            { parse_args(argc, const_cast<const char**>(argv)); }
+        void parse_stream(std::istream & is);
 
 
-            void add_option(std::unique_ptr<option>);
+        void add_option(std::unique_ptr<option>);
 
-            std::unique_ptr<option> remove_option(char letter);
-            std::unique_ptr<option> remove_option(const char * name);
-            std::unique_ptr<option> remove_option(const std::string& name)
-                { return remove_option (name.c_str()); }
-            std::unique_ptr<option> remove_option(const option *opt)
-                { return remove_option (opt->longopt ()); }
+        std::unique_ptr<option> remove_option(char letter);
+        std::unique_ptr<option> remove_option(const char * name);
+        std::unique_ptr<option> remove_option(const std::string& name)
+            { return remove_option (name.c_str()); }
+        std::unique_ptr<option> remove_option(const option *opt)
+            { return remove_option (opt->longopt ()); }
     };
 }
 
