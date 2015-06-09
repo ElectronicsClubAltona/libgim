@@ -22,15 +22,6 @@
 namespace util { namespace image {
     //-------------------------------------------------------------------------
     template <typename T>
-    constexpr size_t
-    buffer<T>::area (void) const
-    {
-        return w * h;
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <typename T>
     constexpr extent2u
     buffer<T>::extent (void) const
     {

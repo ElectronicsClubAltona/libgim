@@ -98,7 +98,7 @@ hydraulic_erode (util::image::buffer<float> &height, const unsigned ticks)
             }
 
         // evaporate water, deposit sediment
-        for (size_t i = 0; i < water.area (); ++i) {
+        for (size_t i = 0; i < water.extent ().area (); ++i) {
             water[i]  -= EVAPORATION;
             height[i] += SOLUBILITY * EVAPORATION;
         }
@@ -107,8 +107,8 @@ hydraulic_erode (util::image::buffer<float> &height, const unsigned ticks)
     }
 
     // forcibly evaporate all remaining water.
-    CHECK_EQ (water.area (), height.area ());
-    for (size_t i = 0; i < water.area (); ++i)
+    CHECK_EQ (water.extent ().area (), height.extent ().area ());
+    for (size_t i = 0; i < water.extent ().area (); ++i)
         height[i] += water[i] * SOLUBILITY;
 }
 
@@ -252,7 +252,7 @@ adjust_ocean (util::image::buffer<float> &height,
         buckets[size_t (h * 255u)]++;
 
     size_t pivot = 0;
-    for (size_t accum = 0, target = size_t (percentage * height.area ()); pivot < buckets.size (); ++pivot) {
+    for (size_t accum = 0, target = size_t (percentage * height.extent ().area ()); pivot < buckets.size (); ++pivot) {
         accum += buckets[pivot];
         if (accum > target)
             break;

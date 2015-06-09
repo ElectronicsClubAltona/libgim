@@ -49,7 +49,6 @@ namespace util { namespace image {
         buffer<T> downsample (float factor) const;
 
         //---------------------------------------------------------------------
-        constexpr size_t area (void) const;
         constexpr extent2u extent (void) const;
 
         constexpr bool is_packed (void) const;
