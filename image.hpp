@@ -50,6 +50,8 @@ namespace util { namespace image {
 
         //---------------------------------------------------------------------
         constexpr size_t area (void) const;
+        constexpr extent2u extent (void) const;
+
         constexpr bool is_packed (void) const;
 
         size_t w;

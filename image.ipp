@@ -28,6 +28,16 @@ namespace util { namespace image {
         return w * h;
     }
 
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    constexpr extent2u
+    buffer<T>::extent (void) const
+    {
+        return { w, h };
+    }
+
+
     //-------------------------------------------------------------------------
     template <typename T>
     constexpr bool
