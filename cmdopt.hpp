@@ -48,6 +48,7 @@ namespace util { namespace cmdopt {
         public:
             value (std::string name, T&);
 
+            using base::execute;
             void execute (const char *restrict) override;
 
             T  data (void) const;
@@ -62,6 +63,8 @@ namespace util { namespace cmdopt {
         class count : public value<T> {
         public:
             count (std::string name);
+
+            using value<T>::execute;
             void execute (void) override;
         };
 
@@ -69,6 +72,8 @@ namespace util { namespace cmdopt {
         class bytes : public value<size_t> {
         public:
             bytes (std::string name);
+
+            using value<size_t>::execute;
             void execute (const char *restrict) override;
         };
     }
