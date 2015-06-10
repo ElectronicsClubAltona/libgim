@@ -20,7 +20,6 @@
 
 #include <algorithm>
 #include <cstring>
-#include <sstream>
 
 using util::cmdopt::option::base;
 using util::cmdopt::option::bytes;
@@ -77,53 +76,6 @@ base::name (void) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-value<T>::value (std::string _name, T &_data):
-    base (_name),
-    m_data (_data)
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-void
-value<T>::execute (const char *restrict str)
-{
-    try {
-        std::istringstream os (str);
-        os.exceptions (
-              std::istringstream::failbit
-            | std::istringstream::badbit
-        );
-        os >> m_data;
-
-        if (!os.eof ())
-            throw invalid_value (__func__);
-    } catch (...) {
-        throw invalid_value (__func__);
-    }
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-T
-value<T>::data (void) const
-{
-    return m_data;
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-T&
-value<T>::data (void)
-{
-    return m_data;
-}
-
-
-//-----------------------------------------------------------------------------
 namespace util { namespace cmdopt { namespace option {
     template class value<uint16_t>;
     template class value<uint32_t>;

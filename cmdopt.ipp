@@ -19,7 +19,57 @@
 #endif
 #define __UTIL_CMDLINE_IPP
 
+#include <sstream>
+
 namespace util { namespace cmdopt {
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    option::value<T>::value (std::string _name, T &_data):
+        base (std::move (_name)),
+        m_data (_data)
+    { ; }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    void
+    option::value<T>::execute (const char *restrict str)
+    {
+        try {
+            std::istringstream os (str);
+            os.exceptions (
+                  std::istringstream::failbit
+                | std::istringstream::badbit
+            );
+            os >> m_data;
+
+            if (!os.eof ())
+                throw invalid_value (__func__);
+        } catch (...) {
+            throw invalid_value (__func__);
+        }
+    }
+
+
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    T
+    option::value<T>::data (void) const
+    {
+        return m_data;
+    }
+
+
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    T&
+    option::value<T>::data (void)
+    {
+        return m_data;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename ...Args>
     T&
     parser::add (char shortname, std::string longname, std::string description, Args&&... args)
