@@ -16,6 +16,9 @@ UTIL_FILES   =			\
     bezier.hpp			\
     bitwise.cpp			\
     bitwise.hpp			\
+    cmdopt.cpp			\
+    cmdopt.hpp			\
+    cmdopt.ipp			\
     colour.cpp			\
     colour.hpp			\
     colour.ipp			\

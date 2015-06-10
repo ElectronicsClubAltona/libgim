@@ -270,19 +270,32 @@ adjust_ocean (util::image::buffer<float> &height,
 static const unsigned THERMAL_ITERATIONS = 10;
 static const unsigned HYDRAULIC_ITERATIONS = 100;
 
+#include "cmdopt.hpp"
+
 
 int
-main (void)
+main (int argc, char **argv)
 {
-    // setup the output buffer
+    // setup default variables
 #ifdef ENABLE_DEBUGGING
-    util::extent2u size {320, 240};
+    util::extent2u res {320, 240};
 #else
-    util::extent2u size {1920, 1080};
+    util::extent2u res {1920, 1080};
 #endif
-    util::image::buffer<float> img (size);
 
     uint64_t seed = time (nullptr);
+
+    // fill variables from arguments
+    util::cmdopt::parser args;
+    args.add<util::cmdopt::option::value<size_t>> ('w', "width",  "output image width",  res.w);
+    args.add<util::cmdopt::option::value<size_t>> ('h', "height", "output image height", res.h);
+    args.add<util::cmdopt::option::value<uint64_t>> ('s', "seed", "random seed", seed);
+    //args.add<util::cmdopt::option::value<unsigned>> ('o', "octaves", "total fractal iterations", octaves);
+    //args.add<util::cmdopt::option::value<float>> ('H', "hurst", "Hurst exponent", H);
+
+    args.scan (argc, argv);
+
+    util::image::buffer<float> img (res);
 
     // setup the noise generator
 #if 0
@@ -294,7 +307,7 @@ main (void)
     util::noise::fractal::hetero<float, util::noise::basis::value<float,util::lerp::quintic>> b (seed);
 
     b.octaves (8);
-    b.frequency (10.f / size.w);
+    b.frequency (10.f / res.w);
     b.lacunarity = 2.f;
     b.H = 1.0f;
     b.seed (seed);
@@ -306,21 +319,21 @@ main (void)
         util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::quintic>>
     > b (seed, { 0.13f, 0.13f });
 
-    b.data.frequency (1.f / size.w);
+    b.data.frequency (1.f / res.w);
     b.perturb[0].octaves (4);
     b.perturb[1].octaves (4);
-    b.perturb[0].frequency (10.f / size.w);
-    b.perturb[1].frequency (10.f / size.w);
+    b.perturb[0].frequency (10.f / res.w);
+    b.perturb[1].frequency (10.f / res.w);
 #endif
 
     // generate the values. offset positions slightly to observe simple axis issues with perlin basis
     {
         auto offset = util::vector2f { -100 };
 
-        for (size_t y = 0; y < size.h; ++y)
-            for (size_t x = 0; x < size.w; ++x) {
+        for (size_t y = 0; y < res.h; ++y)
+            for (size_t x = 0; x < res.w; ++x) {
                 auto v = b (util::point2f {float (x), float (y)} + offset);
-                img.data ()[y * size.w + x] = v;
+                img.data ()[y * res.w + x] = v;
             }
     }
 
@@ -342,7 +355,7 @@ main (void)
 
     std::cerr << "thermal_erosion\n";
     for (size_t i = 0; i < THERMAL_ITERATIONS; ++i)
-        thermal_erode (soft, to_radians (30.f), 1.f / size.w, 0.f);
+        thermal_erode (soft, to_radians (30.f), 1.f / res.w, 0.f);
 
     hydraulic_erode (soft, HYDRAULIC_ITERATIONS);
 
