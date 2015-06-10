@@ -102,8 +102,6 @@ hydraulic_erode (util::image::buffer<float> &height, const unsigned ticks)
             water[i]  -= EVAPORATION;
             height[i] += SOLUBILITY * EVAPORATION;
         }
-
-        std::cerr << "eroded: " << total << '\n';
     }
 
     // forcibly evaporate all remaining water.
@@ -177,8 +175,6 @@ thermal_erode (util::image::buffer<float> &height,
             if (h[7] < centre) height[(y + 1) * height.s + (x + 0)] += dist;
             if (h[8] < centre) height[(y + 1) * height.s + (x + 1)] += dist;
         }
-
-    std::cerr << "eroded: " << total << '\n';
 }
 
 
