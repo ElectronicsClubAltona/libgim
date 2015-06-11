@@ -39,10 +39,12 @@ namespace util {
         ACCESS_READWRITE = ACCESS_READ | ACCESS_WRITE
     };
 
+
     /// Reads an entire file into memory. Caller frees the result. Guarantees a
     /// null trailing byte.
-    std::unique_ptr<char []>
+    std::vector<char>
     slurp [[gnu::warn_unused_result]] (const boost::filesystem::path&);
+
 
     template <typename T>
     void

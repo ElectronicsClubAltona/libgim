@@ -53,7 +53,7 @@ access_to_cflags (access_t a) {
 }
 
 //----------------------------------------------------------------------------
-std::unique_ptr<char []>
+std::vector<char>
 util::slurp (const boost::filesystem::path& path)  {
     fd out (path, ACCESS_READ);
 
@@ -67,12 +67,12 @@ util::slurp (const boost::filesystem::path& path)  {
 
     // Allocate a buffer, and keep reading until it's full. We provide a null
     // padding at the tail as a 'just in case' measure for string manipulation.
-    unique_ptr <char []> buffer (new char[size + 1]);
-    buffer.get()[size] = '\0';
+    std::vector<char> buffer (size + 1);
+    buffer.data ()[size] = '\0';
 
     CHECK_GE (size, 0);
     size_t remaining = (size_t)size;
-    char *cursor = buffer.get();
+    char *cursor = buffer.data ();
 
     while (remaining) {
         ssize_t consumed = ::read (out, cursor, remaining);
