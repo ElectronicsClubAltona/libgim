@@ -63,18 +63,13 @@ write_netpbm (const uint8_t *restrict pixels,
               size_t width,
               size_t height,
               size_t stride,
-              const boost::filesystem::path &path,
+              std::ostream &output,
               const char* MAGIC) {
     CHECK (pixels);
     CHECK_GT (components, 0);
     CHECK_GT (width, 0);
     CHECK_GE (stride, width);
     CHECK_GT (height, 0);
-
-    // Establish an output stream
-    std::ofstream output (path.string ());
-    if (!output.good ())
-        throw util::output_error ("Unable to open output file");
 
     // Write the PPM header.
     output << MAGIC  << "\n"
@@ -83,11 +78,17 @@ write_netpbm (const uint8_t *restrict pixels,
            << (size_t)std::numeric_limits<uint8_t>::max () << "\n";
 
     // Write the data rows
-    for (size_t y = 0; y < height; ++y) {
-        for (size_t x = 0; x < width; ++x)
-            for (size_t c = 0; c < components; ++c)
-                output << pixels[y * stride + x * components + c];
-    }
+    for (size_t y = 0; y < height; ++y)
+        output.write (reinterpret_cast<const char*> (pixels + y * stride), width * components);
+}
+
+
+//-----------------------------------------------------------------------------
+void
+util::pgm::write (const util::image::buffer<uint8_t> &src,
+                  std::ostream &dst)
+{
+    write (src.begin (), src.w, src.h, src.s, dst);
 }
 
 
@@ -96,6 +97,7 @@ void
 util::pgm::write (const util::image::buffer<uint8_t> &src,
                   const boost::filesystem::path &path)
 {
+    std::ofstream dst (path.c_str ());
     write (src.begin (), src.w, src.h, src.s, path);
 }
 
@@ -106,10 +108,24 @@ util::pgm::write (const uint8_t *restrict pixels,
                   size_t width,
                   size_t height,
                   size_t stride,
-                  const boost::filesystem::path &path) {
+                  const boost::filesystem::path &path)
+{
+    std::ofstream dst (path.c_str ());
+    write (pixels, width, height, stride, dst);
+}
+
+
+//-----------------------------------------------------------------------------
+void
+util::pgm::write (const uint8_t *restrict pixels,
+                  size_t width,
+                  size_t height,
+                  size_t stride,
+                  std::ostream &dst)
+{
     // TODO: We should switch between P2 (ascii) and P5 (binary)
     static const char MAGIC[] = "P5";
-    write_netpbm (pixels, 1, width, height, stride, path, MAGIC);
+    write_netpbm (pixels, 1, width, height, stride, dst, MAGIC);
 }
 
 
@@ -119,8 +135,22 @@ util::ppm::write (const uint8_t *restrict pixels,
                   size_t width,
                   size_t height,
                   size_t stride,
-                  const boost::filesystem::path &path) {
+                  const boost::filesystem::path &path)
+{
+    std::ofstream dst (path.c_str ());
+    write (pixels, width, height, stride, dst);
+}
+
+
+//-----------------------------------------------------------------------------
+void
+util::ppm::write (const uint8_t *restrict pixels,
+                  size_t width,
+                  size_t height,
+                  size_t stride,
+                  std::ostream &dst)
+{
     // TODO: We should switch between P3 (ascii) and P6 (binary)
     static const char MAGIC[] = "P6";
-    write_netpbm (pixels, 3, width, height, stride, path, MAGIC);
+    write_netpbm (pixels, 3, width, height, stride, dst, MAGIC);
 }

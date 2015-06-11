@@ -21,6 +21,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <ostream>
 #include <boost/filesystem/path.hpp>
 
 namespace util {
@@ -29,8 +30,15 @@ namespace util {
         static image::buffer<uint8_t> read (const boost::filesystem::path&);
 
         static void write (const image::buffer<uint8_t> &src,
-                           const boost::filesystem::path &);
+                           const boost::filesystem::path &dst);
+        static void write (const image::buffer<uint8_t> &src,
+                           std::ostream &dst);
 
+        static void write (const uint8_t *restrict pixels,
+                           size_t width,
+                           size_t height,
+                           size_t stride,
+                           std::ostream &dst);
         static void write (const uint8_t *restrict pixels,
                            size_t width,
                            size_t height,
@@ -45,6 +53,11 @@ namespace util {
                            size_t height,
                            size_t stride,
                            const boost::filesystem::path &path);
+        static void write (const uint8_t *restrict pixels,
+                           size_t width,
+                           size_t height,
+                           size_t stride,
+                           std::ostream &dst);
     };
 }
 
