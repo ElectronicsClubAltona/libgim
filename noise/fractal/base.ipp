@@ -141,4 +141,22 @@ namespace util { namespace noise { namespace fractal {
     {
         return m_basis.seed ();
     }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
+    const B&
+    base<T,B>::basis (void) const
+    {
+        return m_basis;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
+    B&
+    base<T,B>::basis (void)
+    {
+        return m_basis;
+    }
 } } }

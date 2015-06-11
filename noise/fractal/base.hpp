@@ -61,6 +61,9 @@ namespace util { namespace noise { namespace fractal {
         constexpr seed_t seed (void) const;
         seed_t seed (seed_t);
 
+        const B& basis (void) const;
+        B& basis (void);
+
     protected:
         unsigned m_octaves;
         T m_H;
