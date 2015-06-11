@@ -51,15 +51,17 @@ namespace util {
 
     ///------------------------------------------------------------------------
     /// A simple RAII wrapper for file descriptors
-    struct fd_ref {
-        public:
-            int fd;
+    struct fd {
+    public:
+        explicit fd (int);
+        explicit fd (const boost::filesystem::path&, access_t);
 
-            explicit fd_ref  (int _fd);
-            explicit fd_ref  (const boost::filesystem::path&, access_t access);
-            ~fd_ref ();
+        ~fd ();
 
-            operator int (void) const;
+        operator int (void) const { return m_fd; }
+
+    private:
+        int m_fd;
     };
 
 

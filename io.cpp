@@ -55,14 +55,14 @@ access_to_cflags (access_t a) {
 //----------------------------------------------------------------------------
 std::unique_ptr<char []>
 util::slurp (const boost::filesystem::path& path)  {
-    fd_ref fd(path, ACCESS_READ);
+    fd out (path, ACCESS_READ);
 
     // Calculate the total file size
-    off_t size = lseek (fd, 0, SEEK_END);
+    off_t size = lseek (out, 0, SEEK_END);
     if (size == (off_t)-1)
         throw errno_error();
 
-    if (lseek (fd, 0, SEEK_SET) == (off_t)-1)
+    if (lseek (out, 0, SEEK_SET) == (off_t)-1)
         throw errno_error ();
 
     // Allocate a buffer, and keep reading until it's full. We provide a null
@@ -75,7 +75,7 @@ util::slurp (const boost::filesystem::path& path)  {
     char *cursor = buffer.get();
 
     while (remaining) {
-        ssize_t consumed = ::read (fd, cursor, remaining);
+        ssize_t consumed = ::read (out, cursor, remaining);
         if (consumed == -1)
             throw errno_error();
         CHECK_GT (        consumed, 0);
@@ -95,12 +95,12 @@ util::write (const boost::filesystem::path &path, const T *data, size_t len) {
     CHECK_GT (len, 0);
     CHECK (data);
 
-    fd_ref fd (path, ACCESS_WRITE);
+    fd out (path, ACCESS_WRITE);
     const char *cursor = reinterpret_cast<const char*> (data);
     size_t remaining   = len * sizeof (T);
 
     while (remaining) {
-        ssize_t consumed = ::write (fd, cursor, remaining);
+        ssize_t consumed = ::write (out, cursor, remaining);
         if (consumed < 0)
             errno_error::throw_code ();
 
@@ -115,37 +115,32 @@ template void util::write<uint8_t> (const boost::filesystem::path&, const uint8_
 
 
 //----------------------------------------------------------------------------
-fd_ref::fd_ref (int _fd):
-    fd (_fd)
+fd::fd (int _fd):
+    m_fd (_fd)
 {
-    if (fd < 0)
+    if (_fd < 0)
         throw std::invalid_argument ("invalid descriptor");
 }
 
 
-fd_ref::fd_ref (const boost::filesystem::path &path, access_t access):
+fd::fd (const boost::filesystem::path &path, access_t access):
 #ifdef PLATFORM_WIN32
     // Windows requires the use of 'string ()' to convert to char datatype
     // rather than the typical wchar
-    fd (open (path.string ().c_str (), access_to_cflags (access) | O_BINARY, 0660))
+    m_fd (open (path.string ().c_str (), access_to_cflags (access) | O_BINARY, 0660))
 #else
-    fd (open (path.native ().c_str (), access_to_cflags (access), 0660))
+    m_fd (open (path.native ().c_str (), access_to_cflags (access), 0660))
 #endif
 {
-    if (fd < 0)
+    if (m_fd < 0)
         util::errno_error::throw_code ();
 }
 
 
-fd_ref::~fd_ref () {
-    CHECK (fd >= 0);
-    close (fd);
+fd::~fd () {
+    CHECK (m_fd >= 0);
+    close (m_fd);
 }
-
-
-fd_ref::operator int (void) const
-    { return fd; }
-
 
 
 //----------------------------------------------------------------------------

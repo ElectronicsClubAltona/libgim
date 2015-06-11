@@ -23,7 +23,7 @@ namespace util {
     namespace detail { namespace posix {
         class mapped_file {
             private:
-                fd_ref   m_fd;
+                fd m_fd;
                 uint8_t *m_data;
                 size_t   m_size;
 
