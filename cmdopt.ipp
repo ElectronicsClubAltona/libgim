@@ -72,8 +72,14 @@ namespace util { namespace cmdopt {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename ...Args>
     T&
-    parser::add (char shortname, std::string longname, std::string description, Args&&... args)
+    parser::add (char shortname,
+                 std::string longname,
+                 std::string description,
+                 Args&&... args)
     {
+        // TODO: make use of the description with the help option
+        (void)description;
+
         auto handler = std::make_unique<T> (longname, std::forward<Args> (args)...);
         T& ref = *handler;
 
