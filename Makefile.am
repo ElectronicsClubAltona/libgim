@@ -164,6 +164,8 @@ UTIL_FILES   =			\
     noise/fractal/hmf.ipp	\
     noise/fractal/rmf.hpp	\
     noise/fractal/rmf.ipp	\
+    noise/fractal/runtime.cpp	\
+    noise/fractal/runtime.hpp	\
     noise/lerp.cpp		\
     noise/lerp.hpp		\
     noise/lut.cpp		\
