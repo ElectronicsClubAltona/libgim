@@ -146,10 +146,12 @@ UTIL_FILES   =			\
     noise/basis/constant.cpp	\
     noise/basis/constant.hpp	\
     noise/basis/constant.ipp	\
-    noise/basis/value.hpp	\
-    noise/basis/value.ipp	\
     noise/basis/perlin.hpp	\
     noise/basis/perlin.ipp	\
+    noise/basis/runtime.cpp	\
+    noise/basis/runtime.hpp	\
+    noise/basis/value.hpp	\
+    noise/basis/value.ipp	\
     noise/basis/worley.hpp	\
     noise/basis/worley.ipp	\
     noise/fractal/base.hpp	\
