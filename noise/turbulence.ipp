@@ -32,6 +32,29 @@ namespace util { namespace noise {
         scale (_scale)
     { ; }
 
+    ////////////////////////////////////////////////////////////////////////////
+    template <typename T, typename D, typename P>
+    typename turbulence<T,D,P>::seed_t
+    turbulence<T,D,P>::seed (void) const
+    {
+        return data.seed ();
+    }
+
+
+    //------------------------------------------------------------------------- 
+    template <typename T, typename D, typename P>
+    typename turbulence<T,D,P>::seed_t
+    turbulence<T,D,P>::seed (seed_t _seed)
+    {
+        auto ret = _seed;
+
+        data.seed (_seed);          _seed = hash::wang (_seed);
+        perturb[0].seed (_seed);    _seed = hash::wang (_seed);
+        perturb[1].seed (_seed);    _seed = hash::wang (_seed);
+
+        return ret;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename D, typename P>

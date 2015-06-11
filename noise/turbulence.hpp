@@ -34,6 +34,9 @@ namespace util { namespace noise {
         using seed_t = uint64_t;
         turbulence (seed_t, vector<2,T> scale);
 
+        seed_t seed (seed_t);
+        seed_t seed (void) const;
+
         constexpr T operator() (point<2,T>) const;
         
         D data;
