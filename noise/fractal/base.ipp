@@ -61,13 +61,31 @@ namespace util { namespace noise { namespace fractal {
 
     //-------------------------------------------------------------------------
     template <typename T, typename B>
+    constexpr unsigned
+    base<T,B>::octaves (void) const
+    {
+        return m_octaves;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
     T
     base<T,B>::H (T _h)
     {
         m_H = _h;
         m_invAH = std::pow (m_amplitude, -m_H);
         m_invGH = std::pow (m_gain, m_H);
-        return H;
+        return m_H;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
+    constexpr T
+    base<T,B>::H (void) const
+    {
+        return m_H;
     }
 
 
@@ -100,9 +118,27 @@ namespace util { namespace noise { namespace fractal {
 
     //-------------------------------------------------------------------------
     template <typename T, typename B>
+    constexpr T
+    base<T,B>::lacunarity (void) const
+    {
+        return m_lacunarity;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
     typename base<T,B>::seed_t
     base<T,B>::seed (seed_t _seed)
     {
         return m_basis.seed (_seed);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
+    constexpr typename base<T,B>::seed_t
+    base<T,B>::seed (void) const
+    {
+        return m_basis.seed ();
     }
 } } }
