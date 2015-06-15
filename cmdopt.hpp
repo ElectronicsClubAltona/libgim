@@ -62,7 +62,7 @@ namespace util { namespace cmdopt {
         template <typename T = unsigned>
         class count : public value<T> {
         public:
-            count (std::string name);
+            count (std::string name, T&);
 
             using value<T>::execute;
             void execute (void) override;

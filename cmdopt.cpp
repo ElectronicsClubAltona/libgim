@@ -85,10 +85,17 @@ namespace util { namespace cmdopt { namespace option {
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
+count<T>::count (std::string _name, T &_data):
+    value<T> (std::move (_name), _data)
+{ ; }
+
+
+//-------------------------------------------------------------------------
+template <typename T>
 void
 count<T>::execute (void)
 {
-    ++ this->data();
+    ++this->data ();
 }
 
 
