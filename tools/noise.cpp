@@ -180,6 +180,7 @@ main (int argc, char **argv)
     float H;
     float scale = 1.f;
     float turbulence = 0.f;
+    unsigned single = 0;
 
     // fill variables from arguments
     util::cmdopt::parser args;
@@ -190,6 +191,7 @@ main (int argc, char **argv)
     args.add<util::cmdopt::option::value<fractal_t>> ('f', "fractal",   "primary fractal function", fractal);
     args.add<util::cmdopt::option::value<lerp_t>>    ('l', "lerp",      "interpolation algorithm",  lerp);
     args.add<util::cmdopt::option::value<unsigned>>  ('o', "octaves",   "total fractal iterations", octaves);
+    args.add<util::cmdopt::option::count<unsigned>>  ('1', "single",    "single octave",            single);
     args.add<util::cmdopt::option::value<float>>     ('H', "hurst",     "Hurst exponent",           H);
     args.add<util::cmdopt::option::value<float>>     ('x', "scale",     "frequency multiplier",     scale);
     args.add<util::cmdopt::option::value<float>>     ('t', "turbulence","turbulence scale",         turbulence);
@@ -276,13 +278,32 @@ main (int argc, char **argv)
 
     util::image::buffer<float> img (res);
 
+    // XXX: offset slightly to avoid origin artefacts in some basis functions
+    static const auto OFFSET = util::vector2f { -100 };
+
     {
-        // XXX: offset slightly to avoid origin artefacts in some basis functions
-        auto offset = util::vector2f { -100 };
+        for (size_t y = 0; y < res.h; ++y)
+            for (size_t x = 0; x < res.w; ++x)
+                img.data ()[y * img.s + x] = t (util::point2f {float (x), float (y)} + OFFSET);
+    }
+
+    // working on the assumption that all octave images are based on summation,
+    // subtract the image with one less octave from our current image to leave
+    // us with the highest octave contribution only. this is hideously
+    // inefficient, but it's not an operation we care about in general.
+    if (single && f.octaves () != 1) {
+        auto oldoctaves = f.octaves ();
+        auto prev = img.clone ();
 
         for (size_t y = 0; y < res.h; ++y)
             for (size_t x = 0; x < res.w; ++x)
-                img.data ()[y * img.s + x] = t (util::point2f {float (x), float (y)} + offset);
+                prev.data ()[y * img.s + x] = t (util::point2f {float (x), float (y)} + OFFSET);
+
+        CHECK_EQ (img.stride (), prev.stride ());
+        for (size_t i = 0; i < img.size (); ++i)
+            img[i] -= prev[i];
+
+        f.octaves (oldoctaves);
     }
 
     // rescale into the range [0, 1]
