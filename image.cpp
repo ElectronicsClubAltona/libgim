@@ -258,6 +258,9 @@ template <typename T>
 T
 buffer<T>::operator[] (point<2,size_t> p) const
 {
+    CHECK_LT (p.x, w);
+    CHECK_LT (p.y, h);
+
     return begin ()[p.y * s + p.x];
 }
 
@@ -267,6 +270,9 @@ template <typename T>
 T&
 buffer<T>::operator[] (point<2,size_t> p)
 {
+    CHECK_LT (p.x, w);
+    CHECK_LT (p.y, h);
+
     return begin ()[p.y * s + p.x];
 }
 
@@ -276,6 +282,8 @@ template <typename T>
 T
 buffer<T>::operator[] (size_t idx) const
 {
+    CHECK_LT (idx, h * s);
+
     return begin ()[idx];
 }
 
@@ -285,6 +293,8 @@ template <typename T>
 T&
 buffer<T>::operator[] (size_t idx)
 {
+    CHECK_LT (idx, h * s);
+
     return begin ()[idx];
 }
 
