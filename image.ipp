@@ -31,9 +31,27 @@ namespace util { namespace image {
 
     //-------------------------------------------------------------------------
     template <typename T>
+    constexpr extent2u
+    buffer<T>::stride (void) const
+    {
+        return { 1, s };
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    constexpr size_t
+    buffer<T>::size (void) const
+    {
+        return extent ()[1] * stride ()[1];
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
     constexpr bool
     buffer<T>::is_packed (void) const
     {
-        return s == w;
+        return stride ()[1] == extent ()[0];
     }
 } }
