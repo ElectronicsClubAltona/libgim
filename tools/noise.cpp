@@ -293,6 +293,7 @@ main (int argc, char **argv)
     // inefficient, but it's not an operation we care about in general.
     if (single && f.octaves () != 1) {
         auto oldoctaves = f.octaves ();
+        f.octaves (oldoctaves - 1);
         auto prev = img.clone ();
 
         for (size_t y = 0; y < res.h; ++y)
