@@ -67,6 +67,7 @@ namespace util { namespace noise { namespace fractal {
         for (size_t i = 0; i < this->m_octaves; ++i) {
             total += this->m_basis (p) * scale;
 
+            p += T{1};
             p *= this->m_lacunarity;
             scale *= this->m_invGH;
         }

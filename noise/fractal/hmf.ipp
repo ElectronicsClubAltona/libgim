@@ -77,6 +77,7 @@ namespace util { namespace noise { namespace fractal {
             weight  = min (weight, T{1});
 
             scale *= this->m_invGH;
+            p += T{1};
             p *= this->m_lacunarity;
         }
 
