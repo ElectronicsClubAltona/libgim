@@ -198,8 +198,6 @@ main (int argc, char **argv)
 
     args.scan (argc, argv);
 
-    std::cerr << "turbulence: " << turbulence << '\n';
-
     util::noise::turbulence<
         float,
         util::noise::fractal::runtime<
@@ -311,7 +309,6 @@ main (int argc, char **argv)
     auto range = std::minmax_element (img.begin (), img.end ());
     auto offset = *range.first;
     auto div    = *range.second - *range.first;
-    std::cerr << "range: [" << *range.first << ", " << *range.second << "]\n";
 
     std::transform (img.begin (), img.end (), img.begin (), [offset,div] (auto i) { return (i - offset) / div; });
 
