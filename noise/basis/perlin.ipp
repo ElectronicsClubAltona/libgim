@@ -69,7 +69,7 @@ namespace util { namespace noise { namespace basis {
         auto p_int = p.template cast<intmax_t> ();
         if (p.x < 0) p_int.x -= 1;
         if (p.y < 0) p_int.y -= 1;
-        auto p_rem = abs (p - p_int);
+        auto p_rem = p - p_int;
 
         // generate the corner positions
         auto p0 = p_int + util::vector<2,intmax_t> { 0, 0 };

@@ -69,7 +69,7 @@ namespace util { namespace noise { namespace basis {
         auto p_int = p.template cast<intmax_t> ();
         if (p.x < 0) p_int.x -= 1;
         if (p.y < 0) p_int.y -= 1;
-        auto p_rem = abs (p - p_int).template as<point> ();
+        auto p_rem = (p - p_int).template as<point> ();
 
         // setup an array of distances
         constexpr size_t RADIUS = 1;
