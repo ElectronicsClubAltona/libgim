@@ -92,7 +92,7 @@ namespace util {
         std::ostream*   m_owner;
 
     protected:
-        virtual int overflow (int ch);
+        virtual int overflow (int ch) override;
 
     public:
         explicit indenter (std::streambuf* _dest, size_t _indent = 4);
