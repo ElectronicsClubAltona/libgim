@@ -195,7 +195,7 @@ namespace util { namespace cmdopt { namespace option {
 
 ///////////////////////////////////////////////////////////////////////////////
 int
-parser::scan (int argc, char *const *argv)
+parser::scan (int argc, const char *const *argv)
 {
     CHECK_GE (argc, 0);
     CHECK    (argv);
@@ -230,7 +230,7 @@ parser::scan (int argc, char *const *argv)
 
 //-----------------------------------------------------------------------------
 int
-parser::parse_long (int pos, int argc, char *const *argv)
+parser::parse_long (int pos, int argc, const char *const *argv)
 {
     CHECK_LT (pos, argc);
     CHECK_GE (pos, 0);
@@ -276,7 +276,7 @@ parser::parse_long (int pos, int argc, char *const *argv)
 
 //-----------------------------------------------------------------------------
 int
-parser::parse_short (int pos, int argc, char *const *argv)
+parser::parse_short (int pos, int argc, const char *const *argv)
 {
     CHECK_LT (pos, argc);
     CHECK_GE (pos, 0);

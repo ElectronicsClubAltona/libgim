@@ -134,11 +134,11 @@ namespace util { namespace cmdopt {
                 std::string description,
                 Args&&...);
 
-        int scan (int argc, char *const *argv);
+        int scan (int argc, const char *const *argv);
 
     private:
-        int parse_long  (int pos, int argc, char *const *argv);
-        int parse_short (int pos, int argc, char *const *argv);
+        int parse_long  (int pos, int argc, const char *const *argv);
+        int parse_short (int pos, int argc, const char *const *argv);
 
 
         using short_t = std::tuple<char,option::base&>;
