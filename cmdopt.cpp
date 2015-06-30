@@ -117,6 +117,28 @@ base::seen (bool _seen)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+null::null (std::string _name):
+    base (std::move (_name))
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+void
+null::execute (void)
+{
+    seen (true);
+}
+
+
+//-----------------------------------------------------------------------------
+void
+null::execute (const char *restrict)
+{
+    seen (true);
+}
+
+
+//-----------------------------------------------------------------------------
 namespace util { namespace cmdopt { namespace option {
     template class value<uint16_t>;
     template class value<uint32_t>;

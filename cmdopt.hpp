@@ -51,6 +51,15 @@ namespace util { namespace cmdopt {
         };
 
 
+        class null : public base {
+        public:
+            null (std::string name);
+
+            virtual void execute (void) override;
+            virtual void execute (const char *restrict) override;
+        };
+
+
         template <typename T>
         class value : public base {
         public:
