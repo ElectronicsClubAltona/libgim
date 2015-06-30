@@ -60,6 +60,20 @@ namespace util { namespace cmdopt {
         };
 
 
+        class present : public base {
+        public:
+            present (std::string name, bool&);
+
+            using base::execute;
+            virtual void execute (void) override;
+
+            virtual void finish (void) override;
+
+        private:
+            bool &m_data;
+        };
+
+
         template <typename T>
         class value : public base {
         public:

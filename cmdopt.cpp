@@ -138,6 +138,30 @@ null::execute (const char *restrict)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+present::present (std::string _name, bool &_data):
+    base (std::move (_name)),
+    m_data (_data)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+void
+present::execute (void)
+{
+    seen (true);
+}
+
+
+//-----------------------------------------------------------------------------
+void
+present::finish (void)
+{
+    m_data = seen ();
+    base::finish ();
+}
+
+
 //-----------------------------------------------------------------------------
 namespace util { namespace cmdopt { namespace option {
     template class value<uint16_t>;
