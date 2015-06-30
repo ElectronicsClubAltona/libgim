@@ -38,7 +38,7 @@ namespace util { namespace noise {
         seed_t seed (void) const;
 
         constexpr T operator() (point<2,T>) const;
-        
+
         D data;
         P perturb[2];
 

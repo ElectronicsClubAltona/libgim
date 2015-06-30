@@ -41,7 +41,7 @@ namespace util { namespace noise {
     }
 
 
-    //------------------------------------------------------------------------- 
+    //-------------------------------------------------------------------------
     template <typename T, typename D, typename P>
     typename turbulence<T,D,P>::seed_t
     turbulence<T,D,P>::seed (seed_t _seed)
