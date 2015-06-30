@@ -307,6 +307,7 @@ TEST_BIN = 			\
     test/bezier			\
     test/bitwise		\
     test/checksum		\
+    test/cmdopt			\
     test/colour			\
     test/crypto/arc4		\
     test/crypto/tea		\
