@@ -221,10 +221,13 @@ factorial [[gnu::pure]] (unsigned i)
 }
 
 
+/// stirlings approximation of factorials
 constexpr uintmax_t
 stirling [[gnu::pure]] (unsigned n)
 {
-    return static_cast<uintmax_t> (std::sqrt (2 * PI<float> * n) * std::pow (n / E<float>, n));
+    return static_cast<uintmax_t> (
+        std::sqrt (2 * PI<float> * n) * std::pow (n / E<float>, n)
+    );
 }
 
 
