@@ -28,6 +28,8 @@ AC_DEFUN([NC_OPTIMISATION],[
         AX_APPEND_COMPILE_FLAGS([-fno-fat-lto-objects], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-flto-odr-type-merging], [], [-Werror])
         AX_APPEND_LINK_FLAGS([-fuse-linker-plugin], [], [-Werror])
+
+        AX_APPEND_COMPILE_FLAGS([-fdevirtualize-at-ltrans], [], [-Werror])
     ])
 
     ##-------------------------------------------------------------------------
@@ -67,6 +69,16 @@ AC_DEFUN([NC_OPTIMISATION],[
         # gcc >= 4.8 defaults to enabling stack-protector, we care more about
         # performance than security.
         AX_APPEND_COMPILE_FLAGS([-fno-stack-protector], [], [-Werror])
+
+        AX_APPEND_COMPILE_FLAGS([-ftree-loop-linear], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-floop-interchange], [], [-Werror])
+
+        AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribution], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribute-patterns], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-ftree-vectorize], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-floop-interchange], [], [-Werror])
+
+
     ])
 
     ##-------------------------------------------------------------------------

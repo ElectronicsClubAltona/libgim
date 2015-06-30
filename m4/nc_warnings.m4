@@ -4,13 +4,17 @@ AC_DEFUN([NC_WARNINGS],[
 
     AX_COMPILER_VENDOR
 
+    # -------------------------------------------------------------------------
     # Compound warnings
     AX_APPEND_COMPILE_FLAGS([-Wall], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wextra], [], [-Werror])
 
+    # -------------------------------------------------------------------------
     # General warnings
+    AX_APPEND_COMPILE_FLAGS([-Wbool-compare], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wcast-align], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wcast-qual], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wdisabled-optimization], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wfloat-conversion], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wfloat-equal], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wno-aggressive-loop-optimizations], [], [-Werror])
@@ -25,10 +29,12 @@ AC_DEFUN([NC_WARNINGS],[
     AX_APPEND_COMPILE_FLAGS([-Wstrict-aliasing], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wstrict-overflow], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wtype-limits], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wunsafe-loop-optimizations], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wunused-but-set-variable], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wunused-parameter], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wuseless-cast], [], [-Werror])
 
+    # -------------------------------------------------------------------------
     # Required extensions
     #AX_APPEND_COMPILE_FLAGS([-Wgnu-flexible-array-union-member], [], [-Werror])
     #AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
@@ -46,6 +52,7 @@ AC_DEFUN([NC_WARNINGS],[
         AX_APPEND_COMPILE_FLAGS([-Wno-zero-length-array], [], [-Werror])
     ])
 
+    # -------------------------------------------------------------------------
     # Excessive warnings
     AX_APPEND_COMPILE_FLAGS([-Wno-missing-braces], [], [-Werror])
 
@@ -54,6 +61,20 @@ AC_DEFUN([NC_WARNINGS],[
         AX_APPEND_COMPILE_FLAGS([-Wno-unused-const-variable], [], [-Werror])
     ])
 
+    # -------------------------------------------------------------------------
     # Strict warnings
     AX_APPEND_COMPILE_FLAGS([-pedantic], [], [-Werror])
+
+    # -------------------------------------------------------------------------
+    # Advisory warnings
+    AC_ARG_ENABLE([advisory], [
+        AS_HELP_STRING([--enable-advisory], [enable advisory warnings])
+    ])
+
+    AS_IF([test "x$enable_advisory" = "xyes"], [
+        AX_APPEND_COMPILE_FLAGS([-Winline], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-Wsuggest-final-types], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-Wsuggest-final-methods], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-Wsuggest-override], [], [-Werror])
+    ], [])
 ])
