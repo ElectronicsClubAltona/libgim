@@ -172,8 +172,6 @@ UTIL_FILES   =			\
     noise/lut.hpp		\
     noise/turbulence.hpp	\
     noise/turbulence.ipp	\
-    options.cpp			\
-    options.hpp			\
     pascal.cpp			\
     pascal.hpp			\
     plane.cpp			\
@@ -330,7 +328,6 @@ TEST_BIN = 			\
     test/md2			\
     test/md4			\
     test/md5			\
-    test/options		\
     test/point			\
     test/polynomial		\
     test/pool			\
