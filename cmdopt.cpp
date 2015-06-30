@@ -236,6 +236,61 @@ namespace util { namespace cmdopt { namespace option {
 
 
 ///////////////////////////////////////////////////////////////////////////////
+static size_t
+suffix_to_multiplier (char c)
+{
+    switch (c) {
+    case 'e':
+    case 'E':
+        return pow (1024UL, 6);
+
+    case 'p':
+    case 'P':
+        return pow (1024UL, 5);
+
+    case 't':
+    case 'T':
+        return pow (1024UL, 4);
+
+    case 'g':
+    case 'G':
+        return pow (1024UL, 3);
+
+    case 'm':
+    case 'M':
+        return pow (1024UL, 2);
+
+    case 'k':
+    case 'K':
+        return pow (1024UL, 1);
+
+    default:
+        throw util::cmdopt::invalid_value ("bytes");
+    }
+}
+
+
+void
+bytes::execute (const char *restrict str)
+{
+    const char *tail;
+    const char *last = str + strlen (str);
+    unsigned long val = std::strtoul (const_cast<char *> (str), const_cast<char**> (&tail), 10);
+
+    CHECK_LE (tail, last);
+
+    if (tail == str) {
+        throw invalid_value (name ());
+    } else if (tail == last) {
+        data (val);
+    } else if (tail + 1 == last) {
+        data (val * suffix_to_multiplier (*tail));
+    } else
+        throw invalid_value (name ());
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 int
 parser::scan (int argc, const char *const *argv)
 {
