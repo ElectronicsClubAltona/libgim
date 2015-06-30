@@ -38,8 +38,16 @@ namespace util { namespace cmdopt {
 
             std::string name (void) const;
 
+            bool required (void) const;
+            bool required (bool);
+
+            bool seen (void) const;
+            bool seen (bool);
+
         private:
             std::string m_name;
+            bool m_required;
+            bool m_seen;
         };
 
 
@@ -71,7 +79,7 @@ namespace util { namespace cmdopt {
 
         class bytes : public value<size_t> {
         public:
-            bytes (std::string name);
+            using value<size_t>::value;
 
             using value<size_t>::execute;
             void execute (const char *restrict) override;
@@ -89,6 +97,9 @@ namespace util { namespace cmdopt {
     { using error::error; };
 
     class invalid_null : public error
+    { using error::error; };
+
+    class invalid_required : public error
     { using error::error; };
 
 

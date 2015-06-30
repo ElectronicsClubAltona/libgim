@@ -24,13 +24,17 @@
 using util::cmdopt::option::base;
 using util::cmdopt::option::bytes;
 using util::cmdopt::option::count;
+using util::cmdopt::option::null;
+using util::cmdopt::option::present;
 using util::cmdopt::option::value;
 using util::cmdopt::parser;
 
 
 ///////////////////////////////////////////////////////////////////////////////
 base::base (std::string _name):
-    m_name (_name)
+    m_name (_name),
+    m_required (false),
+    m_seen (false)
 { ; }
 
 
@@ -58,13 +62,18 @@ base::execute (const char *restrict)
 //-----------------------------------------------------------------------------
 void
 base::start (void)
-{ ; }
+{
+    m_seen = false;
+}
 
 
 //-----------------------------------------------------------------------------
 void
 base::finish (void)
-{ ; }
+{
+    if (m_required && !m_seen)
+        throw invalid_required (m_name);
+}
 
 
 //-----------------------------------------------------------------------------
@@ -72,6 +81,38 @@ std::string
 base::name (void) const
 {
     return m_name;
+}
+
+
+//-----------------------------------------------------------------------------
+bool
+base::required (void) const
+{
+    return m_required;
+}
+
+
+//-----------------------------------------------------------------------------
+bool
+base::required (bool _required)
+{
+    return m_required = _required;
+}
+
+
+//-----------------------------------------------------------------------------
+bool
+base::seen (void) const
+{
+    return m_seen;
+}
+
+
+//-----------------------------------------------------------------------------
+bool
+base::seen (bool _seen)
+{
+    return m_seen = _seen;
 }
 
 
@@ -96,6 +137,7 @@ void
 count<T>::execute (void)
 {
     ++this->data ();
+    this->seen (true);
 }
 
 
@@ -111,6 +153,9 @@ parser::scan (int argc, char *const *argv)
 {
     CHECK_GE (argc, 0);
     CHECK    (argv);
+
+    for (auto &j: m_options)
+        j->start ();
 
     // start iterating after our program's name
     int i = 1;
@@ -129,6 +174,9 @@ parser::scan (int argc, char *const *argv)
         CHECK_GT (inc, 0);
         i += inc;
     }
+
+    for (auto &j: m_options)
+        j->finish ();
 
     return i;
 }

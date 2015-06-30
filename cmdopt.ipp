@@ -48,6 +48,8 @@ namespace util { namespace cmdopt {
         } catch (...) {
             throw invalid_value (__func__);
         }
+
+        seen (true);
     }
 
 
