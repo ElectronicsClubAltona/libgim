@@ -19,6 +19,9 @@
 #include "types.hpp"
 #include "cmdopt.hpp"
 
+#include "region.hpp"
+#include "random.hpp"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 template struct util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::cubic>>;
@@ -153,10 +156,86 @@ operator<< (std::ostream &os, lerp_t &l)
 }
 
 
+void
+diamond (util::image::buffer<float> &img, util::region2u target, float scale, float persistence)
+{
+
+}
+
+
+void
+midpoint (util::image::buffer<float> &img, util::region2u target, float scale, float persistence)
+{
+    CHECK_GE (target.area (), 9);
+
+    auto w = target.w;
+    auto h = target.h;
+
+    // 0--1
+    // |  |
+    // 2--3
+
+    auto v0 = img[target.p+util::vector2u{0,  0  }];
+    auto v1 = img[target.p+util::vector2u{w-1,0  }];
+    auto v2 = img[target.p+util::vector2u{0,  h-1}];
+    auto v3 = img[target.p+util::vector2u{w-1,h-1}];
+
+    // do the centre
+    auto avg = (v0 + v1 + v2 + v3) / 4;
+    auto val = avg + scale * (util::random<float> () * 2 - 1);
+    auto pos = target.p + target.e / 2;
+
+    img[pos] = val;
+
+    // average the sides
+    auto p01 = target.p + util::vector2u{w/2,     0};
+    auto p13 = target.p + util::vector2u{w-1,   h/2};
+    auto p32 = target.p + util::vector2u{w/2,   h  -1};
+    auto p20 = target.p + util::vector2u{0,     h/2};
+
+    img[p01] = (v0 + v1) / 2;
+    img[p13] = (v1 + v3) / 2;
+    img[p32] = (v3 + v2) / 2;
+    img[p20] = (v2 + v0) / 2;
+
+    // recurse
+    if (target.area () > 9) {
+        auto e = target.e / 2 + 1;
+
+        midpoint (img, {target.p + util::vector2u{ 0,      0 }, e}, scale * persistence, persistence);
+        midpoint (img, {target.p + util::vector2u{ w/2,   0 }, e}, scale * persistence, persistence);
+        midpoint (img, {target.p + util::vector2u{ 0,   h/2 }, e}, scale * persistence, persistence);
+        midpoint (img, {target.p + util::vector2u{ w/2, h/2 }, e}, scale * persistence, persistence);
+    }
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 int
 main (int argc, char **argv)
 {
+    //{
+    //    util::extent2u size { 1025 };
+    //    util::image::buffer<float> img (size);
+
+    //    img[{0,         0}]         = 0.7f;
+    //    img[{0,         size.w-1}]  = 0.1f;
+    //    img[{size.h-1,  0}]         = 0.5f;
+    //    img[{size.h-1,  size.w-1}]  = 0.2f;
+    //    midpoint (img, { {0, 0}, size }, 1, 0.65f);
+
+    //    auto range = std::minmax_element (img.begin (), img.end ());
+    //    auto offset = *range.first;
+    //    auto div    = *range.second - *range.first;
+    //    std::cerr << "range: [" << *range.first << ", " << *range.second << "]\n";
+
+    //    std::transform (img.begin (), img.end (), img.begin (), [offset,div] (auto i) { return (i - offset) / div; });
+    //    util::pgm::write (img.cast<uint8_t> (), std::cout);
+    //}
+
+    //return 0;
+
+
 #ifndef ENABLE_DEBUGGING
     if (isatty (fileno (stdout))) {
         std::cerr << "cowardly refusing to dump binary data to console\n";
