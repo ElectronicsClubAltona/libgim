@@ -242,10 +242,12 @@ UTIL_FILES   =			\
     version.cpp			\
     version.hpp			\
     view.cpp			\
-    view.hpp			\
-    zlib.cpp			\
-    zlib.hpp
+    view.hpp
 
+# zlib.cpp
+# zlib.hpp
+# options.cpp
+# options.hpp
 
 if PLATFORM_LINUX
 UTIL_FILES += 			\
