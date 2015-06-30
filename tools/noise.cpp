@@ -18,6 +18,7 @@
 #include "netpbm.hpp"
 #include "types.hpp"
 #include "cmdopt.hpp"
+#include "hash/murmur/murmur2.hpp"
 
 #include "region.hpp"
 #include "random.hpp"
@@ -163,10 +164,36 @@ diamond (util::image::buffer<float> &img, util::region2u target, float scale, fl
 }
 
 
-void
-midpoint (util::image::buffer<float> &img, util::region2u target, float scale, float persistence)
+static float
+gen (uint64_t seed, util::point2u p)
 {
+    using util::hash::murmur2::mix;
+
+    uint64_t v = mix (
+        seed,
+        mix (
+            p.y,
+            p.x
+        )
+    ) & 0xffff;
+
+    return v / float{0xffff} * 2 - 1;
+}
+
+
+// perturb the centre point by at most scale-units
+// average the side points (optionally perturb by sides-units)
+//
+void
+midpoint (util::image::buffer<float> &img, uint64_t seed, util::region2u target, float scale, float persistence, float sides = 0.f)
+{
+    CHECK_EQ (target.e.w % 2, 1);
+    CHECK_EQ (target.e.h % 2, 1);
     CHECK_GE (target.area (), 9);
+
+    CHECK_GT (scale, 0);
+    CHECK_GT (persistence, 0);
+    CHECK_GE (sides, 0);
 
     auto w = target.w;
     auto h = target.h;
@@ -175,14 +202,19 @@ midpoint (util::image::buffer<float> &img, util::region2u target, float scale, f
     // |  |
     // 2--3
 
-    auto v0 = img[target.p+util::vector2u{0,  0  }];
-    auto v1 = img[target.p+util::vector2u{w-1,0  }];
-    auto v2 = img[target.p+util::vector2u{0,  h-1}];
-    auto v3 = img[target.p+util::vector2u{w-1,h-1}];
+    auto p0 = target.p+util::vector2u{0,  0  };
+    auto p1 = target.p+util::vector2u{w-1,0  };
+    auto p2 = target.p+util::vector2u{0,  h-1};
+    auto p3 = target.p+util::vector2u{w-1,h-1};
+
+    auto v0 = img[p0];
+    auto v1 = img[p1];
+    auto v2 = img[p2];
+    auto v3 = img[p3];
 
     // do the centre
     auto avg = (v0 + v1 + v2 + v3) / 4;
-    auto val = avg + scale * (util::random<float> () * 2 - 1);
+    auto val = avg + scale * gen (seed, target.centre ());
     auto pos = target.p + target.e / 2;
 
     img[pos] = val;
@@ -190,22 +222,27 @@ midpoint (util::image::buffer<float> &img, util::region2u target, float scale, f
     // average the sides
     auto p01 = target.p + util::vector2u{w/2,     0};
     auto p13 = target.p + util::vector2u{w-1,   h/2};
-    auto p32 = target.p + util::vector2u{w/2,   h  -1};
+    auto p32 = target.p + util::vector2u{w/2,   h-1};
     auto p20 = target.p + util::vector2u{0,     h/2};
 
-    img[p01] = (v0 + v1) / 2;
-    img[p13] = (v1 + v3) / 2;
-    img[p32] = (v3 + v2) / 2;
-    img[p20] = (v2 + v0) / 2;
+    auto v01 = (v0 + v1) / 2 + sides * scale * gen (seed, p01);
+    auto v13 = (v1 + v3) / 2 + sides * scale * gen (seed, p13);
+    auto v32 = (v3 + v2) / 2 + sides * scale * gen (seed, p32);
+    auto v20 = (v2 + v0) / 2 + sides * scale * gen (seed, p20);
+
+    img[p01] = v01;
+    img[p13] = v13;
+    img[p32] = v32;
+    img[p20] = v20;
 
     // recurse
     if (target.area () > 9) {
         auto e = target.e / 2 + 1;
 
-        midpoint (img, {target.p + util::vector2u{ 0,      0 }, e}, scale * persistence, persistence);
-        midpoint (img, {target.p + util::vector2u{ w/2,   0 }, e}, scale * persistence, persistence);
-        midpoint (img, {target.p + util::vector2u{ 0,   h/2 }, e}, scale * persistence, persistence);
-        midpoint (img, {target.p + util::vector2u{ w/2, h/2 }, e}, scale * persistence, persistence);
+        midpoint (img, seed, {target.p + util::vector2u{ 0,     0 }, e}, scale * persistence, persistence, sides);
+        midpoint (img, seed, {target.p + util::vector2u{ w/2,   0 }, e}, scale * persistence, persistence, sides);
+        midpoint (img, seed, {target.p + util::vector2u{ 0,   h/2 }, e}, scale * persistence, persistence, sides);
+        midpoint (img, seed, {target.p + util::vector2u{ w/2, h/2 }, e}, scale * persistence, persistence, sides);
     }
 }
 
