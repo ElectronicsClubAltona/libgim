@@ -84,6 +84,7 @@ namespace util { namespace cmdopt {
 
             T  data (void) const;
             T& data (void);
+            T& data (T);
 
         private:
             T& m_data;

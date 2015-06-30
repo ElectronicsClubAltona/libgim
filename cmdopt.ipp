@@ -71,6 +71,15 @@ namespace util { namespace cmdopt {
     }
 
 
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    T&
+    option::value<T>::data (T _data)
+    {
+        return m_data = _data;
+    }
+
+
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename ...Args>
     T&
