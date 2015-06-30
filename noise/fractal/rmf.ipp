@@ -60,7 +60,7 @@ namespace util { namespace noise { namespace fractal {
     // we use the name 'amplitude' instead of musgrave's 'gain'.
     // assumes basis distribution [-1,1] and offset ~= 1
     template <typename T, typename B>
-    constexpr T
+    T
     rmf<T,B>::operator() (util::point<2,T> p) const
     {
         T scale = this->m_invAH;

@@ -43,7 +43,7 @@ namespace util { namespace noise { namespace basis {
 
     //-------------------------------------------------------------------------
     template <typename T, size_t F>
-    constexpr seed_t
+    seed_t
     worley<T,F>::seed (void) const
     {
         return m_seed;
@@ -61,7 +61,7 @@ namespace util { namespace noise { namespace basis {
 
     //-------------------------------------------------------------------------
     template <typename T, size_t F>
-    constexpr T
+    T
     worley<T,F>::operator() (util::point<2,T> p) const
     {
         // extract integer and fractional parts. be careful to always round down
@@ -101,7 +101,7 @@ namespace util { namespace noise { namespace basis {
 
     //////////////////////////////////////////////////////////////////////////
     template <typename T, size_t F>
-    constexpr point<2,T>
+    point<2,T>
     worley<T,F>::generate (point<2,intmax_t> p) const
     {
         using util::hash::murmur2::mix;

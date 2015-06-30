@@ -40,7 +40,7 @@ namespace util { namespace noise { namespace basis {
 
     //-------------------------------------------------------------------------
     template <typename T, lerp_t<T> L>
-    constexpr seed_t
+    seed_t
     value<T,L>::seed (void) const
     {
         return m_seed;
@@ -58,7 +58,7 @@ namespace util { namespace noise { namespace basis {
 
     //-------------------------------------------------------------------------
     template <typename T, util::noise::lerp_t<T> L>
-    constexpr T
+    T
     value<T,L>::operator() (util::point<2,T> p) const
     {
         // extract integer and fractional parts. be careful to always round down
@@ -92,7 +92,7 @@ namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
     // Generate a type from [-UNIT..UNIT]
     template <typename T, lerp_t<T> L>
-    constexpr T
+    T
     value<T,L>::generate (point<2,intmax_t> p) const
     {
         using util::hash::murmur2::mix;

@@ -28,13 +28,13 @@ namespace util { namespace noise { namespace basis {
         worley (seed_t);
 
         range<T> bounds (void) const;
-        constexpr T operator() (util::point<2,T>) const;
+        T operator() (util::point<2,T>) const;
 
-        constexpr seed_t seed (void) const;
+        seed_t seed (void) const;
         seed_t seed (seed_t);
 
     private:
-        constexpr point<2,T> generate (point<2,intmax_t>) const;
+        point<2,T> generate (point<2,intmax_t>) const;
         seed_t m_seed;
     };
 } } }

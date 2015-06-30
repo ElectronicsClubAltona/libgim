@@ -136,7 +136,7 @@ namespace util { namespace noise { namespace fractal {
 
     //-------------------------------------------------------------------------
     template <typename T, typename B>
-    constexpr typename base<T,B>::seed_t
+    typename base<T,B>::seed_t
     base<T,B>::seed (void) const
     {
         return m_basis.seed ();

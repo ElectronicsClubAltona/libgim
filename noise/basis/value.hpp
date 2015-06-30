@@ -29,13 +29,13 @@ namespace util { namespace noise { namespace basis {
         value (seed_t);
 
         range<T> bounds (void) const;
-        constexpr T operator() (util::point<2,T>) const;
+        T operator() (util::point<2,T>) const;
 
-        constexpr seed_t seed (void) const;
+        seed_t seed (void) const;
         seed_t seed (seed_t);
 
     private:
-        constexpr T generate (point<2,intmax_t>) const;
+        T generate (point<2,intmax_t>) const;
 
         seed_t m_seed;
     };

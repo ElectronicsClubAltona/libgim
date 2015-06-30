@@ -56,7 +56,7 @@ namespace util { namespace noise { namespace fractal {
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename B>
-    constexpr T
+    T
     fbm<T,B>::operator() (util::point<2,T> p) const
     {
         T total = 0;

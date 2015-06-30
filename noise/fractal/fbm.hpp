@@ -53,7 +53,7 @@ namespace util { namespace noise { namespace fractal {
              T gain);
         fbm (seed_t);
 
-        constexpr T operator() (util::point<2,T>) const;
+        T operator() (util::point<2,T>) const;
     };
 } } }
 

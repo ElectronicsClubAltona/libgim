@@ -27,7 +27,7 @@ namespace util { namespace noise { namespace basis {
         using seed_t = uint64_t;
 
         constant (seed_t);
-        constexpr T operator() (util::point<2,T>) const;
+        T operator() (util::point<2,T>) const;
 
         seed_t seed;
         T value;

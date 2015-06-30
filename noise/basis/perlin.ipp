@@ -43,7 +43,7 @@ namespace util { namespace noise { namespace basis {
 
     //-------------------------------------------------------------------------
     template <typename T, lerp_t<T> L>
-    constexpr seed_t
+    seed_t
     perlin<T,L>::seed (void) const
     {
         return m_seed;
@@ -61,7 +61,7 @@ namespace util { namespace noise { namespace basis {
 
     //-------------------------------------------------------------------------
     template <typename T, util::noise::lerp_t<T> L>
-    constexpr T
+    T
     perlin<T,L>::operator() (util::point<2,T> p) const
     {
         // extract integer and fractional parts. be careful to always round down
@@ -99,7 +99,7 @@ namespace util { namespace noise { namespace basis {
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, lerp_t<T> L>
-    constexpr vector<2,T>
+    vector<2,T>
     perlin<T,L>::gradient (point<2,intmax_t> p) const
     {
         using util::hash::murmur2::mix;

@@ -29,13 +29,13 @@ namespace util { namespace noise { namespace basis {
         perlin (seed_t);
 
         range<T> bounds (void) const;
-        constexpr T operator() (point<2,T>) const;
+        T operator() (point<2,T>) const;
 
-        constexpr seed_t seed (void) const;
+        seed_t seed (void) const;
         seed_t seed (seed_t);
 
     private:
-        constexpr vector<2,T> gradient (point<2,intmax_t>) const;
+        vector<2,T> gradient (point<2,intmax_t>) const;
         seed_t m_seed;
     };
 } } }

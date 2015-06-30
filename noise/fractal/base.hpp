@@ -58,7 +58,7 @@ namespace util { namespace noise { namespace fractal {
         constexpr T lacunarity (void) const;
         T lacunarity (T);
 
-        constexpr seed_t seed (void) const;
+        seed_t seed (void) const;
         seed_t seed (seed_t);
 
         const B& basis (void) const;
