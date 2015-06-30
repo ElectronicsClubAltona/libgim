@@ -116,20 +116,20 @@ namespace json { namespace tree {
 
         public:
             virtual ~object ();
-            virtual std::unique_ptr<node> clone (void) const;
+            virtual std::unique_ptr<node> clone (void) const override;
 
-            virtual const object& as_object  (void) const { return *this; }
-            virtual       object& as_object  (void)       { return *this; }
-            virtual bool          is_object  (void) const { return  true; }
-            virtual type_t type (void) const { return OBJECT; }
+            virtual const object& as_object  (void) const override { return *this; }
+            virtual       object& as_object  (void)       override { return *this; }
+            virtual bool          is_object  (void) const override { return  true; }
+            virtual type_t type (void) const override { return OBJECT; }
 
-            virtual bool operator==(const object &rhs) const;
-            virtual bool operator==(const node   &rhs) const
+            virtual bool operator==(const object &rhs) const override;
+            virtual bool operator==(const node   &rhs) const override
                 { return rhs == *this; }
 
             virtual void insert (const std::string &key, std::unique_ptr<node>&& value);
-            virtual const node& operator[](const std::string &key) const;
-            virtual node& operator[](const std::string &key);
+            virtual const node& operator[](const std::string &key) const override;
+            virtual node& operator[](const std::string &key) override;
             virtual bool has (const std::string&) const;
 
             virtual const_iterator find (const std::string&) const;
@@ -144,7 +144,7 @@ namespace json { namespace tree {
             virtual void clear (void);
             virtual void erase (const std::string &key);
 
-            virtual std::ostream& write (std::ostream &os) const;
+            virtual std::ostream& write (std::ostream &os) const override;
     };
 
 
@@ -163,19 +163,19 @@ namespace json { namespace tree {
 
         public:
             virtual ~array();
-            virtual std::unique_ptr<node> clone (void) const;
+            virtual std::unique_ptr<node> clone (void) const override;
 
-            virtual const array&  as_array   (void) const { return *this; }
-            virtual       array&  as_array   (void)       { return *this; }
-            virtual bool          is_array   (void) const { return  true; }
-            virtual type_t type (void) const { return ARRAY; }
+            virtual const array&  as_array   (void) const override { return *this; }
+            virtual       array&  as_array   (void)       override { return *this; }
+            virtual bool          is_array   (void) const override { return  true; }
+            virtual type_t type (void) const override { return ARRAY; }
 
-            virtual bool operator==(const array &rhs) const;
-            virtual bool operator==(const node  &rhs) const;
+            virtual bool operator==(const array &rhs) const override;
+            virtual bool operator==(const node  &rhs) const override;
 
             virtual size_t size (void) const;
-            virtual node& operator [](unsigned int idx);
-            virtual const node& operator [](unsigned int idx) const;
+            virtual node& operator [](unsigned int idx) override;
+            virtual const node& operator [](unsigned int idx) const override;
 
             virtual iterator begin (void);
             virtual iterator end   (void);
@@ -186,7 +186,7 @@ namespace json { namespace tree {
 
             virtual void insert (std::unique_ptr<json::tree::node> &&_value);
 
-            virtual std::ostream& write (std::ostream &os) const;
+            virtual std::ostream& write (std::ostream &os) const override;
     };
 
 
@@ -199,18 +199,18 @@ namespace json { namespace tree {
             explicit string (const std::string &_value): m_value (_value) { ; }
             explicit string (const char        *_value): m_value (_value) { ; }
             string (const char *_first, const char *_last): m_value (_first, _last) { ; }
-            virtual std::unique_ptr<node> clone (void) const;
+            virtual std::unique_ptr<node> clone (void) const override;
 
-            virtual const string& as_string  (void) const { return *this; }
-            virtual       string& as_string  (void)       { return *this; }
-            virtual bool          is_string  (void) const { return  true; }
+            virtual const string& as_string  (void) const override { return *this; }
+            virtual       string& as_string  (void)       override { return *this; }
+            virtual bool          is_string  (void) const override { return  true; }
 
-            virtual type_t type (void) const { return STRING; }
+            virtual type_t type (void) const override { return STRING; }
 
-            virtual bool operator==(const char   *rhs) const;
-            virtual bool operator==(const string &rhs) const;
+            virtual bool operator==(const char   *rhs) const override;
+            virtual bool operator==(const string &rhs) const override;
             virtual bool operator==(const std::string &rhs) const;
-            virtual bool operator==(const node   &rhs) const
+            virtual bool operator==(const node   &rhs) const override
                 { return rhs == *this; }
 
             virtual bool operator!= (const std::string &rhs) const { return !(*this == rhs); }
@@ -220,7 +220,7 @@ namespace json { namespace tree {
             operator const std::string&(void) const { return m_value; }
             const std::string& native (void) const  { return m_value; }
 
-            virtual std::ostream& write (std::ostream &os) const;
+            virtual std::ostream& write (std::ostream &os) const override;
     };
 
 
@@ -233,22 +233,22 @@ namespace json { namespace tree {
             explicit number (double _value): m_value (_value) { ; }
             explicit number (int    _value): m_value (_value) { ; }
             explicit number (size_t _value): m_value (_value) { ; }
-            virtual std::unique_ptr<node> clone (void) const;
+            virtual std::unique_ptr<node> clone (void) const override;
 
-            virtual const number& as_number  (void) const { return *this; }
-            virtual       number& as_number  (void)       { return *this; }
-            virtual bool          is_number  (void) const { return  true; }
+            virtual const number& as_number  (void) const override { return *this; }
+            virtual       number& as_number  (void)       override { return *this; }
+            virtual bool          is_number  (void) const override { return  true; }
 
-            virtual type_t type (void) const { return NUMBER; }
+            virtual type_t type (void) const override { return NUMBER; }
 
-            virtual bool operator==(const number &rhs) const;
-            virtual bool operator==(const node   &rhs) const
+            virtual bool operator==(const number &rhs) const override;
+            virtual bool operator==(const node   &rhs) const override
                 { return rhs == *this; }
 
             operator double(void) const { return m_value; }
             double native (void) const  { return m_value; }
 
-            virtual std::ostream& write (std::ostream &os) const;
+            virtual std::ostream& write (std::ostream &os) const override;
     };
 
 
@@ -259,40 +259,40 @@ namespace json { namespace tree {
 
         public:
             explicit boolean (bool _value): m_value (_value) { ; }
-            virtual std::unique_ptr<node> clone (void) const;
+            virtual std::unique_ptr<node> clone (void) const override;
 
-            virtual const boolean& as_boolean (void) const { return *this; }
-            virtual       boolean& as_boolean (void)       { return *this; }
-            virtual bool           is_boolean (void) const { return  true; }
+            virtual const boolean& as_boolean (void) const override { return *this; }
+            virtual       boolean& as_boolean (void)       override { return *this; }
+            virtual bool           is_boolean (void) const override { return  true; }
 
-            virtual type_t type (void) const { return BOOLEAN; }
+            virtual type_t type (void) const override { return BOOLEAN; }
 
-            virtual bool operator==(const boolean &rhs) const;
-            virtual bool operator==(const node   &rhs) const
+            virtual bool operator==(const boolean &rhs) const override;
+            virtual bool operator==(const node   &rhs) const override
                 { return rhs == *this; }
 
             operator bool (void) const { return m_value; }
             bool native (void) const { return m_value; }
 
-            virtual std::ostream& write (std::ostream &os) const;
+            virtual std::ostream& write (std::ostream &os) const override;
     };
 
 
     /// Represents a JSON null value.
     class null final : public node {
         public:
-            virtual type_t type (void) const { return NONE; }
-            virtual std::unique_ptr<node> clone (void) const;
+            virtual type_t type (void) const override { return NONE; }
+            virtual std::unique_ptr<node> clone (void) const override;
 
-            virtual bool operator==(const null&) const { return true; }
-            virtual bool operator==(const node   &rhs) const
+            virtual bool operator==(const null&) const override { return true; }
+            virtual bool operator==(const node   &rhs) const override
                 { return rhs == *this; }
 
-            virtual bool        is_null (void) const { return  true; }
-            virtual const null& as_null (void) const { return *this; }
-            virtual       null& as_null (void)       { return *this; }
+            virtual bool        is_null (void) const override { return  true; }
+            virtual const null& as_null (void) const override { return *this; }
+            virtual       null& as_null (void)       override { return *this; }
 
-            virtual std::ostream& write (std::ostream &os) const;
+            virtual std::ostream& write (std::ostream &os) const override;
     };
 
 
