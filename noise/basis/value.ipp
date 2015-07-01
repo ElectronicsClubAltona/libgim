@@ -19,7 +19,7 @@
 #endif
 #define __UTIL_NOISE_BASIS_VALIE_IPP
 
-#include "../../hash/murmur/murmur2.hpp"
+#include "../rand.hpp"
 
 namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
@@ -75,10 +75,10 @@ namespace util { namespace noise { namespace basis {
         auto p3 = p_int + util::vector<2,intmax_t> { 1, 1 };
 
         // Generate the four corner values
-        T g0 = generate (p0);
-        T g1 = generate (p1);
-        T g2 = generate (p2);
-        T g3 = generate (p3);
+        T g0 = noise::rand<float> (m_seed, p0);
+        T g1 = noise::rand<float> (m_seed, p1);
+        T g2 = noise::rand<float> (m_seed, p2);
+        T g3 = noise::rand<float> (m_seed, p3);
 
         // Interpolate on one dimension, then the other.
         auto l0 = L (g0, g1, p_rem.x);
@@ -86,26 +86,5 @@ namespace util { namespace noise { namespace basis {
         auto l_ = L (l0, l1, p_rem.y);
 
         return l_;
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Generate a type from [-UNIT..UNIT]
-    template <typename T, lerp_t<T> L>
-    T
-    value<T,L>::generate (point<2,intmax_t> p) const
-    {
-        using util::hash::murmur2::mix;
-
-        T v = mix (
-            m_seed,
-            mix (
-                uint64_t (p.y),
-                uint64_t (p.x)
-            )
-        ) & 0xffff;
-
-        v = v / T{0xffff} * 2 - 1;
-        return v;
     }
 } } }

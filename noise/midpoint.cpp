@@ -18,25 +18,7 @@
 
 #include "region.hpp"
 #include "point.hpp"
-#include "hash/murmur/murmur2.hpp"
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-static T
-gen (uint64_t seed, util::point2u p)
-{
-    using util::hash::murmur2::mix;
-
-    uint64_t v = mix (
-        seed,
-        mix (
-            p.y,
-            p.x
-        )
-    ) & 0xffff;
-
-    return v / T{0xffff} * 2 - 1;
-}
+#include "rand.hpp"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,7 +60,7 @@ fill (util::image::buffer<T> &img,
     // do the centre
     {
         const auto avg = (v0 + v1 + v2 + v3) / 4;
-        const auto val = avg + scale * gen<T> (seed, target.centre ());
+        const auto val = avg + scale * util::noise::rand<T> (seed, target.centre ());
         const auto pos = target.p + target.e / 2;
 
         img[pos] = val;
@@ -91,10 +73,10 @@ fill (util::image::buffer<T> &img,
         const auto p32 = target.p + util::vector2u{w/2,   h-1};
         const auto p20 = target.p + util::vector2u{0,     h/2};
 
-        const auto v01 = (v0 + v1) / 2 + sides * scale * gen<T> (seed, p01);
-        const auto v13 = (v1 + v3) / 2 + sides * scale * gen<T> (seed, p13);
-        const auto v32 = (v3 + v2) / 2 + sides * scale * gen<T> (seed, p32);
-        const auto v20 = (v2 + v0) / 2 + sides * scale * gen<T> (seed, p20);
+        const auto v01 = (v0 + v1) / 2 + sides * scale * util::noise::rand<T> (seed, p01);
+        const auto v13 = (v1 + v3) / 2 + sides * scale * util::noise::rand<T> (seed, p13);
+        const auto v32 = (v3 + v2) / 2 + sides * scale * util::noise::rand<T> (seed, p32);
+        const auto v20 = (v2 + v0) / 2 + sides * scale * util::noise::rand<T> (seed, p20);
 
         img[p01] = v01;
         img[p13] = v13;
@@ -119,10 +101,15 @@ template <typename T>
 void
 util::noise::midpoint (image::buffer<T> &img, uint64_t seed, float persistence, float sides)
 {
-    img[{0,             0}] = gen<T> (seed, { 0,       0 });
-    img[{0,       img.w-1}] = gen<T> (seed, { 0,       img.w-1 });
-    img[{img.h-1,       0}] = gen<T> (seed, { img.h-1, 0 });
-    img[{img.h-1, img.w-1}] = gen<T> (seed, { img.h-1, img.w-1 });
+    static const util::point2u CORNERS[] = {
+        { 0,         0 },
+        { 0,         img.w - 1 },
+        { img.h - 1, 0 },
+        { img.h - 1, img.w - 1 }
+    };
+
+    for (auto i: CORNERS)
+        img[i] = util::noise::rand<T> (seed, i);
 
     fill (img, seed, { { 0, 0 }, img.extent () }, 1.f, persistence, sides);
 }

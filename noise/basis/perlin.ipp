@@ -19,7 +19,7 @@
 #endif
 #define __UTIL_NOISE_BASIS_PERLIN_IPP
 
-#include "../../hash/murmur/murmur2.hpp"
+#include "../rand.hpp"
 
 namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
@@ -78,10 +78,10 @@ namespace util { namespace noise { namespace basis {
         auto p3 = p_int + util::vector<2,intmax_t> { 1, 1 };
 
         // generate the corner gradients
-        auto g0 = gradient (p0);
-        auto g1 = gradient (p1);
-        auto g2 = gradient (p2);
-        auto g3 = gradient (p3);
+        auto g0 = noise::rand<2,T> (m_seed, p0);
+        auto g1 = noise::rand<2,T> (m_seed, p1);
+        auto g2 = noise::rand<2,T> (m_seed, p2);
+        auto g3 = noise::rand<2,T> (m_seed, p3);
 
         // compute the dot products
         T v0 = dot (g0, p - p0);
@@ -95,26 +95,5 @@ namespace util { namespace noise { namespace basis {
         auto L_ = L (L0, L1, p_rem.y);
 
         return L_;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T, lerp_t<T> L>
-    vector<2,T>
-    perlin<T,L>::gradient (point<2,intmax_t> p) const
-    {
-        using util::hash::murmur2::mix;
-
-        auto u = mix (m_seed, mix (uint64_t (p.x), uint64_t (p.y)));
-        auto v = mix (u, m_seed);
-
-        auto r = util::vector<2,T> {
-            (u & 0xffff) / T{0xffff},
-            (v & 0xffff) / T{0xffff}
-        } * 2 - 1;
-
-        CHECK_GE (r, T{-1});
-        CHECK_LE (r, T{ 1});
-
-        return r;
     }
 } } }

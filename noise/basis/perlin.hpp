@@ -35,7 +35,6 @@ namespace util { namespace noise { namespace basis {
         seed_t seed (seed_t);
 
     private:
-        vector<2,T> gradient (point<2,intmax_t>) const;
         seed_t m_seed;
     };
 } } }

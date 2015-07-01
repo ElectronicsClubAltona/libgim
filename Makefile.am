@@ -172,6 +172,8 @@ UTIL_FILES   =			\
     noise/lut.hpp		\
     noise/midpoint.cpp		\
     noise/midpoint.hpp		\
+    noise/rand.hpp		\
+    noise/rand.ipp		\
     noise/turbulence.hpp	\
     noise/turbulence.ipp	\
     pascal.cpp			\
