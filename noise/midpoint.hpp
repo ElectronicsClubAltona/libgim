@@ -25,6 +25,4 @@ namespace util { namespace noise {
     midpoint (image::buffer<T>&, uint64_t seed, float persistence = 0.65f, float sides = 0.25f);
 } }
 
-#include "midpoint.ipp"
-
 #endif
