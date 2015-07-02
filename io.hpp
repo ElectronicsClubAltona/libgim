@@ -40,17 +40,6 @@ namespace util {
     };
 
 
-    /// Reads an entire file into memory. Caller frees the result. Guarantees a
-    /// null trailing byte.
-    std::vector<char>
-    slurp [[gnu::warn_unused_result]] (const boost::filesystem::path&);
-
-
-    template <typename T>
-    void
-    write (const boost::filesystem::path &, const T *data, size_t len);
-
-
     ///------------------------------------------------------------------------
     /// A simple RAII wrapper for file descriptors
     struct fd {
@@ -67,12 +56,13 @@ namespace util {
     };
 
 
+    //-------------------------------------------------------------------------
 #ifdef PLATFORM_WIN32
-    struct handle_ref : util::nocopy {
+    struct handle : util::nocopy {
     public:
-        explicit handle_ref (HANDLE);
-        explicit handle_ref ();
-        ~handle_ref ();
+        explicit handle (HANDLE);
+        explicit handle ();
+        ~handle ();
 
         void reset (HANDLE);
 
@@ -81,6 +71,22 @@ namespace util {
         HANDLE handle;
     };
 #endif
+
+
+    /// Reads an entire file into memory. Caller frees the result. Guarantees a
+    /// null trailing byte.
+    std::vector<char>
+    slurp [[gnu::warn_unused_result]] (const boost::filesystem::path&);
+
+
+    template <typename T>
+    void write (const fd&, const T *restrict data, size_t count);
+
+    template <typename T>
+    void write (const fd&, const T *restrict first, const T *restrict last);
+
+    template <typename T>
+    void write (const boost::filesystem::path &, const T *restrict first, const T *restrict last);
 
 
     //-------------------------------------------------------------------------

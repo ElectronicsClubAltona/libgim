@@ -6,12 +6,23 @@
 #endif
 
 namespace util {
+    //-------------------------------------------------------------------------
+    template <typename T>
+    void
+    write (const fd &_fd, const T *restrict data, size_t count)
+    {
+        auto first = reinterpret_cast<const char*> (data);
+        write (_fd, first, first + sizeof (T) * count);
+    }
+
+    //-------------------------------------------------------------------------
     template <typename T>
     indented<T>::indented (const T &_data):
         data (_data)
     { ; }
 
 
+    //-------------------------------------------------------------------------
     template <typename T>
     indented<T>
     make_indented (const T &_data) {
@@ -19,6 +30,7 @@ namespace util {
     }
 
 
+    //-------------------------------------------------------------------------
     template <typename T>
     std::ostream&
     operator<< (std::ostream &os, const util::indented<T> &&v) {

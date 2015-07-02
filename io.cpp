@@ -88,16 +88,20 @@ util::slurp (const boost::filesystem::path& path)  {
     return buffer;
 }
 
-//----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 template <typename T>
 void
-util::write (const boost::filesystem::path &path, const T *data, size_t len) {
-    CHECK_GT (len, 0);
-    CHECK (data);
+util::write (const fd &out,
+             const T *restrict first,
+             const T *restrict last)
+{
+    CHECK (first);
+    CHECK (last);
+    CHECK_LE (first, last);
 
-    fd out (path, ACCESS_WRITE);
-    const char *cursor = reinterpret_cast<const char*> (data);
-    size_t remaining   = len * sizeof (T);
+    const char *restrict cursor = reinterpret_cast<const char*> (first);
+    size_t remaining = sizeof (T) * (last - first);
 
     while (remaining) {
         ssize_t consumed = ::write (out, cursor, remaining);
@@ -110,8 +114,25 @@ util::write (const boost::filesystem::path &path, const T *data, size_t len) {
 }
 
 
-template void util::write<char> (const boost::filesystem::path&, const char*,    size_t);
-template void util::write<uint8_t> (const boost::filesystem::path&, const uint8_t*, size_t);
+template void util::write (const fd&, const    char*, const    char*);
+template void util::write (const fd&, const  int8_t*, const  int8_t*);
+template void util::write (const fd&, const uint8_t*, const uint8_t*);
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+void
+util::write (const boost::filesystem::path &path,
+             const T *restrict first,
+             const T *restrict last)
+{
+    write (fd (path, ACCESS_WRITE), first, last);
+}
+
+
+template void util::write (const boost::filesystem::path&, const char*, const    char*);
+template void util::write (const boost::filesystem::path&, const  int8_t*, const  int8_t*);
+template void util::write (const boost::filesystem::path&, const uint8_t*, const uint8_t*);
 
 
 //----------------------------------------------------------------------------
