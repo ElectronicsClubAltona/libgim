@@ -68,8 +68,10 @@ util::TAP::logger::expect_ ## SUFFIX (const T &a,               \
                                       const U &b,               \
                                       const std::string &msg)   \
 {                                                               \
-    static const std::function<bool(const T&,const U&)> TEST = [] (const T&t, const U&u) { return t OP u; }; \
-    expect<const T&, const U&> (TEST, a, b, msg); \
+    static const std::function<                                 \
+        bool(const T&,const U&)                                 \
+    > TEST = [] (const T&t, const U&u) { return t OP u; };      \
+    expect<const T&, const U&> (TEST, a, b, msg);               \
 }
 
 TAP_TEST(gt, > )
@@ -87,4 +89,38 @@ util::TAP::logger::expect_nan (const T &t, const std::string &msg)
 {
     bool(*func)(T) = std::isnan;
     expect<const T&> (std::function<bool(const T&)> (func), t, msg);
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+void
+util::TAP::logger::expect_nothrow (T &&t, const std::string &msg)
+{
+    bool success = true;
+
+    try {
+        t ();
+    } catch (...) {
+        success = false;
+    }
+
+    expect (success, msg);
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename E, typename T>
+void
+util::TAP::logger::expect_throw (T &&t, const std::string &msg)
+{
+    bool success = false;
+
+    try {
+        t ();
+    } catch (const E&) {
+        success = true;
+    }
+
+    expect (success, msg);
 }

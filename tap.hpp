@@ -56,6 +56,10 @@ namespace util { namespace TAP {
         template <typename T> void expect_nan (const T&, const std::string &msg = "nan");
 
         //---------------------------------------------------------------------
+        template <typename T> void expect_nothrow (T&&, const std::string &msg = "nothrow");
+        template <typename E, typename T> void expect_throw (T&&, const std::string &msg = "throw");
+
+        //---------------------------------------------------------------------
         void skip (const std::string &msg);
         void todo (const std::string &msg);
         void noop (void);
