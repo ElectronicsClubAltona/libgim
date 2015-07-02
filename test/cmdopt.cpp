@@ -9,51 +9,64 @@
 //-----------------------------------------------------------------------------
 // Check that null options don't strhrow anything
 void
-test_null (void) {
+test_null (util::TAP::logger &tap)
+{
     util::cmdopt::parser p;
     auto n = p.add<util::cmdopt::option::null> ('n', "null", "testing null option");
 
     static const char *argv1[] = { "./foo", "-n", "foo" };
-    p.scan (elems (argv1), argv1);
+    tap.expect_nothrow ([&] () {
+        p.scan (elems (argv1), argv1);
+    });
 
     static const char *argv2[] = { "./foo", "--null", "foo" };
-    p.scan (elems (argv2), argv2);
+    tap.expect_nothrow ([&] () {
+        p.scan (elems (argv2), argv2);
+    });
 }
 
 
 //-----------------------------------------------------------------------------
 // Check if presence options can be used successfully
 void
-test_present (void) {
+test_present (util::TAP::logger &tap)
+{
     util::cmdopt::parser p;
-
     bool is_present;
+
     p.add<util::cmdopt::option::present> ('p', "present", "option is present", is_present);
 
     // Short option form
-    static const char *argv1[] = { "./foo", "-p" };
-    is_present = false;
-    p.scan (elems (argv1), argv1);
-    CHECK (is_present);
+    {
+        static const char *argv1[] = { "./foo", "-p" };
+        is_present = false;
+        p.scan (elems (argv1), argv1);
+        tap.expect (is_present, "presence short form");
+    }
 
     // Long option form
-    static const char *argv2[] = { "./foo", "--present" };
-    is_present = false;
-    p.scan (elems (argv2), argv2);
-    CHECK (is_present);
+    {
+        static const char *argv2[] = { "./foo", "--present" };
+        is_present = false;
+        p.scan (elems (argv2), argv2);
+        tap.expect (is_present, "presence long form");
+    }
 
     // Check that value is reset from true if not present
-    static const char *argv3[] = { "./foo" };
-    is_present = true;
-    p.scan (elems (argv3), argv3);
-    CHECK (!is_present);
+    {
+        static const char *argv3[] = { "./foo" };
+        is_present = true;
+        p.scan (elems (argv3), argv3);
+        tap.expect (!is_present, "presence null");
+    }
 }
 
 
 //-----------------------------------------------------------------------------
 // Check all forms of boolean inputs
 void
-test_bool (void) {
+test_bool (util::TAP::logger &tap)
+{
     util::cmdopt::parser p;
     bool value = false;
 
@@ -68,13 +81,13 @@ test_bool (void) {
     for (auto i: positive) {
         argv[2] = i;
         p.scan (argv.size (), argv.data ());
-        CHECK_EQ (value, true);
+        tap.expect_eq (value, true, i);
     }
 
     for (auto i: negative) {
         argv[2] = i;
         p.scan (argv.size (), argv.data ());
-        CHECK_EQ (value, false);
+        tap.expect_eq (value, false, i);
     }
 
     // Check that invalid forms of boolean all throw exceptions
@@ -82,10 +95,9 @@ test_bool (void) {
 
     for (auto i: invalid) {
         argv[2] = i;
-        CHECK_THROWS (
-            util::cmdopt::invalid_value,
-            p.scan (argv.size (), argv.data ())
-        );
+        tap.expect_throw<util::cmdopt::invalid_value> ([&] () {
+            p.scan (argv.size (), argv.data ());
+        });
     }
 }
 
@@ -93,7 +105,8 @@ test_bool (void) {
 //-----------------------------------------------------------------------------
 template<typename T>
 void
-test_numeric (void) {
+test_numeric (util::TAP::logger &tap)
+{
     util::cmdopt::parser p;
 
     T value;
@@ -116,28 +129,33 @@ test_numeric (void) {
         std::ostringstream out_short, out_long;
         std::string        str_short, str_long;
 
+        // construct short form arguments
         out_short << values[i];
         str_short = out_short.str ();
         argv_short[2] = str_short.c_str ();
 
+        // check short form reading
         value = 2;
         p.scan (elems (argv_short), argv_short);
-        CHECK (value == values[i]);
+        tap.expect_eq (value, values[i]);
 
+        // construct long form arguments
         out_long << "--type=" << values[i];
         str_long = out_long.str ();
         argv_long[1] = str_long.c_str ();
 
+        // check long form reading
         value = 2;
         p.scan (elems (argv_long), argv_long);
-        CHECK (value == values[i]);
+        tap.expect_eq (value, values[i]);
     }
 }
 
 
 //-----------------------------------------------------------------------------
 void
-test_bytes (void) {
+test_bytes (util::TAP::logger &tap)
+{
     util::cmdopt::parser p;
     size_t size;
 
@@ -163,14 +181,15 @@ test_bytes (void) {
         argv[2] = i.str;
         p.scan (elems (argv), argv);
 
-        CHECK_EQ (i.val, size);
+        tap.expect_eq (i.val, size, "bytes");
     };
 }
 
 
 //-----------------------------------------------------------------------------
 void
-test_required (void) {
+test_required (util::TAP::logger &tap)
+{
     util::cmdopt::parser p;
     p.add<util::cmdopt::option::null> (
         'n',
@@ -184,8 +203,13 @@ test_required (void) {
         "value"
     };
 
-    CHECK_NOTHROW (p.scan (elems (argv), argv));
-    CHECK_THROWS  (util::cmdopt::invalid_required, p.scan (1, argv));
+    tap.expect_nothrow ([&] () {
+        p.scan (elems (argv), argv);
+    });
+
+    tap.expect_throw<util::cmdopt::invalid_required> ([&] () {
+        p.scan (1, argv);
+    });
 }
 
 
@@ -195,15 +219,15 @@ main (int, char **) {
     util::TAP::logger tap;
     tap.todo ("convert to TAP");
 
-    test_null ();
-    test_present ();
-    test_bool ();
-    test_numeric< int16_t> ();
-    test_numeric< int32_t> ();
-    test_numeric< int64_t> ();
-    test_numeric<uint16_t> ();
-    test_numeric<uint32_t> ();
-    test_numeric<uint64_t> ();
-    test_bytes ();
-    test_required ();
+    test_null (tap);
+    test_present (tap);
+    test_bool (tap);
+    test_numeric< int16_t> (tap);
+    test_numeric< int32_t> (tap);
+    test_numeric< int64_t> (tap);
+    test_numeric<uint16_t> (tap);
+    test_numeric<uint32_t> (tap);
+    test_numeric<uint64_t> (tap);
+    test_bytes (tap);
+    test_required (tap);
 }
