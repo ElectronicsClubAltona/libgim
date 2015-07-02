@@ -248,11 +248,6 @@ UTIL_FILES   =			\
     view.cpp			\
     view.hpp
 
-# zlib.cpp
-# zlib.hpp
-# options.cpp
-# options.hpp
-
 if PLATFORM_LINUX
 UTIL_FILES += 			\
     backtrace_execinfo.cpp	\
