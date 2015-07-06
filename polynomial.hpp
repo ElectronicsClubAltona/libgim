@@ -27,7 +27,7 @@ namespace util {
         // first instance.
         template <size_t S>
         std::array<float,S>
-        solve (std::array<float,S+1>);
+        roots (std::array<float,S+1>);
 
         template <size_t S, typename T, typename U>
         T

@@ -34,7 +34,7 @@ main (int, char**)
     util::TAP::logger test;
 
     for (auto &i: CUBICS) {
-        std::array<float,3> s = util::polynomial::solve<3> (i.coeffs);
+        std::array<float,3> s = util::polynomial::roots<3> (i.coeffs);
 
         std::sort (s.begin (), s.end ());
 

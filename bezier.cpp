@@ -191,7 +191,7 @@ util::bezier<S>::intersections (point2f p0, point2f p1) const
         pcoeff[i] = A * bcoeff[i].x + B * bcoeff[i].y;
     pcoeff.back () += C;
 
-    const auto r = polynomial::solve<S> (pcoeff);
+    const auto r = polynomial::roots<S> (pcoeff);
 
     // The curve and line are colinear
     if (std::all_of (r.begin (), r.end (), [] (auto i) { return std::isnan (i); }))
@@ -261,7 +261,7 @@ namespace util {
         float d = dot (M_, A);
 
         // We have our cubic, so pass off to the solver
-        auto solutions = util::polynomial::solve<3> ({a, b, c, d});
+        auto solutions = util::polynomial::roots<3> ({a, b, c, d});
 
         // Find the smallest distance and return
         float dist = std::numeric_limits<float>::infinity ();

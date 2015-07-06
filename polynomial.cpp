@@ -30,7 +30,7 @@ static const size_t NEWTON_ITERATIONS = 1u;
 namespace util { namespace polynomial {
     template <>
     std::array<float,1>
-    solve (std::array<float,2> coeff)
+    roots (std::array<float,2> coeff)
     {
         const float a = coeff[0];
         const float b = coeff[1];
@@ -46,14 +46,14 @@ namespace util { namespace polynomial {
 namespace util { namespace polynomial {
     template <>
     std::array<float,2>
-    solve (std::array<float,3> coeff)
+    roots (std::array<float,3> coeff)
     {
         const float a = coeff[0];
         const float b = coeff[1];
         const float c = coeff[2];
 
         if (almost_zero (a)) {
-            auto s = solve<1> ({b, c});
+            auto s = roots<1> ({b, c});
             return { s[0], std::numeric_limits<float>::quiet_NaN () };
         }
 
@@ -69,7 +69,7 @@ namespace util { namespace polynomial {
 namespace util { namespace polynomial {
     template <>
     std::array<float,3>
-    solve (std::array<float,4> coeffs)
+    roots (std::array<float,4> coeffs)
     {
         const float _a = coeffs[0];
         const float _b = coeffs[1];
@@ -80,7 +80,7 @@ namespace util { namespace polynomial {
         // is zero, but the benefit isn't clear given we have to merge results
         // at the end anyway.
         if (almost_zero (_a)) {
-            auto s = solve<2> ({_b, _c, _d});
+            auto s = roots<2> ({_b, _c, _d});
             return {s[0], s[1], std::numeric_limits<float>::quiet_NaN () };
         }
 
