@@ -18,19 +18,55 @@
 #define __UTIL_QUATERNION_HPP
 
 #include "vector.hpp"
+#include "matrix.hpp"
+
+#include <iostream>
+
 
 namespace util {
     template <typename T>
     struct quaternion {
-        T w, x, y, z;
+        union {
+            struct { T w, x, y, z; };
+            struct { T a, b, c, d; };
+            T data[4];
+        };
 
         static const quaternion IDENTITY;
 
         static quaternion rotation (T radians, vector<3,T> axis);
-        static quaternion rotation (vector<3,T> from, vector<3,T> to);
+        static quaternion rotation (vector<3,T> src, vector<3,T> dst);
 
-        quaternion operator* (const quaternion&) const;
+        quaternion (T a, T b, T c, T d);
+        quaternion (T a);
+        quaternion ();
+        quaternion (vector<3,T>);
+
+        T norm  (void) const;
+        T norm2 (void) const;
+        quaternion normalised (void) const;
+
+        quaternion operator- (void) const;
+        quaternion conjugate (void) const;
+
+        quaternion operator+ (const quaternion) const;
+        quaternion operator- (const quaternion) const;
+        quaternion operator* (const quaternion) const;
+        quaternion operator/ (const quaternion) const;
+
+        quaternion operator+ (const T) const;
+        quaternion operator- (const T) const;
+        quaternion operator* (const T) const;
+        quaternion operator/ (const T) const;
+
+        bool operator== (const quaternion) const;
+        bool operator!= (const quaternion) const;
+
+        matrix4<T> rotation_matrix (void) const;
     };
+
+    template <typename T>
+    std::ostream& operator<< (std::ostream&, quaternion<T>);
 }
 
 
