@@ -75,6 +75,8 @@ namespace util {
         static const matrix<T> ZEROES;
     };
 
+    template <typename T> using matrix4 = matrix<T>;
+
     typedef matrix<float> matrixf;
     typedef matrix<float> matrix4f;
 
