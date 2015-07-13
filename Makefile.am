@@ -334,6 +334,7 @@ TEST_BIN = 			\
     test/pool			\
     test/rand			\
     test/range 			\
+    test/rational		\
     test/region			\
     test/ripemd			\
     test/sha1			\

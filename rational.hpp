@@ -17,30 +17,41 @@
 #ifndef __UTIL_RATIONAL_HPP
 #define __UTIL_RATIONAL_HPP
 
+#include <type_traits>
+
 namespace util {
     template <typename T>
     struct rational {
-        rational (T _n, T _d);
-        rational& operator=  (const rational&) = default;
+        static_assert (std::is_integral<T>::value, "only defined for integer types");
 
-        bool operator== (const rational&);
+        rational (T n, T d);
+        explicit rational (T);
+        rational& operator= (const rational&) = default;
+
+        bool operator== (rational) const;
+        bool operator!= (rational) const;
+        bool operator<  (rational) const;
+        bool operator>= (rational) const;
 
         explicit operator float  (void) const;
         explicit operator double (void) const;
-        explicit operator int    (void) const;
+
+        rational<T> reduced (void) const;
 
         rational<T>  inverse (void) const;
         rational<T>& invert  (void);
 
-        template <typename U> rational<T> operator* (const U&) const;
-        template <typename U> rational<T> operator/ (const U&) const;
+        rational<T> operator+ (T) const;
+        rational<T> operator- (T) const;
+        rational<T> operator* (T) const;
+        rational<T> operator/ (T) const;
 
         T n;
         T d;
     };
 
-    template <typename T, typename U>
-    rational<T> operator/ (U, rational<T>);
+    template <typename T>
+    rational<T> operator/ (T, rational<T>);
 }
 
 #endif

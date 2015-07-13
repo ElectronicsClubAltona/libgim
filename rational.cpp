@@ -16,85 +16,151 @@
 
 #include "rational.hpp"
 
+#include "maths.hpp"
+
 #include <cstdint>
 
 using util::rational;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 rational<T>::rational (T _n, T _d):
     n (_n),
     d (_d)
-{ ; }
+{
+    if (n < 0 && d < 0) {
+        n *= -1;
+        d *= -1;
+    }
+}
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
+rational<T>::rational (T v):
+    n (v),
+    d (1)
+{ ; }
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
 bool
-rational<T>::operator== (const rational<T> &rhs) {
+rational<T>::operator== (const rational<T> rhs) const
+{
     return rhs.n == n && rhs.d == d;
 }
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
-rational<T>::operator float (void) const {
+bool
+rational<T>::operator!= (const rational<T> rhs) const
+{
+    return !operator== (rhs);
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+bool
+rational<T>::operator< (const rational<T> rhs) const
+{
+    return n * rhs.d < rhs.n * d;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+bool
+rational<T>::operator>= (const rational<T> rhs) const
+{
+    return n * rhs.d >= rhs.n * d;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+rational<T>::operator float (void) const
+{
     return static_cast<float> (n) / d;
 }
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
-rational<T>::operator double (void) const {
+rational<T>::operator double (void) const
+{
     return static_cast<double> (n) / d;
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-rational<T>::operator int (void) const {
-    return n / d;
+rational<T>
+rational<T>::reduced (void) const
+{
+    auto x = gcd (abs (n), abs (d));
+
+    return { n / x, d / x };
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 rational<T>
-rational<T>::inverse (void) const {
+rational<T>::inverse (void) const
+{
     return rational<T> { d, n };
 }
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
-template <typename U>
 rational<T>
-rational<T>::operator* (const U &rhs) const {
+rational<T>::operator+ (const T rhs) const
+{
+    return { n + rhs * d, d };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+rational<T>
+rational<T>::operator- (const T rhs) const
+{
+    return { n - rhs * d, d };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+rational<T>
+rational<T>::operator* (const T rhs) const
+{
     return { rhs * n, d };
 }
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
-template <typename U>
 rational<T>
-rational<T>::operator/ (const U &rhs) const {
+rational<T>::operator/ (const T rhs) const
+{
     return { n, rhs * d };
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T, typename U>
+template <typename T>
 rational<T>
-util::operator/ (U lhs, rational<T> rhs) {
+util::operator/ (T lhs, rational<T> rhs) {
     return rhs.inverse () * lhs;
 }
 
 //-----------------------------------------------------------------------------
-namespace util {
-    template struct rational<uint32_t>;
-    template struct rational<int32_t>;
+template struct util::rational<uint32_t>;
+template struct util::rational< int32_t>;
 
-    template rational<uint32_t> operator/ (int, rational<uint32_t>);
-}
+template util::rational<uint32_t> util::operator/ (uint32_t, util::rational<uint32_t>);
