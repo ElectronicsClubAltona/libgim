@@ -102,6 +102,21 @@ digits [[gnu::pure]] (const T& value);
 
 
 //-----------------------------------------------------------------------------
+// factorisation
+template <typename T>
+constexpr T
+gcd (T a, T b)
+{
+    if (a == b) return a;
+
+    if (a > b) return gcd (a - b, b);
+    if (b > a) return gcd (a, b - a);
+
+    unreachable ();
+}
+
+
+//-----------------------------------------------------------------------------
 constexpr int sign (int);
 constexpr float sign (float);
 constexpr double sign (double);
