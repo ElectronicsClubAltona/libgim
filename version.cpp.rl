@@ -113,7 +113,7 @@ version::sanity (void) const {
 //-----------------------------------------------------------------------------
 util::version
 util::version::parse (const std::string& str) {
-    unsigned int accum;
+    unsigned int accum = 0;
 
     int         cs;
     const char *p   = str.data (),
