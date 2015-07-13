@@ -7,12 +7,15 @@
 #include <cstdlib>
 
 int
-main (void) {
+main (void)
+{
+    util::TAP::logger tap;
+
     {
         // Identity matrix-vector multiplication
         auto v = util::vector<4,float> { 1.f, 2.f, 3.f, 4.f };
         auto r = util::matrix<float>::IDENTITY * v;
-        CHECK_EQ (r, v);
+        tap.expect_eq (r, v, "identity matrix-vector multiplication");
     }
 
     {
@@ -28,10 +31,13 @@ main (void) {
 
         auto r = m * v;
 
-        CHECK_EQ (r.x,  30);
-        CHECK_EQ (r.y,  70);
-        CHECK_EQ (r.z, 110);
-        CHECK_EQ (r.w, 150);
+        tap.expect (
+            almost_equal (r.x,  30) &&
+            almost_equal (r.y,  70) &&
+            almost_equal (r.z, 110) &&
+            almost_equal (r.w, 150),
+            "simple matrix-vector multiplication"
+        );
     }
 
     {
@@ -61,19 +67,23 @@ main (void) {
 
         auto res = a * b;
 
-        CHECK_EQ (ab, res);
+        tap.expect_eq (ab, res, "simple matrix-matrix multiplication");
     }
 
 
     {
+        bool success = true;
+
         // Ensure identity inverts to identity
         auto m = util::matrix<float>::IDENTITY.inverse ();
         for (size_t r = 0; r < m.rows; ++r)
             for (size_t c = 0; c < m.cols; ++c)
                 if (r == c)
-                    CHECK_EQ (m.values[r][c], 1);
+                    success = success && almost_equal (m.values[r][c], 1);
                 else
-                    CHECK_EQ (m.values[r][c], 0);
+                    success = success && almost_equal (m.values[r][c], 0);
+
+        tap.expect (success, "identity inversion");
     }
 
     {
@@ -92,9 +102,8 @@ main (void) {
             {  1, -9,  1, 11 }
         } };
 
-        CHECK_EQ (m.inverse (), r / 40.f);
+        tap.expect_eq (m.inverse (), r / 40.f, "simple inversion");
     }
 
-    util::TAP::logger tap;
-    tap.skip ("convert to TAP");
+    return tap.status ();
 }

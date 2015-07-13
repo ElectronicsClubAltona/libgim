@@ -1,7 +1,6 @@
 
 #include "endian.hpp"
 
-#include "debug.hpp"
 #include "tap.hpp"
 #include "platform.hpp"
 
@@ -15,17 +14,18 @@
 
 
 int
-main (int, char **) {
+main (void)
+{
+    util::TAP::logger tap;
 
     uint16_t u16 = 0x1358;
     uint32_t u32 = 0x12345678;
 
-    CHECK_EQ (htons (u16), hton (u16));
-    CHECK_EQ (htonl (u32), hton (u32));
+    tap.expect_eq (htons (u16), hton (u16), "htons");
+    tap.expect_eq (htonl (u32), hton (u32), "htonl");
 
-    CHECK_EQ (ntohs (u16), hton (u16));
-    CHECK_EQ (ntohl (u32), hton (u32));
+    tap.expect_eq (ntohs (u16), hton (u16), "ntohs");
+    tap.expect_eq (ntohl (u32), hton (u32), "ntohl");
 
-    util::TAP::logger tap;
-    tap.todo ("convert to TAP");
+    return tap.status ();
 }

@@ -12,61 +12,67 @@ using std::numeric_limits;
 
 
 void
-test_comparisons (void)
+test_comparisons (util::TAP::logger &tap)
 {
     // Check pos/neg zeroes
-    CHECK (almost_equal ( 0.f,  0.f));
-    CHECK (almost_equal ( 0.f, -0.f));
-    CHECK (almost_equal (-0.f,  0.f));
-    CHECK (almost_equal (-0.f, -0.f));
+    tap.expect (almost_equal ( 0.f,  0.f), "equal float zeros +ve/+ve");
+    tap.expect (almost_equal ( 0.f, -0.f), "equal float zeros +ve/-ve");
+    tap.expect (almost_equal (-0.f,  0.f), "equal float zeros -ve/+ve");
+    tap.expect (almost_equal (-0.f, -0.f), "equal float zeros -ve/-ve");
 
-    CHECK (almost_equal ( 0.,  0.));
-    CHECK (almost_equal ( 0., -0.));
-    CHECK (almost_equal (-0.,  0.));
-    CHECK (almost_equal (-0., -0.));
+    tap.expect (almost_equal ( 0.,  0.), "equal double zeroes +ve/+ve");
+    tap.expect (almost_equal ( 0., -0.), "equal double zeroes +ve/+ve");
+    tap.expect (almost_equal (-0.,  0.), "equal double zeroes +ve/+ve");
+    tap.expect (almost_equal (-0., -0.), "equal double zeroes +ve/+ve");
 
     // Check zero comparison with values near the expected cutoff
-    CHECK ( almost_zero (1e-45f));
-    CHECK (!almost_zero (1e-40f));
-    CHECK (!exactly_zero (1e-45f));
+    tap.expect (almost_zero (1e-45f), "almost_zero with low value");
+    tap.expect (!almost_zero (1e-40f), "not almost_zero with low value");
+    tap.expect (!exactly_zero (1e-45f), "not exactly_zero with low value");
 
     // Compare values a little away from zero
-    CHECK (!almost_equal (-2.0, 0.0));
-    CHECK (!almost_equal (-2.f, 0.f));
+    tap.expect (!almost_equal (-2.0, 0.0), "not equal floats");
+    tap.expect (!almost_equal (-2.f, 0.f), "not equal doubles");
 
     // Compare values at the maximum extreme
-    CHECK (!almost_equal (-std::numeric_limits<float>::max (), 0.f));
-    CHECK (!almost_equal (-std::numeric_limits<float>::max (),
-                           std::numeric_limits<float>::max ()));
+    tap.expect (!almost_equal (-std::numeric_limits<float>::max (), 0.f), "not equal -max/0 float");
+    tap.expect (!almost_equal (-std::numeric_limits<float>::max (),
+                                std::numeric_limits<float>::max ()),
+                "not equal -max/max");
 
     // Compare infinity values
-    CHECK ( almost_equal (numeric_limits<double>::infinity (),
-                          numeric_limits<double>::infinity ()));
-    CHECK (!almost_equal (numeric_limits<double>::infinity (), 0.0));
+    tap.expect ( almost_equal (numeric_limits<double>::infinity (),
+                               numeric_limits<double>::infinity ()),
+                "almost_equal +infinity");
+    tap.expect (!almost_equal (numeric_limits<double>::infinity (), 0.0),
+                "not almost_equal +inf/0");
 
     // Compare NaNs
-    CHECK (!almost_equal (0., numeric_limits<double>::quiet_NaN ()));
-    CHECK (!almost_equal (numeric_limits<double>::quiet_NaN (), 0.));
+    tap.expect (!almost_equal (0., numeric_limits<double>::quiet_NaN ()), "not almost_equal double 0/NaN");
+    tap.expect (!almost_equal (numeric_limits<double>::quiet_NaN (), 0.), "not almost_equal double NaN/0");
 
-    CHECK (!almost_equal (numeric_limits<double>::quiet_NaN (),
-                          numeric_limits<double>::quiet_NaN ()));
+    tap.expect (!almost_equal (numeric_limits<double>::quiet_NaN (),
+                               numeric_limits<double>::quiet_NaN ()),
+                "not almost_equal NaN/NaN");
 }
 
 
 void
-test_normalisations (void)
+test_normalisations (util::TAP::logger &tap)
 {
     // u8 to float
     {
         auto a = renormalise<uint8_t,float> (255);
-        CHECK_EQ (a, 1.f);
+        tap.expect_eq (a, 1.f, "normalise uint8 max");
 
         auto b = renormalise<uint8_t,float> (0);
-        CHECK_EQ (b, 0.f);
+        tap.expect_eq (b, 0.f, "normalise uint8 min");
     }
 
     // float to u8
     {
+        bool success = true;
+
         struct {
             float   a;
             uint8_t b;
@@ -80,53 +86,56 @@ test_normalisations (void)
         for (auto i: TESTS) {
             std::cerr << "x";
             auto v = renormalise<decltype(i.a),decltype(i.b)> (i.a);
-            CHECK_EQ ((unsigned)v, (unsigned)i.b);
+            success = success && almost_equal (unsigned{v}, unsigned{i.b});
         }
+
+        tap.expect (success, "float-u8 normalisation");
     }
 }
 
 
 int
-main (int, char **) {
+main (void)
+{
+    util::TAP::logger tap;
+
     // Max out the precision in case we trigger debug output
     std::cerr.precision (std::numeric_limits<double>::digits10);
     std::cout.precision (std::numeric_limits<double>::digits10);
 
-    test_comparisons ();
+    test_comparisons (tap);
 
-    test_normalisations ();
+    test_normalisations (tap);
 
-    CHECK_EQ (util::min (-2, 0, 2), -2);
-    CHECK_EQ (util::max (-2, 0, 2),  2);
+    tap.expect_eq (util::min (-2, 0, 2), -2, "variadic min");
+    tap.expect_eq (util::max (-2, 0, 2),  2, "variadic max");
 
-    CHECK_EQ (pow2 (2),  4);
-    CHECK_EQ (pow2 (4), 16);
+    tap.expect_eq (pow2 (4), 16, "pow2");
 
-    CHECK_EQ (rootsquare (2, 2), sqrt (8));
+    tap.expect_eq (rootsquare (2, 2), sqrt (8), "rootsquare");
 
-    double pos_zero =  1.0 / numeric_limits<double>::infinity ();
-    double neg_zero = -1.0 / numeric_limits<double>::infinity ();
+    static const double POS_ZERO =  1.0 / numeric_limits<double>::infinity ();
+    static const double NEG_ZERO = -1.0 / numeric_limits<double>::infinity ();
 
-    CHECK_EQ (sign (-1),   -1);
-    CHECK_EQ (sign ( 1),    1);
-    CHECK_EQ (sign (pos_zero),  1);
-    CHECK_EQ (sign (neg_zero), -1);
-    CHECK_EQ (sign ( numeric_limits<double>::infinity ()),  1);
-    CHECK_EQ (sign (-numeric_limits<double>::infinity ()), -1);
+    tap.expect_eq (sign (-1), -1, "sign(-1)");
+    tap.expect_eq (sign ( 1),  1, "sign( 1)");
+    tap.expect_eq (sign (POS_ZERO),  1, "sign (POS_ZERO)");
+    tap.expect_eq (sign (NEG_ZERO), -1, "sign (NEG_ZERO)");
+    tap.expect_eq (sign ( numeric_limits<double>::infinity ()),  1, "sign +inf");
+    tap.expect_eq (sign (-numeric_limits<double>::infinity ()), -1, "sign -inf");
 
-    CHECK_EQ (to_degrees (PI<float>),  180.f);
-    CHECK_EQ (to_degrees (PI<double>),  180.0);
-    CHECK_EQ (to_radians (180.f),  PI<float>);
-    CHECK_EQ (to_radians (180.0),  PI<double>);
+    tap.expect_eq (to_degrees (PI< float>), 180.f, "to_degrees float");
+    tap.expect_eq (to_degrees (PI<double>), 180.0, "to_degrees double");
+    tap.expect_eq (to_radians (180.f), PI<float>,   "to_radians float");
+    tap.expect_eq (to_radians (180.0), PI<double>,  "to_radians double");
 
-    CHECK_EQ (log2 (8u), 3);
-    CHECK_EQ (log2 (1u), 0);
+    tap.expect_eq (log2 (8u), 3, "log2 +ve");
+    tap.expect_eq (log2 (1u), 0, "log2 zero");
 
-    CHECK_EQ (log2   (9u), 3);
-    CHECK_EQ (log2up (9u), 4);
-    CHECK_EQ (log2up (8u), 3);
-    CHECK_EQ (log2up (1u), 0);
+    //tap.expect_eq (log2   (9u), 3, "log2up 9");
+    tap.expect_eq (log2up (9u), 4, "log2up 9");
+    tap.expect_eq (log2up (8u), 3, "log2up 9");
+    tap.expect_eq (log2up (1u), 0, "log2up 9");
 
-    util::TAP::logger tap;
-    tap.todo ("conver to TAP");
+    return tap.status ();
 }
