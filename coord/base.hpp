@@ -39,10 +39,10 @@ namespace util { namespace coord {
         using init<S,T,tags...>::init;
         base () = default;
 
-        explicit base (T val)
+        constexpr explicit base (T val)
         { std::fill (std::begin (this->data), std::end (this->data), val); }
 
-        base (const base<S,T,KLASS,tags...> &rhs) = default;
+        constexpr base (const base<S,T,KLASS,tags...> &rhs) = default;
         base& operator= (const base<S,T,KLASS,tags...> &rhs) = default;
 
         // element accessors

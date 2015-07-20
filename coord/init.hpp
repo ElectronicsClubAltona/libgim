@@ -30,8 +30,8 @@ namespace util { namespace coord {
     struct init<1,T,tags...> : public store<1,T,tags...>
     {
         using store<1,T,tags...>::store;
-        init () = default;
-        init (T v0):
+        constexpr init () = default;
+        constexpr init (T v0):
             store<1,T,tags...> ({v0})
         { ; }
     };
@@ -42,8 +42,8 @@ namespace util { namespace coord {
     struct init<2,T,tags...> : public store<2,T,tags...>
     {
         using store<2,T,tags...>::store;
-        init () = default;
-        init (T v0, T v1):
+        constexpr init () = default;
+        constexpr init (T v0, T v1):
             store<2,T,tags...> ({ v0, v1 })
         { ; }
     };
@@ -54,8 +54,8 @@ namespace util { namespace coord {
     struct init<3,T,tags...> : public store<3,T,tags...>
     {
         using store<3,T,tags...>::store;
-        init () = default;
-        init (T v0, T v1, T v2):
+        constexpr init () = default;
+        constexpr init (T v0, T v1, T v2):
             store<3,T,tags...> ({v0, v1, v2})
         { ; }
     };
@@ -66,8 +66,8 @@ namespace util { namespace coord {
     struct init<4,T,tags...> : public store<4,T,tags...>
     {
         using store<4,T,tags...>::store;
-        init () = default;
-        init (T v0, T v1, T v2, T v3):
+        constexpr init () = default;
+        constexpr init (T v0, T v1, T v2, T v3):
             store<4,T,tags...> ({ v0, v1, v2, v3 })
         { ; }
     };
