@@ -246,6 +246,7 @@ UTIL_FILES   =			\
     variadic.ipp		\
     vector.cpp			\
     vector.hpp			\
+    vector.ipp			\
     version.cpp			\
     version.hpp			\
     view.cpp			\

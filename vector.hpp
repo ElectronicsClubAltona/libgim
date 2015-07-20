@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_VECTOR_HPP
@@ -44,6 +44,9 @@ namespace util {
 
         vector<S,T>& normalise  (void);
         vector<S,T>  normalised [[gnu::warn_unused_result]] (void) const;
+
+        // representations
+        template <size_t D> vector<D,T> homog (void) const;
 
         // constants
         static const vector<S,T> UNIT;
@@ -82,6 +85,8 @@ namespace util {
     typedef vector<3,double> vector3d;
     typedef vector<3,double> vector4d;
 }
+
+#include "vector.ipp"
 
 #endif
 
