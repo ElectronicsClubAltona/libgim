@@ -65,6 +65,8 @@ namespace util {
         matrix4<T> rotation_matrix (void) const;
     };
 
+    typedef quaternion<float> quaternionf;
+
     template <typename T>
     std::ostream& operator<< (std::ostream&, quaternion<T>);
 }
