@@ -63,6 +63,9 @@ namespace util {
     template <typename T> vector<3,T> spherical_to_cartesian (vector<3,T>);
     template <typename T> vector<3,T> cartesian_to_spherical (vector<3,T>);
 
+    template <typename T> vector<2,T> to_euler   (vector<3,T>);
+    template <typename T> vector<3,T> from_euler (vector<2,T>);
+
     // output and serialisation operators
     template <size_t S, typename T> std::ostream& operator<< (std::ostream&, vector<S,T>);
 

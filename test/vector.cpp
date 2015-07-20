@@ -61,12 +61,52 @@ test_polar (util::TAP::logger &tap)
 }
 
 
+void
+test_euler (util::TAP::logger &tap)
+{
+    static const struct {
+        util::vector3f dir;
+        util::vector2f euler;
+        const char *name;
+    } TESTS[] = {
+        // y-axis
+        { {  0,  0, -1 }, { 0.5f,  0.5f }, "forward" },
+        { { -1,  0,  0 }, { 0.5f, -1.0f }, "left" },
+        { {  0,  0,  1 }, { 0.5f, -0.5f }, "back" },
+        { {  1,  0,  0 }, { 0.5f,  0.0f }, "right" },
+
+        // x-axis
+        { {  0,  1,  0 }, { 0, 0 }, "up"   },
+        { {  0, -1,  0 }, { 1, 0 }, "down" },
+    };
+
+    // check that simple axis rotations look correct
+    for (auto i: TESTS) {
+        tap.expect_eq (util::to_euler (i.dir),
+                       i.euler * PI<float>,
+                       "to euler, %s", i.name);
+    }
+
+    // check error in round trip through euler angles
+    for (auto i: TESTS) {
+        auto trip = util::from_euler (util::to_euler (i.dir));
+        auto diff = i.dir - trip;
+        auto norm = diff.magnitude ();
+
+        // trig functions reduce precision above almost_equal levels, so we
+        // hard code a fairly low bound here instead.
+        tap.expect_lt (norm, 1e-7, "euler round-trip error, %s", i.name);
+    }
+}
+
+
 int
 main ()
 {
     util::TAP::logger tap;
 
     test_polar (tap);
+    test_euler (tap);
 
     tap.expect (!util::vector3f::ZERO.is_normalised (), "zero isn't normalised");
     tap.expect (!util::vector3f::UNIT.is_normalised (), "unit is normalised");

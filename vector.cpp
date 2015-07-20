@@ -139,6 +139,39 @@ util::cartesian_to_polar (vector<2,T> v)
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 vector<3,T>
+util::from_euler (vector<2,T> euler)
+{
+    return {
+         std::sin (euler.x) * std::cos (euler.y),
+         std::cos (euler.x),
+        -std::sin (euler.x) * std::sin (euler.y),
+    };
+}
+
+template util::vector3f util::from_euler (util::vector2f);
+template util::vector3d util::from_euler (util::vector2d);
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+vector<2,T>
+util::to_euler (vector<3,T> vec)
+{
+    vec.normalise ();
+
+    return {
+        std::acos  (vec.y / vec.magnitude ()),
+        -std::atan2 (vec.z, vec.x),
+    };
+}
+
+template util::vector2f util::to_euler (util::vector3f);
+template util::vector2d util::to_euler (util::vector3d);
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+vector<3,T>
 util::cross (vector<3,T> a,
              vector<3,T> b)
 {
