@@ -177,9 +177,12 @@ namespace util {
     bool
     operator== (K<S,T> a, K<S,T> b)
     {
+        bool (*predicate)(const T&, const T&) = almost_equal;
+
         return std::equal (std::begin (a),
                            std::end   (a),
-                           std::begin (b));
+                           std::begin (b),
+                           predicate);
     }
 
     ///------------------------------------------------------------------------
