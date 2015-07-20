@@ -24,6 +24,8 @@
 #include <cstdlib>
 #include <algorithm>
 
+#include "format.hpp"
+
 
 //-----------------------------------------------------------------------------
 template <typename... Args>
@@ -35,43 +37,52 @@ util::TAP::logger::expect (std::function<bool(Args...)> test, Args&&... args, co
 
 
 //-----------------------------------------------------------------------------
-template <typename T, typename U>
+template <typename T, typename U, typename ...Args>
 void
-util::TAP::logger::expect_eq (const T&a, const U &b, const std::string &msg)
+util::TAP::logger::expect_eq (const T&a, const U &b, const std::string &fmt, Args&... args)
 {
     static const std::function<bool(const T&,const U&)> TEST = [] (const T &t, const U &u) -> bool {
         return almost_equal (t, u);
     };
 
-    expect<const T&, const U&> (TEST, a, b, msg);
+    expect<const T&, const U&> (TEST, a, b, util::format::render (fmt, std::forward<Args> (args)...));
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T, typename U>
+template <typename T, typename U, typename ...Args>
 void
-util::TAP::logger::expect_neq (const T&a, const U &b, const std::string &msg)
+util::TAP::logger::expect_neq (const T&a, const U &b, const std::string &fmt, Args&... args)
 {
     static const std::function<bool(const T&,const U&)> TEST = [] (const T &t, const U &u) -> bool {
         return !almost_equal (t, u);
     };
 
-    expect<const T&, const U&> (TEST, a, b, msg);
+    expect<const T&, const U&> (TEST, a, b, util::format::render (fmt, std::forward<Args> (args)...));
 }
 
 
 //-----------------------------------------------------------------------------
 #define TAP_TEST(SUFFIX,OP)                                     \
-template <typename T, typename U>                               \
+template <typename T, typename U, typename ...Args>             \
 void                                                            \
 util::TAP::logger::expect_ ## SUFFIX (const T &a,               \
                                       const U &b,               \
-                                      const std::string &msg)   \
+                                      const std::string &fmt,   \
+                                      Args&... args)            \
 {                                                               \
     static const std::function<                                 \
         bool(const T&,const U&)                                 \
     > TEST = [] (const T&t, const U&u) { return t OP u; };      \
-    expect<const T&, const U&> (TEST, a, b, msg);               \
+                                                                \
+    expect<const T&, const U&> (                                \
+        TEST,                                                   \
+        a, b,                                                   \
+        util::format::render (                                  \
+            fmt,                                                \
+            std::forward<Args> (args)...                        \
+        )                                                       \
+    );                                                          \
 }
 
 TAP_TEST(gt, > )
@@ -83,19 +94,23 @@ TAP_TEST(le, <=)
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <typename T, typename ...Args>
 void
-util::TAP::logger::expect_nan (const T &t, const std::string &msg)
+util::TAP::logger::expect_nan (const T &t, const std::string &fmt, Args&... args)
 {
     bool(*func)(T) = std::isnan;
-    expect<const T&> (std::function<bool(const T&)> (func), t, msg);
+    expect<const T&> (
+        std::function<bool(const T&)> (func),
+        t,
+        util::format::render (fmt, std::forward<Args> (args)...)
+    );
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <typename T, typename ...Args>
 void
-util::TAP::logger::expect_nothrow (T &&t, const std::string &msg)
+util::TAP::logger::expect_nothrow (T &&t, const std::string &fmt, Args&... args)
 {
     bool success = true;
 
@@ -105,14 +120,14 @@ util::TAP::logger::expect_nothrow (T &&t, const std::string &msg)
         success = false;
     }
 
-    expect (success, msg);
+    expect (success, util::format::render (fmt, std::forward<Args> (args)...));
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename E, typename T>
+template <typename E, typename T, typename ...Args>
 void
-util::TAP::logger::expect_throw (T &&t, const std::string &msg)
+util::TAP::logger::expect_throw (T &&t, const std::string &fmt, Args&... args)
 {
     bool success = false;
 
@@ -120,7 +135,9 @@ util::TAP::logger::expect_throw (T &&t, const std::string &msg)
         t ();
     } catch (const E&) {
         success = true;
+    } catch (...) {
+        success = false;
     }
 
-    expect (success, msg);
+    expect (success, util::format::render (fmt, std::forward<Args> (args)...));
 }
