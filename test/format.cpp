@@ -12,9 +12,9 @@ main (void)
     tap.expect_eq (util::format::render ("identity"), "identity"s, "identity literal");
     tap.expect_eq (util::format::render ("%s", "identity"s), "identity"s, "identity substitution");
 
-    tap.expect_throw<util::format::missing_error> ([] (void) { util::format::render ("%s"); });
-    tap.expect_throw<util::format::format_error>  ([] (void) { util::format::render ("%!", 42); });
-    tap.expect_throw<util::format::format_error>  ([] (void) { util::format::render ("%", 42); });
+    tap.expect_throw<util::format::missing_error> ([] (void) { util::format::render ("%s");     }, "missing value");
+    tap.expect_throw<util::format::format_error>  ([] (void) { util::format::render ("%!", 42); }, "invalid specifier");
+    tap.expect_throw<util::format::format_error>  ([] (void) { util::format::render ("%", 42);  }, "truncated specifier");
 
     return tap.status ();
 }

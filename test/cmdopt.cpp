@@ -17,12 +17,12 @@ test_null (util::TAP::logger &tap)
     static const char *argv1[] = { "./foo", "-n", "foo" };
     tap.expect_nothrow ([&] () {
         p.scan (elems (argv1), argv1);
-    });
+    }, "nothrow null short form");
 
     static const char *argv2[] = { "./foo", "--null", "foo" };
     tap.expect_nothrow ([&] () {
         p.scan (elems (argv2), argv2);
-    });
+    }, "nothrow null long form");
 }
 
 
@@ -81,13 +81,13 @@ test_bool (util::TAP::logger &tap)
     for (auto i: positive) {
         argv[2] = i;
         p.scan (argv.size (), argv.data ());
-        tap.expect_eq (value, true, i);
+        tap.expect_eq (value, true, i, "read bool, %s", i);
     }
 
     for (auto i: negative) {
         argv[2] = i;
         p.scan (argv.size (), argv.data ());
-        tap.expect_eq (value, false, i);
+        tap.expect_eq (value, false, i, "read bool, %s", i);
     }
 
     // Check that invalid forms of boolean all throw exceptions
@@ -97,7 +97,7 @@ test_bool (util::TAP::logger &tap)
         argv[2] = i;
         tap.expect_throw<util::cmdopt::invalid_value> ([&] () {
             p.scan (argv.size (), argv.data ());
-        });
+        }, "invalid bool, %s", i);
     }
 }
 
@@ -137,7 +137,7 @@ test_numeric (util::TAP::logger &tap)
         // check short form reading
         value = 2;
         p.scan (elems (argv_short), argv_short);
-        tap.expect_eq (value, values[i]);
+        tap.expect_eq (value, values[i], "equality, short form");
 
         // construct long form arguments
         out_long << "--type=" << values[i];
@@ -147,7 +147,7 @@ test_numeric (util::TAP::logger &tap)
         // check long form reading
         value = 2;
         p.scan (elems (argv_long), argv_long);
-        tap.expect_eq (value, values[i]);
+        tap.expect_eq (value, values[i], "equality, long form");
     }
 }
 
@@ -181,7 +181,7 @@ test_bytes (util::TAP::logger &tap)
         argv[2] = i.str;
         p.scan (elems (argv), argv);
 
-        tap.expect_eq (i.val, size, "bytes");
+        tap.expect_eq (i.val, size, "bytes, %s", i.str);
     };
 }
 
@@ -205,11 +205,11 @@ test_required (util::TAP::logger &tap)
 
     tap.expect_nothrow ([&] () {
         p.scan (elems (argv), argv);
-    });
+    }, "required option, success");
 
     tap.expect_throw<util::cmdopt::invalid_required> ([&] () {
         p.scan (1, argv);
-    });
+    }, "required option, failure");
 }
 
 
