@@ -42,6 +42,9 @@ namespace util {
         matrix<T>   operator* (const matrix<T>&) const;
         matrix<T>&  operator*=(const matrix<T>&);
 
+        vector<3,T> operator* (vector<3,T>) const;
+        point<3,T>  operator* (point<3,T>) const;
+
         vector<4,T> operator* (const vector<4,T>&) const;
         point<4,T>  operator* (const point<4,T> &) const;
 

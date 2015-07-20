@@ -255,6 +255,26 @@ matrix<T>::operator*=(const matrix<T> &rhs) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+vector<3,T>
+matrix<T>::operator* (vector<3,T> v) const
+{
+    return (
+        *this * v.template homog<4> ()
+    ).template redim<3> ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+point<3,T>
+matrix<T>::operator* (point<3,T> p) const
+{
+    return (*this * p.template homog<4> ()).template redim<3> ();
+}
+
+
 //-----------------------------------------------------------------------------
 template <typename T>
 vector<4,T>
