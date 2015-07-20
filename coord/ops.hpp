@@ -89,6 +89,7 @@ namespace util {
     ELEMENT_OP(-)
     ELEMENT_OP(*)
     ELEMENT_OP(/)
+    ELEMENT_OP(%)
 #undef ELEMENT_OP
 
     ///////////////////////////////////////////////////////////////////////////
@@ -100,7 +101,7 @@ namespace util {
         typename U,                                     \
         template <size_t,typename> class K              \
     >                                                   \
-    typename std::enable_if<std::is_fundamental<U>::value, K<S,T>>::type                                              \
+    typename std::enable_if<std::is_fundamental<U>::value, K<S,T>>::type    \
     operator OP (U u, K<S,T> k)                         \
     {                                                   \
         K<S,T> out;                                     \
@@ -115,7 +116,7 @@ namespace util {
         typename U,                                     \
         template <size_t,typename> class K              \
     >                                                   \
-    typename std::enable_if<std::is_fundamental<U>::value, K<S,T>>::type                                              \
+    typename std::enable_if<std::is_fundamental<U>::value, K<S,T>>::type    \
     operator OP (K<S,T> k, U u)                         \
     {                                                   \
         K<S,T> out;                                     \
@@ -128,6 +129,7 @@ namespace util {
     SCALAR_OP(-)
     SCALAR_OP(*)
     SCALAR_OP(/)
+    SCALAR_OP(%)
 
 #undef SCALAR_OP
 
@@ -151,6 +153,7 @@ namespace util {
     SCALAR_OP(-=)
     SCALAR_OP(*=)
     SCALAR_OP(/=)
+    SCALAR_OP(%=)
 #undef SCALAR_OP
 
     //-------------------------------------------------------------------------
