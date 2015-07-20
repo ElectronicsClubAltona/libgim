@@ -313,7 +313,7 @@ parser::scan (int argc, const char *const *argv)
         auto inc = argv[i][1] == '-'
              ? parse_long  (i, argc, argv)
              : parse_short (i, argc, argv);
-        
+
         CHECK_GT (inc, 0);
         i += inc;
     }
