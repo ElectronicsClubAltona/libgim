@@ -51,6 +51,9 @@ UTIL_FILES   =			\
     fixed.hpp			\
     float.cpp			\
     float.hpp			\
+    format.cpp			\
+    format.hpp			\
+    format.ipp			\
     fourcc.cpp			\
     fourcc.hpp			\
     guid.cpp			\
@@ -315,6 +318,7 @@ TEST_BIN = 			\
     test/extent			\
     test/fixed			\
     test/float			\
+    test/format			\
     test/hash/murmur		\
     test/hash/fasthash          \
     test/hmac			\
