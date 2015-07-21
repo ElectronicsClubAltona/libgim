@@ -78,7 +78,10 @@ namespace util {
     template <typename T> using vector4 = vector<4,T>;
 
     typedef vector<2,size_t> vector2u;
+    typedef vector<3,size_t> vector3u;
+
     typedef vector<2,intmax_t> vector2i;
+    typedef vector<3,intmax_t> vector3i;
 
     typedef vector<2,float> vector2f;
     typedef vector<3,float> vector3f;
