@@ -327,6 +327,7 @@ TEST_BIN = 			\
     test/hmac			\
     test/hotp			\
     test/hton			\
+    test/image			\
     test/introspection		\
     test/ip 			\
     test/json_types		\
