@@ -61,7 +61,7 @@ namespace util { namespace image {
         size_t s;
 
         //---------------------------------------------------------------------
-        size_t offset (point<2,size_t>) const;
+        constexpr size_t offset (point<2,size_t>) const;
 
         T  operator[] (point<2,size_t>) const;
         T& operator[] (point<2,size_t>);

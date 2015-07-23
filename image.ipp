@@ -41,6 +41,15 @@ namespace util { namespace image {
     //-------------------------------------------------------------------------
     template <typename T>
     constexpr size_t
+    buffer<T>::offset (point<2,size_t> p) const
+    {
+        return dot (stride (), p);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    constexpr size_t
     buffer<T>::size (void) const
     {
         return extent ()[1] * stride ()[1];
