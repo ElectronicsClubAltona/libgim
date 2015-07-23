@@ -301,7 +301,7 @@ buffer<T>::operator[] (size_t idx)
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-T*
+inline T*
 buffer<T>::data (void)
 {
     return begin ();
@@ -310,7 +310,7 @@ buffer<T>::data (void)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-T*
+inline T*
 buffer<T>::begin (void)
 {
     return m_data.get ();
@@ -319,7 +319,7 @@ buffer<T>::begin (void)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-T*
+inline T*
 buffer<T>::end (void)
 {
     return begin () + h * s;
@@ -328,7 +328,7 @@ buffer<T>::end (void)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-const T*
+inline const T*
 buffer<T>::data (void) const
 {
     return begin ();
@@ -337,7 +337,7 @@ buffer<T>::data (void) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
-const T*
+inline const T*
 buffer<T>::begin (void) const
 {
     return m_data.get ();
@@ -346,7 +346,7 @@ buffer<T>::begin (void) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
-const T*
+inline const T*
 buffer<T>::end (void) const
 {
     return begin () + h * s;
