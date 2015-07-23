@@ -77,19 +77,19 @@ namespace util {
     template <typename T> using vector3 = vector<3,T>;
     template <typename T> using vector4 = vector<4,T>;
 
-    typedef vector<2,size_t> vector2u;
-    typedef vector<3,size_t> vector3u;
+    typedef vector2<size_t> vector2u;
+    typedef vector3<size_t> vector3u;
 
-    typedef vector<2,intmax_t> vector2i;
-    typedef vector<3,intmax_t> vector3i;
+    typedef vector2<intmax_t> vector2i;
+    typedef vector3<intmax_t> vector3i;
 
-    typedef vector<2,float> vector2f;
-    typedef vector<3,float> vector3f;
-    typedef vector<4,float> vector4f;
+    typedef vector2<float> vector2f;
+    typedef vector3<float> vector3f;
+    typedef vector4<float> vector4f;
 
-    typedef vector<2,double> vector2d;
-    typedef vector<3,double> vector3d;
-    typedef vector<3,double> vector4d;
+    typedef vector2<double> vector2d;
+    typedef vector3<double> vector3d;
+    typedef vector3<double> vector4d;
 }
 
 #include "vector.ipp"

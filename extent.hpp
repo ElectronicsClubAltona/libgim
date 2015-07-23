@@ -51,10 +51,14 @@ namespace util {
         static const extent MIN;
     };
 
-    typedef extent<2,intmax_t> extent2i;
-    typedef extent<2,size_t> extent2u;
-    typedef extent<2,float> extent2f;
-    typedef extent<2,double> extent2d;
+    // convenience typedefs
+    template <typename T> using extent2 = extent<2,T>;
+    template <typename T> using extent3 = extent<3,T>;
+
+    typedef extent2<intmax_t> extent2i;
+    typedef extent2<size_t> extent2u;
+    typedef extent2<float> extent2f;
+    typedef extent2<double> extent2d;
 
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, util::extent<S,T>);

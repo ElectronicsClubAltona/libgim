@@ -46,11 +46,14 @@ namespace util {
     };
 
     // Convenience types
-    typedef colour<3,uint8_t> colour3u;
-    typedef colour<4,uint8_t> colour4u;
+    template <typename T> using colour3 = colour<3,T>;
+    template <typename T> using colour4 = colour<4,T>;
 
-    typedef colour<4,float> colour4f;
-    typedef colour<3,float> colour3f;
+    typedef colour3<uint8_t> colour3u;
+    typedef colour4<uint8_t> colour4u;
+
+    typedef colour4<float> colour4f;
+    typedef colour3<float> colour3f;
 
     // RGB <-> HSV
     colour3f rgb_to_hsv (colour3f);
