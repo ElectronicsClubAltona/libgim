@@ -364,6 +364,7 @@ buffer<T>::end (void) const
 
 //-----------------------------------------------------------------------------
 template struct util::image::buffer<uint8_t>;
+template struct util::image::buffer<uint16_t>;
 template struct util::image::buffer<float>;
 template struct util::image::buffer<double>;
 
