@@ -68,7 +68,7 @@ namespace util {
 
         operator HANDLE (void) const;
 
-        HANDLE handle;
+        HANDLE fd;
     };
 #endif
 

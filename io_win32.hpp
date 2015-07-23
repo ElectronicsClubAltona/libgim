@@ -44,8 +44,8 @@ namespace util {
             const uint8_t* cend   (void) const;
 
         private:
-            handle_ref m_file;
-            handle_ref m_mapping;
+            handle m_file;
+            handle m_mapping;
 
             std::unique_ptr<uint8_t,BOOL(*)(LPCVOID)> m_data;
             size_t m_size;

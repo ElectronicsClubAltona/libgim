@@ -128,29 +128,29 @@ mapped_file::cend (void) const
 
 
 //-----------------------------------------------------------------------------
-util::handle_ref::handle_ref ():
-    handle (INVALID_HANDLE_VALUE)
+util::handle::handle():
+    fd (INVALID_HANDLE_VALUE)
 { ; }
 
 
-util::handle_ref::~handle_ref ()
+util::handle::~handle ()
 {
     reset (INVALID_HANDLE_VALUE);
 }
 
 
 void
-util::handle_ref::reset (HANDLE _handle)
+util::handle::reset (HANDLE _handle)
 {
-    if (handle != INVALID_HANDLE_VALUE)
-        if (!CloseHandle (handle))
+    if (fd != INVALID_HANDLE_VALUE)
+        if (!CloseHandle (fd))
             win32_error::throw_code ();
 
-    handle = _handle;
+    fd = _handle;
 }
 
 
-util::handle_ref::operator HANDLE (void) const
+util::handle::operator HANDLE (void) const
 {
-    return handle;
+    return fd;
 }

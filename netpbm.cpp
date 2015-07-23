@@ -97,7 +97,7 @@ void
 util::pgm::write (const util::image::buffer<uint8_t> &src,
                   const boost::filesystem::path &path)
 {
-    std::ofstream dst (path.c_str ());
+    std::ofstream dst (path.string ());
     write (src.begin (), src.w, src.h, src.s, path);
 }
 
@@ -110,7 +110,7 @@ util::pgm::write (const uint8_t *restrict pixels,
                   size_t stride,
                   const boost::filesystem::path &path)
 {
-    std::ofstream dst (path.c_str ());
+    std::ofstream dst (path.string ());
     write (pixels, width, height, stride, dst);
 }
 
@@ -137,7 +137,7 @@ util::ppm::write (const uint8_t *restrict pixels,
                   size_t stride,
                   const boost::filesystem::path &path)
 {
-    std::ofstream dst (path.c_str ());
+    std::ofstream dst (path.string ());
     write (pixels, width, height, stride, dst);
 }
 

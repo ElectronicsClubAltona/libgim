@@ -181,7 +181,7 @@ main (int argc, char **argv)
 #endif
 
 
-#ifndef ENABLE_DEBUGGING
+#if !defined(ENABLE_DEBUGGING) and !defined(PLATFORM_WIN32)
     if (isatty (fileno (stdout))) {
         std::cerr << "cowardly refusing to dump binary data to console\n";
         return EXIT_FAILURE;
