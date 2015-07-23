@@ -255,13 +255,22 @@ util::image::buffer<T>::downsample (float factor) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
+size_t
+buffer<T>::offset (point<2,size_t> p) const
+{
+    return dot (stride (), p);
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 T
 buffer<T>::operator[] (point<2,size_t> p) const
 {
     CHECK_LT (p.x, w);
     CHECK_LT (p.y, h);
 
-    return begin ()[p.y * s + p.x];
+    return begin ()[offset (p)];
 }
 
 
@@ -273,7 +282,7 @@ buffer<T>::operator[] (point<2,size_t> p)
     CHECK_LT (p.x, w);
     CHECK_LT (p.y, h);
 
-    return begin ()[p.y * s + p.x];
+    return begin ()[offset (p)];
 }
 
 
