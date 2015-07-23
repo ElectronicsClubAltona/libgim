@@ -24,80 +24,40 @@
 
 using namespace util;
 
-// ----------------------------------------------------------------------------
-static const uint64_t SECOND      = 1000000000UL;
-static const uint64_t MILLISECOND =    1000000UL;
-
-// ----------------------------------------------------------------------------
-#ifdef PLATFORM_WIN32
-#include <windows.h>
-
-uint64_t
-util::nanoseconds (void) {
-    LARGE_INTEGER freq, count;
-    QueryPerformanceFrequency (&freq);
-    QueryPerformanceCounter   (&count);
-
-    return ((double)count.QuadPart / freq.QuadPart) * SECOND;
-}
+///////////////////////////////////////////////////////////////////////////////
+static const uint64_t SECOND      = 1'000'000'000UL;
+static const uint64_t MILLISECOND =     1'000'000UL;
 
 
-void
-util::sleep (uint64_t ns) {
-    Sleep (ns / MILLISECOND);
-}
-
-#else
-#include <ctime>
-
-uint64_t
-util::nanoseconds (void) {
-    struct timespec t;
-    clock_gettime (CLOCK_MONOTONIC, &t);
-
-    CHECK_GT (t.tv_sec, 0);
-    CHECK_GT (t.tv_nsec, 0);
-
-    return static_cast<uint64_t> (t.tv_sec) * SECOND + static_cast<uint64_t> (t.tv_nsec);
-}
-
-
-void
-util::sleep (uint64_t ns) {
-    struct timespec req, rem;
-
-    req.tv_sec  = sign_cast<time_t> (ns / SECOND);
-    req.tv_nsec = sign_cast<long>   (ns % SECOND);
-
-    while (nanosleep (&req, &rem)) {
-        req = rem;
-    }
-}
-#endif
-
-// ----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 delta_clock::delta_clock ():
     time { util::nanoseconds (), util::nanoseconds () }
 { ; }
 
 
+//-----------------------------------------------------------------------------
 float
-delta_clock::seconds (void) {
+delta_clock::seconds (void)
+{
     time.prev = time.curr;
     time.curr = nanoseconds ();
 
     return (time.curr - time.prev) / static_cast<float> (SECOND);
 }
 
-// ----------------------------------------------------------------------------
-util::period_query::period_query (float seconds) {
+
+///////////////////////////////////////////////////////////////////////////////
+util::period_query::period_query (float seconds)
+{
     m_time.start  = nanoseconds ();
     m_time.period = static_cast<uint64_t> (seconds * SECOND);
 }
 
 
+//-----------------------------------------------------------------------------
 bool
-util::period_query::poll (void) {
+util::period_query::poll (void)
+{
     uint64_t now  = nanoseconds ();
     uint64_t diff = now - m_time.start;
     if (diff < m_time.period)
@@ -108,15 +68,17 @@ util::period_query::poll (void) {
 }
 
 
-// ----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 util::rate_limiter::rate_limiter (unsigned rate):
     m_last (nanoseconds ()),
     m_target (SECOND / rate)
 { ; }
 
 
+//-----------------------------------------------------------------------------
 void
-util::rate_limiter::poll (void) {
+util::rate_limiter::poll (void)
+{
     uint64_t now = nanoseconds ();
     uint64_t total = now - m_last;
 
@@ -127,7 +89,7 @@ util::rate_limiter::poll (void) {
 }
 
 
-// ----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 util::polled_duration::polled_duration (std::string name, uint64_t interval):
     m_name     (name),
     m_interval (interval),
@@ -135,12 +97,15 @@ util::polled_duration::polled_duration (std::string name, uint64_t interval):
 { ; }
 
 
+//-----------------------------------------------------------------------------
 void
-util::polled_duration::start (void) {
+util::polled_duration::start (void)
+{
     m_last = nanoseconds ();
 }
 
 
+//-----------------------------------------------------------------------------
 void
 util::polled_duration::stop (void) {
     uint64_t now = nanoseconds ();

@@ -256,13 +256,15 @@ if PLATFORM_LINUX
 UTIL_FILES += 			\
     backtrace_execinfo.cpp	\
     io_posix.cpp		\
-    io_posix.hpp
+    io_posix.hpp		\
+    time_posix.cpp
 endif
 
 if PLATFORM_WIN32
 UTIL_FILES += 			\
     backtrace_null.cpp		\
-    io_win32.cpp
+    io_win32.cpp		\
+    time_win32.cpp
 endif
 
 ###############################################################################
