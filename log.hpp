@@ -87,6 +87,18 @@ namespace util {
         std::string m_message;
     };
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    class scoped_timer : public nocopy {
+    public:
+        scoped_timer (const level_t, std::string&&);
+        ~scoped_timer ();
+
+    private:
+        const level_t m_level;
+        const std::string m_message;
+        uint64_t m_start;
+    };
 }
 
 #include "log.ipp"

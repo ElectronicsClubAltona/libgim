@@ -19,6 +19,7 @@
 
 #include "debug.hpp"
 #include "types.hpp"
+#include "time.hpp"
 
 #include <array>
 #include <ctime>
@@ -157,4 +158,23 @@ scoped_logger::scoped_logger (level_t       _level,
 scoped_logger::~scoped_logger ()
 {
     log (m_level, m_message);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+scoped_timer::scoped_timer (level_t _level,
+                            std::string &&_message):
+    m_level (_level),
+    m_message (_message),
+    m_start (util::nanoseconds ())
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+scoped_timer::~scoped_timer ()
+{
+    auto finish = util::nanoseconds ();
+    auto duration = finish - m_start;
+
+    log (m_level, "%fs, %s", duration / 1'000'000'000.f, m_message);
 }
