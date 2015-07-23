@@ -149,6 +149,8 @@ UTIL_FILES   =			\
     noise/basis/constant.cpp	\
     noise/basis/constant.hpp	\
     noise/basis/constant.ipp	\
+    noise/basis/patch.hpp	\
+    noise/basis/patch.ipp	\
     noise/basis/perlin.hpp	\
     noise/basis/perlin.ipp	\
     noise/basis/runtime.cpp	\

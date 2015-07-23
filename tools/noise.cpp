@@ -9,6 +9,7 @@
 #include "noise/lerp.hpp"
 #include "noise/basis/constant.hpp"
 #include "noise/basis/value.hpp"
+#include "noise/basis/patch.hpp"
 #include "noise/basis/perlin.hpp"
 #include "noise/basis/worley.hpp"
 #include "noise/turbulence.hpp"
@@ -34,7 +35,8 @@ template struct util::noise::fractal::hetero<float, util::noise::basis::worley<f
 enum basis_t {
     VALUE,
     PERLIN,
-    WORLEY
+    WORLEY,
+    PATCH
 };
 
 
@@ -67,6 +69,7 @@ operator>> (std::istream &is, basis_t &b)
     b = name == "value"     ? VALUE  :
         name == "perlin"    ? PERLIN :
         name == "worley"    ? WORLEY :
+        name == "patch"     ? PATCH  :
         (is.setstate (std::istream::failbit), b);
 
     return is;
@@ -78,9 +81,10 @@ std::ostream&
 operator<< (std::ostream &os, basis_t b)
 {
     switch (b) {
-        case VALUE: os << "value"; return os;
-        case PERLIN: os << "perlin"; return os;
-        case WORLEY: os << "worley"; return os;
+        case VALUE:     os << "value";  return os;
+        case PERLIN:    os << "perlin"; return os;
+        case WORLEY:    os << "worley"; return os;
+        case PATCH:     os << "patch";  return os;
 
         default:
             unreachable ();
@@ -285,6 +289,11 @@ main (int argc, char **argv)
 
         case WORLEY: {
             b.reset<util::noise::basis::worley<float>> (seed);
+            break;
+        }
+
+        case PATCH: {
+            b.reset<util::noise::basis::patch<float>> (seed);
             break;
         }
 
