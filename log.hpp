@@ -28,6 +28,7 @@
 #endif
 
 namespace util {
+    ///////////////////////////////////////////////////////////////////////////
     // rfc5424 log levels. It is assumed they are contiguous to simplify array
     // indexing in logging code.
     //
@@ -47,14 +48,19 @@ namespace util {
         DEFAULT = INFO
     };
 
+    //-------------------------------------------------------------------------
     std::ostream&
     operator<< (std::ostream&, level_t);
 
+
+    ///////////////////////////////////////////////////////////////////////////
     void log (level_t, const std::string &format);
 
     template <typename ...tail>
     void log (level_t, const std::string &format, tail ..._tail);
 
+
+    //-------------------------------------------------------------------------
     #define LOG_EMERGENCY(...)  do { util::log(util::EMERGENCY, ##__VA_ARGS__); } while (0)
     #define LOG_ALERT(...)      do { util::log(util::ALERT,     ##__VA_ARGS__); } while (0)
     #define LOG_CRITICAL(...)   do { util::log(util::CRITICAL,  ##__VA_ARGS__); } while (0)
@@ -70,15 +76,17 @@ namespace util {
 #endif
 
 
+    ///////////////////////////////////////////////////////////////////////////
     class scoped_logger : public nocopy {
-        public:
-            scoped_logger (const level_t, const std::string&);
-            ~scoped_logger ();
+    public:
+        scoped_logger (const level_t, std::string&&);
+        ~scoped_logger ();
 
-        protected:
-            const level_t      m_level;
-            const std::string &m_message;
+    protected:
+        level_t     m_level;
+        std::string m_message;
     };
+
 }
 
 #include "log.ipp"

@@ -32,6 +32,8 @@ using namespace util;
 using std::string;
 using std::map;
 
+
+///////////////////////////////////////////////////////////////////////////////
 void
 check_level (level_t l)
 {
@@ -39,6 +41,7 @@ check_level (level_t l)
     CHECK (l >= 0 && l < NUM_LEVELS);
 }
 
+//-----------------------------------------------------------------------------
 const string&
 level_to_string (level_t l) {
     check_level (l);
@@ -58,6 +61,7 @@ level_to_string (level_t l) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 static level_t
 string_to_level (string name) {
     static const map <string, level_t> NAME_LEVELS = {
@@ -83,6 +87,7 @@ string_to_level (string name) {
 }
 
 
+//-----------------------------------------------------------------------------
 std::ostream&
 util::operator<< (std::ostream& os, level_t l) {
     os << level_to_string (l);
@@ -90,11 +95,7 @@ util::operator<< (std::ostream& os, level_t l) {
 }
 
 
-void
-util::log (level_t l, const std::string &format)
-    { detail::log (l, boost::format (format)); }
-
-
+///////////////////////////////////////////////////////////////////////////////
 static level_t
 log_level (void) {
     const char *env = getenv ("LOG_LEVEL");
@@ -109,6 +110,13 @@ log_level (void) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+void
+util::log (level_t l, const std::string &format)
+    { detail::log (l, boost::format (format)); }
+
+
+//-----------------------------------------------------------------------------
 void
 util::detail::log (level_t level, boost::format &&format) {
     static const level_t LOG_LEVEL = log_level ();
@@ -137,13 +145,16 @@ util::detail::log (level_t level, boost::format &&format) {
 }
 
 
-scoped_logger::scoped_logger (const level_t      _level,
-                              const std::string &_message):
+///////////////////////////////////////////////////////////////////////////////
+scoped_logger::scoped_logger (level_t       _level,
+                              std::string &&_message):
     m_level   (_level),
-    m_message (_message)
+    m_message (std::move (_message))
 { ; }
 
 
-scoped_logger::~scoped_logger () {
+//-----------------------------------------------------------------------------
+scoped_logger::~scoped_logger ()
+{
     log (m_level, m_message);
 }
