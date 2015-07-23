@@ -51,7 +51,7 @@ namespace util { namespace image {
 
         //---------------------------------------------------------------------
         constexpr extent2u extent (void) const;
-        constexpr extent2u stride (void) const;
+        constexpr vector2u stride (void) const;
         constexpr size_t   size   (void) const; // elements allocated
 
         constexpr bool is_packed (void) const;

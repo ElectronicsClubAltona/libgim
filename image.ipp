@@ -31,7 +31,7 @@ namespace util { namespace image {
 
     //-------------------------------------------------------------------------
     template <typename T>
-    constexpr extent2u
+    constexpr vector2u
     buffer<T>::stride (void) const
     {
         return { 1, s };
