@@ -129,7 +129,7 @@ util::image::buffer<T>::buffer (size_t _w, size_t _h, size_t _s):
     w (_w),
     h (_h),
     s (_s),
-    m_data (std::make_unique<T[]> (_w * _s))
+    m_data (std::make_unique<T[]> (_h * _s))
 {
     CHECK_NEQ (w * h, 0);
     CHECK_GE (s, w);
