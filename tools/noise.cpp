@@ -209,20 +209,22 @@ main (int argc, char **argv)
     float scale = 1.f;
     float turbulence = 0.f;
     unsigned single = 0;
+    float width = 0;
 
     // fill variables from arguments
     util::cmdopt::parser args;
-    args.add<util::cmdopt::option::value<size_t>>    ('w', "width",     "output image width",       res.w);
-    args.add<util::cmdopt::option::value<size_t>>    ('h', "height",    "output image height",      res.h);
-    args.add<util::cmdopt::option::value<uint64_t>>  ('s', "seed",      "random seed",              seed);
-    args.add<util::cmdopt::option::value<basis_t>>   ('b', "basis",     "primary basis function",   basis);
-    args.add<util::cmdopt::option::value<fractal_t>> ('f', "fractal",   "primary fractal function", fractal);
-    args.add<util::cmdopt::option::value<lerp_t>>    ('l', "lerp",      "interpolation algorithm",  lerp);
-    args.add<util::cmdopt::option::value<unsigned>>  ('o', "octaves",   "total fractal iterations", octaves);
-    args.add<util::cmdopt::option::count<unsigned>>  ('1', "single",    "single octave",            single);
-    args.add<util::cmdopt::option::value<float>>     ('H', "hurst",     "Hurst exponent",           H);
-    args.add<util::cmdopt::option::value<float>>     ('x', "scale",     "frequency multiplier",     scale);
-    args.add<util::cmdopt::option::value<float>>     ('t', "turbulence","turbulence scale",         turbulence);
+    args.add<util::cmdopt::option::value<size_t>>    ('w', "width",         "output image width",       res.w);
+    args.add<util::cmdopt::option::value<size_t>>    ('h', "height",        "output image height",      res.h);
+    args.add<util::cmdopt::option::value<uint64_t>>  ('s', "seed",          "random seed",              seed);
+    args.add<util::cmdopt::option::value<basis_t>>   ('b', "basis",         "primary basis function",   basis);
+    args.add<util::cmdopt::option::value<fractal_t>> ('f', "fractal",       "primary fractal function", fractal);
+    args.add<util::cmdopt::option::value<lerp_t>>    ('l', "lerp",          "interpolation algorithm",  lerp);
+    args.add<util::cmdopt::option::value<unsigned>>  ('o', "octaves",       "total fractal iterations", octaves);
+    args.add<util::cmdopt::option::count<unsigned>>  ('1', "single",        "single octave",            single);
+    args.add<util::cmdopt::option::value<float>>     ('H', "hurst",         "Hurst exponent",           H);
+    args.add<util::cmdopt::option::value<float>>     ('x', "scale",         "frequency multiplier",     scale);
+    args.add<util::cmdopt::option::value<float>>     ('t', "turbulence",    "turbulence scale",         turbulence);
+    args.add<util::cmdopt::option::value<float>>     ('W', "patch-width",   "patch blur width",         width);
 
     args.scan (argc, argv);
 
@@ -293,7 +295,7 @@ main (int argc, char **argv)
         }
 
         case PATCH: {
-            b.reset<util::noise::basis::patch<float>> (seed);
+            b.reset<util::noise::basis::patch<float>> (seed, width);
             break;
         }
 
@@ -343,6 +345,7 @@ main (int argc, char **argv)
     auto offset = *range.first;
     auto div    = *range.second - *range.first;
 
+    std::cerr << '[' << *range.first << ',' << *range.second << "]\n";
     std::transform (img.begin (), img.end (), img.begin (), [offset,div] (auto i) { return (i - offset) / div; });
 
     // write the images to disk
