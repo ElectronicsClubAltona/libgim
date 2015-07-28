@@ -51,7 +51,8 @@ namespace util { namespace noise { namespace basis {
 
         template <typename B>
         struct child : public base {
-            child (seed_t _seed): data (_seed) { }
+            template <typename ...Args>
+            child (seed_t _seed, Args&& ...args): data (_seed, std::forward<Args> (args)...) { }
             virtual T operator() (util::point<2,T> p) const override { return data (p); }
             virtual range<T> bounds (void) const override { return data.bounds (); }
             virtual seed_t seed (void) const override { return data.seed (); }
@@ -64,14 +65,14 @@ namespace util { namespace noise { namespace basis {
         std::unique_ptr<base> m_child;
 
     public:
-        template <typename B>
+        template <typename B, typename ...Args>
         void
-        reset (seed_t _seed)
+        reset (seed_t _seed, Args&& ...args)
         {
             using basis_t = B;
             using child_t = child<basis_t>;
 
-            m_child.reset (new child_t (_seed));
+            m_child.reset (new child_t (_seed, std::forward<Args> (args)...));
         }
     };
 } } }
