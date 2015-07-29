@@ -22,6 +22,7 @@
 #include "../../types.hpp"
 #include "../../ray.hpp"
 #include "../../vector.hpp"
+#include "../../maths/fast.hpp"
 
 
 namespace util { namespace noise { namespace basis {
@@ -74,7 +75,7 @@ namespace util { namespace noise { namespace basis {
 
         T distances[COUNT];
         for (size_t i = 0; i < COUNT; ++i)
-            distances[i] = util::distance (p_rem, centres[i]);
+            distances[i] = maths::fast::sqrt (util::distance2 (p_rem, centres[i]));
 
         // sort the distances, using indices so we can use 'offsets' to generate values
         unsigned indices[COUNT];
@@ -89,7 +90,7 @@ namespace util { namespace noise { namespace basis {
         // calculate normalisation constants for the 9 nearest points. the
         // neighbourhood size is implicitly specified by the 1.5 unit maximum
         // distance.
-        constexpr auto MAX_DISTANCE = std::hypot (1.5f, 1.5f);
+        constexpr auto MAX_DISTANCE = 2.1213203435596424f; // std::hypot (1.5f, 1.5f);
         const auto lo = distances[indices[0]];
         const auto hi = std::min (distances[indices[COUNT-1]], MAX_DISTANCE);
 
@@ -103,7 +104,7 @@ namespace util { namespace noise { namespace basis {
         {
             auto v = generate (p_int + OFFSETS[indices[i]]);
             auto d = (distances[indices[i]] - lo) / (hi - lo);
-            auto w = std::pow (1 - d, m_power);
+            auto w = maths::fast::pow (1-d, m_power);
 
             sumw += w;
             out += v * w;
