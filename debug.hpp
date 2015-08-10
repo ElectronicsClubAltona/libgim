@@ -18,9 +18,10 @@
 #define __DEBUG_HPP
 
 //#include "maths.hpp" // XXX: See notes at the end of file for maths.hpp inclusion
-#include <stdexcept>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
+#include <string>
 
 ///////////////////////////////////////////////////////////////////////////////
 #ifdef ENABLE_DEBUGGING
