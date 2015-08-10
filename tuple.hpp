@@ -22,6 +22,7 @@
 
 #include <tuple>
 #include <type_traits>
+#include <functional>
 
 
 namespace util { namespace tuple {
@@ -63,6 +64,36 @@ namespace util { namespace tuple {
     template <typename T, typename F>
     auto for_type (F f, T t)
     { return for_type<decltype(t)> (f); }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // unpack a tuple as function arguments
+    namespace detail {
+        template <
+            typename Func,
+            typename ...Args,
+            size_t ...I
+        >
+        auto
+        call (const Func &func, std::tuple<Args...> args, indices<I...>)
+        {
+            // quiet unused variable warning with zero args
+            (void)args;
+
+            // XXX: Use `std::invoke' when gcc catches up with c++17
+            return func (std::get<I> (args)...);
+        }
+    }
+
+    template <
+        typename Func,
+        typename ...Args
+    >
+    auto
+    call (const Func &func, std::tuple<Args...> args)
+    {
+        return detail::call (func, args, typename make_indices<sizeof...(Args)>::type {});
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////
