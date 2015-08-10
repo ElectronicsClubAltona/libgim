@@ -261,6 +261,8 @@ UTIL_FILES += 			\
     backtrace_execinfo.cpp	\
     io_posix.cpp		\
     io_posix.hpp		\
+    posix/dir.hpp		\
+    posix/dir.cpp		\
     time_posix.cpp
 endif
 
