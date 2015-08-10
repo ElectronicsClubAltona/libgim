@@ -57,8 +57,8 @@ namespace util {
             static void try_code (void);
             static void try_code (int code);
 
-            static void throw_code (void);
-            static void throw_code (int code);
+            static void throw_code [[gnu::noreturn]] (void);
+            static void throw_code [[gnu::noreturn]] (int code);
     };
 }
 
