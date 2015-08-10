@@ -74,7 +74,10 @@ namespace  util {
             win32_error ();
 
             static void try_code (void);
-            static void throw_code (void);
+            static void try_code (DWORD);
+
+            static void throw_code [[gnu::noreturn]] (void);
+            static void throw_code [[gnu::noreturn]] (DWORD);
     };
 }
 #endif

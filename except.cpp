@@ -105,20 +105,37 @@ win32_error::win32_error (void):
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
-win32_error::try_code (void) {
-    const auto id = GetLastError ();
-    if (id == ERROR_SUCCESS)
-        return;
-
-    throw win32_error (id);
+win32_error::try_code (void)
+{
+    try_code (GetLastError ());
 }
 
 
 //-----------------------------------------------------------------------------
 void
-win32_error::throw_code (void) {
-    const auto id = GetLastError ();
+win32_error::try_code (DWORD id)
+{
+    if (id == ERROR_SUCCESS)
+        return;
+
+    throw_code (id);
+}
+
+
+//-----------------------------------------------------------------------------
+void
+win32_error::throw_code (void)
+{
+    throw_code (GetLastError ());
+}
+
+
+//-----------------------------------------------------------------------------
+void
+win32_error::throw_code (DWORD id)
+{
     CHECK (id != ERROR_SUCCESS);
     throw win32_error (id);
 }
