@@ -17,7 +17,9 @@
 #ifndef __UTIL_PLATFORM_HPP
 #define __UTIL_PLATFORM_HPP
 
-#if defined(__linux__) || defined (__linux)
+#if defined(__ANDROID__)
+    #define PLATFORM_ANDROID
+#elif defined(__linux__) || defined (__linux)
     #define PLATFORM_LINUX
 #elif defined(__WIN32) || defined (_WIN32)
     #define PLATFORM_WIN32
