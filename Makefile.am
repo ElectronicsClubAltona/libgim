@@ -270,7 +270,9 @@ if PLATFORM_WIN32
 UTIL_FILES += 			\
     backtrace_null.cpp		\
     io_win32.cpp		\
-    time_win32.cpp
+    time_win32.cpp		\
+    win32/registry.hpp		\
+    win32/registry.cpp
 endif
 
 ###############################################################################
