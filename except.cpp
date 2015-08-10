@@ -21,10 +21,10 @@
 #include <cstring>
 #include <cerrno>
 
-using namespace std;
-using namespace util;
+using util::errno_error;
 
 
+///////////////////////////////////////////////////////////////////////////////
 /// Construct an errno_error from a given error value. The error value MUST signal an error at
 /// construction time.
 errno_error::errno_error (int _errno):
@@ -35,6 +35,7 @@ errno_error::errno_error (int _errno):
 }
 
 
+///----------------------------------------------------------------------------
 /// Construct an errno_error from the current value of errno. errno MUST signal an error at
 /// construction time.
 errno_error::errno_error ():
@@ -45,33 +46,48 @@ errno_error::errno_error ():
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 /// Throw an errno_error exception if errno currently signals an error.
 void
 errno_error::try_code (void)
-    { try_code (errno); }
+{
+    try_code (errno);
+}
 
 
+///----------------------------------------------------------------------------
 /// Throw an errno_error exception if 'code' represents an error.
 void
-errno_error::try_code(int code) {
+errno_error::try_code (int code)
+{
     if (code != 0)
         throw errno_error(code);
 }
 
 
+///----------------------------------------------------------------------------
 void
 errno_error::throw_code (void)
-    { throw_code (errno); }
+{
+    throw_code (errno);
+}
 
 
+///----------------------------------------------------------------------------
 void
-errno_error::throw_code (int code) {
+errno_error::throw_code (int code)
+{
     CHECK_NEQ (code, 0);
     throw errno_error (code);
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 #if defined(PLATFORM_WIN32)
+
+using util::win32_error;
+
+
 win32_error::win32_error (DWORD _id):
     runtime_error ("Win32 error"),
     id (_id)
@@ -80,6 +96,7 @@ win32_error::win32_error (DWORD _id):
 }
 
 
+//-----------------------------------------------------------------------------
 win32_error::win32_error (void):
     runtime_error ("Win32 error"),
     id (GetLastError ())
@@ -98,6 +115,7 @@ win32_error::try_code (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 win32_error::throw_code (void) {
     const auto id = GetLastError ();
