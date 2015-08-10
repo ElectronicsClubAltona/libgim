@@ -121,6 +121,7 @@ UTIL_FILES   =			\
     json/schema.hpp		\
     json/tree.cpp		\
     json/tree.hpp		\
+    library.hpp			\
     log.cpp			\
     log.hpp			\
     log.ipp			\
@@ -267,6 +268,8 @@ UTIL_FILES += 			\
     backtrace_execinfo.cpp	\
     io_posix.cpp		\
     io_posix.hpp		\
+    library_posix.hpp		\
+    library_posix.cpp		\
     posix/dir.hpp		\
     posix/dir.cpp		\
     threads/barrier_posix.cpp	\
@@ -282,6 +285,8 @@ if PLATFORM_WIN32
 UTIL_FILES += 			\
     backtrace_null.cpp		\
     io_win32.cpp		\
+    library_win32.hpp		\
+    library_win32.cpp		\
     threads/mutex_win32.cpp	\
     threads/mutex_win32.hpp	\
     threads/thread_win32.hpp	\
