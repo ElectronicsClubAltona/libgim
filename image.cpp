@@ -356,6 +356,8 @@ buffer<T>::end (void) const
 //-----------------------------------------------------------------------------
 template struct util::image::buffer<uint8_t>;
 template struct util::image::buffer<uint16_t>;
+template struct util::image::buffer<uint32_t>;
+template struct util::image::buffer< int32_t>;
 template struct util::image::buffer<float>;
 template struct util::image::buffer<double>;
 
@@ -364,5 +366,10 @@ template util::image::buffer<uint8_t> util::image::buffer<uint8_t>::clone (void)
 template util::image::buffer<uint8_t> util::image::buffer<float>::clone (void) const;
 template util::image::buffer<uint8_t> util::image::buffer<double>::clone (void) const;
 
-template util::image::buffer<float> util::image::buffer<float>::alloc (void) const;
+template util::image::buffer<float>    util::image::buffer<float>::alloc (void) const;
+template util::image::buffer<uint32_t> util::image::buffer<float>::alloc (void) const;
+template util::image::buffer< int32_t> util::image::buffer<float>::alloc (void) const;
+
 template util::image::buffer<float> util::image::buffer<float>::clone (void) const;
+
+template util::image::buffer<uint32_t> util::image::buffer<uint32_t>::alloc (void) const;
