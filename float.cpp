@@ -97,7 +97,7 @@ bool
 ieee_float<E, S>::almost_equal (floating_t a,
                                 floating_t b)
 {
-    return almost_equal (a, b, 10000u);
+    return almost_equal (a, b, 100u);
 }
 
 

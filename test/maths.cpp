@@ -54,6 +54,10 @@ test_comparisons (util::TAP::logger &tap)
     tap.expect (!almost_equal (numeric_limits<double>::quiet_NaN (),
                                numeric_limits<double>::quiet_NaN ()),
                 "not almost_equal NaN/NaN");
+
+    // Compare reasonably close values that are wrong
+    tap.expect (!almost_equal (1.0000f, 1.0001f),  ".0001f difference inequality");
+    tap.expect ( almost_equal (1.0000f, 1.00001f), ".00001f difference inequality");
 }
 
 
