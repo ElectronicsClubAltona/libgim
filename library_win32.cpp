@@ -31,6 +31,12 @@ library::library (const char *path):
 
 
 //-----------------------------------------------------------------------------
+library::library (const std::string &path):
+    library (path.c_str ())
+{ ; }
+
+
+//-----------------------------------------------------------------------------
 library::~library ()
 {
     FreeLibrary (m_handle);
