@@ -254,6 +254,31 @@ combination [[gnu::pure]] (unsigned n, unsigned k)
 
 
 //-----------------------------------------------------------------------------
+// kahan summation for long floating point sequences
+
+template <class InputIt>
+typename std::iterator_traits<InputIt>::value_type
+fsum (InputIt first, InputIt last)
+{
+    using T = typename std::iterator_traits<InputIt>::value_type;
+    static_assert (std::is_floating_point<T>::value,
+                   "fsum only works for floating point types");
+
+    T sum = 0;
+    T c = 0;
+
+    for (auto cursor = first; cursor != last; ++cursor) {
+        T y = *cursor - c;
+        T t = sum + y;
+        c = (t - sum) - y;
+        sum = t;
+    }
+
+    return sum;
+}
+
+
+//-----------------------------------------------------------------------------
 /// Variadic minimum
 namespace util {
     template <typename T>
