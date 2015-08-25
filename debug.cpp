@@ -94,13 +94,15 @@ unusual (void) {
 #if defined(PLATFORM_LINUX)
 #include <fenv.h>
 void
-enable_fpe (void) {
+enable_fpe (void)
+{
     feenableexcept (FE_DIVBYZERO | FE_INVALID);
 }
 
 
 void
-disable_fpe (void) {
+disable_fpe (void)
+{
     feenableexcept (0);
 }
 #else
