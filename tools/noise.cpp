@@ -184,7 +184,11 @@ main (int argc, char **argv)
     fractal_t fractal = FBM;
     lerp_t lerp = QUINTIC;
     unsigned octaves = 8;
-    float H;
+    float H = std::numeric_limits<float>::quiet_NaN ();
+    float lacunarity = std::numeric_limits<float>::quiet_NaN ();
+    float amplitude = std::numeric_limits<float>::quiet_NaN ();
+    float gain = std::numeric_limits<float>::quiet_NaN ();
+    float offset = std::numeric_limits<float>::quiet_NaN ();
     float scale = 1.f;
     float turbulence = 0.f;
     unsigned single = 0;
@@ -201,7 +205,11 @@ main (int argc, char **argv)
     args.add<util::cmdopt::option::value<unsigned>>  ('o', "octaves",       "total fractal iterations", octaves);
     args.add<util::cmdopt::option::count<unsigned>>  ('1', "single",        "single octave",            single);
     args.add<util::cmdopt::option::value<float>>     ('H', "hurst",         "Hurst exponent",           H);
+    args.add<util::cmdopt::option::value<float>>     ('G', "gain",          "octave gain",              gain);
+    args.add<util::cmdopt::option::value<float>>     ('A', "amplitude",     "base amplitude",           amplitude);
+    args.add<util::cmdopt::option::value<float>>     ('L', "lacunarity",    "frequency multiplier",     lacunarity);
     args.add<util::cmdopt::option::value<float>>     ('x', "scale",         "frequency multiplier",     scale);
+    args.add<util::cmdopt::option::value<float>>     ('O', "offset",        "hetero offset",            offset);
     args.add<util::cmdopt::option::value<float>>     ('t', "turbulence",    "turbulence scale",         turbulence);
     args.add<util::cmdopt::option::value<float>>     ('W', "patch-width",   "patch blur width",         width);
 
@@ -230,7 +238,12 @@ main (int argc, char **argv)
         case FBM:    f.reset<fractal::fbm   <float,basis::runtime<float>>> (seed); break;
         case HMF:    f.reset<fractal::hmf   <float,basis::runtime<float>>> (seed); break;
         case RMF:    f.reset<fractal::rmf   <float,basis::runtime<float>>> (seed); break;
-        case HETERO: f.reset<fractal::hetero<float,basis::runtime<float>>> (seed); break;
+        case HETERO: {
+            auto &child = f.reset<fractal::hetero<float,basis::runtime<float>>> (seed);
+            if (!isnan (offset))
+                child.offset (offset);
+            break;
+        }
 
         default:
             unreachable ();
@@ -285,6 +298,12 @@ main (int argc, char **argv)
     t.seed (seed);
     f.octaves (octaves);
     f.frequency (scale / res.w);
+    if (!std::isnan (H)) f.H (H);
+    if (!std::isnan (lacunarity)) f.lacunarity (lacunarity);
+    if (!std::isnan (amplitude)) f.amplitude (amplitude);
+    if (!std::isnan (gain)) f.gain (gain);
+
+
     t.perturb[0].frequency ( scale / res.w);
     t.perturb[1].frequency ( scale / res.w);
 
@@ -321,11 +340,11 @@ main (int argc, char **argv)
 
     // rescale into the range [0, 1]
     auto range = std::minmax_element (img.begin (), img.end ());
-    auto offset = *range.first;
-    auto div    = *range.second - *range.first;
+    auto inc = *range.first;
+    auto div = *range.second - *range.first;
 
     std::cerr << '[' << *range.first << ',' << *range.second << "]\n";
-    std::transform (img.begin (), img.end (), img.begin (), [offset,div] (auto i) { return (i - offset) / div; });
+    std::transform (img.begin (), img.end (), img.begin (), [inc,div] (auto i) { return (i - inc) / div; });
 
     // write the images to disk
     util::pgm::write (img.cast<uint8_t> (), std::cout);
