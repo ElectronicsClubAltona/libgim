@@ -233,9 +233,10 @@ UTIL_FILES   =			\
     tap.hpp			\
     tap.ipp			\
     threads/barrier.hpp		\
-    threads/condition.hpp	\
     threads/mutex.hpp		\
+    threads/condition.hpp	\
     threads/semaphore.hpp	\
+    threads/spinlock.cpp	\
     threads/spinlock.hpp	\
     threads/thread.hpp		\
     time.cpp			\
@@ -278,7 +279,10 @@ UTIL_FILES += 			\
     threads/semaphore_posix.cpp	\
     threads/spinlock_posix.cpp	\
     threads/thread_posix.cpp	\
+    threads/thread_posix.hpp	\
+    threads/thread_posix.ipp	\
     time_posix.cpp
+
 endif
 
 if PLATFORM_WIN32
@@ -289,8 +293,8 @@ UTIL_FILES += 			\
     library_win32.cpp		\
     threads/mutex_win32.cpp	\
     threads/mutex_win32.hpp	\
-    threads/thread_win32.hpp	\
     threads/thread_win32.cpp	\
+    threads/thread_win32.hpp	\
     time_win32.cpp		\
     win32/registry.hpp		\
     win32/registry.cpp
