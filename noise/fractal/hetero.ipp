@@ -57,6 +57,24 @@ namespace util { namespace noise { namespace fractal {
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename B>
+    constexpr T
+    hetero<T,B>::offset (void) const
+    {
+        return m_offset;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
+    T
+    hetero<T,B>::offset (T _offset)
+    {
+        return m_offset = _offset;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T, typename B>
     T
     hetero<T,B>::operator() (util::point<2,T> p) const
     {

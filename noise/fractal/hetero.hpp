@@ -48,6 +48,9 @@ namespace util { namespace noise { namespace fractal {
 
         hetero (seed_t);
 
+        constexpr T offset (void) const;
+        T offset (T);
+
         T operator() (util::point<2,T>) const;
 
     private:
