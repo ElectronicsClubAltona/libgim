@@ -164,27 +164,6 @@ operator<< (std::ostream &os, lerp_t &l)
 int
 main (int argc, char **argv)
 {
-#if 0
-    {
-        srand (time (nullptr));
-
-        util::extent2u size { 1025 };
-        util::image::buffer<float> img (size);
-        util::noise::midpoint (img, time (nullptr));
-
-        auto range = std::minmax_element (img.begin (), img.end ());
-        auto offset = *range.first;
-        auto div    = *range.second - *range.first;
-        std::cerr << "range: [" << *range.first << ", " << *range.second << "]\n";
-
-        std::transform (img.begin (), img.end (), img.begin (), [offset,div] (auto i) { return (i - offset) / div; });
-        util::pgm::write (img.cast<uint8_t> (), std::cout);
-    }
-
-    return 0;
-#endif
-
-
 #if !defined(ENABLE_DEBUGGING) and !defined(PLATFORM_WIN32)
     if (isatty (fileno (stdout))) {
         std::cerr << "cowardly refusing to dump binary data to console\n";
