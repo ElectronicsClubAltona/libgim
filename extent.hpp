@@ -60,6 +60,9 @@ namespace util {
     typedef extent2<float> extent2f;
     typedef extent2<double> extent2d;
 
+    typedef extent3<size_t> extent3u;
+    typedef extent3<float> extent3f;
+
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, util::extent<S,T>);
 }
