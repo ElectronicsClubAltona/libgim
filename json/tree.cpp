@@ -38,8 +38,13 @@
 #include <sys/types.h>
 
 
-using namespace std;
-using namespace util;
+using json::tree::node;
+using json::tree::object;
+using json::tree::array;
+using json::tree::string;
+using json::tree::number;
+using json::tree::boolean;
+using json::tree::null;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -321,9 +326,9 @@ json::tree::node::as_chars (void) const
     return as_string ().native ().c_str ();
 }
 
-//-----------------------------------------------------------------------------
-// Global operatoers
 
+///////////////////////////////////////////////////////////////////////////////
+// Global operatoers
 bool
 json::tree::node::operator!= (const node &rhs) const
     { return !(*this == rhs); }
@@ -403,7 +408,7 @@ json::tree::object::operator ==(const json::tree::object &rhs) const
 
 //-----------------------------------------------------------------------------
 void
-json::tree::object::insert (const std::string &_key, unique_ptr<json::tree::node> &&value)
+json::tree::object::insert (const std::string &_key, std::unique_ptr<json::tree::node> &&value)
 {
     m_values[_key] = move(value);
 }
@@ -495,7 +500,7 @@ json::tree::object::write (std::ostream &os) const
 {
     os << "{\n";
     {
-        indenter raii(os);
+        util::indenter raii(os);
 
         for (auto i = m_values.begin (); i != m_values.end ();) {
             os << '"' << i->first << "\" : " << *i->second;
@@ -534,7 +539,7 @@ json::tree::array::clone (void) const
 
 //-----------------------------------------------------------------------------
 void
-json::tree::array::insert (unique_ptr<json::tree::node> &&_value)
+json::tree::array::insert (std::unique_ptr<json::tree::node> &&_value)
 {
     m_values.push_back (move (_value));
 }
@@ -642,7 +647,7 @@ std::ostream&
 json::tree::array::write (std::ostream &os) const {
     os << "[\n";
     {
-        indenter raii(os);
+        util::indenter raii(os);
 
         for (auto i = m_values.begin (); i != m_values.end (); ++i) {
             (*i)->write (os);
@@ -706,7 +711,7 @@ json::tree::number::clone (void) const
 std::ostream&
 json::tree::number::write (std::ostream &os) const
 {
-    os << setprecision (numeric_limits<double>::digits10) << m_value;
+    os << std::setprecision (std::numeric_limits<double>::digits10) << m_value;
     return os;
 }
 
@@ -762,8 +767,8 @@ json::tree::null::write (std::ostream &os) const
 
 
 //-----------------------------------------------------------------------------
-ostream&
-json::tree::operator <<(ostream &os, const json::tree::node &n)
+std::ostream&
+json::tree::operator<< (std::ostream &os, const json::tree::node &n)
     { return n.write (os); }
 
 
@@ -779,7 +784,7 @@ namespace json { namespace tree {
 
     template <>
     std::unique_ptr<node>
-    io<nullptr_t>::serialise (const nullptr_t &) {
+    io<std::nullptr_t>::serialise (const std::nullptr_t &) {
         return std::unique_ptr<node> (new null ());
     }
 
