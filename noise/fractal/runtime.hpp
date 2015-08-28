@@ -149,13 +149,15 @@ namespace util { namespace noise { namespace fractal {
 
     public:
         template <typename F>
-        void
+        F&
         reset (seed_t _seed)
         {
             using fractal_t = F;
             using child_t = child<fractal_t>;
 
-            m_child.reset (new child_t (_seed));
+            child_t *out;
+            m_child.reset (out= new child_t (_seed));
+            return out->data;
         }
     };
 } } }
