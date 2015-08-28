@@ -127,6 +127,46 @@ namespace util { namespace noise { namespace fractal {
 
     //-------------------------------------------------------------------------
     template <typename T, typename B>
+    constexpr T
+    base<T,B>::amplitude (void) const
+    {
+        return m_amplitude;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
+    T
+    base<T,B>::amplitude (T _amplitude)
+    {
+        m_amplitude = _amplitude;
+        m_invAH = std::pow (m_amplitude, -m_H);
+        return m_amplitude;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
+    constexpr T
+    base<T,B>::gain (void) const
+    {
+        return m_gain;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
+    T
+    base<T,B>::gain (T _gain)
+    {
+        m_gain = _gain;
+        m_invGH = std::pow (_gain, m_H);
+        return m_gain;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
     typename base<T,B>::seed_t
     base<T,B>::seed (seed_t _seed)
     {

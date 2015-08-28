@@ -51,12 +51,18 @@ namespace util { namespace noise { namespace fractal {
 
         constexpr T H (void) const;
         T H (T);
-    
+
         constexpr T frequency (void) const;
         T frequency (T);
 
         constexpr T lacunarity (void) const;
         T lacunarity (T);
+
+        constexpr T amplitude (void) const;
+        T amplitude (T);
+
+        constexpr T gain (void) const;
+        T gain (T);
 
         seed_t seed (void) const;
         seed_t seed (seed_t);

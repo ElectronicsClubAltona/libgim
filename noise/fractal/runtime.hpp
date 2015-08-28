@@ -51,6 +51,12 @@ namespace util { namespace noise { namespace fractal {
         T lacunarity (void) const { return m_child->lacunarity (); }
         T lacunarity (T _lacunarity) { return m_child->lacunarity (_lacunarity); }
 
+        T amplitude (void) const { return m_child->amplitude (); }
+        T amplitude (T _amplitude) { return m_child->amplitude (_amplitude); }
+
+        T gain (void) const { return m_child->gain (); }
+        T gain (T _gain) { return m_child->gain (_gain); }
+
         B& basis (void) { return m_child->basis (); }
         const B& basis (void) const { return m_child->basis (); }
 
@@ -74,6 +80,12 @@ namespace util { namespace noise { namespace fractal {
 
             virtual T lacunarity (void) const = 0;
             virtual T lacunarity (T) = 0;
+
+            virtual T amplitude (void) const = 0;
+            virtual T amplitude (T) = 0;
+
+            virtual T gain (void) const = 0;
+            virtual T gain (T) = 0;
 
             virtual B& basis (void) = 0;
             virtual const B& basis (void) const = 0;
@@ -118,13 +130,18 @@ namespace util { namespace noise { namespace fractal {
             T lacunarity (void) const override { return data.lacunarity (); }
             T lacunarity (T _lacunarity) override { return data.lacunarity (_lacunarity); }
 
+            T amplitude (void) const override { return data.amplitude (); }
+            T amplitude (T _amplitude) override { return data.amplitude (_amplitude); }
+
+            T gain (void) const override { return data.gain (); }
+            T gain (T _gain) override { return data.gain (_gain); }
+
             B& basis (void) override { return data.basis (); }
             const B& basis (void) const override { return data.basis (); }
 
             seed_t seed (void) const override { return data.seed (); }
             seed_t seed (seed_t _seed) override { return data.seed (_seed); }
 
-        private:
             F data;
         };
 
