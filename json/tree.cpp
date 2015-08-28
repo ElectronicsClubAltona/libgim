@@ -42,9 +42,7 @@ using namespace std;
 using namespace util;
 
 
-//-----------------------------------------------------------------------------
-// External support
-
+///////////////////////////////////////////////////////////////////////////////
 template <>
 bool
 is_integer (const json::tree::number &node)
@@ -53,6 +51,7 @@ is_integer (const json::tree::number &node)
 }
 
 
+//-----------------------------------------------------------------------------
 template <>
 bool
 is_integer (const json::tree::node &node)
@@ -62,8 +61,7 @@ is_integer (const json::tree::node &node)
 }
 
 
-//-----------------------------------------------------------------------------
-// Node
+///////////////////////////////////////////////////////////////////////////////
 static std::vector<json::flat::item>::const_iterator
 parse (std::vector<json::flat::item>::const_iterator first,
        std::vector<json::flat::item>::const_iterator last,
@@ -162,7 +160,8 @@ parse (std::vector<json::flat::item>::const_iterator first,
     }
 }
 
-//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 std::unique_ptr<json::tree::node>
 json::tree::parse (const boost::filesystem::path &path)
 {
@@ -171,21 +170,25 @@ json::tree::parse (const boost::filesystem::path &path)
 }
 
 
+//-----------------------------------------------------------------------------
 std::unique_ptr<json::tree::node>
 json::tree::parse (const std::string &path)
     { return parse (path.c_str (), path.c_str () + path.size ()); }
 
 
+//-----------------------------------------------------------------------------
 std::unique_ptr<json::tree::node>
 json::tree::parse (const char *start)
     { return parse (start, start + strlen (start)); }
 
 
+//-----------------------------------------------------------------------------
 void
 json::tree::write (const json::tree::node &node, std::ostream &os)
     { node.write (os); }
 
 
+//-----------------------------------------------------------------------------
 std::unique_ptr<json::tree::node>
 json::tree::parse (const char *first, const char *last)
 {
@@ -208,64 +211,73 @@ json::tree::node::as_object  (void) const
     { throw json::type_error ("node is not an object"); }
 
 
+//-----------------------------------------------------------------------------
 const json::tree::array&
 json::tree::node::as_array   (void) const
     { throw json::type_error ("node is not an array"); }
 
 
+//-----------------------------------------------------------------------------
 const json::tree::string&
 json::tree::node::as_string  (void) const
     { throw json::type_error ("node is not a string"); }
 
 
+//-----------------------------------------------------------------------------
 const json::tree::number&
 json::tree::node::as_number  (void) const
     { throw json::type_error ("node is not a number"); }
 
 
+//-----------------------------------------------------------------------------
 const json::tree::boolean&
 json::tree::node::as_boolean (void) const
     { throw json::type_error ("node is not a boolean"); }
 
 
+//-----------------------------------------------------------------------------
 const json::tree::null&
 json::tree::node::as_null (void) const
     { throw json::type_error ("node is not a null"); }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 json::tree::object&
 json::tree::node::as_object  (void)
 { throw json::type_error ("node is not an object"); }
 
 
+//-----------------------------------------------------------------------------
 json::tree::array&
 json::tree::node::as_array   (void)
     { throw json::type_error ("node is not an array"); }
 
 
+//-----------------------------------------------------------------------------
 json::tree::string&
 json::tree::node::as_string  (void)
     { throw json::type_error ("node is not a string"); }
 
 
+//-----------------------------------------------------------------------------
 json::tree::number&
 json::tree::node::as_number  (void)
     { throw json::type_error ("node is not a number"); }
 
 
+//-----------------------------------------------------------------------------
 json::tree::boolean&
 json::tree::node::as_boolean (void)
     { throw json::type_error ("node is not a boolean"); }
 
 
+//-----------------------------------------------------------------------------
 json::tree::null&
 json::tree::node::as_null (void)
     { throw json::type_error ("node is not a null"); }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-
 bool
 json::tree::node::as_bool (void) const
 {
@@ -317,7 +329,9 @@ json::tree::node::operator!= (const node &rhs) const
     { return !(*this == rhs); }
 
 
-bool json::tree::node::operator==(const char *rhs) const {
+//-----------------------------------------------------------------------------
+bool json::tree::node::operator==(const char *rhs) const
+{
     try {
         return as_string ().native () == rhs;
     } catch (const json::type_error&) {
@@ -352,7 +366,6 @@ json::tree::node::operator[] (unsigned int idx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 // Object
-
 json::tree::object::~object ()
     { ; }
 
