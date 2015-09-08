@@ -75,6 +75,9 @@ namespace json { namespace tree {
             virtual size_t as_uint   (void) const;
             virtual const char* as_chars (void) const;
 
+            template <typename T>
+            T as (void) const;
+
             virtual bool is_object  (void) const { return false; }
             virtual bool is_array   (void) const { return false; }
             virtual bool is_string  (void) const { return false; }

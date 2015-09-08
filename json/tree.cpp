@@ -322,6 +322,54 @@ json::tree::node::as_chars (void) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
+namespace json { namespace tree {
+    template <>
+    bool node::as (void) const
+    {
+        return as_bool ();
+    }
+} }
+
+
+//-----------------------------------------------------------------------------
+namespace json { namespace tree {
+    template <>
+    float json::tree::node::as (void) const
+    {
+        return as_float ();
+    }
+} }
+
+
+//-----------------------------------------------------------------------------
+namespace json { namespace tree {
+    template <>
+    double
+    json::tree::node::as (void) const
+    {
+        return as_double ();
+    }
+} }
+
+
+//-----------------------------------------------------------------------------
+#define AS_INTEGRAL(T)                          \
+namespace json { namespace tree {               \
+    template <>                                 \
+    T                                           \
+    node::as (void) const                       \
+    {                                           \
+        return static_cast<T> (as_double ());   \
+    }                                           \
+} }
+
+AS_INTEGRAL(uint8_t)
+AS_INTEGRAL(uint16_t)
+AS_INTEGRAL(uint32_t)
+AS_INTEGRAL(uint64_t)
+
+
+///////////////////////////////////////////////////////////////////////////////
 // Global operatoers
 bool
 json::tree::node::operator!= (const node &rhs) const
