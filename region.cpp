@@ -286,7 +286,7 @@ template <size_t S, typename T>
 util::region<S,T>&
 util::region<S,T>::expand (T mag)
 {
-    return expand ({mag});
+    return expand (vector<S,T> {mag});
 }
 
 
@@ -307,7 +307,7 @@ template <size_t S, typename T>
 util::region<S,T>
 util::region<S,T>::expanded (T mag) const
 {
-    return expanded ({mag});
+    return expanded (vector<S,T> {mag});
 }
 
 
