@@ -20,6 +20,7 @@
 #include "random.hpp"
 #include "stream.hpp"
 
+#include <map>
 
 //-----------------------------------------------------------------------------
 using util::colour;
@@ -341,26 +342,22 @@ util::hsv_to_rgb (colour3f hsv)
 }
 
 
-
 ///----------------------------------------------------------------------------
-//! Extract a colour object from a JSON node.
-//!
-//! Data must be an array or 3 or 4 numbers. Guarantees success, or throws a
-//! json::tree::type_error.
-const json::tree::node&
-operator>> (const json::tree::node &node, util::colour4f &c) {
-    c.r = static_cast<float> (node[0].as_number ());
-    c.g = static_cast<float> (node[1].as_number ());
-    c.b = static_cast<float> (node[2].as_number ());
+/// Extract a colour object from a JSON node.
+#include "json/tree.hpp"
 
-    try {
-        c.a = static_cast<float> (node[3].as_number ());
-    } catch (...) {
-        c.a = 1;
+namespace json { namespace tree {
+    template <>
+    util::colour4f
+    io<util::colour4f>::deserialise (const node &root) {
+        return {
+            root[0].as<float> (),
+            root[1].as<float> (),
+            root[2].as<float> (),
+            root[3].as<float> (),
+        };
     }
-
-    return node;
-}
+} }
 
 
 //-----------------------------------------------------------------------------

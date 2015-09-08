@@ -19,8 +19,6 @@
 
 #include "coord.hpp"
 
-#include "json/tree.hpp"
-
 #include <iostream>
 
 namespace util {
@@ -60,9 +58,6 @@ namespace util {
     // RGB <-> HSV
     colour3f rgb_to_hsv (colour3f);
     colour3f hsv_to_rgb (colour3f);
-
-    // Serialisation
-    const json::tree::node& operator>> (const json::tree::node&, util::colour4f&);
 
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, util::colour<S,T>);
