@@ -182,12 +182,6 @@ json::tree::parse (const std::string &path)
 
 
 //-----------------------------------------------------------------------------
-std::unique_ptr<json::tree::node>
-json::tree::parse (const char *start)
-    { return parse (start, start + strlen (start)); }
-
-
-//-----------------------------------------------------------------------------
 void
 json::tree::write (const json::tree::node &node, std::ostream &os)
     { node.write (os); }

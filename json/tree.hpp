@@ -42,7 +42,6 @@ namespace json { namespace tree {
     /// Parse an encoded form of JSON into a tree structure
     extern std::unique_ptr<node> parse (const boost::filesystem::path &path);
     extern std::unique_ptr<node> parse (const char *start, const char *stop);
-    extern std::unique_ptr<node> parse (const char *start);
     extern std::unique_ptr<node> parse (const std::string&);
 
     extern void write (const json::tree::node&, std::ostream&);
