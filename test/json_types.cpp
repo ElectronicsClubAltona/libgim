@@ -9,7 +9,7 @@
 
 int
 main (void) {
-    static const char TEST_STRING[] = R"_(
+    static const std::string TEST_STRING = R"_(
         {
            "string":"brad",
            "integer":1,
