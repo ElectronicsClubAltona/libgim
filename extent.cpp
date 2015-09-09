@@ -26,9 +26,14 @@
 template <size_t S, typename T>
 util::extent<S,T>::extent (vector<S,T> _v)
 {
-    std::copy (std::begin (_v.data),
-               std::end   (_v.data),
-               std::begin (this->data));
+    std::transform (std::begin (_v),
+                    std::end   (_v),
+                    this->begin (),
+                    [] (auto i) {
+        // using std::abs gives unsigned abs warnings under clang. this tricks
+        // it sufficiently to quiet the warnings.
+        return i < 0 ? -i : i;
+    });
 }
 
 
