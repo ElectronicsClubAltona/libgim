@@ -28,7 +28,10 @@ namespace util { namespace noise {
     turbulence<T,D,P>::turbulence (seed_t _seed,
                                    vector<2,T> _scale):
         data (_seed),
-        perturb { hash::wang (_seed), hash::wang (hash::wang (_seed)) },
+        perturb {
+            hash::wang (_seed),
+            hash::wang (hash::wang (_seed))
+        },
         scale (_scale)
     { ; }
 
