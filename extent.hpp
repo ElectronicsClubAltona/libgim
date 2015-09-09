@@ -32,7 +32,7 @@ namespace util {
         using coord::base<S,T,util::extent,coord::whd>::base;
 
         extent () = default;
-        extent (vector<S,T>);
+        explicit extent (vector<S,T>);
 
         T    area  (void) const;
         T diameter (void) const;

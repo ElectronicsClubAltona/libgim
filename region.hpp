@@ -62,10 +62,10 @@ namespace util {
 
         //---------------------------------------------------------------------
         region () = default;
-        region (extent_t);
+        explicit region (extent_t);
         region (point_t, extent_t);
         region (point_t, point_t);
-        region (std::array<T,S*2>);
+        explicit region (std::array<T,S*2>);
 
         //---------------------------------------------------------------------
         size_type area     (void) const;

@@ -42,7 +42,7 @@ namespace util { namespace coord {
         constexpr explicit base (T val)
         { std::fill (std::begin (this->data), std::end (this->data), val); }
 
-        constexpr base (const base<S,T,KLASS,tags...> &rhs) = default;
+        constexpr explicit base (const base<S,T,KLASS,tags...> &rhs) = default;
         base& operator= (const base<S,T,KLASS,tags...> &rhs) = default;
 
         // element accessors
