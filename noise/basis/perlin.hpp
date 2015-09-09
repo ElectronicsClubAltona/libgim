@@ -18,7 +18,7 @@
 #ifndef __UTIL_NOISE_BASIS_PERLIN_HPP
 #define __UTIL_NOISE_BASIS_PERLIN_HPP
 
-#include "../basis.hpp"
+#include "../fwd.hpp"
 #include "../../point.hpp"
 #include "../../range.hpp"
 

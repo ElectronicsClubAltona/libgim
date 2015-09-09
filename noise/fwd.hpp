@@ -14,8 +14,8 @@
  * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_NOISE_BASIS_HPP
-#define __UTIL_NOISE_BASIS_HPP
+#ifndef __UTIL_NOISE_FWD_HPP
+#define __UTIL_NOISE_FWD_HPP
 
 #include <cstdint>
 

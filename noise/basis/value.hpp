@@ -18,7 +18,7 @@
 #ifndef __UTIL_NOISE_BASIS_VALUE_HPP
 #define __UTIL_NOISE_BASIS_VALUE_HPP
 
-#include "../basis.hpp"
+#include "../fwd.hpp"
 #include "../../range.hpp"
 #include "../../point.hpp"
 
