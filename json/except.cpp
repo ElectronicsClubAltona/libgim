@@ -17,14 +17,23 @@
 #include "except.hpp"
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 json::parse_error::parse_error (const std::string &_what, size_t _line):
     error (_what),
-    line  (_line)
+    line  (_line),
+    desc  (_what + " at line " + std::to_string (_line))
 { ; }
 
 
 //-----------------------------------------------------------------------------
+const char*
+json::parse_error::what (void) const noexcept
+{
+    return desc.c_str ();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 json::key_error::key_error (std::string _what):
     error (std::move (_what))
 { ; }

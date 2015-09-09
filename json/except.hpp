@@ -40,7 +40,10 @@ namespace json {
 
         explicit parse_error (const std::string &_what, size_t _line = 0);
 
+        const char* what (void) const noexcept override;
+
         size_t line;
+        std::string desc;
     };
 
 
