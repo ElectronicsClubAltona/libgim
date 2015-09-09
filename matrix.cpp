@@ -130,11 +130,7 @@ matrix<T>::inverse (void) const {
 template <typename T>
 matrix<T>&
 matrix<T>::invert (void) {
-    auto m = *this;
-    m.invert ();
-    *this = m;
-
-    return *this;
+    return *this = inverse ();
 }
 
 
