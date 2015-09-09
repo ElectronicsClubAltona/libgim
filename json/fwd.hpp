@@ -27,6 +27,12 @@ namespace json {
         class boolean;
         class null;
     }
+
+    struct error;
+    struct type_error;
+    struct parse_error;
+    struct schema_error;
+    struct key_error;
 }
 
 #endif
