@@ -47,8 +47,6 @@ access_to_cflags (access_t a) {
         flags = O_WRONLY | O_CREAT;
     }
 
-    a = static_cast<access_t> (a & ~ACCESS_READWRITE);
-
     return flags;
 }
 

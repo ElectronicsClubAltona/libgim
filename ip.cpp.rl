@@ -101,11 +101,12 @@ ipv4::ip::operator == (const ipv4::ip &rhs) const {
 %%write data;
 
 
-ipv4::ip::ip (const std::string &data) {
+ipv4::ip::ip (const std::string &data)
+{
     bool __success = true;
     uint8_t __octets[4] = { 0, 0, 0, 0 };
-    const char *octetstart = nullptr,
-               *octetend   = nullptr;
+    const char *octetstart = data.data ();
+    const char *octetend   = nullptr;
     uint8_t __octet;
 
     int cs = 0;
