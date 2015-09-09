@@ -29,19 +29,24 @@
 using namespace std;
 
 
+///////////////////////////////////////////////////////////////////////////////
 const ipv4::ip ipv4::ip::LOOPBACK (127, 0, 0, 1);
 const ipv4::ip ipv4::ip::ANY      (  0, 0, 0, 0);
 
+
+//-----------------------------------------------------------------------------
 const util::range<ipv4::port> ipv4::WELL_KNOWN_PORT (    0,  1023),
                               ipv4::REGISTERED_PORT ( 1024, 49151),
                               ipv4::PRIVATE_PORT    (49152, 65535);
 
 
+///////////////////////////////////////////////////////////////////////////////
 ipv4::ip::ip (uint32_t _integer):
     m_integer (_integer)
 { ; }
 
 
+//-----------------------------------------------------------------------------
 ipv4::ip::ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d)
 {
     m_octets[0] = a;
@@ -51,8 +56,10 @@ ipv4::ip::ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 ipv4::ip&
-ipv4::ip::operator = (const ipv4::ip &rhs) {
+ipv4::ip::operator= (const ipv4::ip &rhs)
+{
     m_octets[0] = rhs.m_octets[0];
     m_octets[1] = rhs.m_octets[1];
     m_octets[2] = rhs.m_octets[2];
@@ -62,8 +69,10 @@ ipv4::ip::operator = (const ipv4::ip &rhs) {
 }
 
 
+//-----------------------------------------------------------------------------
 bool
-ipv4::ip::operator == (const ipv4::ip &rhs) const {
+ipv4::ip::operator== (const ipv4::ip &rhs) const
+{
     return m_octets[0] == rhs.m_octets[0] && 
            m_octets[1] == rhs.m_octets[1] &&
            m_octets[2] == rhs.m_octets[2] &&
@@ -71,6 +80,7 @@ ipv4::ip::operator == (const ipv4::ip &rhs) const {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 // RFC 3986
 %%{
     machine ipv4;
@@ -98,9 +108,12 @@ ipv4::ip::operator == (const ipv4::ip &rhs) const {
             $!{ __success = false; };
 }%%
 
+
+//-----------------------------------------------------------------------------
 %%write data;
 
 
+///////////////////////////////////////////////////////////////////////////////
 ipv4::ip::ip (const std::string &data)
 {
     bool __success = true;
@@ -127,6 +140,7 @@ ipv4::ip::ip (const std::string &data)
 }
 
 
+//-----------------------------------------------------------------------------
 ipv4::ip
 ipv4::ip::parse (const string &data)
     { return ipv4::ip (data); }
