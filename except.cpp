@@ -60,7 +60,7 @@ errno_error::try_code (void)
 void
 errno_error::try_code (int code)
 {
-    if (code != 0)
+    if (__builtin_expect (code != 0, false))
         throw errno_error(code);
 }
 
@@ -117,10 +117,8 @@ win32_error::try_code (void)
 void
 win32_error::try_code (DWORD id)
 {
-    if (id == ERROR_SUCCESS)
-        return;
-
-    throw_code (id);
+    if (__builtin_expect (id != ERROR_SUCCESS, false))
+        throw_code (id);
 }
 
 

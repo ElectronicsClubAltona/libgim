@@ -89,10 +89,8 @@ net::error::throw_code (void)
 //-----------------------------------------------------------------------------
 void
 net::error::try_code (int err) {
-    if (err == 0)
-        return;
-
-    throw_code (err);
+    if (__builtin_expect (err != 0, false))
+        throw_code (err);
 }
 
 
