@@ -240,7 +240,7 @@ main (int argc, char **argv)
         case RMF:    f.reset<fractal::rmf   <float,basis::runtime<float>>> (seed); break;
         case HETERO: {
             auto &child = f.reset<fractal::hetero<float,basis::runtime<float>>> (seed);
-            if (!isnan (offset))
+            if (!std::isnan (offset))
                 child.offset (offset);
             break;
         }
