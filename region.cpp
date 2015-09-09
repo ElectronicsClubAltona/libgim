@@ -48,7 +48,7 @@ util::region<S,T>::region (point_t  _p,
 template <size_t S, typename T>
 util::region<S,T>::region (point_t _a,
                            point_t _b):
-    region (_a, _b - _a)
+    region (_a, extent_t { _b - _a })
 {
     debug::sanity (*this);
 }
