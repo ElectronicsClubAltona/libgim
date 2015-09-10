@@ -23,4 +23,5 @@ AC_DEFUN([NC_CXX],[
                                        [])],
                       [], [AC_DEFINE([final], [], [Pretend about final keyword support])])
 
+    AX_APPEND_COMPILE_FLAGS([-fvisibility=hidden], [], [-Werror])
 ])

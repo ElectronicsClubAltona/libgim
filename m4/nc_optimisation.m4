@@ -54,6 +54,8 @@ AC_DEFUN([NC_OPTIMISATION],[
     )
 
     AX_APPEND_COMPILE_FLAGS([-pipe])
+
+    # base instruction set requirements for x86
     AX_APPEND_COMPILE_FLAGS([-mfpmath=sse], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-msahf], [], [-Werror])
 
@@ -61,30 +63,34 @@ AC_DEFUN([NC_OPTIMISATION],[
     ## Enable aggressive code generation optimisations
 
     AS_IF([test "x$enable_debugging" != "xyes"], [
-        AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribute-patterns], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-ftree-loop-if-convert-stores], [], [-Werror])
+        # gcc vectorisation
         AX_APPEND_COMPILE_FLAGS([-ftree-vectorize], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-funsafe-loop-optimizations], [], [-Werror])
 
-        # gcc >= 4.8 defaults to enabling stack-protector, we care more about
-        # performance than security.
-        AX_APPEND_COMPILE_FLAGS([-fno-stack-protector], [], [-Werror])
+        # clang vectorisation
+        AX_APPEND_COMPILE_FLAGS([-fvectorize], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-fslp-vectorize], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-fslp-vectorize-aggressive], [], [-Werror])
 
-        AX_APPEND_COMPILE_FLAGS([-ftree-loop-linear], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-floop-interchange], [], [-Werror])
-
+        # loop hosting/distribution
+        AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribute-patterns], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribution], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribute-patterns], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-ftree-vectorize], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-ftree-loop-if-convert-stores], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-ftree-loop-linear], [], [-Werror])
+
+        AX_APPEND_COMPILE_FLAGS([-funsafe-loop-optimizations], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-floop-interchange], [], [-Werror])
 
-
+        # safety removal for performance
+        AX_APPEND_COMPILE_FLAGS([-fno-stack-protector], [], [-Werror])
     ])
 
     ##-------------------------------------------------------------------------
     ## Enable code size optimisations (that don't impact performance)
     ## Note: we assume CXX, and that CXXLINK is g++ not ld, hence the -Wl opt
     AS_IF([test "x$enable_debugging" != "xyes"], [
+        AX_APPEND_COMPILE_FLAGS([-fdevirtualize], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-fdevirtualize-speculatively], [], [-Werror])
+
         AX_CHECK_LINK_FLAG([-Wl,--gc-sections], [
             AX_APPEND_COMPILE_FLAGS([-fdata-sections], [], [-Werror])
             AX_APPEND_COMPILE_FLAGS([-ffunction-sections], [], [-Werror])
