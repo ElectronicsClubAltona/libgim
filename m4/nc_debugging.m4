@@ -58,7 +58,7 @@ AC_DEFUN([NC_DEBUGGING],[
         AC_DEFINE([ENABLE_DEBUGGING], [], [Debugging support enabled])
         AC_DEFINE([_GLIBCXX_DEBUG],   [], [Use glibcxx debugging mode])
 
-        NC_APPEND_ONE_COMPILE_FLAG([-Og -O0])
+        NC_APPEND_ONE_COMPILE_FLAG([-O0])
     ], [
         AX_APPEND_COMPILE_FLAGS([-O2])
     ])
