@@ -22,7 +22,7 @@
 namespace util { namespace threads {
     class semaphore {
     public:
-        semaphore (unsigned value = 0);
+        explicit semaphore (unsigned value = 0);
         ~semaphore ();
 
         void wait (void);

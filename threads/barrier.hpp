@@ -22,7 +22,7 @@
 namespace util { namespace threads {
     class barrier {
     public:
-        barrier (unsigned count);
+        explicit barrier (unsigned count);
         ~barrier ();
 
         void wait (void);
