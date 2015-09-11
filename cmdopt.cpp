@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <iomanip>
 
 using util::cmdopt::option::base;
 using util::cmdopt::option::bytes;
@@ -31,10 +32,11 @@ using util::cmdopt::parser;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-base::base (std::string _name):
-    m_name (_name),
+base::base (std::string _name, std::string _description):
     m_required (false),
-    m_seen (false)
+    m_seen (false),
+    m_name (std::move (_name)),
+    m_description (std::move (_description))
 { ; }
 
 
@@ -77,10 +79,18 @@ base::finish (void)
 
 
 //-----------------------------------------------------------------------------
-std::string
+const std::string&
 base::name (void) const
 {
     return m_name;
+}
+
+
+//-----------------------------------------------------------------------------
+const std::string&
+base::description (void) const
+{
+    return m_description;
 }
 
 
@@ -117,8 +127,8 @@ base::seen (bool _seen)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-null::null (std::string _name):
-    base (std::move (_name))
+null::null (std::string _name, std::string _description):
+    base (std::move (_name), std::move (_description))
 { ; }
 
 
@@ -139,8 +149,8 @@ null::execute (const char *restrict)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-present::present (std::string _name, bool &_data):
-    base (std::move (_name)),
+present::present (std::string _name, std::string _description, bool &_data):
+    base (std::move (_name), std::move (_description)),
     m_data (_data)
 { ; }
 
@@ -214,8 +224,8 @@ namespace util { namespace cmdopt { namespace option {
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-count<T>::count (std::string _name, T &_data):
-    value<T> (std::move (_name), _data)
+count<T>::count (std::string _name, std::string _description, T &_data):
+    value<T> (std::move (_name), std::move (_description), _data)
 { ; }
 
 
@@ -270,6 +280,7 @@ suffix_to_multiplier (char c)
 }
 
 
+//-----------------------------------------------------------------------------
 void
 bytes::execute (const char *restrict str)
 {
@@ -298,7 +309,7 @@ parser::scan (int argc, const char *const *argv)
     CHECK    (argv);
 
     for (auto &j: m_options)
-        j->start ();
+        std::get<2> (j)->start ();
 
     // start iterating after our program's name
     int i = 1;
@@ -319,7 +330,7 @@ parser::scan (int argc, const char *const *argv)
     }
 
     for (auto &j: m_options)
-        j->finish ();
+        std::get<2> (j)->finish ();
 
     return i;
 }
@@ -343,6 +354,8 @@ parser::parse_long (int pos, int argc, const char *const *argv)
     const char *last  = start + strlen (start);
 
     std::string key { start, eq ? eq : last };
+    if (key == "help")
+        print_help (argc, argv);
 
     // find the handler
     auto handle_pos = std::find_if (m_long.begin (),
@@ -388,6 +401,8 @@ parser::parse_short (int pos, int argc, const char *const *argv)
     if (len > 2 || pos + 1 == argc || argv[pos+1][0] == '-') {
         for (size_t i = 1; i < len; ++i) {
             auto letter = argv[pos][i];
+            if (letter == 'h')
+                print_help (argc, argv);
 
             auto hpos = std::find_if (m_short.begin (),
                                       m_short.end (),
@@ -410,4 +425,44 @@ parser::parse_short (int pos, int argc, const char *const *argv)
     std::get<1> (*hpos).execute (argv[pos+1]);
 
     return 2;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+void
+parser::print_help (const int argc,
+                    const char *const *argv) const
+{
+    (void)argc;
+
+    CHECK_EQ (m_short.size (), m_options.size ());
+    CHECK_EQ (m_long.size (), m_options.size ());
+
+    if (m_options.empty ())
+        exit (0);
+
+    // find the longest long form argument so we can set field alignment 
+    auto largest = std::max_element (m_long.begin (),
+                                     m_long.end (),
+                                     [] (const auto &a, const auto &b) {
+        return std::get<0> (a).size () < std::get<0> (b).size ();
+    });
+    int longwidth = std::get<0> (*largest).size ();
+
+    // field width requires an alignment. we don't care about preserving
+    // state as we're about to bail anyway
+    std::cout << std::left;
+
+    // print all the option info
+    std::cout << "usage: " << argv[0] << '\n';
+
+    for (auto &o: m_options) {
+        std::cout << '\t'
+                  << '-' << std::get<0> (o) << '\t'
+                  << std::setw (longwidth) << std::get<1> (o) << '\t'
+                  << std::setw (0) << std::get<2> (o)->description ()
+                  << '\n';
+    }
+
+    exit (0);
 }

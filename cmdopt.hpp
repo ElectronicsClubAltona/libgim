@@ -27,8 +27,10 @@
 namespace util { namespace cmdopt {
     namespace option {
         class base {
+        protected:
+            base (std::string name, std::string description);
+
         public:
-            base (std::string name);
             virtual ~base ();
 
             virtual void execute (void);
@@ -36,7 +38,8 @@ namespace util { namespace cmdopt {
             virtual void start   (void);
             virtual void finish  (void);
 
-            std::string name (void) const;
+            const std::string& name (void) const;
+            const std::string& description (void) const;
 
             bool required (void) const;
             bool required (bool);
@@ -45,15 +48,17 @@ namespace util { namespace cmdopt {
             bool seen (bool);
 
         private:
-            std::string m_name;
             bool m_required;
             bool m_seen;
+
+            std::string m_name;
+            std::string m_description;
         };
 
 
         class null : public base {
         public:
-            null (std::string name);
+            explicit null (std::string name, std::string description);
 
             virtual void execute (void) override;
             virtual void execute (const char *restrict) override;
@@ -62,7 +67,7 @@ namespace util { namespace cmdopt {
 
         class present : public base {
         public:
-            present (std::string name, bool&);
+            present (std::string name, std::string description, bool&);
 
             using base::execute;
             virtual void execute (void) override;
@@ -77,7 +82,7 @@ namespace util { namespace cmdopt {
         template <typename T>
         class value : public base {
         public:
-            value (std::string name, T&);
+            value (std::string name, std::string description, T&);
 
             using base::execute;
             void execute (const char *restrict) override;
@@ -94,7 +99,7 @@ namespace util { namespace cmdopt {
         template <typename T = unsigned>
         class count : public value<T> {
         public:
-            count (std::string name, T&);
+            count (std::string name, std::string description, T&);
 
             using value<T>::execute;
             void execute (void) override;
@@ -141,6 +146,7 @@ namespace util { namespace cmdopt {
         int parse_long  (int pos, int argc, const char *const *argv);
         int parse_short (int pos, int argc, const char *const *argv);
 
+        void print_help [[noreturn]] (int argc, const char *const *argv) const;
 
         using short_t = std::tuple<char,option::base&>;
         using long_t  = std::tuple<std::string,option::base&>;
@@ -148,7 +154,12 @@ namespace util { namespace cmdopt {
         std::vector<short_t> m_short;
         std::vector<long_t>  m_long;
 
-        std::vector<std::unique_ptr<option::base>> m_options;
+        std::vector<
+            std::tuple<
+                char,
+                std::string,
+                std::unique_ptr<option::base>>
+        > m_options;
     };
 } }
 

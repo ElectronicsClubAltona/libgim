@@ -24,8 +24,8 @@
 namespace util { namespace cmdopt {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    option::value<T>::value (std::string _name, T &_data):
-        base (std::move (_name)),
+    option::value<T>::value (std::string _name, std::string _description, T &_data):
+        base (std::move (_name), std::move (_description)),
         m_data (_data)
     { ; }
 
@@ -88,16 +88,13 @@ namespace util { namespace cmdopt {
                  std::string description,
                  Args&&... args)
     {
-        // TODO: make use of the description with the help option
-        (void)description;
-
-        auto handler = std::make_unique<T> (longname, std::forward<Args> (args)...);
+        auto handler = std::make_unique<T> (longname, description, std::forward<Args> (args)...);
         T& ref = *handler;
 
         m_short.emplace_back (shortname, ref);
         m_long .emplace_back (longname,  ref);
 
-        m_options.emplace_back (std::move (handler));
+        m_options.emplace_back (shortname, longname, std::move (handler));
 
         return ref;
     }
