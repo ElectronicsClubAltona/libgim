@@ -164,13 +164,6 @@ operator<< (std::ostream &os, lerp_t &l)
 int
 main (int argc, char **argv)
 {
-#if !defined(ENABLE_DEBUGGING) and !defined(PLATFORM_WIN32)
-    if (isatty (fileno (stdout))) {
-        std::cerr << "cowardly refusing to dump binary data to console\n";
-        return EXIT_FAILURE;
-    }
-#endif
-
     // setup default variables
 #ifdef ENABLE_DEBUGGING
     util::extent2u res {320, 240};
@@ -214,6 +207,13 @@ main (int argc, char **argv)
     args.add<util::cmdopt::option::value<float>>     ('W', "patch-width",   "patch blur width",         width);
 
     args.scan (argc, argv);
+
+#if !defined(ENABLE_DEBUGGING) and !defined(PLATFORM_WIN32)
+    if (isatty (fileno (stdout))) {
+        std::cerr << "cowardly refusing to dump binary data to console\n";
+        return EXIT_FAILURE;
+    }
+#endif
 
     util::noise::turbulence<
         float,
