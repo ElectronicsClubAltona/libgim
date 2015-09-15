@@ -255,7 +255,7 @@ util::image::buffer<T>::downsample (float factor) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-T
+const T&
 buffer<T>::operator[] (point<2,size_t> p) const
 {
     CHECK_LT (p.x, w);
@@ -279,7 +279,7 @@ buffer<T>::operator[] (point<2,size_t> p)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-T
+const T&
 buffer<T>::operator[] (size_t idx) const
 {
     CHECK_LT (idx, h * s);
@@ -354,6 +354,7 @@ buffer<T>::end (void) const
 
 
 //-----------------------------------------------------------------------------
+template struct util::image::buffer<char>;
 template struct util::image::buffer<uint8_t>;
 template struct util::image::buffer<uint16_t>;
 template struct util::image::buffer<uint32_t>;
