@@ -19,6 +19,8 @@
 
 #include "coord.hpp"
 #include "vector.hpp"
+#include "point.hpp"
+
 #include <iostream>
 
 
@@ -39,6 +41,9 @@ namespace util {
 
         template <typename U = float>
         U aspect (void) const;
+
+        template <typename U>
+        bool includes (util::point<S,U>) const;
 
         extent expanded (vector<S,T>) const;
         extent expanded (T) const;

@@ -24,11 +24,24 @@
 #include <algorithm>
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 template <typename U>
 U
 util::extent<S,T>::aspect (void) const
 {
     return static_cast<U> (this->w) / this->h;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+template <typename U>
+bool
+util::extent<S,T>::includes (point<S,U> p) const
+{
+    for (size_t i = 0; i < S; ++i)
+        if (p[i] < 0 || static_cast<T> (p[i]) >= this->data[i])
+            return false;
+    return true;
 }
