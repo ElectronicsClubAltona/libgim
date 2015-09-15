@@ -48,16 +48,20 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <size_t S, typename T, typename U>
-    typename std::common_type<T,U>::type
+    constexpr typename std::common_type<T,U>::type
     distance (point<S,T> a, point<S,U> b)
     {
+        using type_t = typename std::common_type<T,U>::type;
+        static_assert (std::is_floating_point<type_t>::value,
+                       "sqrt likely requires fractional types");
+
         return std::sqrt (distance2 (a, b));
     }
 
 
     //-------------------------------------------------------------------------
     template <size_t S, typename T, typename U>
-    typename std::common_type<T,U>::type
+    constexpr typename std::common_type<T,U>::type
     distance2 (point<S,T> a, point<S,U> b)
     {
         typename std::common_type<T,U>::type sum {0};
@@ -71,13 +75,13 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <size_t S, typename T, typename U>
-    typename std::common_type<T,U>::type
+    constexpr typename std::common_type<T,U>::type
     manhattan (point<S,T> a, point<S,U> b)
     {
         typename std::common_type<T,U>::type sum {0};
 
         for (size_t i = 0; i < S; ++i)
-            sum += std::abs (a.data[i] - b.data[i]);
+            sum += util::abs (a.data[i] - b.data[i]);
 
         return sum;
     }
@@ -85,7 +89,7 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <size_t S, typename T, typename U>
-    typename std::common_type<T,U>::type
+    constexpr typename std::common_type<T,U>::type
     chebyshev(point<S,T> a, point<S,U> b)
     {
         return util::max (abs (a - b));

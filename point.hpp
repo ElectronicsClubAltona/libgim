@@ -45,16 +45,16 @@ namespace util {
 
     // distance operators
     template <size_t S, typename T, typename U>
-    typename std::common_type<T,U>::type distance  (point<S,T>, point<S,U>);
+    constexpr typename std::common_type<T,U>::type distance  (point<S,T>, point<S,U>);
 
     template <size_t S, typename T, typename U>
-    typename std::common_type<T,U>::type distance2 (point<S,T>, point<S,U>);
+    constexpr typename std::common_type<T,U>::type distance2 (point<S,T>, point<S,U>);
 
     template <size_t S, typename T, typename U>
-    typename std::common_type<T,U>::type manhattan (point<S,T>, point<S,U>);
+    constexpr typename std::common_type<T,U>::type manhattan (point<S,T>, point<S,U>);
 
     template <size_t S, typename T, typename U>
-    typename std::common_type<T,U>::type chebyshev (point<S,T>, point<S,U>);
+    constexpr typename std::common_type<T,U>::type chebyshev (point<S,T>, point<S,U>);
 
     // iostream operators
     template <size_t S, typename T>
