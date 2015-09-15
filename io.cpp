@@ -197,21 +197,19 @@ indenter::~indenter ()
         m_owner->rdbuf (m_dest);
 }
 
-//----------------------------------------------------------------------------
-scoped_cwd::scoped_cwd ():
-    m_original(boost::filesystem::canonical (getcwd (nullptr, 0)))
-{ ; }
-
-
-scoped_cwd::~scoped_cwd () {
-    set_cwd (m_original);
+//////////////////////////////////////////////////////////////////////////////
+scoped_cwd::scoped_cwd ()
+{
+    m_original.resize (16);
+    while (getcwd (&m_original[0], m_original.size ()) == nullptr && errno == ERANGE)
+        m_original.resize (m_original.size () * 2);
+    errno_error::try_code ();
 }
 
 
-void
-util::set_cwd (const boost::filesystem::path &path) {
-    CHECK (path.string ().size () > 0);
-
-    if (chdir (path.string ().c_str ()) != 0)
-        throw errno_error ();
+//-----------------------------------------------------------------------------
+scoped_cwd::~scoped_cwd ()
+{
+    if (!chdir (m_original.c_str ()))
+        errno_error::throw_code ();
 }

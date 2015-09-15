@@ -134,11 +134,9 @@ namespace util {
             ~scoped_cwd ();
 
         protected:
-            boost::filesystem::path m_original;
+            std::string m_original;
     };
 
-
-    void set_cwd (const boost::filesystem::path &);
 
     //-------------------------------------------------------------------------
     class path_error : public std::runtime_error {
