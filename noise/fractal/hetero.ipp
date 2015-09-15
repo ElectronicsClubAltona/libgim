@@ -28,6 +28,26 @@ namespace util { namespace noise { namespace fractal {
                         T _frequency,
                         T _lacunarity,
                         T _amplitude,
+                        T _gain):
+        hetero<T,B> (_seed,
+                     _octaves,
+                     _H,
+                     _frequency,
+                     _lacunarity,
+                     _amplitude,
+                     _gain,
+                     -this->basis ().bounds ().min + this->basis ().bounds ().magnitude () / T{2})
+    { ; }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
+    hetero<T,B>::hetero(seed_t _seed,
+                        unsigned _octaves,
+                        T _H,
+                        T _frequency,
+                        T _lacunarity,
+                        T _amplitude,
                         T _gain,
                         T _offset):
         base<T,B> (_seed,

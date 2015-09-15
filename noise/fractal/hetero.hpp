@@ -43,6 +43,14 @@ namespace util { namespace noise { namespace fractal {
                 T frequency,
                 T lacunarity,
                 T amplitude,
+                T gain);
+
+        hetero (seed_t,
+                unsigned octaves,
+                T H,
+                T frequency,
+                T lacunarity,
+                T amplitude,
                 T gain,
                 T offset);
 
