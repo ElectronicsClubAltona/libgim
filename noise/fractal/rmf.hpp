@@ -57,6 +57,9 @@ namespace util { namespace noise { namespace fractal {
 
         T operator() (util::point<2,T>) const;
 
+        T offset (void) const;
+        T offset (T);
+
     private:
         T m_offset;
     };

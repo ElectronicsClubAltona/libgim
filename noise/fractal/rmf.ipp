@@ -98,4 +98,22 @@ namespace util { namespace noise { namespace fractal {
 
         return result;
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T, typename B>
+    T
+    rmf<T,B>::offset (void) const
+    {
+        return m_offset;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename B>
+    T
+    rmf<T,B>::offset (T _offset)
+    {
+        return m_offset = _offset;
+    }
 } } }
