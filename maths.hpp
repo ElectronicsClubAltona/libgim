@@ -32,6 +32,11 @@ abs (T value)
 { return value > 0 ? value : -value; }
 
 
+namespace util {
+    template <typename T> T abs (T t) { return ::abs<T> (t); }
+}
+
+
 //-----------------------------------------------------------------------------
 // Exponentials
 template <typename T>
