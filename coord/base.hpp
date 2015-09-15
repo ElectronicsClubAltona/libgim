@@ -33,7 +33,7 @@ namespace util { namespace coord {
         static constexpr size_t dimension = S;
         static constexpr size_t elements = S;
 
-        size_t size (void) const { return S; }
+        constexpr size_t size (void) const { return S; }
 
         // constructors
         using init<S,T,tags...>::init;
