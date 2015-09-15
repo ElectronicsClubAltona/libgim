@@ -37,19 +37,22 @@ namespace util {
 }
 
 
-//-----------------------------------------------------------------------------
-// Exponentials
+///////////////////////////////////////////////////////////////////////////////
+// exponentials
+
 template <typename T>
 constexpr T
 pow2 [[gnu::pure]] (T value)
     { return value * value; }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 constexpr T
 pow [[gnu::pure]] (T x, unsigned y);
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 bool
 is_pow2 [[gnu::pure]] (T value);
