@@ -21,10 +21,12 @@
 
 #include <cmath>
 
+using util::extent;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-util::extent<S,T>::extent (vector<S,T> _v)
+extent<S,T>::extent (vector<S,T> _v)
 {
     std::transform (std::begin (_v),
                     std::end   (_v),
@@ -40,7 +42,7 @@ util::extent<S,T>::extent (vector<S,T> _v)
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 T
-util::extent<S,T>::diameter (void) const
+extent<S,T>::diameter (void) const
 {
     return static_cast<T> (
         std::sqrt (
@@ -56,7 +58,7 @@ util::extent<S,T>::diameter (void) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 T
-util::extent<S,T>::area (void) const
+extent<S,T>::area (void) const
 {
     return std::accumulate (std::begin (this->data),
                             std::end   (this->data),
@@ -67,8 +69,8 @@ util::extent<S,T>::area (void) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-util::extent<S,T>
-util::extent<S,T>::expanded (util::vector<S,T> mag) const
+extent<S,T>
+extent<S,T>::expanded (util::vector<S,T> mag) const
 {
     return *this + mag;
 }
@@ -76,8 +78,8 @@ util::extent<S,T>::expanded (util::vector<S,T> mag) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::extent<S,T>
-util::extent<S,T>::expanded (T t) const
+extent<S,T>
+extent<S,T>::expanded (T t) const
 {
     return *this + util::vector<S,T> {t};
 }
@@ -85,8 +87,8 @@ util::extent<S,T>::expanded (T t) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::extent<S,T>
-util::extent<S,T>::contracted (vector<S,T> t) const
+extent<S,T>
+extent<S,T>::contracted (vector<S,T> t) const
 {
     return *this - t;
 }
@@ -94,8 +96,8 @@ util::extent<S,T>::contracted (vector<S,T> t) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::extent<S,T>
-util::extent<S,T>::contracted (T t) const
+extent<S,T>
+extent<S,T>::contracted (T t) const
 {
     return *this - vector<S,T> {-t};
 }
@@ -104,7 +106,7 @@ util::extent<S,T>::contracted (T t) const
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 bool
-util::extent<S,T>::empty (void) const
+extent<S,T>::empty (void) const
 {
     return almost_equal (area(), 0);
 }
@@ -112,12 +114,12 @@ util::extent<S,T>::empty (void) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-const util::extent<S,T> util::extent<S,T>::MIN { 0 };
+const extent<S,T> extent<S,T>::MIN { 0 };
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-const util::extent<S,T> util::extent<S,T>::MAX {
+const extent<S,T> extent<S,T>::MAX {
     std::numeric_limits<T>::max ()
 };
 
@@ -125,8 +127,8 @@ const util::extent<S,T> util::extent<S,T>::MAX {
 ///////////////////////////////////////////////////////////////////////////////
 namespace debug {
     template <size_t S, typename T>
-    struct validator<util::extent,S,T> {
-        static bool is_valid (const util::extent<S,T> &e)
+    struct validator<extent,S,T> {
+        static bool is_valid (const extent<S,T> &e)
         {
             return std::all_of (std::begin (e.data),
                                 std::end   (e.data),
@@ -135,17 +137,17 @@ namespace debug {
     };
 }
 
-template bool debug::valid (const util::extent<2,float>&);
-template bool debug::valid (const util::extent<2,double>&);
-template bool debug::valid (const util::extent<2,uint16_t>&);
-template bool debug::valid (const util::extent<2,uint32_t>&);
-template bool debug::valid (const util::extent<2,uint64_t>&);
+template bool debug::valid (const extent<2,float>&);
+template bool debug::valid (const extent<2,double>&);
+template bool debug::valid (const extent<2,uint16_t>&);
+template bool debug::valid (const extent<2,uint32_t>&);
+template bool debug::valid (const extent<2,uint64_t>&);
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, util::extent<S,T> e)
+util::operator<< (std::ostream &os, extent<S,T> e)
 {
     os << "[";
     std::copy (std::begin (e.data),
