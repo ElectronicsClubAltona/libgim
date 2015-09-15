@@ -23,8 +23,8 @@
 #include <cstdlib>
 
 namespace util { namespace hash {
-    uint32_t mix (uint32_t v) { return wang (key); }
-    uint64_t mix (uint64_t v) { return wang (key); }
+    uint32_t mix (uint32_t v) { return wang (v); }
+    uint64_t mix (uint64_t v) { return wang (v); }
 } }
 
 #endif
