@@ -33,7 +33,7 @@ namespace util { namespace coord {
         static constexpr size_t dimension = S;
         static constexpr size_t elements = S;
 
-        constexpr size_t size (void) const { return S; }
+        static constexpr size_t size (void) { return S; }
 
         // constructors
         using init<S,T,tags...>::init;
@@ -65,7 +65,7 @@ namespace util { namespace coord {
             return k;
         }
 
-        //---------------------------------------------------------------------
+        //---------------------------------
         template <typename U>
         KLASS<S,U>
         cast (void) const
