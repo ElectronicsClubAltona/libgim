@@ -23,8 +23,8 @@ namespace util {
     namespace detail {
         class library_posix {
         public:
-            library_posix (const char *path);
-            library_posix (const std::string &path);
+            explicit library_posix (const char *path);
+            explicit library_posix (const std::string &path);
             library_posix (library_posix&&);
             ~library_posix ();
 
