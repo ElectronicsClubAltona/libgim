@@ -35,7 +35,7 @@ const util::colour<S,T>                 \
 util::colour<S,T>::NAME =               \
     util::colour<4,float> (R,G,B,1)     \
     .template redim<S> ()               \
-    .template cast<T> ();
+    .template cast<T> ()
 
 CONSTANT_COLOUR(WHITE,1,1,1);
 CONSTANT_COLOUR(BLACK,0,0,0);

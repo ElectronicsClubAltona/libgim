@@ -139,6 +139,8 @@ namespace util { namespace coord {
             struct { T w,h,d; };
         };
     };
+
+#pragma GCC diagnostic pop
 } }
 
 #endif
