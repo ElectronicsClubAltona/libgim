@@ -96,6 +96,14 @@ rational<T>::operator double (void) const
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
+rational<T>::operator int (void) const
+{
+    return static_cast<int> (n / d);
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 rational<T>

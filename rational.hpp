@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2014 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2014-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_RATIONAL_HPP
@@ -35,6 +35,7 @@ namespace util {
 
         explicit operator float  (void) const;
         explicit operator double (void) const;
+        explicit operator int    (void) const;
 
         rational<T> reduced (void) const;
 
