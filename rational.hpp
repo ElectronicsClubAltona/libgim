@@ -51,8 +51,15 @@ namespace util {
         T d;
     };
 
-    template <typename T>
-    rational<T> operator/ (T, rational<T>);
+    template <typename T, typename U>
+    rational<typename std::common_type<T,U>::type>
+    operator/ (U, rational<T>);
+
+    template <typename T, typename U>
+    rational<typename std::common_type<T,U>::type>
+    operator* (U, rational<T>);
 }
+
+#include "rational.ipp"
 
 #endif

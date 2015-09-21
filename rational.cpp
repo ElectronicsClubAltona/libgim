@@ -161,13 +161,6 @@ rational<T>::operator/ (const T rhs) const
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-rational<T>
-util::operator/ (T lhs, rational<T> rhs) {
-    return rhs.inverse () * lhs;
-}
-
-//-----------------------------------------------------------------------------
 template struct util::rational<uint32_t>;
 template struct util::rational< int32_t>;
 

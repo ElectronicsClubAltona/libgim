@@ -210,6 +210,7 @@ UTIL_FILES   =			\
     range.ipp			\
     rational.cpp		\
     rational.hpp		\
+    rational.ipp		\
     ray.cpp			\
     ray.hpp			\
     region.cpp			\
