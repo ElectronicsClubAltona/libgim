@@ -301,7 +301,7 @@ buffer<T>::operator[] (size_t idx)
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-inline T*
+T*
 buffer<T>::data (void)
 {
     return begin ();
@@ -310,7 +310,7 @@ buffer<T>::data (void)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-inline T*
+T*
 buffer<T>::begin (void)
 {
     return m_data.get ();
@@ -319,7 +319,7 @@ buffer<T>::begin (void)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-inline T*
+T*
 buffer<T>::end (void)
 {
     return begin () + h * s;
@@ -328,7 +328,25 @@ buffer<T>::end (void)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-inline const T*
+const T*
+buffer<T>::begin (void) const
+{
+    return cbegin ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+const T*
+buffer<T>::end (void) const
+{
+    return cend ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+const T*
 buffer<T>::data (void) const
 {
     return begin ();
@@ -337,8 +355,8 @@ buffer<T>::data (void) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
-inline const T*
-buffer<T>::begin (void) const
+const T*
+buffer<T>::cbegin (void) const
 {
     return m_data.get ();
 }
@@ -346,14 +364,14 @@ buffer<T>::begin (void) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
-inline const T*
-buffer<T>::end (void) const
+const T*
+buffer<T>::cend (void) const
 {
-    return begin () + h * s;
+    return cbegin () + h * s;
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template struct util::image::buffer<char>;
 template struct util::image::buffer<uint8_t>;
 template struct util::image::buffer<uint16_t>;
@@ -361,6 +379,8 @@ template struct util::image::buffer<uint32_t>;
 template struct util::image::buffer< int32_t>;
 template struct util::image::buffer<float>;
 template struct util::image::buffer<double>;
+
+template util::image::buffer<char> util::image::buffer<char>::alloc (void) const;
 
 template util::image::buffer<uint8_t> util::image::buffer<uint8_t>::alloc (void) const;
 template util::image::buffer<uint8_t> util::image::buffer<uint8_t>::clone (void) const;

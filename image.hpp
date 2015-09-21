@@ -78,6 +78,9 @@ namespace util { namespace image {
         const T* end   (void) const;
         const T* data  (void) const;
 
+        const T* cbegin (void) const;
+        const T* cend   (void) const;
+
     private:
         std::unique_ptr<T[]> m_data;
     };
