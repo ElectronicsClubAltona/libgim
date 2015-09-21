@@ -143,7 +143,7 @@ traits<uint64_t>::X[] = {
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-std::array<T,traits<T>::COMPONENTS>
+T
 half_round (std::array<T,traits<T>::COMPONENTS> h,
             std::array<T,traits<T>::COMPONENTS> k,
             size_t i)
@@ -155,8 +155,8 @@ half_round (std::array<T,traits<T>::COMPONENTS> h,
     k[i] *= CONSTANTS[i].c;
     k[i]  = rotatel (k[i], CONSTANTS[i].Ks);
     k[i] *= CONSTANTS[i_].c;
-    h[i] ^= k[i];
-    return h;
+
+    return h[i] ^= k[i];
 }
 
 
@@ -164,18 +164,19 @@ half_round (std::array<T,traits<T>::COMPONENTS> h,
 template <typename T>
 std::array<T,traits<T>::COMPONENTS>
 full_round (std::array<T,traits<T>::COMPONENTS> h,
-            std::array<T,traits<T>::COMPONENTS> k,
-            size_t i)
+            std::array<T,traits<T>::COMPONENTS> k)
 {
     auto COMPONENTS = traits<T>::COMPONENTS;
     auto CONSTANTS  = traits<T>::X;
 
-    h = half_round (h, k, i);
+    for (size_t i = 0; i < COMPONENTS; ++i) {
+        h[i] = half_round (h, k, i);
 
-    auto i_ = (i + 1) % COMPONENTS;
-    h[i]  = rotatel (h[i], CONSTANTS[i].Hs);
-    h[i] += h[i_];
-    h[i]  = h[i] * 5 + CONSTANTS[i].O;
+        auto i_ = (i + 1) % COMPONENTS;
+        h[i]  = rotatel (h[i], CONSTANTS[i].Hs);
+        h[i] += h[i_];
+        h[i]  = h[i] * 5 + CONSTANTS[i].O;
+    }
 
     return h;
 }
@@ -202,8 +203,7 @@ hash_128 (const void *restrict key,
         result_t k;
         std::copy_n (cursor, traits<T>::COMPONENTS, k.begin ());
 
-        for (size_t i = 0; i < traits<T>::COMPONENTS; ++i)
-            h = full_round (h, k, i);
+        h = full_round (h, k);
     }
 
     // process the tail
@@ -214,25 +214,21 @@ hash_128 (const void *restrict key,
             v = 0 ^ v;
 
         for (size_t i = 0; i < traits<T>::COMPONENTS; ++i)
-            h = half_round (h, k, i);
+            h[i] = half_round (h, k, i);
     }
 
     // finalise the hash
     for (auto &v: h)
         v ^= len;
 
-    for (size_t i = 1; i < traits<T>::COMPONENTS; ++i)
-        h[0] += h[i];
-    for (size_t i = 1; i < traits<T>::COMPONENTS; ++i)
-        h[i] += h[0];
+    for (size_t i = 1; i < traits<T>::COMPONENTS; ++i) h[0] += h[i];
+    for (size_t i = 1; i < traits<T>::COMPONENTS; ++i) h[i] += h[0];
 
     for (auto &v: h)
         v = util::hash::murmur3::mix (v);
 
-    for (size_t i = 1; i < traits<T>::COMPONENTS; ++i)
-        h[0] += h[i];
-    for (size_t i = 1; i < traits<T>::COMPONENTS; ++i)
-        h[i] += h[0];
+    for (size_t i = 1; i < traits<T>::COMPONENTS; ++i) h[0] += h[i];
+    for (size_t i = 1; i < traits<T>::COMPONENTS; ++i) h[i] += h[0];
 
     return h;
 }
