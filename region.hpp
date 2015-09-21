@@ -68,6 +68,10 @@ namespace util {
         explicit region (std::array<T,S*2>);
 
         //---------------------------------------------------------------------
+        template <typename U>
+        constexpr region<S,U> cast (void) const;
+
+        //---------------------------------------------------------------------
         size_type area     (void) const;
         size_type diameter (void) const;
         extent_t magnitude (void) const;
@@ -132,5 +136,7 @@ namespace util {
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, const util::region<S,T>&);
 }
+
+#include "region.ipp"
 
 #endif

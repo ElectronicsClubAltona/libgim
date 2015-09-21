@@ -214,6 +214,7 @@ UTIL_FILES   =			\
     ray.hpp			\
     region.cpp			\
     region.hpp			\
+    region.ipp			\
     si.cpp			\
     signal.cpp			\
     signal.hpp			\
