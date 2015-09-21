@@ -347,6 +347,7 @@ TEST_BIN = 			\
     test/checksum		\
     test/cmdopt			\
     test/colour			\
+    test/coord			\
     test/crypto/arc4		\
     test/crypto/tea		\
     test/crypto/xtea		\
