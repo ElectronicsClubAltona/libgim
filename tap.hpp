@@ -37,7 +37,8 @@ namespace util { namespace TAP {
         ~logger ();
 
         //---------------------------------------------------------------------
-        void expect (bool, const std::string &msg);
+        template <typename ...Args>
+        void expect (bool, const std::string &fmt, Args&&...);
 
         template <typename ...Args>
         void expect (std::function<bool(Args...)>, Args&&..., const std::string& msg);

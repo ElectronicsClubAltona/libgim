@@ -27,6 +27,20 @@
 #include "format.hpp"
 
 
+///////////////////////////////////////////////////////////////////////////////
+template <typename ...Args>
+void
+util::TAP::logger::expect (bool test, const std::string &fmt, Args&&... args)
+{
+    std::cout << (test ? "ok " : "not ok ") << ++m_size
+              << " - "
+              << util::format::render (fmt, std::forward<Args> (args)...) << '\n';
+
+    if (!test)
+        m_status = EXIT_FAILURE;
+}
+
+
 //-----------------------------------------------------------------------------
 template <typename... Args>
 void
