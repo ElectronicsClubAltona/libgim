@@ -61,10 +61,12 @@ namespace util {
     std::ostream& operator<< (std::ostream&, point<S,T>);
 
     // Convenience typedefs
+    template <typename T> using point1 = point<1,T>;
     template <typename T> using point2 = point<2,T>;
     template <typename T> using point3 = point<3,T>;
     template <typename T> using point4 = point<4,T>;
 
+    typedef point1<float> point1f;
     typedef point2<float> point2f;
     typedef point3<float> point3f;
     typedef point4<float> point4f;
@@ -73,6 +75,7 @@ namespace util {
     typedef point3<double> point3d;
     typedef point4<double> point4d;
 
+    typedef point1<size_t> point1u;
     typedef point2<size_t> point2u;
     typedef point3<size_t> point3u;
     typedef point4<size_t> point4u;
