@@ -22,65 +22,57 @@
 #include <cstring>
 #include <iterator>
 
-//-----------------------------------------------------------------------------
-util::view::view ():
-    m_begin (nullptr),
-    m_end   (nullptr)
-{ ; }
+using util::view;
 
 
 //-----------------------------------------------------------------------------
-util::view::view (const char *str):
-    m_begin (str),
-    m_end   (str + strlen (str))
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-util::view::view (const char *_begin,
-                  const char *_end):
+template <typename T>
+view<T>::view (T _begin, T _end):
     m_begin (_begin),
     m_end   (_end)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-const char*
-util::view::begin (void) const
+template <typename T>
+T
+view<T>::begin (void)
 {
     return m_begin;
 }
 
 
 //-----------------------------------------------------------------------------
-const char*
-util::view::end (void) const
+template <typename T>
+T
+view<T>::end (void)
 {
     return m_end;
 }
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
 bool
-util::view::view::empty (void) const
+view<T>::empty (void) const
 {
-    return m_begin == nullptr ||
-           m_end   == nullptr ||
-           m_begin == m_end;
+    return m_begin == m_end;
 }
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
 size_t
-util::view::size (void) const
+view<T>::size (void) const
 {
-    return m_end - m_begin;
+    return std::distance (m_begin, m_end);
 }
 
 
 //-----------------------------------------------------------------------------
-const char&
-util::view::operator[] (size_t idx) const
+template <typename T>
+const typename view<T>::value_type&
+view<T>::operator[] (size_t idx) const
 {
     CHECK_LT (m_begin + idx, m_end);
     return m_begin[idx];
@@ -88,34 +80,24 @@ util::view::operator[] (size_t idx) const
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
 bool
-util::view::operator== (const char *restrict rhs) const
+view<T>::operator== (const view<T> rhs) const
 {
-    return strlen (rhs) == size () &&
-           0 == strncmp (rhs, m_begin, size ());
+    return rhs.m_begin == m_begin &&
+           rhs.m_end   == m_end;
 }
 
 
 //-----------------------------------------------------------------------------
-bool
-util::view::operator== (view v) const
-{
-    return std::equal (m_begin, m_end, v.begin ());
-}
-
-
-//-----------------------------------------------------------------------------
+template <typename T>
 std::ostream&
-util::operator<< (std::ostream &os, util::view s)
+util::operator<< (std::ostream &os, util::view<T> v)
 {
-    std::copy (s.begin (), s.end (), std::ostream_iterator<char> (os));
+    std::copy (v.begin (), v.end (), std::ostream_iterator<char> (os));
     return os;
 }
 
 
-//-----------------------------------------------------------------------------
-bool
-util::operator== (const char *str, view v)
-{
-    return v == str;
-}
+///////////////////////////////////////////////////////////////////////////////
+template struct util::view<const char*>;

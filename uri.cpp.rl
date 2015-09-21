@@ -169,8 +169,13 @@ util::uri::uri (const char *first, const char *last):
 { ; }
 
 
+///////////////////////////////////////////////////////////////////////////////
+static const util::view<const char*> NULL_VIEW { nullptr, nullptr };
+
+
 //-----------------------------------------------------------------------------
 util::uri::uri (std::string &&_value):
+    m_views {NULL_VIEW, NULL_VIEW, NULL_VIEW, NULL_VIEW, NULL_VIEW},
     m_value (std::move (_value))
 {
     const char *p   = m_value.data ();
@@ -190,7 +195,7 @@ util::uri::uri (std::string &&_value):
 
 
 //-----------------------------------------------------------------------------
-util::view
+util::view<const char*>
 util::uri::get (util::uri::component c)
 {
     CHECK_NEQ (c, NUM_COMPONENTS);
@@ -217,7 +222,7 @@ hex_to_uint (char c)
 
 //-----------------------------------------------------------------------------
 std::string
-util::uri::percent_decode (view s)
+util::uri::percent_decode (view<const char*> s)
 {
     if (s.size () == 0)
         return std::string ();

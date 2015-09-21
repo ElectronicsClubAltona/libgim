@@ -44,12 +44,12 @@ namespace util {
             NUM_COMPONENTS
         };
 
-        view get (component);
+        view<const char*> get (component);
 
-        static std::string percent_decode (view);
+        static std::string percent_decode (view<const char*>);
 
     private:
-        view m_views[NUM_COMPONENTS];
+        view<const char*> m_views[NUM_COMPONENTS];
         std::string m_value;
     };
 

@@ -22,29 +22,30 @@
 #include <iostream>
 
 namespace util {
-    class view {
+    template <typename T>
+    struct view {
     public:
-        view ();
-        explicit view (const char *str);
-        view (const char *first, const char *last);
+        using value_type = typename std::iterator_traits<T>::value_type;
 
-        const char *begin (void) const;
-        const char *end   (void) const;
+        view (T first, T last);
 
-        bool empty () const;
+        T begin (void);
+        T end   (void);
+
+        bool empty (void) const;
         size_t size (void) const;
-        const char& operator[] (size_t) const;
 
-        bool operator== (const char *restrict str) const;
+        value_type& operator[] (size_t);
+        const value_type& operator[] (size_t) const;
+
         bool operator== (view) const;
 
     private:
-        const char *m_begin;
-        const char *m_end;
+        T m_begin;
+        T m_end;
     };
 
-
-    std::ostream& operator<< (std::ostream&, view);
-    bool operator== (const char*, view);
+    template <typename T>
+    std::ostream& operator<< (std::ostream&, view<T>);
 }
 #endif
