@@ -28,6 +28,41 @@
 
 namespace util {
     namespace detail { namespace format {
+        ///////////////////////////////////////////////////////////////////////
+        template <typename T>
+        inline bool
+        is_valid_specifier (const char*)
+        { return false; }
+
+
+        //---------------------------------------------------------------------
+        template <>
+        inline bool
+        is_valid_specifier<const char*> (const char *s)
+        { return *s == 's'; }
+
+        //---------------------------------------------------------------------
+        template <>
+        inline bool
+        is_valid_specifier<char*> (const char *s)
+        { return *s == 's'; }
+
+
+        //---------------------------------------------------------------------
+        template <>
+        inline bool
+        is_valid_specifier<std::string> (const char *s)
+        { return *s == 's'; }
+
+
+        //---------------------------------------------------------------------
+        template <>
+        inline bool
+        is_valid_specifier<size_t> (const char *s)
+        { return *s == 'u'; }
+
+
+        ///////////////////////////////////////////////////////////////////////
         template <typename InputIt>
         void
         render (InputIt first,
@@ -42,6 +77,7 @@ namespace util {
         }
 
 
+        //---------------------------------------------------------------------
         template <typename InputIt,
                   typename ValueT,
                   typename ...Args>
@@ -65,8 +101,8 @@ namespace util {
             if (spec == last)
                 throw util::format::format_error ("missing format specifier");
 
-            if (*spec != 's')
-                throw util::format::format_error ("unhandled format specifier");
+            if (!is_valid_specifier<typename std::decay<ValueT>::type> (&*spec))
+                throw util::format::format_error ("invalid/unhandled format specifier");
 
             dest << val;
 
@@ -74,6 +110,7 @@ namespace util {
         }
     } }
 
+    ///////////////////////////////////////////////////////////////////////////
     namespace format {
         template <typename ...Args>
         std::string
