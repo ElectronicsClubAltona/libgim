@@ -99,7 +99,7 @@ template <size_t S, typename T>
 extent<S,T>
 extent<S,T>::contracted (T t) const
 {
-    return *this - vector<S,T> {-t};
+    return *this - vector<S,T> {t};
 }
 
 
