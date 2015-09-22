@@ -76,6 +76,30 @@ namespace util {
     //-------------------------------------------------------------------------
     template <size_t S, typename T, typename U>
     constexpr typename std::common_type<T,U>::type
+    octile (point<S,T> a, point<S,U> b)
+    {
+        using type_t = typename std::common_type<T,U>::type;
+        static_assert (!std::is_integral<type_t>::value,
+                       "octile requires more than integer precision");
+
+        const type_t D1 = 1;
+        const type_t D2 = std::sqrt (type_t {2});
+
+        auto diff = util::abs (a - b);
+
+        // distance for axis-aligned walks
+        auto axis = D1 * (diff.x + diff.y);
+
+        // the savings from diagonal walks
+        auto diag = (D2 - 2 * D1) * util::min (diff);
+
+        return axis + diag;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <size_t S, typename T, typename U>
+    constexpr typename std::common_type<T,U>::type
     manhattan (point<S,T> a, point<S,U> b)
     {
         typename std::common_type<T,U>::type sum {0};

@@ -51,6 +51,9 @@ namespace util {
     constexpr typename std::common_type<T,U>::type distance2 (point<S,T>, point<S,U>);
 
     template <size_t S, typename T, typename U>
+    constexpr typename std::common_type<T,U>::type octile (point<S,T>, point<S,U>);
+
+    template <size_t S, typename T, typename U>
     constexpr typename std::common_type<T,U>::type manhattan (point<S,T>, point<S,U>);
 
     template <size_t S, typename T, typename U>
