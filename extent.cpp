@@ -168,6 +168,7 @@ namespace util {
     INSTANTIATE_S_T(2,T)    \
     INSTANTIATE_S_T(3,T)
 
+    INSTANTIATE(uint16_t)
     INSTANTIATE(uint32_t)
     INSTANTIATE(uint64_t)
     INSTANTIATE(float)
