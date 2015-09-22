@@ -15,19 +15,19 @@
  */
 
 
-#include "view.hpp"
+#ifdef __UTIL_VIEW_IPP
+#error
+#endif
+#define __UTIL_VIEW_IPP
+
 
 #include "debug.hpp"
 
-#include <cstring>
 #include <iterator>
-
-using util::view;
-
 
 //-----------------------------------------------------------------------------
 template <typename T>
-view<T>::view (T _begin, T _end):
+util::view<T>::view (T _begin, T _end):
     m_begin (_begin),
     m_end   (_end)
 { ; }
@@ -36,7 +36,7 @@ view<T>::view (T _begin, T _end):
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-view<T>::begin (void)
+util::view<T>::begin (void)
 {
     return m_begin;
 }
@@ -45,16 +45,16 @@ view<T>::begin (void)
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-view<T>::end (void)
+util::view<T>::end (void)
 {
     return m_end;
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
-view<T>::empty (void) const
+util::view<T>::empty (void) const
 {
     return m_begin == m_end;
 }
@@ -63,33 +63,33 @@ view<T>::empty (void) const
 //-----------------------------------------------------------------------------
 template <typename T>
 size_t
-view<T>::size (void) const
+util::view<T>::size (void) const
 {
     return std::distance (m_begin, m_end);
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-const typename view<T>::value_type&
-view<T>::operator[] (size_t idx) const
+const typename util::view<T>::value_type&
+util::view<T>::operator[] (size_t idx) const
 {
     CHECK_LT (m_begin + idx, m_end);
     return m_begin[idx];
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
-view<T>::operator== (const view<T> rhs) const
+util::view<T>::operator== (const view<T> rhs) const
 {
     return rhs.m_begin == m_begin &&
            rhs.m_end   == m_end;
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 std::ostream&
 util::operator<< (std::ostream &os, util::view<T> v)
@@ -97,7 +97,3 @@ util::operator<< (std::ostream &os, util::view<T> v)
     std::copy (v.begin (), v.end (), std::ostream_iterator<char> (os));
     return os;
 }
-
-
-///////////////////////////////////////////////////////////////////////////////
-template struct util::view<const char*>;

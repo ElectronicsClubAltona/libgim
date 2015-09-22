@@ -263,7 +263,7 @@ UTIL_FILES   =			\
     vector.ipp			\
     version.cpp			\
     version.hpp			\
-    view.cpp			\
+    view.ipp			\
     view.hpp
 
 if PLATFORM_LINUX
