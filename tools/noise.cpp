@@ -20,7 +20,7 @@
 #include "netpbm.hpp"
 #include "types.hpp"
 #include "cmdopt.hpp"
-
+#include "hash.hpp"
 #include "region.hpp"
 
 
@@ -171,6 +171,7 @@ main (int argc, char **argv)
     util::extent2u res {1920, 1080};
 #endif
 
+    srand (time (nullptr));
     uint64_t seed = time (nullptr);
 
     basis_t basis = PERLIN;
@@ -310,12 +311,15 @@ main (int argc, char **argv)
     util::image::buffer<float> img (res);
 
     // XXX: offset slightly to avoid origin artefacts in some basis functions
-    static const auto OFFSET = util::vector2f { -100 };
+    const auto OFFSET = util::vector2f {
+        (util::hash::mix (                 seed)  & 0xFFFF) / float (0xFFFF),
+        (util::hash::mix (util::hash::mix (seed)) & 0xFFFF) / float (0xFFFF)
+    } / f.frequency ();
 
     {
         for (size_t y = 0; y < res.h; ++y)
             for (size_t x = 0; x < res.w; ++x)
-                img.data ()[y * img.s + x] = t (util::point2f {float (x), float (y)} + OFFSET);
+                img[{x, y}] = t (util::point2f {float (x), float (y)} + OFFSET);
     }
 
     // working on the assumption that all octave images are based on summation,
@@ -329,7 +333,7 @@ main (int argc, char **argv)
 
         for (size_t y = 0; y < res.h; ++y)
             for (size_t x = 0; x < res.w; ++x)
-                prev.data ()[y * img.s + x] = t (util::point2f {float (x), float (y)} + OFFSET);
+                prev[{x,y}] = t (util::point2f {float (x), float (y)} + OFFSET);
 
         CHECK_EQ (img.stride (), prev.stride ());
         for (size_t i = 0; i < img.size (); ++i)
