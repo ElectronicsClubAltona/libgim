@@ -27,18 +27,25 @@ namespace util {
     public:
         using value_type = typename std::iterator_traits<T>::value_type;
 
-        view (T first, T last);
+        template <size_t S>
+        constexpr view (const value_type (&arr)[S]) noexcept;
+        constexpr view (T first, T last) noexcept;
 
-        T begin (void);
-        T end   (void);
+        constexpr T begin (void) const noexcept;
+        constexpr T end   (void) const noexcept;
 
-        bool empty (void) const;
-        size_t size (void) const;
+        constexpr T cbegin (void) const noexcept;
+        constexpr T cend   (void) const noexcept;
 
-        value_type& operator[] (size_t);
-        const value_type& operator[] (size_t) const;
+        constexpr T find (value_type) const noexcept;
 
-        bool operator== (view) const;
+        constexpr bool empty (void) const noexcept;
+        constexpr size_t size (void) const noexcept;
+
+        constexpr value_type& operator[] (size_t) noexcept;
+        constexpr const value_type& operator[] (size_t) const noexcept;
+
+        bool operator== (view) const noexcept;
 
     private:
         T m_begin;

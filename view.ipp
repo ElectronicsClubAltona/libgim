@@ -25,9 +25,21 @@
 
 #include <iterator>
 
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+template <size_t S>
+constexpr
+util::view<T>::view (const value_type(&arr)[S]) noexcept:
+    m_begin (arr),
+    m_end   (arr + S)
+{ ; }
+
+
 //-----------------------------------------------------------------------------
 template <typename T>
-util::view<T>::view (T _begin, T _end):
+constexpr
+util::view<T>::view (T _begin, T _end) noexcept:
     m_begin (_begin),
     m_end   (_end)
 { ; }
@@ -35,8 +47,26 @@ util::view<T>::view (T _begin, T _end):
 
 //-----------------------------------------------------------------------------
 template <typename T>
-T
-util::view<T>::begin (void)
+constexpr T
+util::view<T>::begin (void) const noexcept
+{
+    return cbegin ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+constexpr T
+util::view<T>::end (void) const noexcept
+{
+    return cend ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+constexpr T
+util::view<T>::cbegin (void) const noexcept
 {
     return m_begin;
 }
@@ -44,17 +74,29 @@ util::view<T>::begin (void)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-T
-util::view<T>::end (void)
+constexpr T
+util::view<T>::cend (void) const noexcept
 {
-    return m_end;
+    return m_end;   
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-bool
-util::view<T>::empty (void) const
+constexpr T
+util::view<T>::find (value_type v) const noexcept
+{
+   for (T i = cbegin (); i != cend (); ++i)
+       if (*i == v)
+           return i;
+   return cend ();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+constexpr bool
+util::view<T>::empty (void) const noexcept
 {
     return m_begin == m_end;
 }
@@ -62,17 +104,17 @@ util::view<T>::empty (void) const
 
 //-----------------------------------------------------------------------------
 template <typename T>
-size_t
-util::view<T>::size (void) const
+constexpr size_t
+util::view<T>::size (void) const noexcept
 {
-    return std::distance (m_begin, m_end);
+    return m_end - m_begin;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-const typename util::view<T>::value_type&
-util::view<T>::operator[] (size_t idx) const
+constexpr const typename util::view<T>::value_type&
+util::view<T>::operator[] (size_t idx) const noexcept
 {
     CHECK_LT (m_begin + idx, m_end);
     return m_begin[idx];
@@ -82,7 +124,7 @@ util::view<T>::operator[] (size_t idx) const
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
-util::view<T>::operator== (const view<T> rhs) const
+util::view<T>::operator== (const view<T> rhs) const noexcept
 {
     return rhs.m_begin == m_begin &&
            rhs.m_end   == m_end;
