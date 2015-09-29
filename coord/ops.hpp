@@ -22,6 +22,7 @@
 #include "../types/bits.hpp"
 
 #include <cstdlib>
+#include <cmath>
 
 namespace util {
     // forward declerations for traits
@@ -323,6 +324,22 @@ namespace util {
     bool
     operator<= (K<S,T> k, T t)
     { return max (k) <= t; }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <size_t S, typename T, template<size_t,typename> class K>
+    typename std::enable_if<
+        std::is_floating_point<T>::value,
+        K<S,T>
+    >::type
+    floor (K<S,T> k)
+    {
+        T (*floor_func)(T) = std::floor;
+
+        K<S,T> v;
+        std::transform (k.begin (), k.end (), v.begin (), floor_func);
+        return v;
+    }
 }
 
 #endif
