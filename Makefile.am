@@ -65,8 +65,8 @@ UTIL_FILES   =			\
     hash/bsdsum.hpp		\
     hash/crc.cpp		\
     hash/crc.hpp		\
-    hash/fasthash.hpp		\
     hash/fasthash.cpp		\
+    hash/fasthash.hpp		\
     hash/fletcher.hpp		\
     hash/fnv1a.cpp		\
     hash/fnv1a.hpp		\
