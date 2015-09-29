@@ -116,7 +116,6 @@ template <typename T>
 constexpr const typename util::view<T>::value_type&
 util::view<T>::operator[] (size_t idx) const noexcept
 {
-    CHECK_LT (m_begin + idx, m_end);
     return m_begin[idx];
 }
 
