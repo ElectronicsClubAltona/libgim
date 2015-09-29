@@ -62,10 +62,7 @@ namespace util { namespace noise { namespace basis {
     value<T,L>::operator() (util::point<2,T> p) const
     {
         // extract integer and fractional parts. be careful to always round down
-        // (particularly with negatives) and avoid rounding errors.
-        auto p_int = p.template cast<intmax_t> ();
-        if (p.x < 0) p_int.x -= 1;
-        if (p.y < 0) p_int.y -= 1;
+        auto p_int = floor (p).template cast<intmax_t> ();
         auto p_rem = p - p_int;
 
         // generate the corner points
