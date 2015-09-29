@@ -56,6 +56,33 @@ namespace util {
         static const extent MIN;
     };
 
+    template <size_t S, typename T>
+    struct extent_range {
+    public:
+        struct iterator : public std::iterator<std::forward_iterator_tag, point<S,T>, size_t> {
+        public:
+            iterator (extent<S,T>, util::point<S,T>);
+
+            point<S,T> operator* () const;
+            iterator& operator++ (void);
+
+            bool operator!= (const iterator &rhs) const;
+            bool operator== (const iterator &rhs) const;
+
+        private:
+            point<S,T>  m_cursor;
+            extent<S,T> m_target;
+        };
+
+        extent_range (extent<S,T> target);
+
+        iterator begin (void) const;
+        iterator end   (void) const;
+
+    private:
+        extent<S,T> m_target;
+    };
+
     // convenience typedefs
     template <typename T> using extent2 = extent<2,T>;
     template <typename T> using extent3 = extent<3,T>;
@@ -67,6 +94,14 @@ namespace util {
 
     typedef extent3<size_t> extent3u;
     typedef extent3<float> extent3f;
+
+    template <typename T> using extent_range2 = extent_range<2,T>;
+    template <typename T> using extent_range3 = extent_range<3,T>;
+
+    using extent_range2u = extent_range2<typename extent2u::value_type>;
+    using extent_range2i = extent_range2<typename extent2i::value_type>;
+
+    using extent_range3u = extent_range2<typename extent3u::value_type>;
 
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, util::extent<S,T>);

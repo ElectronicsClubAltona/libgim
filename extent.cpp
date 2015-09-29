@@ -22,6 +22,7 @@
 #include <cmath>
 
 using util::extent;
+using util::extent_range;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,9 +120,95 @@ const extent<S,T> extent<S,T>::MIN { 0 };
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-const extent<S,T> extent<S,T>::MAX {
+const extent<S,T> extent<S,T>::MAX
+{
     std::numeric_limits<T>::max ()
 };
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+extent_range<S,T>::extent_range (extent<S,T> _target):
+    m_target (_target)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+typename extent_range<S,T>::iterator
+extent_range<S,T>::begin (void) const
+{
+    return iterator (m_target, util::point<S,T> (0));
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+typename extent_range<S,T>::iterator
+extent_range<S,T>::end (void) const
+{
+    util::point<S,T> cursor (0);
+    cursor[S-1] = m_target[S-1];
+
+    return iterator (m_target, cursor);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+extent_range<S,T>::iterator::iterator (extent<S,T> _target, util::point<S,T> _cursor):
+    m_cursor (_cursor),
+    m_target (_target)
+{
+    static_assert (std::is_integral<T>::value, "range stepping size is ill-defined for non-integral types");
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+util::point<S,T>
+extent_range<S,T>::iterator::operator* (void) const
+{
+    return m_cursor;
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+typename extent_range<S,T>::iterator&
+extent_range<S,T>::iterator::operator++ (void)
+{
+    ++m_cursor[0];
+
+    for (size_t i = 0; i < S - 1; ++i) {
+        if (m_cursor[i] != m_target[i])
+            break;
+
+        m_cursor[i] = 0;
+        m_cursor[i+1]++;
+        continue;
+    }
+
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+bool
+extent_range<S,T>::iterator::operator== (const iterator &rhs) const
+{
+    return m_cursor == rhs.m_cursor;
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+bool
+extent_range<S,T>::iterator::operator!= (const iterator &rhs) const
+{
+    return m_cursor != rhs.m_cursor;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -173,4 +260,11 @@ namespace util {
     INSTANTIATE(uint64_t)
     INSTANTIATE(float)
     INSTANTIATE(double)
+
+    template struct extent_range<2,uint16_t>;
+    template struct extent_range<3,uint16_t>;
+    template struct extent_range<2,uint32_t>;
+    template struct extent_range<3,uint32_t>;
+    template struct extent_range<2,uint64_t>;
+    template struct extent_range<3,uint64_t>;
 }
