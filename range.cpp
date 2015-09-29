@@ -114,6 +114,15 @@ util::range<T>::operator* (T val) const
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
+util::range<T>
+util::range<T>::operator- (T val) const
+{
+    return util::range<T> (min - val, max - val);
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 namespace util {
     template <>
