@@ -23,16 +23,16 @@
 
 namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, util::noise::lerp_t<T> L>
-    perlin<T,L>::perlin (seed_t _seed):
-        m_seed (_seed)
+    template <typename T, util::noise::lerp_t<T> L, template <typename,lerp_t<T>> class G>
+    perlin<T,L,G>::perlin (seed_t _seed):
+        G<T,L> (_seed)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, util::noise::lerp_t<T> L>
+    template <typename T, util::noise::lerp_t<T> L, template <typename,lerp_t<T>> class G>
     util::range<T>
-    perlin<T,L>::bounds (void) const
+    perlin<T,L,G>::bounds (void) const
     {
         return {
             -std::sqrt (T{2}) / 2,
@@ -42,27 +42,9 @@ namespace util { namespace noise { namespace basis {
 
 
     //-------------------------------------------------------------------------
-    template <typename T, lerp_t<T> L>
-    seed_t
-    perlin<T,L>::seed (void) const
-    {
-        return m_seed;
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <typename T, lerp_t<T> L>
-    seed_t
-    perlin<T,L>::seed (seed_t _seed)
-    {
-        return m_seed = _seed;
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <typename T, util::noise::lerp_t<T> L>
+    template <typename T, util::noise::lerp_t<T> L, template <typename,lerp_t<T>> class G>
     T
-    perlin<T,L>::operator() (util::point<2,T> p) const
+    perlin<T,L,G>::operator() (util::point<2,T> p) const
     {
         // extract integer and fractional parts. be careful to always round down
         // (particularly with negatives) and avoid rounding errors.
@@ -78,10 +60,10 @@ namespace util { namespace noise { namespace basis {
         auto p3 = p_int + util::vector<2,intmax_t> { 1, 1 };
 
         // generate the corner gradients
-        auto g0 = noise::rand<2,T> (m_seed, p0);
-        auto g1 = noise::rand<2,T> (m_seed, p1);
-        auto g2 = noise::rand<2,T> (m_seed, p2);
-        auto g3 = noise::rand<2,T> (m_seed, p3);
+        auto g0 = G<T,L>::generate (p0);
+        auto g1 = G<T,L>::generate (p1);
+        auto g2 = G<T,L>::generate (p2);
+        auto g3 = G<T,L>::generate (p3);
 
         // compute the dot products
         T v0 = dot (g0, p - p0);

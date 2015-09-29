@@ -11,12 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
 
-#ifndef __UTIL_NOISE_BASIS_PERLIN_HPP
-#define __UTIL_NOISE_BASIS_PERLIN_HPP
+#ifndef __UTIL_NOISE_BASIS_EXPGRAD_HPP
+#define __UTIL_NOISE_BASIS_EXPGRAD_HPP
 
 #include "./gradient.hpp"
 
@@ -25,23 +25,24 @@
 #include "../../range.hpp"
 
 namespace util { namespace noise { namespace basis {
-    /// Perlin: interpolated value across each grid space
-    template <
-        typename T,     // arithmetic and result value_type, must be floating point
-        lerp_t<T> L,    // gradient interpolation function
-        template <      // gradient provider class, must provide generate(point_t)
-            typename,
-            lerp_t<T>
-        > class G = gradient
-    >
-    struct perlin : public G<T,L> {
-        perlin (seed_t);
+    template <typename T, lerp_t<T> L>
+    struct expgrad : public gradient<T,L> {
+        explicit expgrad <T,L> (seed_t seed, T base = (T)1.02, T exponent = T{256});
 
-        range<T> bounds (void) const;
-        T operator() (point<2,T>) const;
+        T base (void) const;
+        T base (T);
+
+        T exponent (void) const;
+        T exponent (T);
+
+    protected:
+        vector<2,T> generate (point<2,intmax_t>) const;
+
+        T m_base;
+        T m_exponent;
     };
 } } }
 
-#include "perlin.ipp"
+#include "expgrad.ipp"
 
 #endif

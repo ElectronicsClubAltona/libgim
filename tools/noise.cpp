@@ -8,6 +8,7 @@
 #include "noise/fractal/runtime.hpp"
 #include "noise/lerp.hpp"
 #include "noise/basis/constant.hpp"
+#include "noise/basis/expgrad.hpp"
 #include "noise/basis/value.hpp"
 #include "noise/basis/patch.hpp"
 #include "noise/basis/perlin.hpp"
@@ -36,7 +37,8 @@ enum basis_t {
     VALUE,
     PERLIN,
     WORLEY,
-    PATCH
+    PATCH,
+    EXPDIST
 };
 
 
@@ -66,10 +68,11 @@ operator>> (std::istream &is, basis_t &b)
     std::string name;
     is >> name;
 
-    b = name == "value"     ? VALUE  :
-        name == "perlin"    ? PERLIN :
-        name == "worley"    ? WORLEY :
-        name == "patch"     ? PATCH  :
+    b = name == "value"     ? VALUE     :
+        name == "perlin"    ? PERLIN    :
+        name == "worley"    ? WORLEY    :
+        name == "patch"     ? PATCH     :
+        name == "expgrad"   ? EXPDIST   :
         (is.setstate (std::istream::failbit), b);
 
     return is;
@@ -81,10 +84,11 @@ std::ostream&
 operator<< (std::ostream &os, basis_t b)
 {
     switch (b) {
-        case VALUE:     os << "value";  return os;
-        case PERLIN:    os << "perlin"; return os;
-        case WORLEY:    os << "worley"; return os;
-        case PATCH:     os << "patch";  return os;
+        case VALUE:     os << "value";      return os;
+        case PERLIN:    os << "perlin";     return os;
+        case WORLEY:    os << "worley";     return os;
+        case PATCH:     os << "patch";      return os;
+        case EXPDIST:   os << "expgrad";    return os;
 
         default:
             unreachable ();
@@ -261,6 +265,20 @@ main (int argc, char **argv)
                 case QUINTIC:   b.reset<basis::perlin<float,util::lerp::quintic>> (seed);  break;
                 case COSINE:    b.reset<basis::perlin<float,util::lerp::cosine>> (seed);   break;
                 case TRUNC:     b.reset<basis::perlin<float,util::lerp::trunc>> (seed);    break;
+
+            default:
+                unreachable ();
+            }
+            break;
+        }
+
+        case EXPDIST: {
+            switch (lerp) {
+                case LINEAR:    b.reset<basis::perlin<float,util::lerp::linear,basis::expgrad>> (seed); break;
+                case CUBIC:     b.reset<basis::perlin<float,util::lerp::cubic,basis::expgrad>> (seed);    break;
+                case QUINTIC:   b.reset<basis::perlin<float,util::lerp::quintic,basis::expgrad>> (seed);  break;
+                case COSINE:    b.reset<basis::perlin<float,util::lerp::cosine,basis::expgrad>> (seed);   break;
+                case TRUNC:     b.reset<basis::perlin<float,util::lerp::trunc,basis::expgrad>> (seed);    break;
 
             default:
                 unreachable ();

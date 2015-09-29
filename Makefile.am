@@ -150,6 +150,8 @@ UTIL_FILES   =			\
     noise/basis/constant.cpp	\
     noise/basis/constant.hpp	\
     noise/basis/constant.ipp	\
+    noise/basis/expdist.hpp	\
+    noise/basis/expdist.ipp	\
     noise/basis/patch.hpp	\
     noise/basis/patch.ipp	\
     noise/basis/perlin.hpp	\
