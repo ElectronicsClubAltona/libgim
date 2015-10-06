@@ -40,16 +40,25 @@ namespace util {
 ///////////////////////////////////////////////////////////////////////////////
 // exponentials
 
-template <typename T>
-constexpr T
-pow2 [[gnu::pure]] (T value)
-    { return value * value; }
+namespace util {
+    template <typename T>
+    constexpr T
+    pow2 [[gnu::pure]] (T value)
+        { return value * value; }
+}
 
+template <typename T> constexpr T pow2 [[gnu::pure]] (T value) { return util::pow2 (value); }
 
 //-----------------------------------------------------------------------------
 template <typename T>
 constexpr T
 pow [[gnu::pure]] (T x, unsigned y);
+
+namespace util {
+
+    template <typename T>
+    constexpr T pow (T x, unsigned y) { return ::pow (x, y); }
+}
 
 
 //-----------------------------------------------------------------------------
