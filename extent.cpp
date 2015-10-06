@@ -246,25 +246,29 @@ util::operator<< (std::ostream &os, extent<S,T> e)
 
 
 //-----------------------------------------------------------------------------
-namespace util {
-    #define INSTANTIATE_S_T(S,T)                                        \
-    template struct extent<S,T>;                                        \
-    template std::ostream& operator<< (std::ostream&, extent<S,T>);
+#define INSTANTIATE_S_T(S,T)                                        \
+template struct util::extent<S,T>;                                        \
+template std::ostream& util::operator<< (std::ostream&, extent<S,T>);
 
-    #define INSTANTIATE(T)  \
-    INSTANTIATE_S_T(2,T)    \
-    INSTANTIATE_S_T(3,T)
+#define INSTANTIATE(T)      \
+INSTANTIATE_S_T(1,T)        \
+INSTANTIATE_S_T(2,T)        \
+INSTANTIATE_S_T(3,T)
 
-    INSTANTIATE(uint16_t)
-    INSTANTIATE(uint32_t)
-    INSTANTIATE(uint64_t)
-    INSTANTIATE(float)
-    INSTANTIATE(double)
+#define INSTANTIATE_INT(T)          \
+template struct util::extent_range<1,T>;  \
+template struct util::extent_range<2,T>;  \
+template struct util::extent_range<3,T>;
 
-    template struct extent_range<2,uint16_t>;
-    template struct extent_range<3,uint16_t>;
-    template struct extent_range<2,uint32_t>;
-    template struct extent_range<3,uint32_t>;
-    template struct extent_range<2,uint64_t>;
-    template struct extent_range<3,uint64_t>;
-}
+INSTANTIATE(uint16_t)
+INSTANTIATE(uint32_t)
+INSTANTIATE(uint64_t)
+INSTANTIATE(float)
+INSTANTIATE(double)
+
+INSTANTIATE_INT( int16_t)
+INSTANTIATE_INT( int32_t)
+INSTANTIATE_INT( int64_t)
+INSTANTIATE_INT(uint16_t)
+INSTANTIATE_INT(uint32_t)
+INSTANTIATE_INT(uint64_t)
