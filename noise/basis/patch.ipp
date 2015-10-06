@@ -61,7 +61,7 @@ namespace util { namespace noise { namespace basis {
         std::transform (std::begin (this->OFFSETS),
                         std::end   (this->OFFSETS),
                         std::begin (centres),
-                        [this,p_int] (auto i) { return (noise::rand<point,T> (m_seed, p_int + i) + 1) / 2  + i; });
+                        [this,p_int] (auto i) { return rand::coord<point,T> (m_seed, p_int + i) + i; });
 
         T distances[COUNT];
         std::transform (std::begin (centres),
@@ -96,7 +96,7 @@ namespace util { namespace noise { namespace basis {
         // to blend.
         for (size_t i = 0; i < hi_off; ++i)
         {
-            auto v = util::noise::rand<T> (
+            auto v = rand::scalar<T> (
                 m_seed,
                 p_int + this->OFFSETS[indices[i]]
             );

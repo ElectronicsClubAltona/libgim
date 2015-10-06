@@ -38,7 +38,7 @@ namespace util { namespace noise { namespace basis {
     vector<S,T>
     expgrad<S,T,L>::generate (pointi<S> p) const
     {
-        auto t = (noise::rand<float> (this->seed (), p) + 1) / 2;
+        auto t = rand::scalar<float> (this->seed (), p);
         auto factor = std::pow (m_base, -t * m_exponent);
         return factor * gradient<S,T,L>::generate (p);
     }

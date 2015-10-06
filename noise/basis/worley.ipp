@@ -91,6 +91,6 @@ namespace util { namespace noise { namespace basis {
     point<S,T>
     worley<S,T,F>::generate (point<S,intmax_t> p) const
     {
-        return (noise::rand<util::point,T> (m_seed, p) + 1) / 2;
+        return rand::coord<util::point,T> (m_seed, p);
     }
 } } }

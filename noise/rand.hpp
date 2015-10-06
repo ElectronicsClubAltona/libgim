@@ -17,8 +17,11 @@
 #ifndef __UTIL_NOISE_RAND_HPP
 #define __UTIL_NOISE_RAND_HPP
 
-namespace util { namespace noise {
-    /// generate a uniform random floating point in the range [-1, 1] from a seed and vector
+#include "./rand/permute.hpp"
+#include "./rand/hash.hpp"
+
+namespace util { namespace noise { namespace rand {
+    /// generate a uniform random floating point in the range [0, 1] from a seed and vector
     template <
         typename U,
         size_t S,
@@ -26,8 +29,16 @@ namespace util { namespace noise {
         template <size_t,typename> class Q
     >
     U
-    rand (uint64_t seed, Q<S,T> value);
+    scalar (uint64_t seed, Q<S,T> value)
+    {
+        #if 1
+        return permute::scalar<U> (seed, value);
+        #else
+        return hash::scalar<U> (seed, value);
+        #endif
+    }
 
+    /// generate a coordinate type with uniform random components in the range [0, 1]
     template <
         template <size_t,typename> class R,
         typename U,
@@ -36,9 +47,14 @@ namespace util { namespace noise {
         template <size_t,typename> class Q
     >
     R<S,U>
-    rand (uint64_t seed, Q<S,T> value);
-} }
-
-#include "rand.ipp"
+    coord (uint64_t seed, Q<S,T> value)
+    {
+        #if 1
+        return permute::coord<R,U,S,T,Q> (seed, value);
+        #else
+        return hash::coord<R,U,S,T,Q> (seed, value);
+        #endif
+    }
+} } }
 
 #endif

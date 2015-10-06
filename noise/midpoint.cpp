@@ -60,10 +60,10 @@ fill (util::image::buffer<T> &img,
     // do the centre
     {
         const auto avg = (v0 + v1 + v2 + v3) / 4;
-        const auto val = avg + scale * util::noise::rand<T> (seed, target.centre ());
+        const auto val = avg + scale * util::noise::rand::scalar<T> (seed, target.centre ());
         const auto pos = target.p + target.e / 2;
 
-        img[pos] = val;
+        img[pos] = val * 2 - 1;
     }
 
     // average the sides
@@ -73,15 +73,15 @@ fill (util::image::buffer<T> &img,
         const auto p32 = target.p + util::vector2u{w/2,   h-1};
         const auto p20 = target.p + util::vector2u{0,     h/2};
 
-        const auto v01 = (v0 + v1) / 2 + sides * scale * util::noise::rand<T> (seed, p01);
-        const auto v13 = (v1 + v3) / 2 + sides * scale * util::noise::rand<T> (seed, p13);
-        const auto v32 = (v3 + v2) / 2 + sides * scale * util::noise::rand<T> (seed, p32);
-        const auto v20 = (v2 + v0) / 2 + sides * scale * util::noise::rand<T> (seed, p20);
+        const auto v01 = (v0 + v1) / 2 + sides * scale * util::noise::rand::scalar<T> (seed, p01);
+        const auto v13 = (v1 + v3) / 2 + sides * scale * util::noise::rand::scalar<T> (seed, p13);
+        const auto v32 = (v3 + v2) / 2 + sides * scale * util::noise::rand::scalar<T> (seed, p32);
+        const auto v20 = (v2 + v0) / 2 + sides * scale * util::noise::rand::scalar<T> (seed, p20);
 
-        img[p01] = v01;
-        img[p13] = v13;
-        img[p32] = v32;
-        img[p20] = v20;
+        img[p01] = v01 * 2 - 1;
+        img[p13] = v13 * 2 - 1;
+        img[p32] = v32 * 2 - 1;
+        img[p20] = v20 * 2 - 1;
     }
 
     // recurse
@@ -109,7 +109,7 @@ util::noise::midpoint (image::buffer<T> &img, uint64_t seed, float persistence, 
     };
 
     for (auto i: CORNERS)
-        img[i] = util::noise::rand<T> (seed, i);
+        img[i] = util::noise::rand::scalar<T> (seed, i) * 2 - 1;
 
     fill (img, seed, { { 0, 0 }, img.extent () }, 1.f, persistence, sides);
 }

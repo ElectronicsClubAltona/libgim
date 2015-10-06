@@ -19,7 +19,6 @@
 #endif
 #define __UTIL_NOISE_BASIS_PERLIN_IPP
 
-#include "../rand.hpp"
 #include "../../types.hpp"
 
 

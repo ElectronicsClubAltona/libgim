@@ -77,7 +77,7 @@ namespace util { namespace noise { namespace basis {
         std::array<T,pow(2,S)> g_;
         std::transform (std::begin (p_), std::end (p_),
                         std::begin (g_),
-                        [this] (auto i) { return noise::rand<float> (m_seed, i); });
+                        [this] (auto i) { return rand::scalar<float> (m_seed, i) * 2 - 1; });
 
         // Interpolate on one dimension, then the other.
         T l_[pow(2,S)];

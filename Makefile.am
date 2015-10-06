@@ -186,6 +186,10 @@ UTIL_FILES   =			\
     noise/midpoint.hpp		\
     noise/rand.hpp		\
     noise/rand.ipp		\
+    noise/rand/hash.hpp		\
+    noise/rand/hash.ipp		\
+    noise/rand/permute.cpp	\
+    noise/rand/permute.hpp	\
     noise/turbulence.hpp	\
     noise/turbulence.ipp	\
     pascal.cpp			\

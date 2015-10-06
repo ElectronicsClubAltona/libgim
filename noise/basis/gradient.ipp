@@ -52,7 +52,7 @@ namespace util { namespace noise { namespace basis {
     vector<S,T>
     gradient<S,T,L>::generate (pointi<S> p) const
     {
-        return noise::rand<vector,T> (m_seed, p);
+        return rand::coord<vector,T> (m_seed, p) * 2 - 1;
     }
 } } }
 

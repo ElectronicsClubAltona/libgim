@@ -25,7 +25,7 @@
 #include "region.hpp"
 
 
-constexpr size_t S = 3;
+constexpr size_t S = 2;
 
 ///////////////////////////////////////////////////////////////////////////////
 template struct util::noise::fractal::fbm<S,float, util::noise::basis::perlin<S,float,util::lerp::cubic>>;

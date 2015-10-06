@@ -15,15 +15,13 @@
  */
 
 
-#ifdef __UTIL_NOISE_RAND_IPP
+#ifdef __UTIL_NOISE_RAND_HASH_IPP
 #error
 #endif
-#define __UTIL_NOISE_RAND_IPP
 
-#include "../hash/murmur/murmur2.hpp"
+#define __UTIL_NOISE_RAND_HASH_IPP
 
-
-namespace util { namespace noise {
+namespace util { namespace noise { namespace rand {
     //-------------------------------------------------------------------------
     template <
         typename U,
@@ -32,21 +30,17 @@ namespace util { namespace noise {
         template <size_t,typename> class Q
     >
     U
-    rand (uint64_t seed, Q<S,T> query)
+    hash::scalar (uint64_t seed, Q<S,T> query)
     {
+        constexpr decltype(seed) BITS = 0xFFFF;
         static_assert (std::is_integral<T>::value,
                        "mixing only works on integral types");
 
         uint64_t accum = seed;
         for (auto i: query)
-            accum = hash::murmur2::mix (accum, i);
+            accum = util::hash::murmur2::mix (accum, i);
 
-        U result = (accum & 0xFFFF) / U{0xFFFF};
-
-        result *= 2;
-        result -= 1;
-
-        return result;
+        return (accum & BITS) / U{BITS};
     }
 
 
@@ -59,18 +53,22 @@ namespace util { namespace noise {
         template <size_t,typename> class Q
     >
     R<S,U>
-    rand (uint64_t seed, Q<S,T> query)
+    hash::coord (uint64_t seed, Q<S,T> query)
     {
-        uint64_t accum = seed;
+        constexpr decltype(seed) PERTURB = 0x96c39996c36c36c3;
+        constexpr decltype(seed) BITS    = 0xFFFF;
+
+        auto accum = seed ^ PERTURB;
         for (auto i: query)
-            accum = hash::murmur2::mix (accum, i);
+            accum = util::hash::murmur2::mix (accum, i);
 
         R<S,U> result;
         for (auto &i: result) {
-            i = (accum & 0xFFFF) / U{0xFFFF};
-            accum = hash::murmur2::mix (accum, seed);
+            i  = (accum & BITS);
+            i /= BITS;
+            accum = util::hash::murmur2::mix (accum, seed);
         }
 
-        return result * 2 - 1;
+        return result;
     }
-} }
+} } }
