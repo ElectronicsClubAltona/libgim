@@ -48,7 +48,7 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <size_t S, typename T, typename U>
-    constexpr typename std::common_type<T,U>::type
+    typename std::common_type<T,U>::type
     distance (point<S,T> a, point<S,U> b)
     {
         using type_t = typename std::common_type<T,U>::type;
@@ -74,9 +74,9 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename U>
-    constexpr typename std::common_type<T,U>::type
-    octile (point<S,T> a, point<S,U> b)
+    template <typename T, typename U>
+    typename std::common_type<T,U>::type
+    octile (point2<T> a, point2<U> b)
     {
         using type_t = typename std::common_type<T,U>::type;
         static_assert (!std::is_integral<type_t>::value,
