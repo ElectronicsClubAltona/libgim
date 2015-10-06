@@ -58,7 +58,7 @@ namespace util { namespace noise {
         // the constructor. i know this is horrible, but there's no time to
         // write the proper generator constructor to pass out the seeds.
         union {
-            char _[0];
+            char _;
             P perturb[S];
         };
 
