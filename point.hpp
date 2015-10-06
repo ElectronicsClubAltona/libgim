@@ -69,6 +69,9 @@ namespace util {
     template <typename T> using point3 = point<3,T>;
     template <typename T> using point4 = point<4,T>;
 
+    template <size_t S> using pointi = point<S,intmax_t>;
+    template <size_t S> using pointf = point<S,float>;
+
     typedef point1<float> point1f;
     typedef point2<float> point2f;
     typedef point3<float> point3f;
