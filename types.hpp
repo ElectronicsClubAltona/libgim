@@ -25,8 +25,15 @@
 //-----------------------------------------------------------------------------
 /// Returns the number of elements of a statically allocated array
 template <typename T, size_t N> 
-constexpr size_t elems(const T (&)[N])
+constexpr size_t
+elems (const T (&)[N])
     { return N; }
+
+
+template <typename T>
+constexpr typename T::size_type
+elems (const T &t)
+    { return t.size (); }
 
 
 //-----------------------------------------------------------------------------
