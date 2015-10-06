@@ -24,9 +24,13 @@
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////
     /// Musgrave's "Hybrid MultiFractal"
-    template <typename T, typename B>
-    struct hmf : public base<T,B> {
-        using seed_t = typename base<T,B>::seed_t;
+    template <
+        size_t S,   // probe point dimensionality
+        typename T, // probe point value_type
+        typename B  // generating basis function
+    >
+    struct hmf : public base<S,T,B> {
+        using seed_t = typename base<S,T,B>::seed_t;
 
         // H should be fairly low due to the decreasing weight parameter in eval
         static constexpr unsigned DEFAULT_OCTAVES = 6;
@@ -48,7 +52,7 @@ namespace util { namespace noise { namespace fractal {
 
         hmf (seed_t);
 
-        T operator() (point<2,T>) const;
+        T operator() (point<S,T>) const;
 
     private:
         T m_offset;

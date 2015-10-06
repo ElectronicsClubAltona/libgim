@@ -25,7 +25,7 @@
 #include <memory>
 
 namespace util { namespace noise { namespace basis {
-    template <typename T>
+    template <size_t S, typename T>
     struct runtime {
     public:
         runtime (seed_t) {}
@@ -34,7 +34,7 @@ namespace util { namespace noise { namespace basis {
         runtime& operator= (const runtime&) = delete;
 
         // basis functions
-        T operator () (util::point<2,T> p) const { return (*m_child) (p); }
+        T operator () (util::point<S,T> p) const { return (*m_child) (p); }
         range<T> bounds (void) const { return m_child->bounds (); }
 
         seed_t seed (void) const { return m_child->seed (); }
@@ -43,7 +43,7 @@ namespace util { namespace noise { namespace basis {
     private:
         struct base {
             virtual ~base () = default;
-            virtual T operator() (util::point<2,T>) const = 0;
+            virtual T operator() (util::point<S,T>) const = 0;
             virtual range<T> bounds (void) const = 0;
             virtual seed_t seed (void) const = 0;
             virtual seed_t seed (seed_t) = 0;
@@ -53,7 +53,7 @@ namespace util { namespace noise { namespace basis {
         struct child : public base {
             template <typename ...Args>
             child (seed_t _seed, Args&& ...args): data (_seed, std::forward<Args> (args)...) { }
-            virtual T operator() (util::point<2,T> p) const override { return data (p); }
+            virtual T operator() (util::point<S,T> p) const override { return data (p); }
             virtual range<T> bounds (void) const override { return data.bounds (); }
             virtual seed_t seed (void) const override { return data.seed (); }
             virtual seed_t seed (seed_t _seed) override { return data.seed (_seed); }

@@ -11,19 +11,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifdef __UTIL_NOISE_BASIS_CONSTANT_IPP
-#error
-#endif
-#define __UTIL_NOISE_BASIS_CONSTANT_IPP
+#ifndef __UTIL_NOISE_BASIS_TYPE_GRADIENT_HPP
+#define __UTIL_NOISE_BASIS_TYPE_GRADIENT_HPP
 
-namespace util { namespace noise { namespace basis {
-    template <size_t S, typename T>
-    T
-    constant<S,T>::operator() (point<S,T>) const
-    {
-        return value;
-    }
-} } }
+#include "../../../point.hpp"
+#include "../../../maths.hpp"
+
+#include <array>
+
+
+///////////////////////////////////////////////////////////////////////////////
+namespace util { namespace noise { namespace basis { namespace type {
+    template <size_t S>
+    struct gradient {
+
+    protected:
+        static const std::array<vectori<S>,util::pow(2,S)> CORNERS;
+    };
+} } } }
+
+#endif

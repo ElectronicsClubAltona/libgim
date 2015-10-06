@@ -32,7 +32,11 @@ namespace util { namespace noise { namespace fractal {
     /// lacunarity: per octave frequency scaling factor
     /// amplitude: maximum absolute value of the noise
     /// gain: per octave amplitude scaling factor. typically 1/f.
-    template <typename T, typename B>
+    template <
+        size_t S, // probe point dimensionality
+        typename T, // probe point value_type
+        typename B  // noise basis function
+    >
     struct base {
         using seed_t = uint64_t;
 

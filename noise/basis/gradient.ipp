@@ -23,36 +23,36 @@
 
 namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, util::noise::lerp_t<T> L>
-    gradient<T,L>::gradient (seed_t _seed):
+    template <size_t S, typename T, util::noise::lerp_t<T> L>
+    gradient<S,T,L>::gradient (seed_t _seed):
         m_seed (_seed)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, lerp_t<T> L>
+    template <size_t S, typename T, lerp_t<T> L>
     seed_t
-    gradient<T,L>::seed (void) const
+    gradient<S,T,L>::seed (void) const
     {
         return m_seed;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, lerp_t<T> L>
+    template <size_t S, typename T, lerp_t<T> L>
     seed_t
-    gradient<T,L>::seed (seed_t _seed)
+    gradient<S,T,L>::seed (seed_t _seed)
     {
         return m_seed = _seed;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, util::noise::lerp_t<T> L>
-    vector<2,T>
-    gradient<T,L>::generate (point<2,intmax_t> p) const
+    template <size_t S, typename T, util::noise::lerp_t<T> L>
+    vector<S,T>
+    gradient<S,T,L>::generate (pointi<S> p) const
     {
-        return noise::rand<2,T> (m_seed, p);
+        return noise::rand<vector,T> (m_seed, p);
     }
 } } }
 

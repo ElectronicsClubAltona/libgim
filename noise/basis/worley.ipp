@@ -25,67 +25,58 @@
 
 namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, size_t F>
-    worley<T,F>::worley (seed_t _seed):
+    template <size_t S, typename T, size_t F>
+    worley<S,T,F>::worley (seed_t _seed):
         m_seed (_seed)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, size_t F>
+    template <size_t S, typename T, size_t F>
     util::range<T>
-    worley<T,F>::bounds (void) const
+    worley<S,T,F>::bounds (void) const
     {
         return { 0.0, 1.5 };
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, size_t F>
+    template <size_t S, typename T, size_t F>
     seed_t
-    worley<T,F>::seed (void) const
+    worley<S,T,F>::seed (void) const
     {
         return m_seed;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, size_t F>
+    template <size_t S, typename T, size_t F>
     seed_t
-    worley<T,F>::seed (seed_t _seed)
+    worley<S,T,F>::seed (seed_t _seed)
     {
         return m_seed = _seed;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, size_t F>
+    template <size_t S, typename T, size_t F>
     T
-    worley<T,F>::operator() (util::point<2,T> p) const
+    worley<S,T,F>::operator() (point<S,T> p) const
     {
         // extract integer and fractional parts. be careful to always round down
         auto p_int = floor (p).template cast<intmax_t> ();
         auto p_rem = (p - p_int).template as<point> ();
 
         // setup an array of distances
-        constexpr size_t RADIUS = 1;
-        constexpr size_t COUNT = pow2 (RADIUS * 2 + 1);
-        T distances[COUNT] = { std::numeric_limits<T>::quiet_NaN () };
-        T *cursor = distances;
+        constexpr size_t COUNT = type::distance<S,1>::OFFSET_SIZE;
+        T distances[COUNT];
 
-        // record the distances to each candidate point
-        for (signed y_off = -signed(RADIUS); y_off <= signed(RADIUS) ; ++y_off) {
-            for (signed x_off = -signed(RADIUS); x_off <= signed(RADIUS); ++x_off) {
-                auto off = vector<2,intmax_t> {x_off, y_off};
-                auto pos = generate (p_int + off);
-
-                CHECK_LIMIT (pos.x, T{0}, T{1});
-                CHECK_LIMIT (pos.y, T{0}, T{1});
-
-                *cursor = distance2 (pos + off, p_rem);
-                cursor++;
-            }
-        }
+        std::transform (std::begin (this->OFFSETS), std::end (this->OFFSETS),
+                        distances,
+                        [p_int,p_rem,this] (auto i) {
+            auto q = this->generate (p_int + i);
+            return distance2 (q + i, p_rem);
+        });
 
         // find the f'th lowest value
         static_assert (F < COUNT, "worley order must be less than search radius");
@@ -96,21 +87,10 @@ namespace util { namespace noise { namespace basis {
 
 
     //////////////////////////////////////////////////////////////////////////
-    template <typename T, size_t F>
-    point<2,T>
-    worley<T,F>::generate (point<2,intmax_t> p) const
+    template <size_t S, typename T, size_t F>
+    point<S,T>
+    worley<S,T,F>::generate (point<S,intmax_t> p) const
     {
-        using util::hash::murmur2::mix;
-
-        auto u = mix (m_seed, mix (uint64_t (p.x), uint64_t (p.y)));
-        auto v = mix (u, m_seed);
-
-        auto r = util::point<2,T> {
-            (u & 0xffff) / T{0xffff},
-            (v & 0xffff) / T{0xffff}
-        };
-
-        CHECK_LIMIT (r, T{0}, T{1});
-        return r;
+        return (noise::rand<util::point,T> (m_seed, p) + 1) / 2;
     }
 } } }

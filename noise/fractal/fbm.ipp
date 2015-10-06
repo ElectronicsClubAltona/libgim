@@ -23,41 +23,41 @@
 
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename B>
-    fbm<T,B>::fbm (seed_t _seed,
-                   unsigned _octaves,
-                   T        _H,
-                   T        _frequency,
-                   T        _lacunarity,
-                   T        _amplitude,
-                   T        _gain):
-        base<T,B> (_seed,
-                   _octaves,
-                   _H,
-                   _frequency,
-                   _lacunarity,
-                   _amplitude,
-                   _gain)
+    template <size_t S, typename T, typename B>
+    fbm<S,T,B>::fbm (seed_t _seed,
+                     unsigned _octaves,
+                     T        _H,
+                     T        _frequency,
+                     T        _lacunarity,
+                     T        _amplitude,
+                     T        _gain):
+        base<S,T,B> (_seed,
+                     _octaves,
+                     _H,
+                     _frequency,
+                     _lacunarity,
+                     _amplitude,
+                     _gain)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
-    fbm<T,B>::fbm (seed_t _seed):
-        fbm<T,B> (_seed,
-                  DEFAULT_OCTAVES,
-                  DEFAULT_H,
-                  DEFAULT_FREQUENCY,
-                  DEFAULT_LACUNARITY,
-                  DEFAULT_AMPLITUDE,
-                  DEFAULT_GAIN)
+    template <size_t S, typename T, typename B>
+    fbm<S,T,B>::fbm (seed_t _seed):
+        fbm<S,T,B> (_seed,
+                    DEFAULT_OCTAVES,
+                    DEFAULT_H,
+                    DEFAULT_FREQUENCY,
+                    DEFAULT_LACUNARITY,
+                    DEFAULT_AMPLITUDE,
+                    DEFAULT_GAIN)
     { ; }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     T
-    fbm<T,B>::operator() (util::point<2,T> p) const
+    fbm<S,T,B>::operator() (point<S,T> p) const
     {
         T total = 0;
         T scale = this->m_invAH;
@@ -67,7 +67,7 @@ namespace util { namespace noise { namespace fractal {
         for (size_t i = 0; i < this->m_octaves; ++i) {
             total += this->m_basis (p) * scale;
 
-            p += T{1};
+            p += PI<float>;
             p *= this->m_lacunarity;
             scale *= this->m_invGH;
         }

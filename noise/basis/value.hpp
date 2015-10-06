@@ -18,18 +18,21 @@
 #ifndef __UTIL_NOISE_BASIS_VALUE_HPP
 #define __UTIL_NOISE_BASIS_VALUE_HPP
 
+#include "./type/gradient.hpp"
+
 #include "../fwd.hpp"
 #include "../../range.hpp"
 #include "../../point.hpp"
 
 namespace util { namespace noise { namespace basis {
     /// Single value per grid space
-    template <typename T, lerp_t<T>>
-    struct value {
+    template <size_t S, typename T, lerp_t<T>>
+    struct value : public type::gradient<S> {
         value (seed_t);
 
         range<T> bounds (void) const;
-        T operator() (util::point<2,T>) const;
+
+        T operator() (util::point<S,T>) const;
 
         seed_t seed (void) const;
         seed_t seed (seed_t);

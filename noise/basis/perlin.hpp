@@ -19,6 +19,7 @@
 #define __UTIL_NOISE_BASIS_PERLIN_HPP
 
 #include "./gradient.hpp"
+#include "./type/gradient.hpp"
 
 #include "../fwd.hpp"
 #include "../../point.hpp"
@@ -27,18 +28,21 @@
 namespace util { namespace noise { namespace basis {
     /// Perlin: interpolated value across each grid space
     template <
+        size_t S,       // point point dimensionality
         typename T,     // arithmetic and result value_type, must be floating point
         lerp_t<T> L,    // gradient interpolation function
         template <      // gradient provider class, must provide generate(point_t)
+            size_t,
             typename,
             lerp_t<T>
         > class G = gradient
     >
-    struct perlin : public G<T,L> {
+    struct perlin : public G<S,T,L>, public type::gradient<S> {
         perlin (seed_t);
 
         range<T> bounds (void) const;
-        T operator() (point<2,T>) const;
+
+        T operator() (point<S,T>) const;
     };
 } } }
 

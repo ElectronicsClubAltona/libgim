@@ -19,13 +19,24 @@
 
 namespace util { namespace noise {
     /// generate a uniform random floating point in the range [-1, 1] from a seed and vector
-    template <typename T, typename V>
-    T
-    rand (uint64_t seed, V value);
+    template <
+        typename U,
+        size_t S,
+        typename T,
+        template <size_t,typename> class Q
+    >
+    U
+    rand (uint64_t seed, Q<S,T> value);
 
-    template <size_t N, typename T, typename V>
-    vector<N,T>
-    rand (uint64_t seed, V value);
+    template <
+        template <size_t,typename> class R,
+        typename U,
+        size_t S,
+        typename T,
+        template <size_t,typename> class Q
+    >
+    R<S,U>
+    rand (uint64_t seed, Q<S,T> value);
 } }
 
 #include "rand.ipp"

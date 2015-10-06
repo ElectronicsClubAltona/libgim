@@ -29,20 +29,36 @@ namespace util { namespace noise {
     /// assumes the pertubation function is roughly symetrical around 0.
     /// nothing will explode if it isn't, but you'll see strong directional
     /// artefacts with higher scaling factors.
-    template <typename T, typename D, typename P>
+    template <
+        size_t   S, // dimension
+        typename T, // value_type
+        typename D, // data fractal
+        typename P  // pertubation fractal
+    >
     struct turbulence {
+        static constexpr auto dimension = S;
+        using value_type = T;
+
         using seed_t = uint64_t;
-        turbulence (seed_t, vector<2,T> scale);
+
+        turbulence (seed_t, vector<S,T> scale);
 
         seed_t seed (seed_t);
         seed_t seed (void) const;
 
-        constexpr T operator() (point<2,T>) const;
+        constexpr T operator() (point<S,T>) const;
 
         D data;
-        P perturb[2];
 
-        vector<2,T> scale;
+        // XXX: use a union to defer initialization of pertubation fractals in
+        // the constructor. i know this is horrible, but there's no time to
+        // write the proper generator constructor to pass out the seeds.
+        union {
+            char _[0];
+            P perturb[S];
+        };
+
+        vector<S,T> scale;
     };
 } }
 

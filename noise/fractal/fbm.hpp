@@ -33,9 +33,13 @@ namespace util { namespace noise { namespace fractal {
     /// lacunarity: per octave frequency scaling factor
     /// amplitude: maximum absolute value of the noise
     /// gain: per octave amplitude scaling factor. typically 1/f.
-    template <typename T, typename B>
-    struct fbm : public base<T,B> {
-        using seed_t = typename base<T,B>::seed_t;
+    template <
+        size_t S,   // probe point dimensionality
+        typename T, // probe point value_type
+        typename B  // generating basis function
+    >
+    struct fbm : public base<S,T,B> {
+        using seed_t = typename base<S,T,B>::seed_t;
 
         static constexpr unsigned DEFAULT_OCTAVES = 8;
         static constexpr T DEFAULT_H          = 1;
@@ -53,7 +57,7 @@ namespace util { namespace noise { namespace fractal {
              T gain);
         fbm (seed_t);
 
-        T operator() (util::point<2,T>) const;
+        T operator() (point<S,T>) const;
     };
 } } }
 

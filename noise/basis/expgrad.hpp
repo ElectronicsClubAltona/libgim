@@ -24,10 +24,22 @@
 #include "../../point.hpp"
 #include "../../range.hpp"
 
+
+///////////////////////////////////////////////////////////////////////////////
+// modifies a standard uniforma gradient generator to follow an exponential
+// distribution, base^(-t*exp)
+//
+// 
 namespace util { namespace noise { namespace basis {
-    template <typename T, lerp_t<T> L>
-    struct expgrad : public gradient<T,L> {
-        explicit expgrad <T,L> (seed_t seed, T base = (T)1.02, T exponent = T{256});
+    template <
+        size_t S,   // probe point dimensionality
+        typename T, // probe point value_type
+        lerp_t<T> L // axis interpolation function
+    >
+    struct expgrad : public gradient<S,T,L> {
+        explicit expgrad (seed_t seed,
+                          T base = (T)1.02,
+                          T exponent = T{256});
 
         T base (void) const;
         T base (T);
@@ -36,7 +48,7 @@ namespace util { namespace noise { namespace basis {
         T exponent (T);
 
     protected:
-        vector<2,T> generate (point<2,intmax_t>) const;
+        vector<S,T> generate (pointi<S>) const;
 
         T m_base;
         T m_exponent;

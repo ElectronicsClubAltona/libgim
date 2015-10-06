@@ -18,23 +18,27 @@
 #ifndef __UTIL_NOISE_BASIS_WORLEY_HPP
 #define __UTIL_NOISE_BASIS_WORLEY_HPP
 
+#include "./type/distance.hpp"
+
 #include "../fwd.hpp"
 #include "../../point.hpp"
 #include "../../range.hpp"
 
 namespace util { namespace noise { namespace basis {
-    template <typename T, size_t F = 0>
-    struct worley {
+    template <size_t S, typename T, size_t F = 0>
+    struct worley : public type::distance<S,1> {
         worley (seed_t);
 
         range<T> bounds (void) const;
-        T operator() (util::point<2,T>) const;
+
+        T operator() (util::point<S,T>) const;
 
         seed_t seed (void) const;
         seed_t seed (seed_t);
 
     private:
-        point<2,T> generate (point<2,intmax_t>) const;
+        point<S,T> generate (point<S,intmax_t>) const;
+
         seed_t m_seed;
     };
 } } }

@@ -23,14 +23,14 @@
 
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename B>
-    base<T,B>::base (seed_t _seed,
-                     unsigned _octaves,
-                     T _H,
-                     T _frequency,
-                     T _lacunarity,
-                     T _amplitude,
-                     T _gain):
+    template <size_t S, typename T, typename B>
+    base<S,T,B>::base (seed_t _seed,
+                       unsigned _octaves,
+                       T _H,
+                       T _frequency,
+                       T _lacunarity,
+                       T _amplitude,
+                       T _gain):
         // literals
         m_octaves (_octaves),
         m_H (_H),
@@ -51,27 +51,27 @@ namespace util { namespace noise { namespace fractal {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     unsigned
-    base<T,B>::octaves (unsigned _octaves)
+    base<S,T,B>::octaves (unsigned _octaves)
     {
         return m_octaves = _octaves;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     constexpr unsigned
-    base<T,B>::octaves (void) const
+    base<S,T,B>::octaves (void) const
     {
         return m_octaves;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     T
-    base<T,B>::H (T _h)
+    base<S,T,B>::H (T _h)
     {
         m_H = _h;
         m_invAH = std::pow (m_amplitude, -m_H);
@@ -81,63 +81,63 @@ namespace util { namespace noise { namespace fractal {
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     constexpr T
-    base<T,B>::H (void) const
+    base<S,T,B>::H (void) const
     {
         return m_H;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     T
-    base<T,B>::frequency (T _frequency)
+    base<S,T,B>::frequency (T _frequency)
     {
         return m_frequency = _frequency;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     constexpr T
-    base<T,B>::frequency (void) const
+    base<S,T,B>::frequency (void) const
     {
         return m_frequency;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     T
-    base<T,B>::lacunarity (T _lacunarity)
+    base<S,T,B>::lacunarity (T _lacunarity)
     {
         return m_lacunarity = _lacunarity;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     constexpr T
-    base<T,B>::lacunarity (void) const
+    base<S,T,B>::lacunarity (void) const
     {
         return m_lacunarity;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     constexpr T
-    base<T,B>::amplitude (void) const
+    base<S,T,B>::amplitude (void) const
     {
         return m_amplitude;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     T
-    base<T,B>::amplitude (T _amplitude)
+    base<S,T,B>::amplitude (T _amplitude)
     {
         m_amplitude = _amplitude;
         m_invAH = std::pow (m_amplitude, -m_H);
@@ -146,18 +146,18 @@ namespace util { namespace noise { namespace fractal {
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     constexpr T
-    base<T,B>::gain (void) const
+    base<S,T,B>::gain (void) const
     {
         return m_gain;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     T
-    base<T,B>::gain (T _gain)
+    base<S,T,B>::gain (T _gain)
     {
         m_gain = _gain;
         m_invGH = std::pow (_gain, m_H);
@@ -166,36 +166,36 @@ namespace util { namespace noise { namespace fractal {
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
-    typename base<T,B>::seed_t
-    base<T,B>::seed (seed_t _seed)
+    template <size_t S, typename T, typename B>
+    typename base<S,T,B>::seed_t
+    base<S,T,B>::seed (seed_t _seed)
     {
         return m_basis.seed (_seed);
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
-    typename base<T,B>::seed_t
-    base<T,B>::seed (void) const
+    template <size_t S, typename T, typename B>
+    typename base<S,T,B>::seed_t
+    base<S,T,B>::seed (void) const
     {
         return m_basis.seed ();
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     const B&
-    base<T,B>::basis (void) const
+    base<S,T,B>::basis (void) const
     {
         return m_basis;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     B&
-    base<T,B>::basis (void)
+    base<S,T,B>::basis (void)
     {
         return m_basis;
     }

@@ -24,50 +24,48 @@
 
 namespace util { namespace noise {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename D, typename P>
-    turbulence<T,D,P>::turbulence (seed_t _seed,
-                                   vector<2,T> _scale):
+    template <size_t S, typename T, typename D, typename P>
+    turbulence<S,T,D,P>::turbulence (seed_t _seed,
+                                     vector<S,T> _scale):
         data (_seed),
-        perturb {
-            hash::wang (_seed),
-            hash::wang (hash::wang (_seed))
-        },
         scale (_scale)
-    { ; }
+    {
+        for (auto &p: perturb)
+            new (&p) P (_seed = hash::wang (_seed));
+    }
 
     ////////////////////////////////////////////////////////////////////////////
-    template <typename T, typename D, typename P>
-    typename turbulence<T,D,P>::seed_t
-    turbulence<T,D,P>::seed (void) const
+    template <size_t S, typename T, typename D, typename P>
+    typename turbulence<S,T,D,P>::seed_t
+    turbulence<S,T,D,P>::seed (void) const
     {
         return data.seed ();
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename D, typename P>
-    typename turbulence<T,D,P>::seed_t
-    turbulence<T,D,P>::seed (seed_t _seed)
+    template <size_t S, typename T, typename D, typename P>
+    typename turbulence<S,T,D,P>::seed_t
+    turbulence<S,T,D,P>::seed (seed_t _seed)
     {
         auto ret = _seed;
+        data.seed (_seed);
 
-        data.seed (_seed);          _seed = hash::wang (_seed);
-        perturb[0].seed (_seed);    _seed = hash::wang (_seed);
-        perturb[1].seed (_seed);    _seed = hash::wang (_seed);
+        for (size_t i = 0; i < S; ++i)
+            perturb[i].seed (_seed = hash::wang (_seed));
 
         return ret;
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename D, typename P>
+    template <size_t S, typename T, typename D, typename P>
     constexpr T
-    turbulence<T,D,P>::operator() (point<2,T> p) const
+    turbulence<S,T,D,P>::operator() (point<S,T> p) const
     {
-        vector<2,T> n = {
-            perturb[0] (p),
-            perturb[1] (p)
-        };
+        vector<S,T> n;
+        for (size_t i = 0; i < S; ++i)
+            n[i] = perturb[i] (p);
 
         // scale by the data frequency so that we match scale
         return data (p + n * scale / data.frequency ());

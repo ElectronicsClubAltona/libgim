@@ -32,9 +32,13 @@ namespace util { namespace noise { namespace fractal {
     /// lacunarity: incremental octave frequency scaling factor
     /// amplitude: value scaling factor for the base octave
     /// gain: incremental octave value scaling factor
-    template <typename T, typename B>
-    struct rmf : public base<T,B> {
-        using seed_t = typename base<T,B>::seed_t;
+    template <
+        size_t S,   // probe point dimensionality
+        typename T, // probe point value_type
+        typename B  // generating basis function
+    >
+    struct rmf : public base<S,T,B> {
+        using seed_t = typename base<S,T,B>::seed_t;
 
         static constexpr unsigned DEFAULT_OCTAVES = 5;
         static constexpr T DEFAULT_H = 1;
@@ -55,7 +59,7 @@ namespace util { namespace noise { namespace fractal {
 
         rmf (seed_t);
 
-        T operator() (util::point<2,T>) const;
+        T operator() (point<S,T>) const;
 
         T offset (void) const;
         T offset (T);

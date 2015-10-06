@@ -25,9 +25,13 @@
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////
     /// Heterogeneous procedural terrain fucntion: stats by altitude method
-    template <typename T, typename B>
-    struct hetero : public base<T,B> {
-        using seed_t = typename base<T,B>::seed_t;
+    template <
+        size_t S,   // probe point dimensionality
+        typename T, // probe point value_type
+        typename B  // generating basis function
+    >
+    struct hetero : public base<S,T,B> {
+        using seed_t = typename base<S,T,B>::seed_t;
 
         static constexpr unsigned DEFAULT_OCTAVES = 6;
         static constexpr T DEFAULT_H = T(0.75);
@@ -59,7 +63,7 @@ namespace util { namespace noise { namespace fractal {
         constexpr T offset (void) const;
         T offset (T);
 
-        T operator() (util::point<2,T>) const;
+        T operator() (point<S,T>) const;
 
     private:
         T m_offset;

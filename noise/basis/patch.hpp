@@ -17,16 +17,19 @@
 #ifndef __UTIL_NOISE_BASIS_PATCH_HPP
 #define __UTIL_NOISE_BASIS_PATCH_HPP
 
+#include "./type/distance.hpp"
+
 #include "../fwd.hpp"
 #include "../../point.hpp"
 
 namespace util { namespace noise { namespace basis {
-    template <typename T>
-    struct patch {
+    template <size_t S, typename T>
+    struct patch : public type::distance<S,2> {
         patch (seed_t, T width = 0);
         
         range<T> bounds (void) const;
-        T operator() (point2<T>) const;
+
+        T operator() (point<S,T>) const;
         
         seed_t seed (void) const;
         seed_t seed (seed_t);
@@ -35,9 +38,6 @@ namespace util { namespace noise { namespace basis {
         T width (T);
 
     private:
-        point2<T> centroid (util::point2i) const;
-        T generate (util::point2i) const;
-
         static constexpr T THRESHOLD = 1 - T(0.999);
 
         T m_width;

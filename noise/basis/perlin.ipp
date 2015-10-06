@@ -20,19 +20,21 @@
 #define __UTIL_NOISE_BASIS_PERLIN_IPP
 
 #include "../rand.hpp"
+#include "../../types.hpp"
+
 
 namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, util::noise::lerp_t<T> L, template <typename,lerp_t<T>> class G>
-    perlin<T,L,G>::perlin (seed_t _seed):
-        G<T,L> (_seed)
+    template <size_t S, typename T, util::noise::lerp_t<T> L, template <size_t,typename,lerp_t<T>> class G>
+    perlin<S,T,L,G>::perlin (seed_t _seed):
+        G<S,T,L> (_seed)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, util::noise::lerp_t<T> L, template <typename,lerp_t<T>> class G>
+    template <size_t S, typename T, util::noise::lerp_t<T> L, template <size_t,typename,lerp_t<T>> class G>
     util::range<T>
-    perlin<T,L,G>::bounds (void) const
+    perlin<S,T,L,G>::bounds (void) const
     {
         return {
             -std::sqrt (T{2}) / 2,
@@ -42,37 +44,38 @@ namespace util { namespace noise { namespace basis {
 
 
     //-------------------------------------------------------------------------
-    template <typename T, util::noise::lerp_t<T> L, template <typename,lerp_t<T>> class G>
+    template <size_t S, typename T, util::noise::lerp_t<T> L, template <size_t,typename,lerp_t<T>> class G>
     T
-    perlin<T,L,G>::operator() (util::point<2,T> p) const
+    perlin<S,T,L,G>::operator() (util::point<S,T> p) const
     {
         // extract integer and fractional parts. be careful to always round down
         auto p_int = floor (p).template cast<intmax_t> ();
         auto p_rem = p - p_int;
 
         // generate the corner positions
-        auto p0 = p_int + util::vector<2,intmax_t> { 0, 0 };
-        auto p1 = p_int + util::vector<2,intmax_t> { 1, 0 };
-        auto p2 = p_int + util::vector<2,intmax_t> { 0, 1 };
-        auto p3 = p_int + util::vector<2,intmax_t> { 1, 1 };
+        pointi<S> p_[pow(2,S)];
+        std::transform (std::begin (this->CORNERS), std::end (this->CORNERS),
+                        std::begin (p_),
+                        [p_int] (auto i) { return i + p_int; });
 
         // generate the corner gradients
-        auto g0 = G<T,L>::generate (p0);
-        auto g1 = G<T,L>::generate (p1);
-        auto g2 = G<T,L>::generate (p2);
-        auto g3 = G<T,L>::generate (p3);
+        vector<S,T> g_[pow(2,S)];
+        std::transform (std::begin (p_), std::end (p_),
+                        std::begin (g_),
+                        [this] (auto i) { return this->generate (i); });
 
         // compute the dot products
-        T v0 = dot (g0, p - p0);
-        T v1 = dot (g1, p - p1);
-        T v2 = dot (g2, p - p2);
-        T v3 = dot (g3, p - p3);
+        T v_[pow(2,S)];
+        for (size_t i = 0; i < elems (v_); ++i)
+            v_[i] = dot (g_[i], p - p_[i]);
 
         // interpolate the results
-        auto L0 = L (v0, v1, p_rem.x);
-        auto L1 = L (v2, v3, p_rem.x);
-        auto L_ = L (L0, L1, p_rem.y);
+        T l_[pow(2,S)];
+        std::copy (std::begin (v_), std::end (v_), std::begin (l_));
 
-        return L_;
+        for (size_t i = S; i; --i)
+            for (size_t j = 0; j < std::pow(2,i); j += 2)
+                l_[j / 2] = L (l_[j], l_[j+1], p_rem[S-i]);
+        return l_[0];
     }
 } } }

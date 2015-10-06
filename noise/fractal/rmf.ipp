@@ -22,46 +22,46 @@
 
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename B>
-    rmf<T,B>::rmf (seed_t _seed,
-                   unsigned _octaves,
-                   T        _H,
-                   T        _offset,
-                   T        _frequency,
-                   T        _lacunarity,
-                   T        _amplitude,
-                   T        _gain):
-        base<T,B> (_seed,
-                   _octaves,
-                   _H,
-                   _frequency,
-                   _lacunarity,
-                   _amplitude,
-                   _gain),
+    template <size_t S, typename T, typename B>
+    rmf<S,T,B>::rmf (seed_t _seed,
+                     unsigned _octaves,
+                     T        _H,
+                     T        _offset,
+                     T        _frequency,
+                     T        _lacunarity,
+                     T        _amplitude,
+                     T        _gain):
+        base<S,T,B> (_seed,
+                     _octaves,
+                     _H,
+                     _frequency,
+                     _lacunarity,
+                     _amplitude,
+                     _gain),
         m_offset (_offset)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
-    rmf<T,B>::rmf (seed_t _seed):
-        rmf<T,B> (_seed,
-                  DEFAULT_OCTAVES,
-                  DEFAULT_H,
-                  DEFAULT_FREQUENCY,
-                  DEFAULT_LACUNARITY,
-                  DEFAULT_AMPLITUDE,
-                  DEFAULT_GAIN,
-                  DEFAULT_OFFSET)
+    template <size_t S, typename T, typename B>
+    rmf<S,T,B>::rmf (seed_t _seed):
+        rmf<S,T,B> (_seed,
+                    DEFAULT_OCTAVES,
+                    DEFAULT_H,
+                    DEFAULT_FREQUENCY,
+                    DEFAULT_LACUNARITY,
+                    DEFAULT_AMPLITUDE,
+                    DEFAULT_GAIN,
+                    DEFAULT_OFFSET)
     { ; }
 
 
     ///////////////////////////////////////////////////////////////////////////
     // we use the name 'amplitude' instead of musgrave's 'gain'.
     // assumes basis distribution [-1,1] and offset ~= 1
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     T
-    rmf<T,B>::operator() (util::point<2,T> p) const
+    rmf<S,T,B>::operator() (point<S,T> p) const
     {
         T scale = this->m_invAH;
 
@@ -92,7 +92,7 @@ namespace util { namespace noise { namespace fractal {
 
             scale *= this->m_invGH;
 
-            p += T{1};
+            p += PI<T>;
             p *= this->m_lacunarity;
         }
 
@@ -101,18 +101,18 @@ namespace util { namespace noise { namespace fractal {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     T
-    rmf<T,B>::offset (void) const
+    rmf<S,T,B>::offset (void) const
     {
         return m_offset;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     T
-    rmf<T,B>::offset (T _offset)
+    rmf<S,T,B>::offset (T _offset)
     {
         return m_offset = _offset;
     }

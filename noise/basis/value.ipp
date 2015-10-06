@@ -20,68 +20,72 @@
 #define __UTIL_NOISE_BASIS_VALIE_IPP
 
 #include "../rand.hpp"
+#include "../../types.hpp"
+
 
 namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, util::noise::lerp_t<T> L>
-    value<T,L>::value (seed_t _seed):
+    template <size_t S, typename T, util::noise::lerp_t<T> L>
+    value<S,T,L>::value (seed_t _seed):
         m_seed (_seed)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, util::noise::lerp_t<T> L>
+    template <size_t S, typename T, util::noise::lerp_t<T> L>
     util::range<T>
-    value<T,L>::bounds (void) const
+    value<S,T,L>::bounds (void) const
     {
         return { -1, 1 };
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, lerp_t<T> L>
+    template <size_t S, typename T, lerp_t<T> L>
     seed_t
-    value<T,L>::seed (void) const
+    value<S,T,L>::seed (void) const
     {
         return m_seed;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, lerp_t<T> L>
+    template <size_t S, typename T, lerp_t<T> L>
     seed_t
-    value<T,L>::seed (seed_t _seed)
+    value<S,T,L>::seed (seed_t _seed)
     {
         return m_seed = _seed;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, util::noise::lerp_t<T> L>
+    template <size_t S, typename T, util::noise::lerp_t<T> L>
     T
-    value<T,L>::operator() (util::point<2,T> p) const
+    value<S,T,L>::operator() (util::point<S,T> p) const
     {
         // extract integer and fractional parts. be careful to always round down
         auto p_int = floor (p).template cast<intmax_t> ();
         auto p_rem = p - p_int;
 
         // generate the corner points
-        auto p0 = p_int + util::vector<2,intmax_t> { 0, 0 };
-        auto p1 = p_int + util::vector<2,intmax_t> { 1, 0 };
-        auto p2 = p_int + util::vector<2,intmax_t> { 0, 1 };
-        auto p3 = p_int + util::vector<2,intmax_t> { 1, 1 };
+        std::array<pointi<S>,pow(2,S)> p_;
+        std::transform (std::begin (this->CORNERS), std::end (this->CORNERS),
+                        std::begin (p_),
+                        [p_int] (auto i) { return p_int + i; });
 
-        // Generate the four corner values
-        T g0 = noise::rand<float> (m_seed, p0);
-        T g1 = noise::rand<float> (m_seed, p1);
-        T g2 = noise::rand<float> (m_seed, p2);
-        T g3 = noise::rand<float> (m_seed, p3);
+        // Generate the corner values
+        std::array<T,pow(2,S)> g_;
+        std::transform (std::begin (p_), std::end (p_),
+                        std::begin (g_),
+                        [this] (auto i) { return noise::rand<float> (m_seed, i); });
 
         // Interpolate on one dimension, then the other.
-        auto l0 = L (g0, g1, p_rem.x);
-        auto l1 = L (g2, g3, p_rem.x);
-        auto l_ = L (l0, l1, p_rem.y);
+        T l_[pow(2,S)];
+        std::copy (std::begin (g_), std::end (g_), std::begin (l_));
 
-        return l_;
+        for (size_t i = S; i; --i)
+            for (size_t j = 0; j < std::pow(2,i); j += 2)
+                l_[j / 2] = L (l_[j], l_[j+1], p_rem[S-i]);
+        return l_[0];
     }
 } } }

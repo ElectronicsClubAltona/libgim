@@ -22,44 +22,44 @@
 
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename B>
-    hmf<T,B>::hmf (seed_t _seed,
-                   unsigned _octaves,
-                   T _H,
-                   T _frequency,
-                   T _lacunarity,
-                   T _amplitude,
-                   T _gain,
-                   T _offset):
-        base<T,B> (_seed,
-                   _octaves,
-                   _H,
-                   _frequency,
-                   _lacunarity,
-                   _amplitude,
-                   _gain),
+    template <size_t S, typename T, typename B>
+    hmf<S,T,B>::hmf (seed_t _seed,
+                     unsigned _octaves,
+                     T _H,
+                     T _frequency,
+                     T _lacunarity,
+                     T _amplitude,
+                     T _gain,
+                     T _offset):
+        base<S,T,B> (_seed,
+                     _octaves,
+                     _H,
+                     _frequency,
+                     _lacunarity,
+                     _amplitude,
+                     _gain),
         m_offset (_offset)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename B>
-    hmf<T,B>::hmf (seed_t _seed):
-        hmf<T,B> (_seed,
-                  DEFAULT_OCTAVES,
-                  DEFAULT_H,
-                  DEFAULT_FREQUENCY,
-                  DEFAULT_LACUNARITY,
-                  DEFAULT_AMPLITUDE,
-                  DEFAULT_GAIN,
-                  DEFAULT_OFFSET)
+    template <size_t S, typename T, typename B>
+    hmf<S,T,B>::hmf (seed_t _seed):
+        hmf<S,T,B> (_seed,
+                    DEFAULT_OCTAVES,
+                    DEFAULT_H,
+                    DEFAULT_FREQUENCY,
+                    DEFAULT_LACUNARITY,
+                    DEFAULT_AMPLITUDE,
+                    DEFAULT_GAIN,
+                    DEFAULT_OFFSET)
     { ; }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T, typename B>
+    template <size_t S, typename T, typename B>
     T
-    hmf<T,B>::operator() (util::point<2,T> p) const
+    hmf<S,T,B>::operator() (point<S,T> p) const
     {
         T scale = this->m_invAH;
 
@@ -77,7 +77,7 @@ namespace util { namespace noise { namespace fractal {
             weight  = min (weight, T{1});
 
             scale *= this->m_invGH;
-            p += T{1};
+            p += PI<T>;
             p *= this->m_lacunarity;
         }
 

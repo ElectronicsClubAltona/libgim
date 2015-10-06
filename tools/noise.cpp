@@ -25,11 +25,13 @@
 #include "region.hpp"
 
 
+constexpr size_t S = 3;
+
 ///////////////////////////////////////////////////////////////////////////////
-template struct util::noise::fractal::fbm<float, util::noise::basis::perlin<float,util::lerp::cubic>>;
-template struct util::noise::fractal::hmf<float, util::noise::basis::value<float,util::lerp::cubic>>;
-template struct util::noise::fractal::rmf<float, util::noise::basis::constant<float>>;
-template struct util::noise::fractal::hetero<float, util::noise::basis::worley<float,2>>;
+template struct util::noise::fractal::fbm<S,float, util::noise::basis::perlin<S,float,util::lerp::cubic>>;
+template struct util::noise::fractal::hmf<S,float, util::noise::basis::value<S,float,util::lerp::cubic>>;
+template struct util::noise::fractal::rmf<S,float, util::noise::basis::constant<S,float>>;
+template struct util::noise::fractal::hetero<S,float, util::noise::basis::worley<S,float,S>>;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -221,30 +223,30 @@ main (int argc, char **argv)
 #endif
 
     util::noise::turbulence<
-        float,
+        S,float,
         util::noise::fractal::runtime<
-            float,
-            util::noise::basis::runtime<float>
+            S,float,
+            util::noise::basis::runtime<S,float>
         >,
         util::noise::fractal::fbm<
-            float,
+            S,float,
             util::noise::basis::perlin<
-                float,
+                S,float,
                 util::lerp::cubic
             >
         >
-    > t (seed, { turbulence, turbulence });
+    > t (seed, util::vectorf<S> (turbulence));
 
     auto &f = t.data;
 
     switch (fractal) {
         using namespace util::noise;
 
-        case FBM:    f.reset<fractal::fbm   <float,basis::runtime<float>>> (seed); break;
-        case HMF:    f.reset<fractal::hmf   <float,basis::runtime<float>>> (seed); break;
-        case RMF:    f.reset<fractal::rmf   <float,basis::runtime<float>>> (seed); break;
+        case FBM:    f.reset<fractal::fbm<S,float,basis::runtime<S,float>>> (seed); break;
+        case HMF:    f.reset<fractal::hmf<S,float,basis::runtime<S,float>>> (seed); break;
+        case RMF:    f.reset<fractal::rmf<S,float,basis::runtime<S,float>>> (seed); break;
         case HETERO: {
-            auto &child = f.reset<fractal::hetero<float,basis::runtime<float>>> (seed);
+            auto &child = f.reset<fractal::hetero<S,float,basis::runtime<S,float>>> (seed);
             if (!std::isnan (offset))
                 child.offset (offset);
             break;
@@ -260,11 +262,11 @@ main (int argc, char **argv)
 
         case PERLIN: {
             switch (lerp) {
-                case LINEAR:    b.reset<basis::perlin<float,util::lerp::linear>> (seed); break;
-                case CUBIC:     b.reset<basis::perlin<float,util::lerp::cubic>> (seed);    break;
-                case QUINTIC:   b.reset<basis::perlin<float,util::lerp::quintic>> (seed);  break;
-                case COSINE:    b.reset<basis::perlin<float,util::lerp::cosine>> (seed);   break;
-                case TRUNC:     b.reset<basis::perlin<float,util::lerp::trunc>> (seed);    break;
+                case LINEAR:    b.reset<basis::perlin<S,float,util::lerp::linear>> (seed); break;
+                case CUBIC:     b.reset<basis::perlin<S,float,util::lerp::cubic>> (seed);    break;
+                case QUINTIC:   b.reset<basis::perlin<S,float,util::lerp::quintic>> (seed);  break;
+                case COSINE:    b.reset<basis::perlin<S,float,util::lerp::cosine>> (seed);   break;
+                case TRUNC:     b.reset<basis::perlin<S,float,util::lerp::trunc>> (seed);    break;
 
             default:
                 unreachable ();
@@ -274,11 +276,11 @@ main (int argc, char **argv)
 
         case EXPDIST: {
             switch (lerp) {
-                case LINEAR:    b.reset<basis::perlin<float,util::lerp::linear,basis::expgrad>> (seed); break;
-                case CUBIC:     b.reset<basis::perlin<float,util::lerp::cubic,basis::expgrad>> (seed);    break;
-                case QUINTIC:   b.reset<basis::perlin<float,util::lerp::quintic,basis::expgrad>> (seed);  break;
-                case COSINE:    b.reset<basis::perlin<float,util::lerp::cosine,basis::expgrad>> (seed);   break;
-                case TRUNC:     b.reset<basis::perlin<float,util::lerp::trunc,basis::expgrad>> (seed);    break;
+                case LINEAR:    b.reset<basis::perlin<S,float,util::lerp::linear,basis::expgrad>> (seed); break;
+                case CUBIC:     b.reset<basis::perlin<S,float,util::lerp::cubic,basis::expgrad>> (seed);    break;
+                case QUINTIC:   b.reset<basis::perlin<S,float,util::lerp::quintic,basis::expgrad>> (seed);  break;
+                case COSINE:    b.reset<basis::perlin<S,float,util::lerp::cosine,basis::expgrad>> (seed);   break;
+                case TRUNC:     b.reset<basis::perlin<S,float,util::lerp::trunc,basis::expgrad>> (seed);    break;
 
             default:
                 unreachable ();
@@ -288,11 +290,11 @@ main (int argc, char **argv)
 
         case VALUE: {
             switch (lerp) {
-                case LINEAR:    b.reset<basis::value<float,util::lerp::linear>> (seed); break;
-                case CUBIC:     b.reset<basis::value<float,util::lerp::cubic>> (seed);    break;
-                case QUINTIC:   b.reset<basis::value<float,util::lerp::quintic>> (seed);  break;
-                case COSINE:    b.reset<basis::value<float,util::lerp::cosine>> (seed);   break;
-                case TRUNC:     b.reset<basis::value<float,util::lerp::trunc>> (seed);    break;
+                case LINEAR:    b.reset<basis::value<S,float,util::lerp::linear>> (seed); break;
+                case CUBIC:     b.reset<basis::value<S,float,util::lerp::cubic>> (seed);    break;
+                case QUINTIC:   b.reset<basis::value<S,float,util::lerp::quintic>> (seed);  break;
+                case COSINE:    b.reset<basis::value<S,float,util::lerp::cosine>> (seed);   break;
+                case TRUNC:     b.reset<basis::value<S,float,util::lerp::trunc>> (seed);    break;
 
             default:
                 unreachable ();
@@ -301,12 +303,12 @@ main (int argc, char **argv)
         }
 
         case WORLEY: {
-            b.reset<util::noise::basis::worley<float>> (seed);
+            b.reset<util::noise::basis::worley<S,float>> (seed);
             break;
         }
 
         case PATCH: {
-            b.reset<util::noise::basis::patch<float>> (seed, width);
+            b.reset<util::noise::basis::patch<S,float>> (seed, width);
             break;
         }
 
@@ -322,9 +324,8 @@ main (int argc, char **argv)
     if (!std::isnan (amplitude)) f.amplitude (amplitude);
     if (!std::isnan (gain)) f.gain (gain);
 
-
-    t.perturb[0].frequency ( scale / res.w);
-    t.perturb[1].frequency ( scale / res.w);
+    for (auto &p: t.perturb)
+        p.frequency (scale / res.w);
 
     util::image::buffer<float> img (res);
 
@@ -336,8 +337,10 @@ main (int argc, char **argv)
 
     {
         for (size_t y = 0; y < res.h; ++y)
-            for (size_t x = 0; x < res.w; ++x)
-                img[{x, y}] = t (util::point2f {float (x), float (y)} + OFFSET);
+            for (size_t x = 0; x < res.w; ++x) {
+                util::point2f p (x, y);
+                img[{x, y}] = t ((p + OFFSET).redim<S> ());
+            }
     }
 
     // working on the assumption that all octave images are based on summation,
@@ -350,8 +353,10 @@ main (int argc, char **argv)
         auto prev = img.clone ();
 
         for (size_t y = 0; y < res.h; ++y)
-            for (size_t x = 0; x < res.w; ++x)
-                prev[{x,y}] = t (util::point2f {float (x), float (y)} + OFFSET);
+            for (size_t x = 0; x < res.w; ++x) {
+                util::point2f p (x, y);
+                prev[{x,y}] = t ((p + OFFSET).redim<S> ());
+            }
 
         CHECK_EQ (img.stride (), prev.stride ());
         for (size_t i = 0; i < img.size (); ++i)

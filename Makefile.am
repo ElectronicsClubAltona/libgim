@@ -158,6 +158,10 @@ UTIL_FILES   =			\
     noise/basis/perlin.ipp	\
     noise/basis/runtime.cpp	\
     noise/basis/runtime.hpp	\
+    noise/basis/type/distance.cpp	\
+    noise/basis/type/distance.hpp	\
+    noise/basis/type/gradient.hpp	\
+    noise/basis/type/gradient.cpp	\
     noise/basis/value.hpp	\
     noise/basis/value.ipp	\
     noise/basis/worley.hpp	\

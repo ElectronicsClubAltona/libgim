@@ -24,37 +24,53 @@
 
 
 namespace util { namespace noise {
-    template <typename T, typename V>
-    T
-    rand (uint64_t seed, V value)
+    //-------------------------------------------------------------------------
+    template <
+        typename U,
+        size_t S,
+        typename T,
+        template <size_t,typename> class Q
+    >
+    U
+    rand (uint64_t seed, Q<S,T> query)
     {
+        static_assert (std::is_integral<T>::value,
+                       "mixing only works on integral types");
+
         uint64_t accum = seed;
-        for (auto i: value)
+        for (auto i: query)
             accum = hash::murmur2::mix (accum, i);
 
-        T out = (accum & 0xFFFF) / T{0xFFFF};
+        U result = (accum & 0xFFFF) / U{0xFFFF};
 
-        out *= 2;
-        out -= 1;
+        result *= 2;
+        result -= 1;
 
-        return out;
+        return result;
     }
 
 
-    template <size_t N, typename T, typename V>
-    vector<N,T>
-    rand (uint64_t seed, V value)
+    //-------------------------------------------------------------------------
+    template <
+        template <size_t,typename> class R,
+        typename U,
+        size_t S,
+        typename T,
+        template <size_t,typename> class Q
+    >
+    R<S,U>
+    rand (uint64_t seed, Q<S,T> query)
     {
         uint64_t accum = seed;
-        for (auto i: value)
+        for (auto i: query)
             accum = hash::murmur2::mix (accum, i);
 
-        vector<N,T> out;
-        for (auto &i: out) {
-            i = (accum & 0xFFFF) / T{0xFFFF};
+        R<S,U> result;
+        for (auto &i: result) {
+            i = (accum & 0xFFFF) / U{0xFFFF};
             accum = hash::murmur2::mix (accum, seed);
         }
 
-        return out * 2 - 1;
+        return result * 2 - 1;
     }
 } }

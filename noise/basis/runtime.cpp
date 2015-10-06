@@ -17,4 +17,4 @@
 #include "runtime.hpp"
 
 
-template struct util::noise::basis::runtime<float>;
+template struct util::noise::basis::runtime<2,float>;

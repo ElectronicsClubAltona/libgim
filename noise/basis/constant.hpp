@@ -22,12 +22,13 @@
 #include <cstdint>
 
 namespace util { namespace noise { namespace basis {
-    template <typename T>
+    template <size_t S, typename T>
     struct constant {
         using seed_t = uint64_t;
 
         constant (seed_t);
-        T operator() (util::point<2,T>) const;
+
+        T operator() (point<S,T>) const;
 
         seed_t seed;
         T value;

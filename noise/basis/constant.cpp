@@ -19,14 +19,17 @@
 using util::noise::basis::constant;
 
 
-//-----------------------------------------------------------------------------
-template <typename T>
-constant<T>::constant (seed_t _seed):
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constant<S,T>::constant (seed_t _seed):
     seed (_seed),
     value (42)
 { ; }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template struct util::noise::basis::constant<float>;
-template struct util::noise::basis::constant<double>;
+template struct util::noise::basis::constant<2,float>;
+template struct util::noise::basis::constant<2,double>;
+
+template struct util::noise::basis::constant<3,float>;
+template struct util::noise::basis::constant<3,double>;
