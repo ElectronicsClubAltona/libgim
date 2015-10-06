@@ -7,7 +7,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUvalue_t WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
@@ -21,90 +21,90 @@
 
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename B>
-    hetero<S,T,B>::hetero(seed_t _seed,
-                          unsigned _octaves,
-                          T _H,
-                          T _frequency,
-                          T _lacunarity,
-                          T _amplitude,
-                          T _gain):
-        hetero<S,T,B> (_seed,
-                       _octaves,
-                       _H,
-                       _frequency,
-                       _lacunarity,
-                       _amplitude,
-                       _gain,
-                       -this->basis ().bounds ().min + this->basis ().bounds ().magnitude () / T{2})
+    template <class B>
+    hetero<B>::hetero(seed_t _seed,
+                      unsigned _octaves,
+                      value_t _H,
+                      value_t _frequency,
+                      value_t _lacunarity,
+                      value_t _amplitude,
+                      value_t _gain):
+        hetero<B> (_seed,
+                   _octaves,
+                   _H,
+                   _frequency,
+                   _lacunarity,
+                   _amplitude,
+                   _gain,
+                   -this->basis ().bounds ().min + this->basis ().bounds ().magnitude () / value_t{2})
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    hetero<S,T,B>::hetero(seed_t _seed,
-                          unsigned _octaves,
-                          T _H,
-                          T _frequency,
-                          T _lacunarity,
-                          T _amplitude,
-                          T _gain,
-                          T _offset):
-        base<S,T,B> (_seed,
-                     _octaves,
-                     _H,
-                     _frequency,
-                     _lacunarity,
-                     _amplitude,
-                     _gain),
+    template <class B>
+    hetero<B>::hetero(seed_t _seed,
+                      unsigned _octaves,
+                      value_t _H,
+                      value_t _frequency,
+                      value_t _lacunarity,
+                      value_t _amplitude,
+                      value_t _gain,
+                      value_t _offset):
+        base<B> (_seed,
+                 _octaves,
+                 _H,
+                 _frequency,
+                 _lacunarity,
+                 _amplitude,
+                 _gain),
         m_offset (_offset)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    hetero<S,T,B>::hetero (seed_t _seed):
-        hetero<S,T,B> (_seed,
-                       DEFAULT_OCTAVES,
-                       DEFAULT_H,
-                       DEFAULT_FREQUENCY,
-                       DEFAULT_LACUNARITY,
-                       DEFAULT_AMPLITUDE,
-                       DEFAULT_GAIN,
-                       DEFAULT_OFFSET)
+    template <class B>
+    hetero<B>::hetero (seed_t _seed):
+        hetero<B> (_seed,
+                   DEFAULT_OCTAVES,
+                   DEFAULT_H,
+                   DEFAULT_FREQUENCY,
+                   DEFAULT_LACUNARITY,
+                   DEFAULT_AMPLITUDE,
+                   DEFAULT_GAIN,
+                   DEFAULT_OFFSET)
     { ; }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename B>
-    constexpr T
-    hetero<S,T,B>::offset (void) const
+    template <class B>
+    constexpr typename hetero<B>::value_t
+    hetero<B>::offset (void) const
     {
         return m_offset;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    T
-    hetero<S,T,B>::offset (T _offset)
+    template <class B>
+    typename hetero<B>::value_t
+    hetero<B>::offset (value_t _offset)
     {
         return m_offset = _offset;
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename B>
-    T
-    hetero<S,T,B>::operator() (point<S,T> p) const
+    template <class B>
+    typename hetero<B>::value_t
+    hetero<B>::operator() (point_t p) const
     {
-        T scale = this->m_invAH;
+        value_t scale = this->m_invAH;
 
         p *= this->m_frequency;
-        T result = (this->m_basis (p) + m_offset) * scale;
+        value_t result = (this->m_basis (p) + m_offset) * scale;
         p *= this->m_lacunarity;
 
-        T increment = 0;
+        value_t increment = 0;
 
         for (size_t i = 1; i < this->m_octaves; ++i) {
             scale *= this->m_invGH;
@@ -115,7 +115,7 @@ namespace util { namespace noise { namespace fractal {
 
             result += increment;
 
-            p += PI<T>;
+            p += PI<value_t>;
             p *= this->m_lacunarity;
         }
 

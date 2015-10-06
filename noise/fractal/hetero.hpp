@@ -7,7 +7,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUvalue_t WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
@@ -25,48 +25,45 @@
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////
     /// Heterogeneous procedural terrain fucntion: stats by altitude method
-    template <
-        size_t S,   // probe point dimensionality
-        typename T, // probe point value_type
-        typename B  // generating basis function
-    >
-    struct hetero : public base<S,T,B> {
-        using seed_t = typename base<S,T,B>::seed_t;
+    template <class B>
+    struct hetero : public base<B> {
+        using value_t = typename base<B>::value_t;
+        using point_t = typename base<B>::point_t;
 
         static constexpr unsigned DEFAULT_OCTAVES = 6;
-        static constexpr T DEFAULT_H = T(0.75);
-        static constexpr T DEFAULT_FREQUENCY = T(0.1);
-        static constexpr T DEFAULT_LACUNARITY = 2;
-        static constexpr T DEFAULT_AMPLITUDE = 1;
-        static constexpr T DEFAULT_GAIN = 1 / DEFAULT_LACUNARITY;
-        static constexpr T DEFAULT_OFFSET = T(0.7);
+        static constexpr value_t DEFAULT_H = value_t(0.75);
+        static constexpr value_t DEFAULT_FREQUENCY = value_t(0.1);
+        static constexpr value_t DEFAULT_LACUNARITY = 2;
+        static constexpr value_t DEFAULT_AMPLITUDE = 1;
+        static constexpr value_t DEFAULT_GAIN = 1 / DEFAULT_LACUNARITY;
+        static constexpr value_t DEFAULT_OFFSET = value_t(0.7);
 
         hetero (seed_t,
                 unsigned octaves,
-                T H,
-                T frequency,
-                T lacunarity,
-                T amplitude,
-                T gain);
+                value_t H,
+                value_t frequency,
+                value_t lacunarity,
+                value_t amplitude,
+                value_t gain);
 
         hetero (seed_t,
                 unsigned octaves,
-                T H,
-                T frequency,
-                T lacunarity,
-                T amplitude,
-                T gain,
-                T offset);
+                value_t H,
+                value_t frequency,
+                value_t lacunarity,
+                value_t amplitude,
+                value_t gain,
+                value_t offset);
 
         hetero (seed_t);
 
-        constexpr T offset (void) const;
-        T offset (T);
+        constexpr value_t offset (void) const;
+        value_t offset (value_t);
 
-        T operator() (point<S,T>) const;
+        value_t operator() (point_t) const;
 
     private:
-        T m_offset;
+        value_t m_offset;
     };
 } } }
 

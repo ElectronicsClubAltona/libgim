@@ -32,40 +32,37 @@ namespace util { namespace noise { namespace fractal {
     /// lacunarity: incremental octave frequency scaling factor
     /// amplitude: value scaling factor for the base octave
     /// gain: incremental octave value scaling factor
-    template <
-        size_t S,   // probe point dimensionality
-        typename T, // probe point value_type
-        typename B  // generating basis function
-    >
-    struct rmf : public base<S,T,B> {
-        using seed_t = typename base<S,T,B>::seed_t;
+    template <class B>
+    struct rmf : public base<B> {
+        using value_t = typename base<B>::value_t;
+        using point_t = typename base<B>::point_t;
 
         static constexpr unsigned DEFAULT_OCTAVES = 5;
-        static constexpr T DEFAULT_H = 1;
-        static constexpr T DEFAULT_OFFSET = 1;
-        static constexpr T DEFAULT_FREQUENCY = 1;
-        static constexpr T DEFAULT_LACUNARITY = 2;
-        static constexpr T DEFAULT_AMPLITUDE = 2;
-        static constexpr T DEFAULT_GAIN = 1 / DEFAULT_LACUNARITY;
+        static constexpr value_t DEFAULT_H = 1;
+        static constexpr value_t DEFAULT_OFFSET = 1;
+        static constexpr value_t DEFAULT_FREQUENCY = 1;
+        static constexpr value_t DEFAULT_LACUNARITY = 2;
+        static constexpr value_t DEFAULT_AMPLITUDE = 2;
+        static constexpr value_t DEFAULT_GAIN = 1 / DEFAULT_LACUNARITY;
 
         rmf (seed_t,
              unsigned octaves,
-             T H,
-             T frequency,
-             T lacunarity,
-             T amplitude,
-             T gain,
-             T offset);
+             value_t H,
+             value_t frequency,
+             value_t lacunarity,
+             value_t amplitude,
+             value_t gain,
+             value_t offset);
 
         rmf (seed_t);
 
-        T operator() (point<S,T>) const;
+        value_t operator() (point_t) const;
 
-        T offset (void) const;
-        T offset (T);
+        value_t offset (void) const;
+        value_t offset (value_t);
 
     private:
-        T m_offset;
+        value_t m_offset;
     };
 } } }
 

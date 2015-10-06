@@ -30,19 +30,23 @@ namespace util { namespace noise { namespace basis {
     template <
         size_t S,       // point point dimensionality
         typename T,     // arithmetic and result value_type, must be floating point
-        lerp_t<T> L,    // gradient interpolation function
-        template <      // gradient provider class, must provide generate(point_t)
+        template <      // gradient interpolation function
+            typename
+        > class L,
+        template <      // gradient provider class, must provide generate(point_t) 
             size_t,
-            typename,
-            lerp_t<T>
+            typename   
         > class G = gradient
     >
-    struct perlin : public G<S,T,L>, public type::gradient<S> {
+    struct perlin : public G<S,T>, public type::gradient<S> {
+        using value_t = T;
+        using point_t = point<S,T>;
+
         perlin (seed_t);
 
         range<T> bounds (void) const;
 
-        T operator() (point<S,T>) const;
+        T operator() (point_t) const;
     };
 } } }
 

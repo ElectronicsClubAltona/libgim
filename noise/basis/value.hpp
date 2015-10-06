@@ -26,13 +26,22 @@
 
 namespace util { namespace noise { namespace basis {
     /// Single value per grid space
-    template <size_t S, typename T, lerp_t<T>>
+    template <
+        size_t S,
+        typename T,
+        template <
+            typename
+        > class L
+    >
     struct value : public type::gradient<S> {
+        using value_t = T;
+        using point_t = point<S,T>;
+
         value (seed_t);
 
         range<T> bounds (void) const;
 
-        T operator() (util::point<S,T>) const;
+        value_t operator() (point_t) const;
 
         seed_t seed (void) const;
         seed_t seed (seed_t);

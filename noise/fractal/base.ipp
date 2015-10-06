@@ -7,7 +7,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUvalue_t WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
@@ -23,14 +23,14 @@
 
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename B>
-    base<S,T,B>::base (seed_t _seed,
-                       unsigned _octaves,
-                       T _H,
-                       T _frequency,
-                       T _lacunarity,
-                       T _amplitude,
-                       T _gain):
+    template <class B>
+    base<B>::base (seed_t _seed,
+                   unsigned _octaves,
+                   value_t _H,
+                   value_t _frequency,
+                   value_t _lacunarity,
+                   value_t _amplitude,
+                   value_t _gain):
         // literals
         m_octaves (_octaves),
         m_H (_H),
@@ -51,27 +51,27 @@ namespace util { namespace noise { namespace fractal {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename B>
+    template <class B>
     unsigned
-    base<S,T,B>::octaves (unsigned _octaves)
+    base<B>::octaves (unsigned _octaves)
     {
         return m_octaves = _octaves;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
+    template <class B>
     constexpr unsigned
-    base<S,T,B>::octaves (void) const
+    base<B>::octaves (void) const
     {
         return m_octaves;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    T
-    base<S,T,B>::H (T _h)
+    template <class B>
+    typename base<B>::value_t
+    base<B>::H (value_t _h)
     {
         m_H = _h;
         m_invAH = std::pow (m_amplitude, -m_H);
@@ -81,63 +81,63 @@ namespace util { namespace noise { namespace fractal {
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    constexpr T
-    base<S,T,B>::H (void) const
+    template <class B>
+    constexpr typename base<B>::value_t
+    base<B>::H (void) const
     {
         return m_H;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    T
-    base<S,T,B>::frequency (T _frequency)
+    template <class B>
+    typename base<B>::value_t
+    base<B>::frequency (value_t _frequency)
     {
         return m_frequency = _frequency;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    constexpr T
-    base<S,T,B>::frequency (void) const
+    template <class B>
+    constexpr typename base<B>::value_t
+    base<B>::frequency (void) const
     {
         return m_frequency;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    T
-    base<S,T,B>::lacunarity (T _lacunarity)
+    template <class B>
+    typename base<B>::value_t
+    base<B>::lacunarity (value_t _lacunarity)
     {
         return m_lacunarity = _lacunarity;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    constexpr T
-    base<S,T,B>::lacunarity (void) const
+    template <class B>
+    constexpr typename base<B>::value_t
+    base<B>::lacunarity (void) const
     {
         return m_lacunarity;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    constexpr T
-    base<S,T,B>::amplitude (void) const
+    template <class B>
+    constexpr typename base<B>::value_t
+    base<B>::amplitude (void) const
     {
         return m_amplitude;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    T
-    base<S,T,B>::amplitude (T _amplitude)
+    template <class B>
+    typename base<B>::value_t
+    base<B>::amplitude (value_t _amplitude)
     {
         m_amplitude = _amplitude;
         m_invAH = std::pow (m_amplitude, -m_H);
@@ -146,18 +146,18 @@ namespace util { namespace noise { namespace fractal {
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    constexpr T
-    base<S,T,B>::gain (void) const
+    template <class B>
+    constexpr typename base<B>::value_t
+    base<B>::gain (void) const
     {
         return m_gain;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    T
-    base<S,T,B>::gain (T _gain)
+    template <class B>
+    typename base<B>::value_t
+    base<B>::gain (value_t _gain)
     {
         m_gain = _gain;
         m_invGH = std::pow (_gain, m_H);
@@ -166,36 +166,36 @@ namespace util { namespace noise { namespace fractal {
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    typename base<S,T,B>::seed_t
-    base<S,T,B>::seed (seed_t _seed)
+    template <class B>
+    seed_t
+    base<B>::seed (seed_t _seed)
     {
         return m_basis.seed (_seed);
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    typename base<S,T,B>::seed_t
-    base<S,T,B>::seed (void) const
+    template <class B>
+    seed_t
+    base<B>::seed (void) const
     {
         return m_basis.seed ();
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
+    template <class B>
     const B&
-    base<S,T,B>::basis (void) const
+    base<B>::basis (void) const
     {
         return m_basis;
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
+    template <class B>
     B&
-    base<S,T,B>::basis (void)
+    base<B>::basis (void)
     {
         return m_basis;
     }

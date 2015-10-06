@@ -30,23 +30,27 @@ namespace util { namespace noise {
     /// nothing will explode if it isn't, but you'll see strong directional
     /// artefacts with higher scaling factors.
     template <
-        size_t   S, // dimension
-        typename T, // value_type
         typename D, // data fractal
         typename P  // pertubation fractal
     >
     struct turbulence {
-        static constexpr auto dimension = S;
-        using value_type = T;
+        using value_t = typename D::value_t;
+        using point_t = typename D::point_t;
+        using scale_t = vector<point_t::dimension,value_t>;
 
-        using seed_t = uint64_t;
+        static constexpr size_t S = D::point_t::dimension;
 
-        turbulence (seed_t, vector<S,T> scale);
+        static_assert (std::is_same<typename D::value_t, typename P::value_t>::value,
+                       "data and perturbation value types must match");
+        static_assert (std::is_same<typename D::point_t, typename P::point_t>::value,
+                       "data and perturbation point types must match");
+
+        turbulence (seed_t, scale_t);
 
         seed_t seed (seed_t);
         seed_t seed (void) const;
 
-        constexpr T operator() (point<S,T>) const;
+        constexpr value_t operator() (point_t) const;
 
         D data;
 
@@ -58,7 +62,7 @@ namespace util { namespace noise {
             P perturb[S];
         };
 
-        vector<S,T> scale;
+        scale_t scale;
     };
 } }
 

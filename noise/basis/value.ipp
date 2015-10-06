@@ -25,14 +25,14 @@
 
 namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, util::noise::lerp_t<T> L>
+    template <size_t S, typename T, template <typename> class L>
     value<S,T,L>::value (seed_t _seed):
         m_seed (_seed)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, util::noise::lerp_t<T> L>
+    template <size_t S, typename T, template <typename> class L>
     util::range<T>
     value<S,T,L>::bounds (void) const
     {
@@ -41,7 +41,7 @@ namespace util { namespace noise { namespace basis {
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, lerp_t<T> L>
+    template <size_t S, typename T, template <typename> class L>
     seed_t
     value<S,T,L>::seed (void) const
     {
@@ -50,7 +50,7 @@ namespace util { namespace noise { namespace basis {
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, lerp_t<T> L>
+    template <size_t S, typename T, template <typename> class L>
     seed_t
     value<S,T,L>::seed (seed_t _seed)
     {
@@ -59,7 +59,7 @@ namespace util { namespace noise { namespace basis {
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, util::noise::lerp_t<T> L>
+    template <size_t S, typename T, template <typename> class L>
     T
     value<S,T,L>::operator() (util::point<S,T> p) const
     {
@@ -77,7 +77,7 @@ namespace util { namespace noise { namespace basis {
         std::array<T,pow(2,S)> g_;
         std::transform (std::begin (p_), std::end (p_),
                         std::begin (g_),
-                        [this] (auto i) { return rand::scalar<float> (m_seed, i) * 2 - 1; });
+                        [this] (auto i) { return rand::scalar<value_t> (m_seed, i) * 2 - 1; });
 
         // Interpolate on one dimension, then the other.
         T l_[pow(2,S)];
@@ -85,7 +85,7 @@ namespace util { namespace noise { namespace basis {
 
         for (size_t i = S; i; --i)
             for (size_t j = 0; j < std::pow(2,i); j += 2)
-                l_[j / 2] = L (l_[j], l_[j+1], p_rem[S-i]);
+                l_[j / 2] = L<T>() (l_[j], l_[j+1], p_rem[S-i]);
         return l_[0];
     }
 } } }

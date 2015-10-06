@@ -28,6 +28,9 @@ namespace util { namespace noise { namespace basis {
     template <size_t S, typename T>
     struct runtime {
     public:
+        using value_t = T;
+        using point_t = point<S,T>;
+
         runtime (seed_t) {}
         runtime (runtime&&) = default;
         runtime (const runtime&) = delete;

@@ -27,11 +27,14 @@
 namespace util { namespace noise { namespace basis {
     template <size_t S, typename T, size_t F = 0>
     struct worley : public type::distance<S,1> {
+        using value_t = T;
+        using point_t = point<S,T>;
+
         worley (seed_t);
 
         range<T> bounds (void) const;
 
-        T operator() (util::point<S,T>) const;
+        value_t operator() (point_t) const;
 
         seed_t seed (void) const;
         seed_t seed (seed_t);

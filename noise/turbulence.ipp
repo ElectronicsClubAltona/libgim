@@ -24,10 +24,10 @@
 
 namespace util { namespace noise {
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename D, typename P>
-    turbulence<S,T,D,P>::turbulence (seed_t _seed,
-                                     vector<S,T> _scale):
-        data (_seed),
+    template <typename D, typename P>
+    turbulence<D,P>::turbulence (seed_t  _seed,
+                                     scale_t _scale):
+        data  (_seed),
         scale (_scale)
     {
         for (auto &p: perturb)
@@ -35,18 +35,18 @@ namespace util { namespace noise {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename D, typename P>
-    typename turbulence<S,T,D,P>::seed_t
-    turbulence<S,T,D,P>::seed (void) const
+    template <typename D, typename P>
+    seed_t
+    turbulence<D,P>::seed (void) const
     {
         return data.seed ();
     }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename D, typename P>
-    typename turbulence<S,T,D,P>::seed_t
-    turbulence<S,T,D,P>::seed (seed_t _seed)
+    template <typename D, typename P>
+    seed_t
+    turbulence<D,P>::seed (seed_t _seed)
     {
         auto ret = _seed;
         data.seed (_seed);
@@ -59,11 +59,11 @@ namespace util { namespace noise {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename D, typename P>
-    constexpr T
-    turbulence<S,T,D,P>::operator() (point<S,T> p) const
+    template <typename D, typename P>
+    constexpr typename turbulence<D,P>::value_t
+    turbulence<D,P>::operator() (point_t p) const
     {
-        vector<S,T> n;
+        scale_t n;
         for (size_t i = 0; i < S; ++i)
             n[i] = perturb[i] (p);
 

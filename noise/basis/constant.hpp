@@ -17,6 +17,7 @@
 #ifndef __UTIL_NOISE_BASIS_CONSTANT_HPP
 #define __UTIL_NOISE_BASIS_CONSTANT_HPP
 
+#include "../rand.hpp"
 #include "../../point.hpp"
 
 #include <cstdint>
@@ -24,11 +25,12 @@
 namespace util { namespace noise { namespace basis {
     template <size_t S, typename T>
     struct constant {
-        using seed_t = uint64_t;
+        using value_t = T;
+        using point_t = point<S,T>;
 
         constant (seed_t);
 
-        T operator() (point<S,T>) const;
+        T operator() (point_t) const;
 
         seed_t seed;
         T value;

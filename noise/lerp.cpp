@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "lerp.hpp"
@@ -21,25 +21,17 @@
 
 #include <cmath>
 
-
-//-----------------------------------------------------------------------------
-template <typename T>
-T
-util::lerp::sigmoid (T val)
-{
-    static_assert (std::is_floating_point<T>::value,
-                   "lerp is only defined for floating types");
-    return -1 + 2 / (1 + std::exp (-2 * val));
-}
-
-template float  util::lerp::sigmoid (float);
-template double util::lerp::sigmoid (double);
+using util::lerp::linear;
+using util::lerp::cosine;
+using util::lerp::cubic;
+using util::lerp::quintic;
+using util::lerp::truncate;
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-util::lerp::trunc (T a, T, T weight)
+truncate<T>::operator() (T a, T, T weight)
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
@@ -50,14 +42,14 @@ util::lerp::trunc (T a, T, T weight)
     return a;
 }
 
-template float  util::lerp::trunc (float,  float,  float);
-template double util::lerp::trunc (double, double, double);
+template struct util::lerp::truncate<float>;
+template struct util::lerp::truncate<double>;
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-util::lerp::linear (T a, T b, T weight)
+linear<T>::operator() (T a, T b, T weight)
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
@@ -66,14 +58,14 @@ util::lerp::linear (T a, T b, T weight)
     return a * (1 - weight) + b * weight;
 }
 
-template float  util::lerp::linear (float,  float,  float);
-template double util::lerp::linear (double, double, double);
+template struct util::lerp::linear<float>;
+template struct util::lerp::linear<double>;
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-util::lerp::cosine (T a, T b, T weight)
+cosine<T>::operator() (T a, T b, T weight)
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
@@ -83,14 +75,14 @@ util::lerp::cosine (T a, T b, T weight)
     return a * (1 - t) + b * t;
 }
 
-template float  util::lerp::cosine (float,  float,  float);
-template double util::lerp::cosine (double, double, double);
+template struct util::lerp::cosine<float>;
+template struct util::lerp::cosine<double>;
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-util::lerp::cubic (T a, T b, T weight)
+cubic<T>::operator() (T a, T b, T weight)
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
@@ -101,14 +93,14 @@ util::lerp::cubic (T a, T b, T weight)
     return a * (1 - t) + b * t;
 }
 
-template float  util::lerp::cubic (float,  float,  float);
-template double util::lerp::cubic (double, double, double);
+template struct util::lerp::cubic<float>;
+template struct util::lerp::cubic<double>;
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-util::lerp::quintic (T a, T b, T weight)
+quintic<T>::operator() (T a, T b, T weight)
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
@@ -119,6 +111,5 @@ util::lerp::quintic (T a, T b, T weight)
     return a * (1 - t) + b * t;
 }
 
-
-template float  util::lerp::quintic (float,  float,  float);
-template double util::lerp::quintic (double, double, double);
+template struct util::lerp::quintic<float>;
+template struct util::lerp::quintic<double>;

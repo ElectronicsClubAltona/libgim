@@ -18,6 +18,5 @@
 #include "../basis/runtime.hpp"
 
 template struct util::noise::fractal::runtime<
-    2,float,
     util::noise::basis::runtime<2,float>
 >;

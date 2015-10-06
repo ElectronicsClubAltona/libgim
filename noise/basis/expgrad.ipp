@@ -24,22 +24,21 @@
 
 namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, util::noise::lerp_t<T> L
-    >
-    expgrad<S,T,L>::expgrad (seed_t _seed, T _base, T _exponent):
-        gradient<S,T,L> (_seed),
+    template <size_t S, typename T>
+    expgrad<S,T>::expgrad (seed_t _seed, T _base, T _exponent):
+        gradient<S,T> (_seed),
         m_base (_base),
         m_exponent (_exponent)
     { ; }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, util::noise::lerp_t<T> L>
+    template <size_t S, typename T>
     vector<S,T>
-    expgrad<S,T,L>::generate (pointi<S> p) const
+    expgrad<S,T>::generate (pointi<S> p) const
     {
         auto t = rand::scalar<float> (this->seed (), p);
         auto factor = std::pow (m_base, -t * m_exponent);
-        return factor * gradient<S,T,L>::generate (p);
+        return factor * gradient<S,T>::generate (p);
     }
 } } }

@@ -26,8 +26,7 @@ namespace util { namespace noise { namespace basis {
     /// Perlin: interpolated value across each grid space
     template <
         size_t S,   // probe point dimensionality
-        typename T, // probe point value_type
-        lerp_t<T> L // axis interpolation function
+        typename T // probe point value_type
     >
     struct gradient {
         gradient (seed_t);

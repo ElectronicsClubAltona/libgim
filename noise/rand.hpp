@@ -20,6 +20,12 @@
 #include "./rand/permute.hpp"
 #include "./rand/hash.hpp"
 
+#include <cstdint>
+
+namespace util { namespace noise {
+    using seed_t = uint64_t;
+} }
+
 namespace util { namespace noise { namespace rand {
     /// generate a uniform random floating point in the range [0, 1] from a seed and vector
     template <

@@ -7,7 +7,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUvalue_t WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
@@ -23,51 +23,51 @@
 
 namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename B>
-    fbm<S,T,B>::fbm (seed_t _seed,
-                     unsigned _octaves,
-                     T        _H,
-                     T        _frequency,
-                     T        _lacunarity,
-                     T        _amplitude,
-                     T        _gain):
-        base<S,T,B> (_seed,
-                     _octaves,
-                     _H,
-                     _frequency,
-                     _lacunarity,
-                     _amplitude,
-                     _gain)
+    template <class B>
+    fbm<B>::fbm (seed_t _seed,
+                 unsigned _octaves,
+                 value_t        _H,
+                 value_t        _frequency,
+                 value_t        _lacunarity,
+                 value_t        _amplitude,
+                 value_t        _gain):
+        base<B> (_seed,
+                 _octaves,
+                 _H,
+                 _frequency,
+                 _lacunarity,
+                 _amplitude,
+                 _gain)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename B>
-    fbm<S,T,B>::fbm (seed_t _seed):
-        fbm<S,T,B> (_seed,
-                    DEFAULT_OCTAVES,
-                    DEFAULT_H,
-                    DEFAULT_FREQUENCY,
-                    DEFAULT_LACUNARITY,
-                    DEFAULT_AMPLITUDE,
-                    DEFAULT_GAIN)
+    template <class B>
+    fbm<B>::fbm (seed_t _seed):
+        fbm<B> (_seed,
+                DEFAULT_OCTAVES,
+                DEFAULT_H,
+                DEFAULT_FREQUENCY,
+                DEFAULT_LACUNARITY,
+                DEFAULT_AMPLITUDE,
+                DEFAULT_GAIN)
     { ; }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename B>
-    T
-    fbm<S,T,B>::operator() (point<S,T> p) const
+    template <class B>
+    typename fbm<B>::value_t
+    fbm<B>::operator() (point_t p) const
     {
-        T total = 0;
-        T scale = this->m_invAH;
+        value_t total = 0;
+        value_t scale = this->m_invAH;
 
         p *= this->m_frequency;
 
         for (size_t i = 0; i < this->m_octaves; ++i) {
             total += this->m_basis (p) * scale;
 
-            p += PI<float>;
+            p += PI<value_t>;
             p *= this->m_lacunarity;
             scale *= this->m_invGH;
         }

@@ -19,20 +19,15 @@
 #define __UTIL_NOISE_FRACTAL_RUNTIME_HPP
 
 #include "base.hpp"
-#include "../../point.hpp"
-#include "../../range.hpp"
 
 #include <memory>
 
 namespace util { namespace noise { namespace fractal {
-    template <
-        size_t S,   // probe point dimensionality
-        typename T, // probe point value_type
-        typename B  // generating basis function
-    >
+    template <class B>
     struct runtime {
     public:
-        using seed_t = uint64_t;
+        using value_t = typename B::value_t;
+        using point_t = typename B::point_t;
 
         runtime (seed_t) { }
         runtime () = default;
@@ -41,25 +36,25 @@ namespace util { namespace noise { namespace fractal {
         runtime& operator= (const runtime&) = delete;
 
         // basis functions
-        T operator () (point<S,T> p) const { return (*m_child) (p); }
+        value_t operator () (point_t p) const { return (*m_child) (p); }
 
         unsigned octaves (void) const { return m_child->octaves (); }
         unsigned octaves (unsigned _octaves) { return m_child->octaves (_octaves); }
 
-        T H (void) const { return m_child->H (); }
-        T H (T _H) { return m_child->H (_H); }
+        value_t H (void) const { return m_child->H (); }
+        value_t H (value_t _H) { return m_child->H (_H); }
     
-        T frequency (void) const { return m_child->frequency (); }
-        T frequency (T _frequency) { return m_child->frequency (_frequency); }
+        value_t frequency (void) const { return m_child->frequency (); }
+        value_t frequency (value_t _frequency) { return m_child->frequency (_frequency); }
 
-        T lacunarity (void) const { return m_child->lacunarity (); }
-        T lacunarity (T _lacunarity) { return m_child->lacunarity (_lacunarity); }
+        value_t lacunarity (void) const { return m_child->lacunarity (); }
+        value_t lacunarity (value_t _lacunarity) { return m_child->lacunarity (_lacunarity); }
 
-        T amplitude (void) const { return m_child->amplitude (); }
-        T amplitude (T _amplitude) { return m_child->amplitude (_amplitude); }
+        value_t amplitude (void) const { return m_child->amplitude (); }
+        value_t amplitude (value_t _amplitude) { return m_child->amplitude (_amplitude); }
 
-        T gain (void) const { return m_child->gain (); }
-        T gain (T _gain) { return m_child->gain (_gain); }
+        value_t gain (void) const { return m_child->gain (); }
+        value_t gain (value_t _gain) { return m_child->gain (_gain); }
 
         B& basis (void) { return m_child->basis (); }
         const B& basis (void) const { return m_child->basis (); }
@@ -71,25 +66,25 @@ namespace util { namespace noise { namespace fractal {
         struct base {
             virtual ~base () = default;
 
-            virtual T operator() (util::point<S,T>) = 0;
+            virtual value_t operator() (point_t) = 0;
 
             virtual unsigned octaves (void) const = 0;
             virtual unsigned octaves (unsigned) = 0;
 
-            virtual T H (void) const = 0;
-            virtual T H (T) = 0;
+            virtual value_t H (void) const = 0;
+            virtual value_t H (value_t) = 0;
         
-            virtual T frequency (void) const = 0;
-            virtual T frequency (T) = 0;
+            virtual value_t frequency (void) const = 0;
+            virtual value_t frequency (value_t) = 0;
 
-            virtual T lacunarity (void) const = 0;
-            virtual T lacunarity (T) = 0;
+            virtual value_t lacunarity (void) const = 0;
+            virtual value_t lacunarity (value_t) = 0;
 
-            virtual T amplitude (void) const = 0;
-            virtual T amplitude (T) = 0;
+            virtual value_t amplitude (void) const = 0;
+            virtual value_t amplitude (value_t) = 0;
 
-            virtual T gain (void) const = 0;
-            virtual T gain (T) = 0;
+            virtual value_t gain (void) const = 0;
+            virtual value_t gain (value_t) = 0;
 
             virtual B& basis (void) = 0;
             virtual const B& basis (void) const = 0;
@@ -106,11 +101,11 @@ namespace util { namespace noise { namespace fractal {
 
            child (seed_t _seed,
                   unsigned _octaves,
-                  T _H,
-                  T _frequency,
-                  T _lacunarity,
-                  T _amplitude,
-                  T _gain):
+                  value_t _H,
+                  value_t _frequency,
+                  value_t _lacunarity,
+                  value_t _amplitude,
+                  value_t _gain):
                data (_seed,
                      _octaves,
                      _H,
@@ -120,25 +115,25 @@ namespace util { namespace noise { namespace fractal {
                      _gain)
             { ; }
  
-            T operator() (util::point<S,T> p) override { return data (p); }
+            value_t operator() (point_t p) override { return data (p); }
 
             unsigned octaves (void) const override { return data.octaves (); }
             unsigned octaves (unsigned _octaves) override { return data.octaves (_octaves); }
 
-            T H (void) const override { return data.H (); }
-            T H (T _H) override { return data.H (_H); }
+            value_t H (void) const override { return data.H (); }
+            value_t H (value_t _H) override { return data.H (_H); }
         
-            T frequency (void) const override { return data.frequency (); }
-            T frequency (T _frequency) override { return data.frequency (_frequency); }
+            value_t frequency (void) const override { return data.frequency (); }
+            value_t frequency (value_t _frequency) override { return data.frequency (_frequency); }
 
-            T lacunarity (void) const override { return data.lacunarity (); }
-            T lacunarity (T _lacunarity) override { return data.lacunarity (_lacunarity); }
+            value_t lacunarity (void) const override { return data.lacunarity (); }
+            value_t lacunarity (value_t _lacunarity) override { return data.lacunarity (_lacunarity); }
 
-            T amplitude (void) const override { return data.amplitude (); }
-            T amplitude (T _amplitude) override { return data.amplitude (_amplitude); }
+            value_t amplitude (void) const override { return data.amplitude (); }
+            value_t amplitude (value_t _amplitude) override { return data.amplitude (_amplitude); }
 
-            T gain (void) const override { return data.gain (); }
-            T gain (T _gain) override { return data.gain (_gain); }
+            value_t gain (void) const override { return data.gain (); }
+            value_t gain (value_t _gain) override { return data.gain (_gain); }
 
             B& basis (void) override { return data.basis (); }
             const B& basis (void) const override { return data.basis (); }

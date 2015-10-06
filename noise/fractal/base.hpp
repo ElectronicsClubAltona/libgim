@@ -7,7 +7,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUvalue_t WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
@@ -20,6 +20,7 @@
 #include <cstdint>
 
 #include "../../point.hpp"
+#include "../rand.hpp"
 
 namespace util { namespace noise { namespace fractal {
     /// Fractal Brownian Motion summation.
@@ -32,41 +33,38 @@ namespace util { namespace noise { namespace fractal {
     /// lacunarity: per octave frequency scaling factor
     /// amplitude: maximum absolute value of the noise
     /// gain: per octave amplitude scaling factor. typically 1/f.
-    template <
-        size_t S, // probe point dimensionality
-        typename T, // probe point value_type
-        typename B  // noise basis function
-    >
+    template <class B>
     struct base {
-        using seed_t = uint64_t;
+        using value_t = typename B::value_t;
+        using point_t = typename B::point_t;
 
         // constructors
         base (seed_t,
               unsigned octaves,
-              T H,
-              T frequency,
-              T lacunarity,
-              T amplitude,
-              T gain);
+              value_t H,
+              value_t frequency,
+              value_t lacunarity,
+              value_t amplitude,
+              value_t gain);
 
         // accessors
         constexpr unsigned octaves (void) const;
         unsigned octaves (unsigned);
 
-        constexpr T H (void) const;
-        T H (T);
+        constexpr value_t H (void) const;
+        value_t H (value_t);
 
-        constexpr T frequency (void) const;
-        T frequency (T);
+        constexpr value_t frequency (void) const;
+        value_t frequency (value_t);
 
-        constexpr T lacunarity (void) const;
-        T lacunarity (T);
+        constexpr value_t lacunarity (void) const;
+        value_t lacunarity (value_t);
 
-        constexpr T amplitude (void) const;
-        T amplitude (T);
+        constexpr value_t amplitude (void) const;
+        value_t amplitude (value_t);
 
-        constexpr T gain (void) const;
-        T gain (T);
+        constexpr value_t gain (void) const;
+        value_t gain (value_t);
 
         seed_t seed (void) const;
         seed_t seed (seed_t);
@@ -76,18 +74,18 @@ namespace util { namespace noise { namespace fractal {
 
     protected:
         unsigned m_octaves;
-        T m_H;
+        value_t m_H;
 
-        T m_frequency;
-        T m_lacunarity;
+        value_t m_frequency;
+        value_t m_lacunarity;
 
-        T m_amplitude;
-        T m_gain;
+        value_t m_amplitude;
+        value_t m_gain;
 
         B m_basis;
 
-        T m_invAH;
-        T m_invGH;
+        value_t m_invAH;
+        value_t m_invGH;
     };
 } } }
 

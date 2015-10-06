@@ -33,10 +33,9 @@
 namespace util { namespace noise { namespace basis {
     template <
         size_t S,   // probe point dimensionality
-        typename T, // probe point value_type
-        lerp_t<T> L // axis interpolation function
+        typename T // probe point value_type
     >
-    struct expgrad : public gradient<S,T,L> {
+    struct expgrad : public gradient<S,T> {
         explicit expgrad (seed_t seed,
                           T base = (T)1.02,
                           T exponent = T{256});

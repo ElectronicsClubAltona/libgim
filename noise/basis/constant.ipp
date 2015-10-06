@@ -22,7 +22,7 @@
 namespace util { namespace noise { namespace basis {
     template <size_t S, typename T>
     T
-    constant<S,T>::operator() (point<S,T>) const
+    constant<S,T>::operator() (point_t) const
     {
         return value;
     }

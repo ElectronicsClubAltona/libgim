@@ -24,14 +24,14 @@
 
 namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, util::noise::lerp_t<T> L, template <size_t,typename,lerp_t<T>> class G>
+    template <size_t S, typename T, template <typename> class L, template <size_t,typename> class G>
     perlin<S,T,L,G>::perlin (seed_t _seed):
-        G<S,T,L> (_seed)
+        G<S,T> (_seed)
     { ; }
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, util::noise::lerp_t<T> L, template <size_t,typename,lerp_t<T>> class G>
+    template <size_t S, typename T, template <typename> class L, template <size_t,typename> class G>
     util::range<T>
     perlin<S,T,L,G>::bounds (void) const
     {
@@ -43,9 +43,9 @@ namespace util { namespace noise { namespace basis {
 
 
     //-------------------------------------------------------------------------
-    template <size_t S, typename T, util::noise::lerp_t<T> L, template <size_t,typename,lerp_t<T>> class G>
+    template <size_t S, typename T, template <typename> class L, template <size_t,typename> class G>
     T
-    perlin<S,T,L,G>::operator() (util::point<S,T> p) const
+    perlin<S,T,L,G>::operator() (point_t p) const
     {
         // extract integer and fractional parts. be careful to always round down
         auto p_int = floor (p).template cast<intmax_t> ();
@@ -74,7 +74,7 @@ namespace util { namespace noise { namespace basis {
 
         for (size_t i = S; i; --i)
             for (size_t j = 0; j < std::pow(2,i); j += 2)
-                l_[j / 2] = L (l_[j], l_[j+1], p_rem[S-i]);
+                l_[j / 2] = L<T>() (l_[j], l_[j+1], p_rem[S-i]);
         return l_[0];
     }
 } } }

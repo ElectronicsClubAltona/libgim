@@ -11,20 +11,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_NOISE_LERP_HPP
 #define __UTIL_NOISE_LERP_HPP
 
 namespace util { namespace lerp {
-    template <typename T> T sigmoid (T val);
-
-    template <typename T> T linear  (T a, T b, T weight);
-    template <typename T> T cosine  (T a, T b, T weight);
-    template <typename T> T cubic   (T a, T b, T weight);
-    template <typename T> T quintic (T a, T b, T weight);
-    template <typename T> T trunc   (T a, T b, T weight);
+    template <typename T> struct linear   { T operator() (T, T, T weight); };
+    template <typename T> struct cosine   { T operator() (T, T, T weight); };
+    template <typename T> struct cubic    { T operator() (T, T, T weight); };
+    template <typename T> struct quintic  { T operator() (T, T, T weight); };
+    template <typename T> struct truncate { T operator() (T, T, T weight); };
 } }
 
 #endif
