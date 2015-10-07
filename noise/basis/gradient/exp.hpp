@@ -15,30 +15,28 @@
  */
 
 
-#ifndef __UTIL_NOISE_BASIS_EXPGRAD_HPP
-#define __UTIL_NOISE_BASIS_EXPGRAD_HPP
+#ifndef __UTIL_NOISE_BASIS_GRADIENT_EXP_HPP
+#define __UTIL_NOISE_BASIS_GRADIENT_EXP_HPP
 
-#include "./gradient.hpp"
+#include "./uniform.hpp"
 
-#include "../fwd.hpp"
-#include "../../point.hpp"
-#include "../../range.hpp"
-
+#include "../../fwd.hpp"
+#include "../../../point.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 // modifies a standard uniforma gradient generator to follow an exponential
 // distribution, base^(-t*exp)
 //
 // 
-namespace util { namespace noise { namespace basis {
+namespace util { namespace noise { namespace basis { namespace gradient {
     template <
         size_t S,   // probe point dimensionality
         typename T // probe point value_type
     >
-    struct expgrad : public gradient<S,T> {
-        explicit expgrad (seed_t seed,
-                          T base = (T)1.02,
-                          T exponent = T{256});
+    struct exp : public uniform<S,T> {
+        explicit exp (seed_t seed,
+                      T base = (T)1.02,
+                      T exponent = T{256});
 
         T base (void) const;
         T base (T);
@@ -52,8 +50,8 @@ namespace util { namespace noise { namespace basis {
         T m_base;
         T m_exponent;
     };
-} } }
+} } } }
 
-#include "expgrad.ipp"
+#include "exp.ipp"
 
 #endif

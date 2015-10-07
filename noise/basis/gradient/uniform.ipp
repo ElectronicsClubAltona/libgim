@@ -14,17 +14,17 @@
  * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifdef __UTIL_NOISE_BASIS_GRADIENT_IPP
+#ifdef __UTIL_NOISE_BASIS_GRADIENT_UNIFORM_IPP
 #error
 #endif
-#define __UTIL_NOISE_BASIS_GRADIENT_IPP
+#define __UTIL_NOISE_BASIS_GRADIENT_UNIFORM_IPP
 
-#include "../rand.hpp"
+#include "../../rand.hpp"
 
-namespace util { namespace noise { namespace basis {
+namespace util { namespace noise { namespace basis { namespace gradient {
     ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T>
-    gradient<S,T>::gradient (seed_t _seed):
+    uniform<S,T>::uniform (seed_t _seed):
         m_seed (_seed)
     { ; }
 
@@ -32,7 +32,7 @@ namespace util { namespace noise { namespace basis {
     //-------------------------------------------------------------------------
     template <size_t S, typename T>
     seed_t
-    gradient<S,T>::seed (void) const
+    uniform<S,T>::seed (void) const
     {
         return m_seed;
     }
@@ -41,7 +41,7 @@ namespace util { namespace noise { namespace basis {
     //-------------------------------------------------------------------------
     template <size_t S, typename T>
     seed_t
-    gradient<S,T>::seed (seed_t _seed)
+    uniform<S,T>::seed (seed_t _seed)
     {
         return m_seed = _seed;
     }
@@ -50,9 +50,8 @@ namespace util { namespace noise { namespace basis {
     //-------------------------------------------------------------------------
     template <size_t S, typename T>
     vector<S,T>
-    gradient<S,T>::generate (pointi<S> p) const
+    uniform<S,T>::generate (pointi<S> p) const
     {
         return rand::coord<vector,T> (m_seed, p) * 2 - 1;
     }
-} } }
-
+} } } }

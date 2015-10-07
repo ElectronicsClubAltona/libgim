@@ -8,7 +8,7 @@
 #include "noise/fractal/runtime.hpp"
 #include "noise/lerp.hpp"
 #include "noise/basis/constant.hpp"
-#include "noise/basis/expgrad.hpp"
+#include "noise/basis/gradient/exp.hpp"
 #include "noise/basis/value.hpp"
 #include "noise/basis/patch.hpp"
 #include "noise/basis/perlin.hpp"
@@ -32,13 +32,13 @@ template struct util::noise::fractal::rmf<util::noise::basis::constant<S,float>>
 
 template struct util::noise::fractal::fbm<
     util::noise::basis::perlin<
-        S,float,util::lerp::cubic,util::noise::basis::gradient
+        S,float,util::lerp::cubic,util::noise::basis::gradient::uniform
     >
 >;
 
 template struct util::noise::fractal::fbm<
     util::noise::basis::perlin<
-        S,float,util::lerp::quintic,util::noise::basis::expgrad
+        S,float,util::lerp::quintic,util::noise::basis::gradient::exp
     >
 >;
 
@@ -292,14 +292,14 @@ main (int argc, char **argv)
             switch (lerp) {
                 case LINEAR:    b.reset<
                                     basis::perlin<
-                                        S,float,util::lerp::linear,basis::expgrad
+                                        S,float,util::lerp::linear,basis::gradient::exp
                                     >
                                 > (seed); break;
 
-                case CUBIC:     b.reset<basis::perlin<S,float,util::lerp::cubic,basis::expgrad>> (seed);    break;
-                case QUINTIC:   b.reset<basis::perlin<S,float,util::lerp::quintic,basis::expgrad>> (seed);  break;
-                case COSINE:    b.reset<basis::perlin<S,float,util::lerp::cosine,basis::expgrad>> (seed);   break;
-                case TRUNC:     b.reset<basis::perlin<S,float,util::lerp::truncate,basis::expgrad>> (seed);    break;
+                case CUBIC:     b.reset<basis::perlin<S,float,util::lerp::cubic,basis::gradient::exp>> (seed);    break;
+                case QUINTIC:   b.reset<basis::perlin<S,float,util::lerp::quintic,basis::gradient::exp>> (seed);  break;
+                case COSINE:    b.reset<basis::perlin<S,float,util::lerp::cosine,basis::gradient::exp>> (seed);   break;
+                case TRUNC:     b.reset<basis::perlin<S,float,util::lerp::truncate,basis::gradient::exp>> (seed);    break;
 
             default:
                 unreachable ();

@@ -18,7 +18,7 @@
 #ifndef __UTIL_NOISE_BASIS_PERLIN_HPP
 #define __UTIL_NOISE_BASIS_PERLIN_HPP
 
-#include "./gradient.hpp"
+#include "./gradient/uniform.hpp"
 #include "./type/gradient.hpp"
 
 #include "../fwd.hpp"
@@ -36,7 +36,7 @@ namespace util { namespace noise { namespace basis {
         template <      // gradient provider class, must provide generate(point_t) 
             size_t,
             typename   
-        > class G = gradient
+        > class G = gradient::uniform
     >
     struct perlin : public G<S,T>, public type::gradient<S> {
         using value_t = T;

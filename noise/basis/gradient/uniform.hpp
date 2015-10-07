@@ -15,21 +15,20 @@
  */
 
 
-#ifndef __UTIL_NOISE_BASIS_GRADIENT_HPP
-#define __UTIL_NOISE_BASIS_GRADIENT_HPP
+#ifndef __UTIL_NOISE_BASIS_GRADIENT_UNIFORM_HPP
+#define __UTIL_NOISE_BASIS_GRADIENT_UNIFORM_HPP
 
-#include "../fwd.hpp"
-#include "../../point.hpp"
-#include "../../range.hpp"
+#include "../../fwd.hpp"
+#include "../../../point.hpp"
 
-namespace util { namespace noise { namespace basis {
+namespace util { namespace noise { namespace basis { namespace gradient {
     /// Perlin: interpolated value across each grid space
     template <
         size_t S,   // probe point dimensionality
         typename T // probe point value_type
     >
-    struct gradient {
-        gradient (seed_t);
+    struct uniform {
+        uniform (seed_t);
 
         seed_t seed (void) const;
         seed_t seed (seed_t);
@@ -39,9 +38,9 @@ namespace util { namespace noise { namespace basis {
 
         seed_t m_seed;
     };
-} } }
+} } } }
 
-#include "gradient.ipp"
+#include "uniform.ipp"
 
 #endif
 

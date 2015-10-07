@@ -14,19 +14,20 @@
  * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifdef __UTIL_NOISE_BASIS_EXPGRAD_IPP
+#ifdef __UTIL_NOISE_BASIS_EXP_IPP
 #error
 #endif
-#define __UTIL_NOISE_BASIS_EXPGRAD_IPP
+#define __UTIL_NOISE_BASIS_EXP_IPP
 
-#include "../rand.hpp"
+#include "../../rand.hpp"
 
+#include <cmath>
 
-namespace util { namespace noise { namespace basis {
+namespace util { namespace noise { namespace basis { namespace gradient {
     ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T>
-    expgrad<S,T>::expgrad (seed_t _seed, T _base, T _exponent):
-        gradient<S,T> (_seed),
+    exp<S,T>::exp (seed_t _seed, T _base, T _exponent):
+        uniform<S,T> (_seed),
         m_base (_base),
         m_exponent (_exponent)
     { ; }
@@ -35,10 +36,10 @@ namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T>
     vector<S,T>
-    expgrad<S,T>::generate (pointi<S> p) const
+    exp<S,T>::generate (pointi<S> p) const
     {
         auto t = rand::scalar<float> (this->seed (), p);
         auto factor = std::pow (m_base, -t * m_exponent);
-        return factor * gradient<S,T>::generate (p);
+        return factor * uniform<S,T>::generate (p);
     }
-} } }
+} } } }
