@@ -29,7 +29,7 @@ namespace util { namespace noise { namespace rand {
             template <size_t,typename> class Q
         >
         static U
-        scalar (uint64_t seed, Q<S,T> value);
+        scalar (uint64_t seed, Q<S,T> value) noexcept;
 
         /// generate a coordinate type with uniform random components in the range [0, 1]
         template <
@@ -40,7 +40,7 @@ namespace util { namespace noise { namespace rand {
             template <size_t,typename> class Q
         >
         static R<S,U>
-        coord (uint64_t seed, Q<S,T> value);
+        coord (uint64_t seed, Q<S,T> value) noexcept;
     };
 } } }
 

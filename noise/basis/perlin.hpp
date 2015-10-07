@@ -46,7 +46,7 @@ namespace util { namespace noise { namespace basis {
 
         range<T> bounds (void) const;
 
-        T operator() (point_t) const;
+        T operator() (point_t) const noexcept;
     };
 } } }
 

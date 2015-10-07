@@ -35,7 +35,7 @@ namespace util { namespace noise { namespace rand {
         template <size_t,typename> class Q
     >
     U
-    scalar (uint64_t seed, Q<S,T> value)
+    scalar (uint64_t seed, Q<S,T> value) noexcept
     {
         #if 1
         return permute::scalar<U> (seed, value);
@@ -53,7 +53,7 @@ namespace util { namespace noise { namespace rand {
         template <size_t,typename> class Q
     >
     R<S,U>
-    coord (uint64_t seed, Q<S,T> value)
+    coord (uint64_t seed, Q<S,T> value) noexcept
     {
         #if 1
         return permute::coord<R,U,S,T,Q> (seed, value);

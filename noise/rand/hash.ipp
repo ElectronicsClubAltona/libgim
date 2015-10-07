@@ -30,7 +30,7 @@ namespace util { namespace noise { namespace rand {
         template <size_t,typename> class Q
     >
     U
-    hash::scalar (uint64_t seed, Q<S,T> query)
+    hash::scalar (uint64_t seed, Q<S,T> query) noexcept
     {
         constexpr decltype(seed) BITS = 0xFFFF;
         static_assert (std::is_integral<T>::value,
@@ -53,7 +53,7 @@ namespace util { namespace noise { namespace rand {
         template <size_t,typename> class Q
     >
     R<S,U>
-    hash::coord (uint64_t seed, Q<S,T> query)
+    hash::coord (uint64_t seed, Q<S,T> query) noexcept
     {
         constexpr decltype(seed) PERTURB = 0x96c39996c36c36c3;
         constexpr decltype(seed) BITS    = 0xFFFF;

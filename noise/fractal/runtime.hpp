@@ -36,7 +36,7 @@ namespace util { namespace noise { namespace fractal {
         runtime& operator= (const runtime&) = delete;
 
         // basis functions
-        value_t operator () (point_t p) const { return (*m_child) (p); }
+        value_t operator () (point_t p) const noexcept { return (*m_child) (p); }
 
         unsigned octaves (void) const { return m_child->octaves (); }
         unsigned octaves (unsigned _octaves) { return m_child->octaves (_octaves); }
@@ -66,7 +66,7 @@ namespace util { namespace noise { namespace fractal {
         struct base {
             virtual ~base () = default;
 
-            virtual value_t operator() (point_t) = 0;
+            virtual value_t operator() (point_t) const noexcept = 0;
 
             virtual unsigned octaves (void) const = 0;
             virtual unsigned octaves (unsigned) = 0;
@@ -115,7 +115,7 @@ namespace util { namespace noise { namespace fractal {
                      _gain)
             { ; }
  
-            value_t operator() (point_t p) override { return data (p); }
+            value_t operator() (point_t p) const noexcept  override { return data (p); }
 
             unsigned octaves (void) const override { return data.octaves (); }
             unsigned octaves (unsigned _octaves) override { return data.octaves (_octaves); }

@@ -45,7 +45,7 @@ namespace util { namespace noise { namespace basis {
     //-------------------------------------------------------------------------
     template <size_t S, typename T, template <typename> class L, template <size_t,typename> class G>
     T
-    perlin<S,T,L,G>::operator() (point_t p) const
+    perlin<S,T,L,G>::operator() (point_t p) const noexcept
     {
         // extract integer and fractional parts. be careful to always round down
         auto p_int = floor (p).template cast<intmax_t> ();

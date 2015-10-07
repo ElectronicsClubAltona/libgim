@@ -31,7 +31,7 @@ using util::lerp::truncate;
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-truncate<T>::operator() (T a, T, T weight)
+truncate<T>::operator() (T a, T, T weight) noexcept
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
@@ -49,7 +49,7 @@ template struct util::lerp::truncate<double>;
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-linear<T>::operator() (T a, T b, T weight)
+linear<T>::operator() (T a, T b, T weight) noexcept
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
@@ -65,7 +65,7 @@ template struct util::lerp::linear<double>;
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-cosine<T>::operator() (T a, T b, T weight)
+cosine<T>::operator() (T a, T b, T weight) noexcept
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
@@ -82,7 +82,7 @@ template struct util::lerp::cosine<double>;
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-cubic<T>::operator() (T a, T b, T weight)
+cubic<T>::operator() (T a, T b, T weight) noexcept
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
@@ -100,7 +100,7 @@ template struct util::lerp::cubic<double>;
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-quintic<T>::operator() (T a, T b, T weight)
+quintic<T>::operator() (T a, T b, T weight) noexcept
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");

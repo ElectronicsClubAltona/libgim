@@ -57,7 +57,7 @@ namespace util { namespace noise { namespace fractal {
     ///////////////////////////////////////////////////////////////////////////
     template <class B>
     typename fbm<B>::value_t
-    fbm<B>::operator() (point_t p) const
+    fbm<B>::operator() (point_t p) const noexcept
     {
         value_t total = 0;
         value_t scale = this->m_invAH;

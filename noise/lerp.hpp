@@ -18,11 +18,11 @@
 #define __UTIL_NOISE_LERP_HPP
 
 namespace util { namespace lerp {
-    template <typename T> struct linear   { T operator() (T, T, T weight); };
-    template <typename T> struct cosine   { T operator() (T, T, T weight); };
-    template <typename T> struct cubic    { T operator() (T, T, T weight); };
-    template <typename T> struct quintic  { T operator() (T, T, T weight); };
-    template <typename T> struct truncate { T operator() (T, T, T weight); };
+    template <typename T> struct linear   { T operator() (T, T, T weight) noexcept; };
+    template <typename T> struct cosine   { T operator() (T, T, T weight) noexcept; };
+    template <typename T> struct cubic    { T operator() (T, T, T weight) noexcept; };
+    template <typename T> struct quintic  { T operator() (T, T, T weight) noexcept; };
+    template <typename T> struct truncate { T operator() (T, T, T weight) noexcept; };
 } }
 
 #endif

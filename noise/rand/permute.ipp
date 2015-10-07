@@ -8,7 +8,7 @@ namespace util { namespace noise { namespace rand {
         template <size_t,typename> class Q
     >
     U
-    permute::scalar (uint64_t seed, Q<S,T> query)
+    permute::scalar (uint64_t seed, Q<S,T> query) noexcept
     {
 
         size_t idx = PERMUTE[seed&0xff];
@@ -26,7 +26,7 @@ namespace util { namespace noise { namespace rand {
         template <size_t,typename> class Q
     >
     R<S,U>
-    permute::coord (uint64_t seed, Q<S,T> query)
+    permute::coord (uint64_t seed, Q<S,T> query) noexcept
     {
         auto accum = seed;
         for (auto q: query) {
