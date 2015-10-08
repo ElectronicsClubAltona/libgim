@@ -48,7 +48,7 @@ namespace util { namespace noise { namespace basis {
     ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T>
     T
-    patch<S,T>::operator () (point<S,T> p) const
+    patch<S,T>::operator () (point<S,T> p) const noexcept
     {
         static const size_t COUNT = type::distance<S,2>::OFFSET_SIZE;
 

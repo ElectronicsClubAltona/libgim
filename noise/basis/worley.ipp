@@ -61,7 +61,7 @@ namespace util { namespace noise { namespace basis {
     //-------------------------------------------------------------------------
     template <size_t S, typename T, size_t F>
     T
-    worley<S,T,F>::operator() (point<S,T> p) const
+    worley<S,T,F>::operator() (point<S,T> p) const noexcept
     {
         // extract integer and fractional parts. be careful to always round down
         auto p_int = floor (p).template cast<intmax_t> ();

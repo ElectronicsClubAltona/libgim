@@ -61,7 +61,7 @@ namespace util { namespace noise { namespace basis {
     //-------------------------------------------------------------------------
     template <size_t S, typename T, template <typename> class L>
     T
-    value<S,T,L>::operator() (util::point<S,T> p) const
+    value<S,T,L>::operator() (util::point<S,T> p) const noexcept
     {
         // extract integer and fractional parts. be careful to always round down
         auto p_int = floor (p).template cast<intmax_t> ();

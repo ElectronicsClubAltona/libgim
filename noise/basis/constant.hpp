@@ -30,7 +30,7 @@ namespace util { namespace noise { namespace basis {
 
         constant (seed_t);
 
-        T operator() (point_t) const;
+        T operator() (point_t) const noexcept;
 
         seed_t seed;
         T value;
