@@ -26,6 +26,7 @@ main ()
     }
 
     {
+    #if !defined(NO_RTTI)
         auto tuple = std::make_tuple (1u, 1, 1.f, 1.);
         std::vector<std::type_index> expected {
             std::type_index (typeid (1u)),
@@ -40,7 +41,11 @@ main ()
         });
 
         tap.expect_eq (actual, expected, "type iteration");
+    #else
+        tap.skip ("type iteration");
+    #endif
     }
+
 
     {
         using src_t = std::tuple<std::string>;

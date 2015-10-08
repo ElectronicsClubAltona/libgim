@@ -61,6 +61,8 @@ AC_DEFUN([NC_DEBUGGING],[
         NC_APPEND_ONE_COMPILE_FLAG([-O0])
     ], [
         AX_APPEND_COMPILE_FLAGS([-O2])
+        AX_APPEND_COMPILE_FLAGS([-fno-rtti])
+        AC_DEFINE([NO_RTTI], [], [RTTI disabled])
     ])
 
     ##-------------------------------------------------------------------------
