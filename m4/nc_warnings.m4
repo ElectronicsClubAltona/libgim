@@ -33,6 +33,7 @@ AC_DEFUN([NC_WARNINGS],[
     AX_APPEND_COMPILE_FLAGS([-Wunused-but-set-variable], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wunused-parameter], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wuseless-cast], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wpessimizing-move], [], [-Werror])
 
     # -------------------------------------------------------------------------
     # Required extensions

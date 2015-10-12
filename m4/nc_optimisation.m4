@@ -33,6 +33,18 @@ AC_DEFUN([NC_OPTIMISATION],[
     ])
 
     ##-------------------------------------------------------------------------
+    ## Enable frame pointer
+
+    AC_ARG_ENABLE([frame-pointer], [
+        AS_HELP_STRING([--enable-frame-pointer], [retain the frame pointer even if optimising])
+    ])
+
+    AS_IF([test "x$enable_frame_pointer" = "xyes"], [
+        AX_APPEND_COMPILE_FLAGS([-fno-omit-frame-pointer], [], [-Werror])
+    ])
+
+
+    ##-------------------------------------------------------------------------
     ## Choose the most performant processor architecture and features
 
     AC_CANONICAL_HOST
