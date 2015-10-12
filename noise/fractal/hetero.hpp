@@ -55,7 +55,7 @@ namespace util { namespace noise { namespace fractal {
                 value_t gain,
                 value_t offset);
 
-        hetero (seed_t);
+        explicit hetero (seed_t = 0);
 
         constexpr value_t offset (void) const;
         value_t offset (value_t);

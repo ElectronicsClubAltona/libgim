@@ -57,10 +57,7 @@ namespace util { namespace noise {
         // XXX: use a union to defer initialization of pertubation fractals in
         // the constructor. i know this is horrible, but there's no time to
         // write the proper generator constructor to pass out the seeds.
-        union {
-            char _;
-            P perturb[S];
-        };
+        P perturb[S];
 
         scale_t scale;
     };

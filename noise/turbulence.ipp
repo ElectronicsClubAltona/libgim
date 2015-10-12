@@ -26,12 +26,12 @@ namespace util { namespace noise {
     ///////////////////////////////////////////////////////////////////////////
     template <typename D, typename P>
     turbulence<D,P>::turbulence (seed_t  _seed,
-                                     scale_t _scale):
+                                 scale_t _scale):
         data  (_seed),
         scale (_scale)
     {
         for (auto &p: perturb)
-            new (&p) P (_seed = hash::wang (_seed));
+            p.seed (_seed = hash::wang (_seed));
     }
 
     ////////////////////////////////////////////////////////////////////////////

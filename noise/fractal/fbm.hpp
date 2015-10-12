@@ -52,7 +52,7 @@ namespace util { namespace noise { namespace fractal {
              value_t lacunarity,
              value_t amplitude,
              value_t gain);
-        fbm (seed_t);
+        explicit fbm (seed_t = 0);
 
         value_t operator() (point_t) const noexcept;
     };
