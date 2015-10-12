@@ -261,6 +261,21 @@ namespace util {
         return k;
     }
 
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K
+    >
+    K<S,T>
+    pow (K<S,T> k)
+    {
+        for (auto &v: k)
+            v = pow (v);
+        return k;
+    }
+
+
 
     ///////////////////////////////////////////////////////////////////////////
     // logical element operators
