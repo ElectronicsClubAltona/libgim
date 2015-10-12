@@ -38,7 +38,10 @@ template <typename T>
 constexpr T
 pow (T x, unsigned y)
 {
-    return y == 0 ? 1 : x * pow (x, y - 1);
+    if (y == 0)
+        return T(1);
+
+    return x * ::pow (x, y - 1);
 }
 
 
