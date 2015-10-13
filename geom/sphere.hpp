@@ -14,27 +14,20 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_SPHERE_HPP
-#define __UTIL_SPHERE_HPP
+#ifndef __UTIL_GEOM_SPHERE_HPP
+#define __UTIL_GEOM_SPHERE_HPP
 
-#include "point.hpp"
+#include "../point.hpp"
 
-#include <iostream>
-
-namespace util {
+namespace util { namespace geom {
     template <size_t S, typename T>
     struct sphere {
-        sphere (point<S,T> centre, T radius);
-
         point<S,T> centre;
         T radius;
     };
 
-    template <size_t S, typename T>
-    std::ostream& operator<< (std::ostream&, sphere<S,T>);
-
     typedef sphere<2,float> sphere2f;
     typedef sphere<3,float> sphere3f;
-}
+} }
 
 #endif

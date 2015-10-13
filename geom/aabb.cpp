@@ -18,7 +18,7 @@
 #include "aabb.hpp"
 #include "debug.hpp"
 
-using util::AABB;
+using util::geom::AABB;
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
@@ -223,7 +223,7 @@ namespace debug {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, AABB<S,T> b)
+util::geom::operator<< (std::ostream &os, util::geom::AABB<S,T> b)
 {
     os << "AABB(" << b.p0 << ", " << b.p1 << ")";
     return os;
@@ -232,9 +232,9 @@ util::operator<< (std::ostream &os, AABB<S,T> b)
 
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)                    \
-namespace util { template struct AABB<S,T>; }   \
+namespace util { namespace geom { template struct AABB<S,T>; } }   \
 template bool debug::valid (const AABB<S,T>&);  \
-template std::ostream& util::operator<< (std::ostream&, AABB<S,T>);
+template std::ostream& util::geom::operator<< (std::ostream&, AABB<S,T>);
 
 #define INSTANTIATE(T)  \
 INSTANTIATE_S_T(2,T)    \

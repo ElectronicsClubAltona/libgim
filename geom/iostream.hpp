@@ -14,25 +14,17 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_PLANE_HPP
-#define __UTIL_PLANE_HPP
+#ifndef __UTIL_GEOM_IOSTREAM_HPP
+#define __UTIL_GEOM_IOSTREAM_HPP
 
-#include "point.hpp"
-#include "vector.hpp"
+#include "./fwd.hpp"
 
-namespace util {
+#include <iostream>
+
+namespace util { namespace geom {
     template <size_t S, typename T>
-    struct plane {
-        plane (util::point<S,T> p,
-               util::vector<S,T> n);
-
-        util::point<S,T> p;
-        util::vector<S,T> n;
-    };
-
-
-    typedef plane<2,float> plane2f;
-    typedef plane<3,float> plane3f;
-}
+    std::ostream&
+    operator<< (std::ostream&, sphere<S,T>);
+} }
 
 #endif

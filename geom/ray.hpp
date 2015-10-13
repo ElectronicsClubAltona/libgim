@@ -14,8 +14,8 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_RAY_HPP
-#define __UTIL_RAY_HPP
+#ifndef __UTIL_GEOM_RAY_HPP
+#define __UTIL_GEOM_RAY_HPP
 
 #include "point.hpp"
 
@@ -26,7 +26,7 @@
 
 #include <iostream>
 
-namespace util {
+namespace util { namespace geom {
     template <size_t S, typename T>
     struct ray {
         ray (point<S,T> origin,
@@ -56,6 +56,6 @@ namespace util {
 
     typedef ray<2,float> ray2f;
     typedef ray<3,float> ray3f;
-}
+} }
 
 #endif

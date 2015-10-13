@@ -14,32 +14,20 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "sphere.hpp"
+#include "./iostream.hpp"
 
-using util::sphere;
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-sphere<S,T>::sphere (point<S,T> _centre, T _radius):
-    centre (_centre),
-    radius (_radius)
-{
-    CHECK_GE (_radius, 0);
-}
+#include "../geom/sphere.hpp"
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, sphere<S,T> s)
+util::geom::operator<< (std::ostream &os, util::geom::sphere<S,T> s)
 {
     return os << "sphere(" << s.centre << ',' << s.radius << ')';
 }
 
-template std::ostream& util::operator<< (std::ostream&, sphere<2,float>);
-template std::ostream& util::operator<< (std::ostream&, sphere<3,float>);
-
 
 //-----------------------------------------------------------------------------
-template struct util::sphere<2,float>;
-template struct util::sphere<3,float>;
+template std::ostream& util::geom::operator<< (std::ostream&, util::geom::sphere<2,float>);
+template std::ostream& util::geom::operator<< (std::ostream&, util::geom::sphere<3,float>);

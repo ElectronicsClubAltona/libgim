@@ -15,16 +15,15 @@
  */
 
 
-#ifndef __UTIL_AABB_HPP
-#define __UTIL_AABB_HPP
+#ifndef __UTIL_GEOM_AABB_HPP
+#define __UTIL_GEOM_AABB_HPP
 
-#include "point.hpp"
-#include "extent.hpp"
+#include "../point.hpp"
+#include "../extent.hpp"
 
 #include <cstdint>
-#include <iostream>
 
-namespace util {
+namespace util { namespace geom {
     template <size_t S, typename T>
     struct AABB {
         AABB () = default;
@@ -68,6 +67,6 @@ namespace util {
 
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, AABB<S,T>);
-}
+} }
 
 #endif

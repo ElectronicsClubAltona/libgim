@@ -16,9 +16,10 @@
 
 #include "ray.hpp"
 
-#include "debug.hpp"
+#include "ops.hpp"
+#include "../debug.hpp"
 
-using util::ray;
+using util::geom::ray;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -137,15 +138,15 @@ ray<S,T>::at (T t) const
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, ray<S,T> r)
+util::geom::operator<< (std::ostream &os, ray<S,T> r)
 {
     return os << "ray(" << r.origin << ',' << r.direction << ')';
 }
 
-template std::ostream& util::operator<< (std::ostream&, ray<3,float>);
-template std::ostream& util::operator<< (std::ostream&, ray<3,double>);
+template std::ostream& util::geom::operator<< (std::ostream&, ray<3,float>);
+template std::ostream& util::geom::operator<< (std::ostream&, ray<3,double>);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template struct util::ray<2,float>;
-template struct util::ray<3,float>;
+template struct util::geom::ray<2,float>;
+template struct util::geom::ray<3,float>;

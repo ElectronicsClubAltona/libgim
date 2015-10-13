@@ -1,8 +1,10 @@
-#include "aabb.hpp"
-#include "debug.hpp"
-#include "plane.hpp"
-#include "ray.hpp"
+#include "geom/aabb.hpp"
+#include "geom/plane.hpp"
+#include "geom/ray.hpp"
 #include "tap.hpp"
+
+using util::geom::ray2f;
+using util::geom::ray3f;
 
 
 //-----------------------------------------------------------------------------
@@ -10,8 +12,8 @@ void
 test_intersect_plane (util::TAP::logger &tap)
 {
     // trivial case: origin ray facing z, plane at unit z facing -z.
-    const util::ray3f  l ({0,0,0}, {0,0, 1});
-    const util::plane3f p ({0,0,1}, {0,0,-1});
+    const util::geom::ray3f  l ({0,0,0}, {0,0, 1});
+    const util::geom::plane3f p ({0,0,1}, {0,0,-1});
 
     tap.expect_eq (l.intersect (p), 1.f, "ray-plane intersect");
 }
@@ -21,20 +23,22 @@ test_intersect_plane (util::TAP::logger &tap)
 void
 test_intersect_aabb (util::TAP::logger &tap)
 {
+    using util::geom::AABB2f;
+
     // trivial case: unit aabb at origin, ray from (0.5,-0.5) upwards
-    const util::AABB2f box {
+    const AABB2f box {
         { 0.f, 0.f },
         { 1.f, 1.f }
     };
 
-    const util::ray2f forward {
+    const ray2f forward {
         { 0.5f, -0.5f },
         { 0.f,   1.f }
     };
 
     tap.expect_eq (forward.intersect (box), 0.5f, "ray-aabb intersect");
 
-    const util::ray2f behind {
+    const ray2f behind {
         { 0.5f, 2.f },
         { 0.f, 1.f }
     };
@@ -47,15 +51,17 @@ test_intersect_aabb (util::TAP::logger &tap)
 void
 test_intersect_sphere (util::TAP::logger &tap)
 {
-    const util::sphere3f s = {{0.f, 0.f, 0.f}, 1.f};
+    using util::geom::sphere3f;
 
-    const util::ray3f r0 {{0.f, 2.f, 0.f}, {0.f, -1.f, 0.f}};
+    const sphere3f s = {{0.f, 0.f, 0.f}, 1.f};
+
+    const ray3f r0 {{0.f, 2.f, 0.f}, {0.f, -1.f, 0.f}};
     tap.expect_eq (r0.intersect (s), 1.f, "ray-sphere simple");
 
-    const util::ray3f r1 {{0.f, 1.f, 0.f}, {0.f, 1.f, 0.f}};
+    const ray3f r1 {{0.f, 1.f, 0.f}, {0.f, 1.f, 0.f}};
     tap.expect_eq (r1.intersect (s), 0.f, "ray-sphere adjacent");
 
-    const util::ray3f r2 {{0.f, 2.f, 0.f}, {0.f, 1.f, 0.f}};
+    const ray3f r2 {{0.f, 2.f, 0.f}, {0.f, 1.f, 0.f}};
     tap.expect_nan (r2.intersect (s), "ray-sphere no-intersect");
 }
 

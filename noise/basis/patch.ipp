@@ -20,7 +20,6 @@
 #define __UTIL_NOISE_BASIS_PATCH_IPP
 
 #include "../../types.hpp"
-#include "../../ray.hpp"
 #include "../../vector.hpp"
 
 

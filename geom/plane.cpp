@@ -19,10 +19,13 @@
 
 #include "debug.hpp"
 
+using util::geom::plane;
+
+
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::plane<S,T>::plane (util::point<S,T> _p,
-                         util::vector<S,T> _n):
+plane<S,T>::plane (point<S,T>  _p,
+                   vector<S,T> _n):
     p (_p),
     n (_n)
 {
@@ -31,5 +34,5 @@ util::plane<S,T>::plane (util::point<S,T> _p,
 
 
 //-----------------------------------------------------------------------------
-template struct util::plane<2,float>;
-template struct util::plane<3,float>;
+template struct util::geom::plane<2,float>;
+template struct util::geom::plane<3,float>;

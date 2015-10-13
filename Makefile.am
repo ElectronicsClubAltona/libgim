@@ -9,8 +9,6 @@ AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(ZLIB_CFLAGS)
 ## Source definitions
 
 UTIL_FILES   =			\
-    aabb.cpp			\
-    aabb.hpp			\
     backtrace.hpp   		\
     bezier.cpp			\
     bezier.hpp			\
@@ -56,6 +54,17 @@ UTIL_FILES   =			\
     format.ipp			\
     fourcc.cpp			\
     fourcc.hpp			\
+    geom/fwd.hpp		\
+    geom/aabb.cpp		\
+    geom/aabb.hpp		\
+    geom/iostream.cpp		\
+    geom/iostream.hpp		\
+    geom/plane.cpp		\
+    geom/plane.hpp		\
+    geom/ray.cpp		\
+    geom/ray.hpp		\
+    geom/sphere.cpp		\
+    geom/sphere.hpp		\
     guid.cpp			\
     guid.hpp			\
     hash.hpp			\
@@ -196,8 +205,6 @@ UTIL_FILES   =			\
     noise/turbulence.ipp	\
     pascal.cpp			\
     pascal.hpp			\
-    plane.cpp			\
-    plane.hpp			\
     platform.hpp		\
     point.cpp			\
     point.hpp			\
@@ -221,8 +228,6 @@ UTIL_FILES   =			\
     rational.cpp		\
     rational.hpp		\
     rational.ipp		\
-    ray.cpp			\
-    ray.hpp			\
     region.cpp			\
     region.hpp			\
     region.ipp			\
@@ -231,8 +236,6 @@ UTIL_FILES   =			\
     signal.hpp			\
     signal.ipp			\
     si.hpp			\
-    sphere.cpp			\
-    sphere.hpp			\
     stats.cpp			\
     stats.hpp			\
     stream.cpp			\
@@ -352,7 +355,6 @@ AM_LDFLAGS  += $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB)
 AM_CXXFLAGS += -I$(top_srcdir)
 
 TEST_BIN = 			\
-    test/aabb			\
     test/backtrace 		\
     test/bezier			\
     test/bitwise		\
@@ -368,6 +370,8 @@ TEST_BIN = 			\
     test/fixed			\
     test/float			\
     test/format			\
+    test/geom/aabb		\
+    test/geom/ray 		\
     test/hash/murmur		\
     test/hash/fasthash          \
     test/hmac			\
@@ -377,7 +381,6 @@ TEST_BIN = 			\
     test/introspection		\
     test/ip 			\
     test/json_types		\
-    test/ray 			\
     test/maths			\
     test/matrix			\
     test/md2			\
