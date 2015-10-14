@@ -22,16 +22,16 @@ using util::geom::cylinder;
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 bool
-cylinder<S,T>::includes (util::point<S,T> p) const
+cylinder<S,T>::includes (util::point<S,T> p_) const
 {
-    auto ab = b - a;
-    auto pa = p - a;
+    auto p10 = p1 - p0;
+    auto p_0 = p_ - p0;
 
-    auto l = dot (ab, pa);
-    if (l < 0 || l > ab.magnitude2 ())
+    auto l = dot (p10, p_0);
+    if (l < 0 || l > p10.magnitude2 ())
         return false;
 
-    auto d = dot (pa, pa) - l * l * ab.magnitude2 ();
+    auto d = dot (p10, p10) - l * l * p10.magnitude2 ();
     if (d > radius * radius)
         return false;
 

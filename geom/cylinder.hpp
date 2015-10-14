@@ -23,7 +23,7 @@ namespace util { namespace geom {
     ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T>
     struct cylinder {
-        util::point<S,T> a, b;
+        util::point<S,T> p0, p1;
         T radius;
 
         float distance (util::point<S,T>) const;
