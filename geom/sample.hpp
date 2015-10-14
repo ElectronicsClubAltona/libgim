@@ -14,25 +14,35 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_PLANE_HPP
-#define __UTIL_PLANE_HPP
+#ifndef __UTIL_GEOM_SAMPLE_HPP
+#define __UTIL_GEOM_SAMPLE_HPP
 
 #include "../point.hpp"
-#include "../vector.hpp"
 
 namespace util { namespace geom {
-    template <size_t S, typename T>
-    struct plane {
-        plane (util::point<S,T> p,
-               util::vector<S,T> n);
-
-        util::point<S,T> p;
-        util::vector<S,T> n;
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename G
+    >
+    struct sampler {
+        static point<S,T> fn (K<S,T>, G&);
     };
 
-
-    typedef plane<2,float> plane2f;
-    typedef plane<3,float> plane3f;
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename G  // random generator
+    >
+    point<S,T>
+    sample (K<S,T> k, G &g)
+    {
+        return sampler<S,T,K,G>::fn (k, g);
+    }
 } }
+
+#include "sample.ipp"
 
 #endif

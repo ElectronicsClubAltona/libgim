@@ -14,25 +14,22 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_PLANE_HPP
-#define __UTIL_PLANE_HPP
+#ifndef __UTIL_GEOM_CYLINDER_HPP
+#define __UTIL_GEOM_CYLINDER_HPP
 
 #include "../point.hpp"
-#include "../vector.hpp"
 
 namespace util { namespace geom {
+    ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T>
-    struct plane {
-        plane (util::point<S,T> p,
-               util::vector<S,T> n);
+    struct cylinder {
+        util::point<S,T> a, b;
+        T radius;
 
-        util::point<S,T> p;
-        util::vector<S,T> n;
+        float distance (util::point<S,T>) const;
+        bool includes (util::point<S,T>) const;
     };
 
-
-    typedef plane<2,float> plane2f;
-    typedef plane<3,float> plane3f;
 } }
 
 #endif

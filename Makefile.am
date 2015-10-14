@@ -57,14 +57,27 @@ UTIL_FILES   =			\
     geom/fwd.hpp		\
     geom/aabb.cpp		\
     geom/aabb.hpp		\
+    geom/aabb.ipp		\
+    geom/cylinder.cpp		\
+    geom/cylinder.hpp		\
+    geom/ellipse.cpp		\
+    geom/ellipse.hpp		\
+    geom/ellipse.ipp		\
     geom/iostream.cpp		\
     geom/iostream.hpp		\
+    geom/ops.hpp		\
     geom/plane.cpp		\
     geom/plane.hpp		\
     geom/ray.cpp		\
     geom/ray.hpp		\
+    geom/rect.cpp		\
+    geom/rect.hpp		\
+    geom/sample.hpp		\
+    geom/sample.ipp		\
     geom/sphere.cpp		\
     geom/sphere.hpp		\
+    geom/tri.cpp		\
+    geom/tri.hpp		\
     guid.cpp			\
     guid.hpp			\
     hash.hpp			\

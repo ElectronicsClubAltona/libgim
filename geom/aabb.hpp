@@ -69,4 +69,6 @@ namespace util { namespace geom {
     std::ostream& operator<< (std::ostream&, AABB<S,T>);
 } }
 
+#include "aabb.ipp"
+
 #endif

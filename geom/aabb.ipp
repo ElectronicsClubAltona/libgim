@@ -14,25 +14,27 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_PLANE_HPP
-#define __UTIL_PLANE_HPP
+#if defined(__UTIL_GEOM_AABB_IPP)
+#error
+#endif
 
-#include "../point.hpp"
-#include "../vector.hpp"
+#define __UTIL_GEOM_AABB_IPP
+
+#include "sample.hpp"
+
 
 namespace util { namespace geom {
-    template <size_t S, typename T>
-    struct plane {
-        plane (util::point<S,T> p,
-               util::vector<S,T> n);
+    template <size_t S, typename T, typename G>
+    struct sampler<S,T,AABB,G> {
+        static point<S,T>
+        fn (AABB<S,T> b, G &g)
+        {
+            std::uniform_real_distribution<T> d;
 
-        util::point<S,T> p;
-        util::vector<S,T> n;
+            point<S,T> p;
+            std::generate (p.begin (), p.end (), [&] (void) { return d (g); });
+
+            return p * (b.p1 - b.p0) + b.p0.template as<util::vector> ();
+        }
     };
-
-
-    typedef plane<2,float> plane2f;
-    typedef plane<3,float> plane3f;
 } }
-
-#endif

@@ -14,25 +14,32 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_PLANE_HPP
-#define __UTIL_PLANE_HPP
+#if defined(__UTIL_GEOM_SAMPLE_IPP)
+#error
+#endif
 
-#include "../point.hpp"
-#include "../vector.hpp"
+#define __UTIL_GEOM_SAMPLE_IPP
+
+#include "ops.hpp"
 
 namespace util { namespace geom {
-    template <size_t S, typename T>
-    struct plane {
-        plane (util::point<S,T> p,
-               util::vector<S,T> n);
+    // use rejection sampling by default
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename G
+    >
+    point<S,T>
+    sampler<S,T,K,G>::fn (K<S,T> k, G &g)
+    {
+        auto b = bounds (k);
 
-        util::point<S,T> p;
-        util::vector<S,T> n;
-    };
-
-
-    typedef plane<2,float> plane2f;
-    typedef plane<3,float> plane3f;
+        while (true) {
+            auto p = sample (b, g);
+            if (intersects (k, p))
+                return p;
+        }
+    }
 } }
 
-#endif

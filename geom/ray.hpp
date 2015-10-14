@@ -17,12 +17,11 @@
 #ifndef __UTIL_GEOM_RAY_HPP
 #define __UTIL_GEOM_RAY_HPP
 
-#include "point.hpp"
-
 #include "aabb.hpp"
 #include "plane.hpp"
 #include "sphere.hpp"
-#include "vector.hpp"
+#include "../vector.hpp"
+#include "../point.hpp"
 
 #include <iostream>
 
