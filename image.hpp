@@ -47,8 +47,6 @@ namespace util { namespace image {
         template <typename U = T> buffer<U> clone (void) const;
         template <typename U> buffer<U> cast (void) const { return clone<U> (); }
 
-        buffer<T> downsample (float factor) const;
-
         //---------------------------------------------------------------------
         constexpr extent2u extent (void) const;
         constexpr vector2u stride (void) const;
