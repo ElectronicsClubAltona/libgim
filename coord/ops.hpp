@@ -35,22 +35,19 @@ namespace util {
     // operation traits
     namespace coord {
         template <
-            size_t S,
-            typename T,
-            typename U,
             template <size_t,typename> class A,
             template <size_t,typename> class B
         >
         struct traits { };
 
         //-------------------------------------------------------------------------
-        template <size_t S, typename T, typename U> struct traits<S,T,U,colour,colour> { typedef colour<S,typename std::common_type<T,U>::type> result; };
-        template <size_t S, typename T, typename U> struct traits<S,T,U,extent,extent> { typedef extent<S,typename std::common_type<T,U>::type> result; };
-        template <size_t S, typename T, typename U> struct traits<S,T,U,extent,vector> { typedef extent<S,typename std::common_type<T,U>::type> result; };
-        template <size_t S, typename T, typename U> struct traits<S,T,U,point,extent>  { typedef point <S,typename std::common_type<T,U>::type> result; };
-        template <size_t S, typename T, typename U> struct traits<S,T,U,point,vector>  { typedef point <S,typename std::common_type<T,U>::type> result; };
-        template <size_t S, typename T, typename U> struct traits<S,T,U,vector,point>  { typedef point <S,typename std::common_type<T,U>::type> result; };
-        template <size_t S, typename T, typename U> struct traits<S,T,U,vector,vector> { typedef vector<S,typename std::common_type<T,U>::type> result; };
+        template <> struct traits<colour,colour> { template <size_t S, typename T> using result = colour<S,T>; };
+        template <> struct traits<extent,extent> { template <size_t S, typename T> using result = extent<S,T>; };
+        template <> struct traits<extent,vector> { template <size_t S, typename T> using result = extent<S,T>; };
+        template <> struct traits<point,extent>  { template <size_t S, typename T> using result = point <S,T>; };
+        template <> struct traits<point,vector>  { template <size_t S, typename T> using result = point <S,T>; };
+        template <> struct traits<vector,point>  { template <size_t S, typename T> using result = point <S,T>; };
+        template <> struct traits<vector,vector> { template <size_t S, typename T> using result = vector<S,T>; };
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -63,10 +60,12 @@ namespace util {
         template <size_t,typename> class A,             \
         template <size_t,typename> class B              \
     >                                                   \
-    typename coord::traits<S,T,U,A,B>::result           \
+    auto                                                \
     operator OP (A<S,T> a, B<S,U> b)                    \
     {                                                   \
-        typename coord::traits<S,T,U,A,B>::result out;  \
+        typename coord::traits<A,B>::template result<   \
+            S,typename std::common_type<T,U>::type      \
+        > out;                                          \
         for (size_t i = 0; i < S; ++i)                  \
             out[i] = a[i] OP b[i];                      \
         return out;                                     \
@@ -75,11 +74,18 @@ namespace util {
     template <                                          \
         size_t S,                                       \
         typename T,                                     \
+        typename U,                                     \
         template <size_t,typename> class A,             \
         template <size_t,typename> class B              \
     >                                                   \
-    typename coord::traits<S,T,T,A,B>::result&          \
-    operator PASTE(OP,=) (A<S,T>& a, B<S,T> b)          \
+    typename std::enable_if<                            \
+        std::is_same<                                   \
+            typename std::common_type<T,U>::type,       \
+            T                                           \
+        >::value,                                       \
+        A<S,T>                                          \
+    >::type&                                            \
+    operator PASTE(OP,=) (A<S,T>& a, B<S,U> b)          \
     {                                                   \
         for (size_t i = 0; i < S; ++i)                  \
             a[i] PASTE(OP,=) b[i];                      \
@@ -95,37 +101,35 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     // scalar operators
-#define SCALAR_OP(OP)                                       \
-    template <                                              \
-        size_t S,                                           \
-        typename T,                                         \
-        typename U,                                         \
-        template <size_t,typename> class K                  \
-    >                                                       \
-    K<S,typename std::common_type<T,U>::type>               \
-    operator OP (U u, K<S,T> k)                             \
-    {                                                       \
-        using out_t = typename std::common_type<T,U>::type; \
-        K<S,out_t> out;                                     \
-        for (size_t i = 0; i < S; ++i)                      \
-            out[i] = u OP k[i];                             \
-        return out;                                         \
-    }                                                       \
-                                                            \
-    template <                                              \
-        size_t S,                                           \
-        typename T,                                         \
-        typename U,                                         \
-        template <size_t,typename> class K                  \
-    >                                                       \
-    K<S,typename std::common_type<T,U>::type>               \
-    operator OP (K<S,T> k, U u)                             \
-    {                                                       \
-        using out_t = typename std::common_type<T,U>::type; \
-        K<S,out_t> out;                                     \
-        for (size_t i = 0; i < S; ++i)                      \
-            out[i] = k[i] OP u;                             \
-        return out;                                         \
+#define SCALAR_OP(OP)                                   \
+    template <                                          \
+        size_t S,                                       \
+        typename T,                                     \
+        typename U,                                     \
+        template <size_t,typename> class K              \
+    >                                                   \
+    auto                                                \
+    operator OP (U u, K<S,T> k)                         \
+    {                                                   \
+        K<S,typename std::common_type<T,U>::type> out;  \
+        for (size_t i = 0; i < S; ++i)                  \
+            out[i] = u OP k[i];                         \
+        return out;                                     \
+    }                                                   \
+                                                        \
+    template <                                          \
+        size_t S,                                       \
+        typename T,                                     \
+        typename U,                                     \
+        template <size_t,typename> class K              \
+    >                                                   \
+    auto                                                \
+    operator OP (K<S,T> k, U u)                         \
+    {                                                   \
+        K<S,typename std::common_type<T,U>::type> out;  \
+        for (size_t i = 0; i < S; ++i)                  \
+            out[i] = k[i] OP u;                         \
+        return out;                                     \
     }
 
     SCALAR_OP(+)
@@ -186,6 +190,32 @@ namespace util {
             v = -v;
         return k;
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // unary operators
+
+#define UNARY_OP(OP)                                \
+    template <                                      \
+        size_t S,                                   \
+        typename T,                                 \
+        template <size_t,typename> class K          \
+    >                                               \
+    auto                                            \
+    operator OP (K<S,T> k)                          \
+    {                                               \
+        K<S,decltype(OP std::declval<T> ())> out;   \
+                                                    \
+        for (size_t i = 0; i < S; ++i)              \
+            out[i] = OP k[i];                       \
+                                                    \
+        return k;                                   \
+    }
+
+    UNARY_OP(!)
+    UNARY_OP(~)
+
+#undef UNARY_OP
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -336,31 +366,58 @@ namespace util {
 
 
     ///------------------------------------------------------------------------
-    /// return the minimum element of the coordinate type
     template <size_t S, typename T, template<size_t,typename> class K>
     T
     min (K<S,T> k)
     { return *std::min_element (k.begin (), k.end ()); }
 
 
-    ///------------------------------------------------------------------------
-    /// return the maximum element of the coordinate type
     template <size_t S, typename T, template<size_t,typename> class K>
     T
     max (K<S,T> k)
     { return *std::max_element (k.begin (), k.end ()); }
 
 
-    template <size_t S, typename T, template<size_t,typename> class K>
-    bool
-    operator>= (K<S,T> k, T t)
-    { return min (k) >= t; }
+    //-------------------------------------------------------------------------
+#define SCALAR_OP(OP)                       \
+    template <                              \
+        size_t S,                           \
+        typename T,                         \
+        typename U,                         \
+        template <size_t,typename> class K  \
+    >                                       \
+    K<S,bool>                               \
+    operator OP (const K<S,T> k, const U u) \
+    {                                       \
+        K<S,bool> out;                      \
+        for (size_t i = 0; i < S; ++i)      \
+            out[i] = k[i] OP u;             \
+        return out;                         \
+    }
+
+    SCALAR_OP(<)
+    SCALAR_OP(>)
+    SCALAR_OP(<=)
+    SCALAR_OP(>=)
+
+#undef SCALAR_OP
 
 
-    template <size_t S, typename T, template<size_t,typename> class K>
+    //-------------------------------------------------------------------------
+    template <size_t S, template <size_t,typename> class K>
     bool
-    operator<= (K<S,T> k, T t)
-    { return max (k) <= t; }
+    any (const K<S,bool> k)
+    {
+        return std::any_of (k.begin (), k.end (), identity<bool>);
+    }
+
+    //-------------------------------------------------------------------------
+    template <size_t S, template <size_t,typename> class K>
+    bool
+    all (const K<S,bool> k)
+    {
+        return std::all_of (k.begin (), k.end (), identity<bool>);
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////
