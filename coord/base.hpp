@@ -60,6 +60,12 @@ namespace util { namespace coord {
         auto begin (void) { return std::begin (this->data); }
         auto end   (void) { return std::end   (this->data); }
 
+        const T& front (void) const { return this->data[0]; }
+        T& front (void) { return this->data[0]; }
+
+        const T& back (void) const { return this->data[S-1]; }
+        T& back (void) { return this->data[S-1]; }
+
         ///////////////////////////////////////////////////////////////////////
         // conversions
         template <template <size_t, typename> class K>
