@@ -48,9 +48,9 @@ util::pgm::read (const boost::filesystem::path &path)
     if (expected != remain)
         throw std::runtime_error ("expected data size mismatch");
 
-    util::image::buffer<uint8_t> out (width, height);
+    util::image::buffer<uint8_t> out ({width, height});
 
-    CHECK_EQ (out.w, out.s);
+    CHECK (out.is_packed ());
     std::copy (raw.begin () + cooked.tellg () - 1, raw.end (), out.begin ());
 
     return out;
@@ -88,7 +88,7 @@ void
 util::pgm::write (const util::image::buffer<uint8_t> &src,
                   std::ostream &dst)
 {
-    write (src.begin (), src.w, src.h, src.s, dst);
+    write (src.begin (), src.extent ().w, src.extent ().h, src.stride ().y, dst);
 }
 
 
@@ -98,7 +98,7 @@ util::pgm::write (const util::image::buffer<uint8_t> &src,
                   const boost::filesystem::path &path)
 {
     std::ofstream dst (path.string ());
-    write (src.begin (), src.w, src.h, src.s, path);
+    write (src.begin (), src.extent ().w, src.extent ().h, src.stride ().y, path);
 }
 
 
