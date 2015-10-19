@@ -77,7 +77,7 @@ namespace util {
         extent_t magnitude (void) const;
         extent_t magnitude (extent_t);
 
-        void scale (T factor);
+        void scale (size_type factor);
 
         bool empty (void) const;
 

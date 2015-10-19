@@ -103,9 +103,9 @@ util::region<S,T>::magnitude (extent_t _e)
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 void
-util::region<S,T>::scale (T factor)
+util::region<S,T>::scale (size_type factor)
 {
-    auto o = (e * factor - e) / T{2};
+    auto o = (e * factor - e) / T(2);
     p -= o;
     e *= factor;
 }
