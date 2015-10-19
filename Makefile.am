@@ -9,6 +9,8 @@ AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(ZLIB_CFLAGS)
 ## Source definitions
 
 UTIL_FILES   =			\
+    adapter.hpp			\
+    adapter.cpp			\
     backtrace.hpp   		\
     bezier.cpp			\
     bezier.hpp			\
