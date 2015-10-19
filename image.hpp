@@ -31,13 +31,13 @@ namespace util { namespace image {
         typedef T value_type;
 
         //---------------------------------------------------------------------
-        buffer (util::extent2u);
-        buffer (size_t w, size_t h);
-        buffer (size_t w, size_t h, size_t s);
-        buffer (size_t w, size_t h, size_t s, std::unique_ptr<T[]> &&data);
+        buffer (util::extentu<2>);
+        buffer (util::extentu<2>, std::unique_ptr<T[]> &&data);
 
         buffer (const buffer<T>&) = delete;
         buffer (buffer<T> &&) = default;
+        buffer& operator= (const buffer<T>&) = default;
+        buffer& operator= (buffer<T>&&) = default;
 
         //---------------------------------------------------------------------
         /// allocate and return a buffer of the same dimensions. contents are undefined.
@@ -53,10 +53,6 @@ namespace util { namespace image {
         constexpr size_t   size   (void) const; // elements allocated
 
         constexpr bool is_packed (void) const;
-
-        size_t w;
-        size_t h;
-        size_t s;
 
         //---------------------------------------------------------------------
         constexpr size_t offset (point<2,size_t>) const;
@@ -80,6 +76,8 @@ namespace util { namespace image {
         const T* cend   (void) const;
 
     private:
+        util::extent2u m_size;
+        util::vector2u m_stride;
         std::unique_ptr<T[]> m_data;
     };
 } }

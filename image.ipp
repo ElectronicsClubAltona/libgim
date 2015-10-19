@@ -25,7 +25,7 @@ namespace util { namespace image {
     constexpr extent2u
     buffer<T>::extent (void) const
     {
-        return { w, h };
+        return m_size;
     }
 
 
@@ -34,7 +34,7 @@ namespace util { namespace image {
     constexpr vector2u
     buffer<T>::stride (void) const
     {
-        return { 1, s };
+        return m_stride;
     }
 
 
@@ -52,7 +52,7 @@ namespace util { namespace image {
     constexpr size_t
     buffer<T>::size (void) const
     {
-        return extent ()[1] * stride ()[1];
+        return extent ().back () * stride ().back ();
     }
 
 
@@ -61,6 +61,6 @@ namespace util { namespace image {
     constexpr bool
     buffer<T>::is_packed (void) const
     {
-        return stride ()[1] == extent ()[0];
+        return stride ().back () == extent ().back ();
     }
 } }

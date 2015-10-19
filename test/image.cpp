@@ -10,7 +10,7 @@ main (void)
 
     constexpr size_t W = 64;
     constexpr size_t H = 128;
-    util::image::buffer<uint16_t> img (W, H);
+    util::image::buffer<uint16_t> img ({W, H});
 
     if (!img.is_packed ())
         tap.skip ("linear position probe requires packed image allocation");

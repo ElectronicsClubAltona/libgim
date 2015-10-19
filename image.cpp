@@ -23,45 +23,11 @@ using util::image::buffer;
 
 //-----------------------------------------------------------------------------
 template <typename T>
-util::image::buffer<T>::buffer (util::extent2u _size):
-    buffer<T> (_size.w, _size.h)
+util::image::buffer<T>::buffer (util::extentu<2> _size):
+    m_size (_size),
+    m_stride (1, _size.w),
+    m_data (std::make_unique<T[]> (_size.area ()))
 { ; }
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-util::image::buffer<T>::buffer (size_t _w, size_t _h, size_t _s):
-    w (_w),
-    h (_h),
-    s (_s),
-    m_data (std::make_unique<T[]> (_h * _s))
-{
-    CHECK_NEQ (w * h, 0);
-    CHECK_GE (s, w);
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-util::image::buffer<T>::buffer (size_t _w, size_t _h):
-    buffer<T> (_w, _h, _w)
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-util::image::buffer<T>::buffer (size_t _w,
-                                size_t _h,
-                                size_t _s,
-                                std::unique_ptr<T[]> &&_data):
-    w (_w),
-    h (_h),
-    s (_s),
-    m_data (std::move (_data))
-{
-    CHECK_NEQ (w * h, 0);
-    CHECK_GE (s, w);
-}
 
 
 //-----------------------------------------------------------------------------
@@ -70,7 +36,7 @@ template <typename U>
 util::image::buffer<U>
 util::image::buffer<T>::alloc (void) const
 {
-    return buffer<U> (w, h, s);
+    return buffer<U> (m_size);
 }
 
 
@@ -102,8 +68,7 @@ template <typename T>
 const T&
 buffer<T>::operator[] (point<2,size_t> p) const
 {
-    CHECK_LT (p.x, w);
-    CHECK_LT (p.y, h);
+    CHECK (util::all (p < size ()));
 
     return begin ()[offset (p)];
 }
@@ -114,8 +79,7 @@ template <typename T>
 T&
 buffer<T>::operator[] (point<2,size_t> p)
 {
-    CHECK_LT (p.x, w);
-    CHECK_LT (p.y, h);
+    CHECK (util::all (p < size ()));
 
     return begin ()[offset (p)];
 }
@@ -126,7 +90,7 @@ template <typename T>
 const T&
 buffer<T>::operator[] (size_t idx) const
 {
-    CHECK_LT (idx, h * s);
+    CHECK_LT (idx, size ());
 
     return begin ()[idx];
 }
@@ -137,7 +101,7 @@ template <typename T>
 T&
 buffer<T>::operator[] (size_t idx)
 {
-    CHECK_LT (idx, h * s);
+    CHECK_LT (idx, size ());
 
     return begin ()[idx];
 }
@@ -166,7 +130,7 @@ template <typename T>
 T*
 buffer<T>::end (void)
 {
-    return begin () + h * s;
+    return begin () + m_size.back () * m_stride.back ();
 }
 
 
@@ -211,7 +175,7 @@ template <typename T>
 const T*
 buffer<T>::cend (void) const
 {
-    return cbegin () + h * s;
+    return cbegin () + m_size.back () * m_stride.back ();
 }
 
 
