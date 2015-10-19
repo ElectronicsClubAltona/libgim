@@ -140,6 +140,15 @@ constexpr double sign (double);
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
+const T&
+identity (const T& t)
+{
+    return t;
+}
+
+
+//-----------------------------------------------------------------------------
 // Comparisons
 template <typename T>
 bool
