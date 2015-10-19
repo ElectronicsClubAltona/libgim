@@ -264,7 +264,7 @@ util::region<S,T>::inset (T mag)
 
     return {
         p + mag,
-        e - 2 * mag
+        e - static_cast<T> (2 * mag)
     };
 }
 
