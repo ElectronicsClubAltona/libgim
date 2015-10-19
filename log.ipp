@@ -34,7 +34,7 @@ namespace util {
         template <typename T, typename ...tail>
         void
         log (level_t l, boost::format &&format, const T &val, tail ..._tail) {
-            ::util::detail::log (l, std::move (format % val), _tail...);
+            ::util::detail::log (l, std::move (format.operator% (val)), _tail...);
         }
     }
 
