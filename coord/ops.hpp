@@ -171,10 +171,20 @@ namespace util {
 
     //-------------------------------------------------------------------------
     // negation
-    template <size_t S, typename T, template<size_t,typename> class K>
-    K<S,T> operator- (K<S,T> k)
+    template <
+        size_t S,
+        typename T,
+        template<size_t,typename> class K
+    >
+    typename std::enable_if<
+        std::is_signed<T>::value,
+        K<S,T>
+    >::type
+    operator- (K<S,T> k)
     {
-        return k * T{-1};
+        for (auto &v: k)
+            v = -v;
+        return k;
     }
 
 
