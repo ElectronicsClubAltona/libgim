@@ -95,35 +95,37 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     // scalar operators
-#define SCALAR_OP(OP)                                   \
-    template <                                          \
-        size_t S,                                       \
-        typename T,                                     \
-        typename U,                                     \
-        template <size_t,typename> class K              \
-    >                                                   \
-    typename std::enable_if<std::is_fundamental<U>::value, K<S,T>>::type    \
-    operator OP (U u, K<S,T> k)                         \
-    {                                                   \
-        K<S,T> out;                                     \
-        for (size_t i = 0; i < S; ++i)                  \
-            out[i] = u OP k[i];                         \
-        return out;                                     \
-    }                                                   \
-                                                        \
-    template <                                          \
-        size_t S,                                       \
-        typename T,                                     \
-        typename U,                                     \
-        template <size_t,typename> class K              \
-    >                                                   \
-    typename std::enable_if<std::is_fundamental<U>::value, K<S,T>>::type    \
-    operator OP (K<S,T> k, U u)                         \
-    {                                                   \
-        K<S,T> out;                                     \
-        for (size_t i = 0; i < S; ++i)                  \
-            out[i] = k[i] OP u;                         \
-        return out;                                     \
+#define SCALAR_OP(OP)                                       \
+    template <                                              \
+        size_t S,                                           \
+        typename T,                                         \
+        typename U,                                         \
+        template <size_t,typename> class K                  \
+    >                                                       \
+    K<S,typename std::common_type<T,U>::type>               \
+    operator OP (U u, K<S,T> k)                             \
+    {                                                       \
+        using out_t = typename std::common_type<T,U>::type; \
+        K<S,out_t> out;                                     \
+        for (size_t i = 0; i < S; ++i)                      \
+            out[i] = u OP k[i];                             \
+        return out;                                         \
+    }                                                       \
+                                                            \
+    template <                                              \
+        size_t S,                                           \
+        typename T,                                         \
+        typename U,                                         \
+        template <size_t,typename> class K                  \
+    >                                                       \
+    K<S,typename std::common_type<T,U>::type>               \
+    operator OP (K<S,T> k, U u)                             \
+    {                                                       \
+        using out_t = typename std::common_type<T,U>::type; \
+        K<S,out_t> out;                                     \
+        for (size_t i = 0; i < S; ++i)                      \
+            out[i] = k[i] OP u;                             \
+        return out;                                         \
     }
 
     SCALAR_OP(+)
@@ -136,18 +138,28 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-#define SCALAR_OP(OP)                           \
-    template <                                  \
-        size_t S,                               \
-        typename T,                             \
-        template <size_t,typename> class K      \
-    >                                           \
-    K<S,T>&                                     \
-    operator OP (K<S,T> &k, T t)                \
-    {                                           \
-        for (size_t i = 0; i < S; ++i)          \
-            k[i] OP t;                          \
-        return k;                               \
+    // scalar assignment operators.
+    //
+    // we must check the operands/results do not need casting to store in the
+    // destination type to avoid silent errors accumulating.
+#define SCALAR_OP(OP)                                       \
+    template <                                              \
+        size_t S,                                           \
+        typename T,                                         \
+        typename U,                                         \
+        template <size_t,typename> class K                  \
+    >                                                       \
+    typename std::enable_if<                                \
+        std::is_same<                                       \
+            T,                                              \
+            typename std::common_type<T,U>::type>::value,   \
+        K<S,T>                                              \
+    >::type&                                                \
+    operator OP (K<S,T> &k, U u)                            \
+    {                                                       \
+        for (size_t i = 0; i < S; ++i)                      \
+            k[i] OP u;                                      \
+        return k;                                           \
     }
 
     SCALAR_OP(+=)
