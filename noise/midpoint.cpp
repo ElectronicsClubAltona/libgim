@@ -101,11 +101,13 @@ template <typename T>
 void
 util::noise::midpoint (image::buffer<T> &img, uint64_t seed, float persistence, float sides)
 {
+    auto ext = img.extent ();
+
     static const util::point2u CORNERS[] = {
         { 0,         0 },
-        { 0,         img.w - 1 },
-        { img.h - 1, 0 },
-        { img.h - 1, img.w - 1 }
+        { 0,         ext.w - 1 },
+        { ext.h - 1, 0 },
+        { ext.h - 1, ext.w - 1 }
     };
 
     for (auto i: CORNERS)
