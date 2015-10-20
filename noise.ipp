@@ -23,7 +23,7 @@ namespace util { namespace noise {
     //-------------------------------------------------------------------------
     template <typename T, typename G>
     void
-    fill (image::buffer<T> &pixels, const G& gen)
+    fill (image::buffer<1,T> &pixels, const G& gen)
     {
         size_t h = pixels.h, s = pixels.s, w = pixels.w;
         T *data = pixels.data ();

@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 template <typename T>
 void
-util::noise::fill (image::buffer<T> &pixels,
+util::noise::fill (image::buffer<1,T> &pixels,
                    const util::noise::fractal<T> &gen)
 {
     size_t h = pixels.h, s = pixels.s, w = pixels.w;
@@ -37,8 +37,8 @@ util::noise::fill (image::buffer<T> &pixels,
             data[y * s + x] = gen ({T(x), T(y)});
 }
 
-template void util::noise::fill (image::buffer<float>&, const util::noise::fractal<float>&);
-template void util::noise::fill (image::buffer<double>&, const util::noise::fractal<double>&);
+template void util::noise::fill (image::buffer<1,float>&, const util::noise::fractal<float>&);
+template void util::noise::fill (image::buffer<1,double>&, const util::noise::fractal<double>&);
 
 
 //-----------------------------------------------------------------------------

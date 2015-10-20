@@ -24,7 +24,7 @@
 
 namespace util { namespace noise {
         template <typename T, typename G>
-        void fill (image::buffer<T>&, const G&);
+        void fill (image::buffer<1,T>&, const G&);
 } }
 
 #include "noise.ipp"

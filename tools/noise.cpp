@@ -346,7 +346,7 @@ main (int argc, char **argv)
     for (auto &p: t.perturb)
         p.frequency (scale / res.w);
 
-    util::image::buffer<float> img (res);
+    util::image::buffer<1,float> img (res);
 
     // XXX: offset slightly to avoid origin artefacts in some basis functions
     const auto OFFSET = util::vector2f {

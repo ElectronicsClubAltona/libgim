@@ -25,7 +25,7 @@
 // HACK: This does not support the full header structure with any robustness.
 // In particular it will abort when it sees a comment. If you want better
 // support use waif, or port its implementation.
-util::image::buffer<uint8_t>
+util::image::buffer<1,uint8_t>
 util::pgm::read (const boost::filesystem::path &path)
 {
     util::mapped_file raw (path);
@@ -48,7 +48,7 @@ util::pgm::read (const boost::filesystem::path &path)
     if (expected != remain)
         throw std::runtime_error ("expected data size mismatch");
 
-    util::image::buffer<uint8_t> out ({width, height});
+    util::image::buffer<1,uint8_t> out ({width, height});
 
     CHECK (out.is_packed ());
     std::copy (raw.begin () + cooked.tellg () - 1, raw.end (), out.begin ());
@@ -85,7 +85,7 @@ write_netpbm (const uint8_t *restrict pixels,
 
 //-----------------------------------------------------------------------------
 void
-util::pgm::write (const util::image::buffer<uint8_t> &src,
+util::pgm::write (const util::image::buffer<1,uint8_t> &src,
                   std::ostream &dst)
 {
     write (src.begin (), src.extent ().w, src.extent ().h, src.stride ().y, dst);
@@ -94,7 +94,7 @@ util::pgm::write (const util::image::buffer<uint8_t> &src,
 
 //-----------------------------------------------------------------------------
 void
-util::pgm::write (const util::image::buffer<uint8_t> &src,
+util::pgm::write (const util::image::buffer<1,uint8_t> &src,
                   const boost::filesystem::path &path)
 {
     std::ofstream dst (path.string ());

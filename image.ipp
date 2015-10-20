@@ -21,45 +21,45 @@
 
 namespace util { namespace image {
     //-------------------------------------------------------------------------
-    template <typename T>
+    template <size_t C, typename T>
     constexpr extent2u
-    buffer<T>::extent (void) const
+    buffer<C,T>::extent (void) const
     {
         return m_size;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T>
+    template <size_t C, typename T>
     constexpr vector2u
-    buffer<T>::stride (void) const
+    buffer<C,T>::stride (void) const
     {
         return m_stride;
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T>
+    template <size_t C, typename T>
     constexpr size_t
-    buffer<T>::offset (point<2,size_t> p) const
+    buffer<C,T>::offset (point<2,size_t> p) const
     {
         return dot (stride (), p);
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T>
+    template <size_t C, typename T>
     constexpr size_t
-    buffer<T>::size (void) const
+    buffer<C,T>::size (void) const
     {
         return extent ().back () * stride ().back ();
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename T>
+    template <size_t C, typename T>
     constexpr bool
-    buffer<T>::is_packed (void) const
+    buffer<C,T>::is_packed (void) const
     {
         return stride ().back () == extent ().back ();
     }

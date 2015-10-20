@@ -25,7 +25,7 @@
 // assumes corner points have been assigned their weights
 template <typename T>
 static void
-fill (util::image::buffer<T> &img,
+fill (util::image::buffer<1,T> &img,
       uint64_t seed,
       util::region2u target,
       float scale,
@@ -99,7 +99,7 @@ fill (util::image::buffer<T> &img,
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 void
-util::noise::midpoint (image::buffer<T> &img, uint64_t seed, float persistence, float sides)
+util::noise::midpoint (image::buffer<1,T> &img, uint64_t seed, float persistence, float sides)
 {
     auto ext = img.extent ();
 
@@ -118,4 +118,4 @@ util::noise::midpoint (image::buffer<T> &img, uint64_t seed, float persistence, 
 
 
 //-----------------------------------------------------------------------------
-template void util::noise::midpoint (image::buffer<float>&, uint64_t, float, float);
+template void util::noise::midpoint (image::buffer<1,float>&, uint64_t, float, float);

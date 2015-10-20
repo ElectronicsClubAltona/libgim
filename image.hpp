@@ -26,7 +26,7 @@
 
 
 namespace util { namespace image {
-    template <typename T>
+    template <size_t C, typename T>
     struct buffer {
         typedef T value_type;
 
@@ -34,18 +34,18 @@ namespace util { namespace image {
         buffer (util::extentu<2>);
         buffer (util::extentu<2>, std::unique_ptr<T[]> &&data);
 
-        buffer (const buffer<T>&) = delete;
-        buffer (buffer<T> &&) = default;
-        buffer& operator= (const buffer<T>&) = default;
-        buffer& operator= (buffer<T>&&) = default;
+        buffer (const buffer&) = delete;
+        buffer (buffer &&) = default;
+        buffer& operator= (const buffer&) = default;
+        buffer& operator= (buffer&&) = default;
 
         //---------------------------------------------------------------------
         /// allocate and return a buffer of the same dimensions. contents are undefined.
-        template <typename U = T> buffer<U> alloc (void) const;
+        template <typename U = T> buffer<C,U> alloc (void) const;
 
         /// allocate and return a buffer with the same contents
-        template <typename U = T> buffer<U> clone (void) const;
-        template <typename U> buffer<U> cast (void) const { return clone<U> (); }
+        template <typename U = T> buffer<C,U> clone (void) const;
+        template <typename U> buffer<C,U> cast (void) const { return clone<U> (); }
 
         //---------------------------------------------------------------------
         constexpr extent2u extent (void) const;

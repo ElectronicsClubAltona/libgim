@@ -22,7 +22,7 @@
 namespace util { namespace noise {
     template <typename T>
     void
-    midpoint (image::buffer<T>&, uint64_t seed, float persistence = 0.65f, float sides = 0.25f);
+    midpoint (image::buffer<1,T>&, uint64_t seed, float persistence = 0.65f, float sides = 0.25f);
 } }
 
 #endif

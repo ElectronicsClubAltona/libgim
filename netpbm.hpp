@@ -27,11 +27,11 @@
 namespace util {
     // Portable GrayMap: single component greyscale.
     struct pgm {
-        static image::buffer<uint8_t> read (const boost::filesystem::path&);
+        static image::buffer<1,uint8_t> read (const boost::filesystem::path&);
 
-        static void write (const image::buffer<uint8_t> &src,
+        static void write (const image::buffer<1,uint8_t> &src,
                            const boost::filesystem::path &dst);
-        static void write (const image::buffer<uint8_t> &src,
+        static void write (const image::buffer<1,uint8_t> &src,
                            std::ostream &dst);
 
         static void write (const uint8_t *restrict pixels,

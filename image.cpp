@@ -22,21 +22,26 @@ using util::image::buffer;
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-util::image::buffer<T>::buffer (util::extentu<2> _size):
+template <size_t C, typename T>
+buffer<C,T>::buffer (util::extentu<2> _size):
     m_size (_size),
-    m_stride (1, _size.w),
-    m_data (std::make_unique<T[]> (_size.area ()))
-{ ; }
+    m_stride (C, _size.w),
+    m_data (std::make_unique<T[]> (_size.area () * C))
+{
+    std::partial_sum (m_stride.begin (),
+                      m_stride.end (),
+                      m_stride.begin (),
+                      std::multiplies<T> ());
+}
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 template <typename U>
-util::image::buffer<U>
-util::image::buffer<T>::alloc (void) const
+buffer<C,U>
+buffer<C,T>::alloc (void) const
 {
-    return buffer<U> (m_size);
+    return buffer<C,U> (m_size);
 }
 
 
@@ -50,45 +55,46 @@ rescale (T v)
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 template <typename U>
-util::image::buffer<U>
-util::image::buffer<T>::clone (void) const
+util::image::buffer<C,U>
+util::image::buffer<C,T>::clone (void) const
 {
     auto out = alloc<U> ();
 
-    std::transform (begin (), end (), out.begin (), renormalise<T,U>);
+    auto func = renormalise<T,U>;
+    std::transform (begin (), end (), out.begin (), func);
 
     return out;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <size_t C, typename T>
 const T&
-buffer<T>::operator[] (point<2,size_t> p) const
+buffer<C,T>::operator[] (point<2,size_t> p) const
 {
-    CHECK (util::all (p < size ()));
+    CHECK (util::all (p < extent ()));
 
     return begin ()[offset (p)];
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 T&
-buffer<T>::operator[] (point<2,size_t> p)
+buffer<C,T>::operator[] (point<2,size_t> p)
 {
-    CHECK (util::all (p < size ()));
+    CHECK (util::all (p < extent ()));
 
     return begin ()[offset (p)];
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 const T&
-buffer<T>::operator[] (size_t idx) const
+buffer<C,T>::operator[] (size_t idx) const
 {
     CHECK_LT (idx, size ());
 
@@ -97,9 +103,9 @@ buffer<T>::operator[] (size_t idx) const
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 T&
-buffer<T>::operator[] (size_t idx)
+buffer<C,T>::operator[] (size_t idx)
 {
     CHECK_LT (idx, size ());
 
@@ -108,97 +114,101 @@ buffer<T>::operator[] (size_t idx)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <size_t C, typename T>
 T*
-buffer<T>::data (void)
+buffer<C,T>::data (void)
 {
     return begin ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 T*
-buffer<T>::begin (void)
+buffer<C,T>::begin (void)
 {
     return m_data.get ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 T*
-buffer<T>::end (void)
+buffer<C,T>::end (void)
 {
     return begin () + m_size.back () * m_stride.back ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 const T*
-buffer<T>::begin (void) const
+buffer<C,T>::begin (void) const
 {
     return cbegin ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 const T*
-buffer<T>::end (void) const
+buffer<C,T>::end (void) const
 {
     return cend ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 const T*
-buffer<T>::data (void) const
+buffer<C,T>::data (void) const
 {
     return begin ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 const T*
-buffer<T>::cbegin (void) const
+buffer<C,T>::cbegin (void) const
 {
     return m_data.get ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t C, typename T>
 const T*
-buffer<T>::cend (void) const
+buffer<C,T>::cend (void) const
 {
     return cbegin () + m_size.back () * m_stride.back ();
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template struct util::image::buffer<char>;
-template struct util::image::buffer<uint8_t>;
-template struct util::image::buffer<uint16_t>;
-template struct util::image::buffer<uint32_t>;
-template struct util::image::buffer< int32_t>;
-template struct util::image::buffer<float>;
-template struct util::image::buffer<double>;
 
-template util::image::buffer<char> util::image::buffer<char>::alloc (void) const;
+#define INSTANTIATE_C_T_U(C,T,U)                                                \
+template util::image::buffer<C,U> util::image::buffer<C,T>::alloc (void) const; \
+template util::image::buffer<C,U> util::image::buffer<C,T>::clone (void) const; \
+template util::image::buffer<C,U> util::image::buffer<C,T>::cast  (void) const;
 
-template util::image::buffer<uint8_t> util::image::buffer<uint8_t>::alloc (void) const;
-template util::image::buffer<uint8_t> util::image::buffer<uint8_t>::clone (void) const;
-template util::image::buffer<uint8_t> util::image::buffer<float>::clone (void) const;
-template util::image::buffer<uint8_t> util::image::buffer<double>::clone (void) const;
+#define INSTANTIATE_C_T(C,T)    \
+template struct util::image::buffer<C,T>;   \
+INSTANTIATE_C_T_U(C,T,uint8_t)  \
+INSTANTIATE_C_T_U(C,T,uint16_t) \
+INSTANTIATE_C_T_U(C,T,uint32_t) \
+INSTANTIATE_C_T_U(C,T,float)    \
+INSTANTIATE_C_T_U(C,T,double)
 
-template util::image::buffer<float>    util::image::buffer<float>::alloc (void) const;
-template util::image::buffer<uint32_t> util::image::buffer<float>::alloc (void) const;
-template util::image::buffer< int32_t> util::image::buffer<float>::alloc (void) const;
 
-template util::image::buffer<float> util::image::buffer<float>::clone (void) const;
+#define INSTANTIATE_C(C)        \
+INSTANTIATE_C_T(C,uint8_t)      \
+INSTANTIATE_C_T(C,uint16_t)     \
+INSTANTIATE_C_T(C,uint32_t)     \
+INSTANTIATE_C_T(C,float)        \
+INSTANTIATE_C_T(C,double)
 
-template util::image::buffer<uint32_t> util::image::buffer<uint32_t>::alloc (void) const;
+INSTANTIATE_C(1)
+INSTANTIATE_C(2)
+INSTANTIATE_C(3)
+INSTANTIATE_C(4)
