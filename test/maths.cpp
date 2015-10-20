@@ -77,24 +77,53 @@ test_normalisations (util::TAP::logger &tap)
     {
         bool success = true;
 
-        struct {
+        static const struct {
             float   a;
             uint8_t b;
         } TESTS[] = {
-            {  1.f, 255 },
-            {  0.f,   0 },
-            {  2.f, 255 },
-            { -1.f,   0 }
+            {  1.f,  255 },
+            {  0.5f, 127 },
+            {  2.f,  255 },
+            { -1.f,    0 }
         };
 
         for (auto i: TESTS) {
-            std::cerr << "x";
             auto v = renormalise<decltype(i.a),decltype(i.b)> (i.a);
             success = success && almost_equal (unsigned{v}, unsigned{i.b});
         }
 
         tap.expect (success, "float-u8 normalisation");
     }
+
+    // float to uint32
+    // exercises an integer type that has more precision than float
+    {
+        bool success = true;
+
+        static const struct {
+            float a;
+            uint32_t b;
+        } TESTS[] {
+            { 0.f,          0x00000000 }, // lo range
+            { 1.f,          0xffffffff }, // hi range
+            { 0.5f,         0x7fffff7f }, // 31 bits
+            { 0.001953125f, 0x007fff00 }, // 23 bits
+        };
+
+        for (auto t: TESTS) {
+            auto v = renormalise<float,uint32_t> (t.a);
+            success = success && almost_equal (t.b, v);
+        }
+
+        tap.expect (success, "float-u32 normalisation");
+    }
+
+    std::cerr << renormalise<uint8_t,uint32_t> (0xff) << '\n';
+
+    tap.expect_eq (renormalise<uint8_t,uint32_t> (0xff), 0xffffffff, "normalise hi u8-to-u32");
+    tap.expect_eq (renormalise<uint8_t,uint32_t> (0x00), 0x00000000, "normalise lo u8-to-u32");
+
+    tap.expect_eq (renormalise<uint32_t,uint8_t> (0xffffffff), 0xff, "normalise hi u32-to-u8");
 }
 
 

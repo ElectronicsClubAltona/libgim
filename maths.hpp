@@ -376,32 +376,119 @@ smoothstep [[gnu::pure]] (T a, T b, T x)
 
 #include "types/string.hpp"
 
-//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+// renormalisation of unit floating point and/or normalised integers
+
+// int -> float
 template <typename T, typename U>
-U
+constexpr
+typename std::enable_if<
+    !std::is_floating_point<T>::value && std::is_floating_point<U>::value, U
+>::type
 renormalise [[gnu::pure]] (T t)
 {
-    static const T T_max = std::numeric_limits<T>::max ();
-    static const U U_max = std::numeric_limits<U>::max ();
-    static const bool shrinking = sizeof (U) < sizeof (T);
-    static const bool T_float = std::is_floating_point<T>::value;
-    static const bool U_float = std::is_floating_point<U>::value;
-
-    if (T_float && U_float)
-        return U (t);
-
-    if (T_float) {
-        return U (limit (t, 0, 1) * U_max);
-    }
-
-    if (U_float)
-        return U(U (t) / T_max);
-
-    if (shrinking)
-        return U (t / (sizeof (T) / sizeof (U)));
-    else
-        return U (t) * (sizeof (U) / sizeof (T));
+    return t / static_cast<U> (std::numeric_limits<T>::max ());
 }
+
+
+// float -> int
+template <typename T, typename U>
+constexpr
+typename std::enable_if<
+    std::is_floating_point<T>::value && !std::is_floating_point<U>::value, U
+>::type
+renormalise [[gnu::pure]] (T t)
+{
+    // Ideally std::ldexp would be involved but it complicates handing
+    // integers with greater precision than our floating point type. Also it
+    // would prohibit constexpr and involve errno.
+
+    size_t usable    = std::numeric_limits<T>::digits;
+    size_t available = sizeof (U) * 8;
+    size_t shift     = std::max (available, usable) - usable;
+
+    t = limit (t, 0, 1);
+
+    // construct an integer of the float's mantissa size, multiply it by our
+    // parameter, then shift it back into the full range of the integer type.
+    U in  = std::numeric_limits<U>::max () >> shift;
+    U mid = static_cast<U> (t * in);
+    U out = mid << shift;
+
+    // use the top bits of the output to fill the bottom bits which through
+    // shifting would otherwise be zero. this gives us the full extent of the
+    // integer range, while varying predictably through the entire output
+    // space.
+    return out | out >> (available - shift);
+}
+
+
+// float -> float, avoid identity conversion as we don't want to create
+// ambiguous overloads
+template <typename T, typename U>
+constexpr
+typename std::enable_if<
+    std::is_floating_point<T>::value &&
+    std::is_floating_point<U>::value &&
+    !std::is_same<T,U>::value, U
+>::type
+renormalise [[gnu::pure]] (T t)
+{
+    return static_cast<U> (t);
+}
+
+
+// hi_int -> lo_int
+template <typename T, typename U>
+constexpr
+typename std::enable_if<
+    std::is_integral<T>::value &&
+    std::is_integral<U>::value &&
+    (sizeof (T) > sizeof (U)), U
+>::type
+renormalise [[gnu::pure]] (T t)
+{
+    // we have excess bits ,just shift and return
+    constexpr auto shift = 8 * (sizeof (T) - sizeof (U));
+    return t >> shift;
+}
+
+
+// lo_int -> hi_int
+template <typename T, typename U>
+constexpr
+typename std::enable_if<
+    std::is_integral<T>::value &&
+    std::is_integral<U>::value &&
+    sizeof (T) < sizeof (U), U
+>::type
+renormalise [[gnu::pure]] (T t)
+{
+    // we need to create bits. fill the output integer with copies of ourself.
+    // this is approximately correct in the general case (introducing a small
+    // linear positive bias), but allows us to fill the output space in the
+    // case of input maximum.
+
+    static_assert (sizeof (U) % sizeof (T) == 0,
+                   "assumes integer multiple of sizes");
+
+    U out = 0;
+
+    for (size_t i = 0; i < sizeof (U) / sizeof (T); ++i)
+        out |= t << sizeof (U) * 8 * i;
+
+    return out;
+}
+
+
+template <typename T, typename U>
+constexpr
+typename std::enable_if<
+    std::is_same<T,U>::value, U
+>::type
+renormalise [[gnu::pure]] (T t)
+{ return t; }
 
 #include "maths.ipp"
 
