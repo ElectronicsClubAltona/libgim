@@ -379,6 +379,31 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
+#define VECTOR_OP(OP)                               \
+    template <                                      \
+        size_t S,                                   \
+        typename T,                                 \
+        typename U,                                 \
+        template <size_t,typename> class A,         \
+        template <size_t,typename> class B          \
+    >                                               \
+    vector<S,bool>                                  \
+    operator OP (const A<S,T> a, const B<S,U> b)    \
+    {                                               \
+        vector<S,bool> out;                         \
+        for (size_t i = 0; i < S; ++i)              \
+            out[i] = a[i] OP b[i];                  \
+        return out;                                 \
+    }
+
+    VECTOR_OP(<)
+    VECTOR_OP(>)
+    VECTOR_OP(<=)
+    VECTOR_OP(>=)
+
+#undef VECTOR_OP
+
+
 #define SCALAR_OP(OP)                       \
     template <                              \
         size_t S,                           \
@@ -386,10 +411,10 @@ namespace util {
         typename U,                         \
         template <size_t,typename> class K  \
     >                                       \
-    K<S,bool>                               \
+    vector<S,bool>                          \
     operator OP (const K<S,T> k, const U u) \
     {                                       \
-        K<S,bool> out;                      \
+        vector<S,bool> out;                 \
         for (size_t i = 0; i < S; ++i)      \
             out[i] = k[i] OP u;             \
         return out;                         \
