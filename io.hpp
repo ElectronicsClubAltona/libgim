@@ -83,6 +83,9 @@ namespace util {
     void write (const fd&, const T *restrict data, size_t count);
 
     template <typename T>
+    void write (const fd&, const T &data);
+
+    template <typename T>
     void write (const fd&, const T *restrict first, const T *restrict last);
 
     template <typename T>

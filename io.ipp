@@ -17,6 +17,22 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <typename T>
+    void
+    write (const fd &_fd, const T &data)
+    {
+        write (_fd, &data, 1);
+    }
+
+    //-------------------------------------------------------------------------
+    inline void
+    write (const fd &_fd, const void *_data, size_t _bytes)
+    {
+        auto data = reinterpret_cast<const uint8_t*> (_data);
+        write (_fd, data, data + _bytes);
+    }
+
+    //-------------------------------------------------------------------------
+    template <typename T>
     indented<T>::indented (const T &_data):
         data (_data)
     { ; }
