@@ -350,13 +350,10 @@ namespace util {
 
 // min/max clamping
 template <typename T, typename U, typename V>
-T
+constexpr T
 limit [[gnu::pure]] (const T val, const U lo, const V hi)
 {
-    CHECK_LE(
-        decltype (lo+hi) (lo),
-        decltype (hi+lo) (hi)
-    );
+    CHECK_LE (lo, hi);
 
     return val > hi ? hi:
            val < lo ? lo:
