@@ -25,14 +25,9 @@ using util::image::buffer;
 template <size_t C, typename T>
 buffer<C,T>::buffer (util::extentu<2> _size):
     m_size (_size),
-    m_stride (C, _size.w),
+    m_stride (C, C * _size.w),
     m_data (std::make_unique<T[]> (_size.area () * C))
-{
-    std::partial_sum (m_stride.begin (),
-                      m_stride.end (),
-                      m_stride.begin (),
-                      std::multiplies<T> ());
-}
+{ ; }
 
 
 //-----------------------------------------------------------------------------
