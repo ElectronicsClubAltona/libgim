@@ -61,6 +61,6 @@ namespace util { namespace image {
     constexpr bool
     buffer<C,T>::is_packed (void) const
     {
-        return stride ().back () == extent ().back ();
+        return stride ().back () * extent ().back () == size ();
     }
 } }
