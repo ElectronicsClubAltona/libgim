@@ -20,16 +20,17 @@
 #include "except.hpp"
 
 #include <fcntl.h>
-#include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
 using util::detail::posix::mapped_file;
 
-//----------------------------------------------------------------------------
-mapped_file::mapped_file (const boost::filesystem::path &_path, access_t _access):
-    m_fd (_path, _access)
-{ load_fd (_access); }
+//////////////////////////////////////////////////////////////////////////////
+mapped_file::mapped_file (const char *_path, int fflags, int mflags):
+    m_fd (_path, fflags)
+{
+    load_fd (mflags);
+}
 
 
 //----------------------------------------------------------------------------
@@ -40,29 +41,14 @@ mapped_file::~mapped_file () {
 
 
 //----------------------------------------------------------------------------
-int
-mapped_file::access_to_flags (access_t a) {
-    int flags = 0;
-
-    if (a & ACCESS_READ)
-        flags |= PROT_READ;
-
-    if (a & ACCESS_WRITE)
-        flags |= PROT_WRITE;
-
-    return flags;
-}
-
-
-//----------------------------------------------------------------------------
 void
-mapped_file::load_fd (access_t access) {
+mapped_file::load_fd (int mflags) {
     struct stat meta;
     if (fstat (m_fd, &meta) < 0)
         throw errno_error ();
 
     m_size = (size_t)meta.st_size;
-    m_data = (uint8_t *)mmap (NULL, m_size, access_to_flags (access), MAP_SHARED, m_fd, 0);
+    m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, m_fd, 0);
     if (m_data == MAP_FAILED)
         throw errno_error ();
 }

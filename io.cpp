@@ -34,26 +34,11 @@
 using namespace std;
 using namespace util;
 
-//----------------------------------------------------------------------------
-static int
-access_to_cflags (access_t a) {
-    int flags = 0;
-
-    if ((a & ACCESS_READWRITE) == ACCESS_READWRITE) {
-        flags = O_RDWR | O_CREAT;
-    } else if (a & ACCESS_READ) {
-        flags = O_RDONLY;
-    } else if (a & ACCESS_WRITE) {
-        flags = O_WRONLY | O_CREAT;
-    }
-
-    return flags;
-}
 
 //----------------------------------------------------------------------------
 std::vector<char>
 util::slurp (const boost::filesystem::path& path)  {
-    fd out (path, ACCESS_READ);
+    fd out (path, O_RDONLY | O_BINARY);
 
     // Calculate the total file size
     off_t size = lseek (out, 0, SEEK_END);
@@ -112,28 +97,7 @@ util::write (const fd &out,
 }
 
 
-template void util::write (const fd&, const    char*, const    char*);
-template void util::write (const fd&, const  int8_t*, const  int8_t*);
-template void util::write (const fd&, const uint8_t*, const uint8_t*);
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-void
-util::write (const boost::filesystem::path &path,
-             const T *restrict first,
-             const T *restrict last)
-{
-    write (fd (path, ACCESS_WRITE), first, last);
-}
-
-
-template void util::write (const boost::filesystem::path&, const char*, const    char*);
-template void util::write (const boost::filesystem::path&, const  int8_t*, const  int8_t*);
-template void util::write (const boost::filesystem::path&, const uint8_t*, const uint8_t*);
-
-
-//----------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////
 fd::fd (int _fd):
     m_fd (_fd)
 {
@@ -142,27 +106,29 @@ fd::fd (int _fd):
 }
 
 
-fd::fd (const boost::filesystem::path &path, access_t access):
-#ifdef PLATFORM_WIN32
-    // Windows requires the use of 'string ()' to convert to char datatype
-    // rather than the typical wchar
-    m_fd (open (path.string ().c_str (), access_to_cflags (access) | O_BINARY, 0660))
-#else
-    m_fd (open (path.native ().c_str (), access_to_cflags (access), 0660))
-#endif
+//-----------------------------------------------------------------------------
+fd::fd (const char *path, int flags, mode_t mode):
+    m_fd (open (path, flags, mode))
 {
     if (m_fd < 0)
-        util::errno_error::throw_code ();
+        errno_error::throw_code ();
 }
 
 
+//-----------------------------------------------------------------------------
+fd::fd (const boost::filesystem::path &path, int flags):
+    fd (path.string ().c_str (), flags)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
 fd::~fd () {
     CHECK (m_fd >= 0);
     close (m_fd);
 }
 
 
-//----------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////////
 int
 indenter::overflow (int ch) {
     if (m_line_start && ch != '\n')

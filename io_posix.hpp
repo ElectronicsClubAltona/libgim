@@ -19,6 +19,9 @@
 
 #include "io.hpp"
 
+#include <sys/mman.h>
+#include <fcntl.h>
+
 namespace util {
     namespace detail { namespace posix {
         class mapped_file {
@@ -27,13 +30,10 @@ namespace util {
                 uint8_t *m_data;
                 size_t   m_size;
 
-                void load_fd (access_t);
-
-            protected:
-                int access_to_flags (access_t);
+                void load_fd (int mflags);
 
             public:
-                mapped_file (const boost::filesystem::path &path, access_t access = ACCESS_READ);
+                mapped_file (const char *path, int fflags = O_RDONLY | O_BINARY, int mflags = PROT_READ);
 
                 mapped_file (const mapped_file&) = delete;
                 mapped_file& operator= (const mapped_file&) = delete;

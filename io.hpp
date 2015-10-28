@@ -29,23 +29,18 @@
 
 #ifdef PLATFORM_WIN32
 #include <windows.h>
+#else
+#define O_BINARY 0
 #endif
 
 namespace util {
-    /// Specifies bitwise combinations of IO access rights.
-    enum access_t {
-        ACCESS_READ      = 1 << 0,
-        ACCESS_WRITE     = 1 << 1,
-        ACCESS_READWRITE = ACCESS_READ | ACCESS_WRITE
-    };
-
-
     ///------------------------------------------------------------------------
     /// A simple RAII wrapper for file descriptors
     struct fd {
     public:
         explicit fd (int);
-        explicit fd (const boost::filesystem::path&, access_t);
+        fd (const char *path, int flags, mode_t mode = 0660);
+        fd (const boost::filesystem::path&, int flags);
 
         ~fd ();
 
@@ -151,11 +146,11 @@ namespace util {
 }
 
 #ifdef PLATFORM_WIN32
-#include "io_win32.hpp"
+#include "./io_win32.hpp"
 #else
-#include "io_posix.hpp"
+#include "./io_posix.hpp"
 #endif
 
-#include "io.ipp"
+#include "./io.ipp"
 
 #endif
