@@ -192,6 +192,7 @@ template struct util::image::buffer<C,T>;   \
 INSTANTIATE_C_T_U(C,T,uint8_t)  \
 INSTANTIATE_C_T_U(C,T,uint16_t) \
 INSTANTIATE_C_T_U(C,T,uint32_t) \
+INSTANTIATE_C_T_U(C,T,uint64_t) \
 INSTANTIATE_C_T_U(C,T,float)    \
 INSTANTIATE_C_T_U(C,T,double)
 
@@ -200,6 +201,7 @@ INSTANTIATE_C_T_U(C,T,double)
 INSTANTIATE_C_T(C,uint8_t)      \
 INSTANTIATE_C_T(C,uint16_t)     \
 INSTANTIATE_C_T(C,uint32_t)     \
+INSTANTIATE_C_T(C,uint64_t)     \
 INSTANTIATE_C_T(C,float)        \
 INSTANTIATE_C_T(C,double)
 
