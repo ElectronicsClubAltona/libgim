@@ -205,7 +205,7 @@ AABB<S,T>::operator== (const AABB<S,T> rhs) const
 
 
 //-----------------------------------------------------------------------------
-namespace debug {
+namespace util { namespace debug {
     template <size_t S, typename T>
     struct validator<AABB,S,T> {
         static bool is_valid (const AABB<S,T> &b)
@@ -217,7 +217,7 @@ namespace debug {
             return true;
         }
     };
-}
+} }
 
 
 //-----------------------------------------------------------------------------
@@ -233,7 +233,7 @@ util::geom::operator<< (std::ostream &os, util::geom::AABB<S,T> b)
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)                    \
 namespace util { namespace geom { template struct AABB<S,T>; } }   \
-template bool debug::valid (const AABB<S,T>&);  \
+template bool util::debug::valid (const AABB<S,T>&);  \
 template std::ostream& util::geom::operator<< (std::ostream&, AABB<S,T>);
 
 #define INSTANTIATE(T)  \
