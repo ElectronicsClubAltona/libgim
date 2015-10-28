@@ -73,18 +73,13 @@ util::slurp (const boost::filesystem::path& path)  {
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
 void
 util::write (const fd &out,
-             const T *restrict first,
-             const T *restrict last)
+             const void *restrict data,
+             size_t bytes)
 {
-    CHECK (first);
-    CHECK (last);
-    CHECK_LE (first, last);
-
-    const char *restrict cursor = reinterpret_cast<const char*> (first);
-    size_t remaining = sizeof (T) * (last - first);
+    const char *restrict cursor = reinterpret_cast<const char*> (data);
+    size_t remaining = bytes;
 
     while (remaining) {
         ssize_t consumed = ::write (out, cursor, remaining);

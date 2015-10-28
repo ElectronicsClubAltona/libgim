@@ -74,18 +74,13 @@ namespace util {
     slurp [[gnu::warn_unused_result]] (const boost::filesystem::path&);
 
 
-    template <typename T>
-    void write (const fd&, const T *restrict data, size_t count);
+    void write (const fd&, const void *restrict data, size_t bytes);
 
     template <typename T>
     void write (const fd&, const T &data);
 
     template <typename T>
     void write (const fd&, const T *restrict first, const T *restrict last);
-
-    template <typename T>
-    void write (const boost::filesystem::path &, const T *restrict first, const T *restrict last);
-
 
     //-------------------------------------------------------------------------
     class indenter : public std::streambuf {

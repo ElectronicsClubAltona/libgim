@@ -170,7 +170,7 @@ parse (std::vector<json::flat::item>::const_iterator first,
 std::unique_ptr<json::tree::node>
 json::tree::parse (const boost::filesystem::path &path)
 {
-    util::mapped_file f (path);
+    util::mapped_file f (path.string ().c_str ());
     return parse ((const char*)f.cbegin (), (const char*)f.cend ());
 }
 

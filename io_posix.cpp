@@ -34,7 +34,8 @@ mapped_file::mapped_file (const char *_path, int fflags, int mflags):
 
 
 //----------------------------------------------------------------------------
-mapped_file::~mapped_file () {
+mapped_file::~mapped_file ()
+{
     CHECK (m_data != NULL);
     munmap (m_data, m_size);
 }

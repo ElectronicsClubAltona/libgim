@@ -169,7 +169,7 @@ json::flat::parse (const char *first, const char *last)
 std::vector<json::flat::item>
 json::flat::parse (const boost::filesystem::path &path)
 {
-    util::mapped_file f (path);
+    util::mapped_file f (path.string ().c_str ());
     return parse ((const char *)f.cbegin (), (const char*)f.cend ());
 }
 

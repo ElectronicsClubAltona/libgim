@@ -9,26 +9,18 @@ namespace util {
     //-------------------------------------------------------------------------
     template <typename T>
     void
-    write (const fd &_fd, const T *restrict data, size_t count)
+    write (const fd &_fd, const T &data)
     {
-        auto first = reinterpret_cast<const char*> (data);
-        write (_fd, first, first + sizeof (T) * count);
+        write (_fd, &data, sizeof (T));
     }
+
 
     //-------------------------------------------------------------------------
     template <typename T>
     void
-    write (const fd &_fd, const T &data)
+    write (const fd &_fd, const T *restrict first, const T *restrict last)
     {
-        write (_fd, &data, 1);
-    }
-
-    //-------------------------------------------------------------------------
-    inline void
-    write (const fd &_fd, const void *_data, size_t _bytes)
-    {
-        auto data = reinterpret_cast<const uint8_t*> (_data);
-        write (_fd, data, data + _bytes);
+        write (_fd, first, (last - first) * sizeof (T));
     }
 
     //-------------------------------------------------------------------------

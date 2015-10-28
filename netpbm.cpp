@@ -28,7 +28,7 @@
 util::image::buffer<1,uint8_t>
 util::pgm::read (const boost::filesystem::path &path)
 {
-    util::mapped_file raw (path);
+    util::mapped_file raw (path.string ().c_str ());
 
     std::ifstream cooked (path.string (), std::ios::binary);
     char magic[2];
