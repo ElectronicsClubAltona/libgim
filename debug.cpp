@@ -22,33 +22,31 @@
 #include <cstdlib>
 #include <iostream>
 
-using namespace std;
+using namespace util::debug;
 
 
-//------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////
 void
-panic (const std::string& what) {
-    cerr << "PANIC: " << what << "\n" << debug::backtrace () << endl;
+detail::panic (const char *msg)
+{
+    std::cerr << "PANIC: " << msg << "\n" << ::debug::backtrace () << std::endl;
     breakpoint ();
     abort ();
 }
 
 
-void
-panic (void)
-    { panic ("NFI"); }
-
-
-//------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////
 #if defined(PLATFORM_WIN32)
 #include <windows.h>
 void
-breakpoint (void) {
+breakpoint (void)
+{
     DebugBreak ();
 }
 #else
 void
-breakpoint (void) {
+breakpoint (void)
+{
 #if defined (__x86_64) || defined (__i386)
     __asm__ ("int $3;");
 #else
@@ -58,39 +56,31 @@ breakpoint (void) {
 #endif
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void
-not_implemented (void) {
-    not_implemented ("Function not implemented");
+detail::not_implemented (const char *msg)
+{
+    panic (msg);
 }
 
 
+//-----------------------------------------------------------------------------
 void
-not_implemented (const char *msg)
-    { panic (msg); }
-
-
-//------------------------------------------------------------------------------
-void
-unreachable (void) {
-    panic ("Unreachable code executed");
+detail::unreachable (const char *msg)
+{
+    panic (msg);
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
 void
-unreachable (const std::string& what) {
-    panic (" Unreachable code executed: " + what);
-}
-
-
-//------------------------------------------------------------------------------
-void
-unusual (void) {
+unusual (void)
+{
     panic ("Unusual code path found.");
 }
 
 
-//------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////
 #if defined(PLATFORM_LINUX)
 #include <fenv.h>
 void
@@ -100,6 +90,7 @@ enable_fpe (void)
 }
 
 
+//-----------------------------------------------------------------------------
 void
 disable_fpe (void)
 {
@@ -108,8 +99,11 @@ disable_fpe (void)
 #else
 // contropfp is not defined supposedly due to a regression in GCC include behaviours.
 
+
+//-----------------------------------------------------------------------------
 void
-enable_fpe (void) {
+enable_fpe (void)
+{
     LOG_WARN ("Non-Linux exception code is broken under current GCC.");
 //    _clearfp();
 //    unsigned int ignored;
@@ -117,8 +111,10 @@ enable_fpe (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
-disable_fpe (void) {
+disable_fpe (void)
+{
     LOG_WARN ("Non-Linux exception code is broken under current GCC.");
 //    _clearfp();
 //    unsigned int ignored;
@@ -127,13 +123,14 @@ disable_fpe (void) {
 #endif
 
 
-//------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////
 #if defined(PLATFORM_WIN32)
 #include <io.h>
 #include <fcntl.h>
 
 void
-force_console (void) {
+force_console (void)
+{
     if (!AttachConsole (ATTACH_PARENT_PROCESS))
         return;
 
@@ -169,9 +166,10 @@ force_console (void) {
 #endif
 
 
-//------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////
 void
-debug::init (void) {
+util::debug::init (void)
+{
 #if defined(PLATFORM_WIN32)
     force_console ();
 

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __DEBUG_HPP
@@ -289,18 +289,21 @@ class panic_error {
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 void panic [[noreturn]] (const std::string&);
-void panic [[noreturn]] (void);
+constexpr void panic [[noreturn]] (const char*);
+constexpr void panic [[noreturn]] (void);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void not_implemented [[noreturn]] (void);
-void not_implemented [[noreturn]] (const char*);
+constexpr void not_implemented [[noreturn]] (void);
+constexpr void not_implemented [[noreturn]] (const char *msg);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void unreachable [[noreturn]] (void);
-void unreachable [[noreturn]] (const std::string&);
+constexpr void unreachable [[noreturn]] (void);
+constexpr void unreachable [[noreturn]] (const char*);
+
 void unusual (void);
 
 
@@ -314,7 +317,7 @@ void disable_fpe (void);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace debug {
+namespace util { namespace debug {
     void init (void);
 
 
@@ -358,13 +361,15 @@ namespace debug {
         (void)t;
         CHECK (valid (t));
     }
-}
+} }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 // XXX: maths needs to be included so that CHECK_EQ/NEQ can call almost_equal,
 // but maths.hpp might be using CHECK_ macros so we must include maths.hpp
 // after we define the CHECK_ macros so the preprocessor can resolve them.
-#include "maths.hpp"
+#include "./maths.hpp"
+
+#include "./debug.ipp"
 
 #endif // __DEBUG_HPP
