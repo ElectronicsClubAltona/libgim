@@ -118,8 +118,6 @@ test_normalisations (util::TAP::logger &tap)
         tap.expect (success, "float-u32 normalisation");
     }
 
-    std::cerr << renormalise<uint8_t,uint32_t> (0xff) << '\n';
-
     tap.expect_eq (renormalise<uint8_t,uint32_t> (0xff), 0xffffffff, "normalise hi u8-to-u32");
     tap.expect_eq (renormalise<uint8_t,uint32_t> (0x00), 0x00000000, "normalise lo u8-to-u32");
 
