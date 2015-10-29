@@ -17,9 +17,14 @@
 
 #include "backtrace.hpp"
 
-#include "debug.hpp"
+#include "./debug.hpp"
+#include "./exe.hpp"
+#include "./io.hpp"
 #include "types/casts.hpp"
 
+#include <sstream>
+#include <iomanip>
+#include <cstdio>
 #include <cstdlib>
 #include <execinfo.h>
 #include <algorithm>
@@ -45,16 +50,41 @@ debug::backtrace::backtrace (void):
 
 
 //-----------------------------------------------------------------------------
+static std::string
+addr2line (const void *addr)
+{
+#if defined(ADDR2LINE)
+    using pstream_t = std::unique_ptr<FILE,decltype(&::pclose)>;
+
+    std::ostringstream cmd;
+    cmd << ADDR2LINE << " -e " << util::image_path () << ' ' << std::hex << addr;
+
+    pstream_t stream (
+        ::popen (cmd.str ().c_str (), "r"),
+        ::pclose
+    );
+
+    // inefficient to copy from vector to string, but it's not a high priority path
+    auto data = util::slurp (stream.get ());
+    return std::string (data.cbegin (), data.cend ());
+
+#else
+    return "\n";
+#endif
+}
+
+
+//-----------------------------------------------------------------------------
 ostream&
 debug::operator <<(ostream &os, const debug::backtrace &rhs) {
     const auto frames = rhs.frames ();
 
     // We don't use the array form of unique_ptr as clang fails on ambigious constructors
-    typedef unique_ptr<char *, decltype(&std::free)> unique_str;
-    unique_str names (backtrace_symbols (frames.data (), frames.size ()), ::free);
+    typedef unique_ptr<char *, decltype(&std::free)> str_t;
+    str_t names (backtrace_symbols (frames.data (), frames.size ()), ::free);
 
     for (unsigned int i = 0; i < frames.size (); ++i)
-        os << frames[i] << "\t" << names.get()[i] << "\n";
+        os << frames[i] << '\t' << names.get()[i] << '\t' << addr2line (frames[i]);
 
     return os;
 }

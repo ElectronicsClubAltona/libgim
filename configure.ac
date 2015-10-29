@@ -95,6 +95,9 @@ PKG_CHECK_MODULES([ZLIB], [zlib >= 1.2.0])
 AC_SUBST(ZLIB_CFLAGS)
 AC_SUBST(ZLIB_LIBS)
 
+AC_CHECK_TOOL([ADDR2LINE], [addr2line], [:])
+AS_IF([test "x$ADDR2LINE" != "x:"], [AC_DEFINE_UNQUOTED([ADDR2LINE], ["$ADDR2LINE"], [addr2line tool name])])
+
 ###############################################################################
 ## Performance and build optimisations
 
