@@ -446,6 +446,9 @@ typename std::enable_if<
 >::type
 renormalise [[gnu::pure]] (T t)
 {
+    static_assert (sizeof (T) > sizeof (U),
+                   "assumes right shift is sufficient");
+
     // we have excess bits ,just shift and return
     constexpr auto shift = 8 * (sizeof (T) - sizeof (U));
     return t >> shift;
@@ -462,6 +465,9 @@ typename std::enable_if<
 >::type
 renormalise [[gnu::pure]] (T t)
 {
+    static_assert (sizeof (T) < sizeof (U),
+                   "assumes bit creation is required to fill space");
+
     // we need to create bits. fill the output integer with copies of ourself.
     // this is approximately correct in the general case (introducing a small
     // linear positive bias), but allows us to fill the output space in the
@@ -473,7 +479,7 @@ renormalise [[gnu::pure]] (T t)
     U out = 0;
 
     for (size_t i = 0; i < sizeof (U) / sizeof (T); ++i)
-        out |= t << sizeof (U) * 8 * i;
+        out |= U (t) << sizeof (T) * 8 * i;
 
     return out;
 }
