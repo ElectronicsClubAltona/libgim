@@ -353,7 +353,7 @@ template <typename T, typename U, typename V>
 constexpr T
 limit [[gnu::pure]] (const T val, const U lo, const V hi)
 {
-    lo > hi ? (void)0 : panic ();
+    lo <= hi ? (void)0 : panic ();
 
     return val > hi ? hi:
            val < lo ? lo:
