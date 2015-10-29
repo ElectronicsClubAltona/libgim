@@ -73,6 +73,33 @@ util::slurp (const boost::filesystem::path& path)  {
 
 
 //-----------------------------------------------------------------------------
+std::vector<char>
+util::slurp (FILE *stream)
+{
+    std::vector<char> data;
+    data.resize (16);
+
+    for (size_t chunk = 0, size = data.size ();
+         !ferror (stream) && !feof (stream);
+         chunk = size, size *= 2u)
+    {
+        auto found = fread (data.data () + chunk, 1, chunk, stream);
+        if (found != chunk)
+            break;
+
+        data.resize (data.size () * 2u);
+    }
+
+    if (ferror (stream))
+        errno_error::throw_code ();
+
+    CHECK (feof (stream));
+    return data;
+}
+
+
+
+//-----------------------------------------------------------------------------
 void
 util::write (const fd &out,
              const void *restrict data,

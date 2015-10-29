@@ -70,10 +70,12 @@ namespace util {
 
     /// Reads an entire file into memory. Caller frees the result. Guarantees a
     /// null trailing byte.
-    std::vector<char>
-    slurp [[gnu::warn_unused_result]] (const boost::filesystem::path&);
+    std::vector<char> slurp (const boost::filesystem::path&);
+
+    std::vector<char> slurp (FILE *);
 
 
+    //-------------------------------------------------------------------------
     void write (const fd&, const void *restrict data, size_t bytes);
 
     template <typename T>
