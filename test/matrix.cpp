@@ -13,14 +13,14 @@ main (void)
 
     {
         // Identity matrix-vector multiplication
-        auto v = util::vector<4,float> { 1.f, 2.f, 3.f, 4.f };
-        auto r = util::matrix<float>::IDENTITY * v;
+        auto v = util::vector4f { 1.f, 2.f, 3.f, 4.f };
+        auto r = util::matrix4f::IDENTITY * v;
         tap.expect_eq (r, v, "identity matrix-vector multiplication");
     }
 
     {
         // Simple matrix-vector multiplication
-        util::matrix<float> m { {
+        util::matrix4f m { {
             {  1,  2,  3,  4 },
             {  5,  6,  7,  8 },
             {  9, 10, 11, 12 },
@@ -42,28 +42,28 @@ main (void)
 
     {
         // Simple matrix-matrix multiplication
-        util::matrix<float> a { {
+        util::matrix4f a { {
             {  1,  2,  3,  4 },
             {  5,  6,  7,  8 },
             {  9, 10, 11, 12 },
             { 13, 14, 15, 16 },
         } };
 
-        util::matrix<float> b { {
+        util::matrix4f b { {
             { 17, 18, 19, 20 },
             { 21, 22, 23, 24 },
             { -1, -2, -3, -4 },
             { -5, -6, -7, -8 }
         } };
 
-        util::matrix<float> ab { {
+        util::matrix4f ab { {
             {   9,   8,   7,   6 },
             {  41,  40,  39,  38 },
             {  73,  72,  71,  70 },
             { 105, 104, 103, 102 },
         } };
 
-        ab *= 4;
+        ab *= 4.f;
 
         auto res = a * b;
 
@@ -75,7 +75,7 @@ main (void)
         bool success = true;
 
         // Ensure identity inverts to identity
-        auto m = util::matrix<float>::IDENTITY.inverse ();
+        auto m = util::matrix4f::IDENTITY.inverse ();
         for (size_t r = 0; r < m.rows; ++r)
             for (size_t c = 0; c < m.cols; ++c)
                 if (r == c)
@@ -88,14 +88,14 @@ main (void)
 
     {
         // Simple inversion test
-        util::matrix<float> m { {
+        util::matrix4f m { {
             { 4, 1, 2, 3 },
             { 2, 3, 4, 1 },
             { 3, 4, 1, 2 },
             { 1, 2, 3, 4 }
         } };
 
-        util::matrix<float> r { {
+        util::matrix4f r { {
             { 11,  1,  1, -9 },
             { -9,  1, 11,  1 },
             {  1, 11, -9,  1 },

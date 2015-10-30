@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011-2014 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "matrix.hpp"
@@ -26,25 +26,25 @@ using namespace util;
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::transposed (void) const
+template <size_t S, typename T>
+matrix<S,T>
+matrix<S,T>::transposed (void) const
 {
-    matrix<T> m;
-    for (size_t i = 0; i < 4; ++i)
-        for (size_t j = 0; j < 4; ++j)
+    matrix<S,T> m;
+    for (size_t i = 0; i < S; ++i)
+        for (size_t j = 0; j < S; ++j)
             m.values[i][j] = values[j][i];
     return m;
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>&
-matrix<T>::transpose (void)
+template <size_t S, typename T>
+matrix<S,T>&
+matrix<S,T>::transpose (void)
 {
-    for (size_t i = 0; i < 4; ++i)
-        for (size_t j = i + 1; j < 4; ++j)
+    for (size_t i = 0; i < S; ++i)
+        for (size_t j = i + 1; j < S; ++j)
             std::swap (values[i][j], values[j][i]);
 
     return *this;
@@ -52,9 +52,11 @@ matrix<T>::transpose (void)
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::inverse (void) const {
+template <size_t S, typename T>
+matrix<S,T>
+matrix<S,T>::inverse (void) const {
+    static_assert (S == 4, "assuming 4x4 matrices");
+
     // GLM's implementation of 4x4 matrix inversion. Should allow use of
     // vector instructions.
     const auto &m = values;
@@ -104,10 +106,10 @@ matrix<T>::inverse (void) const {
     vector<4,T> SignA(+1, -1, +1, -1);
     vector<4,T> SignB(-1, +1, -1, +1);
     //matrix<T>   Inverse(Inv0 * SignA, Inv1 * SignB, Inv2 * SignA, Inv3 * SignB);
-    matrix<T>   Inverse = { { { Inv0.x * SignA.x, Inv0.y * SignA.y, Inv0.z * SignA.z, Inv0.w * SignA.w },
-                              { Inv1.x * SignB.x, Inv1.y * SignB.y, Inv1.z * SignB.z, Inv1.w * SignB.w },
-                              { Inv2.x * SignA.x, Inv2.y * SignA.y, Inv2.z * SignA.z, Inv2.w * SignA.w },
-                              { Inv3.x * SignB.x, Inv3.y * SignB.y, Inv3.z * SignB.z, Inv3.w * SignB.w } } };
+    matrix<4,T>   Inverse = { { { Inv0.x * SignA.x, Inv0.y * SignA.y, Inv0.z * SignA.z, Inv0.w * SignA.w },
+                                { Inv1.x * SignB.x, Inv1.y * SignB.y, Inv1.z * SignB.z, Inv1.w * SignB.w },
+                                { Inv2.x * SignA.x, Inv2.y * SignA.y, Inv2.z * SignA.z, Inv2.w * SignA.w },
+                                { Inv3.x * SignB.x, Inv3.y * SignB.y, Inv3.z * SignB.z, Inv3.w * SignB.w } } };
 
     vector<4,T> Row0(Inverse.values[0][0], Inverse.values[1][0], Inverse.values[2][0], Inverse.values[3][0]);
 
@@ -127,25 +129,25 @@ matrix<T>::inverse (void) const {
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>&
-matrix<T>::invert (void) {
+template <size_t S, typename T>
+matrix<S,T>&
+matrix<S,T>::invert (void) {
     return *this = inverse ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::inverse_affine (void) const {
-    return matrix<T>(*this).invert_affine ();
+template <size_t S, typename T>
+matrix<S,T>
+matrix<S,T>::inverse_affine (void) const {
+    return matrix<S,T>(*this).invert_affine ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>&
-matrix<T>::invert_affine (void) {
+template <size_t S, typename T>
+matrix<S,T>&
+matrix<S,T>::invert_affine (void) {
     CHECK (is_affine ());
 
     // inv ([ M b ]  == [ inv(M) -inv(M).b ]
@@ -191,9 +193,9 @@ matrix<T>::invert_affine (void) {
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t S, typename T>
 T
-matrix<T>::det (void) const {
+matrix<S,T>::det (void) const {
     return values[0][3] * values[1][2] * values[2][1] * values[3][0] -
            values[0][2] * values[1][3] * values[2][1] * values[3][0] -
            values[0][3] * values[1][1] * values[2][2] * values[3][0] +
@@ -225,16 +227,16 @@ matrix<T>::det (void) const {
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::operator* (const matrix<T> &rhs) const {
-    matrix<T> m;
+template <size_t S, typename T>
+matrix<S,T>
+matrix<S,T>::operator* (const matrix<S,T> &rhs) const {
+    matrix<S,T> m;
 
-    for (unsigned row = 0; row < 4; ++row) {
-        for (unsigned col = 0; col < 4; ++col) {
+    for (unsigned row = 0; row < S; ++row) {
+        for (unsigned col = 0; col < S; ++col) {
             m.values[row][col] = T {0};
 
-            for (unsigned inner = 0; inner < 4; ++inner)
+            for (unsigned inner = 0; inner < S; ++inner)
                 m.values[row][col] += values[row][inner] * rhs.values[inner][col];
         }
     }
@@ -244,38 +246,38 @@ matrix<T>::operator* (const matrix<T> &rhs) const {
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>&
-matrix<T>::operator*=(const matrix<T> &rhs) {
+template <size_t S, typename T>
+matrix<S,T>&
+matrix<S,T>::operator*=(const matrix<S,T> &rhs) {
     return *this = *this * rhs;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-vector<3,T>
-matrix<T>::operator* (vector<3,T> v) const
-{
-    return (
-        *this * v.template homog<4> ()
-    ).template redim<3> ();
-}
+//template <size_t S, typename T>
+//vector<3,T>
+//matrix<S,T>::operator* (vector<3,T> v) const
+//{
+//    return (
+//        *this * v.template homog<S> ()
+//    ).template redim<3> ();
+//}
+//
+//
+////-----------------------------------------------------------------------------
+//template <size_t S, typename T>
+//point<3,T>
+//matrix<S,T>::operator* (point<3,T> p) const
+//{
+//    return (*this * p.template homog<S> ()).template redim<3> ();
+//}
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-point<3,T>
-matrix<T>::operator* (point<3,T> p) const
-{
-    return (*this * p.template homog<4> ()).template redim<3> ();
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-vector<4,T>
-matrix<T>::operator* (const vector<4,T> &rhs) const {
-    return vector<4,T> {
+template <size_t S, typename T>
+vector<S,T>
+matrix<S,T>::operator* (const vector<S,T> &rhs) const {
+    return vector<S,T> {
         values[0][0] * rhs.x + values[0][1] * rhs.y + values[0][2] * rhs.z + values[0][3] * rhs.w,
         values[1][0] * rhs.x + values[1][1] * rhs.y + values[1][2] * rhs.z + values[1][3] * rhs.w,
         values[2][0] * rhs.x + values[2][1] * rhs.y + values[2][2] * rhs.z + values[2][3] * rhs.w,
@@ -285,11 +287,11 @@ matrix<T>::operator* (const vector<4,T> &rhs) const {
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-point<4,T>
-matrix<T>::operator* (const point<4,T> &rhs) const
+template <size_t S, typename T>
+point<S,T>
+matrix<S,T>::operator* (const point<S,T> &rhs) const
 {
-    return point<4,T> {
+    return point<S,T> {
         values[0][0] * rhs.x + values[0][1] * rhs.y + values[0][2] * rhs.z + values[0][3] * rhs.w,
         values[1][0] * rhs.x + values[1][1] * rhs.y + values[1][2] * rhs.z + values[1][3] * rhs.w,
         values[2][0] * rhs.x + values[2][1] * rhs.y + values[2][2] * rhs.z + values[2][3] * rhs.w,
@@ -299,14 +301,14 @@ matrix<T>::operator* (const point<4,T> &rhs) const
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::operator* (T f) const
+template <size_t S, typename T>
+matrix<S,T>
+matrix<S,T>::operator* (T f) const
 {
-    matrix<T> out;
+    matrix<S,T> out;
 
-    for (size_t i = 0; i < 4; ++i)
-        for (size_t j = 0; j < 4; ++j)
+    for (size_t i = 0; i < S; ++i)
+        for (size_t j = 0; j < S; ++j)
             out.values[i][j] = values[i][j] * f;
 
     return out;
@@ -314,11 +316,11 @@ matrix<T>::operator* (T f) const
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>&
-matrix<T>::operator*= (T f){
-    for (size_t i = 0; i < 4; ++i)
-        for (size_t j = 0; j < 4; ++j)
+template <size_t S, typename T>
+matrix<S,T>&
+matrix<S,T>::operator*= (T f){
+    for (size_t i = 0; i < S; ++i)
+        for (size_t j = 0; j < S; ++j)
             values[i][j] *= f;
 
     return *this;
@@ -326,10 +328,10 @@ matrix<T>::operator*= (T f){
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::operator/ (T s) const {
-    matrix<T> m;
+template <size_t S, typename T>
+matrix<S,T>
+matrix<S,T>::operator/ (T s) const {
+    matrix<S,T> m;
 
     for (size_t r = 0; r < m.rows; ++r)
         for (size_t c = 0; c < m.cols; ++c)
@@ -340,9 +342,9 @@ matrix<T>::operator/ (T s) const {
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>&
-matrix<T>::operator/= (T s) {
+template <size_t S, typename T>
+matrix<S,T>&
+matrix<S,T>::operator/= (T s) {
     for (size_t r = 0; r < rows; ++r)
         for (size_t c = 0; c < cols; ++c)
             values[r][c] /= s;
@@ -352,9 +354,9 @@ matrix<T>::operator/= (T s) {
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t S, typename T>
 bool
-matrix<T>::operator== (const matrix<T> &rhs) const {
+matrix<S,T>::operator== (const matrix<S,T> &rhs) const {
     for (size_t r = 0; r < rows; ++r)
         for (size_t c = 0; c < cols; ++c)
             if (!almost_equal (rhs.values[r][c], values[r][c]))
@@ -364,9 +366,9 @@ matrix<T>::operator== (const matrix<T> &rhs) const {
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
+template <size_t S, typename T>
 bool
-matrix<T>::is_affine (void) const {
+matrix<S,T>::is_affine (void) const {
     return exactly_equal (values[3][0], T {0}) &&
            exactly_equal (values[3][1], T {0}) &&
            exactly_equal (values[3][2], T {0}) &&
@@ -375,11 +377,11 @@ matrix<T>::is_affine (void) const {
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::ortho (T left, T right,
-                  T bottom, T top,
-                  T near, T far)
+template <size_t S, typename T>
+matrix4<T>
+matrix<S,T>::ortho (T left, T right,
+                    T bottom, T top,
+                    T near, T far)
 {
     CHECK_GT (far, near);
 
@@ -401,19 +403,19 @@ matrix<T>::ortho (T left, T right,
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::ortho2D (T left, T right,
-                    T bottom, T top)
+template <size_t S, typename T>
+matrix4<T>
+matrix<S,T>::ortho2D (T left, T right,
+                      T bottom, T top)
 {
     return ortho (left, right, bottom, top, -1, 1);
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::perspective (T fov, T aspect, T near, T far)
+template <size_t S, typename T>
+matrix4<T>
+matrix<S,T>::perspective (T fov, T aspect, T near, T far)
 {
     T f = std::tan (fov / 2);
 
@@ -433,11 +435,11 @@ matrix<T>::perspective (T fov, T aspect, T near, T far)
 
 //-----------------------------------------------------------------------------
 // Emulates gluLookAt
-template <typename T>
-matrix<T>
-matrix<T>::look_at (util::point<3,T> eye,
-                    util::point<3,T> centre,
-                    util::vector<3,T> up)
+template <size_t S, typename T>
+matrix4<T>
+matrix<S,T>::look_at (util::point<3,T> eye,
+                      util::point<3,T> centre,
+                      util::vector<3,T> up)
 {
     const auto f = (centre - eye).normalise ();
     const auto s = cross (f, up).normalise ();
@@ -453,18 +455,18 @@ matrix<T>::look_at (util::point<3,T> eye,
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::translate (util::vector<2,T> v)
+template <size_t S, typename T>
+matrix4<T>
+matrix<S,T>::translate (util::vector<2,T> v)
 {
     return translate ({v.x, v.y, 0});
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::translate (util::vector<3,T> v)
+template <size_t S, typename T>
+matrix4<T>
+matrix<S,T>::translate (util::vector<3,T> v)
 {
     return { {
         { 1.f, 0.f, 0.f, v.x },
@@ -476,17 +478,17 @@ matrix<T>::translate (util::vector<3,T> v)
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::scale (T mag)
+template <size_t S, typename T>
+matrix4<T>
+matrix<S,T>::scale (T mag)
 {
     return scale (vector<3,T> (mag));
 }
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::scale (util::vector<3,T> v)
+template <size_t S, typename T>
+matrix4<T>
+matrix<S,T>::scale (util::vector<3,T> v)
 {
     return { {
         { v.x, 0.f, 0.f, 0.f },
@@ -498,9 +500,9 @@ matrix<T>::scale (util::vector<3,T> v)
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-matrix<T>
-matrix<T>::rotate (T angle, util::vector<3,T> about)
+template <size_t S, typename T>
+matrix4<T>
+matrix<S,T>::rotate (T angle, util::vector<3,T> about)
 {
     about.normalise ();
 
@@ -534,33 +536,33 @@ matrix<T>::rotate (T angle, util::vector<3,T> about)
 }
 
 //-----------------------------------------------------------------------------
-template <typename T>
-const matrix<T>
-matrix<T>::IDENTITY = { { { 1, 0, 0, 0 },
-                          { 0, 1, 0, 0 },
-                          { 0, 0, 1, 0 },
-                          { 0, 0, 0, 1 } } };
+template <size_t S, typename T>
+const matrix<S,T>
+matrix<S,T>::IDENTITY = { { { 1, 0, 0, 0 },
+                            { 0, 1, 0, 0 },
+                            { 0, 0, 1, 0 },
+                            { 0, 0, 0, 1 } } };
 
 
-template <typename T>
-const matrix<T>
-matrix<T>::ZEROES = { { { 0, 0, 0, 0 },
-                        { 0, 0, 0, 0 },
-                        { 0, 0, 0, 0 },
-                        { 0, 0, 0, 0 } } };
+template <size_t S, typename T>
+const matrix<S,T>
+matrix<S,T>::ZEROES = { { { 0, 0, 0, 0 },
+                          { 0, 0, 0, 0 },
+                          { 0, 0, 0, 0 },
+                          { 0, 0, 0, 0 } } };
 
 
 //-----------------------------------------------------------------------------
 namespace util {
-    template struct matrix<float>;
-    template struct matrix<double>;
+    template struct matrix<4,float>;
+    template struct matrix<4,double>;
 }
 
 //-----------------------------------------------------------------------------
 namespace util {
-    template <typename T>
+    template <size_t S, typename T>
     std::ostream&
-    operator<< (std::ostream &os, const matrix<T> &m) {
+    operator<< (std::ostream &os, const matrix<S,T> &m) {
         os << "{ {" << m.values[0][0] << ", "
                     << m.values[0][1] << ", "
                     << m.values[0][2] << ", "
@@ -582,5 +584,5 @@ namespace util {
     }
 }
 
-template std::ostream& util::operator<< (std::ostream&, const matrix<float>&);
-template std::ostream& util::operator<< (std::ostream&, const matrix<double>&);
+template std::ostream& util::operator<< (std::ostream&, const matrix<4,float>&);
+template std::ostream& util::operator<< (std::ostream&, const matrix<4,double>&);

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011-2014 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -21,12 +21,12 @@
 
 #define __UTIL_MATRIX_IPP
 
-template <typename T>
+template <size_t S, typename T>
 template <typename U>
-util::matrix<U>
-util::matrix<T>::cast (void) const
+util::matrix<S,U>
+util::matrix<S,T>::cast (void) const
 {
-    util::matrix<U> out;
+    util::matrix<S,U> out;
 
     for (size_t i = 0; i < rows; ++i)
         for (size_t j = 0; j < cols; ++j)
