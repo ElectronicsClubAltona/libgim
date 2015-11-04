@@ -287,17 +287,48 @@ namespace util {
     //-------------------------------------------------------------------------
     template <
         size_t S,
+        typename T
+    >
+    T dot (const T (&a)[S], const T (&b)[S])
+    {
+        T sum = 0;
+        for (size_t i = 0; i < S; ++i)
+            sum += a[i] * b[i];
+        return sum;
+    }
+
+    template <
+        size_t S,
         typename T,
         template <size_t,typename> class A,
         template <size_t,typename> class B
     >
     T dot (A<S,T> a, B<S,T> b)
     {
-        T sum { 0 };
-        for (size_t i = 0; i < S; ++i)
-            sum += a[i] * b[i];
-        return sum;
+        return dot<S,T> (a.data, b.data);
     }
+
+
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K
+    >
+    T dot (K<S,T> a, const T (&b)[S])
+    {
+        return dot<S,T> (a.data, b);
+    }
+
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K
+    >
+    T dot (const T (&a)[S], K<S,T> b)
+    {
+        return dot<S,T> (a, b.data);
+    }
+
 
     //-------------------------------------------------------------------------
     template <
