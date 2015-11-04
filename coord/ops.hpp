@@ -50,6 +50,13 @@ namespace util {
         template <> struct traits<vector,vector> { template <size_t S, typename T> using result = vector<S,T>; };
     }
 
+    template <template <size_t,typename> class> struct is_coord : std::false_type { };
+
+    template <> struct is_coord<point>  : std::true_type { };
+    template <> struct is_coord<extent> : std::true_type { };
+    template <> struct is_coord<vector> : std::true_type { };
+    template <> struct is_coord<colour> : std::true_type { };
+
     ///////////////////////////////////////////////////////////////////////////
     // vector operators
 #define ELEMENT_OP(OP)                                  \
@@ -58,7 +65,11 @@ namespace util {
         typename T,                                     \
         typename U,                                     \
         template <size_t,typename> class A,             \
-        template <size_t,typename> class B              \
+        template <size_t,typename> class B,             \
+        typename = typename std::enable_if<             \
+            is_coord<A>::value && is_coord<B>::value,   \
+            void                                        \
+        >::type                                         \
     >                                                   \
     auto                                                \
     operator OP (A<S,T> a, B<S,U> b)                    \
@@ -76,15 +87,18 @@ namespace util {
         typename T,                                     \
         typename U,                                     \
         template <size_t,typename> class A,             \
-        template <size_t,typename> class B              \
+        template <size_t,typename> class B,             \
+        typename = typename std::enable_if<             \
+            is_coord<A>::value &&                       \
+            is_coord<B>::value &&                       \
+            std::is_same<                               \
+                typename std::common_type<T,U>::type,   \
+                T                                       \
+            >::value,                                   \
+            void                                        \
+        >::type                                         \
     >                                                   \
-    typename std::enable_if<                            \
-        std::is_same<                                   \
-            typename std::common_type<T,U>::type,       \
-            T                                           \
-        >::value,                                       \
-        A<S,T>                                          \
-    >::type&                                            \
+    auto&                                               \
     operator PASTE(OP,=) (A<S,T>& a, B<S,U> b)          \
     {                                                   \
         for (size_t i = 0; i < S; ++i)                  \
@@ -106,12 +120,16 @@ namespace util {
         size_t S,                                       \
         typename T,                                     \
         typename U,                                     \
-        template <size_t,typename> class K              \
+        template <size_t,typename> class K,             \
+        typename = typename std::enable_if<             \
+            is_coord<K>::value,void                     \
+        >::type                                         \
     >                                                   \
     auto                                                \
     operator OP (U u, K<S,T> k)                         \
     {                                                   \
         K<S,typename std::common_type<T,U>::type> out;  \
+                                                        \
         for (size_t i = 0; i < S; ++i)                  \
             out[i] = u OP k[i];                         \
         return out;                                     \
@@ -121,12 +139,16 @@ namespace util {
         size_t S,                                       \
         typename T,                                     \
         typename U,                                     \
-        template <size_t,typename> class K              \
+        template <size_t,typename> class K,             \
+        typename = typename std::enable_if<             \
+            is_coord<K>::value,void                     \
+        >::type                                         \
     >                                                   \
     auto                                                \
     operator OP (K<S,T> k, U u)                         \
     {                                                   \
         K<S,typename std::common_type<T,U>::type> out;  \
+                                                        \
         for (size_t i = 0; i < S; ++i)                  \
             out[i] = k[i] OP u;                         \
         return out;                                     \
@@ -151,7 +173,11 @@ namespace util {
         size_t S,                                           \
         typename T,                                         \
         typename U,                                         \
-        template <size_t,typename> class K                  \
+        template <size_t,typename> class K,                 \
+        typename = typename std::enable_if<                 \
+            is_coord<K>::value,                             \
+            void                                            \
+        >::type                                             \
     >                                                       \
     typename std::enable_if<                                \
         std::is_same<                                       \
@@ -163,6 +189,7 @@ namespace util {
     {                                                       \
         for (size_t i = 0; i < S; ++i)                      \
             k[i] OP u;                                      \
+                                                            \
         return k;                                           \
     }
 
@@ -303,7 +330,11 @@ namespace util {
         template <size_t,typename> class A,
         template <size_t,typename> class B
     >
-    T dot (A<S,T> a, B<S,T> b)
+    typename std::enable_if<
+        is_coord<A>::value && is_coord<B>::value,
+        T
+    >::type
+    dot (A<S,T> a, B<S,T> b)
     {
         return dot<S,T> (a.data, b.data);
     }
@@ -314,7 +345,8 @@ namespace util {
         typename T,
         template <size_t,typename> class K
     >
-    T dot (K<S,T> a, const T (&b)[S])
+    typename std::enable_if<is_coord<K>::value,T>::type
+    dot (K<S,T> a, const T (&b)[S])
     {
         return dot<S,T> (a.data, b);
     }
@@ -324,7 +356,11 @@ namespace util {
         typename T,
         template <size_t,typename> class K
     >
-    T dot (const T (&a)[S], K<S,T> b)
+    typename std::enable_if<
+        is_coord<K>::value,
+        T
+    >::type
+    dot (const T (&a)[S], K<S,T> b)
     {
         return dot<S,T> (a, b.data);
     }
