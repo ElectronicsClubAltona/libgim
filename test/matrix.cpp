@@ -86,14 +86,52 @@ main (void)
         tap.expect (success, "identity inversion");
     }
 
+    // Simple 2x2 inversion test
     {
-        // Simple inversion test
+        util::matrix2f m { {
+            { 1, 2 },
+            { 3, 4 }
+        } };
+
+        tap.expect_eq (-2, m.determinant (), "2x2 determinant");
+
+        util::matrix2f r { {
+            { -4,  2 },
+            {  3, -1 }
+        } };
+
+        tap.expect_eq (r / 2.f, m.inverse (), "2x2 inversion");
+    }
+
+    // Simple 3x3 inversion test
+    {
+        util::matrix3f m { {
+            { 3, 1, 2 },
+            { 2, 3, 1 },
+            { 4, 0, 2 }
+        } };
+
+        tap.expect_eq (-6, m.determinant (), "3x3 determinant");
+
+        util::matrix3f r { {
+            { -6,  2,  5 },
+            {  0,  2, -1 },
+            { 12, -4, -7 }
+        } };
+
+        tap.expect_eq (m.inverse (), r / 6.f, "3x3 inversion");
+    }
+
+    // Simple 4x4 inversion test
+    {
         util::matrix4f m { {
             { 4, 1, 2, 3 },
             { 2, 3, 4, 1 },
             { 3, 4, 1, 2 },
             { 1, 2, 3, 4 }
         } };
+
+        tap.expect_eq (-160.f, m.determinant (), "4x4 determinant");
 
         util::matrix4f r { {
             { 11,  1,  1, -9 },
@@ -102,7 +140,7 @@ main (void)
             {  1, -9,  1, 11 }
         } };
 
-        tap.expect_eq (m.inverse (), r / 40.f, "simple inversion");
+        tap.expect_eq (m.inverse (), r / 40.f, "4x4 inversion");
     }
 
     return tap.status ();

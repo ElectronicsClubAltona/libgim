@@ -29,8 +29,13 @@ namespace util {
         static const size_t rows = S;
         static const size_t cols = S;
 
+        T* operator[] (size_t);
+        const T* operator[] (size_t) const;
+
         matrix& transpose  (void);
         matrix  transposed (void) const;
+
+        T determinant (void) const;
 
         matrix  inverse (void) const;
         matrix& invert  (void);
@@ -41,9 +46,6 @@ namespace util {
 
         matrix   operator* (const matrix&) const;
         matrix&  operator*=(const matrix&);
-
-        //vector<3,T> operator* (vector<3,T>) const;
-        //point<3,T>  operator* (point<3,T>) const;
 
         vector<S,T> operator* (const vector<S,T>&) const;
         point<S,T>  operator* (const point<S,T> &) const;
@@ -78,11 +80,25 @@ namespace util {
         static const matrix ZEROES;
     };
 
+
+    template <size_t S, typename T>
+    T determinant (const matrix<S,T>&);
+
+    template <size_t S, typename T>
+    matrix<S,T>
+    inverse (const matrix<S,T>&);
+
     template <typename T> using matrix3 = matrix<3,T>;
     template <typename T> using matrix4 = matrix<4,T>;
 
     template <size_t S> using matrixf = matrix<S,float>;
     template <size_t S> using matrixd = matrix<S,double>;
+
+    typedef matrix<2,float> matrix2f;
+    typedef matrix<2,double> matrix2d;
+
+    typedef matrix<3,float> matrix3f;
+    typedef matrix<3,double> matrix3d;
 
     typedef matrix<4,float> matrix4f;
     typedef matrix<4,double> matrix4d;

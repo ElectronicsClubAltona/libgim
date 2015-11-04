@@ -153,6 +153,9 @@ UTIL_FILES   =			\
     maths.hpp			\
     maths.ipp			\
     matrix.cpp			\
+    matrix2.cpp			\
+    matrix3.cpp			\
+    matrix4.cpp			\
     matrix.hpp			\
     matrix.ipp			\
     memory.cpp			\

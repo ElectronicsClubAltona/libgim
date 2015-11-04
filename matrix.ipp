@@ -21,6 +21,46 @@
 
 #define __UTIL_MATRIX_IPP
 
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+T*
+util::matrix<S,T>::operator[] (size_t idx)
+{
+    return this->values[idx];
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+const T*
+util::matrix<S,T>::operator[] (size_t idx) const
+{
+    return this->values[idx];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//template <size_t S, typename T>
+//vector<3,T>
+//matrix<S,T>::operator* (vector<3,T> v) const
+//{
+//    return (
+//        *this * v.template homog<S> ()
+//    ).template redim<3> ();
+//}
+//
+//
+////-----------------------------------------------------------------------------
+//template <size_t S, typename T>
+//point<3,T>
+//matrix<S,T>::operator* (point<3,T> p) const
+//{
+//    return (*this * p.template homog<S> ()).template redim<3> ();
+//}
+//
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 template <typename U>
 util::matrix<S,U>
@@ -34,3 +74,49 @@ util::matrix<S,T>::cast (void) const
 
     return out;
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////
+//template <size_t S, typename T>
+//T
+//util::matrix<S,T>::determinant (void) const
+//{
+//    return util::determinant (*this);
+//}
+//
+//
+////-----------------------------------------------------------------------------
+//template <size_t S, typename T>
+//util::matrix<S,T>
+//util::matrix<S,T>::inverse (void) const
+//{
+//    return util::inverse (*this);
+//}
+
+
+///////////////////////////////////////////////////////////////////////////////
+//template <size_t S, typename T>
+//util::matrix<S,T>
+//util::matrix<S,T>::operator/ (T t) const
+//{
+//    auto out = *this;
+//
+//    for (auto &i: out.values)
+//        for (auto &j: i)
+//            j /= t;
+//
+//    return out;
+//}
+//
+//
+/////////////////////////////////////////////////////////////////////////////////
+//template <size_t S, typename T>
+//bool
+//util::matrix<S,T>::operator== (const matrix<S,T> &m) const
+//{
+//    for (size_t i = 0; i < S; ++i)
+//        for (size_t j = 0; j < S; ++j)
+//            if (!exactly_equal (values[i][j], m[i][j]))
+//                return false;
+//    return true;
+//}
