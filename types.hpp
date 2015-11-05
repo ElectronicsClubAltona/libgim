@@ -36,7 +36,37 @@ elems (const T &t)
     { return t.size (); }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+// analogue of std::data for use until we get proper c++17 support
+namespace util {
+    template <typename T>
+    auto
+    data (T &t)
+    { return t.data (); }
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    auto
+    data (const T &t)
+    { return t.data (); }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, size_t N>
+    constexpr T*
+    data (T (&t)[N])
+    { return &t[0]; }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, size_t N>
+    constexpr const T*
+    data (const T (&t)[N])
+    { return &t[0]; }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <class T>
 T
 first (T a) {
