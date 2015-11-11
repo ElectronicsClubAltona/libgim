@@ -17,9 +17,10 @@
 #include "./paged.hpp"
 
 #include "../system.hpp"
-#include "../../memory.hpp"
-#include "../../types/casts.hpp"
 #include "../../except.hpp"
+#include "../../maths.hpp"
+#include "../../pointer.hpp"
+#include "../../types/casts.hpp"
 
 #include <sys/mman.h>
 

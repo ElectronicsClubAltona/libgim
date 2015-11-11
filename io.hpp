@@ -18,7 +18,6 @@
 #define __UTIL_IO_HPP
 
 #include "types.hpp"
-#include "memory.hpp"
 #include "platform.hpp"
 #include "nocopy.hpp"
 

@@ -158,8 +158,6 @@ UTIL_FILES   =			\
     matrix4.cpp			\
     matrix.hpp			\
     matrix.ipp			\
-    memory.cpp			\
-    memory.hpp			\
     memory/buffer/circular.cpp	\
     memory/buffer/circular.hpp	\
     memory/buffer/paged.cpp	\
