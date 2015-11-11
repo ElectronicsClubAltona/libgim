@@ -19,6 +19,8 @@
 
 #include "preprocessor.hpp"
 
+#include <functional>
+
 /// Defines a translation-unit-unique variable useful for unnamed scoped variables
 #define raii PASTE(__unique_, __COUNTER__)
 
@@ -38,16 +40,20 @@ namespace util {
 
 
     /// Executes a function upon object destruction
-    template <typename T>
     struct scoped_function {
-        explicit scoped_function (T &&_func):
+        explicit scoped_function (std::function<void(void)> &&_func):
             func  (std::move (_func))
         { ; }
 
         ~scoped_function ()
             { func (); }
 
-        T func;
+        void clear (void)
+        {
+            func = [] (void) { ; };
+        }
+
+        std::function<void(void)> func;
     };
 }
 
