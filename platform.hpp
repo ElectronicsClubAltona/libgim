@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_PLATFORM_HPP
@@ -19,12 +19,16 @@
 
 #if defined(__ANDROID__)
     #define PLATFORM_ANDROID
+    #define PLATFORM_SUFFIX "android"
 #elif defined(__linux__) || defined (__linux)
     #define PLATFORM_LINUX
+    #define PLATFORM_SUFFIX "linux"
 #elif defined(__WIN32) || defined (_WIN32)
     #define PLATFORM_WIN32
+    #define PLATFORM_SUFFIX "win32"
 #else
     #error "Unknown platform"
+    #define PLATFORM_SUFFIX "unknown"
 #endif
 
 // Clang needs to be checked before GCC as it pretends to be GCC
