@@ -160,6 +160,10 @@ UTIL_FILES   =			\
     matrix.ipp			\
     memory.cpp			\
     memory.hpp			\
+    memory/buffer/circular.cpp	\
+    memory/buffer/circular.hpp	\
+    memory/buffer/paged.cpp	\
+    memory/buffer/paged.hpp	\
     memory/system.cpp		\
     memory/system.hpp		\
     net/address.cpp		\
@@ -356,7 +360,7 @@ libutil_a_CXXFLAGS = $(AM_CXXFLAGS)
 
 AM_DEFAULT_SOURCE_EXT = .cpp
 
-AM_LDFLAGS  = $(BOOST_LDFLAGS)
+AM_LDFLAGS  = $(BOOST_LDFLAGS) -lrt
 
 bin_PROGRAMS = 				\
     tools/json-clean			\
@@ -401,6 +405,8 @@ TEST_BIN = 			\
     test/introspection		\
     test/ip 			\
     test/json_types		\
+    test/memory/buffer/circular \
+    test/memory/buffer/paged	\
     test/maths			\
     test/matrix			\
     test/md2			\
