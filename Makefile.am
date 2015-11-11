@@ -160,6 +160,8 @@ UTIL_FILES   =			\
     matrix.ipp			\
     memory.cpp			\
     memory.hpp			\
+    memory/system.cpp		\
+    memory/system.hpp		\
     net/address.cpp		\
     net/address.hpp		\
     net/except.cpp		\
