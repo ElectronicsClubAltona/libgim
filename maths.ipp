@@ -23,7 +23,7 @@
 #include <type_traits>
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 constexpr T
 util::pow (T x, unsigned y)
@@ -35,7 +35,7 @@ util::pow (T x, unsigned y)
 }
 
 
-///----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 /// Return a unit type with a sign that matches the provided value
 ///
 /// We were using __builtin_signbit for the potential speedboost, but it causes
@@ -47,6 +47,8 @@ sign (int v)
     return std::signbit (v) ? -1 : 1;
 }
 
+
+//-----------------------------------------------------------------------------
 constexpr float
 sign (float v)
 {
@@ -54,6 +56,7 @@ sign (float v)
 }
 
 
+//-----------------------------------------------------------------------------
 constexpr double
 sign (double v)
 {

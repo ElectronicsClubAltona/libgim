@@ -24,7 +24,7 @@
 #include <type_traits>
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
 is_pow2 (T value) {
@@ -39,7 +39,7 @@ template bool is_pow2 (uint32_t);
 template bool is_pow2 (uint64_t);
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 T
 log2up (T v)
@@ -51,7 +51,7 @@ template uint32_t log2up (uint32_t);
 template uint64_t log2up (uint64_t);
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 T
 log2 (T v) {
@@ -71,18 +71,19 @@ template uint32_t log2 (uint32_t);
 template uint64_t log2 (uint64_t);
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 double
 rootsquare (T a, T b)
     { return sqrt (util::pow2 (a) + util::pow2 (b)); }
 
 
+//-----------------------------------------------------------------------------
 template double rootsquare (double, double);
 template double rootsquare (   int,    int);
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
 is_integer (const T &value) {
@@ -92,11 +93,12 @@ is_integer (const T &value) {
 }
 
 
+//-----------------------------------------------------------------------------
 template bool is_integer (const double&);
 template bool is_integer (const  float&);
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <>
 unsigned
 digits (const uint32_t &v) {
@@ -113,7 +115,7 @@ digits (const uint32_t &v) {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 T
 round_pow2 (T value) {
@@ -130,23 +132,24 @@ round_pow2 (T value) {
 }
 
 
+//-----------------------------------------------------------------------------
 template uint8_t  round_pow2 (uint8_t);
 template uint16_t round_pow2 (uint16_t);
 template uint32_t round_pow2 (uint32_t);
 template uint64_t round_pow2 (uint64_t);
 
 
-//-----------------------------------------------------------------------------
-template const float PI<float>;
+///////////////////////////////////////////////////////////////////////////////
+template const float  PI<float>;
 template const double PI<double>;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Simple instantiations. Some functions aren't used internally to the library
 // so it's easier to instantiate early and check for broken code at library
 // build time.
 
 template float limit (float, float, float);
 
-template float smoothstep (float, float, float);
+template float  smoothstep (float,  float,  float);
 template double smoothstep (double, double, double);

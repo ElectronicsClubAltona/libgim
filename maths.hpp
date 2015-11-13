@@ -59,7 +59,8 @@ namespace util {
     }
 }
 
-//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 namespace util {
     template <typename T>
     constexpr T
@@ -85,14 +86,14 @@ T
 log2up  (T val);
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Roots
 template <typename T>
 double
 rootsquare  (T a, T b);
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Rounding
 template <typename T, typename U>
 inline
@@ -109,32 +110,39 @@ round_to (T value, U size)
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 T
 round_pow2  (T value);
 
 
+//-----------------------------------------------------------------------------
 template <typename T, typename U>
 constexpr T
 divup  (const T a, const U b)
     { return (a + b - 1) / b; }
 
 
-//-----------------------------------------------------------------------------
-// Classification
+///////////////////////////////////////////////////////////////////////////////
+// Properties
 template <typename T>
 bool
 is_integer  (const T& value);
 
 
 //-----------------------------------------------------------------------------
-// Properties
 template <typename T>
 unsigned
 digits  (const T& value);
 
 
 //-----------------------------------------------------------------------------
+constexpr int sign (int);
+constexpr float sign (float);
+constexpr double sign (double);
+
+
+///////////////////////////////////////////////////////////////////////////////
 // factorisation
 template <typename T>
 constexpr T
@@ -146,21 +154,6 @@ gcd (T a, T b)
     if (b > a) return gcd (a, b - a);
 
     unreachable ();
-}
-
-
-//-----------------------------------------------------------------------------
-constexpr int sign (int);
-constexpr float sign (float);
-constexpr double sign (double);
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-const T&
-identity (const T& t)
-{
-    return t;
 }
 
 
@@ -246,16 +239,27 @@ exactly_zero (T a)
     { return exactly_equal (a, T{0}); }
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
+const T&
+identity (const T& t)
+{
+    return t;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // angles, trig
 
 template <typename T>
 constexpr T PI = T(3.141592653589793238462643);
 
+//-----------------------------------------------------------------------------
 template <typename T>
 constexpr T E = T(2.71828182845904523536028747135266250);
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 constexpr T
 to_degrees  (T radians)
@@ -265,6 +269,7 @@ to_degrees  (T radians)
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T>
 constexpr T
 to_radians  (T degrees)
@@ -274,6 +279,7 @@ to_radians  (T degrees)
 }
 
 
+//-----------------------------------------------------------------------------
 //! Normalised sinc function
 template <typename T>
 constexpr T
@@ -283,6 +289,7 @@ sincn  (T x)
 }
 
 
+//-----------------------------------------------------------------------------
 //! Unnormalised sinc function
 template <typename T>
 constexpr T
@@ -292,7 +299,9 @@ sincu  (T x)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+// combinatorics
+
 constexpr uintmax_t
 factorial  (unsigned i)
 {
@@ -300,6 +309,7 @@ factorial  (unsigned i)
 }
 
 
+//-----------------------------------------------------------------------------
 /// stirlings approximation of factorials
 constexpr uintmax_t
 stirling  (unsigned n)
@@ -310,6 +320,7 @@ stirling  (unsigned n)
 }
 
 
+//-----------------------------------------------------------------------------
 constexpr uintmax_t
 combination  (unsigned n, unsigned k)
 {
@@ -317,7 +328,7 @@ combination  (unsigned n, unsigned k)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // kahan summation for long floating point sequences
 
 template <class InputIt>
@@ -342,7 +353,7 @@ fsum (InputIt first, InputIt last)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 /// Variadic minimum
 namespace util {
     template <typename T>
@@ -351,6 +362,7 @@ namespace util {
         { return a; }
 
 
+    //-------------------------------------------------------------------------
     template <typename T, typename U, typename ...Args>
     constexpr typename std::enable_if<
         std::is_unsigned<typename std::decay<T>::type>::value == std::is_unsigned<typename std::decay<U>::type>::value &&
@@ -363,7 +375,7 @@ namespace util {
     }
 
 
-//-----------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     /// Variadic maximum
     template <typename T>
     constexpr T
@@ -371,6 +383,7 @@ namespace util {
         { return a; }
 
 
+    //-------------------------------------------------------------------------
     template <typename T, typename U, typename ...Args>
     constexpr typename std::enable_if<
         std::is_unsigned<typename std::decay<T>::type>::value == std::is_unsigned<typename std::decay<U>::type>::value &&
@@ -383,7 +396,8 @@ namespace util {
     }
 }
 
-//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 // Limiting functions
 
 // min/max clamping
@@ -399,6 +413,7 @@ limit (const T val, const U lo, const V hi)
 }
 
 
+//-----------------------------------------------------------------------------
 // clamped cubic hermite interpolation
 template <typename T>
 T
@@ -427,6 +442,7 @@ renormalise (T t)
 }
 
 
+//-----------------------------------------------------------------------------
 // float -> int
 template <typename T, typename U>
 constexpr
@@ -459,6 +475,7 @@ renormalise (T t)
 }
 
 
+//-----------------------------------------------------------------------------
 // float -> float, avoid identity conversion as we don't want to create
 // ambiguous overloads
 template <typename T, typename U>
@@ -474,6 +491,7 @@ renormalise (T t)
 }
 
 
+//-----------------------------------------------------------------------------
 // hi_int -> lo_int
 template <typename T, typename U>
 constexpr
@@ -493,6 +511,7 @@ renormalise (T t)
 }
 
 
+//-----------------------------------------------------------------------------
 // lo_int -> hi_int
 template <typename T, typename U>
 constexpr
@@ -523,6 +542,7 @@ renormalise (T t)
 }
 
 
+//-----------------------------------------------------------------------------
 template <typename T, typename U>
 constexpr
 typename std::enable_if<
@@ -530,6 +550,7 @@ typename std::enable_if<
 >::type
 renormalise (T t)
 { return t; }
+
 
 #include "maths.ipp"
 
