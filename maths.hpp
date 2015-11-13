@@ -112,33 +112,41 @@ round_to (T value, U size)
 
 //-----------------------------------------------------------------------------
 template <typename T>
-T
+std::enable_if_t<
+    std::is_integral<T>::value, T
+>
 round_pow2  (T value);
 
 
 //-----------------------------------------------------------------------------
 template <typename T, typename U>
-constexpr T
+constexpr std::enable_if_t<
+    std::is_integral<T>::value &&
+    std::is_integral<U>::value,
+    T
+>
 divup  (const T a, const U b)
-    { return (a + b - 1) / b; }
+{
+    return (a + b - 1) / b;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
 // Properties
 template <typename T>
 bool
-is_integer  (const T& value);
+is_integer (const T& value);
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
 unsigned
-digits  (const T& value);
+digits (const T& value);
 
 
 //-----------------------------------------------------------------------------
-constexpr int sign (int);
-constexpr float sign (float);
+constexpr int    sign (int);
+constexpr float  sign (float);
 constexpr double sign (double);
 
 
@@ -364,11 +372,11 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <typename T, typename U, typename ...Args>
-    constexpr typename std::enable_if<
-        std::is_unsigned<typename std::decay<T>::type>::value == std::is_unsigned<typename std::decay<U>::type>::value &&
-        std::is_integral<typename std::decay<T>::type>::value == std::is_integral<typename std::decay<U>::type>::value,
-        typename std::common_type<T,U>::type
-    >::type
+    constexpr std::enable_if_t<
+        std::is_unsigned<std::decay_t<T>>::value == std::is_unsigned<std::decay_t<U>>::value &&
+        std::is_integral<std::decay_t<T>>::value == std::is_integral<std::decay_t<U>>::value,
+        std::common_type_t<T,U>
+    >
     min  (const T a, const U b, Args ...args)
     {
         return min (a < b ? a : b, std::forward<Args> (args)...);
@@ -385,11 +393,11 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <typename T, typename U, typename ...Args>
-    constexpr typename std::enable_if<
-        std::is_unsigned<typename std::decay<T>::type>::value == std::is_unsigned<typename std::decay<U>::type>::value &&
-        std::is_integral<typename std::decay<T>::type>::value == std::is_integral<typename std::decay<U>::type>::value,
-        typename std::common_type<T,U>::type
-    >::type
+    constexpr std::enable_if_t<
+        std::is_unsigned<std::decay_t<T>>::value == std::is_unsigned<std::decay_t<U>>::value &&
+        std::is_integral<std::decay_t<T>>::value == std::is_integral<std::decay_t<U>>::value,
+        std::common_type_t<T,U>
+    >
     max  (const T a, const U b, Args ...args)
     {
         return max (a > b ? a : b, std::forward<Args> (args)...);

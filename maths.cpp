@@ -117,9 +117,11 @@ digits (const uint32_t &v) {
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-T
+std::enable_if_t<
+    std::is_integral<T>::value, T
+>
 round_pow2 (T value) {
-    typedef typename std::enable_if<std::is_integral<T>::value, T>::type return_type;
+    using return_type = std::enable_if_t<std::is_integral<T>::value, T>;
 
     --value;
 
