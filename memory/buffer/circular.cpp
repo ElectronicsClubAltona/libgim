@@ -58,7 +58,7 @@ tmpname (std::string &str, size_t length)
 circular::circular (size_t bytes)
 {
     bytes = max (bytes, sizeof (value_type));
-    bytes = align (bytes, pagesize ());
+    bytes = round_to (bytes, pagesize ());
 
     int fd = -1;
 

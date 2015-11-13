@@ -29,7 +29,7 @@ using util::memory::buffer::paged;
 
 ///////////////////////////////////////////////////////////////////////////////
 paged::paged (size_t bytes, size_t _window):
-    m_window (align (_window, pagesize ()))
+    m_window (round_to (_window, pagesize ()))
 {
     // reserve the address region with no access permissions
     m_begin = reinterpret_cast<char*> (
@@ -40,7 +40,7 @@ paged::paged (size_t bytes, size_t _window):
         errno_error::throw_code ();
 
     // remap the initial window with read/write permissions
-    m_cursor = m_begin + align (min (m_window, bytes), pagesize ());
+    m_cursor = m_begin + round_to (min (m_window, bytes), pagesize ());
     if (MAP_FAILED == mmap (m_begin,
                             m_cursor - m_begin,
                             PROT_READ | PROT_WRITE,
@@ -48,7 +48,7 @@ paged::paged (size_t bytes, size_t _window):
         errno_error::throw_code ();
 
     // record the nominal end address
-    m_end = m_begin + align (bytes, pagesize ());
+    m_end = m_begin + round_to (bytes, pagesize ());
 }
 
 

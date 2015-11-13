@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 template <typename T, typename U>
 typename std::common_type<T,U>::type
-align (T value, U size) {
+round_to (T value, U size) {
     static_assert (std::is_integral<T>::value, "align requires integral types");
     static_assert (std::is_integral<U>::value, "align requires integral types");
 

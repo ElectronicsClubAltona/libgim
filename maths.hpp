@@ -90,7 +90,7 @@ rootsquare [[gnu::pure]] (T a, T b);
 // Rounding
 template <typename T, typename U>
 typename std::common_type<T, U>::type
-align [[gnu::pure]] (T value, U size);
+round_to [[gnu::pure]] (T value, U size);
 
 
 template <typename T>
