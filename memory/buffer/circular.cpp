@@ -84,7 +84,8 @@ circular::circular (size_t bytes)
     util::scoped_function raii ([&name] (void) { shm_unlink (name.c_str ()); });
 
     // embiggen to the desired size
-    ftruncate (fd, bytes);
+    if (ftruncate (fd, bytes))
+        errno_error::throw_code ();
 
     // pre-allocate a sufficiently large virtual memory block. it doesn't
     // matter much what flags we use because we'll just be overwriting it
