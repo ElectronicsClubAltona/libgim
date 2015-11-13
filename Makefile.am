@@ -11,6 +11,23 @@ AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(ZLIB_CFLAGS)
 UTIL_FILES   =			\
     adapter.hpp			\
     adapter.cpp			\
+    alloc/affix.cpp		\
+    alloc/affix.hpp		\
+    alloc/allocator.cpp		\
+    alloc/allocator.hpp		\
+    alloc/arena.cpp		\
+    alloc/arena.hpp		\
+    alloc/arena.ipp		\
+    alloc/fallback.cpp		\
+    alloc/fallback.hpp		\
+    alloc/linear.cpp		\
+    alloc/linear.hpp		\
+    alloc/malloc.cpp		\
+    alloc/malloc.hpp		\
+    alloc/null.cpp		\
+    alloc/null.hpp		\
+    alloc/stack.cpp		\
+    alloc/stack.hpp		\
     backtrace.hpp   		\
     bezier.cpp			\
     bezier.hpp			\
@@ -377,6 +394,8 @@ AM_LDFLAGS  += $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB)
 AM_CXXFLAGS += -I$(top_srcdir)
 
 TEST_BIN = 			\
+    test/alloc/stack		\
+    test/alloc/linear		\
     test/backtrace 		\
     test/bezier			\
     test/bitwise		\
