@@ -1,57 +1,74 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ */
+
 #ifndef __FLOAT_HPP
 #define __FLOAT_HPP
 
 #include "types/bits.hpp"
-#include "debug.hpp"
 
 
+///////////////////////////////////////////////////////////////////////////////
 template <unsigned int EXPONENT, unsigned int SIGNIFICAND>
-class ieee_float {
-    public:
-        static const unsigned int EXPONENT_BITS    = EXPONENT;
-        static const unsigned int SIGNIFICAND_BITS = SIGNIFICAND;
-        static const unsigned int TOTAL_BITS       = 1 + EXPONENT + SIGNIFICAND;
+class ieee_float
+{
+public:
+    static const unsigned int EXPONENT_BITS    = EXPONENT;
+    static const unsigned int SIGNIFICAND_BITS = SIGNIFICAND;
+    static const unsigned int TOTAL_BITS       = 1 + EXPONENT + SIGNIFICAND;
 
-        static const unsigned int BIAS = (1 << (EXPONENT - 1)) - 1;
+    static const unsigned int BIAS = (1 << (EXPONENT - 1)) - 1;
 
-        typedef typename bits_type<TOTAL_BITS>::sint     sint_t;
-        typedef typename bits_type<TOTAL_BITS>::uint     uint_t;
-        typedef typename bits_type<TOTAL_BITS>::floating floating_t;
+    typedef typename bits_type<TOTAL_BITS>::sint     sint_t;
+    typedef typename bits_type<TOTAL_BITS>::uint     uint_t;
+    typedef typename bits_type<TOTAL_BITS>::floating floating_t;
 
-    protected:
-        union {
-            uint_t     m_bits;
-            floating_t m_floating;
+protected:
+    union {
+        uint_t     m_bits;
+        floating_t m_floating;
 
-            struct {
-                uint_t sign        : 1;
-                uint_t exponent    : EXPONENT;
-                uint_t significand : SIGNIFICAND;
-            } m_components;
-        };
+        struct {
+            uint_t sign        : 1;
+            uint_t exponent    : EXPONENT;
+            uint_t significand : SIGNIFICAND;
+        } m_components;
+    };
 
-    public:
-        ieee_float (void);
-        ieee_float (floating_t  _floating);
-        ieee_float (const ieee_float &rhs);
+public:
+    ieee_float (void);
+    ieee_float (floating_t  _floating);
+    ieee_float (const ieee_float &rhs);
 
-        static unsigned int bias (void)
-            { return BIAS; }
+    static unsigned int bias (void)
+        { return BIAS; }
 
-        void   set_bits (uint_t _bits) { m_bits = _bits; }
-        uint_t bits     (void) const   { return m_bits;  }
+    void   set_bits (uint_t _bits) { m_bits = _bits; }
+    uint_t bits     (void) const   { return m_bits;  }
 
-        bool negative (void) const { return m_components.sign; }
-        void negate   (void)       { m_components.sign ^= m_components.sign; }
+    bool negative (void) const { return m_components.sign; }
+    void negate   (void)       { m_components.sign ^= m_components.sign; }
 
-        bool is_zero      (void) const;
-        bool is_subnormal (void) const;
-        bool is_inifinity (void) const;
-        bool is_nan       (void) const;
-        bool operator==   (floating_t) const;
+    bool is_zero      (void) const;
+    bool is_subnormal (void) const;
+    bool is_inifinity (void) const;
+    bool is_nan       (void) const;
+    bool operator==   (floating_t) const;
 
-        static bool almost_equal (floating_t, floating_t);
-        static bool almost_equal (floating_t, floating_t, unsigned ulps);
+    static bool almost_equal (floating_t, floating_t);
+    static bool almost_equal (floating_t, floating_t, unsigned ulps);
 };
 
 
