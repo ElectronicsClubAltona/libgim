@@ -220,7 +220,7 @@ SHA256::finish (void) {
 
 void
 SHA256::process (void) {
-    CHECK_EQ (m_total % sizeof (M), 0);
+    CHECK_EQ (m_total % sizeof (M), 0u);
 
     // Initialise the message schedule, W
     uint32_t W[64];

@@ -32,9 +32,9 @@ fill (util::image::buffer<1,T> &img,
       float persistence,
       float sides)
 {
-    CHECK_EQ (target.e.w % 2, 1);
-    CHECK_EQ (target.e.h % 2, 1);
-    CHECK_GE (target.area (), 9);
+    CHECK_EQ (target.e.w % 2, 1u);
+    CHECK_EQ (target.e.h % 2, 1u);
+    CHECK_GE (target.area (), 9u);
 
     CHECK_GT (scale, 0);
     CHECK_GT (persistence, 0);

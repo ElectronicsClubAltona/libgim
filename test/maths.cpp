@@ -118,10 +118,10 @@ test_normalisations (util::TAP::logger &tap)
         tap.expect (success, "float-u32 normalisation");
     }
 
-    tap.expect_eq (renormalise<uint8_t,uint32_t> (0xff), 0xffffffff, "normalise hi u8-to-u32");
-    tap.expect_eq (renormalise<uint8_t,uint32_t> (0x00), 0x00000000, "normalise lo u8-to-u32");
+    tap.expect_eq (renormalise<uint8_t,uint32_t> (0xff), 0xffffffffu, "normalise hi u8-to-u32");
+    tap.expect_eq (renormalise<uint8_t,uint32_t> (0x00), 0x00000000u, "normalise lo u8-to-u32");
 
-    tap.expect_eq (renormalise<uint32_t,uint8_t> (0xffffffff), 0xff, "normalise hi u32-to-u8");
+    tap.expect_eq (renormalise<uint32_t,uint8_t> (0xffffffff), 0xffu, "normalise hi u32-to-u8");
 }
 
 
@@ -141,7 +141,7 @@ main (void)
     tap.expect_eq (util::min (-2, 0, 2), -2, "variadic min");
     tap.expect_eq (util::max (-2, 0, 2),  2, "variadic max");
 
-    tap.expect_eq (pow2 (4), 16, "pow2");
+    tap.expect_eq (util::pow2 (4u), 16u, "pow2");
 
     tap.expect_eq (rootsquare (2, 2), sqrt (8), "rootsquare");
 
@@ -150,23 +150,23 @@ main (void)
 
     tap.expect_eq (sign (-1), -1, "sign(-1)");
     tap.expect_eq (sign ( 1),  1, "sign( 1)");
-    tap.expect_eq (sign (POS_ZERO),  1, "sign (POS_ZERO)");
-    tap.expect_eq (sign (NEG_ZERO), -1, "sign (NEG_ZERO)");
-    tap.expect_eq (sign ( numeric_limits<double>::infinity ()),  1, "sign +inf");
-    tap.expect_eq (sign (-numeric_limits<double>::infinity ()), -1, "sign -inf");
+    tap.expect_eq (sign (POS_ZERO),  1., "sign (POS_ZERO)");
+    tap.expect_eq (sign (NEG_ZERO), -1., "sign (NEG_ZERO)");
+    tap.expect_eq (sign ( numeric_limits<double>::infinity ()),  1., "sign +inf");
+    tap.expect_eq (sign (-numeric_limits<double>::infinity ()), -1., "sign -inf");
 
     tap.expect_eq (to_degrees (PI< float>), 180.f, "to_degrees float");
     tap.expect_eq (to_degrees (PI<double>), 180.0, "to_degrees double");
     tap.expect_eq (to_radians (180.f), PI<float>,   "to_radians float");
     tap.expect_eq (to_radians (180.0), PI<double>,  "to_radians double");
 
-    tap.expect_eq (log2 (8u), 3, "log2 +ve");
-    tap.expect_eq (log2 (1u), 0, "log2 zero");
+    tap.expect_eq (log2 (8u), 3u, "log2 +ve");
+    tap.expect_eq (log2 (1u), 0u, "log2 zero");
 
     //tap.expect_eq (log2   (9u), 3, "log2up 9");
-    tap.expect_eq (log2up (9u), 4, "log2up 9");
-    tap.expect_eq (log2up (8u), 3, "log2up 9");
-    tap.expect_eq (log2up (1u), 0, "log2up 9");
+    tap.expect_eq (log2up (9u), 4u, "log2up 9");
+    tap.expect_eq (log2up (8u), 3u, "log2up 9");
+    tap.expect_eq (log2up (1u), 0u, "log2up 9");
 
     return tap.status ();
 }

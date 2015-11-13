@@ -166,9 +166,9 @@ test_bytes (util::TAP::logger &tap)
         size_t      val;
     } commands[] = {
         { "1",  1 },
-        { "1k", pow (1024, 1) },
-        { "1M", pow (1024, 2) },
-        { "1G", pow (1024, 3) }
+        { "1k", util::pow (1024u, 1u) },
+        { "1M", util::pow (1024u, 2u) },
+        { "1G", util::pow (1024u, 3u) }
     };
 
     const char *argv[] = {

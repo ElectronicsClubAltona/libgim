@@ -26,7 +26,7 @@ main (void)
         for (auto p: util::extent_range2u ({3, 3}))
             success += EXPECTED[offset++] == p ? 1 : 0;
 
-        tap.expect (success == elems (EXPECTED), "extent_range2u iteration");
+        tap.expect_eq (success, elems (EXPECTED), "extent_range2u iteration");
     }
 
     return tap.status ();

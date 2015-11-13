@@ -114,19 +114,6 @@ digits (const uint32_t &v) {
 
 
 //-----------------------------------------------------------------------------
-template <>
-bool
-almost_equal (const float &a, const float &b)
-    { return ieee_single::almost_equal (a, b); }
-
-
-template <>
-bool
-almost_equal (const double &a, const double &b)
-    { return ieee_double::almost_equal (a, b); }
-
-
-//-----------------------------------------------------------------------------
 template <typename T>
 T
 round_pow2 (T value) {

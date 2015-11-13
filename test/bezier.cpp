@@ -129,22 +129,22 @@ test_intersect<2> (util::TAP::logger &tap)
                                       {100.f, 100.f}});
 
     // Through the centre
-    tap.expect_eq (b2.intersections ({100.f, 0.f}, {0.f, 100.f}), 1, "intersect bezier-2 centre");
-    tap.expect_eq (b2.intersections ({0.f, 100.f}, {100.f, 0.f}), 1, "intersect bezier-2 centre");
+    tap.expect_eq (b2.intersections ({100.f, 0.f}, {0.f, 100.f}), 1u, "intersect bezier-2 centre");
+    tap.expect_eq (b2.intersections ({0.f, 100.f}, {100.f, 0.f}), 1u, "intersect bezier-2 centre");
 
     // Coincident with endpoints
-    tap.expect_eq (b2.intersections ({0.f, 0.f}, {0.f,100.f}), 1, "intersect bezier-2 endpoint");
-    tap.expect_eq (b2.intersections ({0.f, 0.f}, {100.f,0.f}), 1, "intersect bezier-2 endpoint");
-    tap.expect_eq (b2.intersections ({100.f, 100.f}, {100.f,0.f}), 1, "intersect bezier-2 endpoint");
+    tap.expect_eq (b2.intersections ({0.f, 0.f}, {0.f,100.f}), 1u, "intersect bezier-2 endpoint");
+    tap.expect_eq (b2.intersections ({0.f, 0.f}, {100.f,0.f}), 1u, "intersect bezier-2 endpoint");
+    tap.expect_eq (b2.intersections ({100.f, 100.f}, {100.f,0.f}), 1u, "intersect bezier-2 endpoint");
 
     // Co-planar
-    tap.expect_eq (b2.intersections ({0.f, 0.f}, {1.f, 1.f}), 1, "intersect bezier-2 co-planar");
+    tap.expect_eq (b2.intersections ({0.f, 0.f}, {1.f, 1.f}), 1u, "intersect bezier-2 co-planar");
 
     // Underneath
-    tap.expect_eq (b2.intersections ({1000.f, -10.f}, {-1000.f, -10.f}), 0, "intersect bezier-2 under");
+    tap.expect_eq (b2.intersections ({1000.f, -10.f}, {-1000.f, -10.f}), 0u, "intersect bezier-2 under");
 
     // Above
-    tap.expect_eq (b2.intersections ({1000.f, 110.f}, {-1000.f, 110.f}), 0, "intersect bezier-2 above");
+    tap.expect_eq (b2.intersections ({1000.f, 110.f}, {-1000.f, 110.f}), 0u, "intersect bezier-2 above");
 }
 
 
@@ -160,21 +160,21 @@ test_intersect<3> (util::TAP::logger &tap)
                                       { 100.f, 100.f }});
 
     // Through the centre
-    tap.expect_eq (b3.intersections ({100.f, 0.f}, {0.f, 100.f}), 1, "intersect bezier-3 centre");
+    tap.expect_eq (b3.intersections ({100.f, 0.f}, {0.f, 100.f}), 1u, "intersect bezier-3 centre");
 
     // Coincident with endpoints
-    tap.expect_eq (b3.intersections ({0.f, 0.f}, {0.f,100.f}), 1, "intersect bezier-3 endpoint");
-    tap.expect_eq (b3.intersections ({0.f, 0.f}, {100.f,0.f}), 1, "intersect bezier-3 endpoint");
-    tap.expect_eq (b3.intersections ({100.f, 100.f}, {100.f,0.f}), 1, "intersect bezier-3 endpoint");
+    tap.expect_eq (b3.intersections ({0.f, 0.f}, {0.f,100.f}), 1u, "intersect bezier-3 endpoint");
+    tap.expect_eq (b3.intersections ({0.f, 0.f}, {100.f,0.f}), 1u, "intersect bezier-3 endpoint");
+    tap.expect_eq (b3.intersections ({100.f, 100.f}, {100.f,0.f}), 1u, "intersect bezier-3 endpoint");
 
     // Co-planar
-    tap.expect_eq (b3.intersections ({0.f, 0.f}, {1.f, 1.f}), 1, "intersect bezier-3 co-planar");
+    tap.expect_eq (b3.intersections ({0.f, 0.f}, {1.f, 1.f}), 1u, "intersect bezier-3 co-planar");
 
     // Underneath
-    tap.expect_eq (b3.intersections ({1000.f, -10.f}, {-1000.f, -10.f}), 0, "intersect bezier-3 under");
+    tap.expect_eq (b3.intersections ({1000.f, -10.f}, {-1000.f, -10.f}), 0u, "intersect bezier-3 under");
 
     // Above
-    tap.expect_eq (b3.intersections ({1000.f, 110.f}, {-1000.f, 110.f}), 0, "intersect bezier-3 above");
+    tap.expect_eq (b3.intersections ({1000.f, 110.f}, {-1000.f, 110.f}), 0u, "intersect bezier-3 above");
 }
 
 

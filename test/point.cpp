@@ -65,10 +65,10 @@ main (void)
         const point4f q = p.homog<4> ();
 
         tap.expect (
-            almost_equal (q.x, 3) &&
-            almost_equal (q.y, 4) &&
-            almost_equal (q.z, 0) &&
-            almost_equal (q.w, 1),
+            almost_equal (q.x, 3.f) &&
+            almost_equal (q.y, 4.f) &&
+            almost_equal (q.z, 0.f) &&
+            almost_equal (q.w, 1.f),
 
             "homogenous redim"
         );

@@ -132,7 +132,7 @@ SHA1::update (const uint8_t *data, size_t size) {
 //-----------------------------------------------------------------------------
 void
 SHA1::process (void) {
-    CHECK_EQ (total % BLOCK_BYTES, 0);
+    CHECK_EQ (total % BLOCK_BYTES, 0u);
 
     // Byteswap the raw input we have buffered ready for arithmetic
     std::transform (std::begin (W),

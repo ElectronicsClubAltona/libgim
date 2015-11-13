@@ -79,7 +79,7 @@ template <size_t S, typename T>
 bool
 vector<S,T>::is_normalised (void) const
 {
-    return almost_equal (magnitude2 (), 1.f);
+    return almost_equal (magnitude2 (), T{1});
 }
 
 
@@ -323,5 +323,7 @@ template <>
 bool
 almost_equal [[gnu::pure]] (const util::vector2f &a, const util::vector2f &b)
 {
-    return std::equal (a.begin (), a.end (), b.begin (), almost_equal<float>);
+    bool (*comparator) (const float&, const float&) = almost_equal;
+    return std::equal (a.begin (), a.end (), b.begin (), comparator);
 }
+

@@ -32,7 +32,7 @@ test_single (void)
     auto raii = void_signal.connect (increment_uint);
     void_signal (val);
 
-    CHECK_EQ (val, 1);
+    CHECK_EQ (val, 1u);
 }
 
 
@@ -47,7 +47,7 @@ test_double (void)
     auto raii = void_signal.connect (increment_uint);
     void_signal (val);
 
-    CHECK_EQ (val, 2);
+    CHECK_EQ (val, 2u);
 }
 
 
@@ -65,11 +65,11 @@ void
 test_value_signal (void)
 {
     util::value_signal<unsigned> val;
-    auto raii = val.connect ([] (unsigned v) { CHECK_EQ (v, 42); });
+    auto raii = val.connect ([] (unsigned v) { CHECK_EQ (v, 42u); });
     val = 42u;
 
     unsigned check = val;
-    CHECK_EQ (check, 42);
+    CHECK_EQ (check, 42u);
 }
 
 
@@ -86,7 +86,7 @@ test_combiner (void)
         auto raii = sig.connect ([&] (void) { ++count; return true; });
 
         CHECK (sig ());
-        CHECK_EQ (count, 3);
+        CHECK_EQ (count, 3u);
     }
 
     {
@@ -98,7 +98,7 @@ test_combiner (void)
         auto raii = sig.connect ([&] (void) { ++count; return true; });
 
         CHECK (!sig ());
-        CHECK_EQ (count, 2);
+        CHECK_EQ (count, 2u);
     }
 }
 

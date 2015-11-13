@@ -110,7 +110,7 @@ ieee_float<E, S>::almost_equal (floating_t _a,
 {
     // Ensure ULPs is small enough that the default NaNs won't compare as
     // equal to anything else.
-    CHECK_LE (ulps, 4 * 1024 * 1024);
+    CHECK_LE (ulps, 4 * 1024 * 1024u);
 
     union {
         floating_t f;

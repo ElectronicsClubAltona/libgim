@@ -324,7 +324,7 @@ void
 RIPEMD::finish (void) {
     // Ensure the length wouldn't overflow if converted to bits. We need to
     // grab this before there's a chance it gets overwritten.
-    CHECK_EQ (m_length >> sizeof(m_length) * 8 - 3, 0);
+    CHECK_EQ (m_length >> sizeof(m_length) * 8 - 3, 0u);
     uint64_t length = m_length * 8;
 
     // Push a padding byte into the buffer
@@ -338,7 +338,7 @@ RIPEMD::finish (void) {
 
         update (ZEROES, remaining);
 
-        CHECK_EQ (m_buffer.size, 0);
+        CHECK_EQ (m_buffer.size, 0u);
         remaining = sizeof (m_buffer.d08);
     }
 

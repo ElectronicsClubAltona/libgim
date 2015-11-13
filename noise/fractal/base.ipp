@@ -44,9 +44,9 @@ namespace util { namespace noise { namespace fractal {
         m_invAH (std::pow (_amplitude, -_H)),
         m_invGH (std::pow (_gain, _H))
     {
-        CHECK_NEQ (m_octaves, 0);
-        CHECK_NEQ (m_frequency, 0);
-        CHECK_NEQ (m_amplitude, 0);
+        CHECK_NEZ (m_octaves);
+        CHECK_NEZ (m_frequency);
+        CHECK_NEZ (m_amplitude);
     }
 
 

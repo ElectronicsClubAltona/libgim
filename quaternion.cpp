@@ -257,7 +257,7 @@ template <typename T>
 matrix4<T>
 quaternion<T>::rotation_matrix (void) const
 {
-    CHECK_EQ (1, norm ());
+    CHECK_EQ (T{1}, norm ());
 
     const T wx = w * x, wy = w * y, wz = w * z;
     const T xx = x * x, xy = x * y, xz = x * z;

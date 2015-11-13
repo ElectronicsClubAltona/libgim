@@ -180,7 +180,7 @@ version::operator== (const version &rhs) const {
 std::ostream&
 operator <<(std::ostream& os, const util::version& rhs) {
     size_t elements = rhs.size;
-    CHECK_GT (elements, 0);
+    CHECK_GT (elements, 0u);
 
     os << rhs.major ();
     if (!--elements)
@@ -195,7 +195,7 @@ operator <<(std::ostream& os, const util::version& rhs) {
         goto done;
 
     os << "." << rhs.build ();
-    CHECK_EQ (--elements, 0);
+    CHECK_EQ (elements - 1, 0u);
 
 done:
     os << release_to_string (rhs.release);

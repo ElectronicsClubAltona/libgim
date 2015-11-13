@@ -32,10 +32,10 @@ main (void)
         auto r = m * v;
 
         tap.expect (
-            almost_equal (r.x,  30) &&
-            almost_equal (r.y,  70) &&
-            almost_equal (r.z, 110) &&
-            almost_equal (r.w, 150),
+            almost_equal (r.x,  30.f) &&
+            almost_equal (r.y,  70.f) &&
+            almost_equal (r.z, 110.f) &&
+            almost_equal (r.w, 150.f),
             "simple matrix-vector multiplication"
         );
     }
@@ -79,9 +79,9 @@ main (void)
         for (size_t r = 0; r < m.rows; ++r)
             for (size_t c = 0; c < m.cols; ++c)
                 if (r == c)
-                    success = success && almost_equal (m.values[r][c], 1);
+                    success = success && almost_equal (m.values[r][c], 1.f);
                 else
-                    success = success && almost_equal (m.values[r][c], 0);
+                    success = success && almost_equal (m.values[r][c], 0.f);
 
         tap.expect (success, "identity inversion");
     }
@@ -93,7 +93,7 @@ main (void)
             { 3, 4 }
         } };
 
-        tap.expect_eq (-2, m.determinant (), "2x2 determinant");
+        tap.expect_eq (-2.f, m.determinant (), "2x2 determinant");
 
         util::matrix2f r { {
             { -4,  2 },
@@ -111,7 +111,7 @@ main (void)
             { 4, 0, 2 }
         } };
 
-        tap.expect_eq (-6, m.determinant (), "3x3 determinant");
+        tap.expect_eq (-6.f, m.determinant (), "3x3 determinant");
 
         util::matrix3f r { {
             { -6,  2,  5 },

@@ -109,7 +109,7 @@ template <size_t S, typename T>
 bool
 extent<S,T>::empty (void) const
 {
-    return almost_equal (area(), 0);
+    return almost_zero (area());
 }
 
 
