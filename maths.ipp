@@ -26,12 +26,12 @@
 //-----------------------------------------------------------------------------
 template <typename T>
 constexpr T
-pow (T x, unsigned y)
+util::pow (T x, unsigned y)
 {
     if (y == 0)
         return T(1);
 
-    return x * ::pow (x, y - 1);
+    return x * util::pow (x, y - 1);
 }
 
 

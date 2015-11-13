@@ -26,14 +26,16 @@
 #include <type_traits>
 #include <utility>
 
-template <typename T>
-T
-abs (T value)
-{ return value > 0 ? value : -value; }
 
 
+///////////////////////////////////////////////////////////////////////////////
 namespace util {
-    template <typename T> T abs (T t) { return ::abs<T> (t); }
+    template <typename T>
+    T
+    abs [[gnu::const]] (T t)
+    {
+        return t > 0 ? t : -t;
+    }
 }
 
 
@@ -47,17 +49,11 @@ namespace util {
         { return value * value; }
 }
 
-template <typename T> constexpr T pow2 [[gnu::const]] (T value) { return util::pow2 (value); }
-
 //-----------------------------------------------------------------------------
-template <typename T>
-constexpr T
-pow [[gnu::const]] (T x, unsigned y);
-
 namespace util {
-
     template <typename T>
-    constexpr T pow (T x, unsigned y) { return ::pow (x, y); }
+    constexpr T
+    pow [[gnu::const]] (T x, unsigned y);
 }
 
 

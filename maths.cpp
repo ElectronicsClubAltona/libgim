@@ -75,7 +75,7 @@ template uint64_t log2 (uint64_t);
 template <typename T>
 double
 rootsquare (T a, T b)
-    { return sqrt (pow2 (a) + pow2 (b)); }
+    { return sqrt (util::pow2 (a) + util::pow2 (b)); }
 
 
 template double rootsquare (double, double);
