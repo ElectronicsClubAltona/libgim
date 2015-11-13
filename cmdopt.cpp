@@ -252,27 +252,27 @@ suffix_to_multiplier (char c)
     switch (c) {
     case 'e':
     case 'E':
-        return pow (1024UL, 6);
+        return util::pow (1024UL, 6);
 
     case 'p':
     case 'P':
-        return pow (1024UL, 5);
+        return util::pow (1024UL, 5);
 
     case 't':
     case 'T':
-        return pow (1024UL, 4);
+        return util::pow (1024UL, 4);
 
     case 'g':
     case 'G':
-        return pow (1024UL, 3);
+        return util::pow (1024UL, 3);
 
     case 'm':
     case 'M':
-        return pow (1024UL, 2);
+        return util::pow (1024UL, 2);
 
     case 'k':
     case 'K':
-        return pow (1024UL, 1);
+        return util::pow (1024UL, 1);
 
     default:
         throw util::cmdopt::invalid_value ("bytes");
