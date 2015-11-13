@@ -22,16 +22,6 @@
 
 #include <type_traits>
 
-//-----------------------------------------------------------------------------
-template <typename T, typename U>
-typename std::common_type<T,U>::type
-round_to (T value, U size) {
-    static_assert (std::is_integral<T>::value, "align requires integral types");
-    static_assert (std::is_integral<U>::value, "align requires integral types");
-
-    return divup (value, size) * size;
-}
-
 
 //-----------------------------------------------------------------------------
 template <typename T>

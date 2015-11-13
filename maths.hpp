@@ -89,8 +89,18 @@ rootsquare [[gnu::pure]] (T a, T b);
 //-----------------------------------------------------------------------------
 // Rounding
 template <typename T, typename U>
-typename std::common_type<T, U>::type
-round_to [[gnu::pure]] (T value, U size);
+inline
+typename std::common_type<
+    std::enable_if_t<std::is_integral<T>::value,T>,
+    std::enable_if_t<std::is_integral<U>::value,U>
+>::type
+round_to [[gnu::const]] (T value, U size)
+{
+    if (value % size == 0)
+        return value;
+
+    return value + (size - value % size);
+}
 
 
 template <typename T>
