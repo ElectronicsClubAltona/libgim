@@ -26,11 +26,11 @@ main (int, char**)
     {
         // white: hue is undefined
         auto white = util::rgb_to_hsv ({1,1,1});
-        tap.expect (exactly_equal (white.s, 0) && exactly_equal (white.v, 1), "white hsv");
+        tap.expect (util::exactly_zero (white.s) && util::exactly_equal (white.v, 1), "white hsv");
 
         // black: hue is undefined
         auto black = util::rgb_to_hsv ({0,0,0});
-        tap.expect (exactly_equal (black.s, 0) && exactly_equal (black.v, 0), "black hsv");
+        tap.expect (util::exactly_zero (black.s) && util::exactly_zero (black.v), "black hsv");
 
         struct {
             const char *name;

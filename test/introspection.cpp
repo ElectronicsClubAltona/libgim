@@ -46,8 +46,8 @@ int main ()
         foo d_foo { 7, 42.0 };
         auto f_tuple = util::as_tuple (d_foo);
 
-        tap.expect (exactly_equal (d_foo.a, std::get<0> (f_tuple)) &&
-                    exactly_equal (d_foo.b, std::get<1> (f_tuple)),
+        tap.expect (util::exactly_equal (d_foo.a, std::get<0> (f_tuple)) &&
+                    util::exactly_equal (d_foo.b, std::get<1> (f_tuple)),
                     "dynamic member access after conversion to tuple");
     }
 }

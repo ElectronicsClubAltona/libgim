@@ -48,23 +48,24 @@ using json::tree::null;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <>
-bool
-is_integer (const json::tree::number &node)
-{
-    return is_integer (node.native ());
+namespace util {
+    template <>
+    bool
+    is_integer (const json::tree::number &node)
+    {
+        return is_integer (node.native ());
+    }
+
+
+    //-----------------------------------------------------------------------------
+    template <>
+    bool
+    is_integer (const json::tree::node &node)
+    {
+        return node.is_number () &&
+               is_integer (node.as_number ());
+    }
 }
-
-
-//-----------------------------------------------------------------------------
-template <>
-bool
-is_integer (const json::tree::node &node)
-{
-    return node.is_number () &&
-           is_integer (node.as_number ());
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////
 static std::vector<json::flat::item>::const_iterator
@@ -305,7 +306,7 @@ size_t
 json::tree::node::as_uint (void) const
 {
     auto val = as_number ().native ();
-    if (!is_integer (val))
+    if (!util::is_integer (val))
         throw json::type_error ("cast fractional value to uint");
 
     // TODO: use trunc_cast
@@ -761,7 +762,7 @@ json::tree::number::write (std::ostream &os) const
 //-----------------------------------------------------------------------------
 bool
 json::tree::number::operator ==(const json::tree::number &rhs) const
-    { return almost_equal (rhs.m_value, m_value); }
+    { return util::almost_equal (rhs.m_value, m_value); }
 
 
 ///////////////////////////////////////////////////////////////////////////////

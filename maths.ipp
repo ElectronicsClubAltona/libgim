@@ -42,7 +42,7 @@ util::pow (T x, unsigned y)
 /// problems with constexpr under clang. If you need speed then you'll probably
 /// have to handcode something.
 constexpr int
-sign (int v)
+util::sign (int v)
 {
     return std::signbit (v) ? -1 : 1;
 }
@@ -50,7 +50,7 @@ sign (int v)
 
 //-----------------------------------------------------------------------------
 constexpr float
-sign (float v)
+util::sign (float v)
 {
     return std::signbit (v) ? -1.f : 1.f;
 }
@@ -58,7 +58,7 @@ sign (float v)
 
 //-----------------------------------------------------------------------------
 constexpr double
-sign (double v)
+util::sign (double v)
 {
     return std::signbit (v) ? -1. : 1.f;
 }

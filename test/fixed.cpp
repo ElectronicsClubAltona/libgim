@@ -1,4 +1,5 @@
 #include "fixed.hpp"
+#include "types/string.hpp"
 
 #include "tap.hpp"
 

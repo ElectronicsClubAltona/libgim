@@ -45,7 +45,7 @@ main (void) {
     CHECK (!ref["integer"].is_object ());
     CHECK (!ref["integer"].is_string ());
     CHECK (
-        exactly_equal (
+        util::exactly_equal (
             (unsigned)ref["integer"].as_number ().native (),
             1u
         )
@@ -81,7 +81,7 @@ main (void) {
     CHECK (!ref["double"].is_object ());
     CHECK (!ref["double"].is_string ());
     CHECK (
-        exactly_equal (
+        util::exactly_equal (
             ref["double"].as_number ().native (),
             3.14
         )

@@ -32,10 +32,10 @@ main (void)
         auto r = m * v;
 
         tap.expect (
-            almost_equal (r.x,  30.f) &&
-            almost_equal (r.y,  70.f) &&
-            almost_equal (r.z, 110.f) &&
-            almost_equal (r.w, 150.f),
+            util::almost_equal (r.x,  30.f) &&
+            util::almost_equal (r.y,  70.f) &&
+            util::almost_equal (r.z, 110.f) &&
+            util::almost_equal (r.w, 150.f),
             "simple matrix-vector multiplication"
         );
     }
@@ -79,9 +79,9 @@ main (void)
         for (size_t r = 0; r < m.rows; ++r)
             for (size_t c = 0; c < m.cols; ++c)
                 if (r == c)
-                    success = success && almost_equal (m.values[r][c], 1.f);
+                    success = success && util::almost_equal (m.values[r][c], 1.f);
                 else
-                    success = success && almost_equal (m.values[r][c], 0.f);
+                    success = success && util::almost_equal (m.values[r][c], 0.f);
 
         tap.expect (success, "identity inversion");
     }

@@ -27,34 +27,36 @@
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
-is_pow2 (T value) {
+util::is_pow2 (T value)
+{
     typedef typename std::enable_if<std::is_integral<T>::value, bool>::type return_type;
     return (return_type)(value && !(value & (value - 1)));
 }
 
 
-template bool is_pow2 (uint8_t);
-template bool is_pow2 (uint16_t);
-template bool is_pow2 (uint32_t);
-template bool is_pow2 (uint64_t);
+template bool util::is_pow2 (uint8_t);
+template bool util::is_pow2 (uint16_t);
+template bool util::is_pow2 (uint32_t);
+template bool util::is_pow2 (uint64_t);
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 T
-log2up (T v)
+util::log2up (T v)
 {
     return log2 ((v << 1) - 1);
 }
 
-template uint32_t log2up (uint32_t);
-template uint64_t log2up (uint64_t);
+template uint32_t util::log2up (uint32_t);
+template uint64_t util::log2up (uint64_t);
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 T
-log2 (T v) {
+util::log2 (T v)
+{
     static_assert (std::is_integral<T>::value,
                    "log2 is only implemented for integers");
 
@@ -65,28 +67,29 @@ log2 (T v) {
     return l;
 }
 
-template uint8_t  log2 (uint8_t);
-template uint16_t log2 (uint16_t);
-template uint32_t log2 (uint32_t);
-template uint64_t log2 (uint64_t);
+template uint8_t  util::log2 (uint8_t);
+template uint16_t util::log2 (uint16_t);
+template uint32_t util::log2 (uint32_t);
+template uint64_t util::log2 (uint64_t);
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 double
-rootsquare (T a, T b)
+util::rootsquare (T a, T b)
     { return sqrt (util::pow2 (a) + util::pow2 (b)); }
 
 
 //-----------------------------------------------------------------------------
-template double rootsquare (double, double);
-template double rootsquare (   int,    int);
+template double util::rootsquare (double, double);
+template double util::rootsquare (   int,    int);
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
-is_integer (const T &value) {
+util::is_integer (const T &value)
+{
     T integer;
     return exactly_equal (std::modf (value, &integer),
                           static_cast<T> (0.0));
@@ -94,24 +97,27 @@ is_integer (const T &value) {
 
 
 //-----------------------------------------------------------------------------
-template bool is_integer (const double&);
-template bool is_integer (const  float&);
+template bool util::is_integer (const double&);
+template bool util::is_integer (const  float&);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <>
-unsigned
-digits (const uint32_t &v) {
-    return (v >= 1000000000) ? 10 :
-           (v >=  100000000) ?  9 :
-           (v >=   10000000) ?  8 :
-           (v >=    1000000) ?  7 :
-           (v >=     100000) ?  6 :
-           (v >=      10000) ?  5 :
-           (v >=       1000) ?  4 :
-           (v >=        100) ?  3 :
-           (v >=         10) ?  2 :
-                                1;
+namespace util {
+    template <>
+    unsigned
+    digits (const uint32_t &v)
+    {
+        return (v >= 1000000000) ? 10 :
+               (v >=  100000000) ?  9 :
+               (v >=   10000000) ?  8 :
+               (v >=    1000000) ?  7 :
+               (v >=     100000) ?  6 :
+               (v >=      10000) ?  5 :
+               (v >=       1000) ?  4 :
+               (v >=        100) ?  3 :
+               (v >=         10) ?  2 :
+                                    1;
+    }
 }
 
 
@@ -120,7 +126,8 @@ template <typename T>
 std::enable_if_t<
     std::is_integral<T>::value, T
 >
-round_pow2 (T value) {
+util::round_pow2 (T value)
+{
     using return_type = std::enable_if_t<std::is_integral<T>::value, T>;
 
     --value;
@@ -135,15 +142,15 @@ round_pow2 (T value) {
 
 
 //-----------------------------------------------------------------------------
-template uint8_t  round_pow2 (uint8_t);
-template uint16_t round_pow2 (uint16_t);
-template uint32_t round_pow2 (uint32_t);
-template uint64_t round_pow2 (uint64_t);
+template uint8_t  util::round_pow2 (uint8_t);
+template uint16_t util::round_pow2 (uint16_t);
+template uint32_t util::round_pow2 (uint32_t);
+template uint64_t util::round_pow2 (uint64_t);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template const float  PI<float>;
-template const double PI<double>;
+template const float  util::PI<float>;
+template const double util::PI<double>;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -151,7 +158,7 @@ template const double PI<double>;
 // so it's easier to instantiate early and check for broken code at library
 // build time.
 
-template float limit (float, float, float);
+template float util::limit (float, float, float);
 
-template float  smoothstep (float,  float,  float);
-template double smoothstep (double, double, double);
+template float  util::smoothstep (float,  float,  float);
+template double util::smoothstep (double, double, double);

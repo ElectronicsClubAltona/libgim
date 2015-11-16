@@ -28,13 +28,13 @@ test_polar (util::TAP::logger &tap)
         },
 
         {
-            { 1.f, PI<float> / 2.f },
+            { 1.f, util::PI<float> / 2.f },
             { 0.f, 1.f },
             "unit length, rotated"
         },
 
         {
-            { 1.f, 2 * PI<float> },
+            { 1.f, 2 * util::PI<float> },
             { 1.f, 0.f },
             "full rotation, unit length"
         }
@@ -53,8 +53,8 @@ test_polar (util::TAP::logger &tap)
         auto in_polar = t.polar;
         auto to_polar = util::cartesian_to_polar (t.cartesian);
 
-        in_polar[1] = std::fmod (in_polar[1], 2 * PI<float>);
-        to_polar[1] = std::fmod (to_polar[1], 2 * PI<float>);
+        in_polar[1] = std::fmod (in_polar[1], 2 * util::PI<float>);
+        to_polar[1] = std::fmod (to_polar[1], 2 * util::PI<float>);
 
         tap.expect_eq (in_polar, to_polar, t.desc);
     }
@@ -83,7 +83,7 @@ test_euler (util::TAP::logger &tap)
     // check that simple axis rotations look correct
     for (auto i: TESTS) {
         tap.expect_eq (util::to_euler (i.dir),
-                       i.euler * PI<float>,
+                       i.euler * util::PI<float>,
                        "to euler, %s", i.name);
     }
 

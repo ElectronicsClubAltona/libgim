@@ -48,7 +48,7 @@ main (int, char**)
                 continue;
             }
 
-            if (!almost_equal (i.solutions[j], s[j]))
+            if (!util::almost_equal (i.solutions[j], s[j]))
                 ok = false;
         }
 

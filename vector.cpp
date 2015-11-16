@@ -319,11 +319,14 @@ namespace util {
     template <> vector<4,double> random (void) { util::vector<4,double> out; randomise (out.data); return out; }
 }
 
-template <>
-bool
-almost_equal [[gnu::pure]] (const util::vector2f &a, const util::vector2f &b)
-{
-    bool (*comparator) (const float&, const float&) = almost_equal;
-    return std::equal (a.begin (), a.end (), b.begin (), comparator);
+
+namespace util {
+    template <>
+    bool
+    almost_equal [[gnu::pure]] (const util::vector2f &a, const util::vector2f &b)
+    {
+        bool (*comparator) (const float&, const float&) = almost_equal;
+        return std::equal (a.begin (), a.end (), b.begin (), comparator);
+    }
 }
 

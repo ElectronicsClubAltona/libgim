@@ -175,7 +175,7 @@ validate (json::tree::string &node,
     auto maxLength = schema.find ("maxLength");
     if (maxLength != schema.cend ()) {
         auto cmp = maxLength->second->as_number ().native ();
-        if (!is_integer (cmp))
+        if (!util::is_integer (cmp))
             throw length_error ("maxLength");
 
         if (val.size () > cmp)
@@ -186,7 +186,7 @@ validate (json::tree::string &node,
     auto minLength = schema.find ("minLength");
     if (minLength != schema.cend ()) {
         auto cmp = minLength->second->as_number ().native ();
-        if (!is_integer (cmp))
+        if (!util::is_integer (cmp))
             throw length_error ("minLength");
 
         if (val.size () < cmp)
@@ -217,7 +217,7 @@ validate (json::tree::number &node,
     if (mult != schema.cend ()) {
         auto div = mult->second->as_number ().native ();
 
-        if (val <= 0 || almost_equal (val, div))
+        if (val <= 0 || util::almost_equal (val, div))
             throw json::schema_error ("multipleOf");
     }
 

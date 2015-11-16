@@ -82,7 +82,7 @@
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
         const auto __b = (B);                               \
-        _CHECK_META (almost_equal (__a, __b),               \
+        _CHECK_META (util::almost_equal (__a, __b),         \
                      { ; },                                 \
                      {                                      \
             std::ostringstream __debug_os;                  \
@@ -203,7 +203,7 @@
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
         const auto __b = (B);                               \
-        _CHECK_META (!almost_equal (__a, __b),              \
+        _CHECK_META (!util::almost_equal (__a, __b),        \
                      { ; },                                 \
                      {                                      \
             std::ostringstream __debug_neq_os;              \
