@@ -135,7 +135,8 @@ namespace util {
     digits (const T& value);
 
 
-    //-----------------------------------------------------------------------------
+    ///----------------------------------------------------------------------------
+    /// return positive or negative unit value corresponding to the input.
     template <typename T>
     constexpr std::enable_if_t<
         std::is_signed<T>::value && std::is_integral<T>::value, T
@@ -145,7 +146,10 @@ namespace util {
         return t < 0 ? -1 : 1;
     }
 
-    //-------------------------------------------------------------------------
+    ///------------------------------------------------------------------------
+    /// return positive or negative unit value corresponding to the input.
+    /// guaranteed to give correct results for signed zeroes, use another
+    /// method if extreme speed is important.
     template <typename T>
     constexpr std::enable_if_t<
         std::is_floating_point<T>::value, T
