@@ -75,18 +75,6 @@ template uint64_t util::log2 (uint64_t);
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-double
-util::rootsquare (T a, T b)
-    { return sqrt (util::pow2 (a) + util::pow2 (b)); }
-
-
-//-----------------------------------------------------------------------------
-template double util::rootsquare (double, double);
-template double util::rootsquare (   int,    int);
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
 bool
 util::is_integer (const T &value)
 {

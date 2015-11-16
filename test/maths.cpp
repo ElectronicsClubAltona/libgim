@@ -143,8 +143,6 @@ main (void)
 
     tap.expect_eq (util::pow2 (4u), 16u, "pow2");
 
-    tap.expect_eq (util::rootsquare (2, 2), sqrt (8), "rootsquare");
-
     static const double POS_ZERO =  1.0 / numeric_limits<double>::infinity ();
     static const double NEG_ZERO = -1.0 / numeric_limits<double>::infinity ();
 
