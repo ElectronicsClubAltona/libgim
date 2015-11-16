@@ -75,6 +75,7 @@ namespace util {
     log2  (T val);
 
 
+    //-------------------------------------------------------------------------
     template <typename T>
     T
     log2up  (T val);
@@ -129,6 +130,7 @@ namespace util {
     template <typename T>
     unsigned
     digits (const T& value);
+
 
     //-----------------------------------------------------------------------------
     constexpr int    sign (int);
@@ -244,9 +246,9 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////////
     // angles, trig
-
     template <typename T>
     constexpr T PI = T(3.141592653589793238462643);
+
 
     //-----------------------------------------------------------------------------
     template <typename T>
