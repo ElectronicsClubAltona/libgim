@@ -59,7 +59,10 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
     constexpr T
-    pow [[gnu::const]] (T x, unsigned y);
+    pow [[gnu::const]] (T x, unsigned y)
+    {
+        return y == 0 ? T{1} : x * pow (x, y - 1);
+    }
 
 
     //-------------------------------------------------------------------------
@@ -133,9 +136,24 @@ namespace util {
 
 
     //-----------------------------------------------------------------------------
-    constexpr int    sign (int);
-    constexpr float  sign (float);
-    constexpr double sign (double);
+    template <typename T>
+    constexpr std::enable_if_t<
+        std::is_signed<T>::value && std::is_integral<T>::value, T
+    >
+    sign (T t)
+    {
+        return t < 0 ? -1 : 1;
+    }
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    constexpr std::enable_if_t<
+        std::is_floating_point<T>::value, T
+    >
+    sign (T t)
+    {
+        return std::signbit (t) ? -1 : 1;
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -545,8 +563,5 @@ namespace util {
     { return t; }
 }
 
-
-//#include "types/string.hpp"
-#include "maths.ipp"
 
 #endif // __MATHS_HPP

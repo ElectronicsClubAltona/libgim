@@ -168,7 +168,6 @@ UTIL_FILES   =			\
     log.ipp			\
     maths.cpp			\
     maths.hpp			\
-    maths.ipp			\
     matrix.cpp			\
     matrix2.cpp			\
     matrix3.cpp			\
