@@ -250,6 +250,7 @@ UTIL_FILES   =			\
     point.cpp			\
     point.hpp			\
     point.ipp			\
+    pointer.hpp			\
     polynomial.cpp		\
     polynomial.hpp		\
     polynomial.ipp		\
