@@ -23,44 +23,48 @@
 #include <limits>
 
 
-//-----------------------------------------------------------------------------
-namespace detail {
-    template <typename T, typename V>
-    T
-    _sign_cast (const typename std::enable_if<sizeof(T) == sizeof(V)     &&
-                                              std::is_unsigned<T>::value &&
-                                              std::is_signed<V>::value, V>::type v)
-    {
-        CHECK_GE (v, 0);
-        return static_cast<T> (v);
-    }
-
-
-    template <typename T, typename V>
-    T
-    _sign_cast (const typename std::enable_if<sizeof(T) == sizeof(V)  &&
-                                             std::is_signed<T>::value &&
-                                             std::is_unsigned<V>::value, V>::type v)
-    {
-        CHECK_LT (v, std::numeric_limits<V>::max () / 2);
-        return static_cast<T> (v);
-    }
-
-
-    template <typename T, typename V>
-    T
-    _sign_cast (const typename std::enable_if<std::is_same<T, V>::value, V>::type v)
-        { return v; }
-}
-
-
+///////////////////////////////////////////////////////////////////////////////
 /// Safely cast a numeric type to its (un)signed counterpart, aborting if the
 /// dynamically checked result is not representable. May be optimised out if
 /// NDEBUG is defined.
-template <typename T, typename V>
-T
-sign_cast (const V v)
-    { return detail::_sign_cast<T,V>(v); }
+///
+/// The signed/unsigned and unsigned/signed cases are split so we can simplify
+/// the out of range tests.
+///
+/// The same-type case is not provided because we want to error out on
+/// unnecessary casts.
+template <
+    typename T,
+    typename U
+>
+std::enable_if_t<
+    sizeof(T) == sizeof(U) &&
+    std::is_unsigned<T>::value &&
+    std::is_signed<U>::value,
+    T
+>
+sign_cast (const U u)
+{
+    CHECK_GE (u, 0);
+    return static_cast<T> (u);
+}
+
+//-----------------------------------------------------------------------------
+template <
+    typename T,
+    typename U
+>
+std::enable_if_t<
+    sizeof(T) == sizeof (U)  &&
+    std::is_signed<T>::value &&
+    std::is_unsigned<U>::value,
+    T
+>
+sign_cast (const U u)
+{
+    CHECK_LT (u, std::numeric_limits<U>::max () / 2);
+    return static_cast<T> (u);
+}
 
 
 ///----------------------------------------------------------------------------
