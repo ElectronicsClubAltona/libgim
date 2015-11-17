@@ -73,8 +73,12 @@ T
 trunc_cast (U u)
 {
     auto t = static_cast<T> (u);
+
+    // assume testing round-trip error is the same as half-trip error. this
+    // makes satisfying the type system (for the debug checks) a lot easier,
+    // but seems like it might bite us later...
     if (u == u)
-        CHECK_EQ (t, u);
+        CHECK_EQ  (static_cast<U> (t), u);
     else
         CHECK_NEQ (t, t);
 
