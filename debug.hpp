@@ -221,7 +221,7 @@
 #define CHECK_ZERO(A) do {                                  \
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
-        _CHECK_META (almost_zero (__a),                     \
+        _CHECK_META (util::almost_zero (__a),               \
                      { ; },                                 \
                      {                                      \
             std::ostringstream __debug_nez_os;              \
@@ -237,7 +237,7 @@
 #define CHECK_NEZ(A) do {                                   \
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
-        _CHECK_META (!almost_zero (__a),                    \
+        _CHECK_META (!util::almost_zero (__a),              \
                      { ; },                                 \
                      {                                      \
             std::ostringstream __debug_nez_os;              \
