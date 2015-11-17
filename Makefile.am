@@ -286,6 +286,8 @@ UTIL_FILES   =			\
     string.hpp			\
     stringid.cpp		\
     stringid.hpp		\
+    strongdef.cpp		\
+    strongdef.hpp		\
     tap.cpp			\
     tap.hpp			\
     tap.ipp			\
