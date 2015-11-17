@@ -98,13 +98,14 @@ trunc_cast (U u)
 }
 
 
-///----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 /// assert if the value is not a pointer to a subclass of T, else return the
 /// converted value. Note: this is only a debug-time check and is compiled out
 /// in optimised builds.
 template <typename T, typename V>
 T*
-known_cast (V *v) {
+known_cast (V *v)
+{
     CHECK (dynamic_cast<T*> (v));
     return static_cast<T*> (v);
 }
@@ -113,7 +114,8 @@ known_cast (V *v) {
 //-----------------------------------------------------------------------------
 template <typename T, typename V>
 T&
-known_cast (V &v) {
+known_cast (V &v)
+{
     CHECK_NOTHROW (dynamic_cast<T> (v));
     return static_cast<T> (v);
 }
