@@ -1,6 +1,6 @@
 #include "./distance.hpp"
 #include "../../../extent.hpp"
-#include "../../../types/casts.hpp"
+#include "../../../cast.hpp"
 
 
 ///////////////////////////////////////////////////////////////////////////////

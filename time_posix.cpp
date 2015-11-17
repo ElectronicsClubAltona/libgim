@@ -16,7 +16,7 @@
 
 #include "time.hpp"
 
-#include "types/casts.hpp"
+#include "cast.hpp"
 
 #include <ctime>
 

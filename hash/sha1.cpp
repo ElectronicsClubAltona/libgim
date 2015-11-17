@@ -20,7 +20,7 @@
 #include "debug.hpp"
 #include "endian.hpp"
 #include "types.hpp"
-#include "types/casts.hpp"
+#include "cast.hpp"
 
 #include <algorithm>
 #include <cassert>

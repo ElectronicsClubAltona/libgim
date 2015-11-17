@@ -22,7 +22,7 @@
 #if defined(PLATFORM_LINUX)
 
 #include "except.hpp"
-#include "types/casts.hpp"
+#include "cast.hpp"
 
 #include <sys/stat.h>
 #include <sys/types.h>

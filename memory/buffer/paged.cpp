@@ -20,7 +20,7 @@
 #include "../../except.hpp"
 #include "../../maths.hpp"
 #include "../../pointer.hpp"
-#include "../../types/casts.hpp"
+#include "../../cast.hpp"
 
 #include <sys/mman.h>
 

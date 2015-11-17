@@ -19,7 +19,7 @@
 #include "debug.hpp"
 #include "except.hpp"
 #include "platform.hpp"
-#include "types/casts.hpp"
+#include "cast.hpp"
 
 #include <cstdio>
 #include <fcntl.h>

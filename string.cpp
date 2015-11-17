@@ -18,7 +18,7 @@
 
 #include <cstring>
 
-#include "types/casts.hpp"
+#include "cast.hpp"
 
 // TODO: Horribly inefficient, but God help you if you're relying on this
 // being efficient in the first place.

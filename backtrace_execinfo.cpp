@@ -20,7 +20,7 @@
 #include "./debug.hpp"
 #include "./exe.hpp"
 #include "./io.hpp"
-#include "types/casts.hpp"
+#include "cast.hpp"
 
 #include <sstream>
 #include <iomanip>

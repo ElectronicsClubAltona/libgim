@@ -18,7 +18,7 @@
 #include "region.hpp"
 
 #include "debug.hpp"
-#include "types/casts.hpp"
+#include "cast.hpp"
 
 #include <cmath>
 #include <type_traits>

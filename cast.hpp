@@ -14,10 +14,10 @@
  * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_TYPES_CASTS_HPP
-#define __UTIL_TYPES_CASTS_HPP
+#ifndef __UTIL_CAST_HPP
+#define __UTIL_CAST_HPP
 
-#include "../debug.hpp"
+#include "./debug.hpp"
 
 #include <type_traits>
 #include <limits>

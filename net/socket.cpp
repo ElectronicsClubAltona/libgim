@@ -18,7 +18,7 @@
 
 #include "../debug.hpp"
 #include "../except.hpp"
-#include "../types/casts.hpp"
+#include "../cast.hpp"
 #include "../log.hpp"
 #include "except.hpp"
 

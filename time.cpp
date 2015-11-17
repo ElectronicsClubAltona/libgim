@@ -19,7 +19,7 @@
 #include "debug.hpp"
 #include "log.hpp"
 #include "platform.hpp"
-#include "types/casts.hpp"
+#include "cast.hpp"
 
 
 using namespace util;

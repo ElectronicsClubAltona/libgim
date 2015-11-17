@@ -17,7 +17,7 @@
 #include "./system.hpp"
 
 #include "../except.hpp"
-#include "../types/casts.hpp"
+#include "../cast.hpp"
 
 #include <unistd.h>
 

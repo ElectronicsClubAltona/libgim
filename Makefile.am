@@ -33,6 +33,7 @@ UTIL_FILES   =			\
     bezier.hpp			\
     bitwise.cpp			\
     bitwise.hpp			\
+    cast.hpp			\
     cmdopt.cpp			\
     cmdopt.hpp			\
     cmdopt.ipp			\
@@ -297,7 +298,6 @@ UTIL_FILES   =			\
     tuple.cpp			\
     tuple.hpp			\
     types/bits.hpp		\
-    types/casts.hpp		\
     types/comparator.hpp	\
     types/comparator.ipp	\
     types.hpp			\

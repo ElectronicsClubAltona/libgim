@@ -20,7 +20,7 @@
 
 #include "ip.hpp"
 
-#include "types/casts.hpp"
+#include "cast.hpp"
 
 #include <stdexcept>
 #include <iostream>

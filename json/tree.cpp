@@ -23,7 +23,7 @@
 #include "debug.hpp"
 #include "io.hpp"
 #include "maths.hpp"
-#include "types/casts.hpp"
+#include "cast.hpp"
 
 #include <algorithm>
 #include <cstdlib>
