@@ -71,9 +71,17 @@ sign_cast (const U u)
 /// assert if the value cannot be cast loslessly from U to T, else return the
 /// converted value.Note: this is only a debug-time check and is compiled out
 /// in optimised builds.
-
-template <typename T, typename U>
-T
+template <
+    typename T,
+    typename U
+>
+std::enable_if_t<
+    // either we're casting from real to integer
+    !std::is_floating_point<T>::value && std::is_floating_point<U>::value
+    // or we're reducing the size of the type
+    || sizeof (T) < sizeof (U),
+    T
+>
 trunc_cast (U u)
 {
     auto t = static_cast<T> (u);
