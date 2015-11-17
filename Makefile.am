@@ -179,6 +179,8 @@ UTIL_FILES   =			\
     memory/buffer/circular.hpp	\
     memory/buffer/paged.cpp	\
     memory/buffer/paged.hpp	\
+    memory/deleter.cpp		\
+    memory/deleter.hpp		\
     memory/system.cpp		\
     memory/system.hpp		\
     net/address.cpp		\
