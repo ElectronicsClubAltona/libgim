@@ -445,6 +445,7 @@ TEST_BIN = 			\
     test/sha2			\
     test/signal			\
     test/stringid		\
+    test/strongdef		\
     test/tuple			\
     test/uri			\
     test/vector			\
