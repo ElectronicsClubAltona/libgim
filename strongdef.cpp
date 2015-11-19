@@ -23,4 +23,4 @@ using util::strongdef;
 // This instantiation is not meant to be exported, only being used as a local
 // compilation error canary.
 
-template struct util::strongdef<unsigned>;
+template struct util::strongdef<unsigned,void>;

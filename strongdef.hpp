@@ -22,7 +22,7 @@
 namespace util {
     /// A transparent wrapper around a (typically lightweight) type for the
     /// purposes of overload disambiguation. It acts like a typesafe typedef.
-    template <typename T>
+    template <typename T,typename Tag>
     struct strongdef {
     public:
         using value_type = T;
@@ -45,9 +45,9 @@ namespace util {
 
 
 namespace std {
-    template <typename T>
-    struct numeric_limits<util::strongdef<T>> {
-        using value_type = typename util::strongdef<T>::value_type;
+    template <typename T, typename Tag>
+    struct numeric_limits<util::strongdef<T,Tag>> {
+        using value_type = typename util::strongdef<T,Tag>::value_type;
 
         static constexpr bool is_specialized =                  numeric_limits<value_type>::is_specialized;
         static constexpr bool is_signed =                       numeric_limits<value_type>::is_signed;
