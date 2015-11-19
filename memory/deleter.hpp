@@ -21,8 +21,6 @@ namespace util { namespace memory {
     template <typename T, typename U, void (U::*F)(T*)>
     class object_deleter {
     public:
-        static_assert (F != nullptr, "destroy function must be non-null");
-
         object_deleter (U &owner):
             m_owner (owner)
         { ; }
