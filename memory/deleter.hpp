@@ -19,9 +19,9 @@
 
 namespace util { namespace memory {
     template <typename T, typename U, void (U::*F)(T*)>
-    class object_deleter {
+    class owner_deleter {
     public:
-        object_deleter (U &owner):
+        owner_deleter (U &owner):
             m_owner (owner)
         { ; }
 

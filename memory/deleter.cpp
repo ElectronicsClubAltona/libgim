@@ -16,7 +16,7 @@
 
 #include "./deleter.hpp"
 
-using util::memory::object_deleter;
+using util::memory::owner_deleter;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,4 +29,4 @@ class owner {
 };
 
 
-template class util::memory::object_deleter<void,owner,&owner::dealloc>;
+template class util::memory::owner_deleter<void,owner,&owner::dealloc>;
