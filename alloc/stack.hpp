@@ -22,6 +22,8 @@
 
 
 namespace util { namespace alloc {
+    // allocate memory from a buffer in a stacklike manner. deallocation that
+    // is not correctly ordered has undefined (read 'bad') results.
     class stack {
     public:
         stack (const stack&) = delete;

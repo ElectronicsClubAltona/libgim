@@ -21,6 +21,8 @@
 
 
 namespace util { namespace alloc {
+    // allocate progressively across a buffer without concern for deallocation.
+    // deallocation is a noop; the only way to free allocations is via reset.
     class linear {
     public:
         linear (const linear&) = delete;
