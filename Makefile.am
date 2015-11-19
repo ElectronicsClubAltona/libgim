@@ -428,6 +428,7 @@ TEST_BIN = 			\
     test/json_types		\
     test/memory/buffer/circular \
     test/memory/buffer/paged	\
+    test/memory/deleter		\
     test/maths			\
     test/matrix			\
     test/md2			\
