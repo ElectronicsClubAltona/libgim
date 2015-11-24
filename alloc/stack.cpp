@@ -99,3 +99,27 @@ stack::reset (void)
 {
     m_cursor = m_begin;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+size_t
+stack::capacity (void) const
+{
+    return m_end - m_begin;
+}
+
+
+//-----------------------------------------------------------------------------
+size_t
+stack::size (void) const
+{
+    return m_cursor - m_begin;
+}
+
+
+//-----------------------------------------------------------------------------
+size_t
+stack::remain (void) const
+{
+    return capacity () - size ();
+}
