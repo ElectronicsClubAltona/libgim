@@ -39,6 +39,7 @@ namespace util { namespace alloc {
 
         size_t capacity (void) const;
         size_t size     (void) const;
+        size_t remain   (void) const;
 
     protected:
         char *m_begin, *m_end, *m_cursor;

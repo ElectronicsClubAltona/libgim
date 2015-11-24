@@ -61,3 +61,27 @@ linear::reset (void)
 {
     m_cursor = m_begin;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+size_t
+linear::capacity (void) const
+{
+    return m_end - m_begin;
+}
+
+
+//-----------------------------------------------------------------------------
+size_t
+linear::size (void) const
+{
+    return m_cursor - m_begin;
+}
+
+
+//-----------------------------------------------------------------------------
+size_t
+linear::remain (void) const
+{
+    return capacity () - size ();
+}
