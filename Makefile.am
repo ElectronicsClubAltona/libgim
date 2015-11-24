@@ -398,6 +398,7 @@ AM_LDFLAGS  += $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB)
 AM_CXXFLAGS += -I$(top_srcdir)
 
 TEST_BIN = 			\
+    test/alloc/arena		\
     test/alloc/stack		\
     test/alloc/linear		\
     test/backtrace 		\
