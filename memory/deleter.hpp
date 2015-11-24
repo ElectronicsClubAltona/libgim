@@ -17,7 +17,31 @@
 #ifndef __UTIL_MEMORY_DELETER_HPP
 #define __UTIL_MEMORY_DELETER_HPP
 
+#include <functional>
+
 namespace util { namespace memory {
+    template <typename T>
+    class func_deleter {
+    public:
+        using func_t = std::function<void(T*)>;
+
+        func_deleter (func_t _func):
+            m_func (_func)
+        { ; }
+
+        inline void operator() (T *t)
+        { m_func (t); }
+
+    private:
+        func_t m_func;
+    };
+
+
+    // dispatch object deletion to a known member function.
+    //
+    // XXX: Generates a "sorry, unimplemented" under GCC (which is
+    // effectively an ICE). Their bug tracker seems to indicate they don't
+    // give a fuck, so we can't use this except under clang.
     template <typename T, typename U, void (U::*F)(T*)>
     class owner_deleter {
     public:
@@ -25,7 +49,7 @@ namespace util { namespace memory {
             m_owner (owner)
         { ; }
 
-        void operator() (T *t)
+        inline void operator() (T *t)
         {
             (m_owner.*F) (t);
         }
