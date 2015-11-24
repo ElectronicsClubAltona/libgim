@@ -18,6 +18,8 @@
 #define __UTIL_ALLOC_ARENA_HPP
 
 #include <memory>
+#include "../memory/deleter.hpp"
+
 
 namespace util { namespace alloc {
     template <class T>
@@ -25,20 +27,44 @@ namespace util { namespace alloc {
     public:
         arena (T &store);
 
+        //---------------------------------------------------------------------
+        template <typename U, typename ...Args>
+        U*
+        acquire (Args&&...);
+
+        //---------------------------------------------------------------------
         template <typename U>
-        U* acquire (void);
+        void
+        release (U*);
+
+        //---------------------------------------------------------------------
+        template <typename U>
+        using deleter_t = util::memory::owner_deleter<
+            U,arena<T>,&arena::release
+        >;
 
         template <typename U>
-        std::unique_ptr<U> unique (void);
+        using unique_t = std::unique_ptr<U,deleter_t<U>>;
 
-        template <typename U>
-        void release (U*);
+        // the return type must be auto and the implementation must be inline
+        // otherwise we trigger an internal compiler error in gcc-5.2.0
+        // "sorry, unimplemented: mangling offset_ref"
+        template <typename U, typename ...Args>
+        auto
+        unique (Args&& ...args)
+        {
+            return unique_t<U> {
+                acquire<U> (std::forward<Args> (args)...),
+                deleter_t<U> (*this)
+            };
+        }
+
 
     private:
         T &m_store;
     };
 } }
 
-#include "./arena.hpp"
+#include "./arena.ipp"
 
 #endif

@@ -34,24 +34,18 @@ template <typename U, typename ...Args>
 U*
 util::alloc::arena<T>::acquire (Args&& ...args)
 {
-    U *data = m_store.allocate (sizeof (U), alignof (U));
+    U *data = reinterpret_cast<U*> (
+        m_store.allocate (sizeof (U), alignof (U))
+    );
     
     try {
-        new (data) U (std::forward (args)...);
+        new (data) U (std::forward<Args> (args)...);
     } catch (...) {
         m_store.deallocate (data, sizeof (U));
         throw;
     }
-}
 
-
-//-----------------------------------------------------------------------------
-template <class T>
-template <typename U, typename ...Args>
-std::unique_ptr<U>
-util::alloc::arena<T>::unique (Args&& ...args)
-{
-    return std::unique_ptr<U> (acquire (std::forward (args)...));
+    return data;
 }
 
 
@@ -62,7 +56,7 @@ void
 util::alloc::arena<T>::release (U *u)
 {
     u->~U ();
-    m_store.deallocate (u);
+    m_store.deallocate (reinterpret_cast<void*> (u), sizeof (U));
 }
 
 
