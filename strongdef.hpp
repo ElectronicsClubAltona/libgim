@@ -27,13 +27,33 @@ namespace util {
     struct strongdef {
     public:
         using value_type = T;
+        using tag_type   = Tag;
 
         constexpr strongdef () = default;
         constexpr explicit strongdef (const T &_data): data (_data)    { ; }
         constexpr strongdef (const strongdef &rhs):    data (rhs.data) { ; }
 
-        strongdef& operator= (const strongdef &rhs) { data = rhs.data; return *this; }
-        strongdef& operator= (const T &rhs)         { data = rhs;      return *this; }
+        // explicitly disable assignment with unequal types or tags. this
+        // prevents the converion operator getting invoked and falsely
+        // allowing assignment with differing types or tags.
+        template <typename U, typename TagU>
+        std::enable_if_t<
+            !std::is_same<T,U>::value || !std::is_same<Tag,TagU>::value,
+            strongdef<T,Tag>&
+        >
+        operator= (const strongdef<U,TagU> &rhs) = delete;
+
+        template <typename U, typename TagU>
+        std::enable_if_t<
+            std::is_same<T,U>::value && std::is_same<Tag,TagU>::value,
+            strongdef<T,Tag>&
+        >
+        operator= (const strongdef<U,TagU> &rhs)
+        { data = rhs.data; return *this; }
+
+        // simple value_type assignment.
+        strongdef& operator= (const T &rhs)
+        { data = rhs; return *this; }
 
         // conversion operators must not be explicit or it defeats the point
         // of this class (ease of use, transparency).
@@ -42,7 +62,7 @@ namespace util {
 
         // explicitly disable equality with unequal types or tags. this
         // prevents the conversion operator getting invoked and falsely
-        // allowing equality with different tags.
+        // allowing equality with different types or tags.
         template <typename U, typename TagU>
         std::enable_if_t<!std::is_same<T,U>::value || !std::is_same<Tag,TagU>::value,bool>
         operator== (const strongdef<U,TagU> &rhs) = delete;
