@@ -30,6 +30,7 @@ const uint8_t BITMASK_6BITS = 0x3F;
 const uint8_t BITMASK_7BITS = 0x7F;
 const uint8_t BITMASK_8BITS = 0xFF;
 
+///////////////////////////////////////////////////////////////////////////////
 #define MODT(x) ((x) % (sizeof (T) * 8))
 
 template <typename T>
@@ -49,6 +50,8 @@ rotater (const T &value, size_t magnitude) {
 
 #undef MODT
 
+
+///////////////////////////////////////////////////////////////////////////////
 // TODO: make constexpr for C++14
 template <typename T>
 T
@@ -64,6 +67,15 @@ reverse (T value) {
 
     out <<= bits;
     return out;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+constexpr T
+popcount (std::enable_if_t<std::is_integral<T>::value,T> t)
+{
+    return __builtin_popcount (t);
 }
 
 #endif
