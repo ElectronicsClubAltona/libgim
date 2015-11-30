@@ -15,6 +15,7 @@ UTIL_FILES   =			\
     alloc/affix.hpp		\
     alloc/allocator.cpp		\
     alloc/allocator.hpp		\
+    alloc/allocator.ipp		\
     alloc/arena.cpp		\
     alloc/arena.hpp		\
     alloc/arena.ipp		\
@@ -56,6 +57,7 @@ UTIL_FILES   =			\
     crypto/xxtea.hpp		\
     debug.cpp   		\
     debug.hpp   		\
+    debug.ipp   		\
     endian.cpp			\
     endian.hpp			\
     except.cpp  		\
