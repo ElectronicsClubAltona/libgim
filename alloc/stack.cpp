@@ -111,7 +111,7 @@ stack::capacity (void) const
 
 //-----------------------------------------------------------------------------
 size_t
-stack::size (void) const
+stack::used (void) const
 {
     return m_cursor - m_begin;
 }
@@ -121,5 +121,5 @@ stack::size (void) const
 size_t
 stack::remain (void) const
 {
-    return capacity () - size ();
+    return capacity () - used ();
 }

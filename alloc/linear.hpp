@@ -38,7 +38,7 @@ namespace util { namespace alloc {
         void reset (void);
 
         size_t capacity (void) const;
-        size_t size     (void) const;
+        size_t used     (void) const;
         size_t remain   (void) const;
 
     protected:

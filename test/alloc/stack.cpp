@@ -34,6 +34,8 @@ main (void)
 
     util::alloc::stack store (memory, memory + BUFFER_AVAILABLE);
 
+    tap.expect_eq (store.capacity (), BUFFER_AVAILABLE, "bytes capacity matches");
+
     // larger than total allocations should throw
     tap.expect_throw<std::bad_alloc> (
         [&store] (void) { store.allocate (BUFFER_AVAILABLE + 1, 1); },
@@ -56,6 +58,11 @@ main (void)
         [&store] (void) { store.allocate (BUFFER_REQUEST); },
         "bad_alloc thrown on exhaustion"
     );
+
+    // check byte counts are plausible. stacks use some extra memory for book
+    // keeping, so we need to use relational comparison rather than equality.
+    tap.expect_ge (store.used (), BUFFER_REQUEST, "bytes used matches");
+    tap.expect_le (store.remain (), BUFFER_AVAILABLE - BUFFER_REQUEST, "bytes remain matches");
     
     // try many allocations again after resetting the allocator to zero usage
     store.reset ();

@@ -73,7 +73,7 @@ linear::capacity (void) const
 
 //-----------------------------------------------------------------------------
 size_t
-linear::size (void) const
+linear::used (void) const
 {
     return m_cursor - m_begin;
 }
@@ -83,5 +83,5 @@ linear::size (void) const
 size_t
 linear::remain (void) const
 {
-    return capacity () - size ();
+    return capacity () - used ();
 }
