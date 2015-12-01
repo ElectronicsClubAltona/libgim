@@ -307,14 +307,14 @@ matrix<S,T>::ortho2D (T left, T right,
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 matrix4<T>
-matrix<S,T>::perspective (T fov, T aspect, T near, T far)
+matrix<S,T>::perspective (T fov, T aspect, range<T> Z)
 {
     T f = std::tan (fov / 2);
 
     T tx = 1 / (f * aspect);
     T ty = 1 / f;
-    T z1 =     (far + near) / (near - far);
-    T z2 = (2 * far * near) / (near - far);
+    T z1 =     (Z.max + Z.min) / (Z.min - Z.max);
+    T z2 = (2 * Z.max * Z.min) / (Z.min - Z.max);
 
     return { {
         { tx,  0,  0,  0 },

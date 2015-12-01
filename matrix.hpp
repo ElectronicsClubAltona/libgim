@@ -18,6 +18,7 @@
 #define __UTIL_MATRIX_HPP
 
 #include "point.hpp"
+#include "range.hpp"
 
 #include <iostream>
 
@@ -65,7 +66,7 @@ namespace util {
         // Perspective matrices
         static matrix<4,T> ortho   (T left, T right, T bottom, T top, T near, T far);
         static matrix<4,T> ortho2D (T left, T right, T bottom, T top);
-        static matrix<4,T> perspective (T fov, T aspect, T near, T far);
+        static matrix<4,T> perspective (T fov, T aspect, range<T> Z);
         static matrix<4,T> look_at (point<3,T> eye, point<3,T> centre, vector<3,T> up);
 
         // Affine matrices
