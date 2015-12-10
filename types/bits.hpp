@@ -18,12 +18,13 @@
 #define __UTIL_TYPES_BITS_HPP
 
 #include <cstdint>
+#include <cstddef>
 
-template <int BITS>
+template <size_t BITS>
 struct bits_type;
 
 
-template <> struct bits_type< 8> {
+template <> struct bits_type< 8u> {
     static const bool has_floating = false;
 
     typedef    uint8_t uint;
@@ -32,7 +33,7 @@ template <> struct bits_type< 8> {
 };
 
 
-template <> struct bits_type<16> {
+template <> struct bits_type<16u> {
     static const bool has_floating = false;
 
     typedef   uint16_t uint;
@@ -41,7 +42,7 @@ template <> struct bits_type<16> {
 };
 
 
-template <> struct bits_type<32> {
+template <> struct bits_type<32u> {
     static const bool has_floating = true;
 
     typedef uint32_t uint;
@@ -50,7 +51,7 @@ template <> struct bits_type<32> {
 };
 
 
-template <> struct bits_type<64> {
+template <> struct bits_type<64u> {
     static const bool has_floating = true;
 
     typedef uint64_t uint;
@@ -60,7 +61,7 @@ template <> struct bits_type<64> {
 
 
 template <typename T>
-struct sized_type : public bits_type<sizeof(T) * 8>
+struct sized_type : public bits_type<sizeof(T) * 8u>
 { };
 
 #endif
