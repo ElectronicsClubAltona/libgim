@@ -60,6 +60,11 @@ template <> struct bits_type<64u> {
 };
 
 
+template <size_t BYTES>
+struct bytes_type : public bits_type<BYTES * 8u>
+{ };
+
+
 template <typename T>
 struct sized_type : public bits_type<sizeof(T) * 8u>
 { };
