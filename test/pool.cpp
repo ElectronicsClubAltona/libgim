@@ -1,53 +1,56 @@
-
-#include "debug.hpp"
 #include "pool.hpp"
+
 #include "tap.hpp"
 
 #include <set>
 #include <vector>
 #include <algorithm>
 
-using namespace std;
-using namespace util;
 
+//-----------------------------------------------------------------------------
 void
-check_single (void) {
+check_single (util::TAP::logger &tap)
+{
     // Ensure a single element doesn't break the circular linked list
-    pool<uint64_t> single(1);
-    single.release (single.acquire ());
+    util::pool<uint64_t> single(1);
+    tap.expect_nothrow ([&] {
+        single.release (single.acquire ());
+    }, "single element acquire-release");
 }
 
 
+//-----------------------------------------------------------------------------
 void
-check_unique_ptr (void) {
-    pool<uint64_t> uintpool (1025);
-    set<uint64_t *> uintset;
+check_unique_ptr (util::TAP::logger &tap)
+{
+    util::pool<uint64_t> uintpool (1025);
+    std::set<uint64_t *> uintset;
 
     // Take all pointers out, checking they are unique, then replace for destruction.
-    for (unsigned int i = 0; i < uintpool.capacity (); ++i) {
-        bool success = uintset.insert (uintpool.acquire ()).second;
-        CHECK (success);
-    }
+    while (!uintpool.empty ())
+        uintset.insert (uintpool.acquire ());
 
-    for (auto i = uintset.begin (); i != uintset.end (); ++i)
-        uintpool.release (*i);
+    tap.expect_eq (uintset.size (), uintpool.capacity (), "extracted maximum elements");
+
+    for (auto i: uintset)
+        uintpool.release (i);
+
+    tap.expect_eq (uintset.size (), uintpool.remain (), "re-inserted maximum elements");
     uintset.clear ();
 
     // Do the above one more time to ensure that releasing works right
-    for (unsigned int i = 0; i < uintpool.capacity (); ++i) {
-        bool success = uintset.insert (uintpool.acquire ()).second;
-        CHECK (success);
-    }
-
-    for (auto i = uintset.begin (); i != uintset.end (); ++i)
-        uintpool.release (*i);
+    while (!uintpool.empty ())
+        uintset.insert (uintpool.acquire ());
+    tap.expect_eq (uintset.size (), uintpool.capacity (), "re-extracted maximum elements");
 }
 
 
+//-----------------------------------------------------------------------------
 void
-check_keep_value (void) {
+check_keep_value (util::TAP::logger &tap)
+{
     // Ensure that items keep their values.
-    pool<uint64_t> uintpool(256);
+    util::pool<uint64_t> uintpool(256);
     std::vector<uint64_t*> uintvector;
     uintvector.reserve(uintpool.capacity ());
 
@@ -58,10 +61,11 @@ check_keep_value (void) {
 
         uintvector.push_back(item);
     }
+
     CHECK_EQ (uintvector.size (), uintpool.capacity ());
 
     // Ensure they're all still present
-    vector<bool> present(uintpool.capacity (), false);
+    std::vector<bool> present(uintpool.capacity (), false);
     for (auto i = uintvector.begin (); i != uintvector.end (); ++i) {
         CHECK (**i < uintpool.capacity ());
         CHECK (present[**i] != true);
@@ -70,21 +74,24 @@ check_keep_value (void) {
     }
 
     // All must have been marked as present...
-    CHECK (find (present.begin (), present.end (), false) == present.end ());
+    tap.expect (std::find (present.begin (), present.end (), false) == present.end (), "values retained");
 
     // Release all back into the pool for destruction
-    for (auto i = uintvector.begin (); i != uintvector.end (); ++i)
-        uintpool.release (*i);
-    uintvector.clear ();
+    //for (auto i = uintvector.begin (); i != uintvector.end (); ++i)
+    //    uintpool.release (*i);
+    //uintvector.clear ();
 }
 
 
+//-----------------------------------------------------------------------------
 int
-main (int, char **) {
-    check_single ();
-    check_unique_ptr ();
-    check_keep_value ();
-
+main (int, char **)
+{
     util::TAP::logger tap;
-    tap.skip ("convert to TAP");
+
+    check_single (tap);
+    check_unique_ptr (tap);
+    check_keep_value (tap);
+
+    return tap.status ();
 }

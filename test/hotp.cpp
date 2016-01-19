@@ -24,9 +24,11 @@ main (int, char**)
         520489,
     };
 
-    for (size_t i = 0; i < elems (EXPECTED); ++i)
-        CHECK_EQ (EXPECTED[i], h.value ());
-
+    
     util::TAP::logger tap;
-    tap.todo ("convert to TAP");
+
+    for (auto &i: EXPECTED)
+        tap.expect_eq (i, h.value (), "sequence");
+
+    return tap.status ();
 }

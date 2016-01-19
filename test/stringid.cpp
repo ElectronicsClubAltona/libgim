@@ -8,19 +8,20 @@
 
 int
 main (int, char**) {
+    util::TAP::logger tap;
+
     util::stringid map;
 
-    CHECK_THROWS (std::out_of_range, map.find ("invalid"));
+    tap.expect_throw<std::out_of_range> ([&] { map.find ("invalid"); }, "find on empty set throws");
 
     auto id1 = map.add ("first");
-    CHECK_EQ (id1, map.find ("first"));
+    tap.expect_eq (id1, map.find ("first"), "single entity ID matches");
 
-    CHECK_THROWS (std::out_of_range, map.find ("invalid"));
+    tap.expect_throw<std::out_of_range> ([&] { map.find ("invalid"); }, "invalid find throws");
 
     auto id2 = map.add ("second");
-    CHECK_EQ (id1 + 1, id2);
-    CHECK_EQ (id1, map.find ("first"));
+    tap.expect_eq (id1 + 1, id2, "monotonically increasing IDs");
+    tap.expect_eq (id1, map.find ("first"), "first element still matches");
 
-    util::TAP::logger tap;
-    tap.skip ("convert to TAP");
+    return tap.status ();
 }

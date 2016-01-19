@@ -271,17 +271,10 @@ static const struct {
 int
 main (int, char**)
 {
-    unsigned i = 0;
-    for (const auto &t: TESTS) {
-        std::cerr << i++ << ": " << t.key.size () << ", " << t.dat.size () << '\n';
-
-
-        if (!t.fun (t.key, t.dat, t.res))
-            return EXIT_FAILURE;
-    }
-
     util::TAP::logger tap;
-    tap.todo ("convert to TAP");
 
-    return EXIT_SUCCESS;
+    for (size_t i = 0; i < elems (TESTS); ++i)
+        tap.expect (TESTS[i].fun (TESTS[i].key, TESTS[i].dat, TESTS[i].res), "standard test vector");
+
+    return tap.status ();
 }

@@ -12,7 +12,8 @@ using namespace std;
 
 // TODO: Use a more robust test like Chi-Square
 void
-test_bool (void) {
+test_bool (util::TAP::logger &tap)
+{
     static const unsigned ITERATIONS = 8192;
     static const unsigned THRESHOLD  = ITERATIONS / 10;
 
@@ -24,13 +25,14 @@ test_bool (void) {
                     counts[0] - counts[1] :
                     counts[1] - counts[0];
 
-    CHECK_LT (diff, THRESHOLD);
+    tap.expect_lt (diff, THRESHOLD, "approximately even bool distribution");
 }
 
 
 // TODO: Use a more robust test like Kolmogorov-Smirnov
 void
-test_float (void) {
+test_float (util::TAP::logger &tap)
+{
     static const unsigned BUCKETS    =    8;
     static const unsigned ITERATIONS = 8912;
     static const unsigned EXPECTED   = ITERATIONS / BUCKETS;
@@ -40,22 +42,27 @@ test_float (void) {
     for (unsigned i = 0; i < ITERATIONS; ++i)
         ++counts[unsigned (util::random<float> () * BUCKETS)];
 
+    bool success = true;
     for (unsigned c: counts) {
         unsigned diff = EXPECTED > c ?
                         EXPECTED - c :
                         c - EXPECTED;
 
-        CHECK_LT (diff, THRESHOLD);
+        success = success && diff < THRESHOLD;
     }
+
+    tap.expect (success, "approximately equal float buckets");
 }
 
 
 int
 main (int, char **) {
-    srand (time (NULL));
-    test_bool ();
-    test_float ();
-
     util::TAP::logger tap;
-    tap.skip ("convert to TAP");
+
+    srand (time (NULL));
+
+    test_bool (tap);
+    test_float (tap);
+
+    return tap.status ();
 }

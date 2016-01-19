@@ -217,7 +217,6 @@ test_required (util::TAP::logger &tap)
 int
 main (int, char **) {
     util::TAP::logger tap;
-    tap.todo ("convert to TAP");
 
     test_null (tap);
     test_present (tap);
@@ -230,4 +229,6 @@ main (int, char **) {
     test_numeric<uint64_t> (tap);
     test_bytes (tap);
     test_required (tap);
+
+    return tap.status ();
 }

@@ -8,25 +8,55 @@
 
 #include <cstdlib>
 
-using namespace std;
 
-
-int
-main (int, char **) {
-    struct ip_test {
-        const char     *str;
-        const ipv4::ip  ip;
-    } data [] = {
-        {         "0.0.0.0", {   0,   0,   0,   0 } },
-        { "255.255.255.255", { 255, 255, 255, 255 } },
-        {       "127.0.0.1", { 127,   0,   0,   1 } }
+//-----------------------------------------------------------------------------
+static void
+test_good (util::TAP::logger &tap)
+{
+    static const struct {
+        const char  *str;
+        ipv4::ip ip;
+        const char *msg;
+    } TESTS[] = {
+        {         "0.0.0.0", {   0,   0,   0,   0 }, "null" },
+        { "255.255.255.255", { 255, 255, 255, 255 }, "full" },
+        {       "127.0.0.1", { 127,   0,   0,   1 }, "localhost" }
     };
 
-    for (unsigned int i = 0; i < elems (data); ++i) {
-        ipv4::ip parsed (ipv4::ip::parse (data[i].str));
-        CHECK (parsed == data[i].ip);
+    for (const auto &i: TESTS) {
+        ipv4::ip parsed (ipv4::ip::parse (i.str));
+        tap.expect_eq (parsed, i.ip, i.msg);
     }
+}
 
+
+//-----------------------------------------------------------------------------
+static void
+test_bad (util::TAP::logger &tap)
+{
+    static const struct {
+        const char *str;
+        const char *msg;
+    } TESTS[] = {
+        { "::1", "ipv6" },
+        { "foo", "alpha" },
+        { "", "empty" },
+        { "256.0.0.1", "overflow" }
+    };
+
+    for (const auto &i: TESTS) {
+        tap.expect_throw<ipv4::error> ([&] { ipv4::ip::parse (i.str); }, i.msg);
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+int
+main (int, char **) {
     util::TAP::logger tap;
-    tap.todo ("convert to TAP");
+
+    test_good (tap);
+    test_bad (tap);
+
+    return tap.status ();
 }

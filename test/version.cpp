@@ -1,53 +1,43 @@
 #include "version.hpp"
 
-#include "debug.hpp"
 #include "tap.hpp"
 
-#include <string>
-#include <vector>
-#include <cstdlib>
+static const struct {
+    const char *msg;
+    const char *str;
+    unsigned parts[4];
+    util::version::release_t release;
 
-using namespace std;
-using namespace util;
+} TESTS[] = {
+    { "1-component",        "1",          { 1u             }, util::version::PRODUCTION },
 
+    { "2-component",        "1.2",        { 1u, 2u         }, util::version::PRODUCTION },
+    { "3-component",        "1.2.3",      { 1u, 2u, 3u     }, util::version::PRODUCTION },
+    { "4-component",        "1.2.3.4",    { 1u, 2u, 3u, 4u }, util::version::PRODUCTION },
 
-struct parsed_version {
-    string                str;
-    vector <unsigned int> parts;
+    { "2-component alpha",  "9.5a",       { 9u, 5u         }, util::version::ALPHA },
+    { "3-component beta",   "8.2.5b",     { 8u, 2u, 5u     }, util::version::BETA },
+
+    /*
+    { "1.4.1-p8",   { 1, 4, 1    } },
+    { "4.2.0-r4",   { 4, 2, 0    } },
+
+    { "1.4 RC1",    { 1, 4       } }
+    */
 };
 
-
+//-----------------------------------------------------------------------------
 int
 main () {
-    vector <parsed_version> tests ({
-        { "1",          { 1          } },
-
-        { "1.2",        { 1, 2       } },
-        { "1.2.3",      { 1, 2, 3    } },
-        { "1.2.3.4",    { 1, 2, 3, 4 } },
-
-        { "9.5a",       { 9, 5       } },
-        { "8.2.5b",     { 8, 2, 5    } },
-
-        /*
-        { "1.4.1-p8",   { 1, 4, 1    } },
-        { "4.2.0-r4",   { 4, 2, 0    } },
-
-        { "1.4 RC1",    { 1, 4       } }
-        */
-    });
-
-    for (auto i = tests.begin (); i != tests.end (); ++i) {
-        version v (i->str);
-
-        if (i->parts.size () > 0) CHECK (v.major () == i->parts[0]);
-        if (i->parts.size () > 1) CHECK (v.minor () == i->parts[1]);
-        if (i->parts.size () > 2) CHECK (v.point () == i->parts[2]);
-        if (i->parts.size () > 3) CHECK (v.build () == i->parts[3]);
-
-        CHECK_LE (i->parts.size (), 4);
-    }
 
     util::TAP::logger tap;
-    tap.skip ("convert to TAP");
+
+    for (const auto &i: TESTS) {
+        util::version v (i.str);
+
+        tap.expect (std::equal (v.begin (), v.end (), i.parts) && v.release == i.release,
+                    i.msg);
+    }
+
+    return tap.status ();
 }

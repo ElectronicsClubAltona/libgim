@@ -10,32 +10,40 @@
 #include <iostream>
 
 
-using util::hash::SHA1;
-
-
 int
-main (int, char**) {
+main (int, char**)
+{
+    util::TAP::logger tap;
+
     static const struct {
+        const char *msg;
         const char *input;
-        SHA1::digest_t output;
+        util::hash::SHA1::digest_t output;
     } TESTS[] = {
-        { "",
+        {
+          "empty string",
+          "",
           { { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55,
               0xbf, 0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09  } }
         },
 
         {
+          "single a",
           "a",
           { { 0x86, 0xf7, 0xe4, 0x37, 0xfa, 0xa5, 0xa7, 0xfc, 0xe1, 0x5d,
               0x1d, 0xdc, 0xb9, 0xea, 0xea, 0xea, 0x37, 0x76, 0x67, 0xb8  } }
         },
 
-        { "abc",
+        {
+          "abc",
+          "abc",
           { { 0xA9, 0x99, 0x3E, 0x36, 0x47, 0x06, 0x81, 0x6A, 0xBA, 0x3E,
               0x25, 0x71, 0x78, 0x50, 0xC2, 0x6C, 0x9C, 0xD0, 0xD8, 0x9D  } }
         },
 
-        { "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+        {
+          "abc...opq",
+          "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
           { { 0x84, 0x98, 0x3E, 0x44, 0x1C, 0x3B, 0xD2, 0x6E, 0xBA, 0xAE,
               0x4A, 0xA1, 0xF9, 0x51, 0x29, 0xE5, 0xE5, 0x46, 0x70, 0xF1  } }
         },
@@ -53,22 +61,13 @@ main (int, char**) {
         //}
     };
 
-    for (auto i: TESTS) {
+    for (const auto &i: TESTS) {
         util::hash::SHA1 obj;
         obj.update (reinterpret_cast<const uint8_t*> (i.input), strlen (i.input));
         obj.finish ();
 
-        for (uint8_t c: obj.digest ()) {
-            unsigned hi = c >> 4u;
-            unsigned lo = c & 0xF;
-
-            std::cout << std::hex << hi << lo << " ";
-        }
-        std::cout << "\n";
-
-        CHECK (obj.digest () == i.output);
+        tap.expect_eq (obj.digest (), i.output, i.msg);
     }
 
-    util::TAP::logger tap;
-    tap.skip ("convert to TAP");
+    return tap.status ();
 }

@@ -10,7 +10,8 @@ using namespace std;
 
 
 void
-test_double (void) {
+test_double (util::TAP::logger &tap)
+{
     struct sized_test {
         ieee_double::uint_t bits;
         double              floating;
@@ -32,16 +33,22 @@ test_double (void) {
         { 0x3fd5555555555555,  1.0 / 3.0 }
     };
 
+    bool success = true;
+
     for (unsigned int i = 0; i < elems (tests); ++i) {
         ieee_double val;
         val.set_bits (tests[i].bits);
-        CHECK (val == tests[i].floating);
+
+        success = success && util::exactly_equal (val, tests[i].floating);
     }
+
+    tap.expect (success, "double precision bitwise equality");
 }
 
 
 void
-test_single (void) {
+test_single (util::TAP::logger &tap)
+{
     struct sized_test {
         ieee_single::uint_t bits;
         float               floating;
@@ -61,19 +68,25 @@ test_single (void) {
         { 0x3eaaaaab,  1.0f / 3.0f }
     };
 
+    bool success = true;
+
     for (unsigned int i = 0; i < elems (tests); ++i) {
         ieee_single val;
         val.set_bits (tests[i].bits);
-        CHECK (val == tests[i].floating);
+
+        success = success && util::exactly_equal (val, tests[i].floating);
     }
+
+    tap.expect (success, "single precision bitwise equality");
 }
 
 
 int
 main (int, char **) {
-    test_single ();
-    test_double ();
-
     util::TAP::logger tap;
-    tap.todo ("convert to TAP");
+
+    test_single (tap);
+    test_double (tap);
+
+    return tap.status ();
 }

@@ -1,13 +1,15 @@
 #include "region.hpp"
 
-#include "debug.hpp"
 #include "point.hpp"
 #include "tap.hpp"
 
-using namespace util;
 
+//-----------------------------------------------------------------------------
 int
-main (int, char **) {
+main (int, char **)
+{
+    util::TAP::logger tap;
+
     {
         util::point2d  ap { 32.7, -6.09703 };
         util::extent2d ae { 0.8, 2. };
@@ -15,32 +17,31 @@ main (int, char **) {
         util::point2d bp {33.5, -4.5};
         util::extent2d be { 0.5, 0.5 };
 
-         region2d a (ap, ae);
-         region2d b (bp, be);
+        util::region2d a (ap, ae);
+        util::region2d b (bp, be);
 
-         CHECK (!a.intersects (b));
+        tap.expect (!a.intersects (b), "simple 2d intersection");
     }
 
-    CHECK (region2d::MAX.intersects (region2d::UNIT));
-    CHECK (region2f::MAX.intersects (region2f::UNIT));
+    tap.expect (util::region2d::MAX.intersects (util::region2d::UNIT), "maximal region2d intersection");
+    tap.expect (util::region2f::MAX.intersects (util::region2f::UNIT), "maximal region2f intersection");
 
-    CHECK_EQ (region2d::UNIT.area (), 1.0);
-    CHECK_EQ (region2f::UNIT.area (), 1.0f);
+    tap.expect_eq (util::region2d::UNIT.area (), 1.0,  "unit region2d area");
+    tap.expect_eq (util::region2f::UNIT.area (), 1.0f, "unit region2f area");
 
     util::point2u p0 { 0 };
     util::extent2u e0 { 2 };
 
-    CHECK (region2u (p0, e0).includes (point2u {1, 1}));
-    CHECK (region2u (p0, e0).includes (point2u {0, 0}));
-    CHECK (region2u (p0, e0).includes (point2u {2, 2}));
+    tap.expect (util::region2u (p0, e0).includes (util::point2u {1, 1}), "unsigned region centre inclusion");
+    tap.expect (util::region2u (p0, e0).includes (util::point2u {0, 0}), "unsigned region base inclusion");
+    tap.expect (util::region2u (p0, e0).includes (util::point2u {2, 2}), "unsigned region corner inclusion");
 
-    CHECK ( region2u (p0, e0).contains (point2u {1, 1}));
-    CHECK (!region2u (p0, e0).contains (point2u {0, 0}));
-    CHECK (!region2u (p0, e0).contains (point2u {2, 2}));
+    tap.expect ( util::region2u (p0, e0).contains (util::point2u {1, 1}), "unsigned region center contains");
+    tap.expect (!util::region2u (p0, e0).contains (util::point2u {0, 0}), "unsigned region base contains");
+    tap.expect (!util::region2u (p0, e0).contains (util::point2u {2, 2}), "unsigned region corner contains");
 
     //CHECK (region<2,intmax_t> (0, 0, 10, 10).includes (point2d (0.4, 0.01)));
     //CHECK (region<2,intmax_t> (0, 0, 10, 10).contains (point2d (0.4, 0.01)));
 
-    util::TAP::logger tap;
-    tap.skip ("convert to TAP");
+    return tap.status ();
 }
