@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_IP_HPP
@@ -46,12 +46,15 @@ namespace ipv4 {
     };
 
 
-    typedef uint16_t port;
-    typedef uint32_t mask;
+    typedef uint16_t port_t;
+    typedef uint32_t mask_t;
 
-    extern const util::range<port> WELL_KNOWN_PORT,
-                             REGISTERED_PORT,
-                             PRIVATE_PORT;
+    extern const util::range<port_t> WELL_KNOWN_PORT,
+                                     REGISTERED_PORT,
+                                     PRIVATE_PORT;
+
+    class error : public std::exception { };
+
 }
 
 
@@ -62,13 +65,15 @@ namespace ipv6 {
         explicit ip (const std::string&) { ; }
     };
 
-    typedef uint16_t port;
+    typedef uint16_t port_t;
 
-    struct mask {
+    struct mask_t {
         uint32_t m_quads[4];
 
-        explicit mask (uint32_t) { ; }
+        explicit mask_t (uint32_t) { ; }
     };
+
+    class error : public std::exception { };
 }
 
 

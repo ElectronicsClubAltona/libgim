@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -35,9 +35,9 @@ const ipv4::ip ipv4::ip::ANY      (  0, 0, 0, 0);
 
 
 //-----------------------------------------------------------------------------
-const util::range<ipv4::port> ipv4::WELL_KNOWN_PORT (    0,  1023),
-                              ipv4::REGISTERED_PORT ( 1024, 49151),
-                              ipv4::PRIVATE_PORT    (49152, 65535);
+const util::range<ipv4::port_t> ipv4::WELL_KNOWN_PORT (    0,  1023),
+                                ipv4::REGISTERED_PORT ( 1024, 49151),
+                                ipv4::PRIVATE_PORT    (49152, 65535);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -131,7 +131,7 @@ ipv4::ip::ip (const std::string &data)
     %%write exec;
 
     if (!__success)
-        throw invalid_argument(data);
+        throw ipv4::error ();
 
     m_octets[0] = __octets[0];
     m_octets[1] = __octets[1];

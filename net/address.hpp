@@ -37,18 +37,18 @@ namespace net {
 
     template <>
     struct address_types <domain::INET> {
-        typedef ipv4::ip    ip;
-        typedef ipv4::mask  mask;
-        typedef ipv4::port  port;
-        typedef sockaddr_in sockaddr;
+        typedef ipv4::ip     ip;
+        typedef ipv4::mask_t mask_t;
+        typedef ipv4::port_t port_t;
+        typedef sockaddr_in  sockaddr;
     };
 
 
     template <>
     struct address_types <domain::INET6> {
         typedef ipv6::ip     ip;
-        typedef ipv6::mask   mask;
-        typedef ipv6::port   port;
+        typedef ipv6::mask_t mask_t;
+        typedef ipv6::port_t port_t;
         typedef sockaddr_in6 sockaddr;
     };
 
@@ -58,8 +58,8 @@ namespace net {
     class address {
         public:
             typedef typename address_types<D>::ip       ip_type;
-            typedef typename address_types<D>::mask     mask_type;
-            typedef typename address_types<D>::port     port_type;
+            typedef typename address_types<D>::mask_t   mask_type;
+            typedef typename address_types<D>::port_t   port_type;
             typedef typename address_types<D>::sockaddr sockaddr_type;
 
         protected:
