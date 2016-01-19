@@ -11,82 +11,121 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifdef __UTIL_POOL_IPP
-#error Double inclusion of pool.ipp
+#error
 #endif
 
 #define __UTIL_POOL_IPP
 
 
 namespace util {
+    //-------------------------------------------------------------------------
     template <typename T>
     pool<T>::pool (unsigned int _capacity):
-        m_capacity (_capacity)
+        m_capacity (_capacity),
+        m_remain   (_capacity)
     {
         static_assert (sizeof (T) >= sizeof (uintptr_t),
                        "pool<T>'s chained block system requires that T be at least pointer sized");
 
-        m_head = static_cast<node *> (operator new (sizeof (T) * m_capacity));
-        m_next = m_head;
+        // allocate the memory and note the base address for deletion in destructor
+        m_next = m_head = new node[m_capacity]; // static_cast<node *> (operator new (sizeof (T) * m_capacity));
 
+        // initialise the linked list of nodes
         for (unsigned int i = 0; i < m_capacity - 1; ++i)
-            m_next[i]._chain = &m_next[i + 1];
-        m_next[m_capacity - 1]._chain = NULL;
+            m_next[i]._node = m_next + i + 1;
+        m_next[m_capacity - 1]._node = nullptr;
     }
 
 
+    //-------------------------------------------------------------------------
     template <typename T>
-    pool<T>::~pool () {
-        CHECK (m_next != NULL);
-
-        unsigned int doomed_count = 0;
-        for (node *cursor = m_next; cursor != NULL; cursor = cursor->_chain)
-            ++doomed_count;
-
-        CHECK_EQ (doomed_count, m_capacity);
-        operator delete (m_head);
+    pool<T>::~pool ()
+    {
+        // don't check if everything's been returned as pools are often used
+        // for PODs which don't need to be destructed via calling release.
+        delete [] m_head;
     }
 
 
+    //-------------------------------------------------------------------------
     template <typename T>
     size_t
     pool<T>::capacity (void) const
-        { return m_capacity; }
+    {
+        return m_capacity;
+    }
 
 
+    //-------------------------------------------------------------------------
+    template <typename T>
+    size_t
+    pool<T>::remain (void) const
+    {
+        return m_remain;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    bool
+    pool<T>::empty (void) const
+    {
+        return m_remain == 0;
+    }
+
+
+    //-------------------------------------------------------------------------
     template <typename T>
     template <typename ...Args>
     T*
-    pool<T>::acquire (Args&... args) {
+    pool<T>::acquire (Args&... args)
+    {
+        // double check we have enough capacity left
         if (!m_next)
             throw std::bad_alloc ();
+        CHECK_GT (m_remain, 0);
 
-        node *newnext = m_next->_chain;
-        T *data = (T*)&m_next->_data;
+        // save what will become the next node shortly. it could be overwritten
+        // in the constructor we're about to call.
+        node *newnext = m_next->_node;
+        T *data = reinterpret_cast<T*> (m_next->_data);
 
+        // try to construct the returnable object.
         try {
             new (data) T (args...);
         } catch (...) {
-            m_next->_chain = newnext;
+            // the constructor may have overwritten the node linkages before
+            // throwing. fix this up before forwarding the exception.
+            m_next->_node = newnext;
             throw;
         }
 
+        // the object is valid. save the new linked list head and bump the
+        // stats for availability.
         m_next  = newnext;
+        m_remain--;
+
         return data;
     }
 
 
+    //-------------------------------------------------------------------------
     template <typename T>
     void
-    pool<T>::release (T *data) {
+    pool<T>::release (T *data)
+    {
+        CHECK_LT (m_remain, m_capacity);
+
         data->~T();
         node *newnode = reinterpret_cast<node *> (data);
 
-        newnode->_chain = m_next;
+        newnode->_node = m_next;
         m_next = newnode;
+        m_remain++;
     }
 }
 

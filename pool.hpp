@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011-2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_POOL_HPP
@@ -26,13 +26,15 @@ namespace util {
     class pool : public nocopy {
         protected:
             union node {
+                node *_node;
                 char  _data[sizeof (T)];
-                node *_chain;
             };
 
-            node   *m_head;
-            node   *m_next;
-            size_t  m_capacity;
+            node *m_head; // root address of allocation
+            node *m_next; // next available entry in the linked list
+
+            const size_t m_capacity;
+            size_t m_remain;
 
         public:
             pool (unsigned int _capacity);
@@ -45,6 +47,8 @@ namespace util {
             void release (T *data);
 
             size_t capacity (void) const;
+            size_t remain (void) const;
+            bool empty (void) const;
 
             // Indexing
             size_t index (const T*) const;
