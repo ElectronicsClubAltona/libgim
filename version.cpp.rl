@@ -26,46 +26,51 @@
 #include "debug.hpp"
 
 
-using namespace util;
+using util::version;
 
-//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 version::version ():
-    size (0)
+    size (0),
+    release (PRODUCTION)
 { ; }
 
 
+//-----------------------------------------------------------------------------
 version::version (unsigned int _major,
                   unsigned int _minor):
-    size    (2),
-    release (RELEASE_PRODUCTION)
+    size (0),
+    components { _major, _minor },
+    release (PRODUCTION)
 {
-    values[OFFSET_MAJOR] = _major;
-    values[OFFSET_MINOR] = _minor;
-}
-
-
-version::version (const std::string& str): 
-    size (0)
-{
-    *this = version::parse (str);
-}
-
-
-version::version (const char *str):
-    size (0)
-{
-    *this = version::parse (str);
+    components[MAJOR] = _major;
+    components[MINOR] = _minor;
 }
 
 
 //-----------------------------------------------------------------------------
+version::version (const std::string& str): 
+    version (str.c_str ())
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+version::version (const char *str):
+    version ()
+{
+    *this = version::parse (str);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 static void
-sanity (version::release_t r) {
+sanity (version::release_t r)
+{
     switch (r) {
-        case version::RELEASE_ALPHA:
-        case version::RELEASE_BETA:
-        case version::RELEASE_GAMMA:
-        case version::RELEASE_PRODUCTION:
+        case version::ALPHA:
+        case version::BETA:
+        case version::GAMMA:
+        case version::PRODUCTION:
             return;
     }
 
@@ -73,6 +78,7 @@ sanity (version::release_t r) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 version::sanity (void) const {
     ::sanity (release);
@@ -80,7 +86,29 @@ version::sanity (void) const {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+unsigned version::major (void) const { return components[MAJOR]; }
+unsigned version::minor (void) const { return components[MINOR]; }
+unsigned version::point (void) const { return components[POINT]; }
+unsigned version::build (void) const { return components[BUILD]; }
+
+
+///////////////////////////////////////////////////////////////////////////////
+const unsigned*
+version::begin (void) const
+{
+    return components.begin ();
+}
+
+
+const unsigned*
+version::end (void) const
+{
+    return components.begin () + size;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 %%{
     machine version;
     
@@ -90,7 +118,7 @@ version::sanity (void) const {
         { accum *= 10;
           accum += (uintptr_t)(fc - (unsigned char)'0'); }
     action finish
-        { v.values[v.size++] = accum ; }
+        { v.components[v.size++] = accum ; }
 
     number   = (digit+)
                >clear
@@ -99,9 +127,9 @@ version::sanity (void) const {
                   
     dots     = (number '.')* number;
 
-    type     =   ('beta'i     | 'b'i) %{ v.release = RELEASE_BETA;  }
-               | ('alpha'i    | 'a'i) %{ v.release = RELEASE_ALPHA; }
-               | ('gamma'i    | 'g'i) %{ v.release = RELEASE_GAMMA; };
+    type     =   ('beta'i     | 'b'i) %{ v.release = BETA;  }
+               | ('alpha'i    | 'a'i) %{ v.release = ALPHA; }
+               | ('gamma'i    | 'g'i) %{ v.release = GAMMA; };
 
     version := (dots type?) >clear
                $!{ throw std::invalid_argument (str); };
@@ -129,37 +157,24 @@ util::version::parse (const std::string& str) {
 }
 
 
+//-----------------------------------------------------------------------------
 util::version
 util::version::parse (const char *str) {
     return parse (std::string (str));
 }
 
 
-//-----------------------------------------------------------------------------
-static std::string
-release_to_string (version::release_t r) {
-    sanity (r);
-
-    static const char* RELEASE_STRINGS[] = {
-        "a",    // RELEASE_ALPHA
-        "b",    // RELEASE_BETA
-        "g",    // RELEASE_GAMMA
-        ""      // RELEASE_PRODUCTION
-    };
-
-    return RELEASE_STRINGS[r];
-}
-
-
+///////////////////////////////////////////////////////////////////////////////
 bool
-version::operator> (const version &rhs) const {
-    unsigned int count = min (values.size (), rhs.values.size ());
+version::operator> (const version &rhs) const
+{
+    unsigned int count = min (size, rhs.size);
 
     for (unsigned int i = 0; i < count; ++i)
-        if (values[i] < rhs.values[i])
+        if (components[i] < rhs.components[i])
             return false;
 
-    if (values.size () < rhs.values.size())
+    if (size < rhs.size)
         return false;
 
     if (release <= rhs.release)
@@ -169,35 +184,58 @@ version::operator> (const version &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 bool
 version::operator== (const version &rhs) const {
-    return values  == rhs.values &&
-           size    == rhs.size   &&
-           release == rhs.release;
+    return components == rhs.components &&
+           size       == rhs.size   &&
+           release    == rhs.release;
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+namespace util {
+    std::ostream&
+    operator<< (std::ostream& os, const util::version::release_t r)
+    {
+        switch (r) {
+            case version::ALPHA:        return os << 'a';
+            case version::BETA:         return os << 'b';
+            case version::GAMMA:        return os << 'g';
+            case version::PRODUCTION:   return os;
+
+            default:
+                unreachable ();
+        }
+    }
+}
+
+
+//-----------------------------------------------------------------------------
 std::ostream&
-operator <<(std::ostream& os, const util::version& rhs) {
+util::operator<< (std::ostream& os, const util::version& rhs)
+{
     size_t elements = rhs.size;
     CHECK_GT (elements, 0u);
 
-    os << rhs.major ();
-    if (!--elements)
-        goto done;
+    do {
+        os << rhs.major ();
+        if (!--elements)
+            break;
 
-    os << "." << rhs.minor ();
-    if (!--elements)
-        goto done;
+        os << "." << rhs.minor ();
+        if (!--elements)
+            break;
 
-    os << "." << rhs.point ();
-    if (!--elements)
-        goto done;
+        os << "." << rhs.point ();
+        if (!--elements)
+            break;
 
-    os << "." << rhs.build ();
-    CHECK_EQ (elements - 1, 0u);
+        os << "." << rhs.build ();
+        CHECK_EQ (elements - 1, 0u);
+    } while (0);
 
-done:
-    os << release_to_string (rhs.release);
+    os << rhs.release;
+
     return os;
 }

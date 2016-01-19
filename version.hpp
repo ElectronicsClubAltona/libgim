@@ -20,15 +20,25 @@
 #include <array>
 #include <string>
 #include <iostream>
-
+#include <limits>
 
 namespace util {
     struct version {
+        // underlying component value type
+        using value_t = unsigned;
+
+        static_assert (std::numeric_limits<value_t>::max () >= 2100'00'00,
+                       "value_t must be sufficient to store a reasonable future year in YYYYMMDD format");
+
+        /// type of release.
+        ///
+        /// * must be sorted from earliest to latest
+        /// * specific values aren't currently guaranteed.
         enum release_t {
-            RELEASE_ALPHA,
-            RELEASE_BETA,
-            RELEASE_GAMMA,
-            RELEASE_PRODUCTION
+            ALPHA,
+            BETA,
+            GAMMA,
+            PRODUCTION
         };
 
         version ();
@@ -38,36 +48,40 @@ namespace util {
 
         void sanity (void) const;
 
-        enum {
-            OFFSET_MAJOR = 0,
-            OFFSET_MINOR = 1,
-            OFFSET_POINT = 2,
-            OFFSET_BUILD = 3,
-
-            NUM_OFFSETS
+        // named component indices
+        //
+        // * must start from zero and be monotonically increasing
+        enum offset_t {
+            MAJOR = 0,
+            MINOR = 1,
+            POINT = 2,
+            BUILD = 3
         };
 
-        unsigned major (void) const { return values[OFFSET_MAJOR]; }
-        unsigned minor (void) const { return values[OFFSET_MINOR]; }
-        unsigned point (void) const { return values[OFFSET_POINT]; }
-        unsigned build (void) const { return values[OFFSET_BUILD]; }
+        unsigned major (void) const;
+        unsigned minor (void) const;
+        unsigned point (void) const;
+        unsigned build (void) const;
 
-        std::array<unsigned int, NUM_OFFSETS> values;
+        const unsigned* begin (void) const;
+        const unsigned* end   (void) const;
+
         size_t size;
+        std::array<unsigned,4u> components;
         release_t release;
 
         static version parse (const std::string&);
         static version parse (const char*);
 
-        bool operator <  (const version& rhs) const;
-        bool operator >  (const version& rhs) const;
-        bool operator >= (const version& rhs) const;
-        bool operator <= (const version& rhs) const;
-        bool operator == (const version& rhs) const;
+        bool operator<  (const version& rhs) const;
+        bool operator>  (const version& rhs) const;
+        bool operator>= (const version& rhs) const;
+        bool operator<= (const version& rhs) const;
+        bool operator== (const version& rhs) const;
     };
-}
 
-std::ostream& operator<< (std::ostream& os, const util::version& rhs);
+    std::ostream& operator<< (std::ostream& os, const util::version& rhs);
+}
 
 
 #endif // __VERSION_HPP
