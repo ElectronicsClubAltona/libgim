@@ -16,6 +16,8 @@ AC_DEFUN([NC_DEBUGGING],[
             dnl 'undefined' due to false positives in some core libraries
             dnl (eg, boost::format).
             [address],
+            dnl gcc currently causes segfaults at configure time with [thread],
+            dnl
             dnl gcc specific names. do not use vptr or boost::format will die
             [alignment],
             [bounds],
@@ -34,7 +36,6 @@ AC_DEFUN([NC_DEBUGGING],[
             [vla-bound],
             dnl clang specific names
             [integer],
-            [thread],
             [undefined-trap],
             [cfi]dnl
         ], [
