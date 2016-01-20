@@ -9,8 +9,9 @@ main (void)
 
     util::TAP::logger tap;
 
-    tap.expect_eq (util::format::render ("identity"), "identity"s, "identity literal");
-    tap.expect_eq (util::format::render ("%s", "identity"s), "identity"s, "identity substitution");
+    tap.expect_eq (util::format::render ("identity"),        "identity"s, "identity literal");
+    tap.expect_eq (util::format::render ("%s", "identity"s), "identity"s, "identity string substitution");
+    tap.expect_eq (util::format::render ("%s", "identity" ), "identity"s, "identity char[] substitution");
 
     tap.expect_throw<util::format::missing_error> ([] (void) { util::format::render ("%s");     }, "missing value");
     tap.expect_throw<util::format::format_error>  ([] (void) { util::format::render ("%!", 42); }, "invalid specifier");
