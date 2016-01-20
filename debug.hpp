@@ -304,7 +304,11 @@ constexpr void not_implemented [[noreturn]] (const char *msg);
 constexpr void unreachable [[noreturn]] (void);
 constexpr void unreachable [[noreturn]] (const char*);
 
-void unusual (void);
+
+///////////////////////////////////////////////////////////////////////////////
+void warn (void);
+void warn (const std::string&);
+void warn (const char *);
 
 
 ///////////////////////////////////////////////////////////////////////////////

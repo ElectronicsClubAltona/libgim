@@ -74,9 +74,25 @@ detail::unreachable (const char *msg)
 
 ////////////////////////////////////////////////////////////////////////////////
 void
-unusual (void)
+warn (void)
 {
-    panic ("Unusual code path found.");
+    warn ("Unusual code path found.");
+}
+
+
+//-----------------------------------------------------------------------------
+void
+warn (const std::string &msg)
+{
+    warn (msg.c_str ());
+}
+
+
+//-----------------------------------------------------------------------------
+void
+warn (const char *msg)
+{
+    LOG_WARN (msg);
 }
 
 
