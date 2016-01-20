@@ -25,6 +25,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <iterator>
+#include <boost/filesystem/path.hpp>
 
 namespace util {
     namespace detail { namespace format {
@@ -41,6 +42,7 @@ namespace util {
         is_valid_specifier<const char*> (const char *s)
         { return *s == 's'; }
 
+
         //---------------------------------------------------------------------
         template <>
         inline bool
@@ -52,6 +54,13 @@ namespace util {
         template <>
         inline bool
         is_valid_specifier<std::string> (const char *s)
+        { return *s == 's'; }
+
+
+        //---------------------------------------------------------------------
+        template <>
+        inline bool
+        is_valid_specifier<boost::filesystem::path> (const char *s)
         { return *s == 's'; }
 
 

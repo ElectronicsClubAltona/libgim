@@ -23,7 +23,8 @@
 namespace util {
     namespace format {
         template <typename ...Args>
-        std::string render (const std::string &fmt, Args&&...);
+        std::string
+        render (const std::string &fmt, Args&&...);
 
         class error : public std::runtime_error
         { using runtime_error::runtime_error; };
