@@ -44,7 +44,8 @@ check_level (level_t l)
 
 //-----------------------------------------------------------------------------
 const string&
-level_to_string (level_t l) {
+level_to_string (level_t l)
+{
     check_level (l);
 
     static const std::array <std::string, NUM_LEVELS> LEVEL_NAMES ({{
@@ -64,7 +65,8 @@ level_to_string (level_t l) {
 
 ///////////////////////////////////////////////////////////////////////////////
 static level_t
-string_to_level (string name) {
+string_to_level (string name)
+{
     static const map <string, level_t> NAME_LEVELS = {
         { "EMERGENCY",     EMERGENCY },
         { "ALERT",         ALERT },
@@ -90,7 +92,8 @@ string_to_level (string name) {
 
 //-----------------------------------------------------------------------------
 std::ostream&
-util::operator<< (std::ostream& os, level_t l) {
+util::operator<< (std::ostream& os, level_t l)
+{
     os << level_to_string (l);
     return os;
 }
@@ -98,7 +101,8 @@ util::operator<< (std::ostream& os, level_t l) {
 
 ///////////////////////////////////////////////////////////////////////////////
 static level_t
-log_level (void) {
+log_level (void)
+{
     const char *env = getenv ("LOG_LEVEL");
     if (!env)
         return DEFAULT;
@@ -114,12 +118,15 @@ log_level (void) {
 ///////////////////////////////////////////////////////////////////////////////
 void
 util::log (level_t l, const std::string &format)
-    { detail::log (l, boost::format (format)); }
+{
+    detail::log (l, boost::format (format));
+}
 
 
 //-----------------------------------------------------------------------------
 void
-util::detail::log (level_t level, boost::format &&format) {
+util::detail::log (level_t level, boost::format &&format)
+{
     static const level_t LOG_LEVEL = log_level ();
     if (level > LOG_LEVEL)
         return;
