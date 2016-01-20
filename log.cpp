@@ -31,35 +31,6 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-static void
-sanity (util::level_t l)
-{
-    (void)l; // Consume even in release mode
-    CHECK (l >= 0 && l < util::NUM_LEVELS);
-}
-
-//-----------------------------------------------------------------------------
-static const std::string&
-to_string (util::level_t l)
-{
-    sanity (l);
-
-    static const std::array<std::string, util::NUM_LEVELS> LEVEL_NAMES ({{
-        "EMERGENCY",
-        "ALERT",
-        "CRITICAL",
-        "ERROR",
-        "WARN",
-        "NOTICE",
-        "INFO",
-        "DEBUG"
-    }});
-
-    return LEVEL_NAMES[l];
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 static util::level_t
 to_level (std::string name)
 {
@@ -90,8 +61,19 @@ to_level (std::string name)
 std::ostream&
 util::operator<< (std::ostream& os, util::level_t l)
 {
-    os << to_string (l);
-    return os;
+    switch (l) {
+        case util::EMERGENCY:       return os << "EMERGENCY";
+        case util::ALERT:           return os << "ALERT";
+        case util::CRITICAL:        return os << "CRITICAL";
+        case util::ERROR:           return os << "ERROR";
+        case util::WARNING:         return os << "WARNING";
+        case util::NOTICE:          return os << "NOTICE";
+        case util::INFORMATIONAL:   return os << "INFO";
+        case util::DEBUG:           return os << "DEBUG";
+
+        default:
+            unreachable ();
+    }
 }
 
 
