@@ -11,35 +11,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifdef __UTIL_LOG_IPP
-#error Double inclusion of util/log.ipp
+#error
 #endif
 
 #define __UTIL_LOG_IPP
 
-
-//-----------------------------------------------------------------------------
-#include <boost/format.hpp>
-
+#include "format.hpp"
 
 //-----------------------------------------------------------------------------
 namespace util {
-    namespace detail  {
-        void
-        log (level_t l, boost::format &&format);
-
-        template <typename T, typename ...tail>
-        void
-        log (level_t l, boost::format &&format, const T &val, tail ..._tail) {
-            ::util::detail::log (l, std::move (format.operator% (val)), _tail...);
-        }
-    }
-
     template <typename ...tail>
-    void log (level_t l, const std::string &format, tail ..._tail)
-        { detail::log (l, std::move (boost::format (format)), _tail...); }
+    void
+    log (level_t l, const std::string &format, tail ..._tail)
+    {
+        log (l, format::render (format, std::forward<tail> (_tail)...));
+    }
 }
 

@@ -54,7 +54,7 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    void log (level_t, const std::string &format);
+    void log (level_t, const std::string &msg);
 
     template <typename ...tail>
     void log (level_t, const std::string &format, tail ..._tail);
@@ -79,7 +79,7 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     class scoped_logger : public nocopy {
     public:
-        scoped_logger (const level_t, std::string&&);
+        scoped_logger (const level_t, std::string);
         ~scoped_logger ();
 
     protected:
@@ -91,7 +91,7 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     class scoped_timer : public nocopy {
     public:
-        scoped_timer (const level_t, std::string&&);
+        scoped_timer (const level_t, std::string);
         ~scoped_timer ();
 
     private:

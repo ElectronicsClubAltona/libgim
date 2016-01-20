@@ -27,8 +27,6 @@
 #include <map>
 #include <string>
 
-#include <boost/format.hpp>
-
 
 ///////////////////////////////////////////////////////////////////////////////
 static util::level_t
@@ -95,45 +93,31 @@ log_level (void)
 
 ///////////////////////////////////////////////////////////////////////////////
 void
-util::log (util::level_t l, const std::string &format)
+util::log (util::level_t level, const std::string &msg)
 {
-    detail::log (l, boost::format (format));
-}
+      static const util::level_t LOG_LEVEL = log_level ();
+      if (level > LOG_LEVEL)
+          return;
 
+      static const size_t time_len = strlen("YYYY-mm-dd HHMMhSS") + 1;
+      std::string time_string (time_len - 1, '\0');
+      time_t unix_time = time (nullptr);
 
-//-----------------------------------------------------------------------------
-void
-util::detail::log (util::level_t level, boost::format &&format)
-{
-    static const util::level_t LOG_LEVEL = log_level ();
-    if (level > LOG_LEVEL)
-        return;
+      if (0 == strftime (&time_string[0],
+                         time_len,
+                         "%Y-%m-%d %H%Mh%S",
+                         localtime (&unix_time))) {
+          warn ("failed to log time");
+          return;
+      }
 
-    static const boost::format LEVEL_FORMAT ("%s [%s] ");
-
-    static const size_t time_len = strlen("YYYY-mm-dd HHMMhSS") + 1;
-    std::string time_string (time_len - 1, '\0');
-    time_t unix_time = time (nullptr);
-
-    if (0 == strftime (&time_string[0],
-                       time_len,
-                       "%Y-%m-%d %H%Mh%S",
-                       localtime (&unix_time))) {
-        unusual ();
-        return;
-    }
-
-    std::cerr << boost::format (LEVEL_FORMAT)
-                    % time_string
-                    % level
-              << format
-              << std::endl;
+      std::cerr << time_string << " [" << level << "] " << msg << std::endl;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-util::scoped_logger::scoped_logger (util::level_t  _level,
-                                    std::string  &&_message):
+util::scoped_logger::scoped_logger (util::level_t _level,
+                                    std::string   _message):
     m_level   (_level),
     m_message (std::move (_message))
 { ; }
@@ -148,9 +132,9 @@ util::scoped_logger::~scoped_logger ()
 
 ///////////////////////////////////////////////////////////////////////////////
 util::scoped_timer::scoped_timer (util::level_t _level,
-                                  std::string &&_message):
+                                  std::string   _message):
     m_level (_level),
-    m_message (_message),
+    m_message (std::move (_message)),
     m_start (util::nanoseconds ())
 { ; }
 
