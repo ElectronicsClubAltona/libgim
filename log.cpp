@@ -29,26 +29,22 @@
 
 #include <boost/format.hpp>
 
-using namespace util;
-using std::string;
-using std::map;
-
 
 ///////////////////////////////////////////////////////////////////////////////
 static void
-sanity (level_t l)
+sanity (util::level_t l)
 {
     (void)l; // Consume even in release mode
-    CHECK (l >= 0 && l < NUM_LEVELS);
+    CHECK (l >= 0 && l < util::NUM_LEVELS);
 }
 
 //-----------------------------------------------------------------------------
-const string&
-level_to_string (level_t l)
+static const std::string&
+to_string (util::level_t l)
 {
     sanity (l);
 
-    static const std::array <std::string, NUM_LEVELS> LEVEL_NAMES ({{
+    static const std::array<std::string, util::NUM_LEVELS> LEVEL_NAMES ({{
         "EMERGENCY",
         "ALERT",
         "CRITICAL",
@@ -64,20 +60,20 @@ level_to_string (level_t l)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-static level_t
-to_level (string name)
+static util::level_t
+to_level (std::string name)
 {
-    static const map <string, level_t> NAME_LEVELS = {
-        { "EMERGENCY",     EMERGENCY },
-        { "ALERT",         ALERT },
-        { "CRITICAL",      CRITICAL },
-        { "ERROR",         ERROR },
-        { "WARN",          WARN },
-        { "WARNING",       WARN },
-        { "NOTICE",        NOTICE },
-        { "INFO",          INFO },
-        { "INFORMATIONAL", INFO },
-        { "DEBUG",         DEBUG }
+    static const std::map<std::string, util::level_t> NAME_LEVELS = {
+        { "EMERGENCY",     util::EMERGENCY },
+        { "ALERT",         util::ALERT },
+        { "CRITICAL",      util::CRITICAL },
+        { "ERROR",         util::ERROR },
+        { "WARN",          util::WARN },
+        { "WARNING",       util::WARN },
+        { "NOTICE",        util::NOTICE },
+        { "INFO",          util::INFO },
+        { "INFORMATIONAL", util::INFO },
+        { "DEBUG",         util::DEBUG }
     };
 
     std::transform (name.cbegin (), name.cend (), name.begin (), ::toupper);
@@ -92,32 +88,32 @@ to_level (string name)
 
 //-----------------------------------------------------------------------------
 std::ostream&
-util::operator<< (std::ostream& os, level_t l)
+util::operator<< (std::ostream& os, util::level_t l)
 {
-    os << level_to_string (l);
+    os << to_string (l);
     return os;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-static level_t
+static util::level_t
 log_level (void)
 {
     const char *env = getenv ("LOG_LEVEL");
     if (!env)
-        return DEFAULT;
+        return util::DEFAULT;
 
     try {
         return to_level (env);
     } catch (...) {
-        return DEFAULT;
+        return util::DEFAULT;
     }
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 void
-util::log (level_t l, const std::string &format)
+util::log (util::level_t l, const std::string &format)
 {
     detail::log (l, boost::format (format));
 }
@@ -125,9 +121,9 @@ util::log (level_t l, const std::string &format)
 
 //-----------------------------------------------------------------------------
 void
-util::detail::log (level_t level, boost::format &&format)
+util::detail::log (util::level_t level, boost::format &&format)
 {
-    static const level_t LOG_LEVEL = log_level ();
+    static const util::level_t LOG_LEVEL = log_level ();
     if (level > LOG_LEVEL)
         return;
 
@@ -154,23 +150,23 @@ util::detail::log (level_t level, boost::format &&format)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-scoped_logger::scoped_logger (level_t       _level,
-                              std::string &&_message):
+util::scoped_logger::scoped_logger (util::level_t  _level,
+                                    std::string  &&_message):
     m_level   (_level),
     m_message (std::move (_message))
 { ; }
 
 
 //-----------------------------------------------------------------------------
-scoped_logger::~scoped_logger ()
+util::scoped_logger::~scoped_logger ()
 {
     log (m_level, m_message);
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-scoped_timer::scoped_timer (level_t _level,
-                            std::string &&_message):
+util::scoped_timer::scoped_timer (util::level_t _level,
+                                  std::string &&_message):
     m_level (_level),
     m_message (_message),
     m_start (util::nanoseconds ())
@@ -178,7 +174,7 @@ scoped_timer::scoped_timer (level_t _level,
 
 
 //-----------------------------------------------------------------------------
-scoped_timer::~scoped_timer ()
+util::scoped_timer::~scoped_timer ()
 {
     auto finish = util::nanoseconds ();
     auto duration = finish - m_start;
