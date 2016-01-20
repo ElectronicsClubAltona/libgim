@@ -35,8 +35,8 @@ using std::map;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void
-check_level (level_t l)
+static void
+sanity (level_t l)
 {
     (void)l; // Consume even in release mode
     CHECK (l >= 0 && l < NUM_LEVELS);
@@ -46,7 +46,7 @@ check_level (level_t l)
 const string&
 level_to_string (level_t l)
 {
-    check_level (l);
+    sanity (l);
 
     static const std::array <std::string, NUM_LEVELS> LEVEL_NAMES ({{
         "EMERGENCY",
@@ -65,7 +65,7 @@ level_to_string (level_t l)
 
 ///////////////////////////////////////////////////////////////////////////////
 static level_t
-string_to_level (string name)
+to_level (string name)
 {
     static const map <string, level_t> NAME_LEVELS = {
         { "EMERGENCY",     EMERGENCY },
@@ -108,7 +108,7 @@ log_level (void)
         return DEFAULT;
 
     try {
-        return string_to_level (env);
+        return to_level (env);
     } catch (...) {
         return DEFAULT;
     }
