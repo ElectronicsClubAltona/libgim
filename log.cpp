@@ -95,27 +95,53 @@ log_level (void)
 }
 
 
+//-----------------------------------------------------------------------------
+static bool
+needs_break (util::level_t level)
+{
+    static util::level_t break_level;
+    static bool has_level = [&] (void) {
+        const char *env = getenv ("BREAK_LEVEL");
+        if (!env)
+            return false;
+
+        try {
+            break_level = to_level (env);
+            return true;
+        } catch (...) {
+            return false;
+        }
+    } ();
+
+    return has_level && level <= break_level;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 void
 util::log (util::level_t level, const std::string &msg)
 {
-      static const util::level_t LOG_LEVEL = log_level ();
-      if (level > LOG_LEVEL)
-          return;
+    // fire a breakpoint before the following early exit
+    if (needs_break (level))
+        breakpoint ();
 
-      static const size_t time_len = strlen("YYYY-mm-dd HHMMhSS") + 1;
-      std::string time_string (time_len - 1, '\0');
-      time_t unix_time = time (nullptr);
+    static const util::level_t LOG_LEVEL = log_level ();
+    if (level > LOG_LEVEL)
+        return;
 
-      if (0 == strftime (&time_string[0],
-                         time_len,
-                         "%Y-%m-%d %H%Mh%S",
-                         localtime (&unix_time))) {
-          warn ("failed to log time");
-          return;
-      }
+    static const size_t time_len = strlen("YYYY-mm-dd HHMMhSS") + 1;
+    std::string time_string (time_len - 1, '\0');
+    time_t unix_time = time (nullptr);
 
-      std::cerr << time_string << " [" << level << "] " << msg << std::endl;
+    if (0 == strftime (&time_string[0],
+                time_len,
+                "%Y-%m-%d %H%Mh%S",
+                localtime (&unix_time))) {
+        warn ("failed to log time");
+        return;
+    }
+
+    std::cerr << time_string << " [" << level << "] " << msg << std::endl;
 }
 
 
