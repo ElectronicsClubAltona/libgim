@@ -85,12 +85,12 @@ log_level (void)
 {
     const char *env = getenv ("LOG_LEVEL");
     if (!env)
-        return util::DEFAULT;
+        return util::DEFAULT_LOG_LEVEL;
 
     try {
         return to_level (env);
     } catch (...) {
-        return util::DEFAULT;
+        return util::DEFAULT_LOG_LEVEL;
     }
 }
 

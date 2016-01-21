@@ -42,11 +42,10 @@ namespace util {
         NOTICE,                 /** normal but significant condition */
         INFORMATIONAL,
         INFO = INFORMATIONAL,   /** informational messages */
-        DEBUG,                  /** debug-level messages */
-
-        NUM_LEVELS,
-        DEFAULT = INFO
+        DEBUG                   /** debug-level messages */
     };
+
+    constexpr auto DEFAULT_LOG_LEVEL = INFO;
 
     //-------------------------------------------------------------------------
     std::ostream&
