@@ -29,6 +29,10 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
+/// convert a string representation of a log-level into an enumeration value.
+///
+/// conversion is case insensitive
+/// throws std::range_error if unable to convert
 static util::level_t
 to_level (std::string name)
 {
