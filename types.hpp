@@ -67,18 +67,22 @@ namespace util {
 
 
 ///////////////////////////////////////////////////////////////////////////////
+/// returns the first argument from a parameter pack which can evaluate to true.
 template <class T>
 T
-first (T a) {
+first (T a)
+{
     if (a)
         return a;
 
     throw std::logic_error ("no valid object");
 }
 
+//-----------------------------------------------------------------------------
 template <class T, class ...Args>
 T
-first (T a, Args&& ...b) {
+first (T a, Args&& ...b)
+{
     if (a)
         return a;
 
