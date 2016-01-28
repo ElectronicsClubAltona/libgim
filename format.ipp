@@ -71,6 +71,35 @@ namespace util {
         { return *s == 'u'; }
 
 
+        //---------------------------------------------------------------------
+        template <>
+        inline bool
+        is_valid_specifier<unsigned> (const char *s)
+        { return *s == 'u'; }
+
+
+        //---------------------------------------------------------------------
+        template <>
+        inline bool
+        is_valid_specifier<float> (const char *s)
+        {
+            switch (*s) {
+            case 'e':
+            case 'E':
+            case 'f':
+            case 'F':
+            case 'g':
+            case 'G':
+            case 'a':
+            case 'A':
+                return true;
+
+            default:
+                return false;
+            }
+        }
+
+
         ///////////////////////////////////////////////////////////////////////
         template <typename InputIt>
         void
