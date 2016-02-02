@@ -32,56 +32,56 @@ namespace util {
         ///////////////////////////////////////////////////////////////////////
         template <typename T>
         inline bool
-        is_valid_specifier (const char*)
+        is_type_specifier (const char*)
         { return false; }
 
 
         //---------------------------------------------------------------------
         template <>
         inline bool
-        is_valid_specifier<const char*> (const char *s)
+        is_type_specifier<const char*> (const char *s)
         { return *s == 's'; }
 
 
         //---------------------------------------------------------------------
         template <>
         inline bool
-        is_valid_specifier<char*> (const char *s)
+        is_type_specifier<char*> (const char *s)
         { return *s == 's'; }
 
 
         //---------------------------------------------------------------------
         template <>
         inline bool
-        is_valid_specifier<std::string> (const char *s)
+        is_type_specifier<std::string> (const char *s)
         { return *s == 's'; }
 
 
         //---------------------------------------------------------------------
         template <>
         inline bool
-        is_valid_specifier<boost::filesystem::path> (const char *s)
+        is_type_specifier<boost::filesystem::path> (const char *s)
         { return *s == 's'; }
 
 
         //---------------------------------------------------------------------
         template <>
         inline bool
-        is_valid_specifier<size_t> (const char *s)
+        is_type_specifier<size_t> (const char *s)
         { return *s == 'u'; }
 
 
         //---------------------------------------------------------------------
         template <>
         inline bool
-        is_valid_specifier<unsigned> (const char *s)
+        is_type_specifier<unsigned> (const char *s)
         { return *s == 'u'; }
 
 
         //---------------------------------------------------------------------
         template <>
         inline bool
-        is_valid_specifier<float> (const char *s)
+        is_type_specifier<float> (const char *s)
         {
             switch (*s) {
             case 'e':
@@ -97,6 +97,15 @@ namespace util {
             default:
                 return false;
             }
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        template <typename T>
+        inline bool
+        is_valid_specifier (const char *s)
+        {
+            return *s == '!' || is_type_specifier<T> (s);
         }
 
 
