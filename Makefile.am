@@ -373,6 +373,8 @@ bin_PROGRAMS = 				\
     tools/hash				\
     tools/noise
 
+noinst_PROGRAMS = tools/scratch
+
 LDADD = $(top_builddir)/libutil.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
 
 
