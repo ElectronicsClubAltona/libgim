@@ -67,8 +67,12 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <typename T>
-    bool
-    is_pow2  (T value);
+    constexpr
+    std::enable_if_t<std::is_integral<T>::value, bool>
+    is_pow2 [[gnu::const]]  (T value)
+    {
+        return value && !(value & (value - 1));
+    }
 
 
     //-----------------------------------------------------------------------------

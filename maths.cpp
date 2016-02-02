@@ -26,22 +26,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-bool
-util::is_pow2 (T value)
-{
-    typedef typename std::enable_if<std::is_integral<T>::value, bool>::type return_type;
-    return (return_type)(value && !(value & (value - 1)));
-}
-
-
-template bool util::is_pow2 (uint8_t);
-template bool util::is_pow2 (uint16_t);
-template bool util::is_pow2 (uint32_t);
-template bool util::is_pow2 (uint64_t);
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
 T
 util::log2up (T v)
 {
