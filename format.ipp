@@ -81,6 +81,15 @@ namespace util {
         //---------------------------------------------------------------------
         template <>
         inline bool
+        is_type_specifier<int> (const char *s)
+        {
+            return *s == 'i' || *s == 'd';
+        }
+
+
+        //---------------------------------------------------------------------
+        template <>
+        inline bool
         is_type_specifier<float> (const char *s)
         {
             switch (*s) {
