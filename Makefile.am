@@ -421,7 +421,7 @@ TEST_BIN = 			\
     test/point			\
     test/polynomial		\
     test/pool			\
-    test/rand			\
+    test/random			\
     test/range 			\
     test/rational		\
     test/region			\
