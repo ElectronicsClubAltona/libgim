@@ -23,6 +23,7 @@
 #include <stdexcept>
 #include <string>
 
+
 ///////////////////////////////////////////////////////////////////////////////
 #ifdef ENABLE_DEBUGGING
 #define DEBUG_ONLY(X) do {  \
@@ -57,43 +58,34 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-#define _CHECK_META(C, SUCCESS, FAILURE) do {                       \
-    const auto __DEBUG_value = (C);                                 \
-    if (!__DEBUG_value)            {                                \
-        std::cerr <<  PACKAGE << ": "                               \
-                  << __FILE__ << ":"                                \
-                  << __LINE__ << ": "                               \
-                  << __FUNCTION__                                   \
-                  << ". Assertion '" << #C                          \
-                  << "' failed: "    << __DEBUG_value << std::endl; \
-                                                                    \
-        { FAILURE }                                                 \
-    } else {                                                        \
-        { SUCCESS }                                                 \
-    }                                                               \
-} while (0)
+#define _CHECK_PANIC(FMT,...) do {                          \
+    panic ("%s:%s:%i:%s\n" FMT,                             \
+           PACKAGE, __FILE__, __LINE__, __FUNCTION__,       \
+           __VA_ARGS__);                                    \
+} while(0)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-#define CHECK(C) do { DEBUG_ONLY(_CHECK_META((C), { ; }, { panic (); });); } while (0)
+#define CHECK(C) do {   \
+    DEBUG_ONLY(         \
+        if (!(C))       \
+            panic ();   \
+    );                  \
+} while (0)
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_EQ(A,B) do {                                  \
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
         const auto __b = (B);                               \
-        _CHECK_META (util::almost_equal (__a, __b),         \
-                     { ; },                                 \
-                     {                                      \
-            std::ostringstream __debug_os;                  \
-            __debug_os.precision (15);                      \
-            __debug_os                                      \
-               << "expected equality.\n"                    \
-               << "__a: " << #A << " is " << __a << ")"     \
-               << "\n != \n"                                \
-               << "__b: " << #B << " is " << __b << ")";    \
-            panic (__debug_os.str ());                      \
-        });                                                 \
+                                                            \
+        if (!util::almost_equal (__a, __b)) {               \
+            _CHECK_PANIC("expected equality\n"              \
+                         "__a: %s is %!\n"                  \
+                         "__b: %s is %!\n",                 \
+                         #A, __a,                           \
+                         #B, __b);                          \
+        }                                                   \
     );                                                      \
 } while (0)
 
@@ -103,17 +95,14 @@
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
         const auto __b = (B);                               \
-        _CHECK_META (__a < __b,                             \
-                     { ; },                                 \
-                     {                                      \
-            std::ostringstream __debug_check_lt_os;         \
-            __debug_check_lt_os                             \
-               << "expected less than.\n"                   \
-               << "__a: " << #A << " is " << __a << ")"     \
-               << "\n >= \n"                                \
-               << "__b: " << #B << " is " << __b << ")";    \
-            panic (__debug_check_lt_os.str ());             \
-        });                                                 \
+                                                            \
+        if (__a >= __b) {                                   \
+            _CHECK_PANIC("expected less than\n"             \
+                          "__a: %s is %!\n"                 \
+                          "__b: %s is %!\n",                \
+                          #A, __a,                          \
+                          #B, __b);                         \
+        };                                                  \
     );                                                      \
 } while (0)
 
@@ -123,17 +112,14 @@
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
         const auto __b = (B);                               \
-        _CHECK_META (__a <= __b,                            \
-                     { ; },                                 \
-                     {                                      \
-            std::ostringstream __debug_check_lt_os;         \
-            __debug_check_lt_os                             \
-               << "expected less or equal to\n"             \
-               << "__a: " << #A << " is " << __a << ")"     \
-               << "\n > \n"                                 \
-               << "__b: " << #B << " is " << __b << ")";    \
-            panic (__debug_check_lt_os.str ());             \
-        });                                                 \
+                                                            \
+        if (__a > __b) {                                    \
+            _CHECK_PANIC("expected less than or equal\n"    \
+                         "__a: %s is %!\n"                  \
+                         "__b: %s is %!\n",                 \
+                         #A, __a,                           \
+                         #B, __b);                          \
+        }                                                   \
     );                                                      \
 } while (0)
 
@@ -143,17 +129,14 @@
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
         const auto __b = (B);                               \
-        _CHECK_META (__a > __b,                             \
-                     { ; },                                 \
-                     {                                      \
-            std::ostringstream __debug_check_gt_os;         \
-            __debug_check_gt_os                             \
-               << "expected greater than.\n"                \
-               << "__a: " << #A << " is " << __a << ")"     \
-               << "\n <= \n"                                \
-               << "__b: " << #B << " is " << __b << ")";    \
-            panic (__debug_check_gt_os.str ());             \
-        });                                                 \
+                                                            \
+        if (__a <= __b) {                                   \
+            _CHECK_PANIC ("expected greater than\n"         \
+                          "__a: %s is %!\n"                 \
+                          "__b: %s is %!\n",                \
+                          #A, __a,                          \
+                          #B, __b);                         \
+        }                                                   \
     );                                                      \
 } while (0)
 
@@ -163,39 +146,35 @@
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
         const auto __b = (B);                               \
-        _CHECK_META (__a >= __b,                            \
-                     { ; },                                 \
-                     {                                      \
-            std::ostringstream __debug_check_gt_os;         \
-            __debug_check_gt_os                             \
-               << "expected greater or equal to.\n"         \
-               << "__a: " << #A << " is " << __a << ")"     \
-               << "\n < \n"                                 \
-               << "__b: " << #B << " is " << __b << ")";    \
-            panic (__debug_check_gt_os.str ());             \
-        });                                                 \
+                                                            \
+        if (__a < __b) {                                    \
+            _CHECK_PANIC ("expected greater or equal\n"     \
+                          "__a: %s is %!\n"                 \
+                          "__b: %s is %!\n",                \
+                          #A, __a,                          \
+                          #B, __b);                         \
+        };                                                  \
     );                                                      \
 } while (0)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-#define CHECK_LIMIT(VAL,LO,HI) do {                                 \
-    DEBUG_ONLY(                                                     \
-        const auto __val = (VAL);                                   \
-        const auto __hi  = (HI);                                    \
-        const auto __lo  = (LO);                                    \
-                                                                    \
-        _CHECK_META (__val >= __lo && __val <= __hi,                \
-                     { ; },                                         \
-                     {                                              \
-            std::ostringstream __os;                                \
-            __os << "expected satisifies limit\n"                   \
-                 << "__val: " << #VAL << " = " << __val << '\n'     \
-                 << "__lo: " << #LO << " = " << __lo << '\n'        \
-                 << "__hi: " << #HI << " = " << __hi << '\n';       \
-            panic (__os.str ());                                    \
-        });                                                         \
-    );                                                              \
+#define CHECK_LIMIT(V,L,H) do {                             \
+    DEBUG_ONLY(                                             \
+        const auto __v = (V);                               \
+        const auto __l = (L);                               \
+        const auto __h = (H);                               \
+                                                            \
+        if (__v < __l || __v > __h) {                       \
+            _CHECK_PANIC ("expected limit\n"                \
+                          "__l: %s is %!\n"                 \
+                          "__h: %s is %!\n"                 \
+                          "__v: %s is %!\n",                \
+                          #H, __h,                          \
+                          #L, __l,                          \
+                          #V, __v);                         \
+        };                                                  \
+    );                                                      \
 } while (0)
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -203,16 +182,14 @@
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
         const auto __b = (B);                               \
-        _CHECK_META (!util::almost_equal (__a, __b),        \
-                     { ; },                                 \
-                     {                                      \
-            std::ostringstream __debug_neq_os;              \
-            __debug_neq_os << "unexpected equality.\n"      \
-               << "__a: " << #A << " is " << __a << ")"     \
-               << "\n == \n"                                \
-               << "__b: " << #B << " is " << __b << ")";    \
-            panic (__debug_neq_os.str ());                  \
-        });                                                 \
+                                                            \
+        if (util::almost_equal (__a, __b)) {                \
+            _CHECK_PANIC ("expected inequality\n"           \
+                          "__a: %s is %s\n"                 \
+                          "__b: %s is %s\n",                \
+                          #A, __a,                          \
+                          #B, __b);                         \
+        };                                                  \
     );                                                      \
 } while (0)
 
@@ -221,14 +198,12 @@
 #define CHECK_ZERO(A) do {                                  \
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
-        _CHECK_META (util::almost_zero (__a),               \
-                     { ; },                                 \
-                     {                                      \
-            std::ostringstream __debug_nez_os;              \
-            __debug_nez_os << "expected zero.\n"            \
-               << "__a: " << #A << " is " << __a << ")";    \
-            panic (__debug_nez_os.str ());                  \
-        });                                                 \
+                                                            \
+        if (!util::almost_zero (__a)) {                     \
+            _CHECK_PANIC ("expected zero\n"                 \
+                          "__a: %s is %s\n"                 \
+                          #A, __a);                         \
+        };                                                  \
     );                                                      \
 } while (0)
 
@@ -237,62 +212,52 @@
 #define CHECK_NEZ(A) do {                                   \
     DEBUG_ONLY(                                             \
         const auto __a = (A);                               \
-        _CHECK_META (!util::almost_zero (__a),              \
-                     { ; },                                 \
-                     {                                      \
-            std::ostringstream __debug_nez_os;              \
-            __debug_nez_os << "unexpected zero.\n"          \
-               << "__a: " << #A << " is " << __a << ")";    \
-            panic (__debug_nez_os.str ());                  \
-        });                                                 \
+        if (util::exactly_zero (__a))                       \
+            _CHECK_PANIC ("expected zero\n"                 \
+                          "__a: %s is %!",                  \
+                          #A, __a);                         \
     );                                                      \
 } while (0)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-#define CHECK_THROWS(E,C) do {                  \
-    DEBUG_ONLY(                                 \
-        bool caught = false;                    \
-                                                \
-        try                                     \
-            { C; }                              \
-        catch (E)                               \
-            { caught = true; }                  \
-                                                \
-        if (!caught)                            \
-            panic ("expected exception: " #E);  \
-    );                                          \
+#define CHECK_THROWS(E,C) do {                              \
+    DEBUG_ONLY(                                             \
+        bool caught = false;                                \
+                                                            \
+        try                                                 \
+            { C; }                                          \
+        catch (E)                                           \
+            { caught = true; }                              \
+                                                            \
+        if (!caught)                                        \
+            _CHECK_PANIC ("expected exception: %s", #E);    \
+    );                                                      \
 } while (0)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-#define CHECK_NOTHROW(C) do {               \
-    DEBUG_ONLY(                             \
-        try {                               \
-            C;                              \
-        } catch (...) {                     \
-            panic ("unexpected exception"); \
-        }                                   \
-    );                                      \
+#define CHECK_NOTHROW(C) do {                               \
+    DEBUG_ONLY(                                             \
+        try {                                               \
+            C;                                              \
+        } catch (const std::exception &e) {                 \
+            _CHECK_PANIC ("unexpected exception: %s",       \
+                          e.what ());                       \
+        } catch (...) {                                     \
+            _CHECK_PANIC ("unexpected exception: %s",       \
+                          "unknown");                       \
+        }                                                   \
+    );                                                      \
 } while (0)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-class panic_error {
-    protected:
-        std::string m_what;
-
-    public:
-        explicit panic_error (const std::string &_what):
-                m_what (_what)
-        { ; }
-};
-
-
-///////////////////////////////////////////////////////////////////////////////
-void panic [[noreturn]] (const std::string&);
 constexpr void panic [[noreturn]] (const char*);
 constexpr void panic [[noreturn]] (void);
+
+template <typename ...Args>
+constexpr void panic [[noreturn]] (const char *fmt, const Args&...);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -368,12 +333,13 @@ namespace util { namespace debug {
 } }
 
 
+#include "./debug.ipp"
+
 ///////////////////////////////////////////////////////////////////////////////
 // XXX: maths needs to be included so that CHECK_EQ/NEQ can call almost_equal,
 // but maths.hpp might be using CHECK_ macros so we must include maths.hpp
 // after we define the CHECK_ macros so the preprocessor can resolve them.
 #include "./maths.hpp"
 
-#include "./debug.ipp"
 
 #endif // __DEBUG_HPP

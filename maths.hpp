@@ -38,6 +38,135 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util {
+    ///////////////////////////////////////////////////////////////////////////
+    // Comparisons
+    inline bool
+    almost_equal (const float &a, const float &b)
+    {
+        return ieee_single::almost_equal (a, b);
+    }
+
+
+    //-----------------------------------------------------------------------------
+    inline bool
+    almost_equal (const double &a, const double &b)
+    {
+        return ieee_double::almost_equal (a, b);
+    }
+
+
+    //-----------------------------------------------------------------------------
+    template <typename A, typename B>
+    typename std::enable_if_t<
+        std::is_floating_point<A>::value &&
+        std::is_floating_point<B>::value,
+        bool
+    >
+    almost_equal (const A &a, const B &b)
+    {
+        using common_t = std::common_type_t<A,B>;
+        return almost_equal<common_t> (static_cast<common_t> (a),
+                                       static_cast<common_t> (b));
+    }
+
+
+    //-----------------------------------------------------------------------------
+    template <typename A, typename B>
+    typename std::enable_if_t<
+        std::is_integral<A>::value &&
+        std::is_integral<B>::value &&
+        std::is_signed<A>::value == std::is_signed<B>::value,
+        bool
+    >
+    almost_equal (const A &a, const B &b) {
+        using common_t = std::common_type_t<A,B>;
+        return static_cast<common_t> (a) == static_cast<common_t> (b);
+    }
+
+
+    //-----------------------------------------------------------------------------
+    template <typename Ta, typename Tb>
+    typename std::enable_if<
+        !std::is_arithmetic<Ta>::value ||
+        !std::is_arithmetic<Tb>::value,
+        bool
+    >::type
+    almost_equal (const Ta &a, const Tb &b)
+        { return a == b; }
+
+
+    //-----------------------------------------------------------------------------
+    // Useful for explictly ignore equality warnings
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+    template <typename Ta, typename Tb>
+    constexpr
+    typename std::enable_if_t<
+        std::is_arithmetic<Ta>::value &&
+        std::is_arithmetic<Tb>::value,
+        bool
+    >
+    exactly_equal (const Ta a, const Tb b)
+    {
+        return a == b;
+    }
+
+    //-------------------------------------------------------------------------
+    template <typename Ta, typename Tb>
+    typename std::enable_if_t<
+        !std::is_arithmetic<Ta>::value ||
+        !std::is_arithmetic<Tb>::value,
+        bool
+    >
+    exactly_equal  (const Ta &a, const Tb &b)
+    {
+        return a == b;
+    }
+#pragma GCC diagnostic pop
+
+
+    //-----------------------------------------------------------------------------
+    template <typename T>
+    constexpr
+    std::enable_if_t<
+        std::is_integral<T>::value, bool
+    >
+    almost_zero (T t)
+    {
+        return t == 0;
+    }
+
+    template <typename T>
+    std::enable_if_t<
+        !std::is_integral<T>::value, bool
+    >
+    almost_zero  (T a)
+        { return almost_equal (a, T{0}); }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    constexpr
+    typename std::enable_if_t<
+        std::is_integral<T>::value, bool
+    >
+    exactly_zero (T t)
+    {
+        return exactly_equal (t, T{0});
+    }
+
+
+    template <typename T>
+    typename std::enable_if_t<
+        !std::is_integral<T>::value, bool
+    >
+    exactly_zero (T t)
+    {
+        return exactly_equal (t, T{0});
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
     template <typename T>
     T
     abs [[gnu::const]] (T t)
@@ -170,95 +299,18 @@ namespace util {
     constexpr T
     gcd (T a, T b)
     {
-        if (a == b) return a;
+        CHECK_NEZ (a);
+        CHECK_NEZ (b);
 
-        if (a > b) return gcd (a - b, b);
-        if (b > a) return gcd (a, b - a);
+        while (a != b) {
+            if (a > b)
+                a -= b;
+            else if (b > a)
+                b -= a;
+        }
 
-        unreachable ();
+        return a;
     }
-
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // Comparisons
-    inline bool
-    almost_equal (const float &a, const float &b)
-    {
-        return ieee_single::almost_equal (a, b);
-    }
-
-
-    //-----------------------------------------------------------------------------
-    inline bool
-    almost_equal (const double &a, const double &b)
-    {
-        return ieee_double::almost_equal (a, b);
-    }
-
-
-    //-----------------------------------------------------------------------------
-    template <typename A, typename B>
-    typename std::enable_if_t<
-        std::is_floating_point<A>::value &&
-        std::is_floating_point<B>::value,
-        bool
-    >
-    almost_equal (const A &a, const B &b)
-    {
-        using common_t = std::common_type_t<A,B>;
-        return almost_equal<common_t> (static_cast<common_t> (a),
-                                       static_cast<common_t> (b));
-    }
-
-
-    //-----------------------------------------------------------------------------
-    template <typename A, typename B>
-    typename std::enable_if_t<
-        std::is_integral<A>::value &&
-        std::is_integral<B>::value &&
-        std::is_signed<A>::value == std::is_signed<B>::value,
-        bool
-    >
-    almost_equal (const A &a, const B &b) {
-        using common_t = std::common_type_t<A,B>;
-        return static_cast<common_t> (a) == static_cast<common_t> (b);
-    }
-
-
-    //-----------------------------------------------------------------------------
-    template <typename Ta, typename Tb>
-    typename std::enable_if<
-        !std::is_arithmetic<Ta>::value ||
-        !std::is_arithmetic<Tb>::value,
-        bool
-    >::type
-    almost_equal (const Ta &a, const Tb &b)
-        { return a == b; }
-
-
-    //-----------------------------------------------------------------------------
-    // Useful for explictly ignore equality warnings
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
-    template <typename T, typename U>
-    bool
-    exactly_equal  (const T &a, const U &b)
-        { return a == b; }
-#pragma GCC diagnostic pop
-
-
-    //-----------------------------------------------------------------------------
-    template <typename T>
-    bool
-    almost_zero  (T a)
-        { return almost_equal (a, T{0}); }
-
-
-    //-----------------------------------------------------------------------------
-    template <typename T>
-    bool
-    exactly_zero (T a)
-        { return exactly_equal (a, T{0}); }
 
 
     //-----------------------------------------------------------------------------

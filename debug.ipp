@@ -20,11 +20,18 @@
 
 #define __UTIL_DEBUG_IPP
 
+#include "./format.hpp"
+
 #include <limits>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace debug { namespace detail {
     void panic [[noreturn]] (const char *msg);
+
+    template <typename ...Args>
+    void panic [[noreturn]] (const char *msg, const Args& ...args)
+    { panic (util::format::render (msg, args...).c_str ()); }
+
     void not_implemented [[noreturn]] (const char *msg);
     void unreachable [[noreturn]] (const char *msg);
 } } }
@@ -76,13 +83,6 @@ constexpr void unreachable [[noreturn]] (const char *msg)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-inline void panic [[noreturn]] (const std::string &msg)
-{
-    util::debug::detail::panic (msg.c_str ());
-}
-
-
-//-----------------------------------------------------------------------------
 constexpr void panic [[noreturn]] (void)
 {
     panic ("nfi");
@@ -95,4 +95,16 @@ constexpr void panic [[noreturn]] (const char *msg)
     ! msg
     ? panic (msg)
     : util::debug::detail::panic (msg);
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename ...Args>
+constexpr
+void
+panic [[noreturn]] (const char *fmt, const Args& ...args)
+{
+    ! fmt
+    ? panic ()
+    : util::debug::detail::panic (fmt, args...);
 }
