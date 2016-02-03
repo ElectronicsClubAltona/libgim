@@ -292,6 +292,15 @@ namespace util {
         return std::signbit (t) ? -1 : 1;
     }
 
+    //-------------------------------------------------------------------------
+    template <typename T>
+    constexpr
+    bool
+    samesign (T a, T b)
+    {
+        return a < 0 && b < 0 || a > 0 && b > 0;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////////
     // factorisation
