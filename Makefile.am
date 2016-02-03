@@ -263,6 +263,8 @@ UTIL_FILES   =			\
     quaternion.cpp		\
     quaternion.hpp		\
     raii.hpp			\
+    rand/lcg.cpp		\
+    rand/lcg.hpp		\
     rand/xorshift.cpp		\
     rand/xorshift.hpp		\
     random.cpp			\
@@ -425,7 +427,7 @@ TEST_BIN = 			\
     test/point			\
     test/polynomial		\
     test/pool			\
-    test/rand/xorshift		\
+    test/rand/buckets		\
     test/random			\
     test/range 			\
     test/rational		\

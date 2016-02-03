@@ -15,7 +15,8 @@
 /options
 /point
 /pool
-/rand
+/random
+/rand/buckets
 /range
 /region
 /ripemd
