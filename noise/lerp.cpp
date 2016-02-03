@@ -25,13 +25,12 @@ using util::lerp::linear;
 using util::lerp::cosine;
 using util::lerp::cubic;
 using util::lerp::quintic;
-using util::lerp::truncate;
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
 T
-truncate<T>::operator() (T a, T, T weight) noexcept
+util::lerp::truncate<T>::operator() (T a, T, T weight) noexcept
 {
     static_assert (std::is_floating_point<T>::value,
                    "lerp is only defined for floating types");
