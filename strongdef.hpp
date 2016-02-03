@@ -64,13 +64,22 @@ namespace util {
         // prevents the conversion operator getting invoked and falsely
         // allowing equality with different types or tags.
         template <typename U, typename TagU>
-        std::enable_if_t<!std::is_same<T,U>::value || !std::is_same<Tag,TagU>::value,bool>
-        operator== (const strongdef<U,TagU> &rhs) = delete;
+        std::enable_if_t<
+            !std::is_same<T,U>::value ||
+            !std::is_same<Tag,TagU>::value,
+            bool
+        >
+        operator== (const strongdef<U,TagU> &rhs) const = delete;
 
         // provide a usable equality for equal types and tags
         template <typename U, typename TagU>
-        std::enable_if_t<std::is_same<T,U>::value && std::is_same<Tag,TagU>::value,bool>
-        operator== (const strongdef<U,TagU> &rhs) { return data == rhs.data; }
+        constexpr
+        std::enable_if_t<
+            std::is_same<T,U>::value &&
+            std::is_same<Tag,TagU>::value,
+            bool
+        >
+        operator== (const strongdef<U,TagU> &rhs) const { return data == rhs.data; }
 
         T data;
     };
