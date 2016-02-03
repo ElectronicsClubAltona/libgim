@@ -279,6 +279,7 @@ UTIL_FILES   =			\
     region.cpp			\
     region.hpp			\
     region.ipp			\
+    roots/bisection.hpp		\
     si.cpp			\
     signal.cpp			\
     signal.hpp			\
@@ -433,6 +434,7 @@ TEST_BIN = 			\
     test/rational		\
     test/region			\
     test/ripemd			\
+    test/roots/bisection	\
     test/sha1			\
     test/sha2			\
     test/signal			\
