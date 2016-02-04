@@ -22,6 +22,10 @@
 #include <cstdlib>
 
 namespace util {
+    /// a simple pre-allocated pool for storage of PODs.
+    ///
+    /// non-POD types can be stored, but there are no guarantees for calling
+    /// item destructors at pool destruction time.
     template <typename T>
     class pool : public nocopy {
         protected:
@@ -34,7 +38,7 @@ namespace util {
             node *m_next; // next available entry in the linked list
 
             const size_t m_capacity;
-            size_t m_remain;
+            size_t m_size;
 
         public:
             pool (unsigned int _capacity);
@@ -47,7 +51,7 @@ namespace util {
             void release (T *data);
 
             size_t capacity (void) const;
-            size_t remain (void) const;
+            size_t size (void) const;
             bool empty (void) const;
 
             // Indexing

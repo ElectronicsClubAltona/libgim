@@ -35,7 +35,7 @@ check_unique_ptr (util::TAP::logger &tap)
     for (auto i: uintset)
         uintpool.release (i);
 
-    tap.expect_eq (uintset.size (), uintpool.remain (), "re-inserted maximum elements");
+    tap.expect_eq (uintpool.size (), 0u, "re-inserted maximum elements");
     uintset.clear ();
 
     // Do the above one more time to ensure that releasing works right

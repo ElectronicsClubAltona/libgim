@@ -26,7 +26,7 @@ namespace util {
     template <typename T>
     pool<T>::pool (unsigned int _capacity):
         m_capacity (_capacity),
-        m_remain   (_capacity)
+        m_size     (0u)
     {
         static_assert (sizeof (T) >= sizeof (uintptr_t),
                        "pool<T>'s chained block system requires that T be at least pointer sized");
@@ -63,9 +63,9 @@ namespace util {
     //-------------------------------------------------------------------------
     template <typename T>
     size_t
-    pool<T>::remain (void) const
+    pool<T>::size (void) const
     {
-        return m_remain;
+        return m_size;
     }
 
 
@@ -74,7 +74,7 @@ namespace util {
     bool
     pool<T>::empty (void) const
     {
-        return m_remain == 0;
+        return m_size == m_capacity;
     }
 
 
@@ -87,7 +87,7 @@ namespace util {
         // double check we have enough capacity left
         if (!m_next)
             throw std::bad_alloc ();
-        CHECK_GT (m_remain, 0);
+        CHECK_LT (m_size, m_capacity);
 
         // save what will become the next node shortly. it could be overwritten
         // in the constructor we're about to call.
@@ -107,7 +107,7 @@ namespace util {
         // the object is valid. save the new linked list head and bump the
         // stats for availability.
         m_next  = newnext;
-        m_remain--;
+        m_size++;
 
         return data;
     }
@@ -118,14 +118,14 @@ namespace util {
     void
     pool<T>::release (T *data)
     {
-        CHECK_LT (m_remain, m_capacity);
+        CHECK_NEZ (m_size);
 
         data->~T();
         node *newnode = reinterpret_cast<node *> (data);
 
         newnode->_node = m_next;
         m_next = newnode;
-        m_remain++;
+        m_size--;
     }
 }
 
