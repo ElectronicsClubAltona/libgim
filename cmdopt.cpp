@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <iostream>
 #include <iomanip>
 
 using util::cmdopt::option::base;

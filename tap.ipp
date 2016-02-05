@@ -21,8 +21,9 @@
 
 #include "maths.hpp"
 
-#include <cstdlib>
 #include <algorithm>
+#include <cstdlib>
+#include <iostream>
 
 #include "format.hpp"
 
