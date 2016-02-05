@@ -18,6 +18,7 @@
 #define __DEBUG_HPP
 
 //#include "maths.hpp" // XXX: See notes at the end of file for maths.hpp inclusion
+#include <algorithm>
 #include <stdexcept>
 #include <string>
 
@@ -216,6 +217,26 @@
                           #A, __a);                         \
     );                                                      \
 } while (0)
+
+
+///////////////////////////////////////////////////////////////////////////////
+#if defined(ENABLE_DEBUGGING)
+#define CHECK_ENUM(C, ...) do {                         \
+    const auto &__c = (C);                              \
+    const auto &__e = { __VA_ARGS__ };                  \
+                                                        \
+    if (std::find (std::cbegin (__e),                   \
+                   std::cend   (__e),                   \
+                  __c) != std::end (__e)) {             \
+        _CHECK_PANIC("expect enum\n"                    \
+                     "__c: %s is $!",                   \
+                     #C, __c);                          \
+    }                                                   \
+} while (0)
+#else
+#define CHECK_ENUM(C,...)
+#endif
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
