@@ -28,6 +28,12 @@ namespace util { namespace alloc {
     public:
         void* allocate (size_t bytes, size_t align = alignof (std::max_align_t));
         void deallocate (void *ptr, size_t bytes, size_t align = alignof (std::max_align_t));
+
+        void reset (void) { ; }
+
+        constexpr size_t capacity (void) const { return 0u; }
+        constexpr size_t used     (void) const { return 0u; }
+        constexpr size_t remain   (void) const { return 0u; }
     };
 } }
 
