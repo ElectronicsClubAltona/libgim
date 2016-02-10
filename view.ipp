@@ -114,7 +114,7 @@ util::view<T>::size (void) const noexcept
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 constexpr
-const typename util::view<T>::value_type&
+typename util::view<T>::value_type&
 util::view<T>::operator[] (size_t idx) const noexcept
 {
     return m_begin[idx];

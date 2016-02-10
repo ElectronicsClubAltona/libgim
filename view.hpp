@@ -43,7 +43,7 @@ namespace util {
         constexpr size_t size (void) const noexcept;
 
         constexpr value_type& operator[] (size_t) noexcept;
-        constexpr const value_type& operator[] (size_t) const noexcept;
+        constexpr value_type& operator[] (size_t) const noexcept;
 
         bool operator== (view) const noexcept;
 
