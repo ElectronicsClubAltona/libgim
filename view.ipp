@@ -136,6 +136,11 @@ template <typename T>
 std::ostream&
 util::operator<< (std::ostream &os, util::view<T> v)
 {
-    std::copy (v.begin (), v.end (), std::ostream_iterator<char> (os));
+    os << '[';
+
+    for (auto &i: v)
+        os << v << ", ";
+
+    os << ']';
     return os;
 }
