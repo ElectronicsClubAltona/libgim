@@ -11,6 +11,7 @@ AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(ZLIB_CFLAGS)
 UTIL_FILES   =			\
     adapter.hpp			\
     adapter.cpp			\
+    alloc/fwd.hpp		\
     alloc/affix.cpp		\
     alloc/affix.hpp		\
     alloc/allocator.cpp		\
