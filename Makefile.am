@@ -19,6 +19,7 @@ UTIL_FILES   =			\
     alloc/arena.cpp		\
     alloc/arena.hpp		\
     alloc/arena.ipp		\
+    alloc/dynamic.hpp		\
     alloc/fallback.cpp		\
     alloc/fallback.hpp		\
     alloc/linear.cpp		\
@@ -389,6 +390,7 @@ AM_CXXFLAGS += -I$(top_srcdir)
 
 TEST_BIN = 			\
     test/alloc/arena		\
+    test/alloc/dynamic		\
     test/alloc/stack		\
     test/alloc/linear		\
     test/backtrace 		\
