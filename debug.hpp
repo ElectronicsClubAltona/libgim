@@ -283,6 +283,9 @@ constexpr void panic [[noreturn]] (const char *fmt, const Args&...);
 constexpr void not_implemented [[noreturn]] (void);
 constexpr void not_implemented [[noreturn]] (const char *msg);
 
+constexpr void unimplemented [[noreturn]] (void) { not_implemented (); }
+constexpr void unimplemented [[noreturn]] (const char *msg) { not_implemented (msg); }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 constexpr void unreachable [[noreturn]] (void);
