@@ -23,8 +23,6 @@
 
 #include "debug.hpp"
 
-#include <iterator>
-
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
@@ -95,7 +93,8 @@ util::view<T>::find (value_type v) const noexcept
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-constexpr bool
+constexpr
+bool
 util::view<T>::empty (void) const noexcept
 {
     return m_begin == m_end;
@@ -104,7 +103,8 @@ util::view<T>::empty (void) const noexcept
 
 //-----------------------------------------------------------------------------
 template <typename T>
-constexpr size_t
+constexpr
+size_t
 util::view<T>::size (void) const noexcept
 {
     return m_end - m_begin;
@@ -113,7 +113,8 @@ util::view<T>::size (void) const noexcept
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-constexpr const typename util::view<T>::value_type&
+constexpr
+const typename util::view<T>::value_type&
 util::view<T>::operator[] (size_t idx) const noexcept
 {
     return m_begin[idx];

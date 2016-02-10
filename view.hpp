@@ -53,7 +53,8 @@ namespace util {
     };
 
     template <typename T>
-    std::ostream& operator<< (std::ostream&, view<T>);
+    std::ostream&
+    operator<< (std::ostream&, view<T>);
 }
 
 #include "./view.ipp"
