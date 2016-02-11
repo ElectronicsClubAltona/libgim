@@ -44,6 +44,9 @@ namespace json { namespace tree {
     extern std::unique_ptr<node> parse (const char *start, const char *stop);
     extern std::unique_ptr<node> parse (const std::string&);
 
+    extern std::unique_ptr<node> from_path (const char *path);
+    extern std::unique_ptr<node> from_path (const std::string&);
+
     extern void write (const json::tree::node&, std::ostream&);
 
     /// Abstract base for all JSON values

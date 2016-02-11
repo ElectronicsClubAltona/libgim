@@ -204,6 +204,21 @@ json::tree::parse (const char *first, const char *last)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+std::unique_ptr<json::tree::node>
+json::tree::from_path (const char *path)
+{
+    return json::tree::parse (boost::filesystem::path (path));
+}
+
+
+//-----------------------------------------------------------------------------
+std::unique_ptr<json::tree::node>
+json::tree::from_path (const std::string &path)
+{
+    return json::tree::from_path (path.c_str ());
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // Type conversion
 
 const json::tree::object&
