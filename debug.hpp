@@ -227,7 +227,7 @@
                                                         \
     if (std::find (std::cbegin (__e),                   \
                    std::cend   (__e),                   \
-                  __c) != std::end (__e)) {             \
+                  __c) == std::end (__e)) {             \
         _CHECK_PANIC("expect enum\n"                    \
                      "__c: %s is $!",                   \
                      #C, __c);                          \
