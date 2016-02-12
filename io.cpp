@@ -201,3 +201,18 @@ scoped_cwd::~scoped_cwd ()
     if (!chdir (m_original.c_str ()))
         errno_error::throw_code ();
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+path_error::path_error (const boost::filesystem::path &_path):
+    runtime_error (format::render ("Unknown path: %!", m_path)),
+    m_path (_path)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+const char*
+path_error::path (void) const noexcept
+{
+    return m_path.c_str ();
+}

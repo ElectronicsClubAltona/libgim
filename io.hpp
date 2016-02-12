@@ -134,10 +134,13 @@ namespace util {
 
     //-------------------------------------------------------------------------
     class path_error : public std::runtime_error {
-        public:
-            path_error (const boost::filesystem::path &path):
-                runtime_error ("Invalid path " + path.string ())
-            { ; }
+    public:
+        path_error (const boost::filesystem::path &path);
+
+        const char* path (void) const noexcept;
+
+    private:
+        const boost::filesystem::path m_path;
     };
 }
 
