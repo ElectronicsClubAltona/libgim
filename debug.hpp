@@ -229,7 +229,7 @@
                    std::cend   (__e),                   \
                   __c) == std::end (__e)) {             \
         _CHECK_PANIC("expect enum\n"                    \
-                     "__c: %s is $!",                   \
+                     "__c: %s is %!",                   \
                      #C, __c);                          \
     }                                                   \
 } while (0)
