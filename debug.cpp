@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "backtrace.hpp"
@@ -36,27 +36,6 @@ detail::panic (const char *msg)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-#if defined(PLATFORM_WIN32)
-#include <windows.h>
-void
-breakpoint (void)
-{
-    DebugBreak ();
-}
-#else
-void
-breakpoint (void)
-{
-#if defined (__x86_64) || defined (__i386)
-    __asm__ ("int $3;");
-#else
-    raise (SIGINT);
-#endif
-}
-#endif
-
-
-//-----------------------------------------------------------------------------
 void
 detail::not_implemented (const char *msg)
 {
@@ -97,101 +76,12 @@ warn (const char *msg)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-#if defined(PLATFORM_LINUX)
-#include <fenv.h>
-void
-enable_fpe (void)
-{
-    feenableexcept (FE_DIVBYZERO | FE_INVALID);
-}
-
-
-//-----------------------------------------------------------------------------
-void
-disable_fpe (void)
-{
-    feenableexcept (0);
-}
-#else
-// contropfp is not defined supposedly due to a regression in GCC include behaviours.
-
-
-//-----------------------------------------------------------------------------
-void
-enable_fpe (void)
-{
-    LOG_WARN ("Non-Linux exception code is broken under current GCC.");
-//    _clearfp();
-//    unsigned int ignored;
-//    _controlfp_s (&ignored, _MCW_EM, _MCW_EM);
-}
-
-
-//-----------------------------------------------------------------------------
-void
-disable_fpe (void)
-{
-    LOG_WARN ("Non-Linux exception code is broken under current GCC.");
-//    _clearfp();
-//    unsigned int ignored;
-//    _controlfp_s (&ignored, 0, _MCW_EM);
-}
-#endif
-
-
-////////////////////////////////////////////////////////////////////////////////
-#if defined(PLATFORM_WIN32)
-#include <io.h>
-#include <fcntl.h>
-
-void
-force_console (void)
-{
-    if (!AttachConsole (ATTACH_PARENT_PROCESS))
-        return;
-
-    auto out_handle = GetStdHandle (STD_OUTPUT_HANDLE);
-    auto err_handle = GetStdHandle (STD_ERROR_HANDLE);
-    auto in_handle  = GetStdHandle (STD_INPUT_HANDLE);
-
-    auto out_fd = _open_osfhandle (reinterpret_cast<intptr_t> (out_handle), _O_TEXT);
-    auto err_fd = _open_osfhandle (reinterpret_cast<intptr_t> (err_handle), _O_TEXT);
-    auto in_fd  = _open_osfhandle (reinterpret_cast<intptr_t> (in_handle),  _O_TEXT);
-
-    auto out_file = _fdopen (out_fd, "w");
-    auto err_file = _fdopen (err_fd, "w");
-    auto in_file  = _fdopen (in_fd,  "r");
-
-    /// FILE objects are not reassignable, but Windows doesn't leave us much
-    /// choice here.
-    *stdout = *out_file;
-    *stderr = *err_file;
-    *stdin  = *in_file;
-
-    setvbuf (stdout, NULL, _IONBF, 0);
-    setvbuf (stderr, NULL, _IONBF, 0);
-    setvbuf (stdin,  NULL, _IONBF, 0);
-
-    ios::sync_with_stdio ();
-
-    // Windows doesn't give an immediate newline when an application is run
-    // from a console, so we provide one here for sanity.
-    std::cout << "\n";
-    std::cerr << "Console installed\n";
-}
-#endif
-
-
-////////////////////////////////////////////////////////////////////////////////
 void
 util::debug::init (void)
 {
-#if defined(PLATFORM_WIN32)
     force_console ();
+    prepare_debugger ();
 
-    if (nullptr == LoadLibrary("exchndl.dll")) {
-        std::cerr << GetLastError () << "\n";
-        LOG_WARNING("Emergency debugger not loaded");
-    }
-#endif
+    if (getenv ("DEBUG_WAIT"))
+        await_debugger ();
 }

@@ -327,6 +327,7 @@ UTIL_FILES   =			\
 if PLATFORM_LINUX
 UTIL_FILES += 			\
     backtrace_execinfo.cpp	\
+    debug_posix.cpp		\
     io_posix.cpp		\
     io_posix.hpp		\
     library_posix.hpp		\
@@ -340,6 +341,7 @@ endif
 if PLATFORM_WIN32
 UTIL_FILES += 			\
     backtrace_null.cpp		\
+    debug_win32.cpp		\
     io_win32.cpp		\
     library_win32.hpp		\
     library_win32.cpp		\
