@@ -1,4 +1,4 @@
-#include "image.hpp"
+#include "image/buffer.hpp"
 #include "noise.hpp"
 
 #include "noise/fractal/fbm.hpp"

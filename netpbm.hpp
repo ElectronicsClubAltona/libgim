@@ -17,7 +17,7 @@
 #ifndef __UTIL_NETPBM_HPP
 #define __UTIL_NETPBM_HPP
 
-#include "image.hpp"
+#include "./image/buffer.hpp"
 
 #include <cstdint>
 #include <cstddef>

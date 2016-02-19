@@ -14,10 +14,10 @@
  * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifdef __UTIL_IMAGE_IPP
+#ifdef __UTIL_IMAGE_BUFFER_IPP
 #error
 #endif
-#define __UTIL_IMAGE_IPP
+#define __UTIL_IMAGE_BUFFER_IPP
 
 namespace util { namespace image {
     //-------------------------------------------------------------------------

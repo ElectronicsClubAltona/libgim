@@ -20,7 +20,7 @@
 #include <cstdint>
 #include <cstdlib>
 
-#include "image.hpp"
+#include "image/buffer.hpp"
 
 namespace util { namespace noise {
         template <typename T, typename G>

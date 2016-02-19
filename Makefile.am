@@ -147,9 +147,9 @@ UTIL_FILES   =			\
     hash/sha2.hpp		\
     hash/wang.hpp		\
     hash/wang.ipp		\
-    image.cpp			\
-    image.hpp			\
-    image.ipp			\
+    image/buffer.cpp		\
+    image/buffer.hpp		\
+    image/buffer.ipp		\
     introspection.cpp		\
     introspection.hpp		\
     io.cpp			\

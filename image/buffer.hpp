@@ -14,11 +14,11 @@
  * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_IMAGE_HPP
-#define __UTIL_IMAGE_HPP
+#ifndef __UTIL_IMAGE_BUFFER_HPP
+#define __UTIL_IMAGE_BUFFER_HPP
 
-#include "extent.hpp"
-#include "point.hpp"
+#include "../extent.hpp"
+#include "../point.hpp"
 
 #include <cstdint>
 #include <cstdlib>
@@ -82,6 +82,6 @@ namespace util { namespace image {
     };
 } }
 
-#include "image.ipp"
+#include "./buffer.ipp"
 
 #endif

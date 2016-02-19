@@ -1,4 +1,4 @@
-#include "image.hpp"
+#include "image/buffer.hpp"
 #include "tap.hpp"
 
 #include <cstdint>

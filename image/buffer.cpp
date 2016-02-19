@@ -14,9 +14,9 @@
  * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "image.hpp"
+#include "./buffer.hpp"
 
-#include "debug.hpp"
+#include "../debug.hpp"
 
 using util::image::buffer;
 
