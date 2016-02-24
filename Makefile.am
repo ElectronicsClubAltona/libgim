@@ -197,56 +197,6 @@ UTIL_FILES   =			\
     net/types.cpp		\
     net/types.hpp		\
     nocopy.hpp			\
-    noise.hpp			\
-    noise.ipp			\
-    noise/fwd.hpp		\
-    noise/basis/constant.cpp	\
-    noise/basis/constant.hpp	\
-    noise/basis/constant.ipp	\
-    noise/basis/gradient/uniform.hpp	\
-    noise/basis/gradient/uniform.ipp	\
-    noise/basis/gradient/exp.hpp	\
-    noise/basis/gradient/exp.ipp	\
-    noise/basis/patch.hpp	\
-    noise/basis/patch.ipp	\
-    noise/basis/perlin.hpp	\
-    noise/basis/perlin.ipp	\
-    noise/basis/runtime.cpp	\
-    noise/basis/runtime.hpp	\
-    noise/basis/type/distance.cpp	\
-    noise/basis/type/distance.hpp	\
-    noise/basis/type/gradient.hpp	\
-    noise/basis/type/gradient.cpp	\
-    noise/basis/value.hpp	\
-    noise/basis/value.ipp	\
-    noise/basis/worley.hpp	\
-    noise/basis/worley.ipp	\
-    noise/fractal/base.hpp	\
-    noise/fractal/base.ipp	\
-    noise/fractal/fbm.hpp	\
-    noise/fractal/fbm.ipp	\
-    noise/fractal/hetero.hpp	\
-    noise/fractal/hetero.ipp	\
-    noise/fractal/hmf.hpp	\
-    noise/fractal/hmf.ipp	\
-    noise/fractal/rmf.hpp	\
-    noise/fractal/rmf.ipp	\
-    noise/fractal/runtime.cpp	\
-    noise/fractal/runtime.hpp	\
-    noise/lerp.cpp		\
-    noise/lerp.hpp		\
-    noise/lut.cpp		\
-    noise/lut.hpp		\
-    noise/midpoint.cpp		\
-    noise/midpoint.hpp		\
-    noise/rand.hpp		\
-    noise/rand/hash.hpp		\
-    noise/rand/hash.ipp		\
-    noise/rand/permute.cpp	\
-    noise/rand/permute.hpp	\
-    noise/rand/permute.ipp	\
-    noise/turbulence.hpp	\
-    noise/turbulence.ipp	\
     pascal.cpp			\
     pascal.hpp			\
     platform.hpp		\
@@ -379,8 +329,7 @@ bin_PROGRAMS = 				\
     tools/json-clean			\
     tools/json-validate			\
     tools/json-schema			\
-    tools/hash				\
-    tools/noise
+    tools/hash
 
 noinst_PROGRAMS = tools/scratch
 
