@@ -29,6 +29,7 @@ AM_SILENT_RULES([yes])
 
 AC_CONFIG_HEADERS([config.h])
 
+AX_CHECK_GNU_MAKE
 
 ###############################################################################
 ## Architecture features
@@ -59,6 +60,13 @@ AC_SEARCH_LIBS([clock_gettime], [rt])
 AS_IF([test "x$ac_cv_search_clock_gettime" == "x-*"], [
     AX_APPEND_LINK_FLAGS([$ac_cv_search_clock_gettime], [], [-Werror])
 ])
+
+## Use dynamic loader if present (for util::library)
+AS_IF(
+    [test "x${host_os}" != "xmingw32"],
+    [AC_SEARCH_LIBS([dlopen], [dl])]
+)
+
 
 ###############################################################################
 ## Debug features
@@ -111,6 +119,7 @@ AX_APPEND_FLAG([-include config.h])
 AC_CONFIG_FILES([
     Doxyfile
     Makefile
+    libcruft-util.pc
 ])
 AC_CONFIG_FILES([test/json-parse],  [chmod a+x test/json-parse])
 AC_CONFIG_FILES([test/json-schema], [chmod a+x test/json-schema])

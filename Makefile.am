@@ -4,9 +4,13 @@
 ACLOCAL_AMFLAGS = -I m4
 
 AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(ZLIB_CFLAGS)
+AM_DEFAULT_SOURCE_EXT = .cpp
 
 ###############################################################################
 ## Source definitions
+
+pkgincludedir = $(includedir)/cruft/util
+pkglibdir     = $(libdir)/cruft
 
 UTIL_FILES   =			\
     adapter.hpp			\
@@ -147,9 +151,6 @@ UTIL_FILES   =			\
     hash/sha2.hpp		\
     hash/wang.hpp		\
     hash/wang.ipp		\
-    image/buffer.cpp		\
-    image/buffer.hpp		\
-    image/buffer.ipp		\
     introspection.cpp		\
     introspection.hpp		\
     io.cpp			\
@@ -350,6 +351,7 @@ UTIL_FILES += 			\
     win32/registry.cpp
 endif
 
+
 ###############################################################################
 ## Local build rules
 CLEANFILES = json.cpp version.cpp ip.cpp uri.cpp
@@ -362,14 +364,16 @@ SUFFIXES = .cpp .cpp.rl
 
 ###############################################################################
 ## Library definition
-lib_LIBRARIES = libutil.a
-libutil_a_SOURCES  = $(UTIL_FILES)
-libutil_a_CXXFLAGS = $(AM_CXXFLAGS)
+lib_LIBRARIES = libcruft-util.a
+libcruft_util_a_SOURCES  = $(UTIL_FILES)
+libcruft_util_a_CXXFLAGS = $(AM_CXXFLAGS)
+
+nobase_pkginclude_HEADERS = $(filter %.hpp %.ipp, $(UTIL_FILES))
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libcruft-util.pc
 
 ###############################################################################
 ## Utility programs
-
-AM_DEFAULT_SOURCE_EXT = .cpp
 
 AM_LDFLAGS  = $(BOOST_LDFLAGS) -lrt
 
@@ -382,7 +386,7 @@ bin_PROGRAMS = 				\
 
 noinst_PROGRAMS = tools/scratch
 
-LDADD = $(top_builddir)/libutil.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
+LDADD = $(top_builddir)/libcruft-util.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
 
 
 ##-----------------------------------------------------------------------------
@@ -418,7 +422,6 @@ TEST_BIN = 			\
     test/hmac			\
     test/hotp			\
     test/hton			\
-    test/image			\
     test/introspection		\
     test/ip 			\
     test/json_types		\
