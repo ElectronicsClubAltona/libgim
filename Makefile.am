@@ -9,9 +9,6 @@ AM_DEFAULT_SOURCE_EXT = .cpp
 ###############################################################################
 ## Source definitions
 
-pkgincludedir = $(includedir)/cruft/util
-pkglibdir     = $(libdir)/cruft
-
 UTIL_FILES   =			\
     adapter.hpp			\
     adapter.cpp			\
@@ -318,7 +315,9 @@ libcruft_util_a_SOURCES  = $(UTIL_FILES)
 libcruft_util_a_CXXFLAGS = $(AM_CXXFLAGS)
 
 nobase_pkginclude_HEADERS = $(filter %.hpp %.ipp, $(UTIL_FILES))
-pkgconfigdir = $(libdir)/pkgconfig
+pkgincludedir  = $(includedir)/cruft/util
+pkglibdir      = $(libdir)/
+pkgconfigdir   = $(libdir)/pkgconfig
 pkgconfig_DATA = libcruft-util.pc
 
 ###############################################################################
