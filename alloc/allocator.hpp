@@ -17,8 +17,7 @@
 #ifndef __UTIL_ALLOC_ALLOCATOR_HPP
 #define __UTIL_ALLOC_ALLOCATOR_HPP
 
-#include <cstdlib>
-#include <utility>
+#include <cstddef>
 
 // C++11 allocator concept conformant allocator adaptor, going from our
 // allocator interface to that of the STL and friends.
@@ -31,8 +30,8 @@ namespace util { namespace alloc {
         template <typename ...Args>
         allocator (Args&& ...args);
 
-        T* allocate (std::size_t count);
-        void deallocate (T*, std::size_t count);
+        T* allocate (size_t count);
+        void deallocate (T*, size_t count);
 
     private:
         B &m_backing;

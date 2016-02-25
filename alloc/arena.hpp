@@ -17,9 +17,10 @@
 #ifndef __UTIL_ALLOC_ARENA_HPP
 #define __UTIL_ALLOC_ARENA_HPP
 
-#include <memory>
 #include "../memory/deleter.hpp"
 
+#include <memory>
+#include <utility>
 
 namespace util { namespace alloc {
     template <class T>
