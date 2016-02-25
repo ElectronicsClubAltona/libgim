@@ -51,7 +51,13 @@ namespace util { namespace posix {
 
         operator DIR* (void);
 
-        void scan (std::function<void(const char*)>);
+        template <typename ...Args>
+        void
+        scan (std::function<void(const char*, Args&...)>, Args&...);
+
+        template <typename ...Args>
+        void
+        scan (void (*) (const char*, Args&...), Args&...);
 
         //entry begin (void) { rewind (); return { readdir (m_handle), m_handle }; }
         //entry end (void) { return { nullptr, m_handle }; }
@@ -62,5 +68,7 @@ namespace util { namespace posix {
         DIR *m_handle;
     };
 } }
+
+#include "./dir.ipp"
 
 #endif

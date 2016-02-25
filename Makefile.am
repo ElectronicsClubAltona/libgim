@@ -281,8 +281,9 @@ UTIL_FILES += 			\
     io_posix.hpp		\
     library_posix.hpp		\
     library_posix.cpp		\
-    posix/dir.hpp		\
     posix/dir.cpp		\
+    posix/dir.hpp		\
+    posix/dir.ipp		\
     time_posix.cpp
 
 endif

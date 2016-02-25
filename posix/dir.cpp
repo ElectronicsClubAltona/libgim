@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "dir.hpp"
+#include "./dir.hpp"
 
 #include "../except.hpp"
 
@@ -64,19 +64,6 @@ dir::~dir ()
 dir::operator DIR* (void)
 {
     return m_handle;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-dir::scan(std::function<void(const char*)> cb)
-{
-    rewind ();
-
-    for (dirent *cursor; errno = 0, cursor = readdir (m_handle); )
-        cb (cursor->d_name);
-
-    errno_error::try_code ();
 }
 
 
