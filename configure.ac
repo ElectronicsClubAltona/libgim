@@ -39,9 +39,6 @@ AC_C_BIGENDIAN
 ###############################################################################
 ## Useful headers or platform features
 
-AC_TYPE_SIZE_T
-AC_TYPE_SSIZE_T
-
 ###############################################################################
 ## Platform features
 
