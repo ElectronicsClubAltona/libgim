@@ -272,7 +272,6 @@ UTIL_FILES   =			\
 
 if PLATFORM_LINUX
 UTIL_FILES += 			\
-    backtrace_execinfo.cpp	\
     debug_posix.cpp		\
     io_posix.cpp		\
     io_posix.hpp		\
@@ -287,7 +286,6 @@ endif
 
 if PLATFORM_WIN32
 UTIL_FILES += 			\
-    backtrace_null.cpp		\
     debug_win32.cpp		\
     io_win32.cpp		\
     library_win32.hpp		\
@@ -295,6 +293,12 @@ UTIL_FILES += 			\
     time_win32.cpp		\
     win32/registry.hpp		\
     win32/registry.cpp
+endif
+
+if HAVE_EXECINFO_H
+UTIL_FILES += backtrace_execinfo.cpp
+else
+UTIL_FILES += backtrace_null.cpp
 endif
 
 

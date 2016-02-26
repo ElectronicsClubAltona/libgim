@@ -49,9 +49,9 @@ AC_DEFINE([_XOPEN_SOURCE], [700], [use POSIX 2008])
 
 AC_FUNC_MMAP
 
+AC_CHECK_HEADERS([execinfo.h], [break;], [have_execinfo_h=true])
+AM_CONDITIONAL([HAVE_EXECINFO_H], [test "x$have_execinfo_h" = "xtrue"])
 
-AC_CHECK_HEADER([execinfo.h], [break])
-AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
 
 AC_SEARCH_LIBS([clock_gettime], [rt])
 AS_IF([test "x$ac_cv_search_clock_gettime" == "x-*"], [
