@@ -49,9 +49,6 @@ AC_DEFINE([_XOPEN_SOURCE], [700], [use POSIX 2008])
 
 AC_FUNC_MMAP
 
-AC_CHECK_FUNC([strndup], [
-    AC_DEFINE([HAVE_STRNDUP], [], [strndup appears to be present])
-])
 
 AC_CHECK_HEADER([execinfo.h], [break])
 AM_CONDITIONAL([HAVE_EXECINFO], [test x$ac_cv_header_execinfo_h = "xyes"])
