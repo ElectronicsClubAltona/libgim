@@ -1,4 +1,4 @@
-AC_INIT([libgim], [0.1.0], [danny@nerdcruft.net])
+AC_INIT([cruft-util], [0.1.0], [danny@nerdcruft.net])
 ## Explicitly set an empty CXXFLAGS if not present to prevent AC_PROG_CXX from
 ## generating a default -O2. This allows us to manually select -O0 when
 ## debugging is enabled.
@@ -118,6 +118,8 @@ AC_CONFIG_FILES([
     Makefile
     libcruft-util.pc
 ])
+
 AC_CONFIG_FILES([test/json-parse],  [chmod a+x test/json-parse])
 AC_CONFIG_FILES([test/json-schema], [chmod a+x test/json-schema])
+
 AC_OUTPUT
