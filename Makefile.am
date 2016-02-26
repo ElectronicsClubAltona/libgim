@@ -413,3 +413,8 @@ LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver
 TESTS = $(top_builddir)/test/json-parse $(top_builddir)/test/json-schema $(TEST_BIN)
 check_PROGRAMS = $(TEST_BIN)
 EXTRA_DIST += test/json test/json-parse test/json-schema
+
+.PHONY: doc
+
+doc: $(top_builddir)/Doxyfile
+	doxygen $<
