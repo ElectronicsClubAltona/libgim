@@ -49,17 +49,18 @@ AC_FUNC_MMAP
 AC_CHECK_HEADERS([execinfo.h], [break;], [have_execinfo_h=true])
 AM_CONDITIONAL([HAVE_EXECINFO_H], [test "x$have_execinfo_h" = "xtrue"])
 
+AC_SEARCH_LIBS([clock_gettime], [rt], [], [
+    AC_MSG_ERROR([unable to find the clock library])
+])
 
-AC_SEARCH_LIBS([clock_gettime], [rt])
-AS_IF([test "x$ac_cv_search_clock_gettime" == "x-*"], [
-    AX_APPEND_LINK_FLAGS([$ac_cv_search_clock_gettime], [], [-Werror])
+AC_SEARCH_LIBS([cos], [m], [], [
+    AC_MSG_ERROR([unable to find the maths library])
 ])
 
 ## Use dynamic loader if present (for util::library)
-AS_IF(
-    [test "x${host_os}" != "xmingw32"],
-    [AC_SEARCH_LIBS([dlopen], [dl])]
-)
+AS_IF([test "x${host_os}" != "xmingw32"],[
+    AC_SEARCH_LIBS([dlopen], [dl])
+])
 
 
 ###############################################################################
@@ -98,7 +99,9 @@ AC_SUBST(ZLIB_CFLAGS)
 AC_SUBST(ZLIB_LIBS)
 
 AC_CHECK_TOOL([ADDR2LINE], [addr2line], [:])
-AS_IF([test "x$ADDR2LINE" != "x:"], [AC_DEFINE_UNQUOTED([ADDR2LINE], ["$ADDR2LINE"], [addr2line tool name])])
+AS_IF([test "x$ADDR2LINE" != "x:"], [
+    AC_DEFINE_UNQUOTED([ADDR2LINE], ["$ADDR2LINE"], [addr2line tool name])
+])
 
 ###############################################################################
 ## Performance and build optimisations
