@@ -32,6 +32,16 @@ namespace util {
             ptr += alignment - ptr % alignment;
         return reinterpret_cast<T*> (ptr);
     }
+
+
+    //-------------------------------------------------------------------------
+    inline uintptr_t
+    align (uintptr_t ptr, size_t alignment)
+    {
+        return reinterpret_cast<uintptr_t> (
+            align (reinterpret_cast<void*> (ptr), alignment)
+        );
+    }
 }
 
 #endif
