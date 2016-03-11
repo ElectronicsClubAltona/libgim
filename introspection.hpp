@@ -17,7 +17,8 @@
 #ifndef __UTIL_INTROSPECTION_HPP
 #define __UTIL_INTROSPECTION_HPP
 
-#include "variadic.hpp"
+#include "./preprocessor.hpp"
+#include "./variadic.hpp"
 
 #include <cstddef>
 #include <string>
@@ -60,13 +61,174 @@ namespace util {
     template <
         typename E
     >
-    struct enum_values {
+    struct enum_traits {
         /// Specialisations must provide the following constexpr:
         ///
         /// value_type: typename
         /// value_count: size_t
         /// values: static const std::array<value_type,value_count>
     };
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// Defines specialisations for introspection data structures for an
+    /// enum E, in namespace NS, with variadic values __VA_ARGS__.
+    ///
+    /// Expects to be caleld from outside all namespaces.
+
+    #define INTROSPECTION_ENUM_DECL(NS,E, ...)                  \
+    namespace util {                                            \
+        template <>                                             \
+        struct enum_traits<NS::E> {                             \
+            using value_type = NS::E;                           \
+                                                                \
+            static constexpr                                    \
+            size_t value_count = param_count (__VA_ARGS__);     \
+                                                                \
+            static constexpr                                    \
+            std::array<value_type,value_count>                  \
+            values = { __VA_ARGS__ };                           \
+                                                                \
+            static constexpr                                    \
+            std::array<const char*,value_count>                 \
+            names = { MAP(STRINGIZE_LIST, __VA_ARGS__) };       \
+        };                                                      \
+                                                                \
+        template <>                                             \
+        struct type_string<E> {                                 \
+            static constexpr const char value[] = #E;           \
+        };                                                      \
+    }                                                           \
+
+
+    ///------------------------------------------------------------------------
+    /// Declares specialisations for introspection data structures for an
+    /// enum E, in namespace NS, with variadic values __VA_ARGS__.
+    ///
+    /// Expects to be caleld from outside all namespaces.
+
+    #define INTROSPECTION_ENUM_IMPL(NS,E, ...)                  \
+    constexpr                                                   \
+    std::array<                                                 \
+        util::enum_traits<NS::E>::value_type,                   \
+        util::enum_traits<NS::E>::value_count                   \
+    > util::enum_traits<NS::E>::values;                         \
+                                                                \
+    constexpr                                                   \
+    std::array<                                                 \
+        const char*,                                            \
+        util::enum_traits<NS::E>::value_count                   \
+    > util::enum_traits<NS::E>::names;                          \
+                                                                \
+    constexpr                                                   \
+    const char util::type_string<NS::E>::value[];               \
+
+
+    ///------------------------------------------------------------------------
+    /// Defines an istream extraction operator for an enumeration E, within
+    /// namespace NS
+    ///
+    /// Expects to be called from outside all namespaces.
+    ///
+    /// The user is responsible for specialising the ::util::enum_traits<NS::E>
+    /// parameters which are used to drive the implementation (eg, through
+    /// INTROSPECTION_ENUM_DECL, and INTROSPECTION_ENUM_IMPL).
+    ///
+    /// For trivial enumerations INTROSPECTION_ENUM may be easier to use.
+
+    #define INTROSPECTION_ENUM_ISTREAM(NS,E)                    \
+    std::istream&                                               \
+    NS::operator>> (std::istream &is, NS::E &e)                 \
+    {                                                           \
+        using traits = util::enum_traits<E>;                    \
+                                                                \
+        std::string name;                                       \
+        is >> name;                                             \
+                                                                \
+        std::transform (std::begin (name),                      \
+                        std::end   (name),                      \
+                        std::begin (name),                      \
+                        ::toupper);                             \
+                                                                \
+        auto name_pos = std::find (                             \
+            std::cbegin (traits::names),                        \
+            std::cend   (traits::names),                        \
+            name                                                \
+        );                                                      \
+                                                                \
+        if (name_pos == std::cend (traits::names)) {            \
+            is.setstate (std::istream::failbit);                \
+        } else {                                                \
+            auto d = std::distance (                            \
+                std::begin (traits::names),                     \
+                name_pos                                        \
+            );                                                  \
+                                                                \
+            e = traits::values[d];                              \
+        }                                                       \
+                                                                \
+        return is;                                              \
+    }
+
+
+    /// Defines an ostream insertion operator for an enumeration E, within
+    /// namespace NS.
+    ///
+    /// Expects to be called from outside all namespaces.
+    ///
+    /// The user is responsible for specialising the ::util::enum_traits<NS::E>
+    /// parameters which are used to drive the implementation (eg, through
+    /// INTROSPECTION_ENUM_DECL, and INTROSPECTION_ENUM_IMPL).
+    ///
+    /// For trivial enumerations INTROSPECTION_ENUM may be easier to use.
+    #define INTROSPECTION_ENUM_OSTREAM(NS,E)                    \
+    std::ostream&                                               \
+    NS::operator<< (std::ostream &os, NS::E e)                  \
+    {                                                           \
+        using traits = ::util::enum_traits<NS::E>;              \
+                                                                \
+        auto val_pos = std::find (                              \
+            std::cbegin (traits::values),                       \
+            std::cend   (traits::values),                       \
+            e                                                   \
+        );                                                      \
+                                                                \
+        if (val_pos == std::cend (traits::values)) {            \
+            os.setstate (std::ostream::failbit);                \
+        } else {                                                \
+            auto d = std::distance (                            \
+                std::cbegin (traits::values),                   \
+                val_pos                                         \
+            );                                                  \
+                                                                \
+            os << traits::names[d];                             \
+        }                                                       \
+                                                                \
+        return os;                                              \
+    }
+
+
+    /// Defines an enum, its values, associated introspection structures, and
+    /// istream and ostream operators.
+    /// 
+    /// This must be called from outside all namespaces as
+    /// INTROSPECTION_ENUM_DECL and INTROSPECTION_ENUM_IMPL need to declare
+    /// and define structures outside the user's namespace.
+    ///
+    /// The enum will be defined inside an inline namespace to simplify the
+    /// passing of parameters to functions which require some namespace
+    /// prefixing. This shouldn't have a practical effect on user code.
+
+    #define INTROSPECTION_ENUM(E, ...)                      \
+    inline namespace detail_intr_enum {                     \
+        enum E { __VA_ARGS__ };                             \
+        std::ostream& operator<< (std::ostream&, E);        \
+        std::istream& operator>> (std::istream&, E&);       \
+    }                                                       \
+    INTROSPECTION_ENUM_DECL(detail_intr_enum,E,__VA_ARGS__) \
+    INTROSPECTION_ENUM_IMPL(detail_intr_enum,E,__VA_ARGS__) \
+    INTROSPECTION_ENUM_ISTREAM(detail_intr_enum,E)          \
+    INTROSPECTION_ENUM_OSTREAM(detail_intr_enum,E)
+
 
     ///////////////////////////////////////////////////////////////////////////
     /// Describes a single member variable in a type availabe for introspection
