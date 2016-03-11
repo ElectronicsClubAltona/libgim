@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_STREAM_HPP
@@ -22,7 +22,7 @@
 
 namespace util {
     namespace stream {
-        //---------------------------------------------------------------------
+        ///////////////////////////////////////////////////////////////////////
         template <typename T>
         struct numeric
         {
@@ -30,26 +30,25 @@ namespace util {
             T val;
         };
 
-        template <typename T>
-        std::ostream& operator<< (std::ostream &os, numeric<T> n)
-        {
-            static_assert (std::is_fundamental<T>::value,
-                           "numeric streamer is intended for chars");
-
-            using integral_t = typename std::conditional<
-                std::is_floating_point<T>::value,
-                T,
-                typename std::conditional<
-                    std::is_signed<T>::value,
-                    sized_type< intmax_t>::sint,
-                    sized_type<uintmax_t>::uint
-                >::type
-            >::type;
-
-            return os << (integral_t)n.val;
-        }
 
         //---------------------------------------------------------------------
+        template <typename T>
+        numeric<T>
+        to_numeric (const T &t)
+        {
+            return numeric<T> (t);
+        }
+
+
+        //---------------------------------------------------------------------
+        template <typename T>
+        std::ostream&
+        operator<< (std::ostream &os, numeric<T> n)
+        {
+            return os << +n.val;
+        }
+
+        ///////////////////////////////////////////////////////////////////////
         class null : public std::ostream {
             public:
                 std::ostream & put   (char c);

@@ -11,13 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "point.hpp"
+#include "./point.hpp"
 
-#include "debug.hpp"
-#include "maths.hpp"
+#include "./debug.hpp"
+#include "./maths.hpp"
 
 #include <cmath>
 #include <cstdlib>
@@ -64,26 +64,9 @@ util::point<S,T>::sanity (void) const
 template <size_t S, typename T>
 const util::point<S,T> util::point<S,T>::ORIGIN (T {0});
 
-
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
-std::ostream&
-util::operator<< (std::ostream &os, util::point<S,T> p) {
-    os << "point" << S << "(";
-    os << p.data[0];
-
-    for (size_t i = 1; i < S; ++i)
-        os << ", " << p.data[i];
-
-    os << ")";
-    return os;
-}
-
-
-//-----------------------------------------------------------------------------
-#define INSTANTIATE_S_T(S,T)                                                    \
-template struct util::point<S,T>;                                               \
-template std::ostream& util::operator<< (std::ostream &os, util::point<S,T>);   \
+#define INSTANTIATE_S_T(S,T)        \
+template struct util::point<S,T>;
 
 #define INSTANTIATE(T)  \
 INSTANTIATE_S_T(1,T)    \

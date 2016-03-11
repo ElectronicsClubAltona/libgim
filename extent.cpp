@@ -11,13 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "extent.hpp"
+#include "./extent.hpp"
 
-#include "debug.hpp"
-#include "maths.hpp"
+#include "./debug.hpp"
+#include "./maths.hpp"
+#include "./stream.hpp"
 
 #include <cmath>
 
@@ -237,9 +238,10 @@ std::ostream&
 util::operator<< (std::ostream &os, extent<S,T> e)
 {
     os << "[";
-    std::copy (std::begin (e.data),
-               std::end   (e.data),
-               std::ostream_iterator<T> (os, ", "));
+    std::transform (std::cbegin (e.data),
+                    std::cend   (e.data),
+                    infix_iterator<stream::numeric<T>> (os, ", "),
+                    stream::to_numeric<T>);
     os << "]";
     return os;
 }

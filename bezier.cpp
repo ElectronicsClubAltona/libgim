@@ -11,13 +11,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "bezier.hpp"
+#include "./bezier.hpp"
 
-#include "debug.hpp"
-#include "polynomial.hpp"
+#include "./debug.hpp"
+#include "./polynomial.hpp"
+#include "./stream.hpp"
+#include "./coord/iostream.hpp"
 
 #include <algorithm>
 #include <iterator>
@@ -433,9 +435,14 @@ template <size_t S>
 std::ostream&
 util::operator<< (std::ostream &os, const bezier<S> &b)
 {
-    os << b[0];
-    for (size_t i = 1; i < S+1; ++i)
-        os << ", " << b[i];
+    using value_type = decltype(*b.cbegin());
+
+    os << "[";
+    std::transform (std::cbegin (b),
+                    std::cend   (b),
+                    infix_iterator<stream::numeric<value_type>> (os, ", "),
+                    stream::to_numeric<value_type>);
+    os << "]";
 
     return os;
 }

@@ -47,6 +47,7 @@ UTIL_FILES   =			\
     coord/base.hpp		\
     coord.hpp			\
     coord/init.hpp		\
+    coord/iostream.hpp		\
     coord/names.hpp		\
     coord/ops.hpp		\
     coord/store.hpp		\

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_BEZIER_HPP
@@ -26,6 +26,8 @@ namespace util {
     template <size_t S>
     class bezier {
     public:
+        using value_type = point2f::value_type;
+
         bezier (const util::point2f (&)[S+1]);
 
         point2f eval (float t) const;

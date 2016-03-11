@@ -11,14 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 
-#include "region.hpp"
+#include "./region.hpp"
 
-#include "debug.hpp"
-#include "cast.hpp"
+#include "./debug.hpp"
+#include "./cast.hpp"
+
+#include "./coord/iostream.hpp"
 
 #include <cmath>
 #include <type_traits>

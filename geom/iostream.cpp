@@ -16,7 +16,8 @@
 
 #include "./iostream.hpp"
 
-#include "../geom/sphere.hpp"
+#include "./sphere.hpp"
+#include "../coord/iostream.hpp"
 
 
 ///////////////////////////////////////////////////////////////////////////////

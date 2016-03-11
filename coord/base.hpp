@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_COORD_BASE_HPP
@@ -34,7 +34,7 @@ namespace util { namespace coord {
     struct base : public init <S,T,tags...> {
         static_assert (S > 0, "coord dimensions must be strictly positive");
 
-        typedef T value_type;
+        using value_type = T;
         static constexpr size_t dimension = S;
         static constexpr size_t elements = S;
 

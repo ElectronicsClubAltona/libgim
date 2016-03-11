@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_POINT_HPP
@@ -23,7 +23,6 @@
 
 #include <array>
 #include <initializer_list>
-#include <iostream>
 #include <type_traits>
 
 namespace util {
@@ -58,10 +57,6 @@ namespace util {
 
     template <size_t S, typename T, typename U>
     constexpr typename std::common_type<T,U>::type chebyshev (point<S,T>, point<S,U>);
-
-    // iostream operators
-    template <size_t S, typename T>
-    std::ostream& operator<< (std::ostream&, point<S,T>);
 
     // Convenience typedefs
     template <typename T> using point1 = point<1,T>;

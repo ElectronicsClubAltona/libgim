@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2013 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "colour.hpp"
@@ -383,9 +383,12 @@ template <size_t S, typename T>
 std::ostream&
 util::operator<< (std::ostream &os, util::colour<S,T> c) {
     os << "colour(";
-    for (size_t i = 0; i < S - 1; ++i)
-        os << stream::numeric<T> (c[i]) << ", ";
-    os << stream::numeric<T> (c[S-1]) << ")";
+    std::transform (std::cbegin (c),
+                    std::cend   (c),
+                    infix_iterator<stream::numeric<T>> (os, ", "),
+                    stream::to_numeric<T>);
+    os << ")";
+
     return os;
 }
 
