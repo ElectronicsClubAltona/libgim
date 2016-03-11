@@ -31,9 +31,18 @@ namespace util {
         // static const std::string value
     };
 
+    template <> struct type_string<bool> { static constexpr const char value[] = "bool"; };
+
+    template <> struct type_string<  int8_t> { static constexpr const char value[] = "int8"; };
+    template <> struct type_string< int16_t> { static constexpr const char value[] = "int16"; };
+    template <> struct type_string< int32_t> { static constexpr const char value[] = "int32"; };
+    template <> struct type_string< int64_t> { static constexpr const char value[] = "int64"; };
+
+    template <> struct type_string< uint8_t> { static constexpr const char value[] = "uint8"; };
     template <> struct type_string<uint16_t> { static constexpr const char value[] = "uint16"; };
     template <> struct type_string<uint32_t> { static constexpr const char value[] = "uint32"; };
     template <> struct type_string<uint64_t> { static constexpr const char value[] = "uint64"; };
+
     template <> struct type_string<float   > { static constexpr const char value[] = "float32"; };
     template <> struct type_string<double  > { static constexpr const char value[] = "float64"; };
 

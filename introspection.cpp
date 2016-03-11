@@ -18,8 +18,17 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
+constexpr char util::type_string<bool>::value[];
+
+constexpr char util::type_string<  int8_t>::value[];
+constexpr char util::type_string< int16_t>::value[];
+constexpr char util::type_string< int32_t>::value[];
+constexpr char util::type_string< int64_t>::value[];
+
+constexpr char util::type_string< uint8_t>::value[];
 constexpr char util::type_string<uint16_t>::value[];
 constexpr char util::type_string<uint32_t>::value[];
 constexpr char util::type_string<uint64_t>::value[];
+
 constexpr char util::type_string<float>::value[];
 constexpr char util::type_string<double>::value[];
