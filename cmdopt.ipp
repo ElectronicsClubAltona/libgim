@@ -76,9 +76,9 @@ namespace util { namespace cmdopt {
         {
             static const std::string EXAMPLE = [] (void) {
                 std::ostringstream os;
-                std::copy (std::cbegin (enum_values<T>::values),
-                           std::cend   (enum_values<T>::values),
-                           infix_iterator<T> (os, "|"));
+                std::copy (std::cbegin (enum_traits<T>::names),
+                           std::cend   (enum_traits<T>::names),
+                           infix_iterator<const char*> (os, "|"));
                 return os.str ();
             } ();
             return EXAMPLE;
