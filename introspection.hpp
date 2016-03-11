@@ -24,6 +24,41 @@
 #include <tuple>
 
 namespace util {
+    template <
+        typename T
+    >
+    struct type_string {
+        // static const std::string value
+    };
+
+    template <> struct type_string<uint16_t> { static constexpr const char value[] = "uint16"; };
+    template <> struct type_string<uint32_t> { static constexpr const char value[] = "uint32"; };
+    template <> struct type_string<uint64_t> { static constexpr const char value[] = "uint64"; };
+    template <> struct type_string<float   > { static constexpr const char value[] = "float32"; };
+    template <> struct type_string<double  > { static constexpr const char value[] = "float64"; };
+
+    template <typename T>
+    auto
+    to_string (void)
+    {
+        return type_string<T>::value;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// Lists valid values of an enumeration
+    ///
+    /// E: enumeration type
+    template <
+        typename E
+    >
+    struct enum_values {
+        /// Specialisations must provide the following constexpr:
+        ///
+        /// value_type: typename
+        /// value_count: size_t
+        /// values: static const std::array<value_type,value_count>
+    };
+
     ///////////////////////////////////////////////////////////////////////////
     /// Describes a single member variable in a type availabe for introspection
     ///
