@@ -67,4 +67,45 @@ class referencing_iterator {
 
 };
 
+
+namespace util {
+    template <
+        typename T,
+        class CharT = char,
+        class Traits = std::char_traits<CharT>
+    >
+    class infix_iterator : public std::iterator<std::output_iterator_tag, void, void, void, void> {
+    public:
+        using char_type    = CharT;
+        using traits_type  = Traits;
+        using ostream_type = std::basic_ostream<char_type, traits_type>;
+
+        infix_iterator (ostream_type& _output, const CharT *_delimiter):
+            m_output (_output),
+            m_delimiter (_delimiter)
+        { ; }
+
+        infix_iterator&
+        operator= (const T &value)
+        {
+            if (!m_first)
+                m_output << m_delimiter;
+
+            m_output << value;
+            m_first = false;
+
+            return *this;
+        }
+
+        infix_iterator& operator*  (void) { return *this; }
+        infix_iterator& operator++ (void) { return *this; }
+        infix_iterator& operator++ (int)  { return *this; }
+
+    private:
+        bool m_first = true;
+        ostream_type &m_output;
+        const CharT *m_delimiter;
+    };
+}
+
 #endif
