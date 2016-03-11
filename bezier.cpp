@@ -392,7 +392,43 @@ util::bezier<S>::operator[] (size_t idx) const
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S>
+const util::point2f*
+util::bezier<S>::begin (void) const
+{
+    return std::cbegin (m_points);
+}
+
+
 //-----------------------------------------------------------------------------
+template <size_t S>
+const util::point2f*
+util::bezier<S>::end (void) const
+{
+    return std::cend (m_points);
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S>
+const util::point2f*
+util::bezier<S>::cbegin (void) const
+{
+    return std::cbegin (m_points);
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S>
+const util::point2f*
+util::bezier<S>::cend (void) const
+{
+    return std::cend (m_points);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S>
 std::ostream&
 util::operator<< (std::ostream &os, const bezier<S> &b)
@@ -405,7 +441,7 @@ util::operator<< (std::ostream &os, const bezier<S> &b)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 #define INSTANTIATE(S)                                                      \
 template class util::bezier<S>;                                             \
 template std::ostream& util::operator<< (std::ostream&, const bezier<S>&);

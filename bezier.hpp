@@ -43,6 +43,11 @@ namespace util {
         point2f& operator[] (size_t idx);
         const point2f& operator[] (size_t idx) const;
 
+        const point2f* begin  (void) const;
+        const point2f* end    (void) const;
+        const point2f* cbegin (void) const;
+        const point2f* cend   (void) const;
+
     private:
         // HACK: allow easy access to component-wise arithmetic using
         // vector2f rather than point2f in the implementation.
