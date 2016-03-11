@@ -20,7 +20,7 @@
 #include "vector.hpp"
 #include "matrix.hpp"
 
-#include <iostream>
+#include <ostream>
 
 
 namespace util {
@@ -82,7 +82,8 @@ namespace util {
     typedef quaternion<float> quaternionf;
 
     template <typename T>
-    std::ostream& operator<< (std::ostream&, quaternion<T>);
+    std::ostream&
+    operator<< (std::ostream&, quaternion<T>);
 }
 
 

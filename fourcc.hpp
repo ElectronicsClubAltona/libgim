@@ -17,7 +17,7 @@
 #ifndef __UTIL_FOURCC_HPP
 #define __UTIL_FOURCC_HPP
 
-#include <iostream>
+#include <ostream>
 #include <cstdint>
 
 namespace util {
@@ -30,8 +30,9 @@ namespace util {
         bool operator== (const char[4]) const;
         operator uint32_t (void) const;
     };
+
+    std::ostream& operator<< (std::ostream&, util::fourcc);
 }
 
-std::ostream& operator<< (std::ostream&, util::fourcc);
 
 #endif

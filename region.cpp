@@ -365,8 +365,7 @@ util::region<S,T>::UNIT (util::point<S,T>{0}, util::extent<S,T>{1});
 template <size_t S, typename T>
 std::ostream&
 util::operator<< (std::ostream &os, const util::region<S,T> &rhs) {
-    os << "region(" << rhs.p << ", " << rhs.e << ")";
-    return os;
+    return os << "{position: " << rhs.p << ", extent: " << rhs.e << "}";
 }
 
 

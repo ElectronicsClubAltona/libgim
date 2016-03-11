@@ -23,6 +23,8 @@
 #include "vector.hpp"
 #include "types/traits.hpp"
 
+#include <ostream>
+
 namespace util {
     /**
      * A two-dimensional rectangle, with size and position.

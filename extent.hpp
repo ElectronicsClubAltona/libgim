@@ -21,8 +21,6 @@
 #include "vector.hpp"
 #include "point.hpp"
 
-#include <iostream>
-
 
 namespace util {
     /**
@@ -107,9 +105,6 @@ namespace util {
     using extent_range2i = extent_range2<typename extent2i::value_type>;
 
     using extent_range3u = extent_range2<typename extent3u::value_type>;
-
-    template <size_t S, typename T>
-    std::ostream& operator<< (std::ostream&, util::extent<S,T>);
 }
 
 

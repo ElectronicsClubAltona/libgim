@@ -21,7 +21,6 @@
 #include "coord.hpp"
 
 #include <array>
-#include <iostream>
 #include <initializer_list>
 
 namespace util {
@@ -67,8 +66,6 @@ namespace util {
     template <typename T> vector<3,T> from_euler (vector<2,T>);
 
     // output and serialisation operators
-    template <size_t S, typename T> std::ostream& operator<< (std::ostream&, vector<S,T>);
-
     template <size_t S, typename T>
     const json::tree::node& operator>> (const json::tree::node&, vector<S,T>&);
 

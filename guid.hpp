@@ -18,7 +18,8 @@
 #define __UTIL_GUID_HPP
 
 #include <cstdint>
-#include <iostream>
+#include <ostream>
+#include <istream>
 
 class guid {
     public:

@@ -21,6 +21,7 @@
 #include "../stream.hpp"
 
 #include <ostream>
+#include <algorithm>
 
 namespace util {
     template <

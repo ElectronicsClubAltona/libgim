@@ -248,21 +248,6 @@ util::vector<S,T>::sanity (void) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// ostream
-
-template <size_t S, typename T>
-std::ostream&
-util::operator<< (std::ostream &os, util::vector<S,T> v)
-{
-    os << "vec" << S << "(" << v.data[0];
-    for (size_t i = 1; i < S; ++i)
-        os << ", " << v.data[i];
-    os << ")";
-    return os;
-}
-
-
-//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 const json::tree::node&
 util::operator>> (const json::tree::node &node, util::vector<S,T> &v)
@@ -284,7 +269,6 @@ util::operator>> (const json::tree::node &node, util::vector<S,T> &v)
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)                                                    \
 template struct util::vector<S,T>;                                              \
-template std::ostream& util::operator<< (std::ostream&, util::vector<S,T> v);   \
 template const json::tree::node& util::operator>> (const json::tree::node&, util::vector<S,T>&);
 
 

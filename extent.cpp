@@ -232,25 +232,9 @@ template bool util::debug::valid (const extent<2,uint32_t>&);
 template bool util::debug::valid (const extent<2,uint64_t>&);
 
 
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-std::ostream&
-util::operator<< (std::ostream &os, extent<S,T> e)
-{
-    os << "[";
-    std::transform (std::cbegin (e.data),
-                    std::cend   (e.data),
-                    infix_iterator<stream::numeric<T>> (os, ", "),
-                    stream::to_numeric<T>);
-    os << "]";
-    return os;
-}
-
-
 //-----------------------------------------------------------------------------
-#define INSTANTIATE_S_T(S,T)                                        \
-template struct util::extent<S,T>;                                        \
-template std::ostream& util::operator<< (std::ostream&, extent<S,T>);
+#define INSTANTIATE_S_T(S,T)        \
+template struct util::extent<S,T>;
 
 #define INSTANTIATE(T)      \
 INSTANTIATE_S_T(1,T)        \

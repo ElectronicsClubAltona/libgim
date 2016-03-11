@@ -17,12 +17,11 @@
 #include "fourcc.hpp"
 
 using util::fourcc;
-using std::ostream;
-
 
 static_assert (sizeof(fourcc) == 4, "fourcc must be a 4 byte POD");
 
 
+///////////////////////////////////////////////////////////////////////////////
 fourcc
 fourcc::from_chars (uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
     fourcc lhs;
@@ -36,6 +35,7 @@ fourcc::from_chars (uint8_t a, uint8_t b, uint8_t c, uint8_t d) {
 }
 
 
+//-----------------------------------------------------------------------------
 fourcc
 fourcc::from_string (const char data[4]) {
     fourcc lhs;
@@ -49,6 +49,7 @@ fourcc::from_string (const char data[4]) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 bool
 fourcc::operator== (const char rhs[4]) const {
     return data[0] == rhs[0] &&
@@ -58,6 +59,7 @@ fourcc::operator== (const char rhs[4]) const {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 fourcc::operator uint32_t (void) const {
     return static_cast<uint32_t> (data[0] << 24U |
                                   data[1] << 16U |
@@ -66,9 +68,9 @@ fourcc::operator uint32_t (void) const {
 }
 
 
-ostream&
-operator<< (ostream &os, fourcc f) {
+///////////////////////////////////////////////////////////////////////////////
+std::ostream&
+util::operator<< (std::ostream &os, fourcc f) {
     os << f.data[0] << f.data[1] << f.data[2] << f.data[3];
     return os;
 }
-

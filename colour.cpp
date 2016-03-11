@@ -382,12 +382,12 @@ namespace util {
 template <size_t S, typename T>
 std::ostream&
 util::operator<< (std::ostream &os, util::colour<S,T> c) {
-    os << "colour(";
+    os << "[";
     std::transform (std::cbegin (c),
                     std::cend   (c),
                     infix_iterator<stream::numeric<T>> (os, ", "),
                     stream::to_numeric<T>);
-    os << ")";
+    os << "]";
 
     return os;
 }
