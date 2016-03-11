@@ -24,9 +24,8 @@
 #include <iomanip>
 #include <sstream>
 
-using namespace std;
 
-
+///////////////////////////////////////////////////////////////////////////////
 guid::guid (uint32_t _data1,
             uint16_t _data2,
             uint16_t _data3,
@@ -35,38 +34,43 @@ guid::guid (uint32_t _data1,
     data2 (_data2),
     data3 (_data3)
 {
-    copy (_data4, _data4 + elems (data4), data4);
+    std::copy (_data4, _data4 + elems (data4), data4);
 }
 
 
+//-----------------------------------------------------------------------------
 guid::guid (void)
 {
     ;
 }
 
 
+//-----------------------------------------------------------------------------
 guid::guid (const char *str) {
-    istringstream is (str);
+    std::istringstream is (str);
     is >> *this;
 }
 
 
+//-----------------------------------------------------------------------------
 guid::guid (const guid &rhs) {
     *this = rhs;
 }
 
 
+//-----------------------------------------------------------------------------
 guid&
 guid::operator= (const guid &rhs) {
     data1 = rhs.data1;
     data2 = rhs.data2;
     data3 = rhs.data3;
-    copy (rhs.data4 + 0, rhs.data4 + elems (rhs.data4), data4 + 0);
+    std::copy (rhs.data4 + 0, rhs.data4 + elems (rhs.data4), data4 + 0);
 
     return *this;
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 guid
 guid::from_bytes (const uint8_t *bytes) {
     guid g;
@@ -87,11 +91,13 @@ guid::from_bytes (const uint8_t *bytes) {
 }
 
 
+//-----------------------------------------------------------------------------
 guid
 guid::from_string (const char *bytes)
     { return guid (bytes); }
 
 
+///////////////////////////////////////////////////////////////////////////////
 guid::type
 guid::get_type (void) const {
     // Top three bits signal the type
@@ -115,6 +121,7 @@ guid::get_type (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
 bool
 guid::operator< (const guid &rhs) const {
     if (data1 != rhs.data1)
@@ -134,6 +141,7 @@ guid::operator< (const guid &rhs) const {
 }
 
 
+//-----------------------------------------------------------------------------
 bool
 guid::operator== (const guid &rhs) const {
     return data1    == rhs.data1    &&
@@ -149,6 +157,8 @@ guid::operator== (const guid &rhs) const {
            data4[7] == rhs.data4[7];
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
 std::ostream&
 operator<< (std::ostream &os, const guid &g) {
     uint64_t data4_b = static_cast<uint64_t> (g.data4[0]) <<  0u |
@@ -160,17 +170,19 @@ operator<< (std::ostream &os, const guid &g) {
     uint16_t data4_a = static_cast<uint16_t> (g.data4[6]) <<  0u |
                        static_cast<uint16_t> (g.data4[7]) <<  8u;
 
-    os << hex << setfill ('0') << setw (2 * sizeof (g.data1)) << g.data1 << "-"
-                               << setw (2 * sizeof (g.data2)) << g.data2 << "-"
-                               << setw (2 * sizeof (g.data3)) << g.data3 << "-"
-                               << setw (2 * 2) << data4_a << "-"
-                               << setw (2 * 6) << data4_b;
+    os << std::hex << std::setfill ('0')
+       << std::setw (2 * sizeof (g.data1)) << g.data1 << "-"
+       << std::setw (2 * sizeof (g.data2)) << g.data2 << "-"
+       << std::setw (2 * sizeof (g.data3)) << g.data3 << "-"
+       << std::setw (2 * 2) << data4_a << "-"
+       << std::setw (2 * 6) << data4_b;
 
-    os << dec;
+    os << std::dec;
     return os;
 }
 
 
+//-----------------------------------------------------------------------------
 std::istream&
 operator>> (std::istream &is, guid &g) {
     bool braces = '{' == is.peek ();
@@ -181,11 +193,12 @@ operator>> (std::istream &is, guid &g) {
     uint16_t data4_a;
     uint64_t data4_b;
 
-    is >> hex >> g.data1 >> dash1
-              >> g.data2 >> dash2
-              >> g.data3 >> dash3
-              >> data4_a >> dash4a
-              >> data4_b;
+    is >> std::hex
+       >> g.data1 >> dash1
+       >> g.data2 >> dash2
+       >> g.data3 >> dash3
+       >> data4_a >> dash4a
+       >> data4_b;
 
     uint64_t data4 = data4_b | static_cast<uint64_t> (data4_a) << 48u;
     g.data4[0] = data4 & 0xFF; data4 >>= 8u;
@@ -202,4 +215,3 @@ operator>> (std::istream &is, guid &g) {
 
     return is;
 }
-
