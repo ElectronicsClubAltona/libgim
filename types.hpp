@@ -99,6 +99,23 @@ namespace util {
     {
         typedef T type;
     };
+
+
+    ///------------------------------------------------------------------------
+    /// count the number of parameters we are given. useful for counting
+    /// arguments in variadic macros (ie, sizeof... (__VA_ARGS__))
+    template <typename ...T>
+    constexpr size_t
+    param_count (const T... t)
+    {
+        // prevent unused variable warnings by never forwarding recursively
+        // ideally we'd use void casting, but it doesn't work for parameter
+        // packs
+        if (false)
+            return param_count (t...);
+
+        return sizeof... (t);
+    }
 }
 
 #endif
