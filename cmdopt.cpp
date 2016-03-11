@@ -149,6 +149,15 @@ null::execute (const char *restrict)
 }
 
 
+//-----------------------------------------------------------------------------
+const std::string&
+null::example (void) const
+{
+    static const std::string EXAMPLE;
+    return EXAMPLE;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 present::present (std::string _name, std::string _description, bool &_data):
     base (std::move (_name), std::move (_description)),
@@ -161,6 +170,15 @@ void
 present::execute (void)
 {
     seen (true);
+}
+
+
+//-----------------------------------------------------------------------------
+const std::string&
+present::example (void) const
+{
+    static const std::string EXAMPLE;
+    return EXAMPLE;
 }
 
 
@@ -443,12 +461,28 @@ parser::print_help (const int argc,
         exit (0);
 
     // find the longest long form argument so we can set field alignment 
-    auto largest = std::max_element (m_long.begin (),
-                                     m_long.end (),
-                                     [] (const auto &a, const auto &b) {
-        return std::get<0> (a).size () < std::get<0> (b).size ();
+    auto largestwidth = std::max_element (
+        m_long.begin (),
+        m_long.end (),
+        [] (const auto &a, const auto &b)
+    {
+        return std::get<std::string> (a).size () < std::get<std::string> (b).size ();
     });
-    int longwidth = std::get<0> (*largest).size ();
+    int longwidth = std::get<std::string> (*largestwidth).size ();
+
+    // find the longest example text
+    auto largestexample = std::max_element (
+        m_options.cbegin (),
+        m_options.cend (),
+        [] (const auto &a, const auto &b)
+    {
+        const auto &example_a = std::get<std::unique_ptr<option::base>> (a)->example ();
+        const auto &example_b = std::get<std::unique_ptr<option::base>> (b)->example ();
+
+        return example_a.size () > example_b.size ();
+    });
+
+    int longexample = std::get<std::unique_ptr<option::base>> (*largestexample)->example ().size ();
 
     // field width requires an alignment. we don't care about preserving
     // state as we're about to bail anyway
@@ -459,8 +493,9 @@ parser::print_help (const int argc,
 
     for (auto &o: m_options) {
         std::cout << '\t'
-                  << '-' << std::get<0> (o) << '\t'
-                  << std::setw (longwidth) << std::get<1> (o) << '\t'
+                  << '-' << std::get<char> (o) << '\t'
+                  << std::setw (longwidth) << std::get<std::string> (o) << '\t'
+                  << std::setw (longexample) << std::get<std::unique_ptr<option::base>> (o)->example () << '\t'
                   << std::setw (0) << std::get<2> (o)->description ()
                   << '\n';
     }

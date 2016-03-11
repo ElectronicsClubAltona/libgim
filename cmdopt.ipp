@@ -21,6 +21,9 @@
 
 #include <sstream>
 
+#include "./introspection.hpp"
+#include "./iterator.hpp"
+
 namespace util { namespace cmdopt {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
@@ -50,6 +53,45 @@ namespace util { namespace cmdopt {
         }
 
         seen (true);
+    }
+
+
+    //-------------------------------------------------------------------------
+    namespace detail {
+        template <typename T>
+        std::enable_if_t<!std::is_enum<T>::value, const std::string&>
+        value_example (void)
+        {
+            static const std::string EXAMPLE =
+                std::string {"<"} +
+                std::string {to_string<T> ()} +
+                std::string {">"};
+
+            return EXAMPLE;
+        }
+
+        template <typename T>
+        std::enable_if_t<std::is_enum<T>::value, const std::string&>
+        value_example (void)
+        {
+            static const std::string EXAMPLE = [] (void) {
+                std::ostringstream os;
+                std::copy (std::cbegin (enum_values<T>::values),
+                           std::cend   (enum_values<T>::values),
+                           infix_iterator<T> (os, "|"));
+                return os.str ();
+            } ();
+            return EXAMPLE;
+        }
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    const std::string&
+    option::value<T>::example (void) const
+    {
+        return detail::value_example<T> ();
     }
 
 

@@ -38,6 +38,8 @@ namespace util { namespace cmdopt {
             virtual void start   (void);
             virtual void finish  (void);
 
+            virtual const std::string& example (void) const = 0;
+
             const std::string& name (void) const;
             const std::string& description (void) const;
 
@@ -62,6 +64,8 @@ namespace util { namespace cmdopt {
 
             virtual void execute (void) override;
             virtual void execute (const char *restrict) override;
+
+            virtual const std::string& example (void) const override;
         };
 
 
@@ -71,6 +75,8 @@ namespace util { namespace cmdopt {
 
             using base::execute;
             virtual void execute (void) override;
+
+            virtual const std::string& example (void) const override;
 
             virtual void finish (void) override;
 
@@ -86,6 +92,8 @@ namespace util { namespace cmdopt {
 
             using base::execute;
             void execute (const char *restrict) override;
+
+            const std::string& example (void) const override;
 
             T  data (void) const;
             T& data (void);
