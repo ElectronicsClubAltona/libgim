@@ -8,10 +8,12 @@
 #include <cstdlib>
 #include <cstring>
 
-using namespace std;
 
+///////////////////////////////////////////////////////////////////////////////
 static const char *ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
+
+//-----------------------------------------------------------------------------
 static const struct {
     uint32_t adler;
     uint16_t bsd;
@@ -24,6 +26,7 @@ static const struct {
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 int
 main (int, char**) {
     util::TAP::logger tap;

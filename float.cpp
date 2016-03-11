@@ -19,44 +19,48 @@
 
 #include <cmath>
 
-using namespace std;
 
-
-/* Constructors */
-
+///////////////////////////////////////////////////////////////////////////////
 template <unsigned int E, unsigned int S>
 ieee_float<E, S>::ieee_float (void)
 { ; }
 
 
+//-----------------------------------------------------------------------------
 template <unsigned int E, unsigned int S>
 ieee_float<E, S>::ieee_float (floating_t _floating):
     m_floating (_floating)
 { ; }
 
 
+//-----------------------------------------------------------------------------
 template <unsigned int E, unsigned int S>
 ieee_float<E, S>::ieee_float (const ieee_float &rhs):
     m_bits (rhs.m_bits)
 { ; }
 
 
-/* Classifiers */
-
+///////////////////////////////////////////////////////////////////////////////
 template <unsigned int E, unsigned int S>
 bool
-ieee_float<E, S>::is_zero (void) const {
+ieee_float<E, S>::is_zero (void) const
+{
     return m_components.exponent    == 0 &&
            m_components.significand == 0;
 }
 
+
+//-----------------------------------------------------------------------------
 template <unsigned int E, unsigned int S>
 bool
-ieee_float<E, S>::is_subnormal (void) const {
+ieee_float<E, S>::is_subnormal (void) const
+{
     return m_components.exponent    == 0 &&
            m_components.significand != 0;
 }
 
+
+//-----------------------------------------------------------------------------
 template <unsigned int E, unsigned int S>
 bool
 ieee_float<E, S>::is_inifinity (void) const {
@@ -64,6 +68,7 @@ ieee_float<E, S>::is_inifinity (void) const {
            m_components.significand == 0;
 }
 
+//-----------------------------------------------------------------------------
 template <unsigned int E, unsigned int S>
 bool
 ieee_float<E, S>::is_nan (void) const {
@@ -71,6 +76,8 @@ ieee_float<E, S>::is_nan (void) const {
            m_components.significand != 0;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
 template <unsigned int E, unsigned int S>
 bool
 ieee_float<E, S>::operator==(floating_t _floating) const {
@@ -90,25 +97,7 @@ ieee_float<E, S>::operator==(floating_t _floating) const {
 }
 
 
-#include <iostream>
-
-
-//template <unsigned int E, unsigned int S>
-//bool
-//ieee_float<E, S>::almost_equal (floating_t a,
-//                                floating_t b) {
-//    // Static cast to avoid integer casting warnings when using uint16_t for half
-//    static const floating_t epsilon = static_cast<floating_t> (0.001);
-//    const floating_t diff = static_cast<floating_t> (std::fabs (a - b));
-//
-//    // * Use an exact equality first so that infinities are not indirectly compared. This would generate NaNs in the diff.
-//    // * Do not use gte or lte. This stops an infinite from making infinities on both sides of the inequality.
-//    return exactly_equal (a, b)           ||
-//           diff < epsilon * std::fabs (a) ||
-//           diff < epsilon * std::fabs (b);
-//}
-
-
+///////////////////////////////////////////////////////////////////////////////
 template <unsigned int E, unsigned int S>
 bool
 ieee_float<E, S>::almost_equal (floating_t a,
@@ -118,7 +107,8 @@ ieee_float<E, S>::almost_equal (floating_t a,
 }
 
 
-// Based on the cynus `AlmostEqual2sComplement`
+//-----------------------------------------------------------------------------
+// Based on the Cygnus `AlmostEqual2sComplement` function
 template <unsigned int E, unsigned int S>
 bool
 ieee_float<E, S>::almost_equal (floating_t _a,
@@ -164,7 +154,7 @@ ieee_float<E, S>::almost_equal (floating_t _a,
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template class ieee_float< 5,  10>; // ieee_half
 template class ieee_float< 8,  23>; // ieee_single;
 template class ieee_float<11,  52>; // ieee_double;

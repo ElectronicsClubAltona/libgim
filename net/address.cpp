@@ -29,12 +29,10 @@
     #include <arpa/inet.h>
 #endif
 
-//-----------------------------------------------------------------------------
-using namespace net;
-using namespace std;
+using net::address;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 #ifdef __WIN32
 const char* inet_ntop(int af, const void* src, char* dst, int size){
     struct sockaddr_in srcaddr;
@@ -50,20 +48,22 @@ const char* inet_ntop(int af, const void* src, char* dst, int size){
 #endif
 
 
-//-----------------------------------------------------------------------------
-template <domain D>
+///////////////////////////////////////////////////////////////////////////////
+template <net::domain D>
 typename address<D>::port_type
 address<D>::port (void) const
     { return m_port; }
 
 
-template <domain D>
+//-----------------------------------------------------------------------------
+template <net::domain D>
 void
 address<D>::set_port (const port_type &_port)
     { m_port = _port; }
 
 
-template <domain D>
+//-----------------------------------------------------------------------------
+template <net::domain D>
 typename address<D>::ip_type
 address<D>::resolve (const std::string &str) {
     addrinfo  hint;
@@ -81,19 +81,19 @@ address<D>::resolve (const std::string &str) {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 namespace net {
     template <>
-    address<domain::INET>::address (const sockaddr_type &addr):
+    address<net::domain::INET>::address (const sockaddr_type &addr):
         m_ip   (addr.sin_addr.s_addr),
         m_mask (0),
         m_port (ntoh (addr.sin_port))
     {
-        CHECK (addr.sin_family == (int)domain::INET);
+        CHECK (addr.sin_family == (int)net::domain::INET);
     }
 
 
-    template <domain D>
+    template <net::domain D>
     address<D>::address (const std::string &_addr,
                          port_type          _port):
         m_ip   (resolve (_addr)),
@@ -103,11 +103,11 @@ namespace net {
 
 
     template <>
-    address<domain::INET>::sockaddr_type
-    address<domain::INET>::to_sockaddr (void) const {
+    address<net::domain::INET>::sockaddr_type
+    address<net::domain::INET>::to_sockaddr (void) const {
         sockaddr_type addr;
 
-        addr.sin_family      = (int)domain::INET;
+        addr.sin_family      = (int)net::domain::INET;
         addr.sin_port        = hton (m_port);
         addr.sin_addr.s_addr = m_ip.m_integer;
 
@@ -117,11 +117,11 @@ namespace net {
 
     template <>
     std::string
-    address<domain::INET>::to_string (void) const {
+    address<net::domain::INET>::to_string (void) const {
         char dest[INET_ADDRSTRLEN + 1];
         sockaddr_type addr = to_sockaddr ();
 
-        if (NULL == inet_ntop ((int)domain::INET, &addr.sin_addr, dest, sizeof (dest)))
+        if (NULL == inet_ntop ((int)net::domain::INET, &addr.sin_addr, dest, sizeof (dest)))
             net::error::throw_code ();
         return dest;
     }
@@ -129,7 +129,7 @@ namespace net {
 
     template <>
     bool
-    address<domain::INET>::operator ==(const address<domain::INET> &rhs) {
+    address<net::domain::INET>::operator ==(const address<net::domain::INET> &rhs) {
         return m_ip   == rhs.m_ip   &&
                m_mask == rhs.m_mask &&
                m_port == rhs.m_port;
@@ -137,7 +137,7 @@ namespace net {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 std::ostream&
 net::operator<< (std::ostream &os, const address<net::domain::INET> &addr) {
     os << addr.to_string () << ":" << addr.port ();
@@ -145,23 +145,23 @@ net::operator<< (std::ostream &os, const address<net::domain::INET> &addr) {
 }
 
 
-//-----------------------------------------------------------------------------
-template <> const address<domain::INET>
-address<domain::INET>::LOOPBACK  ("127.0.0.1", 0);
+///////////////////////////////////////////////////////////////////////////////
+template <> const address<net::domain::INET>
+address<net::domain::INET>::LOOPBACK  ("127.0.0.1", 0);
 
-template <> const address<domain::INET>
-address<domain::INET>::ANY       ("0.0.0.0", 0);
+template <> const address<net::domain::INET>
+address<net::domain::INET>::ANY       ("0.0.0.0", 0);
 
 namespace net {
-    template class address<domain::INET>;
+    template class address<net::domain::INET>;
 }
 
 //-----------------------------------------------------------------------------
-//template <> const address<domain::INET6>
-//address<domain::INET6>::LOOPBACK ("::1", 0);
+//template <> const address<net::domain::INET6>
+//address<net::domain::INET6>::LOOPBACK ("::1", 0);
 //
-//template <> const address<domain::INET6>
-//address<domain::INET6>::ANY      ("::0", 0);
+//template <> const address<net::domain::INET6>
+//address<net::domain::INET6>::ANY      ("::0", 0);
 //
-//template class address<domain::INET6>;
+//template class address<net::domain::INET6>;
 

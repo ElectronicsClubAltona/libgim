@@ -7,9 +7,8 @@
 #include <cstdlib>
 #include <ctime>
 
-using namespace std;
 
-
+///////////////////////////////////////////////////////////////////////////////
 // TODO: Use a more robust test like Chi-Square
 void
 test_bool (util::TAP::logger &tap)
@@ -29,6 +28,7 @@ test_bool (util::TAP::logger &tap)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 // TODO: Use a more robust test like Kolmogorov-Smirnov
 void
 test_float (util::TAP::logger &tap)
@@ -55,6 +55,7 @@ test_float (util::TAP::logger &tap)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 int
 main (int, char **) {
     util::TAP::logger tap;

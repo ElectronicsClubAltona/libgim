@@ -26,9 +26,6 @@
 #include <iostream>
 
 
-using namespace std;
-
-
 ///////////////////////////////////////////////////////////////////////////////
 const ipv4::ip ipv4::ip::LOOPBACK (127, 0, 0, 1);
 const ipv4::ip ipv4::ip::ANY      (  0, 0, 0, 0);
@@ -142,6 +139,6 @@ ipv4::ip::ip (const std::string &data)
 
 //-----------------------------------------------------------------------------
 ipv4::ip
-ipv4::ip::parse (const string &data)
+ipv4::ip::parse (const std::string &data)
     { return ipv4::ip (data); }
 

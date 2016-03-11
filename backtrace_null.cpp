@@ -19,18 +19,18 @@
 
 #include <iostream>
 
-using namespace std;
 
-
+///////////////////////////////////////////////////////////////////////////////
 debug::backtrace::backtrace (void):
     m_frames (DEFAULT_DEPTH)
 { ; }
 
 
-ostream&
-debug::operator <<(ostream &os, const debug::backtrace&) {
-    os << "null backtrace";
-    return os;
+///////////////////////////////////////////////////////////////////////////////
+std::ostream&
+debug::operator <<(std::ostream &os, const debug::backtrace&)
+{
+    return os << "null_backtrace";
 }
 
 

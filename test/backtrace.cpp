@@ -5,15 +5,14 @@
 #include <iostream>
 #include <cstdlib>
 
-using namespace std;
 
-
+///////////////////////////////////////////////////////////////////////////////
 int
 main (int, char **) {
     util::TAP::logger tap;
 
     util::stream::null out;
-    out << debug::backtrace() << endl;
+    out << debug::backtrace() << std::endl;
     tap.noop ();
 
     return EXIT_SUCCESS;
