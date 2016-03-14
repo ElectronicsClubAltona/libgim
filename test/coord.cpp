@@ -1,6 +1,8 @@
 #include "tap.hpp"
 #include "point.hpp"
 
+#include "coord/iostream.hpp"
+
 int
 main (void)
 {
@@ -15,7 +17,18 @@ main (void)
     static_assert (sizeof (util::point4f) == 4 * sizeof (util::point4f::value_type), "point4f is not packed");
 
     util::TAP::logger t;
-    t.expect (true, "packing tests");
+
+    constexpr util::point2i p { -1,  2 };
+
+    t.expect_eq (-p, util::point2i { 1, -2 }, "unary point negation");
+    t.expect_eq ( p, p, "unary point addition");
+    t.expect (
+        std::is_same<
+            bool,
+            decltype(!p)::value_type
+        >::value,
+        "unary point boolean negation has type bool"
+    );
 
     return t.status ();
 }
