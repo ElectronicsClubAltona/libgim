@@ -71,12 +71,13 @@ namespace util {
             void                                        \
         >::type                                         \
     >                                                   \
+    constexpr                                           \
     auto                                                \
     operator OP (A<S,T> a, B<S,U> b)                    \
     {                                                   \
         typename coord::traits<A,B>::template result<   \
             S,typename std::common_type<T,U>::type      \
-        > out;                                          \
+        > out {};                                       \
         for (size_t i = 0; i < S; ++i)                  \
             out[i] = a[i] OP b[i];                      \
         return out;                                     \
@@ -125,10 +126,11 @@ namespace util {
             is_coord<K>::value,void                     \
         >::type                                         \
     >                                                   \
+    constexpr                                           \
     auto                                                \
     operator OP (U u, K<S,T> k)                         \
     {                                                   \
-        K<S,typename std::common_type<T,U>::type> out;  \
+        K<S,typename std::common_type<T,U>::type> out{};\
                                                         \
         for (size_t i = 0; i < S; ++i)                  \
             out[i] = u OP k[i];                         \
@@ -144,10 +146,11 @@ namespace util {
             is_coord<K>::value,void                     \
         >::type                                         \
     >                                                   \
+    constexpr                                           \
     auto                                                \
     operator OP (K<S,T> k, U u)                         \
     {                                                   \
-        K<S,typename std::common_type<T,U>::type> out;  \
+        K<S,typename std::common_type<T,U>::type> out{};\
                                                         \
         for (size_t i = 0; i < S; ++i)                  \
             out[i] = k[i] OP u;                         \
@@ -210,10 +213,11 @@ namespace util {
         typename T,                                 \
         template <size_t,typename> class K          \
     >                                               \
+    constexpr                                       \
     auto                                            \
     operator OP (K<S,T> k)                          \
     {                                               \
-        K<S,decltype(OP std::declval<T> ())> out;   \
+        K<S,decltype(OP std::declval<T> ())> out{}; \
                                                     \
         for (size_t i = 0; i < S; ++i)              \
             out[i] = OP k[i];                       \
@@ -238,6 +242,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K
     >
+    constexpr
     bool
     operator== (K<S,T> a, K<S,T> b)
     {
@@ -256,6 +261,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K
     >
+    constexpr
     bool
     operator!= (K<S,T> a, K<S,T> b)
     {
@@ -272,10 +278,11 @@ namespace util {
         typename T,
         typename U
     >
+    constexpr
     vector<S,typename std::common_type<T,U>::type>
     operator- (point<S,T> a, point<S,U> b)
     {
-        vector<S,typename std::common_type<T,U>::type> out;
+        vector<S,typename std::common_type<T,U>::type> out {};
         for (size_t i = 0; i < S; ++i)
             out[i] = a[i] - b[i];
         return out;
@@ -288,6 +295,7 @@ namespace util {
         typename T,
         typename U
     >
+    constexpr
     vector<S,typename std::common_type<T,U>::type>
     operator- (U u, point<S,T> p)
     {
@@ -300,7 +308,9 @@ namespace util {
         size_t S,
         typename T
     >
-    T dot (const T (&a)[S], const T (&b)[S])
+    constexpr
+    T
+    dot (const T (&a)[S], const T (&b)[S])
     {
         T sum = 0;
         for (size_t i = 0; i < S; ++i)
@@ -314,6 +324,7 @@ namespace util {
         template <size_t,typename> class A,
         template <size_t,typename> class B
     >
+    constexpr
     typename std::enable_if<
         is_coord<A>::value && is_coord<B>::value,
         T
@@ -329,17 +340,20 @@ namespace util {
         typename T,
         template <size_t,typename> class K
     >
+    constexpr
     typename std::enable_if<is_coord<K>::value,T>::type
     dot (K<S,T> a, const T (&b)[S])
     {
         return dot<S,T> (a.data, b);
     }
 
+
     template <
         size_t S,
         typename T,
         template <size_t,typename> class K
     >
+    constexpr
     typename std::enable_if<
         is_coord<K>::value,
         T
@@ -356,6 +370,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K
     >
+    constexpr
     K<S,T>
     abs (K<S,T> k)
     {
@@ -370,6 +385,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K
     >
+    constexpr
     K<S,T>
     pow (K<S,T> k)
     {
@@ -377,7 +393,6 @@ namespace util {
             v = pow (v);
         return k;
     }
-
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -389,10 +404,11 @@ namespace util {
         typename T,
         template <size_t,typename> class K
     >
+    constexpr
     K<S,T>
     min (K<S,T> a, K<S,T> b)
     {
-        K<S,T> out;
+        K<S,T> out {};
         for (size_t i = 0; i < S; ++i)
             out[i] = min (a[i], b[i]);
         return out;
@@ -406,10 +422,11 @@ namespace util {
         typename T,
         template <size_t,typename> class K
     >
+    constexpr
     K<S,T>
     max (K<S,T> a, K<S,T> b)
     {
-        K<S,T> out;
+        K<S,T> out {};
         for (size_t i = 0; i < S; ++i)
             out[i] = max (a[i], b[i]);
         return out;
@@ -418,12 +435,14 @@ namespace util {
 
     ///------------------------------------------------------------------------
     template <size_t S, typename T, template<size_t,typename> class K>
+    constexpr
     T
     min (K<S,T> k)
     { return *std::min_element (k.begin (), k.end ()); }
 
 
     template <size_t S, typename T, template<size_t,typename> class K>
+    constexpr
     T
     max (K<S,T> k)
     { return *std::max_element (k.begin (), k.end ()); }
@@ -438,10 +457,11 @@ namespace util {
         template <size_t,typename> class A,         \
         template <size_t,typename> class B          \
     >                                               \
+    constexpr                                       \
     vector<S,bool>                                  \
     operator OP (const A<S,T> a, const B<S,U> b)    \
     {                                               \
-        vector<S,bool> out;                         \
+        vector<S,bool> out {};                      \
         for (size_t i = 0; i < S; ++i)              \
             out[i] = a[i] OP b[i];                  \
         return out;                                 \
@@ -462,10 +482,11 @@ namespace util {
         typename U,                         \
         template <size_t,typename> class K  \
     >                                       \
+    constexpr                               \
     vector<S,bool>                          \
     operator OP (const K<S,T> k, const U u) \
     {                                       \
-        vector<S,bool> out;                 \
+        vector<S,bool> out {};              \
         for (size_t i = 0; i < S; ++i)      \
             out[i] = k[i] OP u;             \
         return out;                         \
@@ -481,34 +502,40 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <size_t S, template <size_t,typename> class K>
+    constexpr
     bool
     any (const K<S,bool> k)
     {
-        return std::any_of (k.begin (), k.end (), identity<bool>);
+        return std::any_of (std::cbegin (k), std::cbegin (k), identity<bool>);
     }
 
     //-------------------------------------------------------------------------
     template <size_t S, template <size_t,typename> class K>
+    constexpr
     bool
     all (const K<S,bool> k)
     {
-        return std::all_of (k.begin (), k.end (), identity<bool>);
+        return std::all_of (std::cbegin (k), std::cbegin (k), identity<bool>);
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T, template<size_t,typename> class K>
+    constexpr
     typename std::enable_if<
         std::is_floating_point<T>::value,
         K<S,T>
     >::type
-    floor (K<S,T> k)
+    floor (const K<S,T> k)
     {
         T (*floor_func)(T) = std::floor;
 
-        K<S,T> v;
-        std::transform (k.begin (), k.end (), v.begin (), floor_func);
-        return v;
+        K<S,T> out {};
+        std::transform (std::cbegin (k),
+                        std::cend   (k),
+                        std::begin  (out),
+                        floor_func);
+        return out;
     }
 }
 
