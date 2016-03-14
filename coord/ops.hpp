@@ -236,7 +236,7 @@ namespace util {
         for (size_t i = 0; i < S; ++i)              \
             out[i] = OP k[i];                       \
                                                     \
-        return k;                                   \
+        return out;                                 \
     }
 
     UNARY_OP(!)
