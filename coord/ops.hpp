@@ -200,24 +200,6 @@ namespace util {
     SCALAR_OP(%=)
 #undef SCALAR_OP
 
-    //-------------------------------------------------------------------------
-    // negation
-    template <
-        size_t S,
-        typename T,
-        template<size_t,typename> class K
-    >
-    typename std::enable_if<
-        std::is_signed<T>::value,
-        K<S,T>
-    >::type
-    operator- (K<S,T> k)
-    {
-        for (auto &v: k)
-            v = -v;
-        return k;
-    }
-
 
     ///////////////////////////////////////////////////////////////////////////
     // unary operators
