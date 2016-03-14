@@ -47,6 +47,10 @@ namespace util {
     template <> struct type_string<float   > { static constexpr const char value[] = "float32"; };
     template <> struct type_string<double  > { static constexpr const char value[] = "float64"; };
 
+    template <> struct type_string<std::string> { static constexpr const char value[] = "string"; };
+    template <> struct type_string<char*>       { static constexpr const char value[] = "string"; };
+    template <> struct type_string<char[]>      { static constexpr const char value[] = "string"; };
+
     template <typename T>
     auto
     to_string (void)
