@@ -82,15 +82,17 @@ namespace util {
     #define INTROSPECTION_ENUM_DECL(NS,E, ...)                  \
     namespace util {                                            \
         template <>                                             \
-        struct enum_traits<NS::E> {                             \
-            using value_type = NS::E;                           \
+        struct enum_traits<::NS::E> {                           \
+            using value_type = ::NS::E;                         \
                                                                 \
             static constexpr                                    \
-            size_t value_count = param_count (__VA_ARGS__);     \
+            size_t value_count = VA_ARGS_COUNT(__VA_ARGS__);    \
                                                                 \
             static constexpr                                    \
             std::array<value_type,value_count>                  \
-            values = { __VA_ARGS__ };                           \
+            values = {                                          \
+                MAP1(NAMESPACE_LIST, ::NS::E, __VA_ARGS__)      \
+            };                                                  \
                                                                 \
             static constexpr                                    \
             std::array<const char*,value_count>                 \
@@ -98,7 +100,8 @@ namespace util {
         };                                                      \
                                                                 \
         template <>                                             \
-        struct type_string<E> {                                 \
+        struct type_string<::NS::E> {                           \
+            static constexpr const char ns[] = #NS;             \
             static constexpr const char value[] = #E;           \
         };                                                      \
     }                                                           \
@@ -113,18 +116,21 @@ namespace util {
     #define INTROSPECTION_ENUM_IMPL(NS,E, ...)                  \
     constexpr                                                   \
     std::array<                                                 \
-        util::enum_traits<NS::E>::value_type,                   \
-        util::enum_traits<NS::E>::value_count                   \
-    > util::enum_traits<NS::E>::values;                         \
+        util::enum_traits<::NS::E>::value_type,                 \
+        util::enum_traits<::NS::E>::value_count                 \
+    > util::enum_traits<::NS::E>::values;                       \
                                                                 \
     constexpr                                                   \
     std::array<                                                 \
         const char*,                                            \
-        util::enum_traits<NS::E>::value_count                   \
-    > util::enum_traits<NS::E>::names;                          \
+        util::enum_traits<::NS::E>::value_count                 \
+    > util::enum_traits<::NS::E>::names;                        \
                                                                 \
     constexpr                                                   \
-    const char util::type_string<NS::E>::value[];               \
+    const char util::type_string<::NS::E>::ns[];                \
+                                                                \
+    constexpr                                                   \
+    const char util::type_string<::NS::E>::value[];             \
 
 
     ///------------------------------------------------------------------------
@@ -141,9 +147,9 @@ namespace util {
 
     #define INTROSPECTION_ENUM_ISTREAM(NS,E)                    \
     std::istream&                                               \
-    NS::operator>> (std::istream &is, NS::E &e)                 \
+    ::NS::operator>> (std::istream &is, ::NS::E &e)             \
     {                                                           \
-        using traits = util::enum_traits<E>;                    \
+        using traits = util::enum_traits<::NS::E>;              \
                                                                 \
         std::string name;                                       \
         is >> name;                                             \
@@ -186,9 +192,9 @@ namespace util {
     /// For trivial enumerations INTROSPECTION_ENUM may be easier to use.
     #define INTROSPECTION_ENUM_OSTREAM(NS,E)                    \
     std::ostream&                                               \
-    NS::operator<< (std::ostream &os, NS::E e)                  \
+    ::NS::operator<< (std::ostream &os, ::NS::E e)              \
     {                                                           \
-        using traits = ::util::enum_traits<NS::E>;              \
+        using traits = ::util::enum_traits<::NS::E>;            \
                                                                 \
         auto val_pos = std::find (                              \
             std::cbegin (traits::values),                       \
@@ -225,6 +231,18 @@ namespace util {
     #define INTROSPECTION_ENUM(E, ...)                      \
     inline namespace detail_intr_enum {                     \
         enum E { __VA_ARGS__ };                             \
+        std::ostream& operator<< (std::ostream&, E);        \
+        std::istream& operator>> (std::istream&, E&);       \
+    }                                                       \
+    INTROSPECTION_ENUM_DECL(detail_intr_enum,E,__VA_ARGS__) \
+    INTROSPECTION_ENUM_IMPL(detail_intr_enum,E,__VA_ARGS__) \
+    INTROSPECTION_ENUM_ISTREAM(detail_intr_enum,E)          \
+    INTROSPECTION_ENUM_OSTREAM(detail_intr_enum,E)
+
+
+    #define INTROSPECTION_ENUM_CLASS(E, ...)                \
+    inline namespace detail_intr_enum {                     \
+        enum class E { __VA_ARGS__ };                       \
         std::ostream& operator<< (std::ostream&, E);        \
         std::istream& operator>> (std::istream&, E&);       \
     }                                                       \
