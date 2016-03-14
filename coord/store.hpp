@@ -25,7 +25,7 @@
 
 namespace util { namespace coord {
     ///////////////////////////////////////////////////////////////////////
-    // Disable GCC warnings about validity of anonyous structures in
+    // Disable GCC warnings about validity of anonymous structures in
     // unions. Push comes to shove I'll manually redsign everything to
     // keep this syntax anyway.
 #pragma GCC diagnostic push
@@ -37,8 +37,21 @@ namespace util { namespace coord {
 #endif
 
     ///////////////////////////////////////////////////////////////////////////
-    template <size_t S, typename T, typename...>
-    struct store {
+    // Coordinate storage class.
+    //
+    // Types of arity multiples of 4 with payloads of at least 16 bytes
+    // (T >= uint16_t) are guaranteed to be aligned appropriately for SSE (see
+    // specialisations below).
+    template <
+        size_t S,
+        typename T,
+        typename...
+    >
+    struct
+    alignas (
+        sizeof (T) * S % 16 == 0 && sizeof (T) * S >= 16 ? 16 : alignof (T)
+    )
+    store {
         T data[S];
     };
 
@@ -53,8 +66,18 @@ namespace util { namespace coord {
         };
     };
 
+
+    // Align on 16 bytes if the data is at least 16 bytes long. Prevents tiny
+    // types like colour4u requiring massive alignments, reduces internal
+    // fragmentation.
+    //
+    // TODO: expand this for other instruction sets. maybe switch on type.
     template <typename T>
-    struct store<4,T,rgba,hsv> {
+    struct
+    alignas (
+        sizeof (T) * 4u >= 16 ? 16 : alignof (T)
+    )
+    store<4,T,rgba,hsv> {
         union {
             T data[4];
             struct { T r,g,b,a; };
@@ -82,8 +105,17 @@ namespace util { namespace coord {
     };
 
 
+    // Align on 16 bytes if the data is at least 16 bytes long. Prevents tiny
+    // types like colour4u requiring massive alignments, reduces internal
+    // fragmentation.
+    //
+    // TODO: expand this for other instruction sets. maybe switch on type.
     template <typename T>
-    struct store<4,T,xyzw> {
+    struct
+    alignas (
+        sizeof (T) * 4u >= 16 ? 16 : alignof (T)
+    )
+    store<4,T,xyzw> {
         union {
             T data[4];
             struct { T x,y,z,w; };
@@ -112,8 +144,17 @@ namespace util { namespace coord {
     };
 
 
+    // Align on 16 bytes if the data is at least 16 bytes long. Prevents tiny
+    // types like colour4u requiring massive alignments, reduces internal
+    // fragmentation.
+    //
+    // TODO: expand this for other instruction sets. maybe switch on type.
     template <typename T>
-    struct store<4,T,xyzw,stpq> {
+    struct
+    alignas (
+        sizeof (T) * 4u >= 16 ? 16 : alignof (T)
+    )
+    store<4,T,xyzw,stpq> {
         union {
             T data[4];
             struct { T x,y,z,w; };
