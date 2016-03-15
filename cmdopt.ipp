@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2013 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2013-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifdef __UTIL_CMDLINE_IPP
@@ -27,8 +27,7 @@
 namespace util { namespace cmdopt {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    option::value<T>::value (std::string _name, std::string _description, T &_data):
-        base (std::move (_name), std::move (_description)),
+    option::value<T>::value (T &_data):
         m_data (_data)
     { ; }
 
@@ -130,14 +129,28 @@ namespace util { namespace cmdopt {
                  std::string description,
                  Args&&... args)
     {
-        auto handler = std::make_unique<T> (longname, description, std::forward<Args> (args)...);
+        auto handler = std::make_unique<T> (std::forward<Args> (args)...);
         T& ref = *handler;
 
         m_short.emplace_back (shortname, ref);
-        m_long .emplace_back (longname,  ref);
+        m_long .emplace_back (std::move (longname),  ref);
 
-        m_options.emplace_back (shortname, longname, std::move (handler));
+        m_options.emplace_back (std::move (description), std::move (handler));
 
+        return ref;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename ...Args>
+    T&
+    parser::append (std::string description,
+                    Args &&...args)
+    {
+        auto handler = std::make_unique<T> (std::forward<Args> (args)...);
+        auto &ref = *handler;
+        m_positional.push_back (ref);
+        m_options.emplace_back (std::move (description), std::move (handler));
         return ref;
     }
 } }

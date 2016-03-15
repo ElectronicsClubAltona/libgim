@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2013 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2013-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "cmdopt.hpp"
@@ -23,25 +23,11 @@
 #include <iostream>
 #include <iomanip>
 
-using util::cmdopt::option::base;
-using util::cmdopt::option::bytes;
-using util::cmdopt::option::count;
-using util::cmdopt::option::null;
-using util::cmdopt::option::present;
-using util::cmdopt::option::value;
-using util::cmdopt::parser;
+using namespace util::cmdopt;
+using namespace util::cmdopt::option;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-base::base (std::string _name, std::string _description):
-    m_required (false),
-    m_seen (false),
-    m_name (std::move (_name)),
-    m_description (std::move (_description))
-{ ; }
-
-
-//-----------------------------------------------------------------------------
 base::~base ()
 { ; }
 
@@ -50,15 +36,15 @@ base::~base ()
 void
 base::execute (void)
 {
-    throw invalid_null (m_name);
+    throw invalid_null ();
 }
 
 
 //-----------------------------------------------------------------------------
 void
-base::execute (const char *restrict)
+base::execute (const char *restrict value)
 {
-    throw invalid_value (m_name);
+    throw invalid_value (value);
 }
 
 
@@ -75,23 +61,7 @@ void
 base::finish (void)
 {
     if (m_required && !m_seen)
-        throw invalid_required (m_name);
-}
-
-
-//-----------------------------------------------------------------------------
-const std::string&
-base::name (void) const
-{
-    return m_name;
-}
-
-
-//-----------------------------------------------------------------------------
-const std::string&
-base::description (void) const
-{
-    return m_description;
+        throw invalid_required ();
 }
 
 
@@ -128,12 +98,6 @@ base::seen (bool _seen)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-null::null (std::string _name, std::string _description):
-    base (std::move (_name), std::move (_description))
-{ ; }
-
-
-//-----------------------------------------------------------------------------
 void
 null::execute (void)
 {
@@ -159,8 +123,7 @@ null::example (void) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-present::present (std::string _name, std::string _description, bool &_data):
-    base (std::move (_name), std::move (_description)),
+present::present (bool &_data):
     m_data (_data)
 { ; }
 
@@ -243,8 +206,8 @@ namespace util { namespace cmdopt { namespace option {
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-count<T>::count (std::string _name, std::string _description, T &_data):
-    value<T> (std::move (_name), std::move (_description), _data)
+count<T>::count (T &_data):
+    value<T> (_data)
 { ; }
 
 
@@ -294,7 +257,8 @@ suffix_to_multiplier (char c)
         return util::pow (1024UL, 1);
 
     default:
-        throw util::cmdopt::invalid_value ("bytes");
+        const char str[2] = { c, '\0' };
+        throw std::invalid_argument (str);
     }
 }
 
@@ -310,13 +274,16 @@ bytes::execute (const char *restrict str)
     CHECK_LE (tail, last);
 
     if (tail == str) {
-        throw invalid_value (name ());
+        throw invalid_value (str);
     } else if (tail == last) {
         data (val);
     } else if (tail + 1 == last) {
-        data (val * suffix_to_multiplier (*tail));
+        try {
+            data (val * suffix_to_multiplier (*tail));
+        } catch (const std::invalid_argument&)
+        { throw invalid_value (str); }
     } else
-        throw invalid_value (name ());
+        throw invalid_value (str);
 }
 
 
@@ -328,7 +295,7 @@ parser::scan (int argc, const char *const *argv)
     CHECK    (argv);
 
     for (auto &j: m_options)
-        std::get<2> (j)->start ();
+        std::get<std::unique_ptr<option::base>> (j)->start ();
 
     // start iterating after our program's name
     int i = 1;
@@ -337,7 +304,13 @@ parser::scan (int argc, const char *const *argv)
 
         // bail if there's no potential for an option
         if (len < 2 || argv[i][0] != '-')
-            return i;
+            break;
+
+        // stop processing named options on '--'
+        if (len == 2 && argv[i][1] == '-') {
+            ++i;
+            break;
+        }
 
         // parse longopt
         auto inc = argv[i][1] == '-'
@@ -348,8 +321,17 @@ parser::scan (int argc, const char *const *argv)
         i += inc;
     }
 
+    // process the positional arguments
+    for (size_t cursor = 0; i < argc && cursor < m_positional.size (); ++i, ++cursor)
+        m_positional[cursor].get ().execute (argv[i]);
+
+    // ensure we've processed all the arguments
+    if (i != argc)
+        throw unhandled_argument (i);
+
+    // allow arguments to check if they've been successfully handled
     for (auto &j: m_options)
-        std::get<2> (j)->finish ();
+        std::get<std::unique_ptr<option::base>> (j)->finish ();
 
     return i;
 }
@@ -379,11 +361,11 @@ parser::parse_long (int pos, int argc, const char *const *argv)
     // find the handler
     auto handle_pos = std::find_if (m_long.begin (),
                                  m_long.end (),
-                                 [&] (auto i) { return std::get<0> (i) == key; });
+                                 [&] (auto i) { return std::get<std::string> (i) == key; });
     if (handle_pos == m_long.end ())
         throw invalid_key (key);
 
-    auto &handler = std::get<1> (*handle_pos);
+    auto &handler = std::get<option::base&> (*handle_pos);
 
     // maybe grab a value from the next atom and dispatch
     if (!eq) {
@@ -425,10 +407,10 @@ parser::parse_short (int pos, int argc, const char *const *argv)
 
             auto hpos = std::find_if (m_short.begin (),
                                       m_short.end (),
-                                      [letter] (auto j) { return std::get<0> (j) == letter; });
+                                      [letter] (auto j) { return std::get<char> (j) == letter; });
             if (hpos == m_short.end ())
                 throw invalid_key (std::to_string (letter));
-            std::get<1> (*hpos).execute ();
+            std::get<option::base&> (*hpos).execute ();
         }
 
         return 1;
@@ -438,10 +420,10 @@ parser::parse_short (int pos, int argc, const char *const *argv)
     auto letter = argv[pos][1];
     auto hpos = std::find_if (m_short.begin (),
                               m_short.end (),
-                              [letter] (auto i) { return std::get<0> (i) == letter; });
+                              [letter] (auto i) { return std::get<char> (i) == letter; });
     if (hpos == m_short.end ())
         throw invalid_key (std::to_string (letter));
-    std::get<1> (*hpos).execute (argv[pos+1]);
+    std::get<option::base&> (*hpos).execute (argv[pos+1]);
 
     return 2;
 }
@@ -492,13 +474,109 @@ parser::print_help (const int argc,
     std::cout << "usage: " << argv[0] << '\n';
 
     for (auto &o: m_options) {
-        std::cout << '\t'
-                  << '-' << std::get<char> (o) << '\t'
-                  << std::setw (longwidth) << std::get<std::string> (o) << '\t'
-                  << std::setw (longexample) << std::get<std::unique_ptr<option::base>> (o)->example () << '\t'
-                  << std::setw (0) << std::get<2> (o)->description ()
+        auto ptr = std::get<std::unique_ptr<option::base>> (o).get ();
+
+        auto s = std::find_if (
+            std::cbegin (m_short),
+            std::cend   (m_short),
+            [ptr] (auto j) {
+                return &std::get<option::base&> (j) == ptr;
+            }
+        );
+
+        auto l = std::find_if (
+            std::cbegin (m_long),
+            std::cend   (m_long),
+            [ptr] (auto j) {
+                return &std::get<option::base&> (j) == ptr;
+            }
+        );
+
+        std::cout << '\t';
+        if (s != std::cend (m_short))
+            std::cout << '-' << std::get<char> (*s) << '\t';
+        else
+            std::cout << '\t';
+
+        std::cout << std::setw (longwidth);
+        if (l != std::cend (m_long))
+            std::cout << std::get<std::string> (*l) << '\t';
+        else
+            std::cout << ' ' << '\t';
+
+        std::cout << std::setw (longexample) << ptr->example () << '\t'
+                  << std::setw (0) << std::get<std::string> (o)
                   << '\n';
     }
 
     exit (0);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+invalid_key::invalid_key (std::string _key):
+    m_key (std::move (_key))
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+const char*
+invalid_key::what (void) const noexcept
+{
+    return m_key.c_str ();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+invalid_value::invalid_value (std::string _value):
+    m_value (_value)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+const char*
+invalid_value::what (void) const noexcept
+{
+    return m_value.c_str ();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+const char*
+invalid_null::what (void) const noexcept
+{
+    static const char WHAT[] = "unexpected null option was encountered";
+    return WHAT;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+const char*
+invalid_required::what (void) const noexcept
+{
+    static const char WHAT[] = "required option not seen";
+    return WHAT;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+unhandled_argument::unhandled_argument (int _index):
+    m_index (_index)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+int
+unhandled_argument::index (void) const noexcept
+{
+    return m_index;
+}
+
+
+//-----------------------------------------------------------------------------
+const char*
+unhandled_argument::what (void) const noexcept
+{
+    static const char WHAT[] = "unhandled argument";
+    return WHAT;
 }

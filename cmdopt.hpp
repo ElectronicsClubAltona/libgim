@@ -11,26 +11,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2013 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2013-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 
 #ifndef __UTIL_CMDLINE_HPP
 #define __UTIL_CMDLINE_HPP
 
+#include <functional>
 #include <memory>
-#include <tuple>
-#include <vector>
 #include <stdexcept>
 #include <string>
+#include <tuple>
+#include <vector>
 
 namespace util { namespace cmdopt {
     namespace option {
         class base {
-        protected:
-            base (std::string name, std::string description);
-
         public:
+            // we deal almost exclusively with vtables, so disable copying
+            // just in case we do something stupid.
+            base () { }
+            base (const base&) = delete;
+            base& operator= (const base&) = delete;
+
             virtual ~base ();
 
             virtual void execute (void);
@@ -40,9 +44,6 @@ namespace util { namespace cmdopt {
 
             virtual const std::string& example (void) const = 0;
 
-            const std::string& name (void) const;
-            const std::string& description (void) const;
-
             bool required (void) const;
             bool required (bool);
 
@@ -50,18 +51,13 @@ namespace util { namespace cmdopt {
             bool seen (bool);
 
         private:
-            bool m_required;
-            bool m_seen;
-
-            std::string m_name;
-            std::string m_description;
+            bool m_required = false;
+            bool m_seen = false;
         };
 
 
         class null : public base {
         public:
-            explicit null (std::string name, std::string description);
-
             virtual void execute (void) override;
             virtual void execute (const char *restrict) override;
 
@@ -71,7 +67,7 @@ namespace util { namespace cmdopt {
 
         class present : public base {
         public:
-            present (std::string name, std::string description, bool&);
+            explicit present (bool&);
 
             using base::execute;
             virtual void execute (void) override;
@@ -88,7 +84,7 @@ namespace util { namespace cmdopt {
         template <typename T>
         class value : public base {
         public:
-            value (std::string name, std::string description, T&);
+            explicit value (T&);
 
             using base::execute;
             void execute (const char *restrict) override;
@@ -107,7 +103,7 @@ namespace util { namespace cmdopt {
         template <typename T = unsigned>
         class count : public value<T> {
         public:
-            count (std::string name, std::string description, T&);
+            explicit count (T&);
 
             using value<T>::execute;
             void execute (void) override;
@@ -124,22 +120,6 @@ namespace util { namespace cmdopt {
     }
 
 
-    class error : public std::runtime_error
-    { using runtime_error::runtime_error; };
-
-    class invalid_key : public error
-    { using error::error; };
-
-    class invalid_value : public error
-    { using error::error; };
-
-    class invalid_null : public error
-    { using error::error; };
-
-    class invalid_required : public error
-    { using error::error; };
-
-
     class parser {
     public:
         template <typename T, typename ...Args>
@@ -147,6 +127,10 @@ namespace util { namespace cmdopt {
                 std::string longname,
                 std::string description,
                 Args&&...);
+
+        template <typename T, typename ...Args>
+        T&
+        append (std::string description, Args&&...);
 
         int scan (int argc, const char *const *argv);
 
@@ -161,13 +145,56 @@ namespace util { namespace cmdopt {
 
         std::vector<short_t> m_short;
         std::vector<long_t>  m_long;
+        std::vector<std::reference_wrapper<option::base>> m_positional;
 
         std::vector<
             std::tuple<
-                char,
-                std::string,
-                std::unique_ptr<option::base>>
+                std::string, // description
+                std::unique_ptr<option::base>
+            >
         > m_options;
+    };
+
+
+    class error : public std::exception { };
+
+    class invalid_key : public error {
+    public:
+        invalid_key (std::string _key);
+        virtual const char* what (void) const noexcept override;
+
+    private:
+        const std::string m_key;
+    };
+
+    class invalid_value : public error {
+    public:
+        invalid_value (std::string _value);
+        virtual const char* what (void) const noexcept override;
+
+    private:
+        const std::string m_value;
+    };
+
+    class invalid_null : public error {
+    public:
+        virtual const char* what (void) const noexcept override;
+    };
+
+    class invalid_required : public error {
+    public:
+        virtual const char* what (void) const noexcept override;
+    };
+
+    class unhandled_argument : public error {
+    public:
+        unhandled_argument (int index);
+        virtual const char* what (void) const noexcept override;
+
+        int index (void) const noexcept;
+
+    private:
+        const int m_index;
     };
 } }
 

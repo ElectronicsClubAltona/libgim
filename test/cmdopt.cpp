@@ -6,13 +6,14 @@
 #include "maths.hpp"
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Check that null options don't strhrow anything
+static
 void
 test_null (util::TAP::logger &tap)
 {
     util::cmdopt::parser p;
-    auto n = p.add<util::cmdopt::option::null> ('n', "null", "testing null option");
+    p.add<util::cmdopt::option::null> ('n', "null", "testing null option");
 
     static const char *argv1[] = { "./foo", "-n", "foo" };
     tap.expect_nothrow ([&] () {
@@ -26,8 +27,9 @@ test_null (util::TAP::logger &tap)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Check if presence options can be used successfully
+static
 void
 test_present (util::TAP::logger &tap)
 {
@@ -62,8 +64,9 @@ test_present (util::TAP::logger &tap)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Check all forms of boolean inputs
+static
 void
 test_bool (util::TAP::logger &tap)
 {
@@ -102,8 +105,9 @@ test_bool (util::TAP::logger &tap)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template<typename T>
+static
 void
 test_numeric (util::TAP::logger &tap)
 {
@@ -152,7 +156,8 @@ test_numeric (util::TAP::logger &tap)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+static
 void
 test_bytes (util::TAP::logger &tap)
 {
@@ -186,7 +191,8 @@ test_bytes (util::TAP::logger &tap)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+static
 void
 test_required (util::TAP::logger &tap)
 {
@@ -213,7 +219,32 @@ test_required (util::TAP::logger &tap)
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+static
+void
+test_positional (util::TAP::logger &tap)
+{
+    unsigned value = 0xdead;
+    constexpr unsigned expected = 0xbeef;
+
+    util::cmdopt::parser p;
+    p.append<util::cmdopt::option::value<unsigned>> ("unsigned test", value);
+
+    static const char *argv[] = {
+        "./cpptest",
+        "--",
+        "48879",
+    };
+
+    tap.expect_nothrow ([&] {
+        p.scan (elems (argv), argv);
+    }, "positional, nothrow");
+
+    tap.expect_eq (value, expected, "positiona, value success");
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 int
 main (int, char **) {
     util::TAP::logger tap;
@@ -229,6 +260,7 @@ main (int, char **) {
     test_numeric<uint64_t> (tap);
     test_bytes (tap);
     test_required (tap);
+    test_positional (tap);
 
     return tap.status ();
 }
