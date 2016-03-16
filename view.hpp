@@ -21,7 +21,7 @@
 #include "./types/traits.hpp"
 
 #include <cstdlib>
-#include <iostream>
+#include <ostream>
 
 namespace util {
     template <typename T>
