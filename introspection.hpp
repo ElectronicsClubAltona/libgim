@@ -52,6 +52,10 @@ namespace util {
     template <> struct type_string<char[]>      { static constexpr const char value[] = "string"; };
 
     template <typename T>
+    constexpr
+    const char* type_string_v = type_string<T>::value;
+
+    template <typename T>
     auto
     to_string (void)
     {
