@@ -18,6 +18,8 @@
 #ifndef __UTIL_VIEW_HPP
 #define __UTIL_VIEW_HPP
 
+#include "./types/traits.hpp"
+
 #include <cstdlib>
 #include <iostream>
 
@@ -25,7 +27,7 @@ namespace util {
     template <typename T>
     struct view {
     public:
-        using value_type = typename std::iterator_traits<T>::value_type;
+        using value_type = typename std::iterator_traits<remove_restrict_t<T>>::value_type;
 
         template <size_t S>
         constexpr view (const value_type (&arr)[S]) noexcept;
