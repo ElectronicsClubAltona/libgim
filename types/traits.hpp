@@ -20,7 +20,7 @@
 #include <memory>
 #include <type_traits>
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T> struct is_dereferencable     : std::false_type { };
 template <typename T> struct is_dereferencable<T*> : std::true_type  { };
 template <typename T> struct is_dereferencable<std::unique_ptr<T>> : std::true_type { };
@@ -28,6 +28,7 @@ template <typename T> struct is_dereferencable<std::shared_ptr<T>> : std::true_t
 template <typename T> struct is_dereferencable<std::weak_ptr<T>>   : std::true_type { };
 
 
+///////////////////////////////////////////////////////////////////////////////
 template <typename T> struct dereferenced_type {
     typedef typename std::enable_if<
         std::is_pointer<T>::value,
@@ -42,7 +43,7 @@ template <typename T> struct dereferenced_type<std::shared_ptr<T>> { typedef T t
 template <typename T> struct dereferenced_type<std::weak_ptr<T>>   { typedef T type; };
 
 
-///----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 /// find the unsigned version of a type if one exists
 template <typename T>
 struct try_unsigned
@@ -51,11 +52,12 @@ struct try_unsigned
 };
 
 
+//-----------------------------------------------------------------------------
 template <> struct try_unsigned<double> { typedef double type; };
 template <> struct try_unsigned<float > { typedef float  type; };
 
 
-///----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 /// find the signed version of a type if one exists
 template <typename T>
 struct try_signed
@@ -63,10 +65,13 @@ struct try_signed
     typedef typename std::make_signed<T>::type type;
 };
 
+
+//-----------------------------------------------------------------------------
 template <> struct try_signed<double> { typedef double type; };
 template <> struct try_signed<float > { typedef float  type; };
 
-///----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 /// checks if a type can be converted in all cases without modification
 template <typename T, typename U> struct is_lossless_cast : std::enable_if<
     std::is_integral<T>::value &&
@@ -78,22 +83,32 @@ template <typename T, typename U> struct is_lossless_cast : std::enable_if<
 >::value { };
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 struct func_traits : public func_traits<decltype(&T::operator())>
 { };
 
 
+//-----------------------------------------------------------------------------
 template <typename C, typename R, typename ...Args>
 struct func_traits<R(C::*)(Args...) const> {
     typedef R return_type;
 };
 
 
+//-----------------------------------------------------------------------------
 template <typename R, typename ...Args>
 struct func_traits<R(Args...)> {
     typedef R return_type;
 };
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T> struct remove_restrict              { using type = T;  };
+template <typename T> struct remove_restrict<T *restrict> { using type = T*; };
+
+template <typename T>
+using remove_restrict_t = typename remove_restrict<T>::type;
 
 
 #endif
