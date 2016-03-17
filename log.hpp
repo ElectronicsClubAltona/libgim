@@ -78,19 +78,19 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     class scoped_logger : public nocopy {
     public:
-        scoped_logger (const level_t, std::string);
+        scoped_logger (level_t, std::string);
         ~scoped_logger ();
 
     protected:
-        level_t     m_level;
-        std::string m_message;
+        const level_t     m_level;
+        const std::string m_message;
     };
 
 
     ///////////////////////////////////////////////////////////////////////////
     class scoped_timer : public nocopy {
     public:
-        scoped_timer (const level_t, std::string);
+        scoped_timer (level_t, std::string);
         ~scoped_timer ();
 
     private:
