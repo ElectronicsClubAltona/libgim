@@ -399,6 +399,7 @@ TEST_BIN = 			\
     test/sha1			\
     test/sha2			\
     test/signal			\
+    test/string			\
     test/stringid		\
     test/strongdef		\
     test/tuple			\
