@@ -67,10 +67,8 @@ namespace util {
 #endif
 
 
-    /// Reads an entire file into memory. Caller frees the result. Guarantees a
-    /// null trailing byte.
+    /// Reads an entire file into memory.
     std::vector<char> slurp (const boost::filesystem::path&);
-
     std::vector<char> slurp (FILE *);
 
 

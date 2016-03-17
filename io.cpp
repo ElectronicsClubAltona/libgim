@@ -47,10 +47,8 @@ util::slurp (const boost::filesystem::path& path)  {
     if (lseek (out, 0, SEEK_SET) == (off_t)-1)
         throw errno_error ();
 
-    // Allocate a buffer, and keep reading until it's full. We provide a null
-    // padding at the tail as a 'just in case' measure for string manipulation.
-    std::vector<char> buffer (size + 1);
-    buffer.data ()[size] = '\0';
+    // Allocate a buffer, and keep reading until it's full.
+    std::vector<char> buffer (size);
 
     CHECK_GE (size, 0);
     size_t remaining = (size_t)size;
