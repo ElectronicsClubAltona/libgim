@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_PASCAL_HPP
@@ -22,11 +22,9 @@
 
 namespace util {
     template <typename T>
-    struct parray {
+    class parray {
+    public:
         parray (size_t size, T *data);
-
-        size_t   size;
-        T       *data;
 
         T& operator[] (size_t idx);
         const T& operator[] (size_t idx) const;
@@ -34,15 +32,24 @@ namespace util {
         T& at (size_t idx);
         const T& at (size_t idx) const;
 
-        T* begin (void) const;
-        T* end   (void) const;
+        T* begin (void);
+        T* end   (void);
 
         const T* cbegin (void) const;
         const T* cend   (void) const;
+
+        const T* data (void) const;
+        T* data (void);
+        size_t size (void) const;
+
+    private:
+        size_t   m_size;
+        T       *m_data;
     };
 
     template <typename T>
-    std::ostream& operator<< (std::ostream&, util::parray<T>);
+    std::ostream&
+    operator<< (std::ostream&, util::parray<T>);
 }
 
 
