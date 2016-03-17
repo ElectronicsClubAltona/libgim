@@ -46,7 +46,7 @@ namespace util { namespace posix {
 
     struct dir {
     public:
-        dir (const char *path);
+        explicit dir (const char *path);
         ~dir ();
 
         operator DIR* (void);

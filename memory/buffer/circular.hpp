@@ -27,7 +27,7 @@ namespace util { namespace memory { namespace buffer {
     public:
         using value_type = char;
 
-        circular (size_t bytes);
+        explicit circular (size_t bytes);
         ~circular ();
 
         circular (const circular&) = delete;

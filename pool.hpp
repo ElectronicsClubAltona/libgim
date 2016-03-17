@@ -41,7 +41,9 @@ namespace util {
             size_t m_size;
 
         public:
+            explicit
             pool (unsigned int _capacity);
+
             ~pool ();
 
             // Data management
