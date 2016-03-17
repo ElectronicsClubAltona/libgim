@@ -17,8 +17,6 @@
 #ifndef __NOCOPY_HPP
 #define __NOCOPY_HPP
 
-#include "debug.hpp"
-
 namespace util {
     class nocopy {
         protected:
@@ -26,11 +24,11 @@ namespace util {
             ~nocopy () { ; }
 
         private:
-            nocopy            (const nocopy &) = delete;
-            nocopy& operator =(const nocopy &) = delete;
+            nocopy (const nocopy & ) = delete;
+            nocopy (      nocopy &&) = delete;
 
-            nocopy            (nocopy &&) = delete;
-            nocopy& operator =(nocopy &&) = delete;
+            nocopy& operator= (const nocopy & ) = delete;
+            nocopy& operator= (      nocopy &&) = delete;
     };
 }
 

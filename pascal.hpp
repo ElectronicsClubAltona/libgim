@@ -18,7 +18,7 @@
 #define __UTIL_PASCAL_HPP
 
 #include <cstdlib>
-#include <iostream>
+#include <ostream>
 
 namespace util {
     template <typename T>
