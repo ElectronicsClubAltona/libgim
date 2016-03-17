@@ -73,25 +73,26 @@ util::slurp (const boost::filesystem::path& path)  {
 std::vector<char>
 util::slurp (FILE *stream)
 {
-    std::vector<char> data;
-    data.resize (16);
-
-    for (size_t chunk = 0, size = data.size ();
-         !ferror (stream) && !feof (stream);
-         chunk = size, size *= 2u)
-    {
-        auto found = fread (data.data () + chunk, 1, chunk, stream);
-        if (found != chunk)
-            break;
-
-        data.resize (data.size () * 2u);
-    }
-
-    if (ferror (stream))
+    // find how much data is in this file
+    const int desc = fileno (stream);
+    if (desc < 0)
         errno_error::throw_code ();
 
+    struct stat meta;
+    if (fstat (desc, &meta) < 0)
+        errno_error::throw_code ();
+
+    // allocate a buffer we think is the correct size
+    std::vector<char> buf;
+    buf.resize (meta.st_size);
+
+    // read as much as possible, then resize to the actual length
+    auto res = fread (buf.data (), 1, meta.st_size, stream);
+    if (!ferror (stream))
+        buf.resize (res);
+
     CHECK (feof (stream));
-    return data;
+    return buf;
 }
 
 
