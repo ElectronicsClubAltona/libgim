@@ -68,6 +68,7 @@ namespace util { namespace cmdopt {
         class present : public base {
         public:
             explicit present (bool&);
+            explicit present (bool&&) = delete;
 
             using base::execute;
             virtual void execute (void) override;
@@ -85,15 +86,16 @@ namespace util { namespace cmdopt {
         class value : public base {
         public:
             explicit value (T&);
+            explicit value (T&&) = delete;
 
             using base::execute;
             void execute (const char *restrict) override;
 
             const std::string& example (void) const override;
 
-            T  data (void) const;
-            T& data (void);
-            T& data (T);
+            const T& data (void) const&;
+            T& data (void) &;
+            T& data (T) &;
 
         private:
             T& m_data;
@@ -104,6 +106,7 @@ namespace util { namespace cmdopt {
         class count : public value<T> {
         public:
             explicit count (T&);
+            explicit count (T&&) = delete;
 
             using value<T>::execute;
             void execute (void) override;

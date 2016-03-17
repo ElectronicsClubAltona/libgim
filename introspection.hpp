@@ -273,8 +273,10 @@ namespace util {
         typedef R type;
 
         static const std::string name;
+
         static const R& get (const K &k) { return k.*M; }
-        static R get (K &k) { return k.*M; }
+        static       R& get (      K &k) { return k.*M; }
+        static       R& get (      K &&) = delete;
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -377,6 +379,8 @@ namespace util {
                     std::tuple_element<I, typename type<K>::fields>::type::get (k)...
                 );
             }
+
+            static auto make (K&&) = delete;
         };
     }
 
@@ -389,6 +393,16 @@ namespace util {
     {
         return detail::_as_tuple<K>::make (k);
     }
+
+    template <typename K>
+    auto as_tuple (K &_k)
+    {
+        const K &k = _k;
+        return as_tuple (k);
+    }
+
+    template <typename K>
+    auto as_tuple (K&&) = delete;
 }
 
 #endif

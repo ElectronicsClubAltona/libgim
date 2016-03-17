@@ -35,14 +35,14 @@ namespace util { namespace memory { namespace buffer {
         circular& operator= (const circular&) = delete;
         circular& operator= (circular&&) = delete;
 
-        char& operator[] (size_t);
-        const char& operator[] (size_t) const;
+        char& operator[] (size_t)&;
+        const char& operator[] (size_t) const&;
 
-        char* begin (void);
-        char* end   (void);
+        char* begin (void)&;
+        char* end   (void)&;
 
-        const char* begin (void) const;
-        const char* end   (void) const;
+        const char* begin (void) const&;
+        const char* end   (void) const&;
 
         size_t size (void) const;
 

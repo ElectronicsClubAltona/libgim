@@ -52,13 +52,13 @@ namespace util {
         { data = rhs.data; return *this; }
 
         // simple value_type assignment.
-        strongdef& operator= (const T &rhs)
+        strongdef& operator= (const T &rhs)&
         { data = rhs; return *this; }
 
         // conversion operators must not be explicit or it defeats the point
         // of this class (ease of use, transparency).
-        operator const T& (void) const { return data; }
-        operator       T& (void)       { return data; }
+        operator const T& (void) const& { return data; }
+        operator       T& (void)      & { return data; }
 
         // explicitly disable equality with unequal types or tags. this
         // prevents the conversion operator getting invoked and falsely

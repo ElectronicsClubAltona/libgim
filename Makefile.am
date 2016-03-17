@@ -345,7 +345,7 @@ LDADD = $(top_builddir)/libcruft-util.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_L
 ## Tests
 
 AM_LDFLAGS  += $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB)
-AM_CXXFLAGS += -I$(top_srcdir)
+AM_CXXFLAGS += -I$(top_srcdir) -I$(top_builddir)
 
 TEST_BIN = 			\
     test/alloc/arena		\

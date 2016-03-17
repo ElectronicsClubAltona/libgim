@@ -64,7 +64,7 @@ paged::~paged ()
 
 ///////////////////////////////////////////////////////////////////////////////
 char*
-paged::begin (void)
+paged::begin (void)&
 {
     return m_begin;
 }
@@ -72,7 +72,7 @@ paged::begin (void)
 
 //-----------------------------------------------------------------------------
 char*
-paged::end (void)
+paged::end (void)&
 {
     return m_end;
 }

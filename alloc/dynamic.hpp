@@ -49,15 +49,17 @@ namespace util { namespace alloc {
         }
 
         // allocation management
-        void* allocate   (size_t bytes,
-                          size_t alignment = DEFAULT_ALIGNMENT)
+        void*
+        allocate (size_t bytes,
+                  size_t alignment = DEFAULT_ALIGNMENT) &
         {
             return m_child->allocate (bytes, alignment);
         }
 
-        void  deallocate (void *ptr,
-                          size_t bytes,
-                          size_t alignment = DEFAULT_ALIGNMENT)
+        void
+        deallocate (void *ptr,
+                    size_t bytes,
+                    size_t alignment = DEFAULT_ALIGNMENT)
         {
             return m_child->deallocate (ptr, bytes, alignment);
         }

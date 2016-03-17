@@ -124,7 +124,7 @@ circular::~circular ()
 
 ///////////////////////////////////////////////////////////////////////////////
 char*
-circular::begin (void)
+circular::begin (void)&
 {
     return m_begin;
 }
@@ -132,7 +132,7 @@ circular::begin (void)
 
 //-----------------------------------------------------------------------------
 char*
-circular::end (void)
+circular::end (void)&
 {
     return m_end;
 }

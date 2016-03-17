@@ -57,8 +57,8 @@ namespace util {
             // Indexing
             size_t index (const T*) const;
 
-            T& operator[] (size_t idx);
-            const T& operator[] (size_t idx) const;
+            T& operator[] (size_t idx) &;
+            const T& operator[] (size_t idx) const&;
     };
 }
 

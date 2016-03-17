@@ -96,8 +96,8 @@ namespace util { namespace cmdopt {
 
     //-----------------------------------------------------------------------------
     template <typename T>
-    T
-    option::value<T>::data (void) const
+    const T&
+    option::value<T>::data (void) const&
     {
         return m_data;
     }
@@ -106,7 +106,7 @@ namespace util { namespace cmdopt {
     //-----------------------------------------------------------------------------
     template <typename T>
     T&
-    option::value<T>::data (void)
+    option::value<T>::data (void) &
     {
         return m_data;
     }
@@ -115,7 +115,7 @@ namespace util { namespace cmdopt {
     //-----------------------------------------------------------------------------
     template <typename T>
     T&
-    option::value<T>::data (T _data)
+    option::value<T>::data (T _data) &
     {
         return m_data = _data;
     }

@@ -32,14 +32,14 @@ namespace util { namespace memory { namespace buffer {
         paged& operator= (const paged&) = delete;
         paged& operator= (paged &&) = delete;
 
-        char* begin (void);
-        char* end   (void);
+        char* begin (void)&;
+        char* end   (void)&;
 
-        const char* cbegin (void);
-        const char* cend   (void);
+        const char* cbegin (void)&;
+        const char* cend   (void)&;
 
-        const char* begin (void) const;
-        const char* end   (void) const;
+        const char* begin (void) const&;
+        const char* end   (void) const&;
 
         void access (char*);
 
