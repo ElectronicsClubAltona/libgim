@@ -21,7 +21,8 @@
 #define __UTIL_VIEW_IPP
 
 
-#include "debug.hpp"
+#include "./debug.hpp"
+#include "./iterator.hpp"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,7 +46,25 @@ util::view<T>::view (T _begin, T _end) noexcept:
 
 //-----------------------------------------------------------------------------
 template <typename T>
-constexpr T
+constexpr T&
+util::view<T>::begin (void) noexcept
+{
+    return m_begin;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+constexpr T&
+util::view<T>::end (void) noexcept
+{
+    return m_end;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+constexpr const T&
 util::view<T>::begin (void) const noexcept
 {
     return cbegin ();
@@ -54,7 +73,7 @@ util::view<T>::begin (void) const noexcept
 
 //-----------------------------------------------------------------------------
 template <typename T>
-constexpr T
+constexpr const T&
 util::view<T>::end (void) const noexcept
 {
     return cend ();
@@ -63,7 +82,7 @@ util::view<T>::end (void) const noexcept
 
 //-----------------------------------------------------------------------------
 template <typename T>
-constexpr T
+constexpr const T&
 util::view<T>::cbegin (void) const noexcept
 {
     return m_begin;
@@ -72,7 +91,7 @@ util::view<T>::cbegin (void) const noexcept
 
 //-----------------------------------------------------------------------------
 template <typename T>
-constexpr T
+constexpr const T&
 util::view<T>::cend (void) const noexcept
 {
     return m_end;   
@@ -133,14 +152,17 @@ util::view<T>::operator== (const view<T> rhs) const noexcept
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-std::ostream&
-util::operator<< (std::ostream &os, util::view<T> v)
+util::view<typename T::iterator>
+util::make_view (T &t)
 {
-    os << '[';
+    return util::view<typename T::iterator> { t.begin (), t.end () };
+}
 
-    for (auto &i: v)
-        os << v << ", ";
 
-    os << ']';
-    return os;
+//-----------------------------------------------------------------------------
+template <typename T>
+util::view<typename T::const_iterator>
+util::make_view (const T &t)
+{
+    return util::view<typename T::const_iterator> { t.cbegin (), t.cend () };
 }

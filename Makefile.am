@@ -268,6 +268,7 @@ UTIL_FILES   =			\
     vector.ipp			\
     version.cpp			\
     version.hpp			\
+    view.cpp			\
     view.ipp			\
     view.hpp
 
@@ -403,7 +404,8 @@ TEST_BIN = 			\
     test/tuple			\
     test/uri			\
     test/vector			\
-    test/version
+    test/version		\
+    test/view
 
 
 if PLATFORM_WIN32

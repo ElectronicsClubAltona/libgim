@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -30,14 +30,20 @@ namespace util {
         using value_type = typename std::iterator_traits<remove_restrict_t<T>>::value_type;
 
         template <size_t S>
-        constexpr view (const value_type (&arr)[S]) noexcept;
-        constexpr view (T first, T last) noexcept;
+        constexpr explicit
+        view (const value_type (&arr)[S]) noexcept;
 
-        constexpr T begin (void) const noexcept;
-        constexpr T end   (void) const noexcept;
+        constexpr
+        view (T first, T last) noexcept;
 
-        constexpr T cbegin (void) const noexcept;
-        constexpr T cend   (void) const noexcept;
+        constexpr T& begin (void) noexcept;
+        constexpr T& end   (void) noexcept;
+
+        constexpr const T& begin (void) const noexcept;
+        constexpr const T& end   (void) const noexcept;
+
+        constexpr const T& cbegin (void) const noexcept;
+        constexpr const T& cend   (void) const noexcept;
 
         constexpr T find (value_type) const noexcept;
 
@@ -53,6 +59,28 @@ namespace util {
         T m_begin;
         T m_end;
     };
+
+    template <typename T>
+    view<typename T::iterator>
+    make_view (T&);
+
+    template <typename T>
+    view<typename T::const_iterator>
+    make_view (const T&);
+
+    template <typename T>
+    auto
+    make_view (T&&) = delete;
+
+    bool operator== (const std::string&, view<const char*>);
+    bool operator== (const std::string&, view<char*>);
+    bool operator== (const std::string&, view<std::string::const_iterator>);
+    bool operator== (const std::string&, view<std::string::iterator>);
+
+    bool operator== (view<const char*>,  const std::string&);
+    bool operator== (view<char*>,        const std::string&);
+    bool operator== (view<std::string::const_iterator>, const std::string&);
+    bool operator== (view<std::string::iterator>, const std::string&);
 
     template <typename T>
     std::ostream&
