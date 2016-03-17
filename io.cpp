@@ -159,6 +159,7 @@ indenter::overflow (int ch) {
 }
 
 
+//-----------------------------------------------------------------------------
 indenter::indenter (std::streambuf* _dest, size_t _indent)
     : m_dest       (_dest)
     , m_line_start (true)
@@ -167,6 +168,7 @@ indenter::indenter (std::streambuf* _dest, size_t _indent)
 { ; }
 
 
+//-----------------------------------------------------------------------------
 indenter::indenter (std::ostream& _dest, size_t _indent)
     : m_dest       (_dest.rdbuf())
     , m_line_start (true)
@@ -177,11 +179,13 @@ indenter::indenter (std::ostream& _dest, size_t _indent)
 }
 
 
+//-----------------------------------------------------------------------------
 indenter::~indenter ()
 {
     if (m_owner != NULL)
         m_owner->rdbuf (m_dest);
 }
+
 
 //////////////////////////////////////////////////////////////////////////////
 scoped_cwd::scoped_cwd ()
