@@ -26,31 +26,32 @@ strbegins(const char *restrict str,
 
 
 namespace util {
+    template <typename Iterator>
     struct tokeniser {
     public:
-        using string_type = std::string;
-        using value_type  = string_type::value_type;
+        using value_type = typename std::iterator_traits<Iterator>::value_type;
+        using range_type = view<Iterator>;
 
-        tokeniser (const std::string &value, char separator);
-        tokeniser (std::string &&value, char separator) = delete;
+        tokeniser (Iterator first, Iterator last, value_type separator);
 
         struct iterator {
         public:
-            using range_type = util::view<string_type::const_iterator>;
-
-            iterator (range_type range, char separator);
-
             iterator  operator++ (int);
-            iterator& operator++ (void);
+            iterator& operator++ (void)&;
 
             range_type operator* (void) const;
 
             bool operator== (const iterator&) const;
+            bool operator!= (const iterator&) const;
 
         private:
-            const value_type  m_separator;
+            iterator (range_type range, value_type separator);
+
+            const value_type m_separator;
             range_type m_range;
-            string_type::const_iterator m_end;
+            Iterator m_end;
+
+            friend tokeniser;
         };
 
         iterator cbegin (void) const;
@@ -60,9 +61,15 @@ namespace util {
         iterator end  (void) const;
 
     private:
-        const string_type &m_value;
+        const range_type m_range;
         const value_type m_separator;
     };
+
+    
+    tokeniser<std::string::const_iterator> make_tokeniser (const std::string&, std::string::value_type);
+    tokeniser<std::string::const_iterator> make_tokeniser (std::string&&, std::string::value_type) = delete;
+    tokeniser<const char*> make_tokeniser (const char*, char);
+
 }
 
 #endif // __UTIL_STRING_HPP

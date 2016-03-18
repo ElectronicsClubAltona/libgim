@@ -31,37 +31,42 @@ strbegins (const char *restrict str,
 
 
 ///////////////////////////////////////////////////////////////////////////////
-tokeniser::tokeniser (const string_type &_value,
-                      value_type _separator):
-    m_value (_value),
+template <typename Iterator>
+tokeniser<Iterator>::tokeniser (Iterator _first,
+                                Iterator _last,
+                                value_type _separator):
+    m_range (_first, _last),
     m_separator (_separator)
 { }
 
 
-//-----------------------------------------------------------------------------
-tokeniser::iterator
-tokeniser::cbegin (void) const
+///////////////////////////////////////////////////////////////////////////////
+template <typename Iterator>
+typename tokeniser<Iterator>::iterator
+tokeniser<Iterator>::cbegin (void) const
 {
     return iterator (
-        {m_value.cbegin (), m_value.cend ()},
+        m_range,
         m_separator
     );
 }
 
 
 //-----------------------------------------------------------------------------
-tokeniser::iterator
-tokeniser::cend (void) const
+template <typename Iterator>
+typename tokeniser<Iterator>::iterator
+tokeniser<Iterator>::cend (void) const
 {
     return iterator (
-        {m_value.cend (), m_value.cend ()},
+        {m_range.cend (), m_range.cend ()},
         m_separator
     );
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-tokeniser::iterator::iterator (range_type _range, value_type _separator):
+template <typename Iterator>
+tokeniser<Iterator>::iterator::iterator (range_type _range, value_type _separator):
     m_separator (_separator),
     m_range (_range.cbegin (),
              std::find (_range.cbegin (),
@@ -72,8 +77,9 @@ tokeniser::iterator::iterator (range_type _range, value_type _separator):
 
 
 //-----------------------------------------------------------------------------
-tokeniser::iterator
-tokeniser::iterator::operator++ (int)
+template <typename Iterator>
+typename tokeniser<Iterator>::iterator
+tokeniser<Iterator>::iterator::operator++ (int)
 {
     iterator res(*this);
     ++*this;
@@ -82,8 +88,9 @@ tokeniser::iterator::operator++ (int)
 
 
 //-----------------------------------------------------------------------------
-tokeniser::iterator&
-tokeniser::iterator::operator++ (void)
+template <typename Iterator>
+typename tokeniser<Iterator>::iterator&
+tokeniser<Iterator>::iterator::operator++ (void)&
 {
     auto newend = m_range.cend ();
     if (newend != m_end) {
@@ -101,16 +108,48 @@ tokeniser::iterator::operator++ (void)
 
 
 //-----------------------------------------------------------------------------
-tokeniser::iterator::range_type
-tokeniser::iterator::operator* (void) const
+template <typename Iterator>
+typename tokeniser<Iterator>::range_type
+tokeniser<Iterator>::iterator::operator* (void) const
 {
     return m_range;
 }
 
 
 //-----------------------------------------------------------------------------
+template <typename Iterator>
 bool
-tokeniser::iterator::operator== (const iterator &rhs) const
+tokeniser<Iterator>::iterator::operator== (const iterator &rhs) const
 {
     return m_range == rhs.m_range && m_separator == rhs.m_separator;
 }
+
+
+//-----------------------------------------------------------------------------
+template <typename Iterator>
+bool
+tokeniser<Iterator>::iterator::operator!= (const iterator &rhs) const
+{
+    return !(*this == rhs);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+tokeniser<std::string::const_iterator>
+util::make_tokeniser (const std::string &value, std::string::value_type separator)
+{
+    return tokeniser<std::string::const_iterator> (value.cbegin (), value.cend (), separator);
+}
+
+
+//-----------------------------------------------------------------------------
+tokeniser<const char*>
+util::make_tokeniser (const char *str, char separator)
+{
+    return tokeniser<const char*> (str, str + strlen (str), separator);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template struct util::tokeniser<std::string::const_iterator>;
+template struct util::tokeniser<const char*>;

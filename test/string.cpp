@@ -18,7 +18,7 @@ main (int, char**)
     };
 
     std::string str (std::cbegin (csv), std::cbegin (csv) + elems (csv));
-    auto tok = util::tokeniser (str, ',');
+    auto tok = util::make_tokeniser (str, ',');
     auto t_cursor = tok.cbegin ();
     auto v_cursor = std::cbegin (values);
 
