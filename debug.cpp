@@ -85,3 +85,13 @@ util::debug::init (void)
     if (getenv ("DEBUG_WAIT"))
         await_debugger ();
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+static void
+debug_wait [[gnu::constructor]] (void) {
+    if (auto val = getenv ("DEBUG_WAIT")) {
+        if (std::string ("0") != val)
+            await_debugger ();
+    }
+}
