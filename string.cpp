@@ -64,6 +64,24 @@ tokeniser<Iterator>::cend (void) const
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename Iterator>
+typename tokeniser<Iterator>::iterator
+tokeniser<Iterator>::begin (void) const
+{
+    return cbegin ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename Iterator>
+typename tokeniser<Iterator>::iterator
+tokeniser<Iterator>::end (void) const
+{
+    return cend ();
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 template <typename Iterator>
 tokeniser<Iterator>::iterator::iterator (range_type _range, value_type _separator):
