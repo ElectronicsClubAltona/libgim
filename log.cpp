@@ -18,14 +18,33 @@
 #include "log.hpp"
 
 #include "debug.hpp"
-#include "types.hpp"
+#include "term.hpp"
 #include "time.hpp"
+#include "types.hpp"
 
 #include <array>
 #include <ctime>
 #include <cstring>
 #include <map>
 #include <string>
+#include <iomanip>
+
+
+///////////////////////////////////////////////////////////////////////////////
+static
+const util::level_t
+ALL_LEVELS[] = {
+    util::EMERGENCY,
+    util::ALERT,
+    util::CRITICAL,
+    util::ERROR,
+    util::WARN,
+    util::WARN,
+    util::NOTICE,
+    util::INFO,
+    util::INFO,
+    util::DEBUG,
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,23 +78,31 @@ to_level (std::string name)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+const std::string&
+util::to_string (level_t l)
+{
+    switch (l) {
+    #define CASE(L)                             \
+        case util::L: {                         \
+            static const std::string STR = #L;  \
+            return STR;                         \
+        }
+
+    MAP_LEVEL_T(CASE)
+
+    #undef CASE
+    }
+
+    unreachable ();
+}
+
+
 //-----------------------------------------------------------------------------
 std::ostream&
 util::operator<< (std::ostream& os, util::level_t l)
 {
-    switch (l) {
-        case util::EMERGENCY:       return os << "EMERGENCY";
-        case util::ALERT:           return os << "ALERT";
-        case util::CRITICAL:        return os << "CRITICAL";
-        case util::ERROR:           return os << "ERROR";
-        case util::WARNING:         return os << "WARNING";
-        case util::NOTICE:          return os << "NOTICE";
-        case util::INFORMATIONAL:   return os << "INFO";
-        case util::DEBUG:           return os << "DEBUG";
-
-        default:
-            unreachable ();
-    }
+    return os << to_string (l);
 }
 
 
@@ -117,6 +144,53 @@ needs_break (util::level_t level)
 }
 
 
+//-----------------------------------------------------------------------------
+static
+util::term::csi::graphics
+level_colour (util::level_t level)
+{
+    using util::term::csi::graphics;
+
+    switch (level) {
+    case util::EMERGENCY:
+    case util::ALERT:
+    case util::CRITICAL:
+    case util::ERROR:
+        return graphics (graphics::FOREGROUND, graphics::RED);
+
+    case util::WARNING:
+        return graphics (graphics::FOREGROUND, graphics::YELLOW);
+
+    case util::NOTICE:
+    case util::INFORMATIONAL:
+        return graphics (graphics::FOREGROUND, graphics::GREEN);
+
+    case util::DEBUG:
+        return graphics (graphics::FOREGROUND, graphics::WHITE);
+    }
+
+    unreachable ();
+}
+
+
+//-----------------------------------------------------------------------------
+static
+size_t
+level_width (void)
+{
+    static size_t width = [] {
+        size_t hi = 0;
+
+        for (auto i: ALL_LEVELS)
+            hi = util::max (to_string (i).size (), hi);
+
+        return hi;
+    } ();
+
+    return width;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 void
 util::log (util::level_t level, const std::string &msg)
@@ -141,7 +215,14 @@ util::log (util::level_t level, const std::string &msg)
         return;
     }
 
-    std::cerr << time_string << " [" << level << "] " << msg << std::endl;
+    std::cerr << time_string << " ["
+        << level_colour (level)
+        << std::setw (level_width ())
+        << std::left
+        << level
+        << std::setw (0)
+        << util::term::csi::graphics::RESET
+    << "] " << msg << std::endl;
 }
 
 

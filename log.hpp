@@ -17,7 +17,8 @@
 #ifndef __UTIL_LOG_HPP
 #define __UTIL_LOG_HPP
 
-#include "nocopy.hpp"
+#include "./nocopy.hpp"
+#include "./preprocessor.hpp"
 
 #include <iostream>
 #include <string>
@@ -45,7 +46,12 @@ namespace util {
         DEBUG                   /** debug-level messages */
     };
 
+    #define MAP_LEVEL_T(F) MAP(F, EMERGENCY, ALERT, CRITICAL, ERROR, WARN, NOTICE, INFO, DEBUG)
+
     constexpr auto DEFAULT_LOG_LEVEL = INFO;
+
+    //-------------------------------------------------------------------------
+    const std::string& to_string (level_t);
 
     //-------------------------------------------------------------------------
     std::ostream&
