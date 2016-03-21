@@ -247,6 +247,8 @@ UTIL_FILES   =			\
     tap.cpp			\
     tap.hpp			\
     tap.ipp			\
+    term.cpp			\
+    term.hpp			\
     time.cpp			\
     time.hpp			\
     tuple.cpp			\
