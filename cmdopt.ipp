@@ -38,15 +38,13 @@ namespace util { namespace cmdopt {
     option::value<T>::execute (const char *restrict str)
     {
         try {
-            std::istringstream os (str);
-            os.exceptions (
+            std::istringstream is (str);
+            is.exceptions (
                   std::istringstream::failbit
                 | std::istringstream::badbit
             );
-            os >> m_data;
 
-            if (!os.eof ())
-                throw invalid_value (__func__);
+            is >> m_data;
         } catch (...) {
             throw invalid_value (__func__);
         }
