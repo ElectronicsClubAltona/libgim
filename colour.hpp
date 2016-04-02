@@ -61,6 +61,9 @@ namespace util {
 
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, util::colour<S,T>);
+
+    template <size_t S, typename T>
+    std::istream& operator>> (std::istream&, util::colour<S,T>&);
 }
 
 #include "colour.ipp"

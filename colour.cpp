@@ -391,6 +391,53 @@ util::operator<< (std::ostream &os, util::colour<S,T> c) {
 
 
 //-----------------------------------------------------------------------------
+template <size_t S, typename T>
+std::istream&
+util::operator>> (std::istream &is, util::colour<S,T> &c)
+{
+    std::array<
+        std::conditional_t<
+            sizeof(T) == 1,
+            uint16_t,
+            T
+        >,S
+    > v;
+
+    static_assert (S > 0, "current implementation requires strictly positive components");
+    char comma;
+
+    for (size_t i = 0; i < S - 1; ++i) {
+        is >> v[i] >> comma;
+
+        if (comma != ',' || is.eof ()) {
+            is.setstate (std::ios_base::failbit);
+            return is;
+        }
+    }
+
+    is >> v[S-1];
+
+    if (!std::is_same<T, typename decltype(v)::value_type>::value) {
+        if (std::any_of (std::cbegin (v),
+                         std::cend   (v),
+                         [] (auto i) {
+            return i > std::numeric_limits<T>::max ();
+        })) {
+            is.setstate (std::ios_base::failbit);
+            return is;
+        }
+    }
+
+    std::copy (std::cbegin (v),
+               std::cend   (v),
+               std::begin  (c));
+
+    return is;
+}
+
+template std::istream& util::operator>> (std::istream&, util::colour<3,uint8_t>&);
+
+///////////////////////////////////////////////////////////////////////////////
 #define INSTANTIATE_S_T(S,T)        \
 template struct util::colour<S,T>;  \
 template std::ostream& util::operator<< (std::ostream&, util::colour<S,T>);
