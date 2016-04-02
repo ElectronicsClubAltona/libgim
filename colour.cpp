@@ -378,19 +378,17 @@ namespace util {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 std::ostream&
 util::operator<< (std::ostream &os, util::colour<S,T> c) {
-    os << "[";
-    std::transform (std::cbegin (c),
-                    std::cend   (c),
-                    infix_iterator<stream::numeric<T>> (os, ", "),
-                    stream::to_numeric<T>);
-    os << "]";
-
+    os << "colour(";
+    for (size_t i = 0; i < S - 1; ++i)
+        os << +c[i] << ", ";
+    os << +c[S-1] << ")";
     return os;
 }
+
 
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)        \
