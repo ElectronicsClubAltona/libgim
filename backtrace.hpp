@@ -19,7 +19,7 @@
 
 #include <string>
 #include <vector>
-#include <iostream>
+#include <ostream>
 
 
 //-----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ namespace debug {
     };
 
     std::ostream&
-    operator <<(std::ostream&, const debug::backtrace&);
+    operator<< (std::ostream&, const debug::backtrace&);
 }
 
 
