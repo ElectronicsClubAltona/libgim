@@ -17,6 +17,7 @@
 #include "./debug.hpp"
 
 #include "./except.hpp"
+#include "./log.hpp"
 
 #include <windows.h>
 
