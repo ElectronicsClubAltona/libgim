@@ -11,22 +11,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "time.hpp"
+#include "./time.hpp"
 
-#include "debug.hpp"
-#include "log.hpp"
-#include "platform.hpp"
-#include "cast.hpp"
+#include "./debug.hpp"
+#include "./log.hpp"
+#include "./platform.hpp"
+#include "./cast.hpp"
 
+#include <chrono>
 
-using namespace util;
+using util::delta_clock;
 
 ///////////////////////////////////////////////////////////////////////////////
 static const uint64_t SECOND      = 1'000'000'000UL;
 static const uint64_t MILLISECOND =     1'000'000UL;
+
+
+///////////////////////////////////////////////////////////////////////////////
+uintmax_t
+util::nanoseconds (void)
+{
+    return std::chrono::duration_cast<
+        std::chrono::duration<uintmax_t, std::nano>
+    > (
+        std::chrono::high_resolution_clock::now ().time_since_epoch ()
+    ).count ();
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////

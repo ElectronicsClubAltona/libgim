@@ -11,21 +11,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_TIME_HPP
 #define __UTIL_TIME_HPP
 
+#include <chrono>
 #include <cstdint>
 #include <string>
 
-#include "stats.hpp"
+#include "./stats.hpp"
 
 namespace util {
     // ------------------------------------------------------------------------
-    uint64_t nanoseconds (void);
-    void     sleep (uint64_t ns);
+    uintmax_t nanoseconds (void);
+
+    template <typename T>
+    void sleep (std::chrono::duration<T,std::nano>);
+
+    void sleep (uint64_t ns);
 
     // ------------------------------------------------------------------------
     class delta_clock {
@@ -83,5 +88,7 @@ namespace util {
             stats::accumulator<uint64_t> m_series;
     };
 }
+
+#include "./time.ipp"
 
 #endif // __UTIL_TIME_HPP

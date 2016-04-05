@@ -11,31 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "time.hpp"
+#include "./time.hpp"
 
-#include "cast.hpp"
+#include "./cast.hpp"
 
 #include <ctime>
 
-static const uint64_t SECOND      = 1'000'000'000UL;
-static const uint64_t MILLISECOND =     1'000'000UL;
-
-///////////////////////////////////////////////////////////////////////////////
-uint64_t
-util::nanoseconds (void)
-{
-    struct timespec t;
-    clock_gettime (CLOCK_MONOTONIC, &t);
-
-    CHECK_GT (t.tv_sec, 0);
-    CHECK_GT (t.tv_nsec, 0);
-
-    return static_cast<uint64_t> (t.tv_sec) * SECOND + static_cast<uint64_t> (t.tv_nsec);
-}
-
+static constexpr uint64_t SECOND = 1'000'000'000UL;
 
 ///////////////////////////////////////////////////////////////////////////////
 void
