@@ -1,4 +1,4 @@
-AC_INIT([cruft-util], [0.1.0], [danny@nerdcruft.net])
+AC_INIT([util-cruft], [0.1.0], [danny@nerdcruft.net])
 ## Explicitly set an empty CXXFLAGS if not present to prevent AC_PROG_CXX from
 ## generating a default -O2. This allows us to manually select -O0 when
 ## debugging is enabled.
@@ -44,24 +44,29 @@ AC_C_BIGENDIAN
 ## Platform features
 
 AC_DEFINE([_XOPEN_SOURCE], [700], [use POSIX 2008])
+AC_DEFINE([__STDC_FORMAT_MACROS], [1], [use C format macros])
 
 AC_FUNC_MMAP
 
-AC_CHECK_HEADERS([execinfo.h], [break;], [have_execinfo_h=true])
-AM_CONDITIONAL([HAVE_EXECINFO_H], [test "x$have_execinfo_h" = "xtrue"])
+AC_CHECK_FUNC([backtrace])
+AM_CONDITIONAL([HAVE_EXECINFO], [test "x$ac_cv_func_backtrace" = "xtrue"])
 
 AC_SEARCH_LIBS([clock_gettime], [rt], [], [
-    AC_MSG_ERROR([unable to find the clock library])
+    # windows doesn't have clock_gettime
+    AS_IF([test "x${host_os}" != "xmingw32"], [
+        AC_MSG_ERROR([unable to find the clock library])
+    ])
 ])
 
-AC_SEARCH_LIBS([cos], [m], [], [
-    AC_MSG_ERROR([unable to find the maths library])
-])
+AC_SEARCH_LIBS([cos], [m], [], [AC_MSG_ERROR([unable to find the maths library])])
 
-## Use dynamic loader if present (for util::library)
+## Find some POSIX functions that windows doesn't support
 AS_IF([test "x${host_os}" != "xmingw32"],[
     AC_SEARCH_LIBS([dlopen], [dl])
+    AC_SEARCH_LIBS([shm_open], [rt], [], [AC_MSG_ERROR([unable to find shm library])])
 ])
+
+AC_SEARCH_LIBS([htons], [ws2_32], [], [AC_MSG_ERROR([unable to find htnos library])])
 
 
 ###############################################################################
@@ -75,29 +80,12 @@ AS_IF([test "x${host_os}" != "xmingw32"],[
 
 CHECK_RAGEL([ip.cpp])
 
-AX_BOOST_BASE([1.53], [], [AC_MSG_ERROR([Boost version >= 1.53 required])])
-
-# boost-system isn't a hard requirement, it's only really used to fulfill
-# some other dependency I've since forgotten about...
-AX_BOOST_SYSTEM
-
-AX_BOOST_THREAD
-AS_IF([test "x$ax_cv_boost_thread" != "xyes"], [
-    AC_MSG_ERROR("boost-thread is a hard requirement")
-])
-
-AX_BOOST_FILESYSTEM
-AS_IF([test "x$ax_cv_boost_filesystem" != "xyes"], [
-    AC_MSG_ERROR("boost-filesystem is a hard requirement")
-])
-
+NC_BOOST([1.53], [system filesystem thread])
+AC_SUBST(BOOST_CPPFLAGS)
+AC_SUBST(BOOST_LDFLAGS)
 
 ###############################################################################
 ## Optional packages
-
-PKG_CHECK_MODULES([ZLIB], [zlib >= 1.2.0])
-AC_SUBST(ZLIB_CFLAGS)
-AC_SUBST(ZLIB_LIBS)
 
 AC_CHECK_TOOL([ADDR2LINE], [addr2line], [:])
 AS_IF([test "x$ADDR2LINE" != "x:"], [
@@ -109,6 +97,8 @@ AS_IF([test "x$ADDR2LINE" != "x:"], [
 
 ###############################################################################
 ## Output
+
+AC_SUBST(LIBS)
 
 # inclusion of config.h has to go after compilation tests otherwise we risk
 # failure on a clean build

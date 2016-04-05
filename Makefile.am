@@ -3,7 +3,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-AM_CXXFLAGS = $(BOOST_CPPFLAGS) $(ZLIB_CFLAGS)
+AM_CXXFLAGS = $(BOOST_CPPFLAGS)
 AM_DEFAULT_SOURCE_EXT = .cpp
 
 ###############################################################################
@@ -178,22 +178,8 @@ UTIL_FILES   =			\
     matrix4.cpp			\
     matrix.hpp			\
     matrix.ipp			\
-    memory/buffer/circular.cpp	\
-    memory/buffer/circular.hpp	\
-    memory/buffer/paged.cpp	\
-    memory/buffer/paged.hpp	\
     memory/deleter.cpp		\
     memory/deleter.hpp		\
-    memory/system.cpp		\
-    memory/system.hpp		\
-    net/address.cpp		\
-    net/address.hpp		\
-    net/except.cpp		\
-    net/except.hpp		\
-    net/socket.cpp		\
-    net/socket.hpp		\
-    net/types.cpp		\
-    net/types.hpp		\
     nocopy.hpp			\
     pascal.cpp			\
     pascal.hpp			\
@@ -276,6 +262,20 @@ UTIL_FILES   =			\
 
 if PLATFORM_LINUX
 UTIL_FILES += 			\
+    net/address.cpp		\
+    net/address.hpp		\
+    net/except.cpp		\
+    net/except.hpp		\
+    net/socket.cpp		\
+    net/socket.hpp		\
+    net/types.cpp		\
+    net/types.hpp		\
+    memory/buffer/circular.cpp	\
+    memory/buffer/circular.hpp	\
+    memory/buffer/paged.cpp	\
+    memory/buffer/paged.hpp	\
+    memory/system.cpp		\
+    memory/system.hpp		\
     debug_posix.cpp		\
     io_posix.cpp		\
     io_posix.hpp		\
@@ -299,7 +299,7 @@ UTIL_FILES += 			\
     win32/registry.cpp
 endif
 
-if HAVE_EXECINFO_H
+if HAVE_EXECINFO
 UTIL_FILES += backtrace_execinfo.cpp
 else
 UTIL_FILES += backtrace_null.cpp
@@ -331,7 +331,7 @@ pkgconfig_DATA = libcruft-util.pc
 ###############################################################################
 ## Utility programs
 
-AM_LDFLAGS  = $(BOOST_LDFLAGS) -lrt
+LDADD = $(top_builddir)/libcruft-util.a $(BOOST_LDFLAGS) $(LIBS)
 
 bin_PROGRAMS = 				\
     tools/json-clean			\
@@ -341,14 +341,11 @@ bin_PROGRAMS = 				\
 
 noinst_PROGRAMS = tools/scratch
 
-LDADD = $(top_builddir)/libcruft-util.a $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) $(ZLIB_LIBS)
-
 
 ##-----------------------------------------------------------------------------
 ## Tests
 
-AM_LDFLAGS  += $(BOOST_LDFLAGS) $(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB)
-AM_CXXFLAGS += -I$(top_srcdir) -I$(top_builddir)
+AM_CXXFLAGS += -I$(top_srcdir)
 
 TEST_BIN = 			\
     test/alloc/arena		\

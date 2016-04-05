@@ -1,0 +1,7 @@
+AC_DEFUN([NC_BOOST_BASE], [
+    : ${BOOST_LDFLAGS=""}
+    : ${BOOST_CPPFLAGS=""}
+
+    BOOST_BASE_LDFLAGS=""
+    BOOST_BASE_CPPFLAGS=""
+])

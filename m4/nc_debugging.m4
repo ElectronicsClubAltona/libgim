@@ -6,9 +6,7 @@ AC_DEFUN([NC_DEBUGGING],[
     AX_REQUIRE_DEFINED([NC_APPEND_ONE_COMPILE_FLAG])
 
     ##-------------------------------------------------------------------------
-    AC_ARG_ENABLE([sanitizer], [
-        AS_HELP_STRING([--enable-sanitizer], [enable memory sanitizer])
-    ])
+    AC_ARG_ENABLE([sanitizer], [AS_HELP_STRING([--enable-sanitizer], [enable memory sanitizer])])
 
     AS_IF([test "x$enable_sanitizer" = "xyes"], [
         m4_foreach([NAME], [
@@ -51,9 +49,7 @@ AC_DEFUN([NC_DEBUGGING],[
     ])
 
     ##-------------------------------------------------------------------------
-    AC_ARG_ENABLE([debugging], [
-        AS_HELP_STRING([--enable-debugging], [enables developer debugging support])
-    ])
+    AC_ARG_ENABLE([debugging], [AS_HELP_STRING([--enable-debugging], [enables developer debugging support])])
 
     AS_IF([test "x${enable_debugging}" = "xyes"], [
         AC_DEFINE([ENABLE_DEBUGGING], [], [Debugging support enabled])

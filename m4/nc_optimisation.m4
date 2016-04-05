@@ -1,7 +1,6 @@
 AC_DEFUN([NC_OPTIMISATION],[
     ##-------------------------------------------------------------------------
     AX_REQUIRE_DEFINED([AX_APPEND_COMPILE_FLAGS])
-    AX_REQUIRE_DEFINED([AC_CANONICAL_HOST])
     AX_REQUIRE_DEFINED([AX_COMPILER_VENDOR])
 
     AX_COMPILER_VENDOR
@@ -9,15 +8,9 @@ AC_DEFUN([NC_OPTIMISATION],[
     ##-------------------------------------------------------------------------
     ## Enable LTO
 
-    AC_ARG_ENABLE([lto], [
-        AS_HELP_STRING([--enable-lto], [enable link-time optimisation])
-    ])
+    AC_ARG_ENABLE([lto], [AS_HELP_STRING([--enable-lto], [enable link-time optimisation])])
 
     AS_IF([test "x$enable_lto" == "xyes"], [
-        AS_IF([test x"${host_os}" == x"mingw32"], [
-            AC_ERROR([mingw32 link-time optimisation is currently broken])
-        ])
-
         AS_IF([test "x$ax_cv_cxx_compiler_vendor" == "xgnu"], [
             AC_CHECK_TOOLS([RANLIB], [gcc-ranlib ranlib])
             AC_CHECK_TOOLS([AR], [gcc-ar ar])
@@ -35,9 +28,7 @@ AC_DEFUN([NC_OPTIMISATION],[
     ##-------------------------------------------------------------------------
     ## Enable frame pointer
 
-    AC_ARG_ENABLE([frame-pointer], [
-        AS_HELP_STRING([--enable-frame-pointer], [retain the frame pointer even if optimising])
-    ])
+    AC_ARG_ENABLE([frame-pointer], [AS_HELP_STRING([--enable-frame-pointer], [retain the frame pointer even if optimising])])
 
     AS_IF([test "x$enable_frame_pointer" = "xyes"], [
         AX_APPEND_COMPILE_FLAGS([-fno-omit-frame-pointer], [], [-Werror])

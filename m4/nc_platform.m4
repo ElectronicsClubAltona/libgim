@@ -6,6 +6,8 @@ AC_DEFUN([NC_PLATFORM],[
 
     AS_CASE([$host_os],
         [mingw32], [
+            AC_DEFINE([WIN32_LEAN_AND_MEAN], [], [reduce win32 header complexity])
+
             AC_CHECK_HEADERS([winsock2.h ws2tcpip.h])
             AC_CHECK_HEADERS([windows.h],[],[],[AC_INCLUDES_DEFAULT])
             AC_SUBST([NET_LIBS], [-lws2_32])
