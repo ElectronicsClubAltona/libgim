@@ -22,6 +22,8 @@ NC_OPTIMISATION
 NC_WARNINGS
 NC_DEBUGGING
 
+NC_SUBPACKAGE_ENABLE
+
 LT_INIT
 
 AM_INIT_AUTOMAKE([1.14 dist-bzip2 dist-xz foreign subdir-objects])
@@ -104,10 +106,11 @@ AC_SUBST(LIBS)
 # failure on a clean build
 AX_APPEND_FLAG([-include config.h])
 
+NC_SUBPACKAGE_PC([libcruft-util.pc])
+
 AC_CONFIG_FILES([
     Doxyfile
     Makefile
-    libcruft-util.pc
 ])
 
 AC_CONFIG_FILES([test/json-parse],  [chmod a+x test/json-parse])
