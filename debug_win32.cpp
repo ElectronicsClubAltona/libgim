@@ -106,7 +106,7 @@ force_console (void)
     setvbuf (stderr, NULL, _IONBF, 0);
     setvbuf (stdin,  NULL, _IONBF, 0);
 
-    ios::sync_with_stdio ();
+    std::ios::sync_with_stdio ();
 
     // Windows doesn't give an immediate newline when an application is run
     // from a console, so we provide one here for sanity.
