@@ -14,9 +14,10 @@
  * Copyright 2010 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "except.hpp"
-#include "debug.hpp"
-#include "platform.hpp"
+#include "./except.hpp"
+#include "./debug.hpp"
+#include "./platform.hpp"
+#include "./cast.hpp"
 
 #include <cstring>
 #include <cerrno>
@@ -92,7 +93,7 @@ win32_error::win32_error (DWORD _id):
     runtime_error ("Win32 error"),
     id (_id)
 {
-    CHECK_NEQ (id, ERROR_SUCCESS);
+    CHECK_NEQ (id, (DWORD)ERROR_SUCCESS);
 }
 
 
@@ -101,7 +102,7 @@ win32_error::win32_error (void):
     runtime_error ("Win32 error"),
     id (GetLastError ())
 {
-    CHECK_NEQ (id, ERROR_SUCCESS);
+    CHECK_NEQ (id, (DWORD)ERROR_SUCCESS);
 }
 
 
@@ -134,8 +135,28 @@ win32_error::throw_code (void)
 void
 win32_error::throw_code (DWORD id)
 {
-    CHECK (id != ERROR_SUCCESS);
+    CHECK_NEQ (id, (DWORD)ERROR_SUCCESS);
     throw win32_error (id);
 }
 
+
+//-----------------------------------------------------------------------------
+std::string
+win32_error::code_string (void)
+{
+    return code_string (GetLastError ());
+}
+
+//-----------------------------------------------------------------------------
+std::string
+win32_error::code_string (DWORD code)
+{
+    char message[256];
+
+    auto res = FormatMessage (0, NULL, code, 0, message, sizeof (message), NULL);
+    if (res == 0)
+        win32_error::throw_code ();
+
+    return std::string (message);
+}
 #endif

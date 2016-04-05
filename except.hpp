@@ -78,6 +78,9 @@ namespace  util {
 
             static void throw_code [[gnu::noreturn]] (void);
             static void throw_code [[gnu::noreturn]] (DWORD);
+
+            static std::string code_string (void);
+            static std::string code_string (DWORD);
     };
 }
 #endif
