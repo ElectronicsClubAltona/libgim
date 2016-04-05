@@ -14,12 +14,12 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "schema.hpp"
+#include "./schema.hpp"
 
-#include "debug.hpp"
-#include "maths.hpp"
 #include "./tree.hpp"
 #include "./except.hpp"
+#include "../debug.hpp"
+#include "../maths.hpp"
 
 #include <regex>
 

@@ -16,9 +16,9 @@
 
 #include "md4.hpp"
 
-#include "bitwise.hpp"
-#include "types.hpp"
-#include "endian.hpp"
+#include "../bitwise.hpp"
+#include "../types.hpp"
+#include "../endian.hpp"
 
 #include <cstring>
 

@@ -15,15 +15,15 @@
  */
 
 
-#include "json/tree.hpp"
+#include "./tree.hpp"
 
-#include "json/except.hpp"
-#include "json/flat.hpp"
+#include "./except.hpp"
+#include "./flat.hpp"
 
-#include "debug.hpp"
-#include "io.hpp"
-#include "maths.hpp"
-#include "cast.hpp"
+#include "../debug.hpp"
+#include "../io.hpp"
+#include "../maths.hpp"
+#include "../cast.hpp"
 
 #include <algorithm>
 #include <cstdlib>

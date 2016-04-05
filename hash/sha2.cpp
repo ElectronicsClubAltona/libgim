@@ -17,8 +17,8 @@
 
 #include "sha2.hpp"
 
-#include "bitwise.hpp"
-#include "endian.hpp"
+#include "../bitwise.hpp"
+#include "../endian.hpp"
 
 #include <algorithm>
 

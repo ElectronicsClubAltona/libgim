@@ -14,10 +14,10 @@
  * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "crc.hpp"
+#include "./crc.hpp"
 
-#include "debug.hpp"
-#include "endian.hpp"
+#include "../endian.hpp"
+#include "../debug.hpp"
 
 uint32_t
 crc32 (const void *restrict, size_t) {

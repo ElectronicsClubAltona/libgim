@@ -16,7 +16,7 @@
 
 #include "hmac.hpp"
 
-#include "debug.hpp"
+#include "../debug.hpp"
 
 #include <algorithm>
 

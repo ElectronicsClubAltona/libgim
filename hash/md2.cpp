@@ -16,13 +16,14 @@
 
 #include "md2.hpp"
 
-#include "types.hpp"
+#include "../types.hpp"
 
 #include <array>
 #include <algorithm>
 #include <cstring>
 
 
+///////////////////////////////////////////////////////////////////////////////
 using util::hash::MD2;
 
 using std::array;
@@ -31,6 +32,7 @@ using std::end;
 using std::fill;
 
 
+///////////////////////////////////////////////////////////////////////////////
 static array<uint8_t,256> S = { {
      41,  46,  67, 201, 162, 216, 124,   1,  61,  54,  84, 161, 236, 240,   6,  19,
      98, 167,   5, 243, 192, 199, 115, 140, 152, 147,  43, 217, 188,  76, 130, 202,
@@ -51,12 +53,14 @@ static array<uint8_t,256> S = { {
 } };
 
 
+///////////////////////////////////////////////////////////////////////////////
 MD2::MD2 ()
 {
     reset ();
 }
 
 
+//-----------------------------------------------------------------------------
 void
 MD2::reset (void) {
     m_total = 0;
@@ -65,14 +69,18 @@ MD2::reset (void) {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 MD2::update (const void *data, size_t size)
     { update (static_cast<const uint8_t*> (data), size); }
 
 
+//-----------------------------------------------------------------------------
 static const size_t M_OFFSET = 16;
 static const size_t M_LENGTH = 16;
 
+
+//-----------------------------------------------------------------------------
 void
 MD2::update (const uint8_t *data, size_t size) {
     uint8_t *M = X + M_OFFSET;
@@ -104,6 +112,7 @@ MD2::update (const uint8_t *data, size_t size) {
 }
 
 
+//-----------------------------------------------------------------------------
 MD2::digest_t
 MD2::digest (void) const {
     digest_t d;
@@ -112,6 +121,7 @@ MD2::digest (void) const {
 }
 
 
+//-----------------------------------------------------------------------------
 void
 MD2::transform (void) {
     uint8_t *M = X + M_OFFSET;

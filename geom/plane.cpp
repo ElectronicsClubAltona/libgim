@@ -17,12 +17,12 @@
 
 #include "plane.hpp"
 
-#include "debug.hpp"
+#include "../debug.hpp"
 
 using util::geom::plane;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 plane<S,T>::plane (point<S,T>  _p,
                    vector<S,T> _n):
@@ -33,6 +33,6 @@ plane<S,T>::plane (point<S,T>  _p,
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template struct util::geom::plane<2,float>;
 template struct util::geom::plane<3,float>;

@@ -1,5 +1,5 @@
-#include <cruft/util/tap.hpp>
-#include <cruft/util/view.hpp>
+#include "tap.hpp"
+#include "view.hpp"
     
 int
 main (int, char**)

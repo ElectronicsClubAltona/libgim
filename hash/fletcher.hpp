@@ -17,12 +17,13 @@
 #ifndef __UTIL_FLETCHER_HPP
 #define __UTIL_FLETCHER_HPP
 
-#include "types/bits.hpp"
+#include "../types/bits.hpp"
 
 #include <cstdint>
 #include <cstdlib>
 
 
+///////////////////////////////////////////////////////////////////////////////
 template <
     unsigned OUTPUT,
     unsigned MODULUS,

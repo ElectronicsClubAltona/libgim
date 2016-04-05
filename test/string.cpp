@@ -1,6 +1,6 @@
-#include <cruft/util/tap.hpp>
-#include <cruft/util/string.hpp>
-#include <cruft/util/types.hpp>
+#include "tap.hpp"
+#include "string.hpp"
+#include "types.hpp"
 
 int
 main (int, char**)

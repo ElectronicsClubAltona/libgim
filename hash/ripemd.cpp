@@ -15,10 +15,10 @@
  *      2014, Danny Robson <danny@nerdcruft.net>
  */
 
-#include "ripemd.hpp"
+#include "./ripemd.hpp"
 
-#include "debug.hpp"
-#include "bitwise.hpp"
+#include "../debug.hpp"
+#include "../bitwise.hpp"
 
 #include <cstring>
 #include <stdexcept>

@@ -16,7 +16,7 @@
 
 #include "md5.hpp"
 
-#include "bitwise.hpp"
+#include "../bitwise.hpp"
 
 #include <cstring>
 
