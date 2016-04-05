@@ -18,6 +18,7 @@
 
 #include "./except.hpp"
 #include "./log.hpp"
+#include "./except.hpp"
 
 #include <windows.h>
 
@@ -46,7 +47,7 @@ void
 prepare_debugger (void)
 {
     if (nullptr == LoadLibrary("exchndl.dll")) {
-        LOG_WARNING("Emergency debugger not loaded: %s", util::win32_error ());
+        LOG_WARNING("Emergency debugger not loaded: %s", util::win32_error::code_string ());
     }
 }
 
