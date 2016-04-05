@@ -14,10 +14,10 @@
  * Copyright 2014 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "io_win32.hpp"
+#include "./io_win32.hpp"
 
-#include "debug.hpp"
-#include "except.hpp"
+#include "./debug.hpp"
+#include "./except.hpp"
 
 #include <windows.h>
 
@@ -26,38 +26,40 @@ using util::detail::win32::mapped_file;
 
 //-----------------------------------------------------------------------------
 static DWORD
-access_to_flags (util::access_t a) {
-    switch (a) {
-        case util::ACCESS_READ:
-            return GENERIC_READ;
-
-        case util::ACCESS_WRITE:
-            return GENERIC_WRITE;
-
-        default:
-            unreachable ();
+fflags_to_native (int flags) {
+    switch (flags) {
+    case O_RDONLY:  return GENERIC_READ;
+    case O_WRONLY:  return GENERIC_WRITE;
+    case O_RDWR:    return GENERIC_READ | GENERIC_WRITE;
     }
+
+    unreachable ();
 }
 
 //-----------------------------------------------------------------------------
 mapped_file::mapped_file (const boost::filesystem::path &path,
-                          access_t access):
+                          int fflags,
+                          int mflags):
     m_data (nullptr, UnmapViewOfFile)
 {
-    m_file.reset (CreateFile (path.string ().c_str (),
-                              access_to_flags (access),
-                              access == ACCESS_READ ? FILE_SHARE_READ : 0,
-                              nullptr,
-                              OPEN_EXISTING,
-                              FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN,
-                              0));
+    m_file.reset (
+        CreateFile (
+            path.string ().c_str (),
+            fflags_to_native (fflags),
+            fflags & O_RDONLY ? FILE_SHARE_READ : 0,
+            nullptr,
+            OPEN_EXISTING,
+            FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN,
+            0
+        )
+    );
 
     if (m_file == INVALID_HANDLE_VALUE)
         win32_error::throw_code ();
 
     m_mapping.reset (CreateFileMapping (m_file,
                                         nullptr,
-                                        access == ACCESS_READ ? PAGE_READONLY : PAGE_READWRITE,
+                                        access == O_RDONLY ? PAGE_READONLY : PAGE_READWRITE,
                                         0, 0,
                                         nullptr));
 
@@ -65,7 +67,7 @@ mapped_file::mapped_file (const boost::filesystem::path &path,
         win32_error::throw_code ();
 
     auto view = MapViewOfFile (m_mapping,
-                               access == ACCESS_READ ? FILE_MAP_READ : FILE_MAP_WRITE,
+                               access == O_RDONLY ? FILE_MAP_READ : FILE_MAP_WRITE,
                                0, 0,
                                0);
     if (view == nullptr)

@@ -21,6 +21,8 @@
 #include "platform.hpp"
 #include "nocopy.hpp"
 
+#include <sys/stat.h>
+
 #include <cstdio>
 #include <cstdint>
 #include <memory>

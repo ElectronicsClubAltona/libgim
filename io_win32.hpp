@@ -22,13 +22,24 @@
 #include <cstdint>
 #include <boost/filesystem/path.hpp>
 #include <windows.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
 
 namespace util {
     namespace detail { namespace win32 {
+        enum {
+            PROT_NONE   = 0,
+            PROT_READ   = 1 << 0,
+            PROT_EXEC   = 1 << 1,
+            PROT_WRITE  = 1 << 2
+        };
+
         class mapped_file {
         public:
             mapped_file (const boost::filesystem::path &path,
-                         access_t access = ACCESS_READ);
+                         int fflags = O_RDONLY | O_BINARY,
+                         int mflags = PROT_READ);
 
             mapped_file (const mapped_file&) = delete;
             mapped_file& operator= (const mapped_file&) = delete;

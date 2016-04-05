@@ -216,5 +216,5 @@ path_error::path_error (const boost::filesystem::path &_path):
 const char*
 path_error::path (void) const noexcept
 {
-    return m_path.c_str ();
+    return m_path.string ().c_str ();
 }
