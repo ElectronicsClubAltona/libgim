@@ -72,12 +72,12 @@ addr2line (const void *addr)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-ostream&
-debug::operator <<(ostream &os, const debug::backtrace &rhs) {
+std::ostream&
+debug::operator <<(std::ostream &os, const debug::backtrace &rhs) {
     const auto frames = rhs.frames ();
 
     // We don't use the array form of unique_ptr as clang fails on ambigious constructors
-    typedef unique_ptr<char *, decltype(&std::free)> str_t;
+    typedef std::unique_ptr<char *, decltype(&std::free)> str_t;
     str_t names (backtrace_symbols (frames.data (), frames.size ()), ::free);
 
     for (unsigned int i = 0; i < frames.size (); ++i)
