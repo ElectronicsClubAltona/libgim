@@ -195,34 +195,32 @@ level_width (void)
 void
 util::log (util::level_t level, const std::string &msg)
 {
-    // fire a breakpoint before the following early exit
-    if (needs_break (level))
-        breakpoint ();
-
     static const util::level_t LOG_LEVEL = log_level ();
-    if (level > LOG_LEVEL)
-        return;
+    if (level <= LOG_LEVEL) {
+        static const size_t time_len = strlen("YYYY-mm-dd HHMMhSS") + 1;
+        std::string time_string (time_len - 1, '\0');
+        time_t unix_time = time (nullptr);
 
-    static const size_t time_len = strlen("YYYY-mm-dd HHMMhSS") + 1;
-    std::string time_string (time_len - 1, '\0');
-    time_t unix_time = time (nullptr);
+        if (0 == strftime (&time_string[0],
+                    time_len,
+                    "%Y-%m-%d %H%Mh%S",
+                    localtime (&unix_time))) {
+            warn ("failed to log time");
+            return;
+        }
 
-    if (0 == strftime (&time_string[0],
-                time_len,
-                "%Y-%m-%d %H%Mh%S",
-                localtime (&unix_time))) {
-        warn ("failed to log time");
-        return;
+        std::cerr << time_string << " ["
+            << level_colour (level)
+            << std::setw (level_width ())
+            << std::left
+            << level
+            << std::setw (0)
+            << util::term::csi::graphics::RESET
+        << "] " << msg << std::endl;
     }
 
-    std::cerr << time_string << " ["
-        << level_colour (level)
-        << std::setw (level_width ())
-        << std::left
-        << level
-        << std::setw (0)
-        << util::term::csi::graphics::RESET
-    << "] " << msg << std::endl;
+    if (needs_break (level))
+        breakpoint ();
 }
 
 
