@@ -68,14 +68,14 @@ namespace util {
         template <>
         inline bool
         is_type_specifier<size_t> (const char *s)
-        { return *s == 'u'; }
+        { return *s == 'u' || *s == 'x'; }
 
 
         //---------------------------------------------------------------------
         template <>
         inline bool
         is_type_specifier<unsigned> (const char *s)
-        { return *s == 'u'; }
+        { return *s == 'u' || *s == 'x'; }
 
 
         //---------------------------------------------------------------------
@@ -83,7 +83,7 @@ namespace util {
         inline bool
         is_type_specifier<int> (const char *s)
         {
-            return *s == 'i' || *s == 'd';
+            return *s == 'i' || *s == 'd' || *s == 'x';
         }
 
 
@@ -160,7 +160,10 @@ namespace util {
             if (!is_valid_specifier<typename std::decay<ValueT>::type> (&*spec))
                 throw util::format::format_error ("invalid/unhandled format specifier");
 
-            dest << val;
+            if (*spec == 'x') {
+                dest << std::hex << val << std::dec;
+            } else
+                dest << val;
 
             render (spec + 1, last, dest, std::forward<Args> (args)...);
         }
