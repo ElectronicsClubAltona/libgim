@@ -47,7 +47,8 @@ void
 prepare_debugger (void)
 {
     if (nullptr == LoadLibrary("exchndl.dll")) {
-        LOG_WARNING("Emergency debugger not loaded: %s", util::win32_error::code_string ());
+        auto code = GetLastError ();
+        LOG_WARNING("Emergency debugger not loaded: %s", util::win32_error::code_string (code));
     }
 }
 
