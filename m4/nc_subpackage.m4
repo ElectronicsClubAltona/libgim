@@ -18,7 +18,6 @@ AC_DEFUN([NC_SUBPACKAGE_ENABLE],[
             dnl but i'm not proficient enough at m4 to process the globs
             dnl correctly.
 
-            AS_ECHO(["fake/cruft/$cruft_base"])
             AS_MKDIR_P(["fake/cruft"])
             $LN_S -nf "$ac_abs_top_srcdir" "fake/cruft/$cruft_base"
 
