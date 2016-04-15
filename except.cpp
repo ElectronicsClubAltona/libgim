@@ -18,6 +18,7 @@
 #include "./debug.hpp"
 #include "./platform.hpp"
 #include "./cast.hpp"
+#include "./types.hpp"
 
 #include <cstring>
 #include <cerrno>
@@ -147,16 +148,27 @@ win32_error::code_string (void)
     return code_string (GetLastError ());
 }
 
+
 //-----------------------------------------------------------------------------
 std::string
 win32_error::code_string (DWORD code)
 {
     char message[256];
 
-    auto res = FormatMessage (0, NULL, code, 0, message, sizeof (message), NULL);
-    if (res == 0)
-        win32_error::throw_code ();
+    auto res = FormatMessage (
+        FORMAT_MESSAGE_FROM_SYSTEM,
+        NULL,
+        code,
+        MAKELANGID (LANG_NEUTRAL, SUBLANG_DEFAULT),
+        message,
+        elems (message),
+        NULL
+    );
 
-    return std::string (message);
+    if (res == 0) {
+        win32_error::throw_code ();
+    }
+
+    return std::string (message, message + res);
 }
 #endif
