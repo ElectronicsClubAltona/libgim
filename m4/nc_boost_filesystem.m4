@@ -21,7 +21,7 @@ AC_DEFUN([NC_BOOST_FILESYSTEM], [
             )
 
             BOOST_FILESYSTEM_CPPFLAGS=$CFLAGS
-            BOOST_FILESYSTEM_LDFLAGS=$LIBS
+            BOOST_FILESYSTEM_LDFLAGS=-l$lib
             
             CFLAGS=$nc_save_cflags
             LIBS=$nc_save_libs

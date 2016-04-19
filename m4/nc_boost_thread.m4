@@ -32,7 +32,7 @@ AC_DEFUN([NC_BOOST_THREAD], [
             )
 
             BOOST_THREAD_CPPFLAGS=$CFLAGS
-            BOOST_THREAD_LDFLAGS=$LIBS
+            BOOST_THREAD_LDFLAGS=-l$lib
 
             CFLAGS=$nc_save_cflags
             LIBS=$nc_save_libs

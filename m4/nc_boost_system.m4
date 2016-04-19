@@ -20,7 +20,7 @@ AC_DEFUN([NC_BOOST_SYSTEM], [
             )
 
             BOOST_SYSTEM_CPPFLAGS=$CFLAGS
-            BOOST_SYSTEM_LDFLAGS=$LIBS
+            BOOST_SYSTEM_LDFLAGS=-l$lib
 
             CFLAGS=$nc_save_cflags
             LIBS=$nc_save_libs
