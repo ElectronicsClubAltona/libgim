@@ -301,11 +301,17 @@ UTIL_FILES += 			\
     win32/registry.cpp
 endif
 
-if HAVE_EXECINFO
-UTIL_FILES += backtrace_execinfo.cpp
-else
-UTIL_FILES += backtrace_null.cpp
+
+BACKTRACE_FILES =
+if HAVE_CAPTURESTACKBACKTRACE
+BACKTRACE_FILES += backtrace_win32.cpp
 endif
+
+if HAVE_EXECINFO
+BACKTRACE_FILES += backtrace_execinfo.cpp
+endif
+
+UTIL_FILES += $(BACKTRACE_FILES)
 
 
 ###############################################################################

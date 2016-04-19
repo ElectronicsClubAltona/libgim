@@ -53,6 +53,9 @@ AC_FUNC_MMAP
 AC_CHECK_FUNC([backtrace])
 AM_CONDITIONAL([HAVE_EXECINFO], [test "x$ac_cv_func_backtrace" == "xyes"])
 
+AC_CHECK_FUNC([RtlCaptureStackBackTrace])
+AM_CONDITIONAL([HAVE_CAPTURESTACKBACKTRACE], [test "x$ac_cv_func_RtlCaptureStackBackTrace" == "xyes"])
+
 AC_MSG_CHECKING([for SymFromAddr])
 save_LIBS="$LIBS"
 LIBS+=-ldbghelp

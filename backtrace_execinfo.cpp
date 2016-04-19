@@ -33,8 +33,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 debug::backtrace::backtrace (void):
-    m_frames (DEFAULT_DEPTH) {
-
+    m_frames (DEFAULT_DEPTH)
+{
     size_t last;
     size_t size = m_frames.size ();
 
