@@ -83,13 +83,6 @@ constexpr void unreachable [[noreturn]] (const char *msg)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-constexpr void panic [[noreturn]] (void)
-{
-    panic ("nfi");
-}
-
-
-//-----------------------------------------------------------------------------
 constexpr void panic [[noreturn]] (const char *msg)
 {
     ! msg
@@ -105,6 +98,6 @@ void
 panic [[noreturn]] (const char *fmt, const Args& ...args)
 {
     ! fmt
-    ? panic ()
+    ? panic ("unreachable constexpr panic helper")
     : util::debug::detail::panic (fmt, args...);
 }

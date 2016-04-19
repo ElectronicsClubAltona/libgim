@@ -68,7 +68,7 @@
 #define CHECK(C) do {   \
     DEBUG_ONLY(         \
         if (!(C))       \
-            panic ();   \
+            panic (#C); \
     );                  \
 } while (0)
 
@@ -273,7 +273,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 constexpr void panic [[noreturn]] (const char*);
-constexpr void panic [[noreturn]] (void);
 
 template <typename ...Args>
 constexpr void panic [[noreturn]] (const char *fmt, const Args&...);
