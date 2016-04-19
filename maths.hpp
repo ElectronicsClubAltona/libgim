@@ -486,7 +486,7 @@ namespace util {
     constexpr T
     limit (const T val, const U lo, const V hi)
     {
-        lo <= hi ? (void)0 : panic ();
+        CHECK_LE (lo, hi);
 
         return val > hi ? hi:
                val < lo ? lo:
