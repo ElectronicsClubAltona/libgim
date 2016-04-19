@@ -2,5 +2,6 @@ Name: libcruft-util
 Description: A simple utility library in C++
 URL: http://nerdcruft.net/
 Version: @VERSION@
-Libs: @abs_top_builddir@/libcruft-util.a @BOOST_LDFLAGS@ @LIBS@
+Libs.private: @abs_top_builddir@/libcruft-util.a @LIBS@
+Libs: @BOOST_LDFLAGS@
 Cflags: -isystem @abs_top_builddir@/fake @BOOST_CPPFLAGS@
