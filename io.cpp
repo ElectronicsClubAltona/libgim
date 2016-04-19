@@ -82,16 +82,34 @@ util::slurp (FILE *stream)
     if (fstat (desc, &meta) < 0)
         errno_error::throw_code ();
 
-    // allocate a buffer we think is the correct size
     std::vector<char> buf;
-    buf.resize (meta.st_size);
 
-    // read as much as possible, then resize to the actual length
-    auto res = fread (buf.data (), 1, meta.st_size, stream);
-    if (!ferror (stream))
+    // we think we know the size, so try to do a simple read
+    if (meta.st_size) {
+        buf.resize (meta.st_size);
+
+        // read as much as possible, then resize to the actual length
+        auto res = fread (buf.data (), 1, meta.st_size, stream);
         buf.resize (res);
+    }
 
-    CHECK (feof (stream));
+    // try reading small chunks until we've hit the end. important for
+    // handling pipe streams (like from popen) which report a zero size.
+    constexpr size_t CHUNK_SIZE = 128;
+    size_t cursor = buf.size ();
+
+    while (!feof (stream) && !ferror (stream)) {
+        auto oldsize = buf.size ();
+        buf.resize (oldsize + CHUNK_SIZE);
+        auto res = fread (buf.data () + cursor, 1, CHUNK_SIZE, stream);
+
+        if (res != CHUNK_SIZE)
+            buf.resize (oldsize + res);
+    }
+
+    if (ferror (stream))
+        throw stream_error ();
+
     return buf;
 }
 

@@ -142,6 +142,14 @@ namespace util {
     private:
         const boost::filesystem::path m_path;
     };
+
+    class stream_error : public std::exception {
+    public:
+        virtual ~stream_error () { ; }
+
+        virtual const char* what (void) const noexcept
+        { return "error on C stream"; }
+    };
 }
 
 #ifdef PLATFORM_WIN32
