@@ -51,7 +51,23 @@ AC_DEFINE([__STDC_FORMAT_MACROS], [1], [use C format macros])
 AC_FUNC_MMAP
 
 AC_CHECK_FUNC([backtrace])
-AM_CONDITIONAL([HAVE_EXECINFO], [test "x$ac_cv_func_backtrace" = "xtrue"])
+AM_CONDITIONAL([HAVE_EXECINFO], [test "x$ac_cv_func_backtrace" == "xyes"])
+
+AC_MSG_CHECKING([for SymFromAddr])
+save_LIBS="$LIBS"
+LIBS+=-ldbghelp
+AC_LINK_IFELSE([AC_LANG_PROGRAM(
+[
+#include <windows.h>
+#include <dbghelp.h>
+],
+[SymFromAddr(nullptr,0,nullptr,nullptr); return 0;])],[
+    AC_MSG_RESULT([yes])
+], [
+    AC_MSG_RESULT([no])
+    LIBS="$save_LIBS"
+])
+
 
 AC_SEARCH_LIBS([clock_gettime], [rt], [], [
     # windows doesn't have clock_gettime

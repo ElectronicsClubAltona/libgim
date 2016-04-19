@@ -295,6 +295,8 @@ UTIL_FILES += 			\
     library_win32.hpp		\
     library_win32.cpp		\
     time_win32.cpp		\
+    win32/handle.cpp		\
+    win32/handle.hpp		\
     win32/registry.hpp		\
     win32/registry.cpp
 endif
