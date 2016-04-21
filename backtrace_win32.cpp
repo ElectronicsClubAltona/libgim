@@ -22,7 +22,6 @@
 #include "./except.hpp"
 
 #include <cstdlib>
-#include <iostream>
 #include <windows.h>
 #include <dbghelp.h>
 
@@ -69,7 +68,7 @@ debug::operator <<(std::ostream &os, const debug::backtrace &rhs) {
         SymFromAddr (self, (DWORD64)frame, 0, &symbol.info);
         symbol.name[MAX_LENGTH] = '\0';
 
-        std::cerr << self << "\t" << frame << "\t" << symbol.name << "\n";
+        os << self << "\t" << frame << "\t" << symbol.name << "\n";
     }
 
     return os;
