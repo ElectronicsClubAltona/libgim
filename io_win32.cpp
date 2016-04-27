@@ -25,8 +25,9 @@ using util::detail::win32::mapped_file;
 
 
 //-----------------------------------------------------------------------------
-static DWORD
-fflags_to_native (int flags) {
+static constexpr
+DWORD
+fflags_to_generic (int flags) {
     switch (flags) {
     case O_RDONLY:  return GENERIC_READ;
     case O_WRONLY:  return GENERIC_WRITE;
@@ -36,48 +37,99 @@ fflags_to_native (int flags) {
     unreachable ();
 }
 
+
+static constexpr
+DWORD
+fflags_to_access (int fflags)
+{
+    switch (fflags) {
+    case O_RDONLY:  return FILE_MAP_READ;
+    case O_WRONLY:  return FILE_MAP_WRITE;
+    case O_RDWR:    return FILE_MAP_WRITE;
+    }
+
+    unreachable ();
+}
+
+
+static constexpr
+DWORD
+mflags_to_protect (int mflags) {
+    DWORD res = 0;
+
+    if (mflags & util::detail::win32::PROT_READ)  res |= PAGE_READONLY;
+    if (mflags & util::detail::win32::PROT_WRITE) res |= PAGE_READWRITE;
+    if (mflags & util::detail::win32::PROT_EXEC)  res |= PAGE_EXECUTE;
+
+    return res;
+}
+
+
 //-----------------------------------------------------------------------------
 mapped_file::mapped_file (const boost::filesystem::path &path,
                           int fflags,
                           int mflags):
     m_data (nullptr, UnmapViewOfFile)
 {
+    // Cache the ASCII path to avoid memory scoping issues.
+    std::string path_str = path.string ();
+
+    // Get hold of the file we're attempting to map. Emulate some level of POXIS mmap.
     m_file.reset (
         CreateFile (
-            path.string ().c_str (),
-            fflags_to_native (fflags),
-            fflags & O_RDONLY ? FILE_SHARE_READ : 0,
+            path_str.c_str (),
+            fflags_to_generic (fflags),
+            fflags == O_RDONLY ? FILE_SHARE_READ : 0,
             nullptr,
             OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN,
-            0
+            nullptr
         )
     );
 
     if (m_file == INVALID_HANDLE_VALUE)
         win32_error::throw_code ();
 
-    m_mapping.reset (CreateFileMapping (m_file,
-                                        nullptr,
-                                        access == O_RDONLY ? PAGE_READONLY : PAGE_READWRITE,
-                                        0, 0,
-                                        nullptr));
+    // I would rather perform checks on filesize after mapping, but mapping
+    // requires a check for empty files before we perform the mapping to
+    // detect errors it throws in that specific situation.
+    DWORD hi_size, lo_size = GetFileSize (m_file, &hi_size);
+    m_size = (uint64_t)hi_size << 32 | lo_size;
 
-    if (m_mapping == INVALID_HANDLE_VALUE)
-        win32_error::throw_code ();
+    m_mapping.reset (
+        CreateFileMapping (
+            m_file,
+            nullptr,
+            mflags_to_protect (mflags),
+            0, 0,
+            nullptr
+        )
+    );
 
-    auto view = MapViewOfFile (m_mapping,
-                               access == O_RDONLY ? FILE_MAP_READ : FILE_MAP_WRITE,
-                               0, 0,
-                               0);
-    if (view == nullptr)
+    // Apparently Windows lacks the ability to map zero length files; fucking
+    // hell. Try not to collapse, but instead bail with a null mapping and
+    // pray the user doesn't do something stupid with the result.
+    if (!m_mapping) {
+        auto err = win32_error::last_code ();
+        if (err == ERROR_FILE_INVALID && m_size == 0)
+            return;
+
+        win32_error::throw_code (err);
+    }
+
+    auto view = MapViewOfFile (
+        m_mapping,
+        fflags_to_access (fflags),
+        0, 0,
+        0
+    );
+
+    if (!view)
         win32_error::throw_code ();
 
     m_data.reset (
         static_cast<unsigned char*> (view)
     );
-
-    m_size = GetFileSize (m_file, nullptr);
 }
 
 

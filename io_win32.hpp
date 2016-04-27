@@ -38,7 +38,7 @@ namespace util {
         class mapped_file {
         public:
             mapped_file (const boost::filesystem::path &path,
-                         int fflags = O_RDONLY | O_BINARY,
+                         int fflags = O_RDONLY,
                          int mflags = PROT_READ);
 
             mapped_file (const mapped_file&) = delete;
@@ -59,7 +59,7 @@ namespace util {
             ::util::win32::handle m_mapping;
 
             std::unique_ptr<uint8_t,BOOL(*)(LPCVOID)> m_data;
-            size_t m_size;
+            uint64_t m_size;
         };
     } }
 
