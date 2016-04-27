@@ -42,7 +42,9 @@ namespace util {
 
                 const uint8_t* data (void) const;
                 uint8_t*       data (void);
-                size_t         size (void) const;
+
+                bool empty (void) const;
+                size_t size (void) const;
 
                 uint8_t*       begin (void);
                 uint8_t*       end   (void);

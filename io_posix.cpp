@@ -63,11 +63,17 @@ mapped_file::load_fd (int mflags) {
 
 //----------------------------------------------------------------------------
 size_t
-mapped_file::size (void) const {
-    CHECK (m_size > 0);
-    CHECK (m_data != NULL);
-
+mapped_file::size (void) const
+{
     return m_size;
+}
+
+
+//-----------------------------------------------------------------------------
+bool
+mapped_file::empty (void) const
+{
+    return size () == 0;
 }
 
 
