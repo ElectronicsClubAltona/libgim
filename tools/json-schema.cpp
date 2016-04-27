@@ -40,10 +40,10 @@ main (int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    auto schema = json::tree::parse (fs::path (argv[ARG_SCHEMA]));
-    auto input  = json::tree::parse (fs::path (argv[ARG_INPUT]));
-
     try {
+        auto schema = json::tree::parse (fs::path (argv[ARG_SCHEMA]));
+        auto input  = json::tree::parse (fs::path (argv[ARG_INPUT]));
+
         json::schema::validate (*input, schema->as_object ());
     } catch (const json::error &e) {
         std::cerr << "error: " << e.what () << '\n';
