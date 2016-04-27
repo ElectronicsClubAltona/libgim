@@ -16,6 +16,7 @@
  */
 
 #include "json/flat.hpp"
+#include "json/except.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -41,8 +42,8 @@ main (int argc, char ** argv) {
 
     try {
        json::flat::parse (boost::filesystem::path (argv[ARG_PATH]));
-    } catch (std::exception &x) {
-        std::cerr << "Error: " << x.what () << std::endl;
+    } catch (const json::error &x) {
+        std::cerr << "error: " << x.what () << '\n';
         return EXIT_FAILURE;
     }
 
