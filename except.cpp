@@ -48,11 +48,27 @@ errno_error::errno_error ():
 
 
 ///////////////////////////////////////////////////////////////////////////////
+int
+errno_error::last_code (void)
+{
+    return errno;
+}
+
+
+//-----------------------------------------------------------------------------
+int
+errno_error::code (void) const
+{
+    return m_code;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 /// Throw an errno_error exception if errno currently signals an error.
 void
 errno_error::try_code (void)
 {
-    try_code (errno);
+    try_code (last_code ());
 }
 
 
@@ -70,7 +86,7 @@ errno_error::try_code (int code)
 void
 errno_error::throw_code (void)
 {
-    throw_code (errno);
+    throw_code (last_code ());
 }
 
 

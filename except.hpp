@@ -53,6 +53,9 @@ namespace util {
         errno_error (int code);
         errno_error ();
 
+        int code (void) const;
+        static int last_code (void);
+
         static void try_code (void);
         static void try_code (int code);
 
