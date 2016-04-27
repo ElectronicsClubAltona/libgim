@@ -50,7 +50,7 @@ debug::backtrace::backtrace (void)
 ///////////////////////////////////////////////////////////////////////////////
 std::ostream&
 debug::operator <<(std::ostream &os, const debug::backtrace &rhs) {
-    static auto self = util::win32::handle::current_process ();
+    static auto self  = GetCurrentProcess ();
     static auto ready = SymInitialize (self, nullptr, TRUE);
     CHECK (ready);
 
