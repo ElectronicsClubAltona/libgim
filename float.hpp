@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __FLOAT_HPP
@@ -80,6 +80,5 @@ typedef ieee_float<11,  52> ieee_double;
 static_assert (sizeof(ieee_half   ) == 2, "ieee_half must be 2 bytes");
 static_assert (sizeof(ieee_single ) == 4, "ieee_single must be 4 bytes");
 static_assert (sizeof(ieee_double ) == 8, "ieee_double must be 8 bytes");
-
 
 #endif // __FLOAT_HPP

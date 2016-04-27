@@ -57,6 +57,7 @@ namespace util {
 
     //-----------------------------------------------------------------------------
     template <typename A, typename B>
+    inline
     typename std::enable_if_t<
         std::is_floating_point<A>::value &&
         std::is_floating_point<B>::value,
@@ -72,6 +73,7 @@ namespace util {
 
     //-----------------------------------------------------------------------------
     template <typename A, typename B>
+    inline
     typename std::enable_if_t<
         std::is_integral<A>::value &&
         std::is_integral<B>::value &&
@@ -86,6 +88,7 @@ namespace util {
 
     //-----------------------------------------------------------------------------
     template <typename Ta, typename Tb>
+    inline
     typename std::enable_if<
         !std::is_arithmetic<Ta>::value ||
         !std::is_arithmetic<Tb>::value,
@@ -113,6 +116,7 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <typename Ta, typename Tb>
+    inline
     typename std::enable_if_t<
         !std::is_arithmetic<Ta>::value ||
         !std::is_arithmetic<Tb>::value,
@@ -157,6 +161,7 @@ namespace util {
 
 
     template <typename T>
+    constexpr
     typename std::enable_if_t<
         !std::is_integral<T>::value, bool
     >
