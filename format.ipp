@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #if defined(__UTIL_FORMAT_IPP)
@@ -34,6 +34,13 @@ namespace util {
         inline bool
         is_type_specifier (const char*)
         { return false; }
+
+
+        //---------------------------------------------------------------------
+        template <>
+        inline bool
+        is_type_specifier<char> (const char *s)
+        { return *s == 'c'; }
 
 
         //---------------------------------------------------------------------
