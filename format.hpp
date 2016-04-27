@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_FORMAT_HPP
@@ -36,6 +36,19 @@ namespace util {
         // malformed format specifier
         class format_error : public error
         { using error::error; };
+
+        template <typename ValueT>
+        class invalid_specifier : public format_error {
+        public:
+            using value_type = ValueT;
+
+            invalid_specifier (char specifier);
+
+            char specifier (void) const;
+
+        private:
+            char m_specifier;
+        };
 
         // missing format specifier
         class missing_error : public error

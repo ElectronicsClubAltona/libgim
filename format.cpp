@@ -17,10 +17,3 @@
 #include "format.hpp"
 
 #include <utility>
-
-
-//std::string
-//util::format (std::string &&fmt)
-//{
-//    return std::move (fmt);
-//}

@@ -17,7 +17,7 @@ main (void)
         util::format::render ("%s");
     }, "missing value");
 
-    tap.expect_throw<util::format::format_error> ([] (void) {
+    tap.expect_throw<util::format::invalid_specifier<int>> ([] (void) {
         util::format::render ("%<", 42);
     }, "invalid specifier");
 

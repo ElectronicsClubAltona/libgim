@@ -165,7 +165,7 @@ namespace util {
                 throw util::format::format_error ("missing format specifier");
 
             if (!is_valid_specifier<typename std::decay<ValueT>::type> (&*spec))
-                throw util::format::format_error ("invalid/unhandled format specifier");
+                throw util::format::invalid_specifier<ValueT> (*spec);
 
             if (*spec == 'x') {
                 dest << std::hex << val << std::dec;
@@ -194,4 +194,25 @@ namespace util {
             return out.str ();
         }
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // TODO: we'd like to use typeid here for type naming, but we don't allow
+    // RTTI. revisit this when introspection is more advanced.
+    template <typename ValueT>
+    format::invalid_specifier<ValueT>::invalid_specifier (char _specifier):
+        format_error (
+            format::render ("invalid specifier '%c' for type '%s'",
+                            _specifier,
+                            "unimplemented")
+        ),
+        m_specifier (_specifier)
+    { ; }
+
+
+    //-------------------------------------------------------------------------
+    template <typename ValueT>
+    char
+    format::invalid_specifier<ValueT>::specifier (void) const
+    { return m_specifier; }
 }
