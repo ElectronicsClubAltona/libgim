@@ -36,8 +36,6 @@ namespace json {
 
     /// Base class for errors thrown during parsing
     struct parse_error : public error {
-        using error::error;
-
         explicit parse_error (const std::string &_what, size_t _line = 0);
 
         const char* what (void) const noexcept override;
