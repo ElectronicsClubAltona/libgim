@@ -18,7 +18,6 @@
 
 #include "debug.hpp"
 
-#include <algorithm>
 #include <cstring>
 #include <iostream>
 #include <iomanip>
@@ -152,48 +151,6 @@ present::finish (void)
     m_data = seen ();
     base::finish ();
 }
-
-
-///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace cmdopt { namespace option {
-    template <>
-    void
-    value<bool>::execute (const char *restrict str)
-    {
-        static const std::string TRUE_STRING[] = {
-            "true",
-            "yes",
-            "y",
-            "1"
-        };
-
-        if (std::any_of (std::begin (TRUE_STRING),
-                         std::end (TRUE_STRING),
-                         [str] (auto i) { return i == str; }))
-        {
-            m_data = true;
-            return;
-        }
-
-        static const std::string FALSE_STRING[] = {
-            "false",
-            "no",
-            "n",
-            "0"
-        };
-
-        if (std::any_of (std::begin (FALSE_STRING),
-                         std::end (FALSE_STRING),
-                         [str] (auto i) { return i == str; }))
-        {
-            m_data = false;
-            return;
-        }
-
-        base::execute (str);
-        seen (true);
-    }
-} } }
 
 
 //-----------------------------------------------------------------------------
