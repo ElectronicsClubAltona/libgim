@@ -395,8 +395,6 @@ TEST_BIN = 			\
     test/introspection		\
     test/ip 			\
     test/json_types		\
-    test/memory/buffer/circular \
-    test/memory/buffer/paged	\
     test/memory/deleter		\
     test/maths			\
     test/matrix			\
@@ -425,15 +423,27 @@ TEST_BIN = 			\
     test/version		\
     test/view
 
+if !PLATFORM_WIN32
+TEST_BIN += test/memory/buffer/paged test/memory/buffer/circular
+endif
+
+
+TEST_EXTENSIONS  = .exe #.py .sh .exe
 
 if PLATFORM_WIN32
 test_hton_LDFLAGS = -lws2_32
 endif
 
-LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
-TESTS = $(top_builddir)/test/json-parse $(top_builddir)/test/json-schema $(TEST_BIN)
+# ideally we'd use EXE_LOG_COMPILER, but automake doesn't easily use EXEEXT as
+# part of the log targets so it's just easier to run everything through the
+# wine filter.
+LOG_COMPILER = ${top_srcdir}/build-aux/wine-crlf.sh
+
+LOG_DRIVER = env RS='\r\n' AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
+
+TESTS = $(TEST_BIN) test/json-parse.sh test/json-schema.py
 check_PROGRAMS = $(TEST_BIN)
-EXTRA_DIST += test/json test/json-parse test/json-schema
+EXTRA_DIST += test/json test/json-parse.sh test/json-schema.py
 
 .PHONY: doc
 
