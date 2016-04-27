@@ -63,6 +63,11 @@ AC_DEFUN([NC_DEBUGGING],[
     ])
 
     ##-------------------------------------------------------------------------
-    AX_APPEND_COMPILE_FLAGS([-g], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-ggdb], [], [-Werror])
+    AS_CASE([${host_os}],
+        [mingw*], [AX_APPEND_COMPILE_FLAGS([-gstabs], [], [-Werror])],
+        [
+            AX_APPEND_COMPILE_FLAGS([-g], [], [-Werror])
+            AX_APPEND_COMPILE_FLAGS([-ggdb], [], [-Werror])
+        ]
+    )
 ])
