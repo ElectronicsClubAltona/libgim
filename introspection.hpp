@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_INTROSPECTION_HPP
@@ -21,6 +21,7 @@
 #include "./variadic.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <string>
 #include <tuple>
 
@@ -33,6 +34,9 @@ namespace util {
     };
 
     template <> struct type_string<bool> { static constexpr const char value[] = "bool"; };
+
+    template <> struct type_string<char> { static constexpr const char value[] = "char"; };
+    template <> struct type_string<void*> { static constexpr const char value[] = "void*"; };
 
     template <> struct type_string<  int8_t> { static constexpr const char value[] = "int8"; };
     template <> struct type_string< int16_t> { static constexpr const char value[] = "int16"; };
@@ -48,19 +52,18 @@ namespace util {
     template <> struct type_string<double  > { static constexpr const char value[] = "float64"; };
 
     template <> struct type_string<std::string> { static constexpr const char value[] = "string"; };
-    template <> struct type_string<char*>       { static constexpr const char value[] = "string"; };
-    template <> struct type_string<char[]>      { static constexpr const char value[] = "string"; };
+    template <> struct type_string<char*>       { static constexpr const char value[] = "cstring"; };
+    template <> struct type_string<const char*> { static constexpr const char value[] = "cstring"; };
 
     template <typename T>
     constexpr
     const char* type_string_v = type_string<T>::value;
 
     template <typename T>
-    auto
+    const char*
     to_string (void)
-    {
-        return type_string<T>::value;
-    }
+    { return type_string_v<T>; }
+
 
     ///////////////////////////////////////////////////////////////////////////
     /// Lists valid values of an enumeration

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "introspection.hpp"
@@ -35,4 +35,4 @@ constexpr char util::type_string<double>::value[];
 
 constexpr char util::type_string<std::string>::value[];
 constexpr char util::type_string<char*>::value[];
-constexpr char util::type_string<char[]>::value[];
+constexpr char util::type_string<const char*>::value[];
