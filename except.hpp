@@ -49,16 +49,18 @@ namespace util {
 
     /// An exception class used for reporting errors signalled by errno.
     class errno_error : public std::runtime_error {
-        public:
-            int id;
-            errno_error (int _errno);
-            errno_error ();
+    public:
+        errno_error (int code);
+        errno_error ();
 
-            static void try_code (void);
-            static void try_code (int code);
+        static void try_code (void);
+        static void try_code (int code);
 
-            static void throw_code [[gnu::noreturn]] (void);
-            static void throw_code [[gnu::noreturn]] (int code);
+        static void throw_code [[gnu::noreturn]] (void);
+        static void throw_code [[gnu::noreturn]] (int code);
+
+    private:
+        int m_code;
     };
 }
 

@@ -29,11 +29,11 @@ using util::errno_error;
 ///////////////////////////////////////////////////////////////////////////////
 /// Construct an errno_error from a given error value. The error value MUST signal an error at
 /// construction time.
-errno_error::errno_error (int _errno):
-    runtime_error (strerror (_errno)),
-    id            (_errno)
+errno_error::errno_error (int _code):
+    runtime_error (strerror (_code)),
+    m_code (_code)
 {
-    CHECK_NEQ (_errno, 0);
+    CHECK_NEQ (_code, 0);
 }
 
 
@@ -41,10 +41,9 @@ errno_error::errno_error (int _errno):
 /// Construct an errno_error from the current value of errno. errno MUST signal an error at
 /// construction time.
 errno_error::errno_error ():
-    runtime_error (strerror (errno)),
-    id            (errno)
+    errno_error (last_code ())
 {
-    CHECK_NEQ (errno, 0);
+    CHECK_NEQ (m_code, 0);
 }
 
 
