@@ -6,6 +6,12 @@ using util::win32::handle;
 
 
 ///////////////////////////////////////////////////////////////////////////////
+handle::handle ():
+    m_native (INVALID_HANDLE_VALUE)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
 handle::handle (HANDLE &&h):
     m_native (h)
 { ; }
@@ -22,7 +28,8 @@ handle::handle (handle &&rhs):
 //-----------------------------------------------------------------------------
 handle::~handle ()
 {
-    CloseHandle (m_native);
+    if (m_native != INVALID_HANDLE_VALUE)
+        CloseHandle (m_native);
 }
 
 
@@ -46,6 +53,16 @@ const HANDLE&
 handle::native (void) const &
 {
     return m_native;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+void
+handle::reset (HANDLE rhs)
+{
+    if (m_native != INVALID_HANDLE_VALUE)
+        CloseHandle (m_native);
+    m_native = rhs;
 }
 
 

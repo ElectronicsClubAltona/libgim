@@ -18,15 +18,18 @@
 
 namespace util { namespace win32 {
     struct handle {
+        handle ();
         handle (HANDLE&&);
         handle (handle&&);
-        handle (void) = delete;
         handle (const handle&) = delete;
         ~handle ();
 
         operator HANDLE& (void) &; 
         HANDLE& native (void) &;
         const HANDLE& native (void) const &;
+
+        void reset (HANDLE);
+        void reset (handle&&);
 
         static handle current_process (void);
 

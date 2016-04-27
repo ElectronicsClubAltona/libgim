@@ -17,7 +17,7 @@
 #ifndef __UTIL_IO_WIN32_HPP
 #define __UTIL_IO_WIN32_HPP
 
-#include "io.hpp"
+#include "win32/handle.hpp"
 
 #include <cstdint>
 #include <boost/filesystem/path.hpp>
@@ -55,8 +55,8 @@ namespace util {
             const uint8_t* cend   (void) const;
 
         private:
-            handle m_file;
-            handle m_mapping;
+            ::util::win32::handle m_file;
+            ::util::win32::handle m_mapping;
 
             std::unique_ptr<uint8_t,BOOL(*)(LPCVOID)> m_data;
             size_t m_size;

@@ -53,22 +53,6 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-#ifdef PLATFORM_WIN32
-    struct handle : util::nocopy {
-    public:
-        explicit handle (HANDLE);
-        explicit handle ();
-        ~handle ();
-
-        void reset (HANDLE);
-
-        operator HANDLE (void) const;
-
-        HANDLE fd;
-    };
-#endif
-
-
     /// Reads an entire file into memory.
     std::vector<char> slurp (const boost::filesystem::path&);
     std::vector<char> slurp (FILE *);

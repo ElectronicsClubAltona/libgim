@@ -127,32 +127,3 @@ mapped_file::cend (void) const
 {
     return data () + size ();
 }
-
-
-//-----------------------------------------------------------------------------
-util::handle::handle():
-    fd (INVALID_HANDLE_VALUE)
-{ ; }
-
-
-util::handle::~handle ()
-{
-    reset (INVALID_HANDLE_VALUE);
-}
-
-
-void
-util::handle::reset (HANDLE _handle)
-{
-    if (fd != INVALID_HANDLE_VALUE)
-        if (!CloseHandle (fd))
-            win32_error::throw_code ();
-
-    fd = _handle;
-}
-
-
-util::handle::operator HANDLE (void) const
-{
-    return fd;
-}
