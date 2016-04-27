@@ -132,7 +132,7 @@ AC_CONFIG_FILES([
     Makefile
 ])
 
-AC_CONFIG_FILES([test/json-parse],  [chmod a+x test/json-parse])
-AC_CONFIG_FILES([test/json-schema], [chmod a+x test/json-schema])
+AC_CONFIG_FILES([test/json-parse.sh],  [chmod a+x test/json-parse.sh])
+AC_CONFIG_FILES([test/json-schema.py], [chmod a+x test/json-schema.py])
 
 AC_OUTPUT
