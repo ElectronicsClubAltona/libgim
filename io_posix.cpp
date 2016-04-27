@@ -29,7 +29,13 @@ using util::detail::posix::mapped_file;
 mapped_file::mapped_file (const char *_path, int fflags, int mflags):
     m_fd (_path, fflags)
 {
-    load_fd (mflags);
+    try {
+        load_fd (mflags);
+    } catch (const errno_error &e) {
+        // ignore zero length mapping error
+        if (e.code () == EINVAL && m_size == 0)
+            return;
+    }
 }
 
 
