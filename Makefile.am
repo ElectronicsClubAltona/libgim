@@ -258,7 +258,9 @@ UTIL_FILES   =			\
     version.hpp			\
     view.cpp			\
     view.ipp			\
-    view.hpp
+    view.hpp			\
+    $(BACKTRACE_FILES)
+
 
 if PLATFORM_LINUX
 UTIL_FILES += 			\
@@ -302,16 +304,24 @@ UTIL_FILES += 			\
 endif
 
 
-BACKTRACE_FILES =
-if HAVE_CAPTURESTACKBACKTRACE
-BACKTRACE_FILES += backtrace_win32.cpp
-endif
+# Select one of the available backtrace codepaths. We construct a list of
+# candidates in their preferred order then used firstword to choose the best
+# one.
+#
+# We need to use this two variable approach otherwise the final variable
+# doesn't seem to be expanded at the appropriate time. Using ?= apparently
+# suffers a similar problem.
 
+__BACKTRACE_FILES=
 if HAVE_EXECINFO
-BACKTRACE_FILES += backtrace_execinfo.cpp
+__BACKTRACE_FILES += backtrace_execinfo.cpp
 endif
 
-UTIL_FILES += $(BACKTRACE_FILES)
+if HAVE_CAPTURESTACKBACKTRACE
+__BACKTRACE_FILES += backtrace_stackwalk.cpp backtrace_win32.cpp
+endif
+
+BACKTRACE_FILES=$(firstword $(__BACKTRACE_FILES) backtrace_null.cpp)
 
 
 ###############################################################################
