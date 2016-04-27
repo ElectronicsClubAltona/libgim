@@ -237,6 +237,7 @@ UTIL_FILES   =			\
     term.hpp			\
     time.cpp			\
     time.hpp			\
+    time.ipp			\
     tuple.cpp			\
     tuple.hpp			\
     types/bits.hpp		\
