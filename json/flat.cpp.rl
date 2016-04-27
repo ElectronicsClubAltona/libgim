@@ -172,6 +172,9 @@ std::vector<json::flat::item>
 json::flat::parse (const boost::filesystem::path &path)
 {
     util::mapped_file f (path.string ().c_str ());
+    if (f.empty ())
+        throw parse_error ("empty file");
+
     return parse ((const char *)f.cbegin (), (const char*)f.cend ());
 }
 
