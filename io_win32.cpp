@@ -155,6 +155,13 @@ mapped_file::size (void) const
 }
 
 
+bool
+mapped_file::empty (void) const
+{
+    return size () == 0;
+}
+
+
 uint8_t*
 mapped_file::begin (void)
 {
