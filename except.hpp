@@ -72,20 +72,24 @@ namespace util {
 
 namespace  util {
     class win32_error : public std::runtime_error {
-        public:
-            DWORD id;
+    public:
+        win32_error (DWORD _code);
+        win32_error ();
 
-            win32_error (DWORD _id);
-            win32_error ();
+        DWORD code (void) const;
+        static DWORD last_code (void);
 
-            static void try_code (void);
-            static void try_code (DWORD);
+        static void try_code (void);
+        static void try_code (DWORD);
 
-            static void throw_code [[gnu::noreturn]] (void);
-            static void throw_code [[gnu::noreturn]] (DWORD);
+        static void throw_code [[gnu::noreturn]] (void);
+        static void throw_code [[gnu::noreturn]] (DWORD);
 
-            static std::string code_string (void);
-            static std::string code_string (DWORD);
+        static std::string code_string (void);
+        static std::string code_string (DWORD);
+
+    private:
+        DWORD m_code;
     };
 }
 #endif

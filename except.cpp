@@ -105,20 +105,34 @@ errno_error::throw_code (int code)
 using util::win32_error;
 
 
-win32_error::win32_error (DWORD _id):
-    runtime_error ("Win32 error"),
-    id (_id)
+//-----------------------------------------------------------------------------
+win32_error::win32_error (DWORD _code):
+    runtime_error (code_string (_code)),
+    m_code (_code)
 {
-    CHECK_NEQ (id, (DWORD)ERROR_SUCCESS);
+    CHECK_NEQ (m_code, (DWORD)ERROR_SUCCESS);
 }
 
 
 //-----------------------------------------------------------------------------
 win32_error::win32_error (void):
-    runtime_error ("Win32 error"),
-    id (GetLastError ())
+    win32_error (last_code ())
+{ ; }
+
+
+///////////////////////////////////////////////////////////////////////////////
+DWORD
+win32_error::code (void) const
 {
-    CHECK_NEQ (id, (DWORD)ERROR_SUCCESS);
+    return m_code;
+}
+
+
+//-----------------------------------------------------------------------------
+DWORD
+win32_error::last_code (void)
+{
+    return GetLastError ();
 }
 
 
@@ -126,7 +140,7 @@ win32_error::win32_error (void):
 void
 win32_error::try_code (void)
 {
-    try_code (GetLastError ());
+    try_code (last_code ());
 }
 
 
@@ -143,16 +157,16 @@ win32_error::try_code (DWORD id)
 void
 win32_error::throw_code (void)
 {
-    throw_code (GetLastError ());
+    throw_code (last_code ());
 }
 
 
 //-----------------------------------------------------------------------------
 void
-win32_error::throw_code (DWORD id)
+win32_error::throw_code (DWORD code)
 {
-    CHECK_NEQ (id, (DWORD)ERROR_SUCCESS);
-    throw win32_error (id);
+    CHECK_NEQ (code, (DWORD)ERROR_SUCCESS);
+    throw win32_error (code);
 }
 
 
@@ -160,7 +174,7 @@ win32_error::throw_code (DWORD id)
 std::string
 win32_error::code_string (void)
 {
-    return code_string (GetLastError ());
+    return code_string (last_code ());
 }
 
 
