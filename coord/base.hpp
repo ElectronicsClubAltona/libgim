@@ -31,7 +31,7 @@ namespace util { namespace coord {
         template <size_t, typename> class KLASS,
         typename ...tags
     >
-    struct base : public init <S,T,tags...> {
+    struct base : public init<S,T,tags...> {
         static_assert (S > 0, "coord dimensions must be strictly positive");
 
         using value_type = T;
