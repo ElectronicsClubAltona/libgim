@@ -28,12 +28,9 @@ namespace util { namespace coord {
     // Disable GCC warnings about validity of anonymous structures in
     // unions. Push comes to shove I'll manually redsign everything to
     // keep this syntax anyway.
-#pragma GCC diagnostic push
-#if defined(COMPILER_GCC)
-#pragma GCC diagnostic ignored "-pedantic"
-#endif
 #if defined(COMPILER_CLANG)
-#pragma GCC diagnostic ignored "-Wgnu"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
 #endif
 
     ///////////////////////////////////////////////////////////////////////////
@@ -181,7 +178,9 @@ namespace util { namespace coord {
         };
     };
 
+#if defined(COMPILER_CLANG)
 #pragma GCC diagnostic pop
+#endif
 } }
 
 #endif

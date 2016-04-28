@@ -43,12 +43,9 @@ namespace util {
         static constexpr size_t dimension = S;
         static constexpr size_t elements = extent_t::elements + point_t::elements;
 
-#pragma GCC diagnostic push
-#if defined(COMPILER_GCC)
-    #pragma GCC diagnostic ignored "-pedantic"
-#endif
 #if defined(COMPILER_CLANG)
-    #pragma GCC diagnostic ignored "-Wgnu"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
 #endif
         union {
             struct {
@@ -60,7 +57,9 @@ namespace util {
                 T w, h;
             };
         };
+#if defined(COMPILER_CLANG)
 #pragma GCC diagnostic pop
+#endif
 
         //---------------------------------------------------------------------
         region () = default;
