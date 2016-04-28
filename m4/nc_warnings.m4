@@ -64,7 +64,6 @@ AC_DEFUN([NC_WARNINGS],[
 
     # -------------------------------------------------------------------------
     # Strict warnings
-    AX_APPEND_COMPILE_FLAGS([-pedantic], [], [-Werror])
 
     # -------------------------------------------------------------------------
     # Advisory warnings
