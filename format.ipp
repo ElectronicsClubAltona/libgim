@@ -153,6 +153,8 @@ namespace util {
         {
             CHECK (first <= last);
 
+            using namespace std::literals;
+
             static const char DELIMITER = '%';
             auto cursor = std::find (first, last, DELIMITER);
             std::copy (first, cursor, std::ostream_iterator<char> (dest));
@@ -162,7 +164,7 @@ namespace util {
 
             auto spec = cursor + 1;
             if (spec == last)
-                throw util::format::format_error ("missing format specifier");
+                throw util::format::format_error ("missing format specifier"s);
 
             if (!is_valid_specifier<typename std::decay<ValueT>::type> (&*spec))
                 throw util::format::invalid_specifier<ValueT> (*spec);
