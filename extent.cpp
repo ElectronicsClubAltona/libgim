@@ -21,6 +21,7 @@
 #include "./stream.hpp"
 
 #include <cmath>
+#include <numeric>
 
 using util::extent;
 using util::extent_range;

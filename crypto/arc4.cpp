@@ -17,6 +17,7 @@
 #include "arc4.hpp"
 
 #include <algorithm>
+#include <numeric>
 
 using util::crypto::ARC4;
 
