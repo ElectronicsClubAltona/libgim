@@ -2,7 +2,7 @@ AC_DEFUN([NC_CXX],[
     AX_CHECK_COMPILE_FLAG(
         [-std=c++1z],
         [AX_APPEND_FLAG([-std=c++1z], [CXXFLAGS])],
-        [AC_ERROR([Unable to enable c++1z])]
+        [AC_MSG_ERROR([Unable to enable c++1z])]
     )
 
     AX_APPEND_COMPILE_FLAGS([-pipe], [], [-Werror])
