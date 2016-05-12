@@ -42,7 +42,7 @@ main ()
 
         tap.expect_eq (actual, expected, "type iteration");
     #else
-        tap.skip ("type iteration");
+        tap.skip ("type iteration because no-rtti");
     #endif
     }
 
