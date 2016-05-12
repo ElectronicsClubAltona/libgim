@@ -58,22 +58,6 @@ template uint64_t util::log2 (uint64_t);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-bool
-util::is_integer (const T &value)
-{
-    T integer;
-    return exactly_equal (std::modf (value, &integer),
-                          static_cast<T> (0.0));
-}
-
-
-//-----------------------------------------------------------------------------
-template bool util::is_integer (const double&);
-template bool util::is_integer (const  float&);
-
-
-///////////////////////////////////////////////////////////////////////////////
 namespace util {
     template <>
     unsigned

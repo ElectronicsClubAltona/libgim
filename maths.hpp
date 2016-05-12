@@ -263,8 +263,21 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////////
     // Properties
     template <typename T>
-    bool
-    is_integer (const T& value);
+    constexpr
+    std::enable_if_t<std::is_integral<T>::value, bool>
+    is_integer (T)
+    {
+        return true;
+    }
+
+    template <typename T>
+    constexpr
+    std::enable_if_t<std::is_floating_point<T>::value, bool>
+    is_integer (T t)
+    {
+        T i = 0;
+        return exactly_equal (std::modf (t, &i), T{0});
+    }
 
 
     //-----------------------------------------------------------------------------
