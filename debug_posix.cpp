@@ -25,6 +25,13 @@
 #include <sys/wait.h>
 #include <signal.h>
 
+#include "./platform.hpp"
+
+#if defined(PLATFORM_FREEBSD)
+#define PTRACE_ATTACH PT_ATTACH
+#define PTRACE_DETACH PT_DETACH
+#endif
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Will return true if it is known we are under a debugger. This isn't
@@ -44,9 +51,9 @@ is_debugged (void)
         int res;
 
         // attempt to trace our parent. this will fail if we're being debugged.
-        if (ptrace (PTRACE_ATTACH, ppid, nullptr, nullptr) == 0) {
+        if (ptrace (PTRACE_ATTACH, ppid, nullptr, 0) == 0) {
             waitpid (ppid, nullptr, 0);
-            ptrace (PTRACE_DETACH, ppid, nullptr, nullptr);
+            ptrace (PTRACE_DETACH, ppid, nullptr, 0);
 
             res = 0;
         } else {
