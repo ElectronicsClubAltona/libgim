@@ -20,7 +20,6 @@ NC_CXX
 NC_PLATFORM
 NC_OPTIMISATION
 NC_WARNINGS
-NC_DEBUGGING
 
 NC_SUBPACKAGE_ENABLE
 
@@ -92,6 +91,11 @@ AC_SEARCH_LIBS([htons], [ws2_32], [], [AC_MSG_ERROR([unable to find htnos librar
 
 ###############################################################################
 ## Debug features
+
+dnl debugging might enable sanitizers, which might alter the available
+dnl libraries, so this needs to be called after we've completed our tests.
+dnl specifically: -ldl is implied by some of the sanitizers.
+NC_DEBUGGING
 
 ###############################################################################
 ## Documentation
