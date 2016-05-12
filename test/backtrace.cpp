@@ -11,8 +11,7 @@ int
 main (int, char **) {
     util::TAP::logger tap;
 
-    util::stream::null out;
-    out << debug::backtrace() << std::endl;
+    debug::backtrace ();
     tap.noop ();
 
     return EXIT_SUCCESS;
