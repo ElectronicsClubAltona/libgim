@@ -129,8 +129,6 @@ namespace util {
 
     class stream_error : public std::exception {
     public:
-        virtual ~stream_error () { ; }
-
         virtual const char* what (void) const noexcept
         { return "error on C stream"; }
     };
