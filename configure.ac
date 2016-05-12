@@ -52,6 +52,7 @@ AS_IF([test "x${host_os}" != "xmingw32"],[
 
 AC_FUNC_MMAP
 
+AC_SEARCH_LIBS([backtrace], [execinfo])
 AC_CHECK_FUNC([backtrace])
 AM_CONDITIONAL([HAVE_EXECINFO], [test "x$ac_cv_func_backtrace" == "xyes"])
 
