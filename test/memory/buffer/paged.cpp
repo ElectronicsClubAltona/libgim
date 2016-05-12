@@ -9,10 +9,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 sigjmp_buf fault_jmp;
 
-
-template <typename T>
+__attribute__((no_sanitize_address))
 bool
-has_fault (const volatile T* addr)
+has_fault
+(const volatile char* addr)
 {
     if (sigsetjmp (fault_jmp, 1) == 0) {
         *addr;
@@ -27,6 +27,7 @@ has_fault (const volatile T* addr)
 static bool  fault_seen;
 static void *fault_address;
 
+__attribute__((no_sanitize_address))
 void
 segv_handler (int num, siginfo_t *info, void *cookie)
 {
