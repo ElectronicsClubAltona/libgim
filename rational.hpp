@@ -24,9 +24,9 @@ namespace util {
     struct rational {
         static_assert (std::is_integral<T>::value, "only defined for integer types");
 
+        rational (const rational&) = default;
         rational (T n, T d);
         explicit rational (T);
-        rational& operator= (const rational&) = default;
 
         bool operator== (rational) const;
         bool operator!= (rational) const;
