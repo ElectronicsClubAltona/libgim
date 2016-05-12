@@ -18,25 +18,25 @@
 
 #include "debug.hpp"
 
-using util::stream::null;
+using util::stream::null_ostream;
 using util::stream::bits;
 
 //-----------------------------------------------------------------------------
 std::ostream&
-null::put (char)
+null_ostream::put (char)
     { return *this; }
 
 
 //-----------------------------------------------------------------------------
 bool
-null::good (void) const
+null_ostream::good (void) const
     { return !bad () && !eof () && !fail (); }
 
 
 //-----------------------------------------------------------------------------
-bool null::bad  (void) const { return false; }
-bool null::eof  (void) const { return false; }
-bool null::fail (void) const { return false; }
+bool null_ostream::bad  (void) const { return false; }
+bool null_ostream::eof  (void) const { return false; }
+bool null_ostream::fail (void) const { return false; }
 
 
 //-----------------------------------------------------------------------------

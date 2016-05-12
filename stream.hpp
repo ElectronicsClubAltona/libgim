@@ -48,28 +48,37 @@ namespace util {
             return os << +n.val;
         }
 
+
         ///////////////////////////////////////////////////////////////////////
-        class null : public std::ostream {
-            public:
-                std::ostream & put   (char c);
-                std::ostream & write (const char *s, std::streamsize n);
-
-                std::streampos tellp (void);
-                std::ostream & seekp (std::streampos pos);
-                std::ostream & seekp (std::streamoff off,
-                                      std::ios_base::seekdir dir);
-
-                std::ostream & flush (void);
-
-                bool good (void) const;
-                bool bad  (void) const;
-                bool eof  (void) const;
-                bool fail (void) const;
-
+        class null_streambuf : public std::basic_streambuf<char> {
+        public:
+            virtual ~null_streambuf () { ; }
         };
 
 
-        //---------------------------------------------------------------------
+        ///////////////////////////////////////////////////////////////////////
+        class null_ostream : public std::basic_ostream<char> {
+        public:
+            virtual ~null_ostream () { ; }
+
+            std::ostream & put   (char c);
+            std::ostream & write (const char *s, std::streamsize n);
+
+            std::streampos tellp (void);
+            std::ostream & seekp (std::streampos pos);
+            std::ostream & seekp (std::streamoff off,
+                                  std::ios_base::seekdir dir);
+
+            std::ostream & flush (void);
+
+            bool good (void) const;
+            bool bad  (void) const;
+            bool eof  (void) const;
+            bool fail (void) const;
+        };
+
+
+        ///////////////////////////////////////////////////////////////////////
         struct bits {
             bits (uintmax_t value, unsigned count);
 
