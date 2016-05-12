@@ -34,8 +34,7 @@ namespace ipv4 {
         explicit ip (uint32_t i);
         ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d);
 
-        ip&  operator  = (const ip &);
-        bool operator == (const ip &) const;
+        bool operator== (const ip &) const;
 
         explicit operator uint32_t (void);
 
