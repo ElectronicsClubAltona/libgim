@@ -263,8 +263,7 @@ UTIL_FILES   =			\
     $(BACKTRACE_FILES)
 
 
-if PLATFORM_LINUX
-UTIL_FILES += 			\
+POSIX_FILES = 			\
     net/address.cpp		\
     net/address.hpp		\
     net/except.cpp		\
@@ -289,6 +288,13 @@ UTIL_FILES += 			\
     posix/dir.ipp		\
     time_posix.cpp
 
+
+if PLATFORM_LINUX
+UTIL_FILES += $(POSIX_FILES)
+endif
+
+if PLATFORM_FREEBSD
+UTIL_FILES += $(POSIX_FILES)
 endif
 
 if PLATFORM_WIN32
