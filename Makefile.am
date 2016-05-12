@@ -444,7 +444,7 @@ endif
 # wine filter.
 LOG_COMPILER = ${top_srcdir}/build-aux/wine-crlf.sh
 
-LOG_DRIVER = env RS='\r\n' AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
+LOG_DRIVER = env ASAN_OPTIONS=$(ASAN_OPTIONS):allow_user_segv_handler=true AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/build-aux/tap-driver.sh
 
 TESTS = $(TEST_BIN) test/json-parse.sh test/json-schema.py
 check_PROGRAMS = $(TEST_BIN)
