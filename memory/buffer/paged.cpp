@@ -33,7 +33,7 @@ paged::paged (size_t bytes, size_t _window):
 {
     // reserve the address region with no access permissions
     m_begin = reinterpret_cast<char*> (
-        mmap (nullptr, bytes, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0)
+        mmap (nullptr, bytes, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)
     );
 
     if (m_begin == MAP_FAILED)
@@ -44,7 +44,7 @@ paged::paged (size_t bytes, size_t _window):
     if (MAP_FAILED == mmap (m_begin,
                             m_cursor - m_begin,
                             PROT_READ | PROT_WRITE,
-                            MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, 0, 0))
+                            MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0))
         errno_error::throw_code ();
 
     // record the nominal end address
@@ -109,7 +109,7 @@ paged::commit (char *cursor)
                             cursor - m_cursor,
                             PROT_READ | PROT_WRITE,
                             MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS,
-                            0, 0))
+                            -1, 0))
         errno_error::throw_code ();
 
     m_cursor = cursor;
@@ -136,7 +136,7 @@ paged::release (char *desired)
                             m_end - desired,
                             PROT_NONE,
                             MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS,
-                            0, 0))
+                            -1, 0))
         errno_error::throw_code ();
 
     m_cursor = desired;
