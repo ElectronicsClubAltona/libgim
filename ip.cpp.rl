@@ -57,10 +57,7 @@ ipv4::ip::ip (uint8_t a, uint8_t b, uint8_t c, uint8_t d)
 bool
 ipv4::ip::operator== (const ipv4::ip &rhs) const
 {
-    return m_octets[0] == rhs.m_octets[0] && 
-           m_octets[1] == rhs.m_octets[1] &&
-           m_octets[2] == rhs.m_octets[2] &&
-           m_octets[3] == rhs.m_octets[3];
+    return m_integer == rhs.m_integer;
 }
 
 
