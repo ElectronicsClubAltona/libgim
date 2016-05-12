@@ -399,11 +399,13 @@ namespace util {
 
     //-----------------------------------------------------------------------------
     /// stirlings approximation of factorials
-    constexpr uintmax_t
+    inline uintmax_t
     stirling  (unsigned n)
     {
+        using real_t = double;
+
         return static_cast<uintmax_t> (
-            std::sqrt (2 * PI<float> * n) * std::pow (n / E<float>, n)
+            std::sqrt (2 * PI<real_t> * n) * std::pow (n / E<real_t>, n)
         );
     }
 
