@@ -24,8 +24,7 @@ test_good (util::TAP::logger &tap)
     };
 
     for (const auto &i: TESTS) {
-        ipv4::ip parsed (ipv4::ip::parse (i.str));
-        tap.expect_eq (parsed, i.ip, i.msg);
+        tap.expect_eq (ipv4::ip::parse (i.str), i.ip, i.msg);
     }
 }
 
