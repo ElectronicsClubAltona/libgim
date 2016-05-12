@@ -183,22 +183,23 @@ json::flat::parse (const boost::filesystem::path &path)
 std::ostream&
 json::flat::operator<< (std::ostream &os, json::flat::type t)
 {
+    using T = json::flat::type;
+
     switch (t) {
-    case json::flat::type::STRING:  os << "STRING";     break;
-    case json::flat::type::NUL:     os << "NUL";        break;
-    case json::flat::type::BOOLEAN: os << "BOOLEAN";    break;
-    case json::flat::type::INTEGER: os << "INTEGER";    break;
-    case json::flat::type::REAL:    os << "REAL";       break;
+    case T::STRING:  return os << "STRING";
+    case T::NUL:     return os << "NUL";
+    case T::BOOLEAN: return os << "BOOLEAN";
+    case T::INTEGER: return os << "INTEGER";
+    case T::REAL:    return os << "REAL";
 
-    case json::flat::type::OBJECT_BEGIN:    os << "OBJECT_BEGIN";   break;
-    case json::flat::type::OBJECT_END:      os << "OBJECT_END";     break;
-    case json::flat::type::ARRAY_BEGIN:     os << "ARRAY_BEGIN";    break;
-    case json::flat::type::ARRAY_END:       os << "ARRAY_END";      break;
+    case T::OBJECT_BEGIN:    return os << "OBJECT_BEGIN";
+    case T::OBJECT_END:      return os << "OBJECT_END";
+    case T::ARRAY_BEGIN:     return os << "ARRAY_BEGIN";
+    case T::ARRAY_END:       return os << "ARRAY_END";
 
-    default:
-        unreachable ();
+    case T::UNKNOWN: ;
+        // fall out
     }
-
-    return os;
+    unreachable ();
 }
 

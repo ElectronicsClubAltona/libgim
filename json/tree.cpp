@@ -49,21 +49,29 @@ using json::tree::null;
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util {
-    template <>
     bool
     is_integer (const json::tree::number &node)
     {
-        return is_integer (node.native ());
+        using R = json::tree::number::repr_t;
+
+        switch (node.repr ()) {
+        case R::REAL:
+               return is_integer (node.real ());
+
+        case R::SINT:
+        case R::UINT:
+               return true;
+        }
+
+        unreachable ();
     }
 
 
     //-----------------------------------------------------------------------------
-    template <>
     bool
     is_integer (const json::tree::node &node)
     {
-        return node.is_number () &&
-               is_integer (node.as_number ());
+        return node.is_number () && is_integer (node.as_number ());
     }
 }
 
@@ -127,43 +135,67 @@ parse (std::vector<json::flat::item>::const_iterator first,
     CHECK (first != last);
     CHECK (output.get () == nullptr);
 
+    using T = json::flat::type;
+
     switch (first->tag) {
-        case json::flat::type::NUL:
+        case T::NUL:
             output.reset (new json::tree::null ());
             return first + 1;
 
-        case json::flat::type::BOOLEAN:
+        case T::BOOLEAN:
             CHECK (*first->first == 't' || *first->first == 'f');
             output.reset (new json::tree::boolean (*first->first == 't'));
             return first + 1;
 
-        case json::flat::type::STRING:
+        case T::STRING:
             CHECK_NEQ (first->first, first->last);
             output.reset (new json::tree::string (first->first + 1, first->last - 1));
             return first + 1;
 
-        case json::flat::type::INTEGER:
-        case json::flat::type::REAL:
+        case T::INTEGER:
+            if (first->first[0] == '-') {
+                char *end;
+                intmax_t v = strtoll (first->first, &end, 10);
+                
+                if (end == first->first || end > first->last)
+                    throw json::parse_error ("invalid signed integer");
+                output.reset (new json::tree::number (v));
+            } else {
+                char *end;
+                uintmax_t v = strtoull (first->first, &end, 10);
+
+                if (end == first->first || end > first->last)
+                    throw json::parse_error ("invalid unsigned integer");
+                output.reset (new json::tree::number (v));
+            }
+
+            return first + 1;
+
+        case T::REAL:
             output.reset (new json::tree::number (std::atof (first->first)));
             return first + 1;
 
-        case json::flat::type::ARRAY_BEGIN: {
+        case T::ARRAY_BEGIN: {
             auto value = std::make_unique<json::tree::array> ();
             auto cursor = ::parse (first + 1, last, *value);
             output = std::move (value);
             return cursor;
         }
 
-        case json::flat::type::OBJECT_BEGIN: {
+        case T::OBJECT_BEGIN: {
             auto value = std::make_unique<json::tree::object> ();
             auto cursor = ::parse (first + 1, last, *value);
             output = std::move (value);
             return cursor;
         }
 
-        default:
+        case T::UNKNOWN:
+        case T::OBJECT_END:
+        case T::ARRAY_END:
             unreachable ();
     }
+
+    unreachable ();
 }
 
 
@@ -304,7 +336,7 @@ json::tree::node::as_bool (void) const
 float
 json::tree::node::as_float (void) const
 {
-    return static_cast<float> (as_number ().native ());
+    return static_cast<float> (as_number ().real ());
 }
 
 
@@ -312,20 +344,23 @@ json::tree::node::as_float (void) const
 double
 json::tree::node::as_double (void) const
 {
-    return as_number ().native ();
+    return as_number ().real ();
 }
 
 
 //-----------------------------------------------------------------------------
-size_t
+uintmax_t
 json::tree::node::as_uint (void) const
 {
-    auto val = as_number ().native ();
-    if (!util::is_integer (val))
-        throw json::type_error ("cast fractional value to uint");
+    return as_number ().uint ();
+}
 
-    // TODO: use trunc_cast
-    return static_cast<size_t> (val);
+
+//-----------------------------------------------------------------------------
+intmax_t
+json::tree::node::as_sint (void) const
+{
+    return as_number ().sint ();
 }
 
 
@@ -344,45 +379,60 @@ namespace json { namespace tree {
     {
         return as_bool ();
     }
-} }
 
 
 //-----------------------------------------------------------------------------
-namespace json { namespace tree {
     template <>
     float json::tree::node::as (void) const
     {
         return as_float ();
     }
-} }
 
 
 //-----------------------------------------------------------------------------
-namespace json { namespace tree {
     template <>
     double
     json::tree::node::as (void) const
     {
         return as_double ();
     }
-} }
 
 
 //-----------------------------------------------------------------------------
-#define AS_INTEGRAL(T)                          \
-namespace json { namespace tree {               \
-    template <>                                 \
-    T                                           \
-    node::as (void) const                       \
-    {                                           \
-        return static_cast<T> (as_double ());   \
-    }                                           \
-} }
+    template <>
+    uint32_t
+    json::tree::node::as (void) const
+    {
+        return static_cast<uint32_t> (as_uint ());
+    }
 
-AS_INTEGRAL(uint8_t)
-AS_INTEGRAL(uint16_t)
-AS_INTEGRAL(uint32_t)
-AS_INTEGRAL(uint64_t)
+
+//-----------------------------------------------------------------------------
+    template <>
+    uint64_t
+    json::tree::node::as (void) const
+    {
+        return static_cast<uint64_t> (as_uint ());
+    }
+
+
+//-----------------------------------------------------------------------------
+    template <>
+    int32_t
+    json::tree::node::as (void) const
+    {
+        return static_cast<int32_t> (as_sint ());
+    }
+
+
+//-----------------------------------------------------------------------------
+    template <>
+    int64_t
+    json::tree::node::as (void) const
+    {
+        return static_cast<int64_t> (as_sint ());
+    }
+} }
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -411,7 +461,7 @@ json::tree::node::operator[] (const std::string &key)&
 
 //-----------------------------------------------------------------------------
 json::tree::node&
-json::tree::node::operator[] (unsigned int idx)&
+json::tree::node::operator[] (size_t idx)&
     { return as_array()[idx]; }
 
 
@@ -423,7 +473,7 @@ json::tree::node::operator[] (const std::string &key) const&
 
 //-----------------------------------------------------------------------------
 const json::tree::node&
-json::tree::node::operator[] (unsigned int idx) const&
+json::tree::node::operator[] (size_t idx) const&
     { return as_array()[idx]; }
 
 
@@ -634,7 +684,7 @@ json::tree::array::size (void) const
 
 //-----------------------------------------------------------------------------
 json::tree::node&
-json::tree::array::operator[] (unsigned int idx)&
+json::tree::array::operator[] (size_t idx)&
 {
     return *m_values[idx];
 }
@@ -642,7 +692,7 @@ json::tree::array::operator[] (unsigned int idx)&
 
 //-----------------------------------------------------------------------------
 const json::tree::node&
-json::tree::array::operator[] (unsigned int idx) const&
+json::tree::array::operator[] (size_t idx) const&
 {
     return *m_values[idx];
 }
@@ -761,7 +811,13 @@ json::tree::string::operator== (const std::string &rhs) const
 std::unique_ptr<json::tree::node>
 json::tree::number::clone (void) const
 {
-    return std::make_unique<json::tree::number> (m_value);
+    switch (m_repr) {
+    case REAL: return std::make_unique<json::tree::number> (m_value.r);
+    case SINT: return std::make_unique<json::tree::number> (m_value.s);
+    case UINT: return std::make_unique<json::tree::number> (m_value.u);
+    }
+
+    unreachable ();
 }
 
 
@@ -769,15 +825,86 @@ json::tree::number::clone (void) const
 std::ostream&
 json::tree::number::write (std::ostream &os) const
 {
-    os << std::setprecision (std::numeric_limits<double>::digits10) << m_value;
-    return os;
+    auto old = int (os.precision ());
+
+    switch (m_repr) {
+    case REAL: return os << std::numeric_limits<real_t>::digits10 << m_value.r << std::setprecision (old);
+    case SINT: return os << std::numeric_limits<sint_t>::digits10 << m_value.s << std::setprecision (old);
+    case UINT: return os << std::numeric_limits<uint_t>::digits10 << m_value.u << std::setprecision (old);
+    }
+
+    unreachable ();
 }
 
 
 //-----------------------------------------------------------------------------
 bool
-json::tree::number::operator ==(const json::tree::number &rhs) const
-    { return util::almost_equal (rhs.m_value, m_value); }
+json::tree::number::operator ==(const json::tree::number &rhs) const {
+    if (repr () != rhs.repr ())
+        return false;
+
+    switch (repr ()) {
+    case REAL: return util::almost_equal (real (), rhs.real ());
+    case SINT: return util::almost_equal (sint (), rhs.sint ());
+    case UINT: return util::almost_equal (uint (), rhs.uint ());
+    }
+
+    unreachable ();
+}
+
+
+//-----------------------------------------------------------------------------
+json::tree::number::real_t
+json::tree::number::real (void) const
+{
+    if (m_repr != REAL)
+        throw json::type_error ("number is not a real");
+
+    return m_value.r;
+}
+
+
+//-----------------------------------------------------------------------------
+json::tree::number::sint_t
+json::tree::number::sint (void) const
+{
+    if (m_repr != SINT)
+        throw json::type_error ("number is not a sint");
+
+    return m_value.s;
+}
+
+
+//-----------------------------------------------------------------------------
+json::tree::number::uint_t
+json::tree::number::uint (void) const
+{
+    if (m_repr != UINT)
+        throw json::type_error ("number is not a uint");
+
+    return m_value.u;
+}
+
+
+//-----------------------------------------------------------------------------
+json::tree::number::operator json::tree::number::real_t (void) const
+{
+    return real ();
+}
+
+
+//-----------------------------------------------------------------------------
+json::tree::number::operator json::tree::number::sint_t (void) const
+{
+    return sint ();
+}
+
+
+//-----------------------------------------------------------------------------
+json::tree::number::operator json::tree::number::uint_t (void) const
+{
+    return uint ();
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -854,14 +981,26 @@ namespace json { namespace tree {
 
     template <>
     std::unique_ptr<node>
-    io<int>::serialise (const int &i) {
-        return std::unique_ptr<node> (new number (i));
+    io<int32_t>::serialise (const int32_t &i) {
+        return std::unique_ptr<node> (new number (intmax_t {i}));
     }
 
     template <>
     std::unique_ptr<node>
-    io<size_t>::serialise (const size_t &i) {
-        return std::unique_ptr<node> (new number (i));
+    io<int64_t>::serialise (const int64_t &i) {
+        return std::unique_ptr<node> (new number (intmax_t {i}));
+    }
+
+    template <>
+    std::unique_ptr<node>
+    io<uint32_t>::serialise (const uint32_t &i) {
+        return std::unique_ptr<node> (new number (uintmax_t {i}));
+    }
+
+    template <>
+    std::unique_ptr<node>
+    io<uint64_t>::serialise (const uint64_t &i) {
+        return std::unique_ptr<node> (new number (uintmax_t {i}));
     }
 
     template <>

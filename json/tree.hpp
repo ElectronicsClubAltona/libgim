@@ -52,6 +52,7 @@ namespace json { namespace tree {
     /// Abstract base for all JSON values
     class node {
         public:
+            node (const node&) = delete;
             virtual ~node () { ; }
             virtual std::unique_ptr<node> clone (void) const = 0;
 
@@ -75,7 +76,8 @@ namespace json { namespace tree {
             virtual bool   as_bool   (void) const;
             virtual float  as_float  (void) const;
             virtual double as_double (void) const;
-            virtual size_t as_uint   (void) const;
+            virtual intmax_t  as_sint   (void) const;
+            virtual uintmax_t as_uint   (void) const;
             virtual const char* as_chars (void) const&;
 
             template <typename T>
@@ -103,24 +105,26 @@ namespace json { namespace tree {
             virtual bool operator!=(const char *rhs) const { return !(*this == rhs); }
 
             virtual node& operator[] (const std::string&)&;
-            virtual node& operator[] (unsigned int)&;
+            virtual node& operator[] (size_t)&;
             virtual const node& operator[] (const std::string&) const&;
-            virtual const node& operator[] (unsigned int) const&;
+            virtual const node& operator[] (size_t) const&;
 
             virtual std::ostream& write (std::ostream &os) const = 0;
+
+        protected:
+            node () = default;
     };
 
 
     /// Represents a JSON object, and contains its children.
     class object final : public node {
-        protected:
-            typedef std::map<std::string, std::unique_ptr<node>> value_store;
+        private:
+            using value_store = std::map<std::string, std::unique_ptr<node>>;
+
         public:
             typedef value_store::iterator       iterator;
             typedef value_store::const_iterator const_iterator;
 
-        protected:
-            value_store m_values;
 
         public:
             virtual ~object ();
@@ -136,8 +140,8 @@ namespace json { namespace tree {
                 { return rhs == *this; }
 
             virtual void insert (const std::string &key, std::unique_ptr<node>&& value);
-            virtual const node& operator[](const std::string &key) const& override;
-            virtual node& operator[](const std::string &key)& override;
+            virtual const node& operator[] (const std::string &key) const& override;
+            virtual node& operator[] (const std::string &key)& override;
             virtual bool has (const std::string&) const;
 
             virtual const_iterator find (const std::string&) const;
@@ -153,6 +157,9 @@ namespace json { namespace tree {
             virtual void erase (const std::string &key);
 
             virtual std::ostream& write (std::ostream &os) const override;
+
+        private:
+            value_store m_values;
     };
 
 
@@ -182,8 +189,8 @@ namespace json { namespace tree {
             virtual bool operator==(const node  &rhs) const override;
 
             virtual size_t size (void) const;
-            virtual node& operator [](unsigned int idx)& override;
-            virtual const node& operator [](unsigned int idx) const& override;
+            virtual node& operator[] (size_t idx)& override;
+            virtual const node& operator[] (size_t idx) const& override;
 
             virtual iterator begin (void);
             virtual iterator end   (void);
@@ -234,13 +241,21 @@ namespace json { namespace tree {
 
     /// Represents a JSON integer/float literal.
     class number final : public node {
-        protected:
-            double m_value;
-
         public:
-            explicit number (double _value): m_value (_value) { ; }
-            explicit number (int    _value): m_value (_value) { ; }
-            explicit number (size_t _value): m_value (_value) { ; }
+            enum repr_t {
+                REAL,
+                SINT,
+                UINT
+            };
+
+            using real_t = double;
+            using sint_t = intmax_t;
+            using uint_t = uintmax_t;
+
+
+            explicit number (real_t _value): m_repr (REAL) { m_value.r = _value; }
+            explicit number (sint_t _value): m_repr (SINT) { m_value.s = _value; }
+            explicit number (uint_t _value): m_repr (UINT) { m_value.u = _value; }
             virtual std::unique_ptr<node> clone (void) const override;
 
             virtual const number& as_number  (void) const& override { return *this; }
@@ -248,15 +263,30 @@ namespace json { namespace tree {
             virtual bool          is_number  (void) const  override { return  true; }
 
             virtual type_t type (void) const override { return NUMBER; }
+            virtual repr_t repr (void) const { return m_repr; }
 
             virtual bool operator==(const number &rhs) const override;
             virtual bool operator==(const node   &rhs) const override
                 { return rhs == *this; }
 
-            operator double(void) const { return m_value; }
-            double native (void) const  { return m_value; }
+            operator real_t (void) const;
+            operator sint_t (void) const;
+            operator uint_t (void) const;
+
+            real_t real (void) const;
+            sint_t sint (void) const;
+            uint_t uint (void) const;
 
             virtual std::ostream& write (std::ostream &os) const override;
+
+        private:
+            union {
+                real_t r;
+                sint_t s;
+                uint_t u;
+            } m_value;
+
+            repr_t m_repr;
     };
 
 

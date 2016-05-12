@@ -174,7 +174,7 @@ validate (json::tree::string &node,
     // check length is less than a maximum
     auto maxLength = schema.find ("maxLength");
     if (maxLength != schema.cend ()) {
-        auto cmp = maxLength->second->as_number ().native ();
+        auto cmp = maxLength->second->as_number ().uint ();
         if (!util::is_integer (cmp))
             throw length_error ("maxLength");
 
@@ -185,7 +185,7 @@ validate (json::tree::string &node,
     // check length is greater than a maximum
     auto minLength = schema.find ("minLength");
     if (minLength != schema.cend ()) {
-        auto cmp = minLength->second->as_number ().native ();
+        auto cmp = minLength->second->as_number ().uint ();
         if (!util::is_integer (cmp))
             throw length_error ("minLength");
 
@@ -206,31 +206,42 @@ validate (json::tree::string &node,
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
 static void
-validate (json::tree::number &node,
-          const json::tree::object &schema)
-{
-    const auto &val = node.native ();
+validate_number (T val, const json::tree::object &schema) {
+    using R = json::tree::number::repr_t;
 
     // check strictly positive integer multiple
     auto mult = schema.find ("multipleOf");
     if (mult != schema.cend ()) {
-        auto div = mult->second->as_number ().native ();
+        const auto &div = mult->second->as_number ();
 
-        if (val <= 0 || util::almost_equal (val, div))
-            throw json::schema_error ("multipleOf");
+        switch (div.repr ()) {
+            case R::REAL:  if (util::exactly_zero (std::fmod (val, div.real ()))) throw json::schema_error ("multipleOf"); break;
+            case R::SINT:  if (util::exactly_zero (std::fmod (val, div.sint ()))) throw json::schema_error ("multipleOf"); break;
+            case R::UINT:  if (util::exactly_zero (std::fmod (val, div.uint ()))) throw json::schema_error ("multipleOf"); break;
+        }
     }
 
     // check maximum holds. exclusive requires max condition.
     auto max = schema.find ("maximum");
     auto exclusiveMax = schema.find ("exclusiveMaximum");
     if (max != schema.end ()) {
-        auto cmp = max->second->as_number ().native ();
+        const auto &cmp = max->second->as_number ();
 
-        if (exclusiveMax != schema.end () && exclusiveMax->second->as_boolean () && val >= cmp)
-            throw json::schema_error ("exclusiveMax");
-        else if (val > cmp)
-            throw json::schema_error ("maximum");
+        if (exclusiveMax != schema.end () && exclusiveMax->second->as_boolean ()) {
+            switch (cmp.repr ()) {
+            case R::REAL: if (val >= T(cmp.real ())) throw json::schema_error ("exclusiveMax"); break;
+            case R::SINT: if (val >= T(cmp.uint ())) throw json::schema_error ("exclusiveMax"); break;
+            case R::UINT: if (val >= T(cmp.sint ())) throw json::schema_error ("exclusiveMax"); break;
+            }
+        } else {
+            switch (cmp.repr ()) {
+            case R::REAL: if (val > T(cmp.real ())) throw json::schema_error ("maximum"); break;
+            case R::SINT: if (val > T(cmp.sint ())) throw json::schema_error ("maximum"); break;
+            case R::UINT: if (val > T(cmp.uint ())) throw json::schema_error ("maximum"); break;
+            }
+        }
     } else {
         if (exclusiveMax != schema.cend ())
             throw json::schema_error ("exclusiveMax");
@@ -240,15 +251,41 @@ validate (json::tree::number &node,
     auto min = schema.find ("minimum");
     auto exclusiveMin = schema.find ("exclusiveMinimum");
     if (min != schema.end ()) {
-        auto cmp = min->second->as_number ().native ();
+        const auto &cmp = min->second->as_number ();
 
-        if (exclusiveMin != schema.end () && exclusiveMin->second->as_boolean () && val <= cmp)
-            throw json::schema_error ("exclusiveMin");
-        else if (val < cmp)
-            throw json::schema_error ("minimum");
+        if (exclusiveMin != schema.end () && exclusiveMin->second->as_boolean ()) {
+            switch (cmp.repr ()) {
+            case R::REAL: if (val <= T(cmp.real ())) throw json::schema_error ("exclusiveMin"); break;
+            case R::SINT: if (val <= T(cmp.sint ())) throw json::schema_error ("exclusiveMin"); break;
+            case R::UINT: if (val <= T(cmp.uint ())) throw json::schema_error ("exclusiveMin"); break;
+            }
+        } else {
+            switch (cmp.repr ()) {
+            case R::REAL: if (val < T(cmp.real ())) throw json::schema_error ("minimum"); break;
+            case R::SINT: if (val < T(cmp.sint ())) throw json::schema_error ("minimum"); break;
+            case R::UINT: if (val < T(cmp.uint ())) throw json::schema_error ("minimum"); break;
+            }
+        }
     } else {
         if (exclusiveMin != schema.cend ())
             throw json::schema_error ("exclusiveMin");
+    }
+
+}
+
+
+//-----------------------------------------------------------------------------
+static void
+validate (json::tree::number &node,
+          const json::tree::object &schema)
+{
+    using N = json::tree::number;
+    using R = N::repr_t;
+
+    switch (node.repr ()) {
+    case R::REAL: validate_number<N::real_t> (node.real (), schema); break;
+    case R::SINT: validate_number<N::sint_t> (node.sint (), schema); break;
+    case R::UINT: validate_number<N::uint_t> (node.uint (), schema); break;
     }
 }
 
@@ -304,7 +341,7 @@ validate (json::tree::node &node,
     if (type != schema.cend ()) {
         // check against a single named type
         if (type->second->is_string ()) {
-            auto a = type->second->as_string ();
+            const auto &a = type->second->as_string ();
             auto b = to_string (node.type ());
 
             if (a != b)

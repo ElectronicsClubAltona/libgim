@@ -54,7 +54,7 @@ main (void)
         tap.expect (!ref["integer"].is_string (),   "integer not is_string");
         tap.expect (
             util::exactly_equal (
-                (unsigned)ref["integer"].as_number ().native (),
+                (unsigned)ref["integer"].as_number ().as_uint (),
                 1u
             ),
             "integer value equality"
@@ -102,7 +102,7 @@ main (void)
         tap.expect (!ref["double"].is_string (),  "double not is_string");
         tap.expect (
             util::exactly_equal (
-                ref["double"].as_number ().native (),
+                ref["double"].as_number ().as<double> (),
                 3.14
             ),
             "double value equality"
