@@ -29,12 +29,14 @@ static const unsigned ITERATIONS = 32; // each iteration performs two feistel ro
 
 
 //-----------------------------------------------------------------------------
-static constexpr uint32_t mix (uint32_t Z,
-                               uint32_t Y,
-                               uint32_t S,
-                               size_t E,
-                               size_t P,
-                               const uint32_t *restrict K)
+static constexpr
+uint32_t
+mix (uint32_t Z,
+     uint32_t Y,
+     uint32_t S,
+     size_t E,
+     size_t P,
+     const uint32_t *restrict K)
 {
     return ((Z >> 5 ^ Y << 2) + (Y >> 3 ^ Z << 4)) ^ ((S ^ Y) + (K[(P & 3) ^ E] ^ Z));
 }
