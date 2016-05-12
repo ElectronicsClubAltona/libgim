@@ -275,7 +275,9 @@ util::operator<< (std::ostream &os, util::uri::component c)
         case util::uri::QUERY:      return os << "QUERY";
         case util::uri::FRAGMENT:   return os << "FRAGMENT";
 
-        default:
+        case util::uri::NUM_COMPONENTS:
             unreachable ();
     }
+
+    unreachable ();
 }

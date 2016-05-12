@@ -40,9 +40,9 @@ operator<< (std::ostream &os, SHA1::state_t t) {
     switch (t) {
         case SHA1::READY:       os << "READY";      return os;
         case SHA1::FINISHED:    os << "FINISHED";   return os;
-        default:
-            unreachable ();
     }
+
+    unreachable ();
 }
 
 

@@ -199,14 +199,13 @@ namespace util {
     operator<< (std::ostream& os, const util::version::release_t r)
     {
         switch (r) {
-            case version::ALPHA:        return os << 'a';
-            case version::BETA:         return os << 'b';
-            case version::GAMMA:        return os << 'g';
-            case version::PRODUCTION:   return os;
-
-            default:
-                unreachable ();
+        case version::ALPHA:        return os << 'a';
+        case version::BETA:         return os << 'b';
+        case version::GAMMA:        return os << 'g';
+        case version::PRODUCTION:   return os;
         }
+
+        unreachable ();
     }
 }
 
