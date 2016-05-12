@@ -47,6 +47,12 @@ AC_C_BIGENDIAN
 AC_DEFINE([_XOPEN_SOURCE], [700], [use POSIX 2008])
 AC_DEFINE([__STDC_FORMAT_MACROS], [1], [use C format macros])
 
+## Find some POSIX functions that windows doesn't support
+AS_IF([test "x${host_os}" != "xmingw32"],[
+    AC_SEARCH_LIBS([dlopen], [dl], [], [AC_MSG_ERROR([unable to find dl library])])
+    AC_SEARCH_LIBS([shm_open], [rt], [], [AC_MSG_ERROR([unable to find shm library])])
+])
+
 AC_FUNC_MMAP
 
 AC_CHECK_FUNC([backtrace])
@@ -80,13 +86,7 @@ AC_SEARCH_LIBS([clock_gettime], [rt], [], [
 
 AC_SEARCH_LIBS([cos], [m], [], [AC_MSG_ERROR([unable to find the maths library])])
 
-## Find some POSIX functions that windows doesn't support
-AS_IF([test "x${host_os}" != "xmingw32"],[
-    AC_SEARCH_LIBS([dlopen], [dl])
-    AC_SEARCH_LIBS([shm_open], [rt], [], [AC_MSG_ERROR([unable to find shm library])])
-])
-
-AC_SEARCH_LIBS([htons], [ws2_32], [], [AC_MSG_ERROR([unable to find htnos library])])
+AC_SEARCH_LIBS([htons], [ws2_32], [], [AC_MSG_ERROR([unable to find htons library])])
 
 
 ###############################################################################
