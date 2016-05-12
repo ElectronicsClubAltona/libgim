@@ -1,8 +1,16 @@
 AC_DEFUN([NC_PLATFORM],[
     AC_CANONICAL_HOST
 
-    AM_CONDITIONAL([PLATFORM_WIN32], [test "x$host_os" = "xmingw32"])
-    AM_CONDITIONAL([PLATFORM_LINUX], [test "x$host_os" = "xlinux-gnu"])
+    AS_CASE([x${host_os}],
+        [xmingw*],      [nc_cv_platform_win32=yes],
+        [xlinux*],      [nc_cv_platform_linux=yes],
+        [xfreebsd*],    [nc_cv_platform_freebsd=yes],
+        [AC_MSG_ERROR([unhandled  platform ${host_os}])]
+    )
+
+    AM_CONDITIONAL([PLATFORM_WIN32],    [test "x$nc_cv_platform_win32"   = "xyes"])
+    AM_CONDITIONAL([PLATFORM_LINUX],    [test "x$nc_cv_platform_linux"   = "xyes"])
+    AM_CONDITIONAL([PLATFORM_FREEBSD],  [test "x$nc_cv_platform_freebsd" = "xyes"])
 
     AS_CASE([$host_os],
         [mingw32], [
@@ -20,7 +28,12 @@ AC_DEFUN([NC_PLATFORM],[
             AX_APPEND_LINK_FLAGS([-static-libgcc], [], [-Werror])
         ],
 
-        [linux-gnu], [ ],
+        [freebsd*], [
+            AX_APPEND_COMPILE_FLAGS([-I/usr/local/include])
+            AX_APPEND_LINK_FLAGS([-L/usr/local/lib])
+        ],
+
+        [linux*], [:],
 
         [AC_MSG_ERROR([Unknown platform])]
     )

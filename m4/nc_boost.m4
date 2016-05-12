@@ -12,7 +12,7 @@ dnl sets BOOST_LDFLAGS and BOOST_CPPFLAGS
 
 AC_DEFUN([NC_BOOST], [
     AC_REQUIRE([NC_BOOST_BASE])
-    
+
     for _nc_boost_lib in $2; do
         AS_CASE([$_nc_boost_lib],
             ["system"],     [NC_BOOST_SYSTEM],
@@ -32,11 +32,11 @@ AC_DEFUN([NC_BOOST], [
 
         dnl append flags and libs if they don't already exist
         for flag in $_CPPFLAGS; do
-            [[[ ! " $BOOST_CPPFLAGS " =~ " $flag " ]]] && BOOST_CPPFLAGS="$BOOST_CPPFLAGS $flag"
+            AS_IF([test " $BOOST_CPPFLAGS " != " *$flag* "], [BOOST_CPPFLAGS="$BOOST_CPPFLAGS $flag"])
         done
 
         for lib in $_LDFLAGS; do
-            [[[ ! " $BOOST_LDFLAGS " =~ " $lib " ]]] && BOOST_LDFLAGS="$BOOST_LDFLAGS $lib"
+            AS_IF([test " $BOOST_LDFLAGS " != " *$lib* "], [BOOST_LDFLAGS="$BOOST_LDFLAGS $lib"])
         done
     done
 ])

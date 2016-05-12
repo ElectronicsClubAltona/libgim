@@ -1,6 +1,6 @@
 AC_DEFUN([NC_WARNINGS],[
-    AX_REQUIRE_DEFINED([AX_APPEND_COMPILE_FLAGS])
-    AX_REQUIRE_DEFINED([AX_COMPILER_VENDOR])
+    AC_REQUIRE([AX_APPEND_COMPILE_FLAGS])
+    AC_REQUIRE([AX_COMPILER_VENDOR])
 
     AX_COMPILER_VENDOR
 
@@ -32,8 +32,22 @@ AC_DEFUN([NC_WARNINGS],[
     AX_APPEND_COMPILE_FLAGS([-Wunsafe-loop-optimizations], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wunused-but-set-variable], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wunused-parameter], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-Wuseless-cast], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wpessimizing-move], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wswitch-enum], [], [-Werror])
+
+    dnl gcc-6.1.0 warnings
+    AX_APPEND_COMPILE_FLAGS([-Wshift-negative-value], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wnull-dereference], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wduplicated-cond], [], [-Werror])
+
+    dnl useless-cast isn't usable on gcc-6.1 due to spurious warnings
+    dnl see gcc#70844
+    AX_APPEND_COMPILE_FLAGS([-Wuseless-cast], [], [-Werror])
+
+    dnl clang 3.7.1 warnings
+    AX_APPEND_COMPILE_FLAGS([-Wshorten-64-to-32], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wdeprecated], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wcovered-switch-default], [], [-Werror])
 
     # -------------------------------------------------------------------------
     # Required extensions
@@ -76,5 +90,7 @@ AC_DEFUN([NC_WARNINGS],[
         AX_APPEND_COMPILE_FLAGS([-Wsuggest-final-types], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-Wsuggest-final-methods], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-Wsuggest-override], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-Wweak-vtables], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-Wpadded], [], [-Werror])
     ], [])
 ])

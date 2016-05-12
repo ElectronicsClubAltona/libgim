@@ -75,15 +75,25 @@ AC_DEFUN([NC_OPTIMISATION],[
         AX_APPEND_COMPILE_FLAGS([-fslp-vectorize-aggressive], [], [-Werror])
 
         # loop hosting/distribution
-        AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribute-patterns], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-floop-nest-optimize], [], [-Werror])
+
         AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribution], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-ftree-loop-distribute-patterns], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-ftree-loop-im], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-ftree-loop-if-convert-stores], [], [-Werror])
-        AX_APPEND_COMPILE_FLAGS([-ftree-loop-linear], [], [-Werror])
+
+        AX_APPEND_COMPILE_FLAGS([-fivopts], [], [-Werror])
 
         AX_APPEND_COMPILE_FLAGS([-funsafe-loop-optimizations], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-floop-interchange], [], [-Werror])
 
-        # safety removal for performance
+        AX_APPEND_COMPILE_FLAGS([-fpredictive-commoning], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-funswitch-loops], [], [-Werror])
+
+        # options that require substantial time/memory
+        AX_APPEND_COMPILE_FLAGS([-fipa-pta])
+
+        dnl # safety removal for performance
         AX_APPEND_COMPILE_FLAGS([-fno-stack-protector], [], [-Werror])
     ])
 

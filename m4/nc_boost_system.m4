@@ -5,10 +5,10 @@ AC_DEFUN([NC_BOOST_SYSTEM], [
         for lib in boost_system; do
             AC_MSG_CHECKING([if boost system library is $lib])
 
-            nc_save_cflags=$CFLAGS
+            nc_save_cxxflags=$CXXFLAGS
             nc_save_libs=$LIBS
 
-            CFLAGS="$CFLAGS $BOOST_BASE_CPPFLAGS"
+            CXXFLAGS="$CXXFLAGS $BOOST_BASE_CPPFLAGS"
             LIBS="$LIBS $BOOST_BASE_LDFLAGS -l$lib"
 
             dnl Try to call boost::system::throws as it appears to be extern
@@ -19,10 +19,10 @@ AC_DEFUN([NC_BOOST_SYSTEM], [
                 [nc_cv_boost_system=no]
             )
 
-            BOOST_SYSTEM_CPPFLAGS=$CFLAGS
+            BOOST_SYSTEM_CPPFLAGS=$CXXFLAGS
             BOOST_SYSTEM_LDFLAGS=-l$lib
 
-            CFLAGS=$nc_save_cflags
+            CXXFLAGS=$nc_save_cxxflags
             LIBS=$nc_save_libs
 
             AC_MSG_RESULT([$nc_cv_boost_system])
