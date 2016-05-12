@@ -5,6 +5,8 @@
 #include "types.hpp"
 #include "maths.hpp"
 
+#include <array>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Check that null options don't strhrow anything

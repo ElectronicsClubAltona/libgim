@@ -20,6 +20,7 @@
 #include "random.hpp"
 #include "stream.hpp"
 
+#include <array>
 #include <map>
 
 //-----------------------------------------------------------------------------
