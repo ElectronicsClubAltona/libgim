@@ -55,11 +55,13 @@ AC_DEFUN([NC_WARNINGS],[
     #AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
     #AX_APPEND_COMPILE_FLAGS([-Wno-vla-extension], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wno-vla], [], [-Werror])
-    AX_APPEND_COMPILE_FLAGS([-Wno-gnu-anonymous-struct])
 
+    dnl GCC will happily compile with any "-Wno" argument, so enable GCC-isms
+    dnl only if we aren't GCC
     AS_IF([test "x$ax_cv_cxx_compiler_vendor" != "xgnu"], [
         AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-Wno-flexible-array-extensions], [], [-Werror])
+        AX_APPEND_COMPILE_FLAGS([-Wno-gnu-anonymous-struct])
         AX_APPEND_COMPILE_FLAGS([-Wno-gnu-conditional-omitted-operand], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-Wno-gnu-empty-struct], [], [-Werror])
         AX_APPEND_COMPILE_FLAGS([-Wno-gnu-flexible-array-union-member], [], [-Werror])
