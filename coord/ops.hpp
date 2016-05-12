@@ -181,7 +181,9 @@ namespace util {
         typename U,                                         \
         template <size_t,typename> class K,                 \
         typename = std::enable_if_t<                        \
-            is_coord<K>::value,                             \
+            is_coord<K>::value &&                           \
+            std::is_arithmetic<T>::value &&                 \
+            std::is_arithmetic<U>::value,                   \
             void                                            \
         >                                                   \
     >                                                       \
@@ -306,7 +308,11 @@ namespace util {
     template <
         size_t S,
         typename T,
-        typename U
+        typename U,
+        typename = std::enable_if_t<
+            std::is_arithmetic<T>::value && std::is_arithmetic<U>::value,
+            void
+	>
     >
     constexpr
     vector<S,std::common_type_t<T,U>>
