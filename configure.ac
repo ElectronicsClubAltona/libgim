@@ -44,9 +44,6 @@ AC_C_BIGENDIAN
 ###############################################################################
 ## Platform features
 
-AC_DEFINE([_XOPEN_SOURCE], [700], [use POSIX 2008])
-AC_DEFINE([__STDC_FORMAT_MACROS], [1], [use C format macros])
-
 ## Find some POSIX functions that windows doesn't support
 AS_IF([test "x${host_os}" != "xmingw32"],[
     AC_SEARCH_LIBS([dlopen], [dl], [], [AC_MSG_ERROR([unable to find dl library])])
