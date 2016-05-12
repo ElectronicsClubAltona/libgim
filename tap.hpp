@@ -41,7 +41,7 @@ namespace util { namespace TAP {
         void expect (bool, const std::string &fmt, Args&&...);
 
         template <typename ...Args>
-        void expect (std::function<bool(Args...)>, Args&&..., const std::string& msg);
+        void expect (const std::function<bool(Args...)>&, Args&&..., const std::string& msg);
 
         //---------------------------------------------------------------------
         template <typename T, typename U, typename ...Args>
