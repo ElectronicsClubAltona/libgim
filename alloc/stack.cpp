@@ -11,13 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "./stack.hpp"
 
 #include "../debug.hpp"
 #include "../pointer.hpp"
+#include "../cast.hpp"
 
 using util::alloc::stack;
 
@@ -65,7 +66,7 @@ stack::allocate (size_t bytes, size_t alignment)
     // store the total size and record the new stack head
     record record;
     record.as_bytes = ptr - sizeof (record::offset_t);
-    *record.as_uint32 = ptr - m_cursor;
+    *record.as_uint32 = trunc_cast<uint32_t> (ptr - m_cursor);
 
     m_cursor = ptr + bytes;
 

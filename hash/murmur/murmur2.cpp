@@ -86,7 +86,7 @@ util::hash::murmur2::hash_32 (const void *restrict key,
 
     // setup
     static const auto m = constants<uint32_t>::m;
-    uint32_t h = seed ^ len;
+    uint32_t h = seed ^ uint32_t (len);
 
     // body
     auto cursor = reinterpret_cast<const uint32_t*> (key);

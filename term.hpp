@@ -31,12 +31,12 @@ namespace util { namespace term {
         struct graphics : public code {
             static constexpr char terminator = 'm';
 
-            enum layer {
+            enum layer : char {
                 FOREGROUND = 30,
                 BACKGROUND = 40
             };
 
-            enum hue {
+            enum hue : char {
                 BLACK   = 0,
                 RED     = 1,
                 GREEN   = 2,

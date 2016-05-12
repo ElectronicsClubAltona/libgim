@@ -168,9 +168,9 @@ util::version::parse (const char *str) {
 bool
 version::operator> (const version &rhs) const
 {
-    unsigned int count = min (size, rhs.size);
+    auto count = util::min (size, rhs.size);
 
-    for (unsigned int i = 0; i < count; ++i)
+    for (decltype(count) i = 0; i < count; ++i)
         if (components[i] < rhs.components[i])
             return false;
 

@@ -92,7 +92,7 @@ namespace util {
             void clear (void);
 
             /// Returns the number of callbacks connected.
-            unsigned int size (void) const;
+            size_t size (void) const;
             bool empty (void) const;
 
             /// Execute all callbacks

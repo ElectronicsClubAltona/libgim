@@ -23,7 +23,7 @@
 namespace util {
     class stringid {
         public:
-            typedef unsigned id_t;
+            typedef size_t id_t;
 
             id_t add  (std::string);
             id_t find (const std::string&) const;

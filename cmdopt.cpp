@@ -14,9 +14,10 @@
  * Copyright 2013-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "cmdopt.hpp"
+#include "./cmdopt.hpp"
 
-#include "debug.hpp"
+#include "./cast.hpp"
+#include "./debug.hpp"
 
 #include <cstring>
 #include <iostream>
@@ -407,7 +408,7 @@ parser::print_help (const int argc,
     {
         return std::get<std::string> (a).size () < std::get<std::string> (b).size ();
     });
-    int longwidth = std::get<std::string> (*largestwidth).size ();
+    auto longwidth = std::get<std::string> (*largestwidth).size ();
 
     // find the longest example text
     auto largestexample = std::max_element (
@@ -421,7 +422,7 @@ parser::print_help (const int argc,
         return example_a.size () > example_b.size ();
     });
 
-    int longexample = std::get<std::unique_ptr<option::base>> (*largestexample)->example ().size ();
+    auto longexample = std::get<std::unique_ptr<option::base>> (*largestexample)->example ().size ();
 
     // field width requires an alignment. we don't care about preserving
     // state as we're about to bail anyway
@@ -455,13 +456,13 @@ parser::print_help (const int argc,
         else
             std::cout << '\t';
 
-        std::cout << std::setw (longwidth);
+        std::cout << std::setw (trunc_cast<int> (longwidth));
         if (l != std::cend (m_long))
             std::cout << std::get<std::string> (*l) << '\t';
         else
             std::cout << ' ' << '\t';
 
-        std::cout << std::setw (longexample) << ptr->example () << '\t'
+        std::cout << std::setw (trunc_cast<int> (longexample)) << ptr->example () << '\t'
                   << std::setw (0) << std::get<std::string> (o)
                   << '\n';
     }

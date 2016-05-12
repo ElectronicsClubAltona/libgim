@@ -21,6 +21,7 @@
 #include "term.hpp"
 #include "time.hpp"
 #include "types.hpp"
+#include "cast.hpp"
 
 #include <array>
 #include <ctime>
@@ -211,7 +212,7 @@ util::log (util::level_t level, const std::string &msg)
 
         std::cerr << time_string << " ["
             << level_colour (level)
-            << std::setw (level_width ())
+            << std::setw (trunc_cast<int> (level_width ()))
             << std::left
             << level
             << std::setw (0)
@@ -254,5 +255,5 @@ util::scoped_timer::~scoped_timer ()
     auto finish = util::nanoseconds ();
     auto duration = finish - m_start;
 
-    log (m_level, "%fs, %s", duration / 1'000'000'000.f, m_message);
+    log (m_level, "%fs, %s", float (duration) / 1'000'000'000.f, m_message);
 }

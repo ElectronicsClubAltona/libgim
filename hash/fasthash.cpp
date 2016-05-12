@@ -65,6 +65,6 @@ uint32_t
 util::hash::fasthash::hash32 (const void *restrict data, size_t len, uint32_t seed)
 {
     uint64_t h = hash64 (data, len, seed);
-    return h - (h >> 32);
+    return (h & 0xffffffff) - (h >> 32);
 }
 

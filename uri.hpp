@@ -34,7 +34,7 @@ namespace util {
         class parse_error : public std::runtime_error
         { using runtime_error::runtime_error; };
 
-        enum component : unsigned {
+        enum component {
             SCHEME,
             AUTHORITY,
             PATH,

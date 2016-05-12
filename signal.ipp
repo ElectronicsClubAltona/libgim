@@ -140,7 +140,7 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     /// Returns the number of callbacks connected.
     template <typename F, template <typename> class C>
-    unsigned int
+    size_t
     signal<F,C>::size (void) const
     {
         return m_children.size ();

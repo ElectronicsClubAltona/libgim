@@ -260,7 +260,7 @@ util::operator>> (const json::tree::node &node, util::vector<S,T> &v)
     // compiler error at this point in release mode, so we dumb it down a
     // little.
     for (size_t i = 0; i < array.size (); ++i)
-        v.data[i] = static_cast<T> (array[i].as_number ().native ());
+        v.data[i] = array[i].as<T> ();
 
     return node;
 }
