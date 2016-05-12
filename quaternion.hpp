@@ -27,24 +27,11 @@ namespace util {
     template <typename T>
     struct quaternion {
         ///////////////////////////////////////////////////////////////////////
-        // Disable GCC warnings about validity of anonyous structures in
-        // unions. Push comes to shove I'll manually redsign everything to
-        // keep this syntax anyway.
-#pragma GCC diagnostic push
-#if defined(COMPILER_GCC)
-#pragma GCC diagnostic ignored "-pedantic"
-#endif
-#if defined(COMPILER_CLANG)
-#pragma GCC diagnostic ignored "-Wgnu"
-#endif
-
         union {
             struct { T w, x, y, z; };
             struct { T a, b, c, d; };
             T data[4];
         };
-
-#pragma GCC diagnostic pop
 
         static const quaternion IDENTITY;
 

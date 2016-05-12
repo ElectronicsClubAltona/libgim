@@ -43,10 +43,6 @@ namespace util {
         static constexpr size_t dimension = S;
         static constexpr size_t elements = extent_t::elements + point_t::elements;
 
-#if defined(COMPILER_CLANG)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
-#endif
         union {
             struct {
                 point_t  p;
@@ -57,9 +53,6 @@ namespace util {
                 T w, h;
             };
         };
-#if defined(COMPILER_CLANG)
-#pragma GCC diagnostic pop
-#endif
 
         //---------------------------------------------------------------------
         region () = default;

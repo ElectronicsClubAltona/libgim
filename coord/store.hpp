@@ -24,15 +24,6 @@
 #include <cstdlib>
 
 namespace util { namespace coord {
-    ///////////////////////////////////////////////////////////////////////
-    // Disable GCC warnings about validity of anonymous structures in
-    // unions. Push comes to shove I'll manually redsign everything to
-    // keep this syntax anyway.
-#if defined(COMPILER_CLANG)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
-#endif
-
     ///////////////////////////////////////////////////////////////////////////
     // Coordinate storage class.
     //
@@ -177,10 +168,6 @@ namespace util { namespace coord {
             struct { T w,h,d; };
         };
     };
-
-#if defined(COMPILER_CLANG)
-#pragma GCC diagnostic pop
-#endif
 } }
 
 #endif

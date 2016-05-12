@@ -55,6 +55,7 @@ AC_DEFUN([NC_WARNINGS],[
     #AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
     #AX_APPEND_COMPILE_FLAGS([-Wno-vla-extension], [], [-Werror])
     AX_APPEND_COMPILE_FLAGS([-Wno-vla], [], [-Werror])
+    AX_APPEND_COMPILE_FLAGS([-Wno-gnu-anonymous-struct])
 
     AS_IF([test "x$ax_cv_cxx_compiler_vendor" != "xgnu"], [
         AX_APPEND_COMPILE_FLAGS([-Wno-c99-extensions], [], [-Werror])
