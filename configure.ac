@@ -75,7 +75,7 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM(
 ])
 
 
-AC_SEARCH_LIBS([clock_gettime], [rt], [], [
+AC_SEARCH_LIBS([clock_gettime], [rt c], [], [
     # windows doesn't have clock_gettime
     AS_IF([test "x${host_os}" != "xmingw32"], [
         AC_MSG_ERROR([unable to find the clock library])
