@@ -61,7 +61,7 @@ AM_CONDITIONAL([HAVE_CAPTURESTACKBACKTRACE], [test "x$ac_cv_func_RtlCaptureStack
 
 AC_MSG_CHECKING([for SymFromAddr])
 save_LIBS="$LIBS"
-LIBS+=-ldbghelp
+LIBS="${LIBS} -ldbghelp"
 AC_LINK_IFELSE([AC_LANG_PROGRAM(
 [
 #include <windows.h>
