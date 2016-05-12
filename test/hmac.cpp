@@ -274,7 +274,7 @@ main (int, char**)
     util::TAP::logger tap;
 
     for (size_t i = 0; i < elems (TESTS); ++i)
-        tap.expect (TESTS[i].fun (TESTS[i].key, TESTS[i].dat, TESTS[i].res), "standard test vector");
+        tap.expect (TESTS[i].fun (TESTS[i].key, TESTS[i].dat, TESTS[i].res), "standard test vector %u", i);
 
     return tap.status ();
 }
