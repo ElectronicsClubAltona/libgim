@@ -1,6 +1,4 @@
 AC_DEFUN([NC_CXX],[
-    AC_REQUIRE([AX_COMPILER_VENDOR])
-
     AX_CHECK_COMPILE_FLAG(
         [-std=c++1z],
         [AX_APPEND_FLAG([-std=c++1z], [CXXFLAGS])],
@@ -16,11 +14,11 @@ AC_DEFUN([NC_CXX],[
     AC_C_RESTRICT
     AC_C_INLINE
 
-    AX_COMPILER_VENDOR
-    AS_IF(
-        [test "x$ax_cv_cxx_compiler_vendor" == "xclang"],
-        [AX_APPEND_COMPILE_FLAGS([-stdlib=libc++])]
-    )
+    AC_ARG_ENABLE([libcxx], [AS_HELP_STRING([--enable-libcxx], [use clang's cxx library])])
+
+    AS_IF([test "x${enable_libcxx}" == "xyes"], [
+        AX_APPEND_COMPILE_FLAGS([-stdlib=libc++])
+    ])
 
     AX_APPEND_COMPILE_FLAGS([-fvisibility=hidden], [], [-Werror])
 ])
