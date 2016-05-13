@@ -90,7 +90,7 @@ circular::circular (size_t bytes)
     // pre-allocate a sufficiently large virtual memory block. it doesn't
     // matter much what flags we use because we'll just be overwriting it
     // shortly.
-    m_begin = reinterpret_cast<char*> (mmap (nullptr, bytes * 2, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0));
+    m_begin = reinterpret_cast<char*> (mmap (nullptr, bytes * 2, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
     if (MAP_FAILED == m_begin)
         errno_error::throw_code ();
 
@@ -143,4 +143,4 @@ size_t
 circular::size (void) const
 {
     return m_end - m_begin;
-}   
+}
