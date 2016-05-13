@@ -58,6 +58,14 @@ namespace util {
             BUILD = 3
         };
 
+// fuck you too freebsd
+#ifdef major
+#undef major
+#endif
+#ifdef minor
+#undef minor
+#endif
+
         unsigned major (void) const;
         unsigned minor (void) const;
         unsigned point (void) const;
