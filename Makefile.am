@@ -392,6 +392,7 @@ TEST_BIN = 			\
     test/crypto/tea		\
     test/crypto/xtea		\
     test/crypto/xxtea		\
+    test/exe			\
     test/extent			\
     test/fixed			\
     test/float			\
