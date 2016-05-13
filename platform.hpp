@@ -23,6 +23,9 @@
 #elif defined(__linux__) || defined (__linux)
     #define PLATFORM_LINUX
     #define PLATFORM_SUFFIX "linux"
+#elif defined(__FreeBSD__)
+    #define PLATFORM_FREEBSD
+    #define PLATFORM_SUFFIX "freebsd"
 #elif defined(__WIN32) || defined (_WIN32)
     #define PLATFORM_WIN32
     #define PLATFORM_SUFFIX "win32"
