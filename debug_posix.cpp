@@ -120,6 +120,6 @@ void
 force_console (void)
 {
     if (!isatty (fileno (stdout))) {
-        LOG_ERROR ("expected debugging under a console");
+        LOG_WARN ("expected debugging under a console");
     }
 }
