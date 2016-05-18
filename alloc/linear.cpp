@@ -28,6 +28,9 @@ linear::linear (void *begin, void *end):
     m_end    (reinterpret_cast<char*> (end)),
     m_cursor (reinterpret_cast<char*> (begin))
 {
+    CHECK_NEZ (begin);
+    CHECK_NEZ (end);
+
     CHECK_LE (begin, end);
 }
 
@@ -41,6 +44,8 @@ linear::allocate (size_t bytes, size_t alignment)
         throw std::bad_alloc ();
 
     m_cursor = ptr + bytes;
+
+    CHECK_NEZ (ptr);
     return ptr;
 }
 
