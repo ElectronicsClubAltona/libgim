@@ -12,7 +12,7 @@
  * limitations under the License.
  *
  * Copyright:
- *      2014, Danny Robson <danny@nerdcruft.net>
+ *      2014-2016, Danny Robson <danny@nerdcruft.net>
  */
 
 #include <iostream>
@@ -35,7 +35,9 @@
 #include "hash/sha2.hpp"
 
 
-static const char* NAMES[] = {
+///////////////////////////////////////////////////////////////////////////////
+static
+const char* NAMES[] = {
     "adler32",
     "bsdsum",
     "crc32",
@@ -49,8 +51,11 @@ static const char* NAMES[] = {
 };
 
 
-static void
-compute (std::istream &is, const char *name) {
+///////////////////////////////////////////////////////////////////////////////
+static
+void
+compute (std::istream &is, const char *name)
+{
     std::vector<uint8_t> data {
         std::istream_iterator<uint8_t> (is),
         std::istream_iterator<uint8_t> ( )
@@ -95,6 +100,7 @@ compute (std::istream &is, const char *name) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 enum {
     ARG_CMD,
     ARG_HASH,
@@ -119,7 +125,8 @@ print_usage (int argc, char **argv)
 
 //-----------------------------------------------------------------------------
 int
-main (int argc, char **argv) {
+main (int argc, char **argv)
+{
     if (argc != NUM_ARGS) {
         print_usage (argc, argv);
         return EXIT_FAILURE;
