@@ -31,7 +31,7 @@ namespace util { namespace hash {
     public:
         SHA256();
 
-        void update (const uint8_t *restrict, size_t) noexcept;
+        void update (const void *restrict, size_t) noexcept;
         void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
 
         void finish (void);

@@ -135,10 +135,13 @@ SHA1::update (
 
 //-----------------------------------------------------------------------------
 void
-SHA1::update (const uint8_t *restrict data, size_t size) noexcept
+SHA1::update (const void *restrict _data, size_t size) noexcept
 {
+    CHECK (_data);
     CHECK_EQ (state, READY);
     CHECK_GE (std::numeric_limits<decltype(total)>::max () - total, size);
+
+    auto data = static_cast<const uint8_t *restrict> (_data);
 
     while (size > 0) {
         // Copy the data into the remaining available buffer slots

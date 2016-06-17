@@ -82,22 +82,16 @@ MD2::update (const uint8_t *restrict first, const uint8_t *restrict last) noexce
 
 
 //-----------------------------------------------------------------------------
-void
-MD2::update (const void *restrict data, size_t size) noexcept
-{
-    update (static_cast<const uint8_t*> (data), size);
-}
-
-
-//-----------------------------------------------------------------------------
 static const size_t M_OFFSET = 16;
 static const size_t M_LENGTH = 16;
 
 
 //-----------------------------------------------------------------------------
 void
-MD2::update (const uint8_t *restrict data, size_t size) noexcept
+MD2::update (const void *restrict _data, size_t size) noexcept
 {
+    auto data = static_cast<const uint8_t *restrict> (_data);
+
     uint8_t *M = X + M_OFFSET;
     size_t offset = m_total % M_LENGTH;
     size_t remain = M_LENGTH - offset;

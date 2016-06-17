@@ -31,7 +31,6 @@ namespace util { namespace hash {
         MD4();
 
         void update (const void    *restrict data, size_t len) noexcept;
-        void update (const uint8_t *restrict data, size_t len) noexcept;
         void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
 
         void finish (void);

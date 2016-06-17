@@ -63,9 +63,11 @@ RIPEMD::update (
 
 //-----------------------------------------------------------------------------
 void
-RIPEMD::update (const uint8_t *restrict data, size_t len) noexcept
+RIPEMD::update (const void *restrict _data, size_t len) noexcept
 {
-    CHECK (data);
+    CHECK (_data);
+
+    auto data = static_cast<const uint8_t *restrict> (_data);
 
     size_t cursor = 0;
 
