@@ -20,15 +20,21 @@
 #include "../debug.hpp"
 
 
+///////////////////////////////////////////////////////////////////////////////
 uint32_t
-crc32 (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
-{
-    not_implemented ();
+util::hash::crc32 (
+    const uint8_t *restrict first,
+    const uint8_t *restrict last
+) noexcept {
+    CHECK_LE (first, last);
+
+    return crc32 (first, last - first);
 }
 
 
+//-----------------------------------------------------------------------------
 uint32_t
-crc32 (const void *restrict, size_t) {
+util::hash::crc32 (const void *restrict, size_t) {
     not_implemented ();
 
     /*

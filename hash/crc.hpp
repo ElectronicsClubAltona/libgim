@@ -14,14 +14,15 @@
  * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_CRC_HPP
-#define __UTIL_CRC_HPP
+#ifndef __UTIL_HASH_CRC_HPP
+#define __UTIL_HASH_CRC_HPP
 
 #include <cstdint>
 #include <cstdlib>
 
-uint32_t crc32 (const void *restrict data, size_t bytes);
-uint32_t crc32 (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
-
+namespace util { namespace hash {
+    uint32_t crc32 (const void *restrict data, size_t bytes);
+    uint32_t crc32 (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+} }
 #endif
 

@@ -21,8 +21,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 uint16_t
-bsdsum (const uint8_t *const restrict first, const uint8_t *const restrict last)
-{
+util::hash::bsdsum (
+    const uint8_t *const restrict first,
+    const uint8_t *const restrict last
+) {
     CHECK_LE (first, last);
 
     uint16_t accum = 0;
@@ -38,7 +40,7 @@ bsdsum (const uint8_t *const restrict first, const uint8_t *const restrict last)
 
 ///////////////////////////////////////////////////////////////////////////////
 uint16_t
-bsdsum (const void *restrict data, size_t size)
+util::hash::bsdsum (const void *restrict data, size_t size)
 {
     return bsdsum (
         static_cast<const uint8_t*> (data),

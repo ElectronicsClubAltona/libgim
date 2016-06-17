@@ -20,7 +20,9 @@
 #include <cstdint>
 #include <cstdlib>
 
-extern uint32_t adler32 (const void* restrict, size_t);
-extern uint32_t adler32 (const uint8_t *first, const uint8_t *last);
+namespace util { namespace hash {
+    uint32_t adler32 (const void* restrict, size_t);
+    uint32_t adler32 (const uint8_t *first, const uint8_t *last);
+} }
 
 #endif

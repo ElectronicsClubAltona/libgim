@@ -14,13 +14,15 @@
  * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_BSDSUM_HPP
-#define __UTIL_BSDSUM_HPP
+#ifndef __UTIL_HASH_BSDSUM_HPP
+#define __UTIL_HASH_BSDSUM_HPP
 
 #include <cstdint>
 #include <cstdlib>
 
-uint16_t bsdsum (const void *restrict data, size_t bytes);
-uint16_t bsdsum (const uint8_t *restrict first, const uint8_t *restrict last);
+namespace util { namespace hash {
+    uint16_t bsdsum (const void *restrict data, size_t bytes);
+    uint16_t bsdsum (const uint8_t *restrict first, const uint8_t *restrict last);
+} }
 
 #endif
