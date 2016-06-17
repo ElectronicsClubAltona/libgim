@@ -99,17 +99,29 @@ enum {
     ARG_CMD,
     ARG_HASH,
     ARG_INPUT,
+
+    NUM_ARGS
 };
 
 
+//-----------------------------------------------------------------------------
+void
+print_usage (int argc, char **argv)
+{
+    (void)argc;
+
+    std::cerr << argv[ARG_CMD] << " [";
+    for (auto name: NAMES)
+        std::cerr << name << "|";
+    std::cerr << "] <input>\n";
+}
+
+
+//-----------------------------------------------------------------------------
 int
 main (int argc, char **argv) {
-    if (argc < ARG_INPUT) {
-        std::cerr << argv[ARG_CMD] << " [";
-        for (auto name: NAMES)
-            std::cerr << name << "|";
-        std::cerr << "] <input>\n";
-
+    if (argc != NUM_ARGS) {
+        print_usage (argc, argv);
         return EXIT_FAILURE;
     }
 
