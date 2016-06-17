@@ -20,39 +20,37 @@
 
 #include <array>
 
-namespace util {
-    namespace hash {
-        class RIPEMD {
-            public:
-                typedef std::array<uint8_t,20> digest_t;
+namespace util { namespace hash {
+    class RIPEMD {
+        public:
+            typedef std::array<uint8_t,20> digest_t;
 
-            public:
-                RIPEMD();
+        public:
+            RIPEMD();
 
-                void update (const uint8_t*, size_t);
-                void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+            void update (const uint8_t*, size_t);
+            void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
 
-                digest_t digest (void) const;
-                void finish (void);
-                void reset (void);
+            digest_t digest (void) const;
+            void finish (void);
+            void reset (void);
 
-            protected:
-                void transform ();
+        protected:
+            void transform ();
 
-                bool m_finished;
+            bool m_finished;
 
-                uint32_t m_state[5];
-                uint64_t m_length;
+            uint32_t m_state[5];
+            uint64_t m_length;
 
-                struct {
-                    union {
-                        uint32_t d32[16];
-                        uint8_t  d08[64];
-                    };
-                    size_t size;
-                } m_buffer;
-        };
-    }
-}
+            struct {
+                union {
+                    uint32_t d32[16];
+                    uint8_t  d08[64];
+                };
+                size_t size;
+            } m_buffer;
+    };
+} }
 
 #endif

@@ -21,32 +21,30 @@
 #include <cstdint>
 
 
-namespace util {
-    namespace hash {
-        class MD2 {
-            public:
-                typedef std::array<uint8_t,16> digest_t;
+namespace util { namespace hash {
+    class MD2 {
+        public:
+            typedef std::array<uint8_t,16> digest_t;
 
-            public:
-                MD2 ();
+        public:
+            MD2 ();
 
-                void update (const uint8_t *data, size_t len);
-                void update (const void    *data, size_t len);
-                void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+            void update (const uint8_t *data, size_t len);
+            void update (const void    *data, size_t len);
+            void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
 
-                void finish (void);
-                digest_t digest (void) const;
-                void reset (void);
+            void finish (void);
+            digest_t digest (void) const;
+            void reset (void);
 
-            private:
-                void transform (void);
+        private:
+            void transform (void);
 
-                uint64_t m_total;
+            uint64_t m_total;
 
-                uint8_t C[16];
-                uint8_t X[48];
-        };
-    }
-}
+            uint8_t C[16];
+            uint8_t X[48];
+    };
+} }
 
 #endif

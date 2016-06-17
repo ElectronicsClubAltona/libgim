@@ -21,40 +21,38 @@
 #include <cstdint>
 #include <cstdlib>
 
-namespace util {
-    namespace hash {
-        class MD5 {
-            public:
-                typedef std::array<uint8_t,16> digest_t;
-                static const size_t BLOCK_SIZE  = 64;
-                static const size_t DIGEST_SIZE = 16;
+namespace util { namespace hash {
+    class MD5 {
+    public:
+        typedef std::array<uint8_t,16> digest_t;
+        static const size_t BLOCK_SIZE  = 64;
+        static const size_t DIGEST_SIZE = 16;
 
-            public:
-                MD5();
+    public:
+        MD5();
 
-                void update (const void    *data, size_t len);
-                void update (const uint8_t *data, size_t len);
-                void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+        void update (const void    *data, size_t len);
+        void update (const uint8_t *data, size_t len);
+        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
 
-                void finish (void);
-                digest_t digest (void) const;
-                void reset (void);
+        void finish (void);
+        digest_t digest (void) const;
+        void reset (void);
 
-            private:
-                void transform (void);
+    private:
+        void transform (void);
 
-                uint64_t m_total;
-                std::array<uint32_t, 4> ABCD;
+        uint64_t m_total;
+        std::array<uint32_t, 4> ABCD;
 
-                union {
-                    uint32_t X [16];
-                    uint8_t  Xb[64];
-                };
+        union {
+            uint32_t X [16];
+            uint8_t  Xb[64];
         };
-    }
+    };
 
     typedef uint8_t md5_t;
     md5_t md5 (const void *restrict data, size_t len);
-}
+} }
 
 #endif

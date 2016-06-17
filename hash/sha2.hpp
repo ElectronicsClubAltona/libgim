@@ -21,35 +21,33 @@
 #include <array>
 #include <cstdint>
 
-namespace util {
-    namespace hash {
-        class SHA256 {
-            public:
-                typedef std::array<uint8_t,32> digest_t;
+namespace util { namespace hash {
+    class SHA256 {
+    public:
+        typedef std::array<uint8_t,32> digest_t;
 
-            public:
-                SHA256();
+    public:
+        SHA256();
 
-                void update (const uint8_t *, size_t);
-                void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+        void update (const uint8_t *, size_t);
+        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
 
-                void finish (void);
-                digest_t digest (void) const;
+        void finish (void);
+        digest_t digest (void) const;
 
-                void reset (void);
+        void reset (void);
 
-            private:
-                void process (void);
+    private:
+        void process (void);
 
-                uint64_t m_total;
-                std::array<uint32_t, 8> H;
+        uint64_t m_total;
+        std::array<uint32_t, 8> H;
 
-                union {
-                    std::array<uint32_t, 16> M;
-                    std::array<uint8_t,  64> C;
-                };
+        union {
+            std::array<uint32_t, 16> M;
+            std::array<uint8_t,  64> C;
         };
-    }
-}
+    };
+} }
 
 #endif
