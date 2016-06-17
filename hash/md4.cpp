@@ -17,8 +17,9 @@
 #include "md4.hpp"
 
 #include "../bitwise.hpp"
-#include "../types.hpp"
+#include "../debug.hpp"
 #include "../endian.hpp"
+#include "../types.hpp"
 
 #include <cstring>
 
@@ -68,6 +69,15 @@ MD4::reset (void) {
     ABCD[3] = DEFAULT_D;
 
     memset (Xb, 0, sizeof (Xb));
+}
+
+
+void
+MD4::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
+{
+    CHECK_LE (first, last);
+
+    update (first, last - first);
 }
 
 

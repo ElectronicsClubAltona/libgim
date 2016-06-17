@@ -34,6 +34,7 @@ namespace util {
 
                 void update (const void    *data, size_t len);
                 void update (const uint8_t *data, size_t len);
+                void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
 
                 void finish (void);
                 digest_t digest (void) const;

@@ -18,6 +18,7 @@
 #include "sha2.hpp"
 
 #include "../bitwise.hpp"
+#include "../debug.hpp"
 #include "../endian.hpp"
 
 #include <algorithm>
@@ -167,6 +168,15 @@ SHA256::SHA256 ():
     m_total (0)
 {
     std::copy (std::begin (H_256), std::end (H_256), std::begin (H));
+}
+
+
+void
+SHA256::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
+{
+    CHECK_LE (first, last);
+
+    update (first, last - first);
 }
 
 

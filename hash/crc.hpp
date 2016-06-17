@@ -20,7 +20,8 @@
 #include <cstdint>
 #include <cstdlib>
 
-uint32_t crc32 (const void *restrict, size_t);
+uint32_t crc32 (const void *restrict data, size_t bytes);
+uint32_t crc32 (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
 
 #endif
 

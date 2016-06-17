@@ -49,6 +49,16 @@ RIPEMD::reset (void) {
 
 ///////////////////////////////////////////////////////////////////////////////
 void
+RIPEMD::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
+{
+    CHECK_LE (first, last);
+
+    update (first, last - first);
+}
+
+
+//-----------------------------------------------------------------------------
+void
 RIPEMD::update (const uint8_t *data, size_t len) {
     CHECK (data);
 

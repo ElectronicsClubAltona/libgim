@@ -20,6 +20,7 @@
 #include <cstdint>
 #include <cstdlib>
 
-uint16_t bsdsum (const void *restrict, size_t);
+uint16_t bsdsum (const void *restrict data, size_t bytes);
+uint16_t bsdsum (const uint8_t *restrict first, const uint8_t *restrict last);
 
 #endif

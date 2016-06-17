@@ -103,6 +103,15 @@ MD5::reset (void) {
 
 
 void
+MD5::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
+{
+    CHECK_LE (first, last);
+
+    update (first, last - first);
+}
+
+
+void
 MD5::update (const void *data, size_t len)
     { MD5::update (static_cast<const uint8_t*> (data), len); }
 

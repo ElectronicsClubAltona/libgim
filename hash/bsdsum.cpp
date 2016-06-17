@@ -16,17 +16,33 @@
 
 #include "bsdsum.hpp"
 
+#include "../debug.hpp"
 
+
+///////////////////////////////////////////////////////////////////////////////
 uint16_t
-bsdsum (const void *restrict _data, size_t size) {
-    const uint8_t *restrict data = static_cast<const uint8_t*> (_data);
+bsdsum (const uint8_t *const restrict first, const uint8_t *const restrict last)
+{
+    CHECK_LE (first, last);
+
     uint16_t accum = 0;
 
-    for (size_t i = 0; i < size; ++i) {
+    for (auto cursor = first; cursor != last; ++cursor) {
         accum  = (accum >> 1u) | ((accum & 0x01u) << 15u);
-        accum += data[i];
+        accum += *cursor;
     }
 
     return accum;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+uint16_t
+bsdsum (const void *restrict data, size_t size)
+{
+    return bsdsum (
+        static_cast<const uint8_t*> (data),
+        static_cast<const uint8_t*> (data) + size
+    );
 }
 

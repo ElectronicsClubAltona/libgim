@@ -16,6 +16,7 @@
 
 #include "md2.hpp"
 
+#include "../debug.hpp"
 #include "../types.hpp"
 
 #include <array>
@@ -71,6 +72,16 @@ MD2::reset (void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+void
+MD2::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
+{
+    CHECK_LE (first, last);
+
+    update (first, last - first);
+}
+
+
+//-----------------------------------------------------------------------------
 void
 MD2::update (const void *data, size_t size)
 {

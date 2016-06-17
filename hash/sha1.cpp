@@ -106,6 +106,16 @@ SHA1::reset (void) {
 
 //-----------------------------------------------------------------------------
 void
+SHA1::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
+{
+    CHECK_LE (first, last);
+
+    update (first, last - first);
+}
+
+
+//-----------------------------------------------------------------------------
+void
 SHA1::update (const uint8_t *data, size_t size) {
     CHECK_EQ (state, READY);
     CHECK_GE (numeric_limits<decltype(total)>::max () - total, size);
