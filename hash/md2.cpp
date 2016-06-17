@@ -62,17 +62,20 @@ MD2::MD2 ()
 
 //-----------------------------------------------------------------------------
 void
-MD2::reset (void) {
+MD2::reset (void)
+{
     m_total = 0;
     fill (begin (C), end (C), 0);
     fill (begin (X), end (X), 0);
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 void
 MD2::update (const void *data, size_t size)
-    { update (static_cast<const uint8_t*> (data), size); }
+{
+    update (static_cast<const uint8_t*> (data), size);
+}
 
 
 //-----------------------------------------------------------------------------
@@ -82,7 +85,8 @@ static const size_t M_LENGTH = 16;
 
 //-----------------------------------------------------------------------------
 void
-MD2::update (const uint8_t *data, size_t size) {
+MD2::update (const uint8_t *data, size_t size)
+{
     uint8_t *M = X + M_OFFSET;
     size_t offset = m_total % M_LENGTH;
     size_t remain = M_LENGTH - offset;
@@ -112,18 +116,20 @@ MD2::update (const uint8_t *data, size_t size) {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 MD2::digest_t
-MD2::digest (void) const {
+MD2::digest (void) const
+{
     digest_t d;
     memcpy (d.data (), X, sizeof (d));
     return d;
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 void
-MD2::transform (void) {
+MD2::transform (void)
+{
     uint8_t *M = X + M_OFFSET;
 
     // Update the checksum.
@@ -150,8 +156,10 @@ MD2::transform (void) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
-MD2::finish (void) {
+MD2::finish (void)
+{
     uint8_t *M = X + M_OFFSET;
 
     // Append the padding bytes
