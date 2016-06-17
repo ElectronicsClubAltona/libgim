@@ -82,12 +82,12 @@ MD4::update (const uint8_t *restrict first, const uint8_t *restrict last) noexce
 
 
 void
-MD4::update (const void *data, size_t size)
+MD4::update (const void *restrict data, size_t size) noexcept
     { update (static_cast<const uint8_t*> (data), size); }
 
 
 void
-MD4::update (const uint8_t *data, size_t size) {
+MD4::update (const uint8_t *restrict data, size_t size) noexcept {
     size_t offset = m_total % sizeof (Xb);
     size_t remain = sizeof (Xb) - offset;
 

@@ -24,7 +24,7 @@ uint16_t
 util::hash::bsdsum (
     const uint8_t *const restrict first,
     const uint8_t *const restrict last
-) {
+) noexcept {
     CHECK_LE (first, last);
 
     uint16_t accum = 0;
@@ -40,7 +40,7 @@ util::hash::bsdsum (
 
 ///////////////////////////////////////////////////////////////////////////////
 uint16_t
-util::hash::bsdsum (const void *restrict data, size_t size)
+util::hash::bsdsum (const void *restrict data, size_t size) noexcept
 {
     return bsdsum (
         static_cast<const uint8_t*> (data),

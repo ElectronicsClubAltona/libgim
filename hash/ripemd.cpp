@@ -59,7 +59,7 @@ RIPEMD::update (const uint8_t *restrict first, const uint8_t *restrict last) noe
 
 //-----------------------------------------------------------------------------
 void
-RIPEMD::update (const uint8_t *data, size_t len) {
+RIPEMD::update (const uint8_t *restrict data, size_t len) noexcept {
     CHECK (data);
 
     size_t cursor = 0;

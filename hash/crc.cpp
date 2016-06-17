@@ -34,7 +34,7 @@ util::hash::crc32 (
 
 //-----------------------------------------------------------------------------
 uint32_t
-util::hash::crc32 (const void *restrict, size_t) {
+util::hash::crc32 (const void *restrict, size_t) noexcept {
     not_implemented ();
 
     /*

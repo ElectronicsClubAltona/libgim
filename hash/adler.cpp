@@ -24,7 +24,7 @@ static const unsigned MODULUS = 65521;
 
 ///////////////////////////////////////////////////////////////////////////////
 uint32_t
-util::hash::adler32 (const void* restrict _data, size_t _size)
+util::hash::adler32 (const void* restrict _data, size_t _size) noexcept
 {
     return adler32 (
         static_cast<const uint8_t*> (_data),
@@ -35,7 +35,7 @@ util::hash::adler32 (const void* restrict _data, size_t _size)
 
 //-----------------------------------------------------------------------------
 uint32_t
-util::hash::adler32 (const uint8_t *first, const uint8_t *last)
+util::hash::adler32 (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
 {
     return fletcher<32, MODULUS, 1, 0> (first, last - first);
 }

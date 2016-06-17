@@ -112,12 +112,12 @@ MD5::update (const uint8_t *restrict first, const uint8_t *restrict last) noexce
 
 
 void
-MD5::update (const void *data, size_t len)
+MD5::update (const void *restrict data, size_t len) noexcept
     { MD5::update (static_cast<const uint8_t*> (data), len); }
 
 
 void
-MD5::update (const uint8_t *data, size_t size) {
+MD5::update (const uint8_t *restrict data, size_t size) noexcept {
     size_t offset = m_total % sizeof (Xb);
     size_t remain = sizeof (Xb) - offset;
 

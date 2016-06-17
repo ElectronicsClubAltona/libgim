@@ -116,7 +116,7 @@ SHA1::update (const uint8_t *restrict first, const uint8_t *restrict last) noexc
 
 //-----------------------------------------------------------------------------
 void
-SHA1::update (const uint8_t *data, size_t size) {
+SHA1::update (const uint8_t *restrict data, size_t size) noexcept {
     CHECK_EQ (state, READY);
     CHECK_GE (numeric_limits<decltype(total)>::max () - total, size);
 

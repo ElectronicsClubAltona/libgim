@@ -181,7 +181,7 @@ SHA256::update (const uint8_t *restrict first, const uint8_t *restrict last) noe
 
 
 void
-SHA256::update (const uint8_t *data, size_t length) {
+SHA256::update (const uint8_t *restrict data, size_t length) noexcept {
     while (length) {
         size_t buffered = m_total % sizeof (M);
         size_t chunk = std::min (sizeof (M) - buffered, length);

@@ -21,7 +21,7 @@
 #include <cstdlib>
 
 namespace util { namespace hash {
-    uint32_t crc32 (const void *restrict data, size_t bytes);
+    uint32_t crc32 (const void *restrict data, size_t bytes) noexcept;
     uint32_t crc32 (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
 } }
 #endif
