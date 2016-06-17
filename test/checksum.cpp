@@ -32,8 +32,8 @@ main (int, char**) {
     util::TAP::logger tap;
 
     for (unsigned i = 0; i < elems (TESTS); ++i) {
-        tap.expect_eq (TESTS[i].adler, adler32 (TESTS[i].data, TESTS[i].size), "adler checksum");
-        tap.expect_eq (TESTS[i].bsd,   bsdsum  (TESTS[i].data, TESTS[i].size), "bsdsum checksum");
+        tap.expect_eq (TESTS[i].adler, util::hash::adler32 (TESTS[i].data, TESTS[i].size), "adler checksum");
+        tap.expect_eq (TESTS[i].bsd,   util::hash::bsdsum  (TESTS[i].data, TESTS[i].size), "bsdsum checksum");
     }
 
     return EXIT_SUCCESS;
