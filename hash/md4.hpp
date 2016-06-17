@@ -20,6 +20,8 @@
 #include <array>
 #include <cstdint>
 
+
+///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace hash {
     class MD4 {
     public:

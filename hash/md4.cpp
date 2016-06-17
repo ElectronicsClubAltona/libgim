@@ -25,30 +25,44 @@
 
 
 using util::hash::MD4;
-using std::array;
 
 
+///////////////////////////////////////////////////////////////////////////////
 // Auxiliary functions for each set of rounds
-static inline uint32_t
+static constexpr
+uint32_t
 F (uint32_t X, uint32_t Y, uint32_t Z)
-    { return (X & Y) | (~X & Z); }
+{
+    return (X & Y) | (~X & Z);
+}
 
-static inline uint32_t
+
+//-----------------------------------------------------------------------------
+static constexpr
+uint32_t
 G (uint32_t X, uint32_t Y, uint32_t Z)
-    { return (X & Y) | (X & Z) | (Y & Z); }
+{
+    return (X & Y) | (X & Z) | (Y & Z);
+}
 
-static inline uint32_t
+
+//-----------------------------------------------------------------------------
+static constexpr
+uint32_t
 H (uint32_t X, uint32_t Y, uint32_t Z)
-    { return X ^ Y ^ Z; }
+{
+    return X ^ Y ^ Z;
+}
 
 
-// Constructors and setup functions
-static const uint32_t DEFAULT_A = 0x67452301;
-static const uint32_t DEFAULT_B = 0xefcdab89;
-static const uint32_t DEFAULT_C = 0x98badcfe;
-static const uint32_t DEFAULT_D = 0x10325476;
+//-----------------------------------------------------------------------------
+static constexpr uint32_t DEFAULT_A = 0x67452301;
+static constexpr uint32_t DEFAULT_B = 0xefcdab89;
+static constexpr uint32_t DEFAULT_C = 0x98badcfe;
+static constexpr uint32_t DEFAULT_D = 0x10325476;
 
 
+///////////////////////////////////////////////////////////////////////////////
 MD4::MD4 ()
 {
     reset ();
@@ -59,8 +73,10 @@ MD4::MD4 ()
 }
 
 
+//-----------------------------------------------------------------------------
 void
-MD4::reset (void) {
+MD4::reset (void)
+{
     m_total = 0;
 
     ABCD[0] = DEFAULT_A;
@@ -72,6 +88,7 @@ MD4::reset (void) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
 MD4::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
 {
@@ -81,13 +98,18 @@ MD4::update (const uint8_t *restrict first, const uint8_t *restrict last) noexce
 }
 
 
+//-----------------------------------------------------------------------------
 void
 MD4::update (const void *restrict data, size_t size) noexcept
-    { update (static_cast<const uint8_t*> (data), size); }
+{
+    update (static_cast<const uint8_t*> (data), size);
+}
 
 
+//-----------------------------------------------------------------------------
 void
-MD4::update (const uint8_t *restrict data, size_t size) noexcept {
+MD4::update (const uint8_t *restrict data, size_t size) noexcept
+{
     size_t offset = m_total % sizeof (Xb);
     size_t remain = sizeof (Xb) - offset;
 
@@ -116,16 +138,20 @@ MD4::update (const uint8_t *restrict data, size_t size) noexcept {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 MD4::digest_t
-MD4::digest (void) const {
+MD4::digest (void) const
+{
     digest_t d;
     memcpy (d.data (), ABCD.data(), sizeof (ABCD));
     return d;
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
-MD4::transform (void) {
+MD4::transform (void)
+{
     uint32_t A = ABCD[0],
              B = ABCD[1],
              C = ABCD[2],
@@ -213,8 +239,10 @@ MD4::transform (void) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
-MD4::finish (void) {
+MD4::finish (void)
+{
     uint64_t bits = m_total * 8;
 
     {
@@ -246,4 +274,3 @@ MD4::finish (void) {
         transform ();
     }
 }
-

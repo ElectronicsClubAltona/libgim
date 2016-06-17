@@ -29,14 +29,12 @@
 
 
 using util::hash::SHA1;
-using std::numeric_limits;
-using std::begin;
-using std::end;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 std::ostream&
-operator<< (std::ostream &os, SHA1::state_t t) {
+operator<< (std::ostream &os, SHA1::state_t t)
+{
     switch (t) {
         case SHA1::READY:       os << "READY";      return os;
         case SHA1::FINISHED:    os << "FINISHED";   return os;
@@ -46,37 +44,53 @@ operator<< (std::ostream &os, SHA1::state_t t) {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 // Logical function for sequence of rounds
-static inline uint32_t
+static constexpr
+uint32_t
 f_00 (uint32_t B, uint32_t C, uint32_t D)
-    { return (B & C) | (~B & D); }
-
-
-static inline uint32_t
-f_20 (uint32_t B, uint32_t C, uint32_t D)
-    { return B ^ C ^ D; }
-
-
-static inline uint32_t
-f_40 (uint32_t B, uint32_t C, uint32_t D)
-    { return (B & C) | (B & D) | (C & D); }
-
-
-static inline uint32_t
-f_60 (uint32_t B, uint32_t C, uint32_t D)
-    { return B ^ C ^ D; }
+{
+    return (B & C) | (~B & D);
+}
 
 
 //-----------------------------------------------------------------------------
+static constexpr
+uint32_t
+f_20 (uint32_t B, uint32_t C, uint32_t D)
+{
+    return B ^ C ^ D;
+}
+
+
+//-----------------------------------------------------------------------------
+static constexpr
+uint32_t
+f_40 (uint32_t B, uint32_t C, uint32_t D)
+{
+    return (B & C) | (B & D) | (C & D);
+}
+
+
+//-----------------------------------------------------------------------------
+static constexpr
+uint32_t
+f_60 (uint32_t B, uint32_t C, uint32_t D)
+{
+    return B ^ C ^ D;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 // Constant words for sequence of rounds
-static const uint32_t K_00 = 0x5A827999;
-static const uint32_t K_20 = 0x6ED9EBA1;
-static const uint32_t K_40 = 0x8F1BBCDC;
-static const uint32_t K_60 = 0xCA62C1D6;
+static constexpr uint32_t K_00 = 0x5A827999;
+static constexpr uint32_t K_20 = 0x6ED9EBA1;
+static constexpr uint32_t K_40 = 0x8F1BBCDC;
+static constexpr uint32_t K_60 = 0xCA62C1D6;
 
 
-static const uint32_t DEFAULT_H[] = {
+static
+constexpr uint32_t DEFAULT_H[] = {
     0x67452301,
     0xEFCDAB89,
     0x98BADCFE,
@@ -84,19 +98,22 @@ static const uint32_t DEFAULT_H[] = {
     0xC3D2E1F0
 };
 
-static const size_t BLOCK_WORDS = 16;
-static const size_t BLOCK_BYTES = BLOCK_WORDS * sizeof (uint32_t);
+
+static constexpr size_t BLOCK_WORDS = 16;
+static constexpr size_t BLOCK_BYTES = BLOCK_WORDS * sizeof (uint32_t);
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 SHA1::SHA1()
 {
     reset ();
 }
 
 
+//-----------------------------------------------------------------------------
 void
-SHA1::reset (void) {
+SHA1::reset (void)
+{
     total = 0;
     state = READY;
 
@@ -104,9 +121,11 @@ SHA1::reset (void) {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 void
-SHA1::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
+SHA1::update (
+    const uint8_t *restrict first,
+    const uint8_t *restrict last) noexcept
 {
     CHECK_LE (first, last);
 
@@ -116,9 +135,10 @@ SHA1::update (const uint8_t *restrict first, const uint8_t *restrict last) noexc
 
 //-----------------------------------------------------------------------------
 void
-SHA1::update (const uint8_t *restrict data, size_t size) noexcept {
+SHA1::update (const uint8_t *restrict data, size_t size) noexcept
+{
     CHECK_EQ (state, READY);
-    CHECK_GE (numeric_limits<decltype(total)>::max () - total, size);
+    CHECK_GE (std::numeric_limits<decltype(total)>::max () - total, size);
 
     while (size > 0) {
         // Copy the data into the remaining available buffer slots
@@ -139,9 +159,10 @@ SHA1::update (const uint8_t *restrict data, size_t size) noexcept {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 void
-SHA1::process (void) {
+SHA1::process (void)
+{
     CHECK_EQ (total % BLOCK_BYTES, 0u);
 
     // Byteswap the raw input we have buffered ready for arithmetic
@@ -186,9 +207,10 @@ SHA1::process (void) {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 void
-SHA1::finish (void) {
+SHA1::finish (void)
+{
     size_t offset = total % BLOCK_BYTES;
     size_t used   = total * 8;
 
@@ -226,9 +248,10 @@ SHA1::finish (void) {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 SHA1::digest_t
-SHA1::digest (void) const {
+SHA1::digest (void) const
+{
     CHECK_EQ (state, FINISHED);
 
     return { {

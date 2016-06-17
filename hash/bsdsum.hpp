@@ -20,6 +20,8 @@
 #include <cstdint>
 #include <cstdlib>
 
+
+///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace hash {
     uint16_t bsdsum (const void *restrict data, size_t bytes) noexcept;
     uint16_t bsdsum (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;

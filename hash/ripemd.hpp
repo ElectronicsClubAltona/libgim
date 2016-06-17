@@ -20,6 +20,8 @@
 
 #include <array>
 
+
+///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace hash {
     class RIPEMD {
         public:

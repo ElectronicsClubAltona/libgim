@@ -33,8 +33,10 @@ RIPEMD::RIPEMD()
 }
 
 
+//-----------------------------------------------------------------------------
 void
-RIPEMD::reset (void) {
+RIPEMD::reset (void)
+{
     m_state[0] = 0x67452301u;
     m_state[1] = 0xEFCDAB89u;
     m_state[2] = 0x98BADCFEu;
@@ -49,7 +51,9 @@ RIPEMD::reset (void) {
 
 ///////////////////////////////////////////////////////////////////////////////
 void
-RIPEMD::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
+RIPEMD::update (
+    const uint8_t *restrict first,
+    const uint8_t *restrict last) noexcept
 {
     CHECK_LE (first, last);
 
@@ -59,7 +63,8 @@ RIPEMD::update (const uint8_t *restrict first, const uint8_t *restrict last) noe
 
 //-----------------------------------------------------------------------------
 void
-RIPEMD::update (const uint8_t *restrict data, size_t len) noexcept {
+RIPEMD::update (const uint8_t *restrict data, size_t len) noexcept
+{
     CHECK (data);
 
     size_t cursor = 0;
@@ -82,31 +87,56 @@ RIPEMD::update (const uint8_t *restrict data, size_t len) noexcept {
         throw std::length_error ("exceeded maximum message length");
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////
 static constexpr
 uint32_t
-f1 (uint32_t x, uint32_t y, uint32_t z) { return x  ^ y ^ z; }
+f1 (uint32_t x, uint32_t y, uint32_t z)
+{
+    return x  ^ y ^ z;
+}
 
+
+//-----------------------------------------------------------------------------
 static constexpr
 uint32_t
-f2 (uint32_t x, uint32_t y, uint32_t z) { return (x & y) | (~x & z); }
+f2 (uint32_t x, uint32_t y, uint32_t z)
+{
+    return (x & y) | (~x & z);
+}
 
+
+//-----------------------------------------------------------------------------
 static constexpr
 uint32_t
-f3 (uint32_t x, uint32_t y, uint32_t z) { return (x | ~y) ^ z; }
+f3 (uint32_t x, uint32_t y, uint32_t z)
+{
+    return (x | ~y) ^ z;
+}
 
+
+//-----------------------------------------------------------------------------
 static constexpr
 uint32_t
-f4 (uint32_t x, uint32_t y, uint32_t z) { return (x & z) | (y & ~z); }
+f4 (uint32_t x, uint32_t y, uint32_t z)
+{
+    return (x & z) | (y & ~z);
+}
 
+
+//-----------------------------------------------------------------------------
 static constexpr
 uint32_t
-f5 (uint32_t x, uint32_t y, uint32_t z) { return x ^ (y | ~z); }
+f5 (uint32_t x, uint32_t y, uint32_t z)
+{
+    return x ^ (y | ~z);
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
 void
-RIPEMD::transform (void) {
+RIPEMD::transform (void)
+{
     CHECK_EQ (m_buffer.size, sizeof (m_buffer.d32));
 
     // Use: boolean function f
@@ -338,7 +368,8 @@ RIPEMD::transform (void) {
 
 ///////////////////////////////////////////////////////////////////////////////
 void
-RIPEMD::finish (void) {
+RIPEMD::finish (void)
+{
     // Ensure the length wouldn't overflow if converted to bits. We need to
     // grab this before there's a chance it gets overwritten.
     CHECK_EQ (m_length >> sizeof(m_length) * 8 - 3, 0u);
@@ -377,7 +408,8 @@ RIPEMD::finish (void) {
 
 ///////////////////////////////////////////////////////////////////////////////
 RIPEMD::digest_t
-RIPEMD::digest (void) const {
+RIPEMD::digest (void) const
+{
     digest_t d;
     memcpy (d.data (), m_state, sizeof (m_state));
     return d;

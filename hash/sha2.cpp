@@ -171,6 +171,7 @@ SHA256::SHA256 ():
 }
 
 
+//-----------------------------------------------------------------------------
 void
 SHA256::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
 {
@@ -180,8 +181,10 @@ SHA256::update (const uint8_t *restrict first, const uint8_t *restrict last) noe
 }
 
 
+//-----------------------------------------------------------------------------
 void
-SHA256::update (const uint8_t *restrict data, size_t length) noexcept {
+SHA256::update (const uint8_t *restrict data, size_t length) noexcept
+{
     while (length) {
         size_t buffered = m_total % sizeof (M);
         size_t chunk = std::min (sizeof (M) - buffered, length);
@@ -196,8 +199,10 @@ SHA256::update (const uint8_t *restrict data, size_t length) noexcept {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
-SHA256::finish (void) {
+SHA256::finish (void)
+{
     // Append a single 1 bit followed by 0s.
     size_t buffered = m_total % sizeof (M);
     size_t used     = m_total * 8;
@@ -235,8 +240,10 @@ SHA256::finish (void) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
-SHA256::process (void) {
+SHA256::process (void)
+{
     CHECK_EQ (m_total % sizeof (M), 0u);
 
     // Initialise the message schedule, W
@@ -281,8 +288,10 @@ SHA256::process (void) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 SHA256::digest_t
-SHA256::digest (void) const {
+SHA256::digest (void) const
+{
     digest_t out;
 
     auto cursor = out.begin ();

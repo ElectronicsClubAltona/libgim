@@ -24,29 +24,44 @@
 using util::hash::MD5;
 
 
+///////////////////////////////////////////////////////////////////////////////
 // Per-round mixing functions
-static inline uint32_t
+static constexpr
+uint32_t
 F (uint32_t x, uint32_t y, uint32_t z)
-    //{ return (x & y) | (~x & z); }
-    { return z ^ (x & (y ^ z)); }
+{
+    return z ^ (x & (y ^ z));
+}
 
 
-static inline uint32_t
+//-----------------------------------------------------------------------------
+static constexpr
+uint32_t
 G (uint32_t x, uint32_t y, uint32_t z)
-    //{ return (x & z) | (y & ~z); }
-    { return F (z, x, y); }
+{
+    return F (z, x, y);
+}
 
 
-static inline uint32_t
+//-----------------------------------------------------------------------------
+static constexpr
+uint32_t
 H (uint32_t x, uint32_t y, uint32_t z)
-    { return x ^ y ^ z; }
+{
+    return x ^ y ^ z;
+}
 
 
-static inline uint32_t
+//-----------------------------------------------------------------------------
+static constexpr
+uint32_t
 I (uint32_t x, uint32_t y, uint32_t z)
-    { return y ^ (x | ~z); }
+{
+    return y ^ (x | ~z);
+}
 
 
+///////////////////////////////////////////////////////////////////////////////
 // Mixing constants for all rounds. They are defined as 'abs(sin(i)) * max_uint32', but we use the
 // literals to avoid any stupid maths issues during compilation.
 const std::array<uint32_t, 65> T = { {
@@ -78,21 +93,24 @@ const std::array<uint32_t, 65> T = { {
 } };
 
 
-
+//-----------------------------------------------------------------------------
 static const uint32_t DEFAULT_A = 0x67452301;
 static const uint32_t DEFAULT_B = 0xefcdab89;
 static const uint32_t DEFAULT_C = 0x98badcfe;
 static const uint32_t DEFAULT_D = 0x10325476;
 
 
+///////////////////////////////////////////////////////////////////////////////
 MD5::MD5()
 {
     reset ();
 }
 
 
+//-----------------------------------------------------------------------------
 void
-MD5::reset (void) {
+MD5::reset (void)
+{
     m_total = 0;
 
     ABCD[0] = DEFAULT_A;
@@ -102,6 +120,7 @@ MD5::reset (void) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
 MD5::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
 {
@@ -111,13 +130,18 @@ MD5::update (const uint8_t *restrict first, const uint8_t *restrict last) noexce
 }
 
 
+//-----------------------------------------------------------------------------
 void
 MD5::update (const void *restrict data, size_t len) noexcept
-    { MD5::update (static_cast<const uint8_t*> (data), len); }
+{
+    MD5::update (static_cast<const uint8_t*> (data), len);
+}
 
 
+//-----------------------------------------------------------------------------
 void
-MD5::update (const uint8_t *restrict data, size_t size) noexcept {
+MD5::update (const uint8_t *restrict data, size_t size) noexcept
+{
     size_t offset = m_total % sizeof (Xb);
     size_t remain = sizeof (Xb) - offset;
 
@@ -146,8 +170,10 @@ MD5::update (const uint8_t *restrict data, size_t size) noexcept {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 MD5::digest_t
-MD5::digest (void) const {
+MD5::digest (void) const
+{
     static_assert (sizeof (ABCD) == sizeof (digest_t),
                    "Hash state must be the same size as the final digest");
 
@@ -157,8 +183,10 @@ MD5::digest (void) const {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
-MD5::finish (void) {
+MD5::finish (void)
+{
     uint64_t bits = m_total * 8;
 
     {
@@ -192,8 +220,10 @@ MD5::finish (void) {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
-MD5::transform (void) {
+MD5::transform (void)
+{
     uint32_t A = ABCD[0],
              B = ABCD[1],
              C = ABCD[2],

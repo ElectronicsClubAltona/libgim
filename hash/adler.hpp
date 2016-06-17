@@ -20,6 +20,8 @@
 #include <cstdint>
 #include <cstdlib>
 
+
+///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace hash {
     uint32_t adler32 (const void* restrict, size_t) noexcept;
     uint32_t adler32 (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;

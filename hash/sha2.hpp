@@ -21,6 +21,8 @@
 #include <array>
 #include <cstdint>
 
+
+///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace hash {
     class SHA256 {
     public:
