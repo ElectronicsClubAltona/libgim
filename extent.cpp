@@ -20,7 +20,8 @@
 #include "./maths.hpp"
 #include "./stream.hpp"
 
-#include <cmath>
+#include <algorithm>
+#include <numeric>
 
 using util::extent;
 using util::extent_range;
