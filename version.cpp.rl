@@ -37,14 +37,40 @@ version::version ():
 
 
 //-----------------------------------------------------------------------------
-version::version (unsigned int _major,
-                  unsigned int _minor):
-    size (0),
-    components { _major, _minor },
-    release (PRODUCTION)
+version::version (unsigned _major,
+                  unsigned _minor,
+                  unsigned _point,
+                  unsigned _build):
+    components { _major, _minor, _point, _build }
 {
-    components[MAJOR] = _major;
-    components[MINOR] = _minor;
+    size = 4u;
+}
+
+
+//-----------------------------------------------------------------------------
+version::version (unsigned _major,
+                  unsigned _minor,
+                  unsigned _point):
+    version (_major, _minor, _point, 0)
+{
+    size = 3u;
+}
+
+
+//-----------------------------------------------------------------------------
+version::version (unsigned _major,
+                  unsigned _minor):
+    version (_major, _minor, 0)
+{
+    size = 2u;
+}
+
+
+//-----------------------------------------------------------------------------
+version::version (unsigned _major):
+    version (_major, 0)
+{
+    size = 1u;
 }
 
 
@@ -95,16 +121,49 @@ unsigned version::build (void) const { return components[BUILD]; }
 
 ///////////////////////////////////////////////////////////////////////////////
 const unsigned*
-version::begin (void) const
+version::begin (void) const noexcept
 {
     return components.begin ();
 }
 
 
+//-----------------------------------------------------------------------------
 const unsigned*
-version::end (void) const
+version::end (void) const noexcept
 {
     return components.begin () + size;
+}
+
+
+//-----------------------------------------------------------------------------
+const unsigned*
+version::cbegin (void) const noexcept
+{
+    return begin ();
+}
+
+
+//-----------------------------------------------------------------------------
+const unsigned*
+version::cend (void) const noexcept
+{
+    return end ();
+}
+
+
+//-----------------------------------------------------------------------------
+const unsigned&
+version::operator[] (size_t i) const
+{
+    return components[i];
+}
+
+
+//-----------------------------------------------------------------------------
+unsigned&
+version::operator[] (size_t i)
+{
+    return components[i];
 }
 
 
@@ -141,7 +200,7 @@ version::end (void) const
 //-----------------------------------------------------------------------------
 util::version
 util::version::parse (const std::string& str) {
-    unsigned int accum = 0;
+    unsigned accum = 0;
 
     int         cs;
     const char *p   = str.data (),
@@ -166,30 +225,56 @@ util::version::parse (const char *str) {
 
 ///////////////////////////////////////////////////////////////////////////////
 bool
-version::operator> (const version &rhs) const
+version::operator< (const version &rhs) const noexcept
 {
     auto count = util::min (size, rhs.size);
 
-    for (decltype(count) i = 0; i < count; ++i)
-        if (components[i] < rhs.components[i])
-            return false;
+    // make sure each element we have in common is LT
+    for (decltype (count) i = 0; i < count; ++i)
+        if ((*this)[i] < rhs[i])
+            return true;
 
+    // if they have extra elements and they're not zeros then we must be LT
     if (size < rhs.size)
-        return false;
+        if (std::none_of (rhs.cbegin () + count, rhs.cend (), [] (auto i) { return i == 0; }))
+            return true;
 
-    if (release <= rhs.release)
-        return false;
+    // test if we have an earlier release schedule
+    if (release < rhs.release)
+        return true;
 
-    return true;
+    // we're equal or greater to rhs
+    return false;
 }
 
 
 //-----------------------------------------------------------------------------
 bool
-version::operator== (const version &rhs) const {
-    return components == rhs.components &&
-           size       == rhs.size   &&
-           release    == rhs.release;
+version::operator== (const version &rhs) const noexcept
+{
+    auto count = util::min (size, rhs.size);
+
+    bool front = std::equal (cbegin (), cbegin () + count, rhs.cbegin ());
+    bool left  = std::all_of (this->cbegin () + count, this->cend (), [] (auto i) { return i == 0; });
+    bool right = std::all_of (rhs.cbegin () + count, rhs.cend (), [] (auto i) { return i == 0; });
+
+    return front && (size > rhs.size ? left : right) && release == rhs.release;
+}
+
+
+//-----------------------------------------------------------------------------
+bool
+version::operator<= (const version &rhs) const noexcept
+{
+    return *this < rhs || *this == rhs;
+}
+
+
+//-----------------------------------------------------------------------------
+bool
+version::operator> (const version &rhs) const noexcept
+{
+    return !(*this <= rhs);
 }
 
 

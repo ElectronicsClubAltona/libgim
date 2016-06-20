@@ -42,7 +42,10 @@ namespace util {
         };
 
         version ();
-        version (unsigned int _major, unsigned int _minor);
+        version (unsigned _major);
+        version (unsigned _major, unsigned _minor);
+        version (unsigned _major, unsigned _minor, unsigned _point);
+        version (unsigned _major, unsigned _minor, unsigned _point, unsigned _build);
         explicit version (const std::string& str);
         explicit version (const char *str);
 
@@ -71,21 +74,26 @@ namespace util {
         unsigned point (void) const;
         unsigned build (void) const;
 
-        const unsigned* begin (void) const;
-        const unsigned* end   (void) const;
+        const unsigned* begin (void) const noexcept;
+        const unsigned* end   (void) const noexcept;
+        const unsigned* cbegin (void) const noexcept;
+        const unsigned* cend   (void) const noexcept;
+
+        const unsigned& operator[] (size_t) const;
+        unsigned& operator[] (size_t);
 
         size_t size;
         std::array<unsigned,4u> components;
-        release_t release;
+        release_t release = PRODUCTION;
 
         static version parse (const std::string&);
         static version parse (const char*);
 
-        bool operator<  (const version& rhs) const;
-        bool operator>  (const version& rhs) const;
-        bool operator>= (const version& rhs) const;
-        bool operator<= (const version& rhs) const;
-        bool operator== (const version& rhs) const;
+        bool operator<  (const version& rhs) const noexcept;
+        bool operator>  (const version& rhs) const noexcept;
+        bool operator>= (const version& rhs) const noexcept;
+        bool operator<= (const version& rhs) const noexcept;
+        bool operator== (const version& rhs) const noexcept;
     };
 
     std::ostream& operator<< (std::ostream& os, const util::version& rhs);
