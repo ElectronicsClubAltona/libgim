@@ -10,6 +10,7 @@ AC_INIT([util-cruft], [0.1.0], [danny@nerdcruft.net])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_REQUIRE_AUX_FILE([tap-driver.sh])
 AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIR([m4/nc])
 
 AC_USE_SYSTEM_EXTENSIONS
 AC_CANONICAL_HOST
