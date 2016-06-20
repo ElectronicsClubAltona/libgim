@@ -124,6 +124,8 @@ UTIL_FILES   =			\
     hash/hmac.hpp		\
     hash/hotp.cpp		\
     hash/hotp.hpp		\
+    hash/keccak.cpp		\
+    hash/keccak.hpp		\
     hash/md2.cpp		\
     hash/md2.hpp		\
     hash/md4.cpp		\
@@ -374,6 +376,7 @@ TEST_BIN = 			\
     test/geom/ray 		\
     test/hash/murmur		\
     test/hash/fasthash          \
+    test/hash/keccak		\
     test/hmac			\
     test/hotp			\
     test/hton			\
