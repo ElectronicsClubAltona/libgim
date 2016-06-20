@@ -23,8 +23,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace hash {
-    uint32_t crc32 (const void *restrict data, size_t bytes) noexcept;
-    uint32_t crc32 (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+    class crc32 {
+    public:
+        using digest_t = uint32_t;
+
+        void reset (void);
+
+        void update (const void *restrict data, size_t bytes) noexcept;
+        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+
+        void finish (void);
+
+        digest_t digest (void) const;
+    };
+
 } }
 #endif
 

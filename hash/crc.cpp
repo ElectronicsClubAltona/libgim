@@ -16,25 +16,32 @@
 
 #include "./crc.hpp"
 
-#include "../endian.hpp"
 #include "../debug.hpp"
+
+using util::hash::crc32;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-uint32_t
-util::hash::crc32 (
-    const uint8_t *restrict first,
-    const uint8_t *restrict last
-) noexcept {
+void
+crc32::reset (void)
+{ ; }
+
+
+///////////////////////////////////////////////////////////////////////////////
+void
+crc32::update (const uint8_t *restrict first,
+               const uint8_t *restrict last) noexcept
+{
     CHECK_LE (first, last);
 
-    return crc32 (first, last - first);
+    return update (first, last - first);
 }
 
 
 //-----------------------------------------------------------------------------
-uint32_t
-util::hash::crc32 (const void *restrict, size_t) noexcept {
+void
+crc32::update (const void *restrict, size_t) noexcept
+{
     not_implemented ();
 
     /*
@@ -67,3 +74,15 @@ util::hash::crc32 (const void *restrict, size_t) noexcept {
     }
     */
 }
+
+
+//-----------------------------------------------------------------------------
+void
+crc32::finish (void)
+{ not_implemented (); }
+
+
+//-----------------------------------------------------------------------------
+typename crc32::digest_t
+crc32::digest (void) const
+{ not_implemented (); }
