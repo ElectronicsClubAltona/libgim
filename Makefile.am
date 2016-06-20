@@ -53,6 +53,8 @@ UTIL_FILES   =			\
     coord/store.hpp		\
     crypto/arc4.cpp		\
     crypto/arc4.hpp		\
+    crypto/ice.cpp		\
+    crypto/ice.hpp		\
     crypto/tea.cpp		\
     crypto/tea.hpp		\
     crypto/xtea.cpp		\
@@ -360,6 +362,7 @@ TEST_BIN = 			\
     test/colour			\
     test/coord			\
     test/crypto/arc4		\
+    test/crypto/ice		\
     test/crypto/tea		\
     test/crypto/xtea		\
     test/crypto/xxtea		\
