@@ -54,7 +54,7 @@ util::TAP::logger::expect (std::function<bool(Args...)> test, Args&&... args, co
 //-----------------------------------------------------------------------------
 template <typename T, typename U, typename ...Args>
 void
-util::TAP::logger::expect_eq (const T&a, const U &b, const std::string &fmt, Args&... args)
+util::TAP::logger::expect_eq (const T&a, const U &b, const std::string &fmt, Args&&... args)
 {
     static const std::function<bool(const T&,const U&)> TEST = [] (const T &t, const U &u) -> bool {
         return almost_equal (t, u);
@@ -67,7 +67,7 @@ util::TAP::logger::expect_eq (const T&a, const U &b, const std::string &fmt, Arg
 //-----------------------------------------------------------------------------
 template <typename T, typename U, typename ...Args>
 void
-util::TAP::logger::expect_neq (const T&a, const U &b, const std::string &fmt, Args&... args)
+util::TAP::logger::expect_neq (const T&a, const U &b, const std::string &fmt, Args&&... args)
 {
     static const std::function<bool(const T&,const U&)> TEST = [] (const T &t, const U &u) -> bool {
         return !almost_equal (t, u);
@@ -84,7 +84,7 @@ void                                                            \
 util::TAP::logger::expect_ ## SUFFIX (const T &a,               \
                                       const U &b,               \
                                       const std::string &fmt,   \
-                                      Args&... args)            \
+                                      Args&&... args)           \
 {                                                               \
     static const std::function<                                 \
         bool(const T&,const U&)                                 \
@@ -111,7 +111,7 @@ TAP_TEST(le, <=)
 //-----------------------------------------------------------------------------
 template <typename T, typename ...Args>
 void
-util::TAP::logger::expect_nan (const T &t, const std::string &fmt, Args&... args)
+util::TAP::logger::expect_nan (const T &t, const std::string &fmt, Args&&... args)
 {
     bool(*func)(T) = std::isnan;
     expect<const T&> (
@@ -125,7 +125,7 @@ util::TAP::logger::expect_nan (const T &t, const std::string &fmt, Args&... args
 //-----------------------------------------------------------------------------
 template <typename T, typename ...Args>
 void
-util::TAP::logger::expect_nothrow (T &&t, const std::string &fmt, Args&... args)
+util::TAP::logger::expect_nothrow (T &&t, const std::string &fmt, Args&&... args)
 {
     bool success = true;
 
@@ -142,7 +142,7 @@ util::TAP::logger::expect_nothrow (T &&t, const std::string &fmt, Args&... args)
 //-----------------------------------------------------------------------------
 template <typename E, typename T, typename ...Args>
 void
-util::TAP::logger::expect_throw (T &&t, const std::string &fmt, Args&... args)
+util::TAP::logger::expect_throw (T &&t, const std::string &fmt, Args&&... args)
 {
     bool success = false;
 
