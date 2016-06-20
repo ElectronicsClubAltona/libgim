@@ -107,6 +107,8 @@ UTIL_FILES   =			\
     guid.cpp			\
     guid.hpp			\
     hash.hpp			\
+    hash/simple.hpp		\
+    hash/simple.cpp		\
     hash/adler.cpp		\
     hash/adler.hpp		\
     hash/bsdsum.cpp		\
