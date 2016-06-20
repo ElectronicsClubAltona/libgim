@@ -23,6 +23,10 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "io.hpp"
+
+#include "hash/simple.hpp"
+
 #include "hash/adler.hpp"
 #include "hash/bsdsum.cpp"
 #include "hash/crc.hpp"
@@ -52,42 +56,50 @@ const char* NAMES[] = {
 
 
 ///////////////////////////////////////////////////////////////////////////////
+std::ostream&
+print_digest (std::ostream &os, uint32_t t)
+{
+    return os << std::hex << t << std::dec;
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S>
+std::ostream&
+print_digest (std::ostream &os, std::array<uint8_t,S> digest)
+{
+    os << std::hex;
+
+    for (auto c: digest)
+        os << +(c >> 4) << +(c & 0x0F);
+
+    os << std::dec;
+    return os;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 static
 void
-compute (std::istream &is, const char *name)
+compute (const std::string &name,
+         const unsigned char *restrict first,
+         const unsigned char *restrict last)
 {
-    std::vector<uint8_t> data {
-        std::istream_iterator<uint8_t> (is),
-        std::istream_iterator<uint8_t> ( )
-    };
-
-    #define simple(FUNC) do {                                                   \
-        if (std::strcmp (name, #FUNC))                                          \
-            break;                                                              \
-                                                                                \
-        std::cout << std::hex << FUNC (data.data (), data.size ()) << "\n";     \
-    } while (0)
-
-        simple (adler32);
-        simple (bsdsum);
-        simple (crc32);
-
-    #undef simple
-
     #define stream(TYPE) do {                                       \
-        if (std::strcmp (name, #TYPE))                              \
+        if (name != #TYPE)                                          \
             break;                                                  \
                                                                     \
-        util::hash::TYPE accum;                                     \
-        accum.update (data.data (), data.size ());                  \
-        accum.finish ();                                            \
+        auto sum = util::hash::simple<util::hash::TYPE> (           \
+            first, last                                             \
+        );                                                          \
                                                                     \
-        std::cout << std::hex;                                      \
-        for (auto c: accum.digest ())                               \
-            std::cout << unsigned (c >> 4) << unsigned(c & 0x0F);   \
-        std::cout << std::dec << "\n";                              \
+        print_digest (std::cout, sum) << '\n';                      \
         return;                                                     \
     } while (0);
+
+        stream (adler32);
+        stream (bsdsum);
+        stream (crc32);
 
         stream (MD2);
         stream (MD4);
@@ -133,10 +145,12 @@ main (int argc, char **argv)
     }
 
     if (strcmp (argv[ARG_INPUT], "-")) {
-        std::cerr << "stdin only currently\n";
-        return EXIT_FAILURE;
-    }
+        util::mapped_file src (argv[ARG_INPUT]);
+        compute (argv[ARG_HASH], src.cbegin (), src.cend ());
 
-    compute (std::cin, argv[ARG_HASH]);
-    return EXIT_SUCCESS;
+        return EXIT_SUCCESS;
+    } else {
+        //compute (argv[ARG_HASH], std::cin);
+        return EXIT_SUCCESS;
+    }
 }
