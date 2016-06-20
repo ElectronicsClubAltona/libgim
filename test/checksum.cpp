@@ -1,6 +1,8 @@
 
 #include "hash/adler.hpp"
 #include "hash/bsdsum.hpp"
+#include "hash/simple.hpp"
+
 #include "types.hpp"
 #include "tap.hpp"
 #include "debug.hpp"
@@ -18,11 +20,13 @@ static const struct {
     uint32_t adler;
     uint16_t bsd;
 
+    std::string msg;
     const char *data;
-    size_t      size;
 } TESTS[] = {
-    { 0xDF5B150C, 0x52FB, ALPHABET, strlen (ALPHABET) },
-    { 0x11E60398, 0x3DC8, "Wikipedia", strlen ("Wikipedia") }
+    { 0x00000001, 0x0000, "empty",     "" },
+    { 0xDF5B150C, 0x52FB, "alphabet",  ALPHABET },
+    { 0x11E60398, 0x3DC8, "wikipedia", "Wikipedia" },
+    { 0x97B61069, 0x5555, "digits",    "12345678901234567890123456789012345678901234567890123456789012345678901234567890" },
 };
 
 
@@ -31,9 +35,20 @@ int
 main (int, char**) {
     util::TAP::logger tap;
 
-    for (unsigned i = 0; i < elems (TESTS); ++i) {
-        tap.expect_eq (TESTS[i].adler, util::hash::adler32 (TESTS[i].data, TESTS[i].size), "adler checksum");
-        tap.expect_eq (TESTS[i].bsd,   util::hash::bsdsum  (TESTS[i].data, TESTS[i].size), "bsdsum checksum");
+    for (const auto &t: TESTS) {
+        tap.expect_eq (
+            t.adler,
+            util::hash::simple<util::hash::adler32> (
+                (const void*)t.data,
+                (const void*)(t.data + strlen (t.data))
+            ),
+            "adler checksum: %s", t.msg
+        );
+
+        tap.expect_eq (
+            t.bsd,
+            util::hash::simple<util::hash::bsdsum> (t.data, t.data + strlen (t.data)),
+            "bsdsum checksum: %s", t.msg);
     }
 
     return EXIT_SUCCESS;
