@@ -184,8 +184,8 @@
                                                             \
         if (util::almost_equal (__a, __b)) {                \
             _CHECK_PANIC ("expected inequality\n"           \
-                          "__a: %s is %s\n"                 \
-                          "__b: %s is %s\n",                \
+                          "__a: %s is %!\n"                 \
+                          "__b: %s is %!\n",                \
                           #A, __a,                          \
                           #B, __b);                         \
         };                                                  \
@@ -200,7 +200,7 @@
                                                             \
         if (!util::almost_zero (__a)) {                     \
             _CHECK_PANIC ("expected zero\n"                 \
-                          "__a: %s is %s\n"                 \
+                          "__a: %s is %!\n"                 \
                           #A, __a);                         \
         };                                                  \
     );                                                      \
