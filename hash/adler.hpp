@@ -14,8 +14,10 @@
  * Copyright 2010-2014 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_ADLER_HPP
-#define __UTIL_ADLER_HPP
+#ifndef __UTIL_HASH_ADLER_HPP
+#define __UTIL_HASH_ADLER_HPP
+
+#include "./fletcher.hpp"
 
 #include <cstdint>
 #include <cstdlib>
@@ -23,8 +25,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace hash {
-    uint32_t adler32 (const void* restrict, size_t) noexcept;
-    uint32_t adler32 (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+    class adler32 : public fletcher<uint32_t> {
+    public:
+        adler32 ();
+    };
 } }
 
 #endif

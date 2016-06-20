@@ -11,11 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_FLETCHER_HPP
-#define __UTIL_FLETCHER_HPP
+#ifndef __UTIL_HASH_FLETCHER_HPP
+#define __UTIL_HASH_FLETCHER_HPP
 
 #include "../types/bits.hpp"
 
@@ -24,28 +24,35 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <
-    unsigned OUTPUT,
-    unsigned MODULUS,
-    unsigned INITIAL_A,
-    unsigned INITIAL_B
->
-typename bits_type<OUTPUT>::uint
-fletcher (const void *restrict _data,
-          size_t size)
-{
-    typedef typename bits_type<OUTPUT / 2>::uint temp_t;
+namespace util { namespace hash {
+    template <typename DIGEST>
+    class fletcher {
+    public:
+        using digest_t = DIGEST;
+        using part_t = typename bytes_type<sizeof (digest_t) / 2>::uint;
 
-    auto data = static_cast<const uint8_t*> (_data);
-    temp_t A = INITIAL_A, B = INITIAL_B;
+        fletcher (part_t modulus, part_t a, part_t b);
 
-    for (size_t i = 0; i < size; ++i) {
-        A = (A + data[i]) % MODULUS;
-        B = (A +       B) % MODULUS;
-    }
+        void update (const void *restrict, size_t) noexcept;
+        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
 
-    return (B << (OUTPUT / 2u)) + A;
-}
+        void finish (void);
+        digest_t digest (void) const;
+
+        void reset (void);
+
+    private:
+        const digest_t m_modulus;
+
+        struct state_t {
+            part_t a, b;
+        };
+
+        const state_t m_initial;
+        state_t m_state;
+    };
+} }
+
 
 #endif
 

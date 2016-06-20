@@ -115,6 +115,7 @@ UTIL_FILES   =			\
     hash/crc.hpp		\
     hash/fasthash.cpp		\
     hash/fasthash.hpp		\
+    hash/fletcher.cpp		\
     hash/fletcher.hpp		\
     hash/fnv1a.cpp		\
     hash/fnv1a.hpp		\
