@@ -14,8 +14,8 @@
  * Copyright 2013 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_MD5_HPP
-#define __UTIL_MD5_HPP
+#ifndef __UTIL_HASH_MD5_HPP
+#define __UTIL_HASH_MD5_HPP
 
 #include <array>
 #include <cstdint>
