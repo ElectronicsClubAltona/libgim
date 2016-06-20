@@ -23,8 +23,23 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace hash {
-    uint16_t bsdsum (const void *restrict data, size_t bytes) noexcept;
-    uint16_t bsdsum (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+    class bsdsum {
+    public:
+        using digest_t = uint16_t;
+
+        bsdsum (void);
+        void reset (void);
+
+        void update (const void *restrict data, size_t bytes) noexcept;
+        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+
+        void finish (void);
+
+        digest_t digest (void) const;
+
+    private:
+        digest_t m_accum;
+    };
 } }
 
 #endif

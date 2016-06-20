@@ -18,33 +18,61 @@
 
 #include "../debug.hpp"
 
+using util::hash::bsdsum;
+
 
 ///////////////////////////////////////////////////////////////////////////////
-uint16_t
-util::hash::bsdsum (
-    const uint8_t *const restrict first,
-    const uint8_t *const restrict last
-) noexcept {
-    CHECK_LE (first, last);
-
-    uint16_t accum = 0;
-
-    for (auto cursor = first; cursor != last; ++cursor) {
-        accum  = (accum >> 1u) | ((accum & 0x01u) << 15u);
-        accum += *cursor;
-    }
-
-    return accum;
+bsdsum::bsdsum ()
+{
+    reset ();
 }
 
 
 //-----------------------------------------------------------------------------
-uint16_t
-util::hash::bsdsum (const void *restrict data, size_t size) noexcept
+void
+bsdsum::reset (void)
 {
-    return bsdsum (
-        static_cast<const uint8_t*> (data),
-        static_cast<const uint8_t*> (data) + size
-    );
+    m_accum = 0;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+void
+bsdsum::update (const void *restrict data, size_t size) noexcept
+{
+    auto first = static_cast<const uint8_t *restrict> (data);
+
+    update (first, first + size);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+void
+bsdsum::update (
+    const uint8_t *const restrict first,
+    const uint8_t *const restrict last) noexcept
+{
+    CHECK (first);
+    CHECK (last);
+    CHECK_LE (first, last);
+
+    for (auto cursor = first; cursor != last; ++cursor) {
+        m_accum  = (m_accum >> 1u) | ((m_accum & 0x01u) << 15u);
+        m_accum += *cursor;
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+void
+bsdsum::finish (void)
+{ ; }
+
+
+
+//-----------------------------------------------------------------------------
+typename bsdsum::digest_t
+bsdsum::digest (void) const
+{
+    return m_accum;
+}
