@@ -31,24 +31,20 @@ const uint8_t BITMASK_7BITS = 0x7F;
 const uint8_t BITMASK_8BITS = 0xFF;
 
 ///////////////////////////////////////////////////////////////////////////////
-#define MODT(x) ((x) % (sizeof (T) * 8))
-
 template <typename T>
 constexpr T
-rotatel (const T &value, size_t magnitude) {
-    return (value << MODT (magnitude)) |
-           (value >> sizeof (value) * 8 - MODT (magnitude));
+rotatel [[gnu::pure]] (const T value, size_t magnitude)
+{
+    return (value << magnitude) | (value >> sizeof (value) * 8 - magnitude);
 }
 
 
 template <typename T>
 constexpr T
-rotater (const T &value, size_t magnitude) {
-    return (value >> MODT (magnitude)) |
-           (value << sizeof (value) * 8 - MODT (magnitude));
+rotater [[gnu::pure]] (const T value, size_t magnitude)
+{
+    return (value >> magnitude) | (value << sizeof (value) * 8 - magnitude);
 }
-
-#undef MODT
 
 
 ///////////////////////////////////////////////////////////////////////////////
