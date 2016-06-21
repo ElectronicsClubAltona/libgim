@@ -175,7 +175,7 @@ ice_sboxes_init (void)
         const uint_fast16_t row = (i & 0x1) | ((i & 0x200) >> 8);
 
         for (unsigned j = 0; j < 4; ++j) {
-            const auto p = gf_exp7 (
+            const auto p = gf_exp7<uint_fast16_t> (
                 col ^ ice_sxor[j][row],
                       ice_smod[j][row]
             ) << (24 - j * 8);
