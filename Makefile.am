@@ -361,8 +361,6 @@ pkglibdir      = $(libdir)/
 pkgconfigdir   = $(libdir)/pkgconfig
 pkgconfig_DATA = libcruft-util.pc
 
-EXTRA_DIST += libcruft-util.pc.in libcruft-util-inline.pc.in
-
 EXTRA_DIST += ${top_srcdir}/build-aux/wine-crlf.sh
 
 ###############################################################################

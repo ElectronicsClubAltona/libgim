@@ -128,7 +128,7 @@ AC_SUBST(LIBS)
 # failure on a clean build
 AX_APPEND_FLAG([-include config.h])
 
-NC_SUBPACKAGE_PC([libcruft-util.pc])
+NC_SUBPACKAGE_PC([libcruft-util])
 
 AC_CONFIG_FILES([
     Doxyfile
