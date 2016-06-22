@@ -12,6 +12,8 @@ main (void)
     alignas (std::max_align_t) char memory[BUFFER_SIZE];
     util::alloc::linear store (std::begin (memory), std::end (memory));
 
+    tap.expect_eq (store.base (), std::begin (memory), "base pointers match");
+    tap.expect_eq (store.offset (std::begin (memory)), 0u, "base offset is 0");
     tap.expect_eq (store.capacity (), BUFFER_SIZE, "bytes capacity matches");
 
     tap.expect_throw<std::bad_alloc> (

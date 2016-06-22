@@ -60,6 +60,25 @@ linear::deallocate (void *ptr, size_t bytes, size_t alignment)
 }
 
 
+//-----------------------------------------------------------------------------
+void*
+linear::base (void)
+{
+    return m_begin;
+}
+
+
+//-----------------------------------------------------------------------------
+size_t
+linear::offset (const void *_ptr) const
+{
+    auto ptr = reinterpret_cast<const char*> (_ptr);
+
+    CHECK_GE (ptr, m_begin);
+    return ptr - m_begin;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 void
 linear::reset (void)

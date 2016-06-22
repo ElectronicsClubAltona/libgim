@@ -64,6 +64,16 @@ namespace util { namespace alloc {
             return m_child->deallocate (ptr, bytes, alignment);
         }
 
+        void*
+        base (void)
+        {
+            return m_child->base ();
+        }
+
+        size_t
+        offset (const void *ptr) const
+        { return m_child->offset (ptr); }
+
         void reset (void) { m_child->reset (); }
 
         // capacity queries
@@ -74,15 +84,15 @@ namespace util { namespace alloc {
     private:
         // Internal base for arbitrary allocator types. Necessary for
         // type ellision in super-client classes.
-        class base {
+        class interface {
         public:
-            base () = default;
-            base (const base&) = delete;
-            base (base&&) = delete;
-            base& operator= (const base&) = delete;
-            base& operator= (base&&) = delete;
+            interface () = default;
+            interface (const interface&) = delete;
+            interface (interface&&) = delete;
+            interface& operator= (const interface&) = delete;
+            interface& operator= (interface&&) = delete;
 
-            virtual ~base () { ; }
+            virtual ~interface () { ; }
 
             // allocation management
             virtual void*
@@ -94,6 +104,9 @@ namespace util { namespace alloc {
                         size_t bytes,
                         size_t alignment = DEFAULT_ALIGNMENT) = 0;
 
+            virtual void* base (void) = 0;
+            virtual size_t offset (const void*) const = 0;
+
             virtual void reset (void) = 0;
 
             // capacity queries
@@ -104,11 +117,11 @@ namespace util { namespace alloc {
 
 
         template <typename T>
-        class child final : public base {
+        class child final : public interface {
         public:
             template <typename ...Args>
             child (Args &&...args):
-                base (),
+                interface (),
                 m_target (std::forward<Args> (args)...)
             { ; }
 
@@ -128,6 +141,18 @@ namespace util { namespace alloc {
                 m_target.deallocate (ptr, bytes, alignment);
             }
 
+            void *
+            base (void)
+            {
+                return m_target.base ();
+            }
+
+            size_t
+            offset (const void *ptr) const
+            {
+                return m_target.offset (ptr);
+            }
+
             void reset (void) override
             { m_target.reset (); }
 
@@ -141,11 +166,11 @@ namespace util { namespace alloc {
         };
 
 
-        dynamic (std::unique_ptr<base> _child):
+        dynamic (std::unique_ptr<interface> _child):
             m_child (std::move (_child))
         { ; }
 
-        std::unique_ptr<base> m_child;
+        std::unique_ptr<interface> m_child;
     };
 } }
 

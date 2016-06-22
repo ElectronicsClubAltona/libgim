@@ -34,6 +34,8 @@ main (void)
 
     util::alloc::stack store (memory, memory + BUFFER_AVAILABLE);
 
+    tap.expect_eq (store.base (), std::begin (memory), "base pointers match");
+    tap.expect_eq (store.offset (std::begin (memory)), 0u, "base offset is 0");
     tap.expect_eq (store.capacity (), BUFFER_AVAILABLE, "bytes capacity matches");
 
     // larger than total allocations should throw

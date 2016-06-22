@@ -36,6 +36,8 @@ namespace util { namespace alloc {
         //[[gnu::alloc_align (2), gnu::alloc_size (1), gnu::returns_nonnull, gnu::warn_unused_result]
         void *allocate  (size_t bytes, size_t alignment = alignof (std::max_align_t));
         void deallocate (void *ptr, size_t bytes, size_t alignment = alignof (std::max_align_t));
+        void* base (void);
+        size_t offset (const void*) const;
 
         void reset (void);
 
