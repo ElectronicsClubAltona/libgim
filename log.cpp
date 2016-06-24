@@ -118,6 +118,7 @@ log_level (void)
     try {
         return to_level (env);
     } catch (...) {
+        LOG_ERROR("Invalid environment LOG_LEVEL: '%s'", env);
         return util::DEFAULT_LOG_LEVEL;
     }
 }
