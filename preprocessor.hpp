@@ -45,6 +45,7 @@
 #define MAP_0_06(F, X, ...) F(X)MAP_0_05(F, __VA_ARGS__)
 #define MAP_0_07(F, X, ...) F(X)MAP_0_06(F, __VA_ARGS__)
 #define MAP_0_08(F, X, ...) F(X)MAP_0_07(F, __VA_ARGS__)
+
 #define MAP_0_09(F, X, ...) F(X)MAP_0_08(F, __VA_ARGS__)
 #define MAP_0_10(F, X, ...) F(X)MAP_0_09(F, __VA_ARGS__)
 #define MAP_0_11(F, X, ...) F(X)MAP_0_10(F, __VA_ARGS__)
@@ -54,6 +55,16 @@
 #define MAP_0_15(F, X, ...) F(X)MAP_0_14(F, __VA_ARGS__)
 #define MAP_0_16(F, X, ...) F(X)MAP_0_15(F, __VA_ARGS__)
 
+#define MAP_0_17(F, X, ...) F(X)MAP_0_16(F, __VA_ARGS__)
+#define MAP_0_18(F, X, ...) F(X)MAP_0_17(F, __VA_ARGS__)
+#define MAP_0_19(F, X, ...) F(X)MAP_0_18(F, __VA_ARGS__)
+#define MAP_0_20(F, X, ...) F(X)MAP_0_19(F, __VA_ARGS__)
+#define MAP_0_21(F, X, ...) F(X)MAP_0_20(F, __VA_ARGS__)
+#define MAP_0_22(F, X, ...) F(X)MAP_0_21(F, __VA_ARGS__)
+#define MAP_0_23(F, X, ...) F(X)MAP_0_22(F, __VA_ARGS__)
+#define MAP_0_24(F, X, ...) F(X)MAP_0_23(F, __VA_ARGS__)
+
+
 #define MAP_1_01(F, A, X)      F(A, X)
 #define MAP_1_02(F, A, X, ...) F(A, X)MAP_1_01(F, A, __VA_ARGS__)
 #define MAP_1_03(F, A, X, ...) F(A, X)MAP_1_02(F, A, __VA_ARGS__)
@@ -62,6 +73,7 @@
 #define MAP_1_06(F, A, X, ...) F(A, X)MAP_1_05(F, A, __VA_ARGS__)
 #define MAP_1_07(F, A, X, ...) F(A, X)MAP_1_06(F, A, __VA_ARGS__)
 #define MAP_1_08(F, A, X, ...) F(A, X)MAP_1_07(F, A, __VA_ARGS__)
+
 #define MAP_1_09(F, A, X, ...) F(A, X)MAP_1_08(F, A, __VA_ARGS__)
 #define MAP_1_10(F, A, X, ...) F(A, X)MAP_1_09(F, A, __VA_ARGS__)
 #define MAP_1_11(F, A, X, ...) F(A, X)MAP_1_10(F, A, __VA_ARGS__)
@@ -70,6 +82,15 @@
 #define MAP_1_14(F, A, X, ...) F(A, X)MAP_1_13(F, A, __VA_ARGS__)
 #define MAP_1_15(F, A, X, ...) F(A, X)MAP_1_14(F, A, __VA_ARGS__)
 #define MAP_1_16(F, A, X, ...) F(A, X)MAP_1_15(F, A, __VA_ARGS__)
+
+#define MAP_1_17(F, A, X, ...) F(A, X)MAP_1_16(F, A, __VA_ARGS__)
+#define MAP_1_18(F, A, X, ...) F(A, X)MAP_1_17(F, A, __VA_ARGS__)
+#define MAP_1_19(F, A, X, ...) F(A, X)MAP_1_18(F, A, __VA_ARGS__)
+#define MAP_1_20(F, A, X, ...) F(A, X)MAP_1_19(F, A, __VA_ARGS__)
+#define MAP_1_21(F, A, X, ...) F(A, X)MAP_1_20(F, A, __VA_ARGS__)
+#define MAP_1_22(F, A, X, ...) F(A, X)MAP_1_21(F, A, __VA_ARGS__)
+#define MAP_1_23(F, A, X, ...) F(A, X)MAP_1_22(F, A, __VA_ARGS__)
+#define MAP_1_24(F, A, X, ...) F(A, X)MAP_1_23(F, A, __VA_ARGS__)
 
 // Uses the sliding pairs dispatch technique: by passing __VA_ARGS__ as the
 // first set of variables and appending (reverse orderred) names of the
@@ -80,6 +101,7 @@
 #define ARITY_DISPATCH(                 \
     _01,_02,_03,_04,_05,_06,_07,_08,    \
     _09,_10,_11,_12,_13,_14,_15,_16,    \
+    _17,_18,_19,_20,_21,_22,_23,_24,    \
     NAME,...                            \
 ) NAME
 
@@ -92,6 +114,7 @@
 // Just use templates. Really...
 #define MAP(FUNC,...)                                                               \
 ARITY_DISPATCH(__VA_ARGS__,                                                         \
+    MAP_0_24, MAP_0_23, MAP_0_22, MAP_0_21, MAP_0_20, MAP_0_19, MAP_0_18, MAP_0_17, \
     MAP_0_16, MAP_0_15, MAP_0_14, MAP_0_13, MAP_0_12, MAP_0_11, MAP_0_10, MAP_0_09, \
     MAP_0_08, MAP_0_07, MAP_0_06, MAP_0_05, MAP_0_04, MAP_0_03, MAP_0_02, MAP_0_01, \
     STATIC_ASSERT("invalid arity for MAP")                                          \
@@ -99,7 +122,8 @@ ARITY_DISPATCH(__VA_ARGS__,                                                     
 
 #define MAP1(FUNC,...)                                                              \
 ARITY_DISPATCH(__VA_ARGS__,                                                         \
-              MAP_1_15, MAP_1_14, MAP_1_13, MAP_1_12, MAP_1_11, MAP_1_10, MAP_1_09, \
+              MAP_1_23, MAP_1_22, MAP_1_21, MAP_1_20, MAP_1_19, MAP_1_18, MAP_1_17, \
+    MAP_1_16, MAP_1_15, MAP_1_14, MAP_1_13, MAP_1_12, MAP_1_11, MAP_1_10, MAP_1_09, \
     MAP_1_08, MAP_1_07, MAP_1_06, MAP_1_05, MAP_1_04, MAP_1_03, MAP_1_02, MAP_1_01, \
     STATIC_ASSERT("invalid arity for MAP1")                                         \
 )(FUNC, __VA_ARGS__)
@@ -123,10 +147,20 @@ ARITY_DISPATCH(__VA_ARGS__,                                                     
 #define LITERAL_14 14
 #define LITERAL_15 15
 #define LITERAL_16 16
+#define LITERAL_17 17
+#define LITERAL_18 18
+#define LITERAL_19 19
+#define LITERAL_20 20
+#define LITERAL_21 21
+#define LITERAL_22 22
+#define LITERAL_23 23
+#define LITERAL_24 24
 
 
 #define VA_ARGS_COUNT(...)                          \
 ARITY_DISPATCH(__VA_ARGS__,                         \
+    LITERAL_24, LITERAL_23, LITERAL_22, LITERAL_21, \
+    LITERAL_20, LITERAL_19, LITERAL_18, LITERAL_17, \
     LITERAL_16, LITERAL_15, LITERAL_14, LITERAL_13, \
     LITERAL_12, LITERAL_11, LITERAL_10, LITERAL_09, \
     LITERAL_08, LITERAL_07, LITERAL_06, LITERAL_05, \
