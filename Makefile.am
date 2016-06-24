@@ -385,12 +385,11 @@ AM_CXXFLAGS += -I$(top_srcdir)
 TEST_BIN = 			\
     test/alloc/arena		\
     test/alloc/dynamic		\
-    test/alloc/stack		\
     test/alloc/linear		\
+    test/alloc/stack		\
     test/backtrace 		\
     test/bezier			\
     test/bitwise		\
-    test/checksum		\
     test/cmdopt			\
     test/colour			\
     test/coord			\
@@ -406,21 +405,25 @@ TEST_BIN = 			\
     test/format			\
     test/geom/aabb		\
     test/geom/ray 		\
-    test/hash/murmur		\
+    test/hash/checksum		\
     test/hash/fasthash          \
+    test/hash/hmac		\
+    test/hash/hotp		\
     test/hash/keccak		\
-    test/hmac			\
-    test/hotp			\
+    test/hash/md2		\
+    test/hash/md4		\
+    test/hash/md5		\
+    test/hash/murmur		\
+    test/hash/ripemd		\
+    test/hash/sha1		\
+    test/hash/sha2		\
     test/hton			\
     test/introspection		\
     test/ip 			\
     test/json_types		\
-    test/memory/deleter		\
     test/maths			\
     test/matrix			\
-    test/md2			\
-    test/md4			\
-    test/md5			\
+    test/memory/deleter		\
     test/point			\
     test/polynomial		\
     test/pool			\
@@ -429,10 +432,7 @@ TEST_BIN = 			\
     test/range 			\
     test/rational		\
     test/region			\
-    test/ripemd			\
     test/roots/bisection	\
-    test/sha1			\
-    test/sha2			\
     test/signal			\
     test/string			\
     test/stringid		\
