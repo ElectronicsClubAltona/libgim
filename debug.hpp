@@ -72,6 +72,18 @@
     );                  \
 } while (0)
 
+
+///////////////////////////////////////////////////////////////////////////////
+#define CHECK_SANITY(A) do {                                            \
+    DEBUG_ONLY(                                                         \
+        const auto &__a = (A);                                          \
+        if (!util::debug::valid (__a)) {                                \
+            _CHECK_PANIC("failed sanity test for %s, %!\n", #A, __a);   \
+        }                                                               \
+    );                                                                  \
+} while (0)
+
+
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_EQ(A,B) do {                                  \
     DEBUG_ONLY(                                             \
