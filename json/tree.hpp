@@ -17,16 +17,20 @@
 #ifndef __UTIL_JSON_TREE_HPP
 #define __UTIL_JSON_TREE_HPP
 
+#include "./flat.hpp"
+#include "./fwd.hpp"
+
+#include "../iterator.hpp"
+#include "../view.hpp"
+
 #include <iostream>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "../iterator.hpp"
-#include "../view.hpp"
-#include "./flat.hpp"
-#include "./fwd.hpp"
+#include <boost/filesystem/path.hpp>
+
 
 namespace json { namespace tree {
     enum type_t {
@@ -42,6 +46,9 @@ namespace json { namespace tree {
     template <typename T>
     std::unique_ptr<node>
     parse (util::view<T> data);
+
+    std::unique_ptr<node>
+    parse (const boost::filesystem::path &);
 
     extern void write (const json::tree::node&, std::ostream&);
 

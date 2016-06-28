@@ -247,6 +247,15 @@ MAP(
 #undef INSTANTIATE
 
 
+//-----------------------------------------------------------------------------
+std::unique_ptr<json::tree::node>
+json::tree::parse (const boost::filesystem::path &src)
+{
+    const util::mapped_file data (src.string ().c_str ());
+    return parse (data.as_view<char> ());
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 void
 json::tree::write (const json::tree::node &node, std::ostream &os)
