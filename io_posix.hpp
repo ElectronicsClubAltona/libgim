@@ -25,13 +25,6 @@
 namespace util {
     namespace detail { namespace posix {
         class mapped_file {
-        private:
-            fd m_fd;
-            uint8_t *m_data;
-            size_t   m_size;
-
-            void load_fd (int mflags);
-
         public:
             mapped_file (const char *path, int fflags = O_RDONLY | O_BINARY, int mflags = PROT_READ);
 
@@ -51,6 +44,13 @@ namespace util {
 
             const uint8_t* cbegin (void) const;
             const uint8_t* cend   (void) const;
+
+        private:
+            fd m_fd;
+            uint8_t *m_data;
+            size_t   m_size;
+
+            void load_fd (int mflags);
         };
     } }
 
