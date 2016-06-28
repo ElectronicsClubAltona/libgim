@@ -136,22 +136,6 @@ mapped_file::mapped_file (const boost::filesystem::path &path,
 
 
 ///////////////////////////////////////////////////////////////////////////////
-const uint8_t*
-mapped_file::data (void) const
-{
-    return m_data.get ();
-}
-
-
-//-----------------------------------------------------------------------------
-uint8_t*
-mapped_file::data (void)
-{
-    return m_data.get ();
-}
-
-
-//-----------------------------------------------------------------------------
 size_t
 mapped_file::size (void) const
 {
@@ -168,8 +152,24 @@ mapped_file::empty (void) const
 
 
 //-----------------------------------------------------------------------------
+const uint8_t*
+mapped_file::data (void) const &
+{
+    return m_data.get ();
+}
+
+
+//-----------------------------------------------------------------------------
 uint8_t*
-mapped_file::begin (void)
+mapped_file::data (void) &
+{
+    return m_data.get ();
+}
+
+
+//-----------------------------------------------------------------------------
+uint8_t*
+mapped_file::begin (void) &
 {
     return data ();
 }
@@ -177,7 +177,7 @@ mapped_file::begin (void)
 
 //-----------------------------------------------------------------------------
 uint8_t*
-mapped_file::end (void)
+mapped_file::end (void) &
 {
     return data () + size ();
 }
@@ -185,7 +185,7 @@ mapped_file::end (void)
 
 //-----------------------------------------------------------------------------
 const uint8_t*
-mapped_file::begin (void) const
+mapped_file::begin (void) const &
 {
     return cbegin ();
 }
@@ -193,7 +193,7 @@ mapped_file::begin (void) const
 
 //-----------------------------------------------------------------------------
 const uint8_t*
-mapped_file::end (void) const
+mapped_file::end (void) const &
 {
     return cend ();
 }
@@ -201,7 +201,7 @@ mapped_file::end (void) const
 
 //-----------------------------------------------------------------------------
 const uint8_t*
-mapped_file::cbegin (void) const
+mapped_file::cbegin (void) const &
 {
     return data ();
 }
@@ -209,7 +209,7 @@ mapped_file::cbegin (void) const
 
 //-----------------------------------------------------------------------------
 const uint8_t*
-mapped_file::cend (void) const
+mapped_file::cend (void) const &
 {
     return data () + size ();
 }

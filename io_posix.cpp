@@ -79,7 +79,8 @@ mapped_file::empty (void) const
 
 //////////////////////////////////////////////////////////////////////////////
 uint8_t*
-mapped_file::data (void) {
+mapped_file::data (void) &
+{
     CHECK (m_size > 0);
     CHECK (m_data != NULL);
 
@@ -89,7 +90,8 @@ mapped_file::data (void) {
 
 //----------------------------------------------------------------------------
 const uint8_t*
-mapped_file::data (void) const {
+mapped_file::data (void) const &
+{
     CHECK (m_size > 0);
     CHECK (m_data != NULL);
 
@@ -99,21 +101,23 @@ mapped_file::data (void) const {
 
 //----------------------------------------------------------------------------
 uint8_t*
-mapped_file::begin (void) {
+mapped_file::begin (void) &
+{
     return data ();
 }
 
 
 //----------------------------------------------------------------------------
 uint8_t*
-mapped_file::end (void) {
+mapped_file::end (void) &
+{
     return data () + size ();
 }
 
 
 //-----------------------------------------------------------------------------
 const uint8_t*
-mapped_file::begin (void) const
+mapped_file::begin (void) const &
 {
     return data ();
 }
@@ -121,7 +125,7 @@ mapped_file::begin (void) const
 
 //-----------------------------------------------------------------------------
 const uint8_t*
-mapped_file::end (void) const
+mapped_file::end (void) const &
 {
     return data () + size ();
 }
@@ -129,14 +133,16 @@ mapped_file::end (void) const
 
 //----------------------------------------------------------------------------
 const uint8_t*
-mapped_file::cbegin (void) const {
+mapped_file::cbegin (void) const &
+{
     return data ();
 }
 
 
 //----------------------------------------------------------------------------
 const uint8_t*
-mapped_file::cend (void) const {
+mapped_file::cend (void) const &
+{
     return data () + size ();
 }
 

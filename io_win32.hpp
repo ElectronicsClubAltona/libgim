@@ -45,26 +45,23 @@ namespace util {
             mapped_file (const mapped_file&) = delete;
             mapped_file& operator= (const mapped_file&) = delete;
 
-            const uint8_t* data (void) const;
-            uint8_t*       data (void);
-
             size_t size  (void) const;
             bool   empty (void) const;
 
-            uint8_t* begin (void);
-            uint8_t* end   (void);
+            const uint8_t* data (void) const &;
+            uint8_t*       data (void) &;
 
-            const uint8_t* begin (void) const;
-            const uint8_t* end   (void) const;
+            uint8_t* begin (void) &;
+            uint8_t* end   (void) &;
 
-            const uint8_t* cbegin (void) const;
-            const uint8_t* cend   (void) const;
+            const uint8_t* begin (void) const &;
+            const uint8_t* end   (void) const &;
 
-            template <typename T>
-            operator util::view<const T *restrict> () const &;
+            const uint8_t* cbegin (void) const &;
+            const uint8_t* cend   (void) const &;
 
-            template <typename T>
-            operator util::view<T *restrict> () &;
+            template <typename T> operator util::view<const T *restrict> () const &;
+            template <typename T> operator util::view<      T *restrict> ()       &;
 
         private:
             ::util::win32::handle m_file;

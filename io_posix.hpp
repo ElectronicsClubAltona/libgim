@@ -35,20 +35,20 @@ namespace util {
 
             ~mapped_file ();
 
-            const uint8_t* data (void) const;
-            uint8_t*       data (void);
-
             bool empty (void) const;
             size_t size (void) const;
 
-            uint8_t* begin (void);
-            uint8_t* end   (void);
+            const uint8_t* data (void) const &;
+            uint8_t*       data (void) &;
 
-            const uint8_t* begin (void) const;
-            const uint8_t* end   (void) const;
+            uint8_t* begin (void) &;
+            uint8_t* end   (void) &;
 
-            const uint8_t* cbegin (void) const;
-            const uint8_t* cend   (void) const;
+            const uint8_t* begin (void) const &;
+            const uint8_t* end   (void) const &;
+
+            const uint8_t* cbegin (void) const &;
+            const uint8_t* cend   (void) const &;
 
             template <typename T> operator util::view<const T *restrict> () const &;
             template <typename T> operator util::view<      T *restrict> ()       &;
