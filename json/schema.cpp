@@ -18,7 +18,9 @@
 
 #include "./tree.hpp"
 #include "./except.hpp"
+
 #include "../debug.hpp"
+#include "../io.hpp"
 #include "../maths.hpp"
 
 #include <regex>
@@ -442,4 +444,15 @@ json::schema::validate (json::tree::node &data,
             throw json::schema_error ("description");
 
     return ::validate (data, schema.as_object ());
+}
+
+
+//-----------------------------------------------------------------------------
+void
+json::schema::validate (json::tree::node &data,
+                        const boost::filesystem::path &schema_path)
+{
+    const util::mapped_file schema_data (schema_path.string ().c_str ());
+    auto schema_object = json::tree::parse (schema_data.as_view<char> ());
+    validate (data, schema_object->as_object ());
 }

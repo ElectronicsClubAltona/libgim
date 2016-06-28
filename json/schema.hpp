@@ -20,11 +20,16 @@
 #include "./fwd.hpp"
 
 #include <memory>
+#include <boost/filesystem/path.hpp>
 
 namespace json { namespace schema {
-    void
-    validate (json::tree::node &data,
-              const json::tree::object &schema);
+    // Validate the json tree using the provide schema object or path.
+    //
+    // Note that the data object being validated may be altered in the process
+    // of validation. If a value is not present but the schema specifies a
+    // default, it will be realised in the data object.
+    void validate (json::tree::node &data, const json::tree::object &schema);
+    void validate (json::tree::node &data, const boost::filesystem::path &schema);
 } }
 
 #endif
