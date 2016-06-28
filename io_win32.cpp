@@ -24,7 +24,7 @@
 using util::detail::win32::mapped_file;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 static constexpr
 DWORD
 fflags_to_generic (int flags) {
@@ -38,6 +38,7 @@ fflags_to_generic (int flags) {
 }
 
 
+//-----------------------------------------------------------------------------
 static constexpr
 DWORD
 fflags_to_access (int fflags)
@@ -52,6 +53,7 @@ fflags_to_access (int fflags)
 }
 
 
+//-----------------------------------------------------------------------------
 static constexpr
 DWORD
 mflags_to_protect (int mflags) {
@@ -65,7 +67,7 @@ mflags_to_protect (int mflags) {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 mapped_file::mapped_file (const boost::filesystem::path &path,
                           int fflags,
                           int mflags):
@@ -133,7 +135,7 @@ mapped_file::mapped_file (const boost::filesystem::path &path,
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 const uint8_t*
 mapped_file::data (void) const
 {
@@ -141,6 +143,7 @@ mapped_file::data (void) const
 }
 
 
+//-----------------------------------------------------------------------------
 uint8_t*
 mapped_file::data (void)
 {
@@ -148,6 +151,7 @@ mapped_file::data (void)
 }
 
 
+//-----------------------------------------------------------------------------
 size_t
 mapped_file::size (void) const
 {
@@ -155,6 +159,7 @@ mapped_file::size (void) const
 }
 
 
+//-----------------------------------------------------------------------------
 bool
 mapped_file::empty (void) const
 {
@@ -162,12 +167,15 @@ mapped_file::empty (void) const
 }
 
 
+//-----------------------------------------------------------------------------
 uint8_t*
 mapped_file::begin (void)
 {
     return data ();
 }
 
+
+//-----------------------------------------------------------------------------
 uint8_t*
 mapped_file::end (void)
 {
@@ -175,12 +183,15 @@ mapped_file::end (void)
 }
 
 
+//-----------------------------------------------------------------------------
 const uint8_t*
 mapped_file::cbegin (void) const
 {
     return data ();
 }
 
+
+//-----------------------------------------------------------------------------
 const uint8_t*
 mapped_file::cend (void) const
 {
