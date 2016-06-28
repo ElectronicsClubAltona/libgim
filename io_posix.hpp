@@ -25,32 +25,32 @@
 namespace util {
     namespace detail { namespace posix {
         class mapped_file {
-            private:
-                fd m_fd;
-                uint8_t *m_data;
-                size_t   m_size;
+        private:
+            fd m_fd;
+            uint8_t *m_data;
+            size_t   m_size;
 
-                void load_fd (int mflags);
+            void load_fd (int mflags);
 
-            public:
-                mapped_file (const char *path, int fflags = O_RDONLY | O_BINARY, int mflags = PROT_READ);
+        public:
+            mapped_file (const char *path, int fflags = O_RDONLY | O_BINARY, int mflags = PROT_READ);
 
-                mapped_file (const mapped_file&) = delete;
-                mapped_file& operator= (const mapped_file&) = delete;
+            mapped_file (const mapped_file&) = delete;
+            mapped_file& operator= (const mapped_file&) = delete;
 
-                ~mapped_file ();
+            ~mapped_file ();
 
-                const uint8_t* data (void) const;
-                uint8_t*       data (void);
+            const uint8_t* data (void) const;
+            uint8_t*       data (void);
 
-                bool empty (void) const;
-                size_t size (void) const;
+            bool empty (void) const;
+            size_t size (void) const;
 
-                uint8_t*       begin (void);
-                uint8_t*       end   (void);
+            uint8_t*       begin (void);
+            uint8_t*       end   (void);
 
-                const uint8_t* cbegin (void) const;
-                const uint8_t* cend   (void) const;
+            const uint8_t* cbegin (void) const;
+            const uint8_t* cend   (void) const;
         };
     } }
 
