@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2014 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_IO_POSIX_HPP
@@ -39,8 +39,11 @@ namespace util {
             bool empty (void) const;
             size_t size (void) const;
 
-            uint8_t*       begin (void);
-            uint8_t*       end   (void);
+            uint8_t* begin (void);
+            uint8_t* end   (void);
+
+            const uint8_t* begin (void) const;
+            const uint8_t* end   (void) const;
 
             const uint8_t* cbegin (void) const;
             const uint8_t* cend   (void) const;

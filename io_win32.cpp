@@ -185,6 +185,22 @@ mapped_file::end (void)
 
 //-----------------------------------------------------------------------------
 const uint8_t*
+mapped_file::begin (void) const
+{
+    return cbegin ();
+}
+
+
+//-----------------------------------------------------------------------------
+const uint8_t*
+mapped_file::end (void) const
+{
+    return cend ();
+}
+
+
+//-----------------------------------------------------------------------------
+const uint8_t*
 mapped_file::cbegin (void) const
 {
     return data ();
