@@ -289,6 +289,7 @@ POSIX_FILES = 			\
     debug_posix.cpp		\
     io_posix.cpp		\
     io_posix.hpp		\
+    io_posix.ipp		\
     library_posix.hpp		\
     library_posix.cpp		\
     posix/dir.cpp		\
@@ -309,6 +310,8 @@ if PLATFORM_WIN32
 UTIL_FILES += 			\
     debug_win32.cpp		\
     io_win32.cpp		\
+    io_win32.hpp		\
+    io_win32.ipp		\
     library_win32.hpp		\
     library_win32.cpp		\
     time_win32.cpp		\

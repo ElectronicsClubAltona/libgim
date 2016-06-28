@@ -17,7 +17,8 @@
 #ifndef __UTIL_IO_WIN32_HPP
 #define __UTIL_IO_WIN32_HPP
 
-#include "win32/handle.hpp"
+#include "./win32/handle.hpp"
+#include "./view.hpp"
 
 #include <cstdint>
 #include <boost/filesystem/path.hpp>
@@ -59,6 +60,12 @@ namespace util {
             const uint8_t* cbegin (void) const;
             const uint8_t* cend   (void) const;
 
+            template <typename T>
+            operator util::view<const T *restrict> () const &;
+
+            template <typename T>
+            operator util::view<T *restrict> () &;
+
         private:
             ::util::win32::handle m_file;
             ::util::win32::handle m_mapping;
@@ -70,5 +77,7 @@ namespace util {
 
     typedef detail::win32::mapped_file mapped_file;
 }
+
+#include "io_win32.ipp"
 
 #endif

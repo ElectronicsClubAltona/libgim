@@ -19,6 +19,8 @@
 
 #include "io.hpp"
 
+#include "view.hpp"
+
 #include <sys/mman.h>
 #include <fcntl.h>
 
@@ -48,6 +50,9 @@ namespace util {
             const uint8_t* cbegin (void) const;
             const uint8_t* cend   (void) const;
 
+            template <typename T> operator util::view<const T *restrict> () const &;
+            template <typename T> operator util::view<      T *restrict> ()       &;
+
         private:
             fd m_fd;
             uint8_t *m_data;
@@ -59,5 +64,7 @@ namespace util {
 
     typedef detail::posix::mapped_file mapped_file;
 }
+
+#include "io_posix.ipp"
 
 #endif
