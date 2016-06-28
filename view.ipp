@@ -46,6 +46,26 @@ util::view<T>::view (T _begin, T _end) noexcept:
 
 //-----------------------------------------------------------------------------
 template <typename T>
+template <typename K>
+constexpr
+util::view<T>::view (K &data):
+    m_begin (std::begin (data)),
+    m_end   (std::end   (data))
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+template <typename K>
+constexpr
+util::view<T>::view (const K &data):
+    m_begin (std::begin (data)),
+    m_end   (std::end (data))
+{ ; }
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
 constexpr T&
 util::view<T>::begin (void) noexcept
 {

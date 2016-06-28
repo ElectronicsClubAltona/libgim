@@ -36,6 +36,9 @@ namespace util {
         constexpr
         view (T first, T last) noexcept;
 
+        template <typename K> constexpr explicit view (      K &klass);
+        template <typename K> constexpr explicit view (const K &klass);
+
         constexpr T& begin (void) noexcept;
         constexpr T& end   (void) noexcept;
 
