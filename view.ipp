@@ -152,17 +152,17 @@ util::view<T>::operator== (const view<T> rhs) const noexcept
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-util::view<typename T::iterator>
+auto
 util::make_view (T &t)
 {
-    return util::view<typename T::iterator> { t.begin (), t.end () };
+    return util::view<decltype(std::begin (t))> { t.begin (), t.end () };
 }
 
 
 //-----------------------------------------------------------------------------
 template <typename T>
-util::view<typename T::const_iterator>
+auto
 util::make_view (const T &t)
 {
-    return util::view<typename T::const_iterator> { t.cbegin (), t.cend () };
+    return util::view<decltype(std::cbegin (t))> { t.cbegin (), t.cend () };
 }

@@ -61,11 +61,11 @@ namespace util {
     };
 
     template <typename T>
-    view<typename T::iterator>
+    auto
     make_view (T&);
 
     template <typename T>
-    view<typename T::const_iterator>
+    auto
     make_view (const T&);
 
     template <typename T>
