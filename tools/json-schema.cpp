@@ -20,6 +20,8 @@
 #include "json/schema.hpp"
 #include "json/except.hpp"
 
+#include "io.hpp"
+
 #include <boost/filesystem.hpp>
 
 namespace fs = boost::filesystem;
@@ -41,8 +43,11 @@ main (int argc, char **argv) {
     }
 
     try {
-        auto schema = json::tree::parse (fs::path (argv[ARG_SCHEMA]));
-        auto input  = json::tree::parse (fs::path (argv[ARG_INPUT]));
+        const util::mapped_file schema_src (argv[ARG_SCHEMA]);
+        const util::mapped_file input_src  (argv[ARG_INPUT]);
+
+        auto schema = json::tree::parse (schema_src.as_view<const char> ());
+        auto input  = json::tree::parse (input_src.as_view<const char> ());
 
         json::schema::validate (*input, schema->as_object ());
     } catch (const json::error &e) {

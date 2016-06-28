@@ -60,8 +60,13 @@ namespace util {
             const uint8_t* cbegin (void) const &;
             const uint8_t* cend   (void) const &;
 
-            template <typename T> operator util::view<const T *restrict> () const &;
-            template <typename T> operator util::view<      T *restrict> ()       &;
+            template <typename T>
+            util::view<std::add_const_t<T>*>
+            as_view () const &;
+
+            template <typename T>
+            util::view<T*>
+            as_view () &;
 
         private:
             ::util::win32::handle m_file;

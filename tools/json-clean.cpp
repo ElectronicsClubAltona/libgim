@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2016 Danny Robson <danny@nerdcruft.net>
  */
 
+#include "io.hpp"
 #include "json/except.hpp"
 #include "json/tree.hpp"
 
@@ -22,6 +23,8 @@
 
 #include <boost/filesystem/path.hpp>
 
+
+///////////////////////////////////////////////////////////////////////////////
 enum {
     ARG_COMMAND,
     ARG_INPUT,
@@ -30,23 +33,27 @@ enum {
 };
 
 
+//-----------------------------------------------------------------------------
 void
-print_usage (int argc, char **argv) {
+print_usage (int argc, char **argv)
+{
     (void)argc;
     std::cerr << "usage: " << argv[0] << " <input>\n";
 }
 
 
+//-----------------------------------------------------------------------------
 int
-main (int argc, char **argv) {
+main (int argc, char **argv)
+{
     if (argc != NUM_ARGS) {
         print_usage (argc, argv);
         return EXIT_FAILURE;
     }
 
     try {
-        boost::filesystem::path input (argv[ARG_INPUT]);
-        std::cout << *json::tree::parse (input) << "\n";
+        const util::mapped_file src (argv[ARG_INPUT]);
+        std::cout << *json::tree::parse (src.as_view<const char> ()) << '\n';
     } catch (const json::error& err) {
         std::cerr << err.what () << "\n";
         return EXIT_FAILURE;

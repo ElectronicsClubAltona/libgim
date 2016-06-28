@@ -42,8 +42,8 @@ main (int argc, char ** argv) {
     }
 
     try {
-        util::mapped_file data (argv[ARG_PATH]);
-        json::flat::parse (data.operator util::view<const char*restrict> ());
+        const util::mapped_file data (argv[ARG_PATH]);
+        json::flat::parse (data.as_view<const char> ());
     } catch (const json::error &x) {
         std::cerr << "error: " << x.what () << '\n';
         return EXIT_FAILURE;
