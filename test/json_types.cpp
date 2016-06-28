@@ -28,7 +28,7 @@ main (void)
            ]
         })_";
 
-    std::unique_ptr<json::tree::node> ptr = json::tree::parse (TEST_STRING);
+    std::unique_ptr<json::tree::node> ptr = json::tree::parse (util::make_view (TEST_STRING));
     tap.expect (ptr->is_object (), "is_object");
     CHECK (ptr->is_object ());
 

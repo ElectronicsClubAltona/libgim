@@ -20,6 +20,8 @@
 #include <boost/filesystem/path.hpp>
 #include <iostream>
 
+#include "../view.hpp"
+
 namespace json { namespace flat {
     enum class type {
         UNKNOWN,
@@ -37,18 +39,18 @@ namespace json { namespace flat {
         ARRAY_END
     };
 
+    template <typename T>
     struct item {
         type tag;
-        const char *first;
-        const char *last;
+        T first;
+        T last;
 
-        template <typename T>
-        T as (void) const;
+        template <typename U>
+        U as (void) const;
     };
 
-    std::vector<item> parse (const char *first, const char *last);
-    std::vector<item> parse (const char *first);
-    std::vector<item> parse (const boost::filesystem::path&);
+    template <typename T>
+    std::vector<item<T>> parse (util::view<T> data);
 
     std::ostream& operator<< (std::ostream&, type);
 } }

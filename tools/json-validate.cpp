@@ -12,11 +12,12 @@
  * limitations under the License.
  *
  * Copyright:
- *      2014-2015, Danny Robson <danny@nerdcruft.net>
+ *      2014-2016, Danny Robson <danny@nerdcruft.net>
  */
 
 #include "json/flat.hpp"
 #include "json/except.hpp"
+#include "io.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -41,7 +42,8 @@ main (int argc, char ** argv) {
     }
 
     try {
-       json::flat::parse (boost::filesystem::path (argv[ARG_PATH]));
+        util::mapped_file data (argv[ARG_PATH]);
+        json::flat::parse (data.operator util::view<const char*restrict> ());
     } catch (const json::error &x) {
         std::cerr << "error: " << x.what () << '\n';
         return EXIT_FAILURE;

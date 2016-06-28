@@ -26,6 +26,7 @@
 #include <boost/filesystem.hpp>
 
 #include "../iterator.hpp"
+#include "../view.hpp"
 #include "./flat.hpp"
 #include "./fwd.hpp"
 
@@ -41,8 +42,11 @@ namespace json { namespace tree {
 
     /// Parse an encoded form of JSON into a tree structure
     extern std::unique_ptr<node> parse (const boost::filesystem::path &path);
-    extern std::unique_ptr<node> parse (const char *start, const char *stop);
-    extern std::unique_ptr<node> parse (const std::string&);
+    extern std::unique_ptr<node> parse (const std::string &data);
+
+    template <typename T>
+    std::unique_ptr<node>
+    parse (util::view<T> data);
 
     extern std::unique_ptr<node> from_path (const char *path);
     extern std::unique_ptr<node> from_path (const std::string&);
@@ -211,6 +215,9 @@ namespace json { namespace tree {
             std::string m_value;
 
         public:
+            template <typename T>
+            string (T first, T last): m_value (first, last) { ; }
+
             explicit string (const std::string &_value): m_value (_value) { ; }
             explicit string (const char        *_value): m_value (_value) { ; }
             string (const char *_first, const char *_last): m_value (_first, _last) { ; }

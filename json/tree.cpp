@@ -76,16 +76,20 @@ namespace util {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-static std::vector<json::flat::item>::const_iterator
-parse (std::vector<json::flat::item>::const_iterator first,
-       std::vector<json::flat::item>::const_iterator last,
+template <typename T>
+static
+typename std::vector<json::flat::item<T>>::const_iterator
+parse (typename std::vector<json::flat::item<T>>::const_iterator first,
+       typename std::vector<json::flat::item<T>>::const_iterator last,
        std::unique_ptr<json::tree::node> &output);
 
 
 //-----------------------------------------------------------------------------
-static std::vector<json::flat::item>::const_iterator
-parse (std::vector<json::flat::item>::const_iterator first,
-       std::vector<json::flat::item>::const_iterator last,
+template <typename T>
+static
+typename std::vector<json::flat::item<T>>::const_iterator
+parse (typename std::vector<json::flat::item<T>>::const_iterator first,
+       typename std::vector<json::flat::item<T>>::const_iterator last,
        json::tree::array &parent)
 {
     for (auto cursor = first; cursor != last; ) {
@@ -93,7 +97,7 @@ parse (std::vector<json::flat::item>::const_iterator first,
             return cursor + 1;
 
         std::unique_ptr<json::tree::node> value;
-        cursor = ::parse (cursor, last, value);
+        cursor = ::parse<T> (cursor, last, value);
         parent.insert (std::move (value));
     }
 
@@ -102,9 +106,11 @@ parse (std::vector<json::flat::item>::const_iterator first,
 
 
 //-----------------------------------------------------------------------------
-static std::vector<json::flat::item>::const_iterator
-parse (std::vector<json::flat::item>::const_iterator first,
-       std::vector<json::flat::item>::const_iterator last,
+template <typename T>
+static
+typename std::vector<json::flat::item<T>>::const_iterator
+parse (typename std::vector<json::flat::item<T>>::const_iterator first,
+       typename std::vector<json::flat::item<T>>::const_iterator last,
        json::tree::object &parent)
 {
     for (auto cursor = first; cursor != last; ) {
@@ -117,7 +123,7 @@ parse (std::vector<json::flat::item>::const_iterator first,
         ++cursor;
 
         std::unique_ptr<json::tree::node> val;
-        cursor = ::parse (cursor, last, val);
+        cursor = ::parse<T> (cursor, last, val);
 
         parent.insert (key, std::move (val));
     }
@@ -127,71 +133,78 @@ parse (std::vector<json::flat::item>::const_iterator first,
 
 
 //-----------------------------------------------------------------------------
-static std::vector<json::flat::item>::const_iterator
-parse (std::vector<json::flat::item>::const_iterator first,
-       std::vector<json::flat::item>::const_iterator last,
+template <typename T>
+static
+typename std::vector<json::flat::item<T>>::const_iterator
+parse (typename std::vector<json::flat::item<T>>::const_iterator first,
+       typename std::vector<json::flat::item<T>>::const_iterator last,
        std::unique_ptr<json::tree::node> &output)
 {
     CHECK (first != last);
     CHECK (output.get () == nullptr);
 
-    using T = json::flat::type;
+    using F = json::flat::type;
 
     switch (first->tag) {
-        case T::NUL:
+        case F::NUL:
             output.reset (new json::tree::null ());
             return first + 1;
 
-        case T::BOOLEAN:
+        case F::BOOLEAN:
             CHECK (*first->first == 't' || *first->first == 'f');
             output.reset (new json::tree::boolean (*first->first == 't'));
             return first + 1;
 
-        case T::STRING:
-            CHECK_NEQ (first->first, first->last);
+        case F::STRING:
+            CHECK_NEQ (&*first->first, &*first->last);
             output.reset (new json::tree::string (first->first + 1, first->last - 1));
             return first + 1;
 
-        case T::INTEGER:
-            if (first->first[0] == '-') {
-                char *end;
-                intmax_t v = strtoll (first->first, &end, 10);
-                
-                if (end == first->first || end > first->last)
-                    throw json::parse_error ("invalid signed integer");
-                output.reset (new json::tree::number (v));
-            } else {
-                char *end;
-                uintmax_t v = strtoull (first->first, &end, 10);
+        case F::INTEGER: {
+            T start = first->first;
+            bool negative = *start == '-';
+            if (negative)
+                ++start;
 
-                if (end == first->first || end > first->last)
-                    throw json::parse_error ("invalid unsigned integer");
+            T finish = start;
+            uintmax_t v = 0;
+            while (isdigit (*finish))
+                v *= 10, v += *finish - '0', ++finish;
+
+            if (finish == start || finish > first->last)
+                throw json::parse_error ("invalid integer");
+
+            if (negative)
+                output.reset (new json::tree::number (-intmax_t(v)));
+            else
                 output.reset (new json::tree::number (v));
-            }
 
             return first + 1;
+        }
 
-        case T::REAL:
-            output.reset (new json::tree::number (std::atof (first->first)));
+        case F::REAL: {
+            std::string str (first->first, first->last);
+            output.reset (new json::tree::number (std::atof (str.c_str())));
             return first + 1;
+        }
 
-        case T::ARRAY_BEGIN: {
+        case F::ARRAY_BEGIN: {
             auto value = std::make_unique<json::tree::array> ();
-            auto cursor = ::parse (first + 1, last, *value);
+            auto cursor = ::parse<T> (first + 1, last, *value);
             output = std::move (value);
             return cursor;
         }
 
-        case T::OBJECT_BEGIN: {
+        case F::OBJECT_BEGIN: {
             auto value = std::make_unique<json::tree::object> ();
-            auto cursor = ::parse (first + 1, last, *value);
+            auto cursor = ::parse<T> (first + 1, last, *value);
             output = std::move (value);
             return cursor;
         }
 
-        case T::UNKNOWN:
-        case T::OBJECT_END:
-        case T::ARRAY_END:
+        case F::UNKNOWN:
+        case F::OBJECT_END:
+        case F::ARRAY_END:
             unreachable ();
     }
 
@@ -203,15 +216,17 @@ parse (std::vector<json::flat::item>::const_iterator first,
 std::unique_ptr<json::tree::node>
 json::tree::parse (const boost::filesystem::path &path)
 {
-    util::mapped_file f (path.string ().c_str ());
-    return parse ((const char*)f.cbegin (), (const char*)f.cend ());
+    const util::mapped_file f (path.string ().c_str ());
+    return parse<const char*restrict> (f.operator util::view<const char*restrict> ());
 }
 
 
 //-----------------------------------------------------------------------------
 std::unique_ptr<json::tree::node>
-json::tree::parse (const std::string &path)
-    { return parse (path.c_str (), path.c_str () + path.size ()); }
+json::tree::parse (const std::string &data)
+{
+    return parse<std::string::const_iterator> (::util::make_view (data));
+}
 
 
 //-----------------------------------------------------------------------------
@@ -221,12 +236,13 @@ json::tree::write (const json::tree::node &node, std::ostream &os)
 
 
 //-----------------------------------------------------------------------------
+template <typename T>
 std::unique_ptr<json::tree::node>
-json::tree::parse (const char *first, const char *last)
+json::tree::parse (const util::view<T> src)
 {
     std::unique_ptr<json::tree::node> output;
-    auto data = json::flat::parse (first, last);
-    auto end  = ::parse (data.cbegin (), data.cend (), output);
+    auto data = json::flat::parse (src);
+    auto end  = ::parse<T> (data.cbegin (), data.cend (), output);
 
     CHECK (end == data.cend ());
     (void)end;

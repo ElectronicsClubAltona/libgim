@@ -20,9 +20,9 @@
 #include "json/flat.hpp"
 
 #include "json/except.hpp"
-
-#include "io.hpp"
 #include "debug.hpp"
+#include "io.hpp"
+#include "preprocessor.hpp"
 
 #include <deque>
 
@@ -143,15 +143,16 @@
 
 
 //-----------------------------------------------------------------------------
-std::vector<json::flat::item>
-json::flat::parse (const char *first, const char *last)
+template <typename T>
+std::vector<json::flat::item<T>>
+json::flat::parse (const util::view<T> src)
 {
-    const char *p   = first;
-    const char *pe  = last;
-    const char *eof = pe;
+    auto p   = src.cbegin ();
+    auto pe  = src.cend   ();
+    auto eof = pe;
 
     std::deque<int> ragelstack;
-    std::vector<item> parsed;
+    std::vector<item<T>> parsed;
 
     size_t line = 0;
     int cs, top;
@@ -166,17 +167,20 @@ json::flat::parse (const char *first, const char *last)
     return parsed;
 }
 
+#define INSTANTIATE(KLASS)              \
+template                                \
+std::vector<json::flat::item<KLASS>>    \
+json::flat::parse (util::view<KLASS>);
 
-//-----------------------------------------------------------------------------
-std::vector<json::flat::item>
-json::flat::parse (const boost::filesystem::path &path)
-{
-    util::mapped_file f (path.string ().c_str ());
-    if (f.empty ())
-        throw parse_error ("empty file");
+MAP(
+    INSTANTIATE,
 
-    return parse ((const char *)f.cbegin (), (const char*)f.cend ());
-}
+    std::string::iterator,
+    std::string::const_iterator,
+    const char*restrict
+)
+
+#undef INSTANTIATE
 
 
 //-----------------------------------------------------------------------------
