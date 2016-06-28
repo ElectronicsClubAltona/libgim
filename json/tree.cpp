@@ -20,10 +20,11 @@
 #include "./except.hpp"
 #include "./flat.hpp"
 
+#include "../cast.hpp"
 #include "../debug.hpp"
 #include "../io.hpp"
 #include "../maths.hpp"
-#include "../cast.hpp"
+#include "../preprocessor.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -213,29 +214,6 @@ parse (typename std::vector<json::flat::item<T>>::const_iterator first,
 
 
 ///////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<json::tree::node>
-json::tree::parse (const boost::filesystem::path &path)
-{
-    const util::mapped_file f (path.string ().c_str ());
-    return parse<const char*restrict> (f.operator util::view<const char*restrict> ());
-}
-
-
-//-----------------------------------------------------------------------------
-std::unique_ptr<json::tree::node>
-json::tree::parse (const std::string &data)
-{
-    return parse<std::string::const_iterator> (::util::make_view (data));
-}
-
-
-//-----------------------------------------------------------------------------
-void
-json::tree::write (const json::tree::node &node, std::ostream &os)
-    { node.write (os); }
-
-
-//-----------------------------------------------------------------------------
 template <typename T>
 std::unique_ptr<json::tree::node>
 json::tree::parse (const util::view<T> src)
@@ -250,21 +228,32 @@ json::tree::parse (const util::view<T> src)
     return output;
 }
 
+#define INSTANTIATE(KLASS)          \
+template                            \
+std::unique_ptr<json::tree::node>   \
+json::tree::parse (util::view<KLASS>);
+
+MAP(
+    INSTANTIATE,
+
+    std::string::iterator,
+    std::string::const_iterator,
+    const char* restrict,
+    const char*,
+    char* restrict,
+    char *
+);
+
+#undef INSTANTIATE
+
 
 ///////////////////////////////////////////////////////////////////////////////
-std::unique_ptr<json::tree::node>
-json::tree::from_path (const char *path)
+void
+json::tree::write (const json::tree::node &node, std::ostream &os)
 {
-    return json::tree::parse (boost::filesystem::path (path));
+    node.write (os);
 }
 
-
-//-----------------------------------------------------------------------------
-std::unique_ptr<json::tree::node>
-json::tree::from_path (const std::string &path)
-{
-    return json::tree::from_path (path.c_str ());
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Type conversion

@@ -177,7 +177,10 @@ MAP(
 
     std::string::iterator,
     std::string::const_iterator,
-    const char*restrict
+    const char* restrict,
+    const char*,
+    char *restrict,
+    char *
 )
 
 #undef INSTANTIATE
