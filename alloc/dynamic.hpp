@@ -142,13 +142,13 @@ namespace util { namespace alloc {
             }
 
             void *
-            base (void)
+            base (void) override
             {
                 return m_target.base ();
             }
 
             size_t
-            offset (const void *ptr) const
+            offset (const void *ptr) const override
             {
                 return m_target.offset (ptr);
             }
