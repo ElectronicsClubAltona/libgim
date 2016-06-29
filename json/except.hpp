@@ -54,6 +54,8 @@ namespace json {
     /// Exception class for invalid object indexing
     struct key_error : public error {
         explicit key_error (std::string);
+
+        std::string key;
     };
 }
 

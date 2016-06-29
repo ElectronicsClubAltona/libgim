@@ -16,6 +16,8 @@
 
 #include "except.hpp"
 
+#include "../format.hpp"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 json::parse_error::parse_error (const std::string &_what, size_t _line):
@@ -34,6 +36,7 @@ json::parse_error::what (void) const noexcept
 
 
 ///////////////////////////////////////////////////////////////////////////////
-json::key_error::key_error (std::string _what):
-    error (std::move (_what))
+json::key_error::key_error (std::string _key):
+    error (util::format::render ("missing key '%s'", _key)),
+    key (_key)
 { ; }
