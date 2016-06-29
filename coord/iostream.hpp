@@ -18,7 +18,6 @@
 #define __UTIL_IOSTREAM
 
 #include "../iterator.hpp"
-#include "../stream.hpp"
 
 #include <ostream>
 #include <algorithm>
@@ -35,10 +34,8 @@ namespace util {
         os << "[";
         std::transform (std::cbegin (k),
                         std::cend   (k),
-                        infix_iterator<
-                            stream::numeric<T>
-                        > (os, ", "),
-                        stream::to_numeric<T>);
+                        infix_iterator<T> (os, ", "),
+                        [] (auto i) { return +i; });
         os << "]";
 
         return os;

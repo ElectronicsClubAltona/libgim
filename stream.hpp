@@ -18,37 +18,9 @@
 #define __UTIL_STREAM_HPP
 
 #include <iostream>
-#include "types/bits.hpp"
 
 namespace util {
     namespace stream {
-        ///////////////////////////////////////////////////////////////////////
-        template <typename T>
-        struct numeric
-        {
-            explicit numeric (T _val): val (_val) { ; }
-            T val;
-        };
-
-
-        //---------------------------------------------------------------------
-        template <typename T>
-        numeric<T>
-        to_numeric (const T &t)
-        {
-            return numeric<T> (t);
-        }
-
-
-        //---------------------------------------------------------------------
-        template <typename T>
-        std::ostream&
-        operator<< (std::ostream &os, numeric<T> n)
-        {
-            return os << +n.val;
-        }
-
-
         ///////////////////////////////////////////////////////////////////////
         class null_streambuf : public std::basic_streambuf<char> {
         public:

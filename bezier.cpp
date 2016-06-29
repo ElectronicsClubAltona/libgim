@@ -440,8 +440,8 @@ util::operator<< (std::ostream &os, const bezier<S> &b)
     os << "[";
     std::transform (std::cbegin (b),
                     std::cend   (b),
-                    infix_iterator<stream::numeric<value_type>> (os, ", "),
-                    stream::to_numeric<value_type>);
+                    infix_iterator<value_type> (os, ", "),
+                    [] (auto i) { return +i; });
     os << "]";
 
     return os;
