@@ -187,12 +187,12 @@ A readable and compact implementation of the Keccak-f[1600] permutation.
 ================================================================
 */
 
-static constexpr
-size_t
-i (size_t x, size_t y)
-{
-    return x + 5 * y;
-}
+//static constexpr
+//size_t
+//i (size_t x, size_t y)
+//{
+//    return x + 5 * y;
+//}
 
 
 /**
