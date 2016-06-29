@@ -19,6 +19,7 @@
 using util::rand::lcg;
 
 
+///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 static constexpr
 bool is_coprime (T M, T C)
