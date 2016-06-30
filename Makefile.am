@@ -210,6 +210,8 @@ UTIL_FILES   =			\
     rand/lcg.hpp		\
     rand/xorshift.cpp		\
     rand/xorshift.hpp		\
+    rand/mwc64x.cpp		\
+    rand/mwc64x.hpp		\
     random.cpp			\
     random.hpp			\
     random.ipp			\

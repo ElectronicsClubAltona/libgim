@@ -1,5 +1,6 @@
 #include "rand/xorshift.hpp"
 #include "rand/lcg.hpp"
+#include "rand/mwc64x.hpp"
 
 #include "tap.hpp"
 #include "maths.hpp"
@@ -15,9 +16,9 @@ template <>
 std::string
 type_to_string<util::rand::xorshift<uint64_t>> (void) { return "xorshift<uint64_t>"; }
 
-template <>
-std::string
-type_to_string<util::rand::lcg_t> (void) { return "lcg_t"; }
+template <> std::string type_to_string<util::rand::lcg_t> (void) { return "lcg_t"; }
+
+template <> std::string type_to_string<util::rand::mwc64x> (void) { return "mwc64x"; }
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,10 +44,11 @@ test_buckets (util::TAP::logger &tap, Args&& ...args)
     for (unsigned i = 0; i < ITERATIONS; ++i)
         ++buckets[gen () & BUCKET_MASK];
 
-    tap.expect (std::find_if (std::cbegin (buckets),
-                              std::cend   (buckets),
-                              [] (auto v) { return v < EXPECTED * 3 / 4; }) == std::cend (buckets),
-                "bucket counts for %s", type_to_string<G> ());
+    tap.expect (
+        std::find_if (std::cbegin (buckets),
+                      std::cend   (buckets),
+                      [] (auto v) { return v < EXPECTED * 7 / 8; }) == std::cend (buckets),
+        "bucket counts for %s", type_to_string<G> ());
 }
 
 
@@ -59,6 +61,7 @@ main (int,char**)
     test_buckets<util::rand::xorshift<uint32_t>> (tap, 0x1234u);
     test_buckets<util::rand::xorshift<uint64_t>> (tap, 0x1234u);
     test_buckets<util::rand::lcg_t> (tap, 0x1234u);
+    test_buckets<util::rand::mwc64x> (tap, 0x1234u);
 
     return tap.status ();
 }
