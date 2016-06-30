@@ -60,7 +60,7 @@ int
 main (int, char **) {
     util::TAP::logger tap;
 
-    srand (time (NULL));
+    srand (0u);
 
     test_bool (tap);
     test_float (tap);
