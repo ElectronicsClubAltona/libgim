@@ -392,11 +392,11 @@ ice::scheduleBuild (std::array<uint16_t,4> &kb,
 void
 ice::set (const uint64_t *_key_first, const uint64_t *_key_last)
 {
+    CHECK_EQ ((unsigned)(_key_last - _key_first), m_size);
+
     auto key = reinterpret_cast<const uint8_t*> (_key_first);
 
     if (m_rounds == 8) {
-        CHECK_EQ (_key_last - _key_first, 8 * 2 + 1);
-
         std::array<uint16_t,4> kb;
 
         for (unsigned i = 0; i < 4; i++)
@@ -407,8 +407,6 @@ ice::set (const uint64_t *_key_first, const uint64_t *_key_last)
     }
 
     for (unsigned i = 0; i < m_size; i++) {
-        CHECK_EQ ((unsigned)(_key_last - _key_first), m_size * 8u + 4u * 2u + 1u);
-
         std::array<uint16_t,4> kb;
 
         for (unsigned j = 0; j < 4; j++)
