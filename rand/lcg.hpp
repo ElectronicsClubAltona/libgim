@@ -30,11 +30,18 @@ namespace util { namespace rand {
     template <typename T, T M, T A, T C>
     struct lcg {
     public:
+        using result_type = T;
+
         static_assert (std::is_unsigned<T>::value,
                        "LCG generates integer overflow which is undefined behaviour for signed types");
         lcg (T seed);
 
-        T operator() (void);
+        result_type operator() (void);
+
+        static result_type min (void);
+        static result_type max (void);
+
+        void discard (unsigned);
 
     private:
         T m_x;
