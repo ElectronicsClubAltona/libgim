@@ -26,9 +26,16 @@ namespace util { namespace rand {
     template <typename T>
     struct xorshift {
     public:
+        using result_type = T;
+
         xorshift (T seed);
 
-        T operator() (void);
+        result_type operator() (void);
+
+        static result_type min (void);
+        static result_type max (void);
+
+        void discard (unsigned);
 
     private:
         T m_state;

@@ -75,5 +75,32 @@ xorshift<T>::operator() (void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+typename xorshift<T>::result_type
+xorshift<T>::min (void)
+{
+    return 1u;
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+typename xorshift<T>::result_type
+xorshift<T>::max (void)
+{
+    return std::numeric_limits<T>::max ();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+void
+xorshift<T>::discard (unsigned count)
+{
+    while (count--)
+        (*this)();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template struct util::rand::xorshift<uint32_t>;
 template struct util::rand::xorshift<uint64_t>;
