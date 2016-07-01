@@ -28,8 +28,8 @@ template <typename T>
 xorshift<T>::xorshift (T seed):
     m_state (seed)
 {
-    // state must not be zero, or the period will be zero.
-    CHECK_NEZ (m_state);
+    if (!m_state)
+        throw std::invalid_argument ("xorshift seed must not be zero");
 }
 
 
