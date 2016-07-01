@@ -22,61 +22,6 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T> struct constants { };
-
-template <>
-struct constants<uint32_t> {
-    static const uint32_t m = 0x5bd1e995;
-    static const  int32_t r = 24;
-};
-
-template <>
-struct constants<uint64_t> {
-    static const uint64_t m = 0xc6a4a7935bd1e995;
-    static const  int64_t r = 47;
-};
-
-
-/////////////////////////////////////////////////////////////////////
-uint32_t
-util::hash::murmur2::mix (uint32_t h, uint32_t k)
-{
-    static const uint32_t m = constants<uint32_t>::m;
-    static const uint32_t r = constants<uint32_t>::r;
-
-    k *= m;
-    k ^= k >> r;
-    k *= m;
-
-    h *= m;
-    h ^= k;
-
-    return h;
-}
-
-
-//-----------------------------------------------------------------------------
-// 64 bit murmur2 mixing function. Note the last two lines are swapped
-// compared with 32 bit murmur2_mix. It's not clear if this is deliberate
-// in the canonical implementation, so we just leave it to help compatibility.
-uint64_t
-util::hash::murmur2::mix (uint64_t h, uint64_t k)
-{
-    static const uint64_t m = constants<uint64_t>::m;
-    static const uint64_t r = constants<uint64_t>::r;
-
-    k *= m;
-    k ^= k >> r;
-    k *= m;
-
-    h ^= k;
-    h *= m;
-
-    return h;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 uint32_t
 util::hash::murmur2::hash_32 (const void *restrict key,
                               size_t len,
@@ -85,7 +30,7 @@ util::hash::murmur2::hash_32 (const void *restrict key,
     CHECK (key);
 
     // setup
-    static const auto m = constants<uint32_t>::m;
+    constexpr auto m = detail::constants<uint32_t>::m;
     uint32_t h = seed ^ uint32_t (len);
 
     // body
@@ -116,8 +61,8 @@ util::hash::murmur2::hash_64 (const void *restrict key,
                               uint64_t seed)
 {
     // setup
-    const auto m = constants<uint64_t>::m;
-    const auto r = constants<uint64_t>::r;
+    constexpr auto m = detail::constants<uint64_t>::m;
+    constexpr auto r = detail::constants<uint64_t>::r;
 
     uint64_t h = seed ^ (len * m);
 
