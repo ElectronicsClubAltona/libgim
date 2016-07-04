@@ -324,6 +324,22 @@ to_string (json::tree::type_t t)
 
 
 //-----------------------------------------------------------------------------
+static bool
+is_type_valid (const json::tree::node &node, const std::string &type)
+{
+    if (type == "integer")  return node.is_integer ();
+    if (type == "number")   return node.is_number ();
+    if (type == "string")   return node.is_string ();
+    if (type == "object")   return node.is_object ();
+    if (type == "array")    return node.is_array ();
+    if (type == "boolean")  return node.is_boolean ();
+    if (type == "null")     return node.is_null ();
+
+    return false;
+}
+
+
+//-----------------------------------------------------------------------------
 static void
 validate (json::tree::node &node,
           const json::tree::object &schema)
@@ -343,10 +359,7 @@ validate (json::tree::node &node,
     if (type != schema.cend ()) {
         // check against a single named type
         if (type->second->is_string ()) {
-            const auto &a = type->second->as_string ();
-            auto b = to_string (node.type ());
-
-            if (a != b)
+            if (!is_type_valid (node, type->second->as_string ()))
                 throw json::schema_error ("type");
         // check against an array of types
         } else if (type->second->is_array ()) {
