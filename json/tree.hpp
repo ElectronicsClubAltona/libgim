@@ -90,6 +90,7 @@ namespace json { namespace tree {
             virtual bool is_array   (void) const { return false; }
             virtual bool is_string  (void) const { return false; }
             virtual bool is_number  (void) const { return false; }
+            virtual bool is_integer (void) const { return false; }
             virtual bool is_boolean (void) const { return false; }
             virtual bool is_null    (void) const { return false; }
 
@@ -267,6 +268,7 @@ namespace json { namespace tree {
             virtual const number& as_number  (void) const& override { return *this; }
             virtual       number& as_number  (void)      & override { return *this; }
             virtual bool          is_number  (void) const  override { return  true; }
+            virtual bool          is_integer (void) const  override { return repr () == UINT || repr () == SINT; }
 
             virtual type_t type (void) const override { return NUMBER; }
             virtual repr_t repr (void) const { return m_repr; }
