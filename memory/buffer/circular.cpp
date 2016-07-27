@@ -17,9 +17,10 @@
 #include "./circular.hpp"
 
 #include "../system.hpp"
+#include "../../debug.hpp"
 #include "../../except.hpp"
-#include "../../raii.hpp"
 #include "../../maths.hpp"
+#include "../../raii.hpp"
 #include "../../random.hpp"
 
 #include <cstring>
