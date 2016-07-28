@@ -47,7 +47,11 @@ template <typename... Args>
 void
 util::TAP::logger::expect (const std::function<bool(Args...)> &test, Args&&... args, const std::string &msg)
 {
-    expect (test (std::forward<Args> (args)...), msg);
+    try {
+        expect (test (std::forward<Args> (args)...), msg);
+    } catch (...) {
+        expect (false, msg);
+    }
 }
 
 
