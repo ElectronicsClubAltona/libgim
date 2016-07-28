@@ -603,6 +603,12 @@ namespace util { namespace format { namespace detail {
     OutputT
     write (OutputT os, const specifier spec, const char *t)
     {
+        // we need to forward to the pointer write function rather than the
+        // other way around to reduce ambiguity and the potential for
+        // recursion.
+        if (spec.k == specifier::kind::POINTER)
+            return write (os, spec, reinterpret_cast<const void*> (t));
+
         if (spec.k != specifier::kind::STRING)
             throw conversion_error ("invalid specifier kind for string argumetn");
 
@@ -672,7 +678,7 @@ namespace util { namespace format { namespace detail {
     //-------------------------------------------------------------------------
     template <typename T, typename OutputT>
     std::enable_if_t<
-        std::is_pointer<T>::value,
+        std::is_pointer<T>::value && !std::is_same<std::remove_pointer_t<T>, char>::value,
         OutputT
     >
     write (OutputT &os, const specifier &spec, const T t)

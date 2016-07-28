@@ -112,6 +112,8 @@ main (void)
     CHECK_RENDER ("%c", "A", 'A');
 
     CHECK_RENDER ("%s", "foo", "foo");
+    CHECK_RENDER ("%s", "foo", std::string ("foo"));
+    CHECK_RENDER ("%s", "foo", const_cast<char*> ("foo"));
     CHECK_RENDER ("%.s", "", "foo");
     CHECK_RENDER ("%.0s", "", "foo");
     CHECK_RENDER ("%.2s", "fo", "foo");
@@ -122,6 +124,7 @@ main (void)
 
     CHECK_RENDER ("%p", "0x1234567", (void*)0x01234567);
     CHECK_RENDER ("%p", "0x1234567", (int*)0x01234567);
+    CHECK_RENDER ("%p", "0x1234567", (char*)0x01234567);
     CHECK_RENDER ("%p", "(nil)", nullptr);
     CHECK_RENDER ("%p", "(nil)", NULL);
 
