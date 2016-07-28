@@ -225,12 +225,12 @@ namespace util { namespace format { namespace detail {
                 return -1;
 
         case specifier::kind::STRING:
+        case specifier::kind::OSTREAM:
             return std::numeric_limits<int>::max ();
 
         case specifier::kind::POINTER:
         case specifier::kind::CHARACTER:
         case specifier::kind::ESCAPE:
-        case specifier::kind::OSTREAM:
             return 0;
         }
 

@@ -2,6 +2,18 @@
 
 #include "tap.hpp"
 
+
+///////////////////////////////////////////////////////////////////////////////
+struct userobj { };
+
+static std::ostream&
+operator<< (std::ostream &os, const userobj&)
+{
+    return os << "userobj";
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 int
 main (void)
 {
@@ -121,6 +133,7 @@ main (void)
     CHECK_RENDER ("%.64s", "foo", "foo");
     CHECK_RENDER ("%3.1s", "  f", "foo");
     CHECK_RENDER ("%-3.1s", "f  ", "foo");
+    CHECK_RENDER ("%!", "userobj", userobj {});
 
     CHECK_RENDER ("%p", "0x1234567", (void*)0x01234567);
     CHECK_RENDER ("%p", "0x1234567", (int*)0x01234567);
