@@ -856,7 +856,7 @@ namespace util { namespace format { namespace detail {
     //------------------------------------------------------------------------
     template <typename ValueT, typename ...Args, typename OutputT>
     OutputT
-    _render (OutputT os, const char *first, const char *last, ValueT val, Args&& ...args)
+    _render (OutputT os, const char *first, const char *last, const ValueT &val, const Args &...args)
     {
         auto start = std::find (first, last, '%');
         os = std::copy (first, start, os);
@@ -865,14 +865,14 @@ namespace util { namespace format { namespace detail {
 
         specifier spec;
         auto cursor = parse (start, last, spec);
-        return _render (write (os, spec, val), cursor, last, std::forward<Args> (args)...);
+        return _render (write (os, spec, val), cursor, last, args...);
     }
 
 
     //------------------------------------------------------------------------
     template <typename ValueT, typename ...Args, typename OutputT, size_t N>
     OutputT
-    render (OutputT os, const char (&fmt)[N], ValueT val, Args&& ...args)
+    render (OutputT os, const char (&fmt)[N], const ValueT &val, const Args &...args)
     {
         if (N <= 1)
             return os;
@@ -880,7 +880,7 @@ namespace util { namespace format { namespace detail {
         const auto first = fmt;
         const auto last  = fmt + N - 1;
 
-        return _render (os, first, last, val, std::forward<Args> (args)...);
+        return _render (os, first, last, val, args...);
     }
 
 
