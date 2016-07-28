@@ -48,9 +48,9 @@ void
 util::TAP::logger::expect (const std::function<bool(Args...)> &test, Args&&... args, const char (&fmt)[N])
 {
     try {
-        expect (test (std::forward<Args> (args)...), msg);
+        expect (test (std::forward<Args> (args)...), fmt);
     } catch (...) {
-        expect (false, msg);
+        expect (false, fmt);
     }
 }
 
