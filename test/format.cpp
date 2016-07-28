@@ -167,7 +167,7 @@ main (void)
     CHECK_THROW("%i", conversion_error, nullptr);
 
     CHECK_THROW("%hhi", length_error, (long long)1);
-    CHECK_THROW("%lli", length_error, (signed char)1);
+    //CHECK_THROW("%lli", length_error, (signed char)1);
 
     CHECK_THROW("%u", conversion_error, 1.);
     CHECK_THROW("%u", conversion_error, "foo");
@@ -176,7 +176,7 @@ main (void)
     CHECK_THROW("%u", conversion_error, nullptr);
 
     CHECK_THROW("%hhu", length_error, (unsigned long long)1);
-    CHECK_THROW("%llu", length_error, (unsigned char)1);
+    //CHECK_THROW("%llu", length_error, (unsigned char)1);
 
     CHECK_THROW("%f", conversion_error, 1u);
     CHECK_THROW("%f", conversion_error, "foo");

@@ -729,8 +729,8 @@ namespace util { namespace format { namespace detail {
         if (spec.k != (std::is_unsigned<ValueT>::value ? specifier::kind::UNSIGNED : specifier::kind::SIGNED))
             throw conversion_error ("invalid conversion specifier for integer value");
 
-        if (spec.length != sizeof (ValueT))
-            throw length_error ("incorrect value size");
+        if (sizeof (ValueT) > spec.length)
+            throw length_error ("overlength value parameter");
 
         const auto numerals   = digits (t, spec.base);
         const auto characters = numerals + (spec.positive_char ? 1 : 0);
