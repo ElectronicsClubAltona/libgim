@@ -44,6 +44,7 @@ UTIL_FILES   =			\
     colour.cpp			\
     colour.hpp			\
     colour.ipp			\
+    coord/fwd.hpp		\
     coord/base.hpp		\
     coord.hpp			\
     coord/init.hpp		\
