@@ -66,7 +66,7 @@ main (int, char**)
         obj.update (reinterpret_cast<const uint8_t*> (i.input), strlen (i.input));
         obj.finish ();
 
-        tap.expect_eq (obj.digest (), i.output, i.msg);
+        tap.expect_eq (obj.digest (), i.output, "%s", i.msg);
     }
 
     return tap.status ();

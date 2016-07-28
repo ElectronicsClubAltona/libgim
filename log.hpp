@@ -61,8 +61,8 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     void log (level_t, const std::string &msg);
 
-    template <typename ...tail>
-    void log (level_t, const std::string &format, tail&& ..._tail);
+    template <typename ...Args, size_t N>
+    void log (level_t, const char (&fmt)[N], const Args&...);
 
 
     //-------------------------------------------------------------------------

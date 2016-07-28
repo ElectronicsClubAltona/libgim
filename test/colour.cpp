@@ -45,8 +45,8 @@ main (int, char**)
         };
 
         for (auto i: TESTS) {
-            tap.expect_eq (util::rgb_to_hsv (i.rgb), i.hsv, i.name);
-            tap.expect_eq (util::hsv_to_rgb (i.hsv), i.rgb, i.name);
+            tap.expect_eq (util::rgb_to_hsv (i.rgb), i.hsv, "rgb-to-hsv %s", i.name);
+            tap.expect_eq (util::hsv_to_rgb (i.hsv), i.rgb, "hsv-to-rgb %s", i.name);
         }
     }
 }

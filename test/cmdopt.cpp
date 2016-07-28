@@ -86,13 +86,13 @@ test_bool (util::TAP::logger &tap)
     for (auto i: positive) {
         argv[2] = i;
         p.scan (argv.size (), argv.data ());
-        tap.expect_eq (value, true, i, "read bool, %s", i);
+        tap.expect_eq (value, true, "read bool, %s", i);
     }
 
     for (auto i: negative) {
         argv[2] = i;
         p.scan (argv.size (), argv.data ());
-        tap.expect_eq (value, false, i, "read bool, %s", i);
+        tap.expect_eq (value, false, "read bool, %s", i);
     }
 
     // Check that invalid forms of boolean all throw exceptions

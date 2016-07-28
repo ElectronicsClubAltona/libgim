@@ -286,8 +286,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 constexpr void panic [[noreturn]] (const char*);
 
-template <typename ...Args>
-constexpr void panic [[noreturn]] (const char *fmt, const Args&...);
+template <typename ...Args, size_t N>
+constexpr
+void panic [[noreturn]] (const char (&fmt)[N], const Args&...);
 
 
 ///////////////////////////////////////////////////////////////////////////////

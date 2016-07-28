@@ -23,9 +23,8 @@ test_good (util::TAP::logger &tap)
         {       "127.0.0.1", { 127,   0,   0,   1 }, "localhost" }
     };
 
-    for (const auto &i: TESTS) {
-        tap.expect_eq (ipv4::ip::parse (i.str), i.ip, i.msg);
-    }
+    for (const auto &i: TESTS)
+        tap.expect_eq (ipv4::ip::parse (i.str), i.ip, "%s", i.msg);
 }
 
 
@@ -43,9 +42,8 @@ test_bad (util::TAP::logger &tap)
         { "256.0.0.1", "overflow" }
     };
 
-    for (const auto &i: TESTS) {
-        tap.expect_throw<ipv4::error> ([&] { ipv4::ip::parse (i.str); }, i.msg);
-    }
+    for (const auto &i: TESTS)
+        tap.expect_throw<ipv4::error> ([&] { ipv4::ip::parse (i.str); }, "%s", i.msg);
 }
 
 
