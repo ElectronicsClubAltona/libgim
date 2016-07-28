@@ -18,21 +18,21 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-constexpr char util::type_string<bool>::value[];
+constexpr char util::type_name<bool>::value[];
 
-constexpr char util::type_string<  int8_t>::value[];
-constexpr char util::type_string< int16_t>::value[];
-constexpr char util::type_string< int32_t>::value[];
-constexpr char util::type_string< int64_t>::value[];
+constexpr char util::type_name<  int8_t>::value[];
+constexpr char util::type_name< int16_t>::value[];
+constexpr char util::type_name< int32_t>::value[];
+constexpr char util::type_name< int64_t>::value[];
 
-constexpr char util::type_string< uint8_t>::value[];
-constexpr char util::type_string<uint16_t>::value[];
-constexpr char util::type_string<uint32_t>::value[];
-constexpr char util::type_string<uint64_t>::value[];
+constexpr char util::type_name< uint8_t>::value[];
+constexpr char util::type_name<uint16_t>::value[];
+constexpr char util::type_name<uint32_t>::value[];
+constexpr char util::type_name<uint64_t>::value[];
 
-constexpr char util::type_string<float>::value[];
-constexpr char util::type_string<double>::value[];
+constexpr char util::type_name<float>::value[];
+constexpr char util::type_name<double>::value[];
 
-constexpr char util::type_string<std::string>::value[];
-constexpr char util::type_string<char*>::value[];
-constexpr char util::type_string<const char*>::value[];
+constexpr char util::type_name<std::string>::value[];
+constexpr char util::type_name<char*>::value[];
+constexpr char util::type_name<const char*>::value[];
