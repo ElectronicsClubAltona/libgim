@@ -104,17 +104,8 @@ main ()
         std::vector<uint32_t> dec (enc);
         gen.decrypt (dec.data (), dec.size ());
 
-        {
-            std::ostringstream os;
-            os << "XXTEA_enc " << i;
-            tap.expect (enc == t.enc, os.str ());
-        }
-
-        {
-            std::ostringstream os;
-            os << "XXTEA_dec " << i;
-            tap.expect (dec == t.dec, os.str ());
-        }
+        tap.expect (enc == t.enc, "XXTEA_enc %zu", i);
+        tap.expect (dec == t.dec, "XXTEA_dec %zu", i);
     }
 
     return tap.status ();

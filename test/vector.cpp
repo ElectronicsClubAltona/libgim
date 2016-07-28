@@ -47,7 +47,7 @@ test_polar (util::TAP::logger &tap)
         auto in_cart = t.cartesian;
         auto to_cart = util::polar_to_cartesian (t.polar);
 
-        tap.expect_lt ((in_cart - to_cart).magnitude (), 0.00001f, t.desc);
+        tap.expect_lt ((in_cart - to_cart).magnitude (), 0.00001f, "%s", t.desc);
 
         // Compare polar representations. Make sure to normalise them first.
         auto in_polar = t.polar;
@@ -56,7 +56,7 @@ test_polar (util::TAP::logger &tap)
         in_polar[1] = std::fmod (in_polar[1], 2 * util::PI<float>);
         to_polar[1] = std::fmod (to_polar[1], 2 * util::PI<float>);
 
-        tap.expect_eq (in_polar, to_polar, t.desc);
+        tap.expect_eq (in_polar, to_polar, "%s", t.desc);
     }
 }
 

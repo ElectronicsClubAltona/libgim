@@ -33,7 +33,7 @@ main (void)
     for (const auto &t: TESTS) {
         constexpr float TOLERANCE = 0.00001f;
         auto root = util::roots::bisection (t.lo, t.hi, t.func, TOLERANCE);
-        tap.expect_eq (root, t.root, t.msg);
+        tap.expect_eq (root, t.root, "%s", t.msg);
     }
 
     return tap.status ();  

@@ -7,6 +7,8 @@ static char g_backing[1024*1024];
 
 
 struct setter {
+    setter (const setter&) = delete;
+
     setter (bool &_target):
         target (_target)
     { target = false; }
@@ -30,7 +32,7 @@ main (void)
 
     // double check our testing object is working, because I'm tired and stupid
     {
-        auto val = setter (flag);
+        setter val (flag);
         CHECK (!flag);
     }
     CHECK (flag);

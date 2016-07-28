@@ -14,11 +14,12 @@
  * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "colour.hpp"
+#include "./colour.hpp"
 
-#include "range.hpp"
-#include "random.hpp"
-#include "stream.hpp"
+#include "./debug.hpp"
+#include "./range.hpp"
+#include "./random.hpp"
+#include "./stream.hpp"
 
 #include <array>
 #include <map>

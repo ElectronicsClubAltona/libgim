@@ -16,19 +16,19 @@ test_simple (util::TAP::logger &tap)
     std::ostringstream os;
     os << "fixed<" << type_to_string<T> () << ',' << I << ',' << E << '>';
 
-    tap.expect_eq (lo, lo, os.str () + " self equality");
-    tap.expect_eq (hi, hi, os.str () + " self equality");
+    tap.expect_eq (lo, lo, "%s self equality", os.str ());
+    tap.expect_eq (hi, hi, "%s self equality", os.str ());
 
-    tap.expect_neq (hi, lo, os.str () + " inequality");
-    tap.expect_neq (lo, hi, os.str () + " inequality");
+    tap.expect_neq (hi, lo, "%s inequality", os.str ());
+    tap.expect_neq (lo, hi, "%s inequality", os.str ());
 
-    tap.expect_lt (lo, hi, os.str () + " less than");
-    tap.expect_le (lo, hi, os.str () + " less than equal");
-    tap.expect_le (lo, lo, os.str () + " less than equal");
+    tap.expect_lt (lo, hi, "%s less than", os.str ());
+    tap.expect_le (lo, hi, "%s less than equal", os.str ());
+    tap.expect_le (lo, lo, "%s less than equal", os.str ());
 
-    tap.expect_gt (hi, lo, os.str () + " greater than");
-    tap.expect_ge (lo, lo, os.str () + " greater than equal");
-    tap.expect_ge (hi, lo, os.str () + " greater than equal");
+    tap.expect_gt (hi, lo, "%s greater than", os.str ());
+    tap.expect_ge (lo, lo, "%s greater than equal", os.str ());
+    tap.expect_ge (hi, lo, "%s greater than equal", os.str ());
 }
 
 

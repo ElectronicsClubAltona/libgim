@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_FORMAT_HPP
@@ -20,41 +20,56 @@
 #include <stdexcept>
 #include <string>
 
-namespace util {
-    namespace format {
-        template <typename ...Args>
-        std::string
-        render (const std::string &fmt, Args&&...);
+namespace util { namespace format {
+    //-------------------------------------------------------------------------
+    // render a format string using the provided values.
+    //
+    // we deliberately only take char[] formats so as to promote the use of
+    // only literal strings as format strings.
+    template <typename ...Args, size_t N>
+    std::string
+    render (const char (&fmt)[N], const Args&...);
 
-        class error : public std::runtime_error
-        { using runtime_error::runtime_error; };
+    //-------------------------------------------------------------------------
+    class error : public std::runtime_error
+    { using runtime_error::runtime_error; };
 
-        // value-specifier mismatch
-        class value_error : public error
-        { using error::error; };
+    // value-specifier mismatch
+    class value_error : public error
+    { using error::error; };
 
-        // malformed format specifier
-        class format_error : public error
-        { using error::error; };
+    struct conversion_error : public error
+    { using error::error; };
 
-        template <typename ValueT>
-        class invalid_specifier : public format_error {
-        public:
-            using value_type = ValueT;
+    struct length_error : public error
+    { using error::error; };
 
-            invalid_specifier (char specifier);
+    // malformed format specifier
+    class syntax_error : public error
+    { using error::error; };
 
-            char specifier (void) const;
+    template <typename ValueT>
+    class invalid_specifier : error {
+    public:
+        using value_type = ValueT;
 
-        private:
-            char m_specifier;
-        };
+        invalid_specifier (char specifier);
 
-        // missing format specifier
-        class missing_error : public error
-        { using error::error; };
-    }
-}
+        char specifier (void) const;
+
+    private:
+        char m_specifier;
+    };
+
+    // missing format specifier
+    class missing_error : public error
+    {
+    public:
+        missing_error ():
+            error ("missing argument for specifier")
+        { ; }
+    };
+} }
 
 #include "format.ipp"
 

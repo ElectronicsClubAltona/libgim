@@ -30,7 +30,6 @@
 #include <cstdlib>
 #include <deque>
 #include <iomanip>
-#include <sstream>
 #include <stdexcept>
 
 #include <fcntl.h>

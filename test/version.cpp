@@ -52,7 +52,7 @@ main () {
     for (const auto &i: PARSE_TESTS) {
         util::version v (i.str);
 
-        tap.expect (std::equal (v.begin (), v.end (), i.parts) && v.release == i.release, i.msg);
+        tap.expect (std::equal (v.begin (), v.end (), i.parts) && v.release == i.release, "%s", i.msg);
     }
 
 

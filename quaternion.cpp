@@ -17,6 +17,7 @@
 
 #include "quaternion.hpp"
 
+#include "debug.hpp"
 #include "maths.hpp"
 
 
