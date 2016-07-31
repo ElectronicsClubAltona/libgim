@@ -126,7 +126,7 @@ AC_SUBST(LIBS)
 # failure on a clean build
 AX_APPEND_FLAG([-include config.h])
 
-NC_SUBPACKAGE([util])
+NC_SUBPACKAGE([cruft-util])
 
 AC_CONFIG_FILES([
     Doxyfile
