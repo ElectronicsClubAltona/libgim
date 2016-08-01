@@ -101,7 +101,5 @@ constexpr
 void
 panic [[noreturn]] (const char (&fmt)[N], const Args& ...args)
 {
-    ! fmt
-    ? panic ("unreachable constexpr panic helper")
-    : util::debug::detail::panic (fmt, args...);
+    util::debug::detail::panic (fmt, args...);
 }
