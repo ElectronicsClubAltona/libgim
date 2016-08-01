@@ -86,7 +86,7 @@ RIPEMD::update (const void *restrict _data, size_t len) noexcept
     }
 
     if (m_length >> sizeof (m_length) * 8 - 3 != 0)
-        throw std::length_error ("exceeded maximum message length");
+        panic ("exceeded maximum message length");
 }
 
 
