@@ -31,6 +31,7 @@ namespace util {
         class mapped_file {
         public:
             mapped_file (const char *path, int fflags = O_RDONLY | O_BINARY, int mflags = PROT_READ);
+            mapped_file (const util::fd&,  int mflags = PROT_READ);
 
             mapped_file (const mapped_file&) = delete;
             mapped_file& operator= (const mapped_file&) = delete;
@@ -61,7 +62,6 @@ namespace util {
             as_view () &;
 
         private:
-            fd m_fd;
             uint8_t *m_data;
             size_t   m_size;
 

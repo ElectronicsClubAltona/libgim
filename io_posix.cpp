@@ -26,16 +26,22 @@
 using util::detail::posix::mapped_file;
 
 //////////////////////////////////////////////////////////////////////////////
-mapped_file::mapped_file (const char *_path, int fflags, int mflags):
-    m_fd (_path, fflags)
+mapped_file::mapped_file (const char *path, int fflags, int mflags):
+    mapped_file (util::fd (path, fflags), mflags)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+mapped_file::mapped_file (const util::fd &src, int mflags)
 {
-    try {
-        load_fd (mflags);
-    } catch (const errno_error &e) {
-        // ignore zero length mapping error
-        if (e.code () == EINVAL && m_size == 0)
-            return;
-    }
+    struct stat meta;
+    if (fstat (src, &meta) < 0)
+        throw errno_error ();
+
+    m_size = (size_t)meta.st_size;
+    m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, src, 0);
+    if (m_data == MAP_FAILED)
+        throw errno_error ();
 }
 
 
@@ -44,20 +50,6 @@ mapped_file::~mapped_file ()
 {
     CHECK (m_data != NULL);
     munmap (m_data, m_size);
-}
-
-
-//----------------------------------------------------------------------------
-void
-mapped_file::load_fd (int mflags) {
-    struct stat meta;
-    if (fstat (m_fd, &meta) < 0)
-        throw errno_error ();
-
-    m_size = (size_t)meta.st_size;
-    m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, m_fd, 0);
-    if (m_data == MAP_FAILED)
-        throw errno_error ();
 }
 
 
