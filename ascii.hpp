@@ -17,6 +17,11 @@
 #ifndef __CRUFT_UTIL_ASCII_HPP
 #define __CRUFT_UTIL_ASCII_HPP
 
+#include "./annotation.hpp"
+
+#include <cstdint>
+#include <stdexcept>
+
 namespace util { namespace ascii {
     ///////////////////////////////////////////////////////////////////////////
     constexpr inline
@@ -24,6 +29,16 @@ namespace util { namespace ascii {
     is_digit (char c) noexcept
     {
         return c >= '0' && c <= '9';
+    }
+
+    //-------------------------------------------------------------------------
+    constexpr inline
+    uint8_t
+    to_integer (char c)
+    {
+        return likely (is_digit (c)) ?
+              c - '0'
+            : throw std::invalid_argument ("character is not a digit");
     }
 
 
