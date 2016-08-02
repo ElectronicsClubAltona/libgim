@@ -52,6 +52,26 @@ namespace util { namespace ascii {
     {
         return c - 'A' + 'a';
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    constexpr inline
+    bool
+    is_space (char c)
+    {
+        switch (c) {
+        case ' ':
+        case '\f':
+        case '\n':
+        case '\r':
+        case '\t':
+        case '\v':
+            return true;
+
+        default:
+            return false;
+        }
+    }
 } }
 
 #endif
