@@ -32,6 +32,7 @@ UTIL_FILES   =			\
     alloc/null.hpp		\
     alloc/stack.cpp		\
     alloc/stack.hpp		\
+    annotation.hpp		\
     ascii.hpp			\
     backtrace.hpp   		\
     bezier.cpp			\
