@@ -232,6 +232,21 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
+#define CHECK_MOD(V,M) do {                                         \
+    DEBUG_ONLY (                                                    \
+        const auto &__check_mod_v = (V);                            \
+        const auto &__check_mod_m = (M);                            \
+        if (!util::exactly_zero (__check_mod_v % __check_mod_m))    \
+            _CHECK_PANIC ("expected zero modulus\n"                 \
+                          "__v: %s is %!\n"                         \
+                          "__m: %s is %!",                          \
+                          #V, __check_mod_v,                        \
+                          #M, __check_mod_m);                       \
+    );                                                              \
+} while (0)
+
+
+///////////////////////////////////////////////////////////////////////////////
 #if defined(ENABLE_DEBUGGING)
 #define CHECK_ENUM(C, ...) do {                         \
     const auto &__c = (C);                              \
