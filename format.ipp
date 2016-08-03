@@ -633,6 +633,15 @@ namespace util { namespace format { namespace detail {
     //-------------------------------------------------------------------------
     template <typename OutputT>
     OutputT
+    write (OutputT os, const specifier &spec, const unsigned char *t)
+    {
+        return write (os, spec, reinterpret_cast<const char*> (t));
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename OutputT>
+    OutputT
     write (OutputT os, const specifier spec, const std::string &val)
     {
         return write (os, spec, val.c_str ());
