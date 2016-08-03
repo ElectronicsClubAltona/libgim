@@ -87,8 +87,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_EQ(A,B) do {                                  \
     DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (!util::almost_equal (__a, __b)) {               \
             _CHECK_PANIC("expected equality\n"              \
@@ -104,8 +104,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LT(A,B) do {                                  \
     DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (__a >= __b) {                                   \
             _CHECK_PANIC("expected less than\n"             \
@@ -121,8 +121,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LE(A,B) do {                                  \
     DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (__a > __b) {                                    \
             _CHECK_PANIC("expected less than or equal\n"    \
@@ -138,8 +138,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_GT(A,B) do {                                  \
     DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (__a <= __b) {                                   \
             _CHECK_PANIC ("expected greater than\n"         \
@@ -155,8 +155,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_GE(A,B) do {                                  \
     DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (__a < __b) {                                    \
             _CHECK_PANIC ("expected greater or equal\n"     \
@@ -172,9 +172,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LIMIT(V,L,H) do {                             \
     DEBUG_ONLY(                                             \
-        const auto __v = (V);                               \
-        const auto __l = (L);                               \
-        const auto __h = (H);                               \
+        const auto &__v = (V);                              \
+        const auto &__l = (L);                              \
+        const auto &__h = (H);                              \
                                                             \
         if (__v < __l || __v > __h) {                       \
             _CHECK_PANIC ("expected limit\n"                \
@@ -191,8 +191,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NEQ(A,B) do {                                 \
     DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (util::almost_equal (__a, __b)) {                \
             _CHECK_PANIC ("expected inequality\n"           \
@@ -208,7 +208,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_ZERO(A) do {                                  \
     DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
+        const auto &__a = (A);                              \
                                                             \
         if (!util::almost_zero (__a)) {                     \
             _CHECK_PANIC ("expected zero\n"                 \
@@ -222,7 +222,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NEZ(A) do {                                   \
     DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
+        const auto &__a = (A);                              \
         if (util::exactly_zero (__a))                       \
             _CHECK_PANIC ("expected zero\n"                 \
                           "__a: %s is %!",                  \
