@@ -59,7 +59,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define _CHECK_PANIC(FMT,...) do {                          \
     panic ("%s:%s:%i:%s\n" FMT,                             \
-           PACKAGE, __FILE__, __LINE__, __FUNCTION__,       \
+           PACKAGE, __FILE__, __LINE__, __func__,           \
            __VA_ARGS__);                                    \
 } while(0)
 
