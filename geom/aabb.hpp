@@ -65,9 +65,6 @@ namespace util { namespace geom {
     typedef AABB<3,float> AABB3f;
     typedef AABB<3,size_t> AABB3u;
     typedef AABB<3,intmax_t> AABB3i;
-
-    template <size_t S, typename T>
-    std::ostream& operator<< (std::ostream&, AABB<S,T>);
 } }
 
 #include "aabb.ipp"

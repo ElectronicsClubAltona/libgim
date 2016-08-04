@@ -19,9 +19,17 @@
 
 #include "./fwd.hpp"
 
-#include <iostream>
+#include <ostream>
 
 namespace util { namespace geom {
+    template <size_t S, typename T>
+    std::ostream&
+    operator<< (std::ostream&, AABB<S,T>);
+
+    template <size_t S, typename T>
+    std::ostream&
+    operator<< (std::ostream&, ray<S,T>);
+
     template <size_t S, typename T>
     std::ostream&
     operator<< (std::ostream&, sphere<S,T>);

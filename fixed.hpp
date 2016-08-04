@@ -20,7 +20,7 @@
 #include "types/bits.hpp"
 
 #include <cstdint>
-#include <iostream>
+#include <ostream>
 
 namespace util {
     template <typename T, unsigned I, unsigned E>

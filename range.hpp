@@ -19,7 +19,7 @@
 #define __UTIL_RANGE_HPP
 
 #include <cstdint>
-#include <iostream>
+#include <ostream>
 
 namespace util {
     /**

@@ -24,7 +24,7 @@
 	#include "ws2tcpip.h"
 #endif
 
-#include <iostream>
+#include <ostream>
 #include <string>
 
 

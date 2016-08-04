@@ -14,9 +14,11 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "ray.hpp"
+#include "./ray.hpp"
 
-#include "ops.hpp"
+#include "./iostream.hpp"
+#include "./ops.hpp"
+
 #include "../debug.hpp"
 
 using util::geom::ray;

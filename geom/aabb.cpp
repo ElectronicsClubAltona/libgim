@@ -16,6 +16,8 @@
 
 
 #include "./aabb.hpp"
+
+#include "./iostream.hpp"
 #include "../debug.hpp"
 
 using util::geom::AABB;

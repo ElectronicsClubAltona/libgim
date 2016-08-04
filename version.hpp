@@ -19,7 +19,7 @@
 
 #include <array>
 #include <string>
-#include <iostream>
+#include <ostream>
 #include <limits>
 
 namespace util {

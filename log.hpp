@@ -20,7 +20,7 @@
 #include "./nocopy.hpp"
 #include "./preprocessor.hpp"
 
-#include <iostream>
+#include <ostream>
 #include <string>
 
 // Windows.h or one of its friends defines a macro 'ERROR'. Screw Microsoft.

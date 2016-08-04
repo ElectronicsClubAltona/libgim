@@ -19,7 +19,7 @@
 
 #include "coord.hpp"
 
-#include <iostream>
+#include <ostream>
 
 namespace util {
     /// An RGBA colour POD type.

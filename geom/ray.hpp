@@ -23,7 +23,7 @@
 #include "../vector.hpp"
 #include "../point.hpp"
 
-#include <iostream>
+#include <ostream>
 
 namespace util { namespace geom {
     template <size_t S, typename T>
@@ -49,9 +49,6 @@ namespace util { namespace geom {
         point<S,T>  origin;
         vector<S,T> direction;
     };
-
-    template <size_t S, typename T>
-    std::ostream& operator<< (std::ostream&, ray<S,T>);
 
     typedef ray<2,float> ray2f;
     typedef ray<3,float> ray3f;

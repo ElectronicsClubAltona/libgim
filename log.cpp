@@ -24,12 +24,12 @@
 #include "cast.hpp"
 
 #include <array>
-#include <ctime>
 #include <cstring>
+#include <ctime>
+#include <iomanip>
+#include <iostream>
 #include <map>
 #include <string>
-#include <iomanip>
-
 
 ///////////////////////////////////////////////////////////////////////////////
 static

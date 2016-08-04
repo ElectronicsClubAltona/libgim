@@ -17,7 +17,7 @@
 #ifndef __UTIL_STREAM_HPP
 #define __UTIL_STREAM_HPP
 
-#include <iostream>
+#include <ostream>
 
 namespace util {
     namespace stream {
