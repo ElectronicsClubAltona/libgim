@@ -41,7 +41,7 @@ debug::backtrace::backtrace (void):
     while ((last = ::backtrace (&m_frames[0], trunc_cast<int> (m_frames.size ()))) == size)
         m_frames.resize (size = m_frames.size () * 2);
 
-    CHECK_GT (last, 0);
+    CHECK_GT (last, 0u);
     m_frames.resize (last);
 }
 

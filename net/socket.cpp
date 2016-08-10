@@ -164,7 +164,7 @@ template <domain D>
 void
 net::socket<D, type::STREAM>::send (const uint8_t *restrict data, size_t len) {
     CHECK (data != NULL);
-    CHECK_GT (len, 0);
+    CHECK_GT (len, 0u);
 
     for (size_t sent = 0; sent < len; ) {
         ssize_t result = ::send (this->m_fd, static_cast<const void *>(data + sent), len - sent, 0);
@@ -181,7 +181,7 @@ template <domain D>
 size_t
 net::socket<D, type::STREAM>::recv (uint8_t *restrict data, size_t len) {
     CHECK (data != NULL);
-    CHECK_GT (len, 0);
+    CHECK_GT (len, 0u);
 
     ssize_t received = ::recv (this->m_fd, data, len, 0);
     if (received < 0)
@@ -261,7 +261,7 @@ net::socket<D, type::DGRAM>::send_addr (const address_type      &addr,
                                         const uint8_t *restrict  data,
                                         size_t                   len) {
     CHECK (data != NULL);
-    CHECK_GT (len, 0);
+    CHECK_GT (len, 0u);
 
     typename address_type::sockaddr_type addr_in = addr.to_sockaddr ();
 
@@ -278,7 +278,7 @@ typename net::socket<D, type::DGRAM>::address_type
 net::socket<D, type::DGRAM>::recv_addr (uint8_t *restrict data,
                                         size_t            len) {
     CHECK (data != NULL);
-    CHECK_GT (len, 0);
+    CHECK_GT (len, 0u);
 
     typename address_type::sockaddr_type addr_in;
     socklen_t                            addr_len = sizeof (addr_in);
