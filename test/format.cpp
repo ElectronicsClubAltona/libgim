@@ -53,6 +53,7 @@ main (void)
     CHECK_RENDER ("%lu", "1",  (unsigned long)1);
     CHECK_RENDER ("%llu", "1", (unsigned long long)1);
     CHECK_RENDER ("%ju", "1",  (uintmax_t)1);
+    CHECK_RENDER ("%zu", "0",  (size_t)0);
     CHECK_RENDER ("%zu", "1",  (size_t)1);
 
     CHECK_RENDER ("%o", "1", 01u);

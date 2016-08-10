@@ -743,6 +743,7 @@ namespace util { namespace format { namespace detail {
 
         const auto numerals   = digits (t, spec.base);
         const auto characters = numerals + (spec.positive_char ? 1 : 0);
+        CHECK_NEZ (numerals);
 
         // add any requested positive signifier
         if (spec.positive_char)
@@ -775,11 +776,13 @@ namespace util { namespace format { namespace detail {
         // output is blank (though space padding/etc is still preserved).
         if (t != 0 || spec.precision != 0) {
             const char *NUMERALS = spec.uppercase ?
-                "0123456789ABCDEF" :
+                "0123456789ABCDEF":
                 "0123456789abcdef";
 
             char buffer[numerals];
-            for (auto cursor = buffer; t; t /= spec.base)
+            size_t remain = numerals;
+
+            for (auto cursor = buffer; remain--; t /= spec.base)
                 *cursor++ = NUMERALS[t % spec.base];
             std::reverse_copy (buffer, buffer + numerals, os);
         }
