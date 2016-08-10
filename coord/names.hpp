@@ -20,11 +20,23 @@
 namespace util { namespace coord {
     ///////////////////////////////////////////////////////////////////////
     // tags for accessor names
+    //
+    // colours
     struct rgba { };
     struct hsv  { };
+
+    // physical positions
     struct xyzw { };
+
+    // texture coords
     struct stpq { };
+
+    // physical dimensions
     struct whd  { };
+
+    // quaternions
+    struct wxyz { };
+    struct abcd { };
 } }
 
 #endif

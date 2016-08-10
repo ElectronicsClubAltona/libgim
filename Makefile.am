@@ -435,6 +435,7 @@ TEST_BIN = 			\
     test/point			\
     test/polynomial		\
     test/pool			\
+    test/quaternion		\
     test/rand/buckets		\
     test/random			\
     test/range 			\

@@ -30,6 +30,7 @@ namespace util {
     template <size_t,typename> struct extent;
     template <size_t,typename> struct vector;
     template <size_t,typename> struct colour;
+    template <size_t,typename> struct quaternion;
 
     ///////////////////////////////////////////////////////////////////////
     // operation traits
@@ -52,10 +53,11 @@ namespace util {
 
     template <template <size_t,typename> class> struct is_coord : std::false_type { };
 
-    template <> struct is_coord<point>  : std::true_type { };
-    template <> struct is_coord<extent> : std::true_type { };
-    template <> struct is_coord<vector> : std::true_type { };
-    template <> struct is_coord<colour> : std::true_type { };
+    template <> struct is_coord<point>      : std::true_type { };
+    template <> struct is_coord<extent>     : std::true_type { };
+    template <> struct is_coord<vector>     : std::true_type { };
+    template <> struct is_coord<colour>     : std::true_type { };
+    template <> struct is_coord<quaternion> : std::true_type { };
 
     template <template <size_t,typename> class K>
     constexpr bool

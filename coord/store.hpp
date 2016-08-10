@@ -168,6 +168,17 @@ namespace util { namespace coord {
             struct { T w,h,d; };
         };
     };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    struct store<4,T,wxyz,abcd> {
+        union {
+            T data[4];
+            struct { T w,x,y,z; };
+            struct { T a,b,c,d; };
+        };
+    };
 } }
 
 #endif
