@@ -74,6 +74,7 @@ namespace util {
     template <typename T> using vector3 = vector<3,T>;
     template <typename T> using vector4 = vector<4,T>;
 
+    template <size_t S> using vectoru = vector<S,uintmax_t>;
     template <size_t S> using vectori = vector<S,intmax_t>;
     template <size_t S> using vectorf = vector<S,float>;
 
