@@ -45,7 +45,7 @@ namespace util { namespace coord {
         base () = default;
 
         constexpr explicit base (T val)
-        { for (size_t i = 0; i < S; ++i) this->data[i] = val; }
+        { std::fill (begin (), end (), val); }
 
         constexpr base (const base<S,T,KLASS,tags...> &rhs) = default;
         base& operator= (const base<S,T,KLASS,tags...> &rhs) = default;
