@@ -216,7 +216,7 @@ extent_range<S,T>::iterator::operator!= (const iterator &rhs) const
 ///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace debug {
     template <size_t S, typename T>
-    struct validator<extent,S,T> {
+    struct validator<extent<S,T>> {
         static bool is_valid (const extent<S,T> &e)
         {
             return std::all_of (std::begin (e.data),
@@ -226,11 +226,11 @@ namespace util { namespace debug {
     };
 } }
 
-template bool util::debug::valid (const extent<2,float>&);
-template bool util::debug::valid (const extent<2,double>&);
-template bool util::debug::valid (const extent<2,uint16_t>&);
-template bool util::debug::valid (const extent<2,uint32_t>&);
-template bool util::debug::valid (const extent<2,uint64_t>&);
+template bool util::debug::is_valid (const extent<2,float>&);
+template bool util::debug::is_valid (const extent<2,double>&);
+template bool util::debug::is_valid (const extent<2,uint16_t>&);
+template bool util::debug::is_valid (const extent<2,uint32_t>&);
+template bool util::debug::is_valid (const extent<2,uint64_t>&);
 
 
 //-----------------------------------------------------------------------------

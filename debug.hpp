@@ -77,7 +77,7 @@
 #define CHECK_SANITY(A) do {                                            \
     DEBUG_ONLY(                                                         \
         const auto &__a = (A);                                          \
-        if (!util::debug::valid (__a)) {                                \
+        if (!util::debug::is_valid (__a)) {                             \
             _CHECK_PANIC("failed sanity test for %s, %!\n", #A, __a);   \
         }                                                               \
     );                                                                  \
@@ -344,7 +344,14 @@ namespace util { namespace debug {
 
 
     template <typename T>
-    bool valid (const T&);
+    struct validator {
+        static bool is_valid (const T&);
+    };
+
+
+    template <typename T>
+    bool is_valid (const T &t)
+    { return validator<T>::is_valid (t); }
 
 
     template <
@@ -352,7 +359,7 @@ namespace util { namespace debug {
         size_t S,
         typename ...Args
     >
-    struct validator {
+    struct validator<T<S,Args...>> {
         static bool is_valid (const T<S,Args...>&);
     };
 
@@ -362,15 +369,15 @@ namespace util { namespace debug {
         size_t S,
         typename ...Args
     >
-    bool valid (const T<S,Args...> &v)
-    { return validator<T,S,Args...>::is_valid (v); }
+    bool is_valid (const T<S,Args...> &v)
+    { return validator<T<S,Args...>>::is_valid (v); }
 
 
     template <typename T>
     void sanity (const T &t)
     {
         (void)t;
-        CHECK (valid (t));
+        CHECK (is_valid (t));
     }
 
 
@@ -381,7 +388,7 @@ namespace util { namespace debug {
     void sanity (const T<Args...> &t)
     {
         (void)t;
-        CHECK (valid (t));
+        CHECK (is_valid (t));
     }
 } }
 

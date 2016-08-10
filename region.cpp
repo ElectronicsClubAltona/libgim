@@ -388,7 +388,7 @@ namespace util { namespace debug {
 #define INSTANTIATE_S_T(S,T)                                                \
 template struct util::region<S,T>;                                            \
 template std::ostream& util::operator<< (std::ostream&, const region<S,T>&);  \
-template struct util::debug::validator<util::region,S,T>;
+template struct util::debug::validator<util::region<S,T>>;
 
 #define INSTANTIATE(T)  \
 INSTANTIATE_S_T(2,T)    \
