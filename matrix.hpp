@@ -70,11 +70,11 @@ namespace util {
         static matrix<4,T> look_at (point<3,T> eye, point<3,T> centre, vector<3,T> up);
 
         // Affine matrices
-        static matrix<4,T> translate (util::vector<2,T>);
-        static matrix<4,T> translate (util::vector<3,T>);
-        static matrix<4,T> scale     (util::vector<3,T>);
-        static matrix<4,T> scale     (T);
-        static matrix<4,T> rotate    (T angle, util::vector<3,T> about);
+        static matrix<4,T> translation (util::vector<2,T>);
+        static matrix<4,T> translation (util::vector<3,T>);
+        static matrix<4,T> scale       (util::vector<3,T>);
+        static matrix<4,T> scale       (T);
+        static matrix<4,T> rotation    (T angle, util::vector<3,T> about);
 
         // Constant matrices
         static const matrix IDENTITY;

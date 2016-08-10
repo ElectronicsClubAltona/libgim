@@ -349,16 +349,16 @@ matrix<S,T>::look_at (util::point<3,T> eye,
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 matrix4<T>
-matrix<S,T>::translate (util::vector<2,T> v)
+matrix<S,T>::translation (util::vector<2,T> v)
 {
-    return translate ({v.x, v.y, 0});
+    return translation ({v.x, v.y, 0});
 }
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 matrix4<T>
-matrix<S,T>::translate (util::vector<3,T> v)
+matrix<S,T>::translation (util::vector<3,T> v)
 {
     return { {
         { 1.f, 0.f, 0.f, v.x },
@@ -394,7 +394,7 @@ matrix<S,T>::scale (util::vector<3,T> v)
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 matrix4<T>
-matrix<S,T>::rotate (T angle, util::vector<3,T> about)
+matrix<S,T>::rotation (T angle, util::vector<3,T> about)
 {
     about.normalise ();
 
