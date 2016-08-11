@@ -18,10 +18,11 @@
 #define __UTIL_COORD_FWD_HPP
 
 namespace util {
-    template <size_t S, typename T> struct colour;
-    template <size_t S, typename T> struct extent;
-    template <size_t S, typename T> struct point;
-    template <size_t S, typename T> struct vector;
+    template <size_t,typename> struct colour;
+    template <size_t,typename> struct extent;
+    template <size_t,typename> struct point;
+    template <size_t,typename> struct quaternion;
+    template <size_t,typename> struct vector;
 }
 
 #endif

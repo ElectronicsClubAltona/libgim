@@ -17,6 +17,8 @@
 #ifndef __UTIL_COORDS_OPS
 #define __UTIL_COORDS_OPS
 
+#include "./fwd.hpp"
+
 #include "../preprocessor.hpp"
 #include "../maths.hpp"
 #include "../types/bits.hpp"
@@ -25,13 +27,6 @@
 #include <cmath>
 
 namespace util {
-    // forward declerations for traits
-    template <size_t,typename> struct point;
-    template <size_t,typename> struct extent;
-    template <size_t,typename> struct vector;
-    template <size_t,typename> struct colour;
-    template <size_t,typename> struct quaternion;
-
     ///////////////////////////////////////////////////////////////////////
     // operation traits
     namespace coord {
