@@ -55,11 +55,13 @@ namespace util {
         static const quaternion IDENTITY;
     };
 
-    template <size_t S, typename T> quaternion<S,T> operator* (const quaternion<S,T>, const quaternion<S,T>);
-    template <size_t S, typename T> quaternion<S,T> operator/ (const quaternion<S,T>, const quaternion<S,T>);
+    template <size_t S, typename T>
+    quaternion<S,T>
+    operator* (const quaternion<S,T>, const quaternion<S,T>);
 
-    template <size_t S, typename T> quaternion<S,T> operator* (const quaternion<S,T>, const T);
-    template <size_t S, typename T> quaternion<S,T> operator/ (const quaternion<S,T>, const T);
+    template <size_t S, typename T>
+    quaternion<S,T>
+    operator/ (const quaternion<S,T>, const quaternion<S,T>);
 
     typedef quaternion<4,float> quaternionf;
 

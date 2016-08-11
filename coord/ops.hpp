@@ -50,6 +50,20 @@ namespace util {
             template <size_t,typename> class B
         >
         using result_t = typename result<A,B>::type;
+
+
+        //---------------------------------------------------------------------
+        template <template <size_t,typename> class K>
+        struct has_scalar_op : public std::false_type { };
+
+        template <> struct has_scalar_op<colour>     : public std::true_type { };
+        template <> struct has_scalar_op<extent>     : public std::true_type { };
+        template <> struct has_scalar_op<point>      : public std::true_type { };
+        template <> struct has_scalar_op<quaternion> : public std::true_type { };
+        template <> struct has_scalar_op<vector>     : public std::true_type { };
+
+        template <template <size_t,typename> class K>
+        constexpr auto has_scalar_op_v = has_scalar_op<K>::value;
     }
 
     template <template <size_t,typename> class> struct is_coord : std::false_type { };
@@ -129,7 +143,7 @@ namespace util {
         typename U,                                     \
         template <size_t,typename> class K,             \
         typename = std::enable_if_t<                    \
-            is_coord_v<K>,void                          \
+            coord::has_scalar_op_v<K>, void             \
         >                                               \
     >                                                   \
     constexpr                                           \
@@ -149,7 +163,7 @@ namespace util {
         typename U,                                     \
         template <size_t,typename> class K,             \
         typename = std::enable_if_t<                    \
-            is_coord<K>::value,void                     \
+            coord::has_scalar_op_v<K>,void              \
         >                                               \
     >                                                   \
     constexpr                                           \

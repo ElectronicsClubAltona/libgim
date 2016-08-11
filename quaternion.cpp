@@ -139,34 +139,6 @@ template quaternion<4,float> util::operator/ (quaternion<4,float>, quaternion<4,
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-quaternion<S,T>
-util::operator* (const quaternion<S,T> q, const T t)
-{
-    return {
-        q.w * t,
-        q.x * t,
-        q.y * t,
-        q.z * t
-    };
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-quaternion<S,T>
-util::operator/ (const quaternion<S,T> q, const T t)
-{
-    return {
-        q.w / t,
-        q.x / t,
-        q.y / t,
-        q.z / t
-    };
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
 util::matrix4<T>
 quaternion<S, T>::as_matrix (void) const
 {
