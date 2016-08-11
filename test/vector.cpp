@@ -47,7 +47,7 @@ test_polar (util::TAP::logger &tap)
         auto in_cart = t.cartesian;
         auto to_cart = util::polar_to_cartesian (t.polar);
 
-        tap.expect_lt ((in_cart - to_cart).magnitude (), 0.00001f, "%s", t.desc);
+        tap.expect_lt (norm (in_cart - to_cart), 0.00001f, "%s", t.desc);
 
         // Compare polar representations. Make sure to normalise them first.
         auto in_polar = t.polar;
@@ -91,11 +91,11 @@ test_euler (util::TAP::logger &tap)
     for (auto i: TESTS) {
         auto trip = util::from_euler (util::to_euler (i.dir));
         auto diff = i.dir - trip;
-        auto norm = diff.magnitude ();
+        auto mag  = norm (diff);
 
         // trig functions reduce precision above almost_equal levels, so we
         // hard code a fairly low bound here instead.
-        tap.expect_lt (norm, 1e-7, "euler round-trip error, %s", i.name);
+        tap.expect_lt (mag, 1e-7, "euler round-trip error, %s", i.name);
     }
 }
 
@@ -108,8 +108,8 @@ main ()
     test_polar (tap);
     test_euler (tap);
 
-    tap.expect (!util::vector3f::ZERO.is_normalised (), "zero isn't normalised");
-    tap.expect (!util::vector3f::UNIT.is_normalised (), "unit is normalised");
+    tap.expect (!is_normalised (util::vector3f::ZERO), "zero isn't normalised");
+    tap.expect (!is_normalised (util::vector3f::UNIT), "unit is normalised");
 
     return tap.status ();
 }

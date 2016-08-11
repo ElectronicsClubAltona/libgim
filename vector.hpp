@@ -32,17 +32,8 @@ namespace util {
         // vector size
         bool is_zero (void) const;
 
-        T magnitude  (void) const;
-        T magnitude2 (void) const;
-
         T difference  (vector<S,T>) const;
         T difference2 (vector<S,T>) const;
-
-        // normalisation
-        bool is_normalised (void) const;
-
-        vector<S,T>& normalise  (void);
-        vector<S,T>  normalised [[gnu::warn_unused_result]] (void) const;
 
         // representations
         template <size_t D> vector<D,T> homog (void) const;

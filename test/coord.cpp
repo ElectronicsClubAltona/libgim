@@ -1,5 +1,6 @@
 #include "tap.hpp"
 #include "point.hpp"
+#include "vector.hpp"
 
 #include "coord/iostream.hpp"
 
@@ -29,6 +30,9 @@ main (void)
         >::value,
         "unary point boolean negation has type bool"
     );
+
+    auto vec = util::vector4f (0.5f);
+    t.expect_eq (vec, util::normalised (vec), "normalisation of normalised vector");
 
     return t.status ();
 }

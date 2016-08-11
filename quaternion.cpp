@@ -19,6 +19,7 @@
 
 #include "./debug.hpp"
 #include "./maths.hpp"
+#include "./vector.hpp"
 
 #include <iostream>
 
@@ -33,19 +34,10 @@ template<> const quaternion<4, double> quaternion<4, double>::IDENTITY = { 1, 0,
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-bool
-quaternion<S,T>::is_normalised (void) const
-{
-    return almost_equal (T{1}, magnitude2 ());
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
 quaternion<S,T>
 quaternion<S,T>::rotation (const T radians, const vector<3,T> axis)
 {
-    CHECK (axis.is_normalised ());
+    CHECK (is_normalised (axis));
 
     auto w   = std::cos (radians / 2);
     auto xyz = std::sin (radians / 2) * axis;
@@ -74,36 +66,6 @@ quaternion<S,T>::rotation (const vector<3,T> src, const vector<3,T> dst)
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-T
-quaternion<S,T>::magnitude2 (void) const
-{
-    return this->a * this->a +
-           this->b * this->b +
-           this->c * this->c +
-           this->d * this->d;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-T
-quaternion<S,T>::magnitude (void) const
-{
-    return std::sqrt (magnitude2 ());
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-quaternion<S,T>
-quaternion<S,T>::normalised (void) const
-{
-    return *this / magnitude ();
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
 quaternion<S,T>
 util::operator* (const quaternion<S,T> a, const quaternion<S,T> b)
 {
@@ -123,8 +85,8 @@ template <size_t S, typename T>
 quaternion<S,T>
 util::operator/ (const quaternion<S,T> a, const quaternion<S,T> b)
 {
-    CHECK (a.is_normalised ());
-    CHECK (b.is_normalised ());
+    CHECK (is_normalised (a));
+    CHECK (is_normalised (b));
 
     return quaternion<S,T> {
           a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z,
@@ -142,7 +104,7 @@ template <size_t S, typename T>
 util::matrix4<T>
 quaternion<S, T>::as_matrix (void) const
 {
-    CHECK (is_normalised ());
+    CHECK (is_normalised (*this));
 
     const T wx = this->w * this->x, wy = this->w * this->y, wz = this->w * this->z;
     const T xx = this->x * this->x, xy = this->x * this->y, xz = this->x * this->z;
@@ -181,7 +143,7 @@ namespace util { namespace debug {
     struct validator<quaternion<S,T>> {
         static bool is_valid (const quaternion<S,T> &q)
         {
-            return q.is_normalised ();
+            return is_normalised (q);
         }
     };
 } }

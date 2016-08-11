@@ -31,7 +31,7 @@ ray<S,T>::ray (util::point<S,T> _origin,
     origin (_origin),
     direction (_direction)
 {
-    CHECK (direction.is_normalised ());
+    CHECK (is_normalised (direction));
 }
 
 
@@ -43,7 +43,7 @@ ray<S,T>::make (util::point<S,T> origin,
 {
     return {
         origin,
-        (target - origin).normalised ()
+        normalised (target - origin)
     };
 }
 

@@ -14,7 +14,7 @@ main (void)
     util::TAP::logger tap;
 
     tap.expect_eq (
-        quaternionf::IDENTITY.magnitude (), 1.f,
+        norm (quaternionf::IDENTITY), 1.f,
         "identity magnitude is unit"
     );
 
@@ -25,7 +25,7 @@ main (void)
     );
 
     {
-        auto val = quaternionf (2, 3, 4, 7).normalised ();
+        auto val = normalised (quaternionf (2, 3, 4, 7));
 
         tap.expect_eq (
             val * quaternionf::IDENTITY,
@@ -35,11 +35,17 @@ main (void)
     }
 
     {
+        // construct two quaternions for a trivial multiplication check.
+        //
+        // we use vector as an intermediate form so that normalisation can be
+        // done before the quaternion code is invoked (which may consider the
+        // values to be invalid and throw an exception given it's geared more
+        // towards rotations than general maths).
         util::vector4f a_v { 2, -11,  5, -17};
         util::vector4f b_v { 3,  13, -7, -19};
 
-        auto a = a_v.normalised ().as<quaternion> ();
-        auto b = b_v.normalised ().as<quaternion> ();
+        auto a = normalised (a_v).as<quaternion> ();
+        auto b = normalised (b_v).as<quaternion> ();
         auto c = quaternionf {
             -0.27358657116960006f,
             -0.43498209092420004f,

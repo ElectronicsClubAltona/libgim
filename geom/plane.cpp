@@ -29,7 +29,7 @@ plane<S,T>::plane (point<S,T>  _p,
     p (_p),
     n (_n)
 {
-    CHECK_EQ (n.magnitude2 (), T{1});
+    CHECK (is_normalised (n));
 }
 
 

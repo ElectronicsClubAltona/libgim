@@ -54,6 +54,17 @@ namespace util {
 
         //---------------------------------------------------------------------
         template <template <size_t,typename> class K>
+        struct has_norm : public std::false_type { };
+
+        template <> struct has_norm<vector>     : public std::true_type { };
+        template <> struct has_norm<quaternion> : public std::true_type { };
+
+        template <template <size_t,typename> class K>
+        constexpr auto has_norm_v = has_norm<K>::value;
+
+
+        //---------------------------------------------------------------------
+        template <template <size_t,typename> class K>
         struct has_scalar_op : public std::false_type { };
 
         template <> struct has_scalar_op<colour>     : public std::true_type { };
@@ -407,7 +418,79 @@ namespace util {
     }
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<coord::has_norm_v<K>,void>
+    >
+    constexpr
+    T
+    norm2 (const K<S,T> &k)
+    {
+        T sum = T{0};
+        for (auto &t: k)
+            sum += t * t;
+        return sum;
+    }
+
+
     //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            coord::has_norm_v<K>,
+            void
+        >
+    >
+    constexpr
+    T
+    norm (const K<S,T> &k)
+    {
+        return std::sqrt (norm2 (k));
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            coord::has_norm_v<K>,
+            void
+        >
+    >
+    constexpr
+    K<S,T>
+    normalised (const K<S,T> &k)
+    {
+        return k / norm (k);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            coord::has_norm_v<K>,
+            void
+        >
+    >
+    constexpr
+    bool
+    is_normalised (const K<S,T> &k)
+    {
+        return almost_equal (norm2 (k), T{1});
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
     template <
         size_t S,
         typename T,

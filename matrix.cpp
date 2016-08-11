@@ -333,8 +333,8 @@ matrix<S,T>::look_at (util::point<3,T> eye,
                       util::point<3,T> centre,
                       util::vector<3,T> up)
 {
-    const auto f = (centre - eye).normalise ();
-    const auto s = cross (f, up).normalise ();
+    const auto f = normalised (centre - eye);
+    const auto s = normalised (cross (f, up));
     const auto u = cross (s, f);
 
     return { {
@@ -396,7 +396,7 @@ template <size_t S, typename T>
 matrix4<T>
 matrix<S,T>::rotation (T angle, util::vector<3,T> about)
 {
-    about.normalise ();
+    CHECK (is_normalised (about));
 
     T c = std::cos (angle);
     T s = std::sin (angle);

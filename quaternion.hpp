@@ -44,12 +44,6 @@ namespace util {
         static quaternion rotation (T radians, vector<3,T> axis);
         static quaternion rotation (vector<3,T> src, vector<3,T> dst);
 
-        T magnitude  (void) const;
-        T magnitude2 (void) const;
-
-        bool is_normalised (void) const;
-        quaternion normalised (void) const;
-
         matrix4<T> as_matrix (void) const;
 
         static const quaternion IDENTITY;
