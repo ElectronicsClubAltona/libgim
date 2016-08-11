@@ -312,6 +312,27 @@ namespace util {
     }
 
 
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K>, void
+        >
+    >
+    constexpr
+    bool
+    almost_zero (const K<S,T> &k)
+    {
+        return std::all_of (
+            std::cbegin (k),
+            std::cend (k),
+            [] (T t) { return almost_equal (t); }
+        );
+    }
+
+
     ///////////////////////////////////////////////////////////////////////////
     // special operators
 

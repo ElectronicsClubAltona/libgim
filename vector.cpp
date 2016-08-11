@@ -154,18 +154,7 @@ util::cartesian_to_spherical (vector<3,T> c)
 }
 
 
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-util::vector<S,T>::is_zero (void) const
-{
-    return std::all_of (std::begin (this->data),
-                        std::end   (this->data),
-                        [] (T i) { return almost_zero (i); });
-}
-
-
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 const util::vector<S,T>
 util::vector<S,T>::UNIT (T{1});

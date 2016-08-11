@@ -29,9 +29,6 @@ namespace util {
     {
         using coord::base<S,T,util::vector,coord::xyzw,coord::stpq>::base;
 
-        // vector size
-        bool is_zero (void) const;
-
         T difference  (vector<S,T>) const;
         T difference2 (vector<S,T>) const;
 
