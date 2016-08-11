@@ -31,28 +31,6 @@ using util::vector3d;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-T
-util::vector<S,T>::difference (vector<S,T> rhs) const
-{
-    // TODO: change the signature to ensure it does not truncate
-    return static_cast<T> (std::sqrt (difference2 (rhs)));
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-T
-util::vector<S,T>::difference2 (vector<S,T> rhs) const
-{
-    T sum {0};
-    for (size_t i = 0; i < S; ++i)
-        sum += pow2 (this->data[i] - rhs.data[i]);
-    return sum;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 vector<2,T>
 util::polar_to_cartesian (vector<2,T> v)
@@ -160,12 +138,13 @@ const util::vector<S,T>
 util::vector<S,T>::UNIT (T{1});
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 const util::vector<S,T>
 util::vector<S,T>::ZERO (T{0});
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 void
 util::vector<S,T>::sanity (void) const

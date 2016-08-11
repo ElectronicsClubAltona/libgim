@@ -29,9 +29,6 @@ namespace util {
     {
         using coord::base<S,T,util::vector,coord::xyzw,coord::stpq>::base;
 
-        T difference  (vector<S,T>) const;
-        T difference2 (vector<S,T>) const;
-
         // representations
         template <size_t D> vector<D,T> homog (void) const;
 
@@ -55,7 +52,8 @@ namespace util {
 
     // output and serialisation operators
     template <size_t S, typename T>
-    const json::tree::node& operator>> (const json::tree::node&, vector<S,T>&);
+    const json::tree::node&
+    operator>> (const json::tree::node&, vector<S,T>&);
 
     // convenience typedefs
     template <typename T> using vector2 = vector<2,T>;
