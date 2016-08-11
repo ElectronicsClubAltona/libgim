@@ -128,11 +128,7 @@ util::operator<< (std::ostream &os, const quaternion<S,T> q)
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
-template struct util::quaternion<4,float>;
-template struct util::quaternion<4,double>;
-
-
+//-----------------------------------------------------------------------------
 template std::ostream& util::operator<< (std::ostream&, quaternion<4,float>);
 template std::ostream& util::operator<< (std::ostream&, quaternion<4,double>);
 
@@ -152,3 +148,8 @@ namespace util { namespace debug {
 //-----------------------------------------------------------------------------
 template bool util::debug::is_valid(const quaternion<4,float>&);
 template bool util::debug::is_valid(const quaternion<4,double>&);
+
+
+///////////////////////////////////////////////////////////////////////////////
+template struct util::quaternion<4,float>;
+template struct util::quaternion<4,double>;
