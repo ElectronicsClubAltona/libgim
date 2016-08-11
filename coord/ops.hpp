@@ -34,16 +34,22 @@ namespace util {
             template <size_t,typename> class A,
             template <size_t,typename> class B
         >
-        struct traits { };
+        struct result { };
 
         //-------------------------------------------------------------------------
-        template <> struct traits<colour,colour> { template <size_t S, typename T> using result = colour<S,T>; };
-        template <> struct traits<extent,extent> { template <size_t S, typename T> using result = extent<S,T>; };
-        template <> struct traits<extent,vector> { template <size_t S, typename T> using result = extent<S,T>; };
-        template <> struct traits<point,extent>  { template <size_t S, typename T> using result = point <S,T>; };
-        template <> struct traits<point,vector>  { template <size_t S, typename T> using result = point <S,T>; };
-        template <> struct traits<vector,point>  { template <size_t S, typename T> using result = point <S,T>; };
-        template <> struct traits<vector,vector> { template <size_t S, typename T> using result = vector<S,T>; };
+        template <> struct result<colour,colour> { template <size_t S, typename T> using type = colour<S,T>; };
+        template <> struct result<extent,extent> { template <size_t S, typename T> using type = extent<S,T>; };
+        template <> struct result<extent,vector> { template <size_t S, typename T> using type = extent<S,T>; };
+        template <> struct result<point,extent>  { template <size_t S, typename T> using type = point <S,T>; };
+        template <> struct result<point,vector>  { template <size_t S, typename T> using type = point <S,T>; };
+        template <> struct result<vector,point>  { template <size_t S, typename T> using type = point <S,T>; };
+        template <> struct result<vector,vector> { template <size_t S, typename T> using type = vector<S,T>; };
+
+        template <
+            template <size_t,typename> class A,
+            template <size_t,typename> class B
+        >
+        using result_t = typename result<A,B>::type;
     }
 
     template <template <size_t,typename> class> struct is_coord : std::false_type { };
@@ -76,7 +82,7 @@ namespace util {
     auto                                                \
     operator OP (A<S,T> a, B<S,U> b)                    \
     {                                                   \
-        typename coord::traits<A,B>::template result<   \
+        typename coord::result<A,B>::template type<     \
             S,std::common_type_t<T,U>                   \
         > out {};                                       \
         for (size_t i = 0; i < S; ++i)                  \
@@ -319,7 +325,7 @@ namespace util {
     }
 
 
-    //-------------------------------------------------------------------------
+    ///////////////////////////////////////////////////////////////////////////
     template <
         size_t S,
         typename T
@@ -334,6 +340,8 @@ namespace util {
         return sum;
     }
 
+
+    //-------------------------------------------------------------------------
     template <
         size_t S,
         typename T,
@@ -351,6 +359,7 @@ namespace util {
     }
 
 
+    //-------------------------------------------------------------------------
     template <
         size_t S,
         typename T,
@@ -367,6 +376,7 @@ namespace util {
     }
 
 
+    //-------------------------------------------------------------------------
     template <
         size_t S,
         typename T,
@@ -401,7 +411,7 @@ namespace util {
         return k;
     }
 
-    //-------------------------------------------------------------------------
+    ///////////////////////////////////////////////////////////////////////////
     template <
         size_t S,
         typename T,
