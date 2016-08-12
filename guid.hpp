@@ -21,40 +21,45 @@
 #include <ostream>
 #include <istream>
 
-class guid {
-    public:
-        enum type {
-            NCS_BACKWARD, // 0xx: Network Computing System backward compatibility
-            STANDARD,     // 10x: Standard
-            COM_BACKWARD, // 110: Microsoft Component Object Model backward compatibility
-            RESERVED      // 111: Reserved for future use
-        };
 
-    private:
-        guid (void);
+///////////////////////////////////////////////////////////////////////////////
+namespace util {
+    class guid {
+        public:
+            enum type {
+                NCS_BACKWARD, // 0xx: Network Computing System backward compatibility
+                STANDARD,     // 10x: Standard
+                COM_BACKWARD, // 110: Microsoft Component Object Model backward compatibility
+                RESERVED      // 111: Reserved for future use
+            };
 
-    public:
-        guid (uint32_t, uint16_t, uint16_t, uint8_t[8]);
-        explicit guid (const char *);
-        guid (const guid&);
+        private:
+            guid (void);
 
-        guid& operator= (const guid&);
+        public:
+            guid (uint32_t, uint16_t, uint16_t, uint8_t[8]);
+            explicit guid (const char *);
+            guid (const guid&);
 
-        static guid from_bytes  (const uint8_t *bytes);
-        static guid from_string (const char    *bytes);
+            guid& operator= (const guid&);
 
-        uint32_t data1;
-        uint16_t data2;
-        uint16_t data3;
-        uint8_t  data4[8];
+            static guid from_bytes  (const uint8_t *bytes);
+            static guid from_string (const char    *bytes);
 
-        type get_type (void) const;
+            uint32_t data1;
+            uint16_t data2;
+            uint16_t data3;
+            uint8_t  data4[8];
 
-        bool operator<  (const guid&) const;
-        bool operator== (const guid&) const;
-};
+            type get_type (void) const;
 
-std::istream& operator>> (std::istream&,       guid&);
-std::ostream& operator<< (std::ostream&, const guid&);
+            bool operator<  (const guid&) const;
+            bool operator== (const guid&) const;
+    };
+
+    std::istream& operator>> (std::istream&,       guid&);
+    std::ostream& operator<< (std::ostream&, const guid&);
+}
+
 
 #endif
