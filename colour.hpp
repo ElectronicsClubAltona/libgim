@@ -29,6 +29,7 @@ namespace util {
         using coord::base<S,T,util::colour,coord::rgba,coord::hsv>::base;
         using base_t = coord::base<S,T,util::colour,coord::rgba,coord::hsv>;
 
+        // overloaded cast operator which assumes values are unit normalised
         template <typename U>
         colour<S,U>
         cast (void) const;
