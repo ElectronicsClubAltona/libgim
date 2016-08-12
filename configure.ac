@@ -83,8 +83,6 @@ AC_SEARCH_LIBS([clock_gettime], [rt c], [], [
 
 AC_SEARCH_LIBS([cos], [m], [], [AC_MSG_ERROR([unable to find the maths library])])
 
-AC_SEARCH_LIBS([htons], [ws2_32], [], [AC_MSG_ERROR([unable to find htons library])])
-
 
 ###############################################################################
 ## Debug features
