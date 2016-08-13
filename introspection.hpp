@@ -26,10 +26,8 @@
 #include <tuple>
 
 namespace util {
-    template <
-        typename T
-    >
-    struct type_name { };
+    template <typename T>
+    struct type_name;
 
     template <> struct type_name<bool> { static constexpr const char value[] = "bool"; };
 
