@@ -440,14 +440,38 @@ util::operator>> (std::istream &is, util::colour<S,T> &c)
 template std::istream& util::operator>> (std::istream&, util::colour<3,uint8_t>&);
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INSTANTIATE_S_T(S,T)        \
-template struct util::colour<S,T>;  \
-template std::ostream& util::operator<< (std::ostream&, util::colour<S,T>);
+// we need to instantiate the various type_name specialisations for colour.
+//
+// we provide a declaration here, before then instantiating a routine that we
+// know will cause an implicit instantiation (ie util::to_string) for each
+// colour specialisation we require.
+template <size_t S, typename T>
+constexpr
+const char util::type_name<colour<S,T>>::value[];
 
+
+//-----------------------------------------------------------------------------
+#define INSTANTIATE_S_T(S,T)                            \
+template                                                \
+struct util::colour<S,T>;                               \
+                                                        \
+template                                                \
+std::ostream&                                           \
+util::operator<< (std::ostream&, util::colour<S,T>);    \
+                                                        \
+template                                                \
+const char*                                             \
+util::to_string<util::colour<S,T>> (void);
+
+
+//-----------------------------------------------------------------------------
 #define INSTANTIATE_S(S)    \
 INSTANTIATE_S_T(S,uint8_t)  \
 INSTANTIATE_S_T(S,float)    \
 INSTANTIATE_S_T(S,double)
 
+
+//-----------------------------------------------------------------------------
+INSTANTIATE_S(1)
 INSTANTIATE_S(3)
 INSTANTIATE_S(4)

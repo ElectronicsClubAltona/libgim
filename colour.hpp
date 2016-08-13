@@ -18,6 +18,7 @@
 #define __UTIL_COLOUR_HPP
 
 #include "coord.hpp"
+#include "introspection.hpp"
 
 #include <ostream>
 
@@ -48,6 +49,7 @@ namespace util {
     template <typename T> using colour3 = colour<3,T>;
     template <typename T> using colour4 = colour<4,T>;
 
+    typedef colour3<uint8_t> colour1u;
     typedef colour3<uint8_t> colour3u;
     typedef colour4<uint8_t> colour4u;
 
@@ -55,15 +57,24 @@ namespace util {
     typedef colour3<float> colour3f;
     typedef colour4<float> colour4f;
 
-    // RGB <-> HSV
+    // RGB/HSV conversions
     colour3f rgb_to_hsv (colour3f);
     colour3f hsv_to_rgb (colour3f);
 
+    // ostream/istream operators
     template <size_t S, typename T>
-    std::ostream& operator<< (std::ostream&, util::colour<S,T>);
+    std::ostream&
+    operator<< (std::ostream&, util::colour<S,T>);
 
     template <size_t S, typename T>
-    std::istream& operator>> (std::istream&, util::colour<S,T>&);
+    std::istream&
+    operator>> (std::istream&, util::colour<S,T>&);
+
+    // type name introspection specialisation
+    template <size_t S, typename T>
+    struct type_name<colour<S,T>> {
+        static constexpr const char value[] = "colour";
+    };
 }
 
 #include "colour.ipp"
