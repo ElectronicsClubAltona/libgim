@@ -21,6 +21,7 @@ NC_CXX
 NC_PLATFORM
 NC_OPTIMISATION
 NC_WARNINGS
+# NC_DEBUGGING is called further down, see notes at the call site.
 
 LT_INIT
 
