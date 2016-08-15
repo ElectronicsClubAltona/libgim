@@ -132,6 +132,86 @@ util::operator OP (                                                 \
 MATRIX_ELEMENT_OP(-)
 MATRIX_ELEMENT_OP(+)
 
+#undef MATRIX_ELEMENT_OP
+
+
+///////////////////////////////////////////////////////////////////////////////
+#define MATRIX_SCALAR_OP(OP)                                \
+template <size_t S, typename T>                             \
+constexpr                                                   \
+util::matrix<S,T>                                           \
+util::operator OP (const util::matrix<S,T> &m, const T t)   \
+{                                                           \
+    util::matrix<S,T> res {};                               \
+                                                            \
+    std::transform (                                        \
+        std::cbegin (m),                                    \
+        std::cend   (m),                                    \
+        std::begin  (res),                                  \
+        [&t] (auto x) { return x OP t; }                    \
+    );                                                      \
+                                                            \
+    return res;                                             \
+}                                                           \
+                                                            \
+                                                            \
+template <size_t S, typename T>                             \
+constexpr                                                   \
+util::matrix<S,T>                                           \
+util::operator OP (const T t, const util::matrix<S,T> &m)   \
+{                                                           \
+    return m OP t;                                          \
+}                                                           \
+                                                            \
+                                                            \
+template <size_t S, typename T>                             \
+constexpr                                                   \
+util::matrix<S,T>&                                          \
+util::operator OP##= (util::matrix<S,T> &m, T t)            \
+{                                                           \
+    std::transform (                                        \
+        std::cbegin (m),                                    \
+        std::cend   (m),                                    \
+        std::begin  (m),                                    \
+        [&t] (auto x) { return x OP t; }                    \
+    );                                                      \
+                                                            \
+    return m;                                               \
+}
+
+
+MATRIX_SCALAR_OP(*)
+MATRIX_SCALAR_OP(/)
+MATRIX_SCALAR_OP(+)
+MATRIX_SCALAR_OP(-)
+
+#undef MATRIX_SCALAR_OP
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+bool
+util::operator== (const matrix<S,T> &a, const matrix<S,T> &b)
+{
+    static_assert (
+        a.rows == b.rows && a.cols == b.cols,
+        "elementwise operations must be the same dimension"
+    );
+
+    return std::equal (std::cbegin (a), std::cend (a), std::cbegin (b));
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+constexpr
+bool
+util::operator!= (const matrix<S,T> &a, const matrix<S,T> &b)
+{
+    return !(a == b);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>

@@ -189,58 +189,6 @@ matrix<S,T>::operator* (const point<S,T> &rhs) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-matrix<S,T>
-matrix<S,T>::operator* (T t) const
-{
-    matrix<S,T> out;
-    std::transform (cbegin (), cend (), std::begin (out), [t] (auto x) { return x * t; });
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-matrix<S,T>&
-matrix<S,T>::operator*= (T t)
-{
-    std::transform (cbegin (), cend (), begin (), [t] (auto x) { return x * t; });
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::matrix<S,T>
-util::matrix<S,T>::operator/ (T t) const
-{
-    matrix<S,T> out;
-    std::transform (cbegin (), cend (), std::begin (out), [t] (auto x) { return x / t; });
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-matrix<S,T>&
-matrix<S,T>::operator/= (T t)
-{
-    std::transform (cbegin (), cend (), begin (), [t] (auto x) { return x / t; });
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-matrix<S,T>::operator== (const matrix<S,T> &rhs) const
-{
-    constexpr bool (*comparator)(const T&,const T&) = util::almost_equal;
-    return std::equal (cbegin (), cend (), std::cbegin (rhs), comparator);
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
 bool
 matrix<S,T>::is_affine (void) const
 {

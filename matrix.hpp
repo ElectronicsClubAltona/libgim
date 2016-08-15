@@ -59,13 +59,6 @@ namespace util {
         vector<S,T> operator* (const vector<S,T>&) const;
         point<S,T>  operator* (const point<S,T> &) const;
 
-        matrix  operator*  (T) const;
-        matrix& operator*= (T);
-        matrix  operator/  (T) const;
-        matrix& operator/= (T);
-
-        bool operator== (const matrix&) const;
-
         bool is_affine (void) const;
 
         template <typename U>
@@ -90,6 +83,22 @@ namespace util {
     };
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    // logical operations
+    template <size_t S, typename T>
+    constexpr
+    bool
+    operator== (const matrix<S,T>&, const matrix<S,T>&);
+
+
+    template <size_t S, typename T>
+    constexpr
+    bool
+    operator!= (const matrix<S,T>&, const matrix<S,T>&);
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // element operations
     template <size_t S, typename T>
     constexpr
     matrix<S,T>
@@ -100,6 +109,26 @@ namespace util {
     matrix<S,T>
     operator- (const matrix<S,T>&, const matrix<S,T>&);
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    // scalar operations
+    template <size_t S, typename T> constexpr matrix<S,T> operator* (const matrix<S,T>&, T);
+    template <size_t S, typename T> constexpr matrix<S,T> operator/ (const matrix<S,T>&, T);
+    template <size_t S, typename T> constexpr matrix<S,T> operator+ (const matrix<S,T>&, T);
+    template <size_t S, typename T> constexpr matrix<S,T> operator- (const matrix<S,T>&, T);
+
+    template <size_t S, typename T> constexpr matrix<S,T> operator* (T, const matrix<S,T>&);
+    template <size_t S, typename T> constexpr matrix<S,T> operator/ (T, const matrix<S,T>&);
+    template <size_t S, typename T> constexpr matrix<S,T> operator+ (T, const matrix<S,T>&);
+    template <size_t S, typename T> constexpr matrix<S,T> operator- (T, const matrix<S,T>&);
+
+    template <size_t S, typename T> constexpr matrix<S,T>& operator*= (matrix<S,T>&, T);
+    template <size_t S, typename T> constexpr matrix<S,T>& operator/= (matrix<S,T>&, T);
+    template <size_t S, typename T> constexpr matrix<S,T>& operator+= (matrix<S,T>&, T);
+    template <size_t S, typename T> constexpr matrix<S,T>& operator-= (matrix<S,T>&, T);
+
+
+    ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T>
     T
     determinant (const matrix<S,T>&);

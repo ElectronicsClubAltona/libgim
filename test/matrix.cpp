@@ -11,8 +11,24 @@ main (void)
 {
     util::TAP::logger tap;
 
-    tap.expect_eq (sum (util::matrix4f::IDENTITY), 4.f, "element summation");
+    static constexpr util::matrix4f SEQ { {
+        {  1,  2,  3,  4 },
+        {  5,  6,  7,  8 },
+        {  9, 10, 11, 12 },
+        { 13, 14, 15, 16 }
+    } };
 
+    tap.expect_eq (sum (SEQ), 136.f, "element summation");
+
+    // matrix-scalar operations
+    {
+        tap.expect_eq (sum (SEQ + 1.f), 152.f, "matrix-scalar addition");
+        tap.expect_eq (sum (SEQ - 1.f), 120.f, "matrix-scalar subtraction");
+        tap.expect_eq (sum (SEQ * 2.f), 272.f, "matrix-scalar multiplication");
+        tap.expect_eq (sum (SEQ / 2.f),  68.f, "matrix-scalar division");
+    }
+
+    // Simple matrix-vector multiplication
     {
         // Identity matrix-vector multiplication
         auto v = util::vector4f { 1.f, 2.f, 3.f, 4.f };
@@ -21,17 +37,9 @@ main (void)
     }
 
     {
-        // Simple matrix-vector multiplication
-        util::matrix4f m { {
-            {  1,  2,  3,  4 },
-            {  5,  6,  7,  8 },
-            {  9, 10, 11, 12 },
-            { 13, 14, 15, 16 }
-        } };
-
         util::vector<4,float> v { 1.f, 2.f, 3.f, 4.f };
 
-        auto r = m * v;
+        auto r = SEQ * v;
 
         tap.expect (
             util::almost_equal (r.x,  30.f) &&
