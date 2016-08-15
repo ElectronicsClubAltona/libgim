@@ -27,8 +27,8 @@ namespace util {
     struct matrix {
         T values[S][S];
 
-        static const size_t rows = S;
-        static const size_t cols = S;
+        static constexpr size_t rows = S;
+        static constexpr size_t cols = S;
 
         // index operators return a pointer into the data array so that
         // multidimensional array syntax can be used transparently on this
