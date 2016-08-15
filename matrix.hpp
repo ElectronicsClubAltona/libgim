@@ -99,6 +99,10 @@ namespace util {
     matrix<S,T>
     inverse (const matrix<S,T>&);
 
+    template <size_t S, typename T>
+    matrix<S,T>
+    abs (const matrix<S,T>&);
+
     template <typename T> using matrix3 = matrix<3,T>;
     template <typename T> using matrix4 = matrix<4,T>;
 

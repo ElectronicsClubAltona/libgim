@@ -106,6 +106,14 @@ util::matrix<S,T>::cast (void) const
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+util::matrix<S,T>
+util::abs (const util::matrix<S,T> &src)
+{
+    util::matrix<S,T> dst;
+    std::transform (std::cbegin (src), std::cend (src), std::begin (dst), util::abs<T>);
+    return dst;
 }
 
 
