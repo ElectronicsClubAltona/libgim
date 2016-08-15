@@ -53,8 +53,6 @@ namespace util {
         matrix  inverse_affine (void) const;
         matrix& invert_affine  (void);
 
-        T det (void) const;
-
         matrix   operator* (const matrix&) const;
         matrix&  operator*=(const matrix&);
 
