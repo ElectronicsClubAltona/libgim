@@ -418,16 +418,14 @@ matrix<S,T>::ZEROES { 0 };
 
 
 //-----------------------------------------------------------------------------
-namespace util {
-    template struct matrix<2,float>;
-    template struct matrix<2,double>;
+template struct util::matrix<2,float>;
+template struct util::matrix<2,double>;
 
-    template struct matrix<3,float>;
-    template struct matrix<3,double>;
+template struct util::matrix<3,float>;
+template struct util::matrix<3,double>;
 
-    template struct matrix<4,float>;
-    template struct matrix<4,double>;
-}
+template struct util::matrix<4,float>;
+template struct util::matrix<4,double>;
 
 
 ///////////////////////////////////////////////////////////////////////////////
