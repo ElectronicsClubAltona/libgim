@@ -107,6 +107,33 @@ util::matrix<S,T>::cast (void) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
+#define MATRIX_ELEMENT_OP(OP)                                       \
+template <size_t S, typename T>                                     \
+constexpr                                                           \
+util::matrix<S,T>                                                   \
+util::operator OP (                                                 \
+    const util::matrix<S,T> &a,                                     \
+    const util::matrix<S,T> &b)                                     \
+{                                                                   \
+    static_assert (                                                 \
+        a.rows == b.rows && a.cols == b.cols,                       \
+        "matrix dimensions must match for elementwise operations"   \
+    );                                                              \
+                                                                    \
+    util::matrix<S,T> res {};                                       \
+                                                                    \
+    for (size_t i = 0; i < a.rows; ++i)                             \
+        for (size_t j = 0; j < a.cols; ++j)                         \
+            res[i][j] = a[i][j] OP b[i][j];                         \
+                                                                    \
+    return res;                                                     \
+}
+
+MATRIX_ELEMENT_OP(-)
+MATRIX_ELEMENT_OP(+)
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 util::matrix<S,T>
 util::abs (const util::matrix<S,T> &src)

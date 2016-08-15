@@ -93,7 +93,18 @@ namespace util {
 
 
     template <size_t S, typename T>
-    T determinant (const matrix<S,T>&);
+    constexpr
+    matrix<S,T>
+    operator+ (const matrix<S,T>&, const matrix<S,T>&);
+
+    template <size_t S, typename T>
+    constexpr
+    matrix<S,T>
+    operator- (const matrix<S,T>&, const matrix<S,T>&);
+
+    template <size_t S, typename T>
+    T
+    determinant (const matrix<S,T>&);
 
     template <size_t S, typename T>
     matrix<S,T>
