@@ -190,14 +190,10 @@ matrix<S,T>::operator* (const point<S,T> &rhs) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 matrix<S,T>
-matrix<S,T>::operator* (T f) const
+matrix<S,T>::operator* (T t) const
 {
     matrix<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        for (size_t j = 0; j < S; ++j)
-            out.values[i][j] = values[i][j] * f;
-
+    std::transform (cbegin (), cend (), std::begin (out), [t] (auto x) { return x * t; });
     return out;
 }
 
@@ -205,12 +201,9 @@ matrix<S,T>::operator* (T f) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 matrix<S,T>&
-matrix<S,T>::operator*= (T f)
+matrix<S,T>::operator*= (T t)
 {
-    for (size_t i = 0; i < S; ++i)
-        for (size_t j = 0; j < S; ++j)
-            values[i][j] *= f;
-
+    std::transform (cbegin (), cend (), begin (), [t] (auto x) { return x * t; });
     return *this;
 }
 
@@ -220,12 +213,8 @@ template <size_t S, typename T>
 util::matrix<S,T>
 util::matrix<S,T>::operator/ (T t) const
 {
-    auto out = *this;
-
-    for (auto &i: out.values)
-        for (auto &j: i)
-            j /= t;
-
+    matrix<S,T> out;
+    std::transform (cbegin (), cend (), std::begin (out), [t] (auto x) { return x / t; });
     return out;
 }
 
@@ -233,12 +222,9 @@ util::matrix<S,T>::operator/ (T t) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 matrix<S,T>&
-matrix<S,T>::operator/= (T s)
+matrix<S,T>::operator/= (T t)
 {
-    for (size_t r = 0; r < rows; ++r)
-        for (size_t c = 0; c < cols; ++c)
-            values[r][c] /= s;
-
+    std::transform (cbegin (), cend (), begin (), [t] (auto x) { return x / t; });
     return *this;
 }
 
@@ -248,11 +234,8 @@ template <size_t S, typename T>
 bool
 matrix<S,T>::operator== (const matrix<S,T> &rhs) const
 {
-    for (size_t r = 0; r < rows; ++r)
-        for (size_t c = 0; c < cols; ++c)
-            if (!almost_equal (rhs.values[r][c], values[r][c]))
-                return false;
-    return true;
+    constexpr bool (*comparator)(const T&,const T&) = util::almost_equal;
+    return std::equal (cbegin (), cend (), std::cbegin (rhs), comparator);
 }
 
 

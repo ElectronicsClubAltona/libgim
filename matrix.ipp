@@ -101,12 +101,11 @@ util::matrix<S,U>
 util::matrix<S,T>::cast (void) const
 {
     util::matrix<S,U> out;
-
-    for (size_t i = 0; i < rows; ++i)
-        for (size_t j = 0; j < cols; ++j)
-            out.values[i][j] = values[i][j];
-
+    std::copy (cbegin (), cend (), std::begin (out));
     return out;
+}
+
+
 }
 
 
