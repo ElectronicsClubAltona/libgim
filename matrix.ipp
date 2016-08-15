@@ -118,3 +118,10 @@ util::abs (const util::matrix<S,T> &src)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+T
+util::sum (const util::matrix<S,T> &src)
+{
+    return sum (std::cbegin (src), std::cend (src));
+}

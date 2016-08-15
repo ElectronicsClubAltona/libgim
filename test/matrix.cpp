@@ -11,6 +11,8 @@ main (void)
 {
     util::TAP::logger tap;
 
+    tap.expect_eq (sum (util::matrix4f::IDENTITY), 4.f, "element summation");
+
     {
         // Identity matrix-vector multiplication
         auto v = util::vector4f { 1.f, 2.f, 3.f, 4.f };

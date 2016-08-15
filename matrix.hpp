@@ -103,6 +103,11 @@ namespace util {
     matrix<S,T>
     abs (const matrix<S,T>&);
 
+    template <size_t S, typename T>
+    constexpr
+    T
+    sum (const matrix<S,T>&);
+
     template <typename T> using matrix3 = matrix<3,T>;
     template <typename T> using matrix4 = matrix<4,T>;
 
