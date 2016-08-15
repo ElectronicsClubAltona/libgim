@@ -16,8 +16,9 @@
 
 #include "matrix.hpp"
 
-#include "point.hpp"
 #include "debug.hpp"
+#include "iterator.hpp"
+#include "point.hpp"
 
 #include <cstring>
 #include <cmath>
@@ -446,33 +447,23 @@ namespace util {
 }
 
 
-//-----------------------------------------------------------------------------
-namespace util {
-    template <size_t S, typename T>
-    std::ostream&
-    operator<< (std::ostream &os, const matrix<S,T> &m)
-    {
-        os << "{ {" << m.values[0][0] << ", "
-                    << m.values[0][1] << ", "
-                    << m.values[0][2] << ", "
-                    << m.values[0][3] << "}, "
-           <<   "{" << m.values[1][0] << ", "
-                    << m.values[1][1] << ", "
-                    << m.values[1][2] << ", "
-                    << m.values[1][3] << "}, "
-           <<   "{" << m.values[2][0] << ", "
-                    << m.values[2][1] << ", "
-                    << m.values[2][2] << ", "
-                    << m.values[2][3] << "}, "
-           <<   "{" << m.values[3][0] << ", "
-                    << m.values[3][1] << ", "
-                    << m.values[3][2] << ", "
-                    << m.values[3][3] << "} }";
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+std::ostream&
+util::operator<< (std::ostream &os, const matrix<S,T> &m)
+{
+    os << "{ ";
 
-        return os;
+    for (size_t i = 0; i < S; ++i) {
+        os << "{ ";
+        std::copy (m[i], m[i]+S, util::infix_iterator<float> (os, ", "));
+        os << ((i == S - 1) ? " }" : " }, ");
     }
+
+    return os << " }";
 }
 
 
+//-----------------------------------------------------------------------------
 template std::ostream& util::operator<< (std::ostream&, const matrix<4,float>&);
 template std::ostream& util::operator<< (std::ostream&, const matrix<4,double>&);
