@@ -115,11 +115,6 @@ util::operator OP (                                                 \
     const util::matrix<S,T> &a,                                     \
     const util::matrix<S,T> &b)                                     \
 {                                                                   \
-    static_assert (                                                 \
-        a.rows == b.rows && a.cols == b.cols,                       \
-        "matrix dimensions must match for elementwise operations"   \
-    );                                                              \
-                                                                    \
     util::matrix<S,T> res {};                                       \
                                                                     \
     for (size_t i = 0; i < a.rows; ++i)                             \
@@ -194,11 +189,6 @@ constexpr
 bool
 util::operator== (const matrix<S,T> &a, const matrix<S,T> &b)
 {
-    static_assert (
-        a.rows == b.rows && a.cols == b.cols,
-        "elementwise operations must be the same dimension"
-    );
-
     return std::equal (std::cbegin (a), std::cend (a), std::cbegin (b));
 }
 
