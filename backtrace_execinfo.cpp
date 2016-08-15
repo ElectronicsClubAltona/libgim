@@ -81,7 +81,7 @@ debug::operator <<(std::ostream &os, const debug::backtrace &rhs) {
     str_t names (backtrace_symbols (frames.data (), trunc_cast<int> (frames.size ())), ::free);
 
     for (unsigned int i = 0; i < frames.size (); ++i)
-        os << frames[i] << '\t' << names.get()[i] << '\t' << addr2line (frames[i]) << '\n';
+        os << frames[i] << '\t' << names.get()[i] << '\t' << addr2line (frames[i]);
 
     return os;
 }
