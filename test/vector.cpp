@@ -109,7 +109,7 @@ main ()
     test_euler (tap);
 
     tap.expect (!is_normalised (util::vector3f::ZERO), "zero isn't normalised");
-    tap.expect (!is_normalised (util::vector3f::UNIT), "unit is normalised");
+    tap.expect (!is_normalised (util::vector3f::ONES), "ones isn't normalised");
 
     return tap.status ();
 }

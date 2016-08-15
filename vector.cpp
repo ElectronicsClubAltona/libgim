@@ -135,7 +135,7 @@ util::cartesian_to_spherical (vector<3,T> c)
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 const util::vector<S,T>
-util::vector<S,T>::UNIT (T{1});
+util::vector<S,T>::ONES (T{1});
 
 
 //-----------------------------------------------------------------------------

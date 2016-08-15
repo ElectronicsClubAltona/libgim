@@ -33,7 +33,7 @@ namespace util {
         template <size_t D> vector<D,T> homog (void) const;
 
         // constants
-        static const vector<S,T> UNIT;
+        static const vector<S,T> ONES;
         static const vector<S,T> ZERO;
 
         void sanity (void) const;
