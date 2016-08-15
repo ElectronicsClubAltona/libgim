@@ -23,8 +23,8 @@
 #include "../maths.hpp"
 #include "../types/bits.hpp"
 
-#include <cstdlib>
 #include <cmath>
+#include <cstdlib>
 
 namespace util {
     ///////////////////////////////////////////////////////////////////////
@@ -625,7 +625,24 @@ namespace util {
     }
 
 
-    //-------------------------------------------------------------------------
+    ///////////////////////////////////////////////////////////////////////////
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K>, void
+        >
+    >
+    constexpr
+    T
+    sum (const K<S,T> k)
+    {
+        return sum (std::cbegin (k), std::cend (k));
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
 #define VECTOR_OP(OP)                               \
     template <                                      \
         size_t S,                                   \
