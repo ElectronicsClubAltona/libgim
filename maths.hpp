@@ -28,6 +28,7 @@
 #include <cmath>
 #include <cstdint>
 #include <limits>
+#include <numeric>
 #include <type_traits>
 #include <utility>
 
@@ -469,13 +470,16 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////////
     // kahan summation for long floating point sequences
 
-    template <class InputIt>
-    typename std::iterator_traits<InputIt>::value_type
-    fsum (InputIt first, InputIt last)
+    template <class InputT>
+    std::enable_if_t<
+        std::is_floating_point<
+            typename std::iterator_traits<InputT>::value_type
+        >::value,
+        typename std::iterator_traits<InputT>::value_type
+    >
+    sum (InputT first, InputT last)
     {
-        using T = typename std::iterator_traits<InputIt>::value_type;
-        static_assert (std::is_floating_point<T>::value,
-                       "fsum only works for floating point types");
+        using T = typename std::iterator_traits<InputT>::value_type;
 
         T sum = 0;
         T c = 0;
@@ -488,6 +492,21 @@ namespace util {
         }
 
         return sum;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <class InputT>
+    std::enable_if_t<
+        std::is_integral<
+            typename std::iterator_traits<InputT>::value_type
+        >::value,
+        typename std::iterator_traits<InputT>::value_type
+    >
+    sum (InputT first, InputT last)
+    {
+        using T = typename std::iterator_traits<InputT>::value_type;
+        return std::accumulate (first, last, T{0});
     }
 
 
