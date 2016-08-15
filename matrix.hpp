@@ -30,8 +30,18 @@ namespace util {
         static const size_t rows = S;
         static const size_t cols = S;
 
+        // index operators return a pointer into the data array so that
+        // multidimensional array syntax can be used transparently on this
+        // type.
         T* operator[] (size_t);
         const T* operator[] (size_t) const;
+
+        const T* begin (void) const;
+        const T* end   (void) const;
+        T* begin (void);
+        T* end   (void);
+        const T* cbegin (void) const;
+        const T* cend   (void) const;
 
         matrix& transpose  (void);
         matrix  transposed (void) const;

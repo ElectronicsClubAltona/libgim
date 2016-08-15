@@ -39,25 +39,59 @@ util::matrix<S,T>::operator[] (size_t idx) const
     return this->values[idx];
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//template <size_t S, typename T>
-//vector<3,T>
-//matrix<S,T>::operator* (vector<3,T> v) const
-//{
-//    return (
-//        *this * v.template homog<S> ()
-//    ).template redim<3> ();
-//}
-//
-//
-////-----------------------------------------------------------------------------
-//template <size_t S, typename T>
-//point<3,T>
-//matrix<S,T>::operator* (point<3,T> p) const
-//{
-//    return (*this * p.template homog<S> ()).template redim<3> ();
-//}
-//
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+const T*
+util::matrix<S,T>::begin (void) const
+{
+    return &(*this)[0][0];
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+const T*
+util::matrix<S,T>::end (void) const
+{
+    return &(*this)[S][0];
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+const T*
+util::matrix<S,T>::cbegin (void) const
+{
+    return begin ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+const T*
+util::matrix<S,T>::cend (void) const
+{
+    return end ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+T*
+util::matrix<S,T>::begin (void)
+{
+    return &(*this)[0][0];
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+T*
+util::matrix<S,T>::end (void)
+{
+    return &(*this)[S][0];
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
