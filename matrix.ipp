@@ -109,47 +109,4 @@ util::matrix<S,T>::cast (void) const
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////
-//template <size_t S, typename T>
-//T
-//util::matrix<S,T>::determinant (void) const
-//{
-//    return util::determinant (*this);
-//}
-//
-//
-////-----------------------------------------------------------------------------
-//template <size_t S, typename T>
-//util::matrix<S,T>
-//util::matrix<S,T>::inverse (void) const
-//{
-//    return util::inverse (*this);
-//}
-
-
 ///////////////////////////////////////////////////////////////////////////////
-//template <size_t S, typename T>
-//util::matrix<S,T>
-//util::matrix<S,T>::operator/ (T t) const
-//{
-//    auto out = *this;
-//
-//    for (auto &i: out.values)
-//        for (auto &j: i)
-//            j /= t;
-//
-//    return out;
-//}
-//
-//
-/////////////////////////////////////////////////////////////////////////////////
-//template <size_t S, typename T>
-//bool
-//util::matrix<S,T>::operator== (const matrix<S,T> &m) const
-//{
-//    for (size_t i = 0; i < S; ++i)
-//        for (size_t j = 0; j < S; ++j)
-//            if (!exactly_equal (values[i][j], m[i][j]))
-//                return false;
-//    return true;
-//}
