@@ -76,20 +76,23 @@ main (void)
         for (size_t i = 0; i < elems (ROTATIONS); ++i) {
             const auto &r = ROTATIONS[i];
 
-            tap.expect_eq (quaternionf::rotation    (r.mag, r.axis).as_matrix (),
-                           util::matrix4f::rotation (r.mag, r.axis),
-                           "single basis rotation %zu", i);
+            auto q = quaternionf::rotation    (r.mag, r.axis).as_matrix ();
+            auto m = util::matrix4f::rotation (r.mag, r.axis);
+            auto diff = util::abs (q - m);
+
+            tap.expect_lt (util::sum (diff), 1e-6f, "single basis rotation %zu", i);
         }
 
-        auto q_total = quaternionf::IDENTITY;
-        auto m_total = util::matrix4f::IDENTITY;
+        auto q = quaternionf::IDENTITY;
+        auto m = util::matrix4f::IDENTITY;
 
         for (auto r: ROTATIONS) {
-            q_total = q_total.rotation (r.mag, r.axis) * q_total;
-            m_total = m_total.rotation (r.mag, r.axis) * m_total;
+            q = q.rotation (r.mag, r.axis) * q;
+            m = m.rotation (r.mag, r.axis) * m;
         }
 
-        tap.expect_eq (q_total.as_matrix (), m_total, "chained single axis rotations");
+        auto diff = util::abs (q.as_matrix () - m);
+        tap.expect_lt (util::sum (diff), 1e-6f, "chained single axis rotations");
     }
 
     return tap.status ();
