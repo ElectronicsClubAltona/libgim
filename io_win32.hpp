@@ -17,6 +17,7 @@
 #ifndef __UTIL_IO_WIN32_HPP
 #define __UTIL_IO_WIN32_HPP
 
+#include "./io.hpp"
 #include "./win32/handle.hpp"
 #include "./view.hpp"
 
@@ -27,19 +28,40 @@
 #include <sys/types.h>
 #include <fcntl.h>
 
+
+///////////////////////////////////////////////////////////////////////////////
+// compatibility definitions
+enum : int {
+    PROT_NONE   = 0,
+    PROT_READ   = 1 << 0,
+    PROT_EXEC   = 1 << 1,
+    PROT_WRITE  = 1 << 2
+};
+
+
+//-----------------------------------------------------------------------------
+enum : int {
+    MAP_SHARED,
+    MAP_PRIVATE,
+
+    MAP_ANONYMOUS
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+// implementation definitions
 namespace util {
     namespace detail { namespace win32 {
-        enum {
-            PROT_NONE   = 0,
-            PROT_READ   = 1 << 0,
-            PROT_EXEC   = 1 << 1,
-            PROT_WRITE  = 1 << 2
-        };
-
         class mapped_file {
         public:
+            mapped_file (::util::win32::handle &&,
+                         int fflags = O_RDONLY,
+                         int mflags = PROT_READ);
             mapped_file (const boost::filesystem::path &path,
                          int fflags = O_RDONLY,
+                         int mflags = PROT_READ);
+            mapped_file (const util::fd&,
+                         int fflag = O_RDONLY,
                          int mflags = PROT_READ);
 
             mapped_file (const mapped_file&) = delete;
