@@ -19,7 +19,7 @@
 namespace util { namespace win32 {
     struct handle {
         handle ();
-        handle (HANDLE&&);
+        explicit handle (HANDLE&&);
         handle (handle&&);
         handle (const handle&) = delete;
         ~handle ();

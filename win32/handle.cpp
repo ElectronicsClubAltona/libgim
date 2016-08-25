@@ -70,9 +70,5 @@ handle::reset (HANDLE rhs)
 handle
 handle::current_process (void)
 {
-    auto process = GetCurrentProcess ();
-    if (!process)
-        util::win32_error::throw_code ();
-
-    return process;
+    return handle (GetCurrentProcess ());
 }
