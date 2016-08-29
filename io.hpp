@@ -40,6 +40,10 @@ namespace util {
     struct fd {
     public:
         explicit fd (int);
+
+        fd (const fd&) = delete;
+        fd (const fd&&);
+
         fd (const char *path, int flags, mode_t mode = 0660);
         fd (const boost::filesystem::path&, int flags);
 
