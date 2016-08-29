@@ -312,7 +312,7 @@ namespace util {
     digits (ValueT value, BaseT base) noexcept
     {
         if (value < 0)
-            return digits (-value, base);
+            value *= -1;
 
         unsigned tally = 1;
         while (value /= base)
