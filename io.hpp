@@ -47,6 +47,7 @@ namespace util {
         fd (const char *path, int flags, mode_t mode = 0660);
         fd (const boost::filesystem::path&, int flags);
 
+        fd dup (void) const;
         static fd dup (int);
 
         ~fd ();
