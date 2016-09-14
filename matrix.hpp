@@ -139,6 +139,12 @@ namespace util {
 
     template <size_t S, typename T>
     matrix<S,T>
+    transposed (const matrix<S,T>&);
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    template <size_t S, typename T>
+    matrix<S,T>
     abs (const matrix<S,T>&);
 
     template <size_t S, typename T>

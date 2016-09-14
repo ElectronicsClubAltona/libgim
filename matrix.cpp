@@ -130,7 +130,22 @@ util::matrix<S,T>::inverse (void) const
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+matrix<S,T>
+util::transposed (const matrix<S,T> &m)
+{
+    util::matrix<S,T> res;
+
+    for (size_t y = 0; y < S; ++y)
+        for (size_t x = 0; x < S; ++x)
+            res[y][x] = m[x][y];
+
+    return res;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 matrix<S,T>
 matrix<S,T>::operator* (const matrix<S,T> &rhs) const
