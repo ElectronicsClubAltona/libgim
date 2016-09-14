@@ -385,6 +385,7 @@ TEST_BIN = 			\
     test/alloc/dynamic		\
     test/alloc/linear		\
     test/alloc/stack		\
+    test/affine			\
     test/backtrace 		\
     test/bezier			\
     test/bitwise		\
