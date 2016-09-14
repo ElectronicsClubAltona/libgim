@@ -565,6 +565,50 @@ namespace util {
         return k;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // trigonometric functions
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<is_coord_v<K>,void>
+    >
+    constexpr
+    K<S,T>
+    sin (K<S,T> k)
+    {
+        std::transform (
+            std::cbegin (k),
+            std::cend   (k),
+            std::begin  (k),
+            [] (auto v) { return std::sin (v); }
+        );
+
+        return k;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<is_coord_v<K>,void>
+    >
+    constexpr
+    K<S,T>
+    cos (K<S,T> k)
+    {
+        std::transform (
+            std::cbegin (k),
+            std::cend   (k),
+            std::begin  (k),
+            [] (auto v) { return std::cos (v); }
+        );
+
+        return k;
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // logical element operators
