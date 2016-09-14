@@ -3,9 +3,13 @@
 #include "debug.hpp"
 #include "tap.hpp"
 #include "vector.hpp"
+#include "coord/iostream.hpp"
+#include "quaternion.hpp"
 
 #include <cstdlib>
 
+
+///////////////////////////////////////////////////////////////////////////////
 int
 main (void)
 {
@@ -151,6 +155,44 @@ main (void)
         } };
 
         tap.expect_eq (m.inverse (), r / 40.f, "4x4 inversion");
+    }
+
+    // sanity check euler rotations
+    {
+        static const struct {
+            util::vector3f euler;
+            const char *msg;
+        }  TESTS[] = {
+            { util::vector3f { 0 }, "zeroes" },
+
+            { { 1, 0, 0 }, "x-axis" },
+            { { 0, 1, 0 }, "y-axis" },
+            { { 0, 0, 1 }, "z-axis" },
+
+            { util::vector3f { 1 }, "ones" },
+
+            { {  3,  5,  7 }, "positive primes" },
+            { { -3, -5, -7 }, "negative primes" },
+            { {  3, -5,  7 }, "mixed primes" },
+        };
+
+        for (auto t: TESTS) {
+            constexpr auto PI2 = 2 * util::PI<float>;
+
+            auto matrix = (
+                util::quaternionf::rotation (t.euler[2], { 0, 0, 1 }) *
+                util::quaternionf::rotation (t.euler[1], { 0, 1, 0 }) *
+                util::quaternionf::rotation (t.euler[0], { 1, 0, 0 })
+            ).as_matrix ();
+
+            auto euler = to_euler (matrix);
+            auto truth = t.euler;
+
+            euler = mod (euler + 4 * PI2, PI2);
+            truth = mod (truth + 4 * PI2, PI2);
+
+            tap.expect_eq (truth, euler, "matrix-to-euler, %s", t.msg);
+        }
     }
 
     return tap.status ();
