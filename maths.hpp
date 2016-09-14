@@ -385,6 +385,32 @@ namespace util {
     }
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Modulus/etc
+
+    // namespaced wrapper for `man 3 fmod`
+    template <typename T>
+    constexpr
+    std::enable_if_t<
+        std::is_floating_point<T>::value, T
+    >
+    mod (T x, T y)
+    {
+        return std::fmod (x, y);
+    }
+
+
+    template <typename T>
+    constexpr
+    std::enable_if_t<
+        std::is_integral<T>::value, T
+    >
+    mod (T x, T y)
+    {
+        return x % y;
+    }
+
+
     ///////////////////////////////////////////////////////////////////////////////
     // angles, trig
     template <typename T>
