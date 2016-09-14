@@ -549,6 +549,24 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K>, void
+        >
+    >
+    constexpr
+    K<S,T>
+    mod (K<S,T> k, T t)
+    {
+        std::transform (std::cbegin (k), std::cend (k), std::begin (k), [t] (auto v) { return mod (v, t); });
+        return k;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
     // logical element operators
 
     /// return a coord type containing the max element at each offset
