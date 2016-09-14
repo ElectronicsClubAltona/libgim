@@ -561,7 +561,12 @@ namespace util {
     K<S,T>
     mod (K<S,T> k, T t)
     {
-        std::transform (std::cbegin (k), std::cend (k), std::begin (k), [t] (auto v) { return mod (v, t); });
+        std::transform (
+            std::cbegin (k),
+            std::cend   (k),
+            std::begin  (k),
+            [t] (auto v) { return mod (v, t);
+        });
         return k;
     }
 
