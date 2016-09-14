@@ -68,9 +68,9 @@ main (void)
             float mag;
             util::vector3f axis;
         } ROTATIONS[] = {
-            { 0.f, { 1.f, 0.f, 0.f } },
+            { 1.f, { 1.f, 0.f, 0.f } },
             { 1.f, { 0.f, 1.f, 0.f } },
-            { 0.f, { 0.f, 0.f, 1.f } },
+            { 1.f, { 0.f, 0.f, 1.f } },
         };
 
         for (size_t i = 0; i < elems (ROTATIONS); ++i) {
