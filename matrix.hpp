@@ -84,6 +84,16 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
+    // Convert an affine rotation matrix to euler angles.
+    //
+    // Results are undefined if the matrix is not purely a rotation matrix,
+    // or if the dimension is not 3x3 or 4x4.
+    template <size_t S, typename T>
+    vector<3,T>
+    to_euler (const matrix<S,T>&);
+
+
+    ///////////////////////////////////////////////////////////////////////////
     // logical operations
     template <size_t S, typename T>
     constexpr
@@ -152,6 +162,8 @@ namespace util {
     T
     sum (const matrix<S,T>&);
 
+
+    ///////////////////////////////////////////////////////////////////////////
     template <typename T> using matrix3 = matrix<3,T>;
     template <typename T> using matrix4 = matrix<4,T>;
 
@@ -167,6 +179,8 @@ namespace util {
     typedef matrix<4,float> matrix4f;
     typedef matrix<4,double> matrix4d;
 
+
+    ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, const matrix<S,T>&);
 }

@@ -392,6 +392,37 @@ template struct util::matrix<4,double>;
 
 
 ///////////////////////////////////////////////////////////////////////////////
+// Uses the algorithm from:
+//    "Extracting Euler Angles from a Rotation Matrix" by
+//    Mike Day, Insomniac Games.
+template <size_t S, typename T>
+util::vector<3,T>
+util::to_euler (const matrix<S,T> &m)
+{
+    static_assert (S == 3 || S == 4, "only defined for 3d affine transforms");
+
+    const auto theta0 = std::atan2 (m[2][1], m[2][2]);
+
+    const auto c1 = std::hypot (m[0][0], m[1][0]);
+    const auto theta1 = std::atan2 (-m[2][0], c1);
+
+    const auto s0 = std::sin(theta0);
+    const auto c0 = std::cos(theta0);
+    const auto theta2 = std::atan2(
+        s0 * m[0][2] - c0 * m[0][1],
+        c0 * m[1][1] - s0 * m[1][2]
+    );
+
+    return { theta0, theta1, theta2 };
+}
+
+
+//-----------------------------------------------------------------------------
+template util::vector<3,float> util::to_euler (const matrix<3,float>&);
+template util::vector<3,float> util::to_euler (const matrix<4,float>&);
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 std::ostream&
 util::operator<< (std::ostream &os, const matrix<S,T> &m)
