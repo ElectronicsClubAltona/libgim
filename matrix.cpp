@@ -277,10 +277,10 @@ matrix<S,T>::perspective (T fov, T aspect, range<T> Z)
 template <size_t S, typename T>
 matrix4<T>
 matrix<S,T>::look_at (util::point<3,T> eye,
-                      util::point<3,T> centre,
+                      util::point<3,T> target,
                       util::vector<3,T> up)
 {
-    const auto f = normalised (centre - eye);
+    const auto f = normalised (target - eye);
     const auto s = normalised (cross (f, up));
     const auto u = cross (s, f);
 
