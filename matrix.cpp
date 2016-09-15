@@ -280,16 +280,18 @@ matrix<S,T>::look_at (util::point<3,T> eye,
                       util::point<3,T> target,
                       util::vector<3,T> up)
 {
-    const auto f = normalised (target - eye);
-    const auto s = normalised (cross (f, up));
-    const auto u = cross (s, f);
+    auto forward = normalised (eye.to (target));
+    auto side    = normalised (cross (forward, up));
+    up = cross (side, forward);
 
-    return { {
-        {  s.x,  s.y,  s.z, -dot (s, eye) },
-        {  u.x,  u.y,  u.z, -dot (u, eye) },
-        { -f.x, -f.y, -f.z,  dot (f, eye) },
-        {    0,    0,    0,  1 },
-    } };
+    auto rot = util::matrix4<T> {{
+        { side[0], up[0], -forward[0], 0 },
+        { side[1], up[1], -forward[1], 0 },
+        { side[2], up[2], -forward[2], 0 },
+        { 0, 0, 0, 1 }
+    }};
+
+    return util::matrix4<T>::translation (-eye.template as<vector> ()) * rot;
 }
 
 
