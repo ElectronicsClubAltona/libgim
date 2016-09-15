@@ -49,6 +49,10 @@ namespace util {
         static const quaternion IDENTITY;
     };
 
+    template <typename T>
+    quaternion<4,T>
+    conjugate (quaternion<4,T>);
+
     template <size_t S, typename T>
     quaternion<S,T>
     operator* (const quaternion<S,T>, const quaternion<S,T>);

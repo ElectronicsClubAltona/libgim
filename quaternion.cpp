@@ -65,6 +65,18 @@ quaternion<S,T>::rotation (const vector<3,T> src, const vector<3,T> dst)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+quaternion<4,T>
+util::conjugate (quaternion<4,T> q)
+{
+    return { q.w, -q.x, -q.y, -q.z };
+}
+
+
+template quaternion<4,float> util::conjugate (quaternion<4,float>);
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 quaternion<S,T>
 util::operator* (const quaternion<S,T> a, const quaternion<S,T> b)
