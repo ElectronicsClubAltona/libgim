@@ -32,6 +32,7 @@ struct length_error : public json::schema_error {
 };
 
 
+//-----------------------------------------------------------------------------
 struct format_error : public json::schema_error {
     using schema_error::schema_error;
 };
@@ -233,15 +234,47 @@ validate_number (T val, const json::tree::object &schema) {
 
         if (exclusiveMax != schema.end () && exclusiveMax->second->as_boolean ()) {
             switch (cmp.repr ()) {
-            case R::REAL: if (val >= T(cmp.real ())) throw json::schema_error ("exclusiveMax"); break;
-            case R::SINT: if (val >= T(cmp.uint ())) throw json::schema_error ("exclusiveMax"); break;
-            case R::UINT: if (val >= T(cmp.sint ())) throw json::schema_error ("exclusiveMax"); break;
+            case R::REAL:
+                if (T(val) >= cmp.real ())
+                    throw json::schema_error ("exclusiveMax");
+                break;
+
+            case R::SINT:
+                if (json::tree::number::sint_t(std::numeric_limits<T>::max ()) >= cmp.sint () &&
+                    val >= T(cmp.sint ()))
+                {
+                    throw json::schema_error ("exclusiveMax");
+                }
+                break;
+
+            case R::UINT:
+                if (json::tree::number::uint_t(std::numeric_limits<T>::max ()) >= cmp.uint () &&
+                    val >= T(cmp.uint ()))
+                {
+                    throw json::schema_error ("exclusiveMax");
+                }
+                break;
             }
         } else {
             switch (cmp.repr ()) {
-            case R::REAL: if (val > T(cmp.real ())) throw json::schema_error ("maximum"); break;
-            case R::SINT: if (val > T(cmp.sint ())) throw json::schema_error ("maximum"); break;
-            case R::UINT: if (val > T(cmp.uint ())) throw json::schema_error ("maximum"); break;
+            case R::REAL:
+                if (T(val) > cmp.real ())
+                    throw json::schema_error ("maximum");
+                break;
+            case R::SINT:
+                if (json::tree::number::sint_t(std::numeric_limits<T>::max ()) >= cmp.sint () &&
+                    val >= T(cmp.sint ()))
+                {
+                    throw json::schema_error ("maximum");
+                }
+                break;
+            case R::UINT:
+                if (json::tree::number::uint_t(std::numeric_limits<T>::max ()) >= cmp.uint () &&
+                    val >= T(cmp.uint ()))
+                {
+                    throw json::schema_error ("maximum");
+                }
+                break;
             }
         }
     } else {
@@ -257,15 +290,47 @@ validate_number (T val, const json::tree::object &schema) {
 
         if (exclusiveMin != schema.end () && exclusiveMin->second->as_boolean ()) {
             switch (cmp.repr ()) {
-            case R::REAL: if (val <= T(cmp.real ())) throw json::schema_error ("exclusiveMin"); break;
-            case R::SINT: if (val <= T(cmp.sint ())) throw json::schema_error ("exclusiveMin"); break;
-            case R::UINT: if (val <= T(cmp.uint ())) throw json::schema_error ("exclusiveMin"); break;
+            case R::REAL:
+                if (T(val) < cmp.real ())
+                    throw json::schema_error ("exclusiveMin");
+                break;
+            case R::SINT:
+                if (cmp.sint () > json::tree::number::sint_t(std::numeric_limits<T>::min ()) &&
+                    val < T(cmp.sint ()))
+                {
+                    throw json::schema_error ("exclusiveMin");
+                }
+                break;
+            case R::UINT:
+                if (cmp.uint () > json::tree::number::uint_t(std::numeric_limits<T>::min ()) &&
+                    val < T(cmp.uint ()))
+                {
+                    throw json::schema_error ("exclusiveMin");
+                }
+                break;
             }
         } else {
             switch (cmp.repr ()) {
-            case R::REAL: if (val < T(cmp.real ())) throw json::schema_error ("minimum"); break;
-            case R::SINT: if (val < T(cmp.sint ())) throw json::schema_error ("minimum"); break;
-            case R::UINT: if (val < T(cmp.uint ())) throw json::schema_error ("minimum"); break;
+            case R::REAL:
+                if (T(val) <= cmp.real ())
+                    throw json::schema_error ("minimum");
+                break;
+
+            case R::SINT:
+                if (cmp.sint () >= json::tree::number::sint_t(std::numeric_limits<T>::min ()) &&
+                    val <= T(cmp.sint ()))
+                {
+                    throw json::schema_error ("minimum");
+                }
+                break;
+
+            case R::UINT:
+                if (cmp.uint () >= json::tree::number::uint_t(std::numeric_limits<T>::min ()) &&
+                    val <= T(cmp.uint ()))
+                {
+                    throw json::schema_error ("minimum");
+                }
+                break;
             }
         }
     } else {
