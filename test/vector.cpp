@@ -115,7 +115,7 @@ main ()
     tap.expect (!is_normalised (util::vector3f::ONES), "ones isn't normalised");
 
     tap.expect_eq (
-        util::hypot (util::vector3f{0,1,2}, util::vector3f{3,2,4}),
+        util::hypot (util::vector3f{0,1,2} - util::vector3f{3,2,4}),
         std::sqrt (14.f),
         "vector3f hypot"
     );

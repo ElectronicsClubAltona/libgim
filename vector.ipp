@@ -38,8 +38,7 @@ util::vector<S,T>::homog (void) const
 template <size_t S, typename T>
 constexpr
 T
-util::hypot (util::vector<S,T> a, util::vector<S,T> b)
+util::hypot (util::vector<S,T> v)
 {
-    auto c  = a - b;
-    return std::sqrt (sum (c * c));
+    return std::sqrt (sum (v * v));
 }

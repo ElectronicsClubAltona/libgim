@@ -50,11 +50,11 @@ namespace util {
     template <typename T> vector<2,T> to_euler   (vector<3,T>);
     template <typename T> vector<3,T> from_euler (vector<2,T>);
 
-    // power functions
+    // root of sum of squares
     template <size_t S, typename T>
     constexpr
     T
-    hypot (util::vector<S,T>, util::vector<S,T>);
+    hypot (util::vector<S,T>);
 
     // output and serialisation operators
     template <size_t S, typename T>
