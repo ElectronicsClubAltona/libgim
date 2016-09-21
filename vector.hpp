@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_VECTOR_HPP
@@ -49,6 +49,12 @@ namespace util {
 
     template <typename T> vector<2,T> to_euler   (vector<3,T>);
     template <typename T> vector<3,T> from_euler (vector<2,T>);
+
+    // power functions
+    template <size_t S, typename T>
+    constexpr
+    T
+    hypot (util::vector<S,T>, util::vector<S,T>);
 
     // output and serialisation operators
     template <size_t S, typename T>

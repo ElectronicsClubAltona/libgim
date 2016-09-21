@@ -7,6 +7,7 @@ using util::vector;
 using util::vector2f;
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
 test_polar (util::TAP::logger &tap)
 {
@@ -61,6 +62,7 @@ test_polar (util::TAP::logger &tap)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
 test_euler (util::TAP::logger &tap)
 {
@@ -100,6 +102,7 @@ test_euler (util::TAP::logger &tap)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 int
 main ()
 {
@@ -110,6 +113,12 @@ main ()
 
     tap.expect (!is_normalised (util::vector3f::ZERO), "zero isn't normalised");
     tap.expect (!is_normalised (util::vector3f::ONES), "ones isn't normalised");
+
+    tap.expect_eq (
+        util::hypot (util::vector3f{0,1,2}, util::vector3f{3,2,4}),
+        std::sqrt (14.f),
+        "vector3f hypot"
+    );
 
     return tap.status ();
 }

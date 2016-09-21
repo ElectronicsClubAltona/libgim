@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #if defined(__UTIL_VECTOR_IPP)
@@ -20,14 +20,26 @@
 #define __UTIL_VECTOR_IPP
 #endif
 
+#include "./maths.hpp"
 
-namespace util {
-    template <size_t S, typename T>
-    template <size_t D>
-    vector<D,T>
-    vector<S,T>::homog (void) const
-    {
-        static_assert (D > S, "reducing size loses data");
-        return (*this).template redim<D> (0.f);
-    }
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+template <size_t D>
+util::vector<D,T>
+util::vector<S,T>::homog (void) const
+{
+    static_assert (D > S, "reducing size loses data");
+    return (*this).template redim<D> (0.f);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+T
+util::hypot (util::vector<S,T> a, util::vector<S,T> b)
+{
+    auto c  = a - b;
+    return std::sqrt (sum (c * c));
 }
