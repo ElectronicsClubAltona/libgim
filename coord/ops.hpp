@@ -780,7 +780,7 @@ namespace util {
     any (const K<S,bool> k)
     {
         return std::any_of (std::cbegin (k),
-                            std::cbegin (k),
+                            std::cend   (k),
                             identity<bool>);
     }
 
@@ -797,7 +797,7 @@ namespace util {
     all (const K<S,bool> k)
     {
         return std::all_of (std::cbegin (k),
-                            std::cbegin (k),
+                            std::cend   (k),
                             identity<bool>);
     }
 
