@@ -54,6 +54,9 @@ namespace util { namespace coord {
         T& operator[] (size_t i) { return this->data[i]; }
         constexpr const T& operator[] (size_t i) const { return this->data[i]; }
 
+        auto cbegin (void) const { return std::cbegin (this->data); }
+        auto cend   (void) const { return std::cend   (this->data); }
+
         auto begin (void) const { return std::begin (this->data); }
         auto end   (void) const { return std::end   (this->data); }
 
