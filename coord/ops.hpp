@@ -77,15 +77,15 @@ namespace util {
         constexpr auto has_scalar_op_v = has_scalar_op<K>::value;
     }
 
-    template <template <size_t,typename> class> struct is_coord : std::false_type { };
+    template <class> struct is_coord : std::false_type { };
 
-    template <> struct is_coord<point>      : std::true_type { };
-    template <> struct is_coord<extent>     : std::true_type { };
-    template <> struct is_coord<vector>     : std::true_type { };
-    template <> struct is_coord<colour>     : std::true_type { };
-    template <> struct is_coord<quaternion> : std::true_type { };
+    template <size_t S, typename T> struct is_coord<point<S,T>>      : std::true_type { };
+    template <size_t S, typename T> struct is_coord<extent<S,T>>     : std::true_type { };
+    template <size_t S, typename T> struct is_coord<vector<S,T>>     : std::true_type { };
+    template <size_t S, typename T> struct is_coord<colour<S,T>>     : std::true_type { };
+    template <size_t S, typename T> struct is_coord<quaternion<S,T>> : std::true_type { };
 
-    template <template <size_t,typename> class K>
+    template <class K>
     constexpr bool
     is_coord_v = is_coord<K>::value;
 
@@ -99,7 +99,7 @@ namespace util {
         template <size_t,typename> class A,             \
         template <size_t,typename> class B,             \
         typename = std::enable_if_t<                    \
-            is_coord_v<A> && is_coord_v<B>,             \
+            is_coord_v<A<S,T>> && is_coord_v<B<S,U>>,   \
             void                                        \
         >                                               \
     >                                                   \
@@ -122,8 +122,8 @@ namespace util {
         template <size_t,typename> class A,             \
         template <size_t,typename> class B,             \
         typename = std::enable_if_t<                    \
-            is_coord_v<A> &&                            \
-            is_coord_v<B> &&                            \
+            is_coord_v<A<S,T>> &&                       \
+            is_coord_v<B<S,U>> &&                       \
             std::is_same<                               \
                 std::common_type_t<T,U>, T              \
             >::value,                                   \
@@ -209,7 +209,7 @@ namespace util {
         typename U,                                         \
         template <size_t,typename> class K,                 \
         typename = std::enable_if_t<                        \
-            is_coord<K>::value &&                           \
+            is_coord<K<S,T>>::value &&                      \
             std::is_arithmetic<T>::value &&                 \
             std::is_arithmetic<U>::value,                   \
             void                                            \
@@ -247,7 +247,7 @@ namespace util {
         typename T,                                 \
         template <size_t,typename> class K,         \
         typename = std::enable_if_t<                \
-            is_coord_v<K>, void                     \
+            is_coord_v<K<S,T>>, void                \
         >                                           \
     >                                               \
     constexpr                                       \
@@ -279,7 +279,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -301,7 +301,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -318,7 +318,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -394,7 +394,7 @@ namespace util {
         template <size_t,typename> class A,
         template <size_t,typename> class B,
         typename = std::enable_if_t<
-            is_coord_v<A> && is_coord_v<B>, void
+            is_coord_v<A<S,T>> && is_coord_v<B<S,T>>, void
         >
     >
     constexpr
@@ -411,7 +411,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -428,7 +428,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -517,7 +517,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -535,7 +535,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -554,7 +554,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -576,7 +576,7 @@ namespace util {
         size_t S,
         typename T,
         template <size_t,typename> class K,
-        typename = std::enable_if_t<is_coord_v<K>,void>
+        typename = std::enable_if_t<is_coord_v<K<S,T>>,void>
     >
     constexpr
     K<S,T>
@@ -598,7 +598,7 @@ namespace util {
         size_t S,
         typename T,
         template <size_t,typename> class K,
-        typename = std::enable_if_t<is_coord_v<K>,void>
+        typename = std::enable_if_t<is_coord_v<K<S,T>>,void>
     >
     constexpr
     K<S,T>
@@ -624,7 +624,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -645,7 +645,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -665,7 +665,7 @@ namespace util {
         typename T,
         template<size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -681,7 +681,7 @@ namespace util {
         typename T,
         template<size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -698,7 +698,7 @@ namespace util {
         typename T,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,T>>, void
         >
     >
     constexpr
@@ -710,25 +710,25 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-#define VECTOR_OP(OP)                               \
-    template <                                      \
-        size_t S,                                   \
-        typename T,                                 \
-        typename U,                                 \
-        template <size_t,typename> class A,         \
-        template <size_t,typename> class B,         \
-        typename = std::enable_if_t<                \
-            is_coord_v<A> && is_coord_v<B>, void    \
-        >                                           \
-    >                                               \
-    constexpr                                       \
-    vector<S,bool>                                  \
-    operator OP (const A<S,T> a, const B<S,U> b)    \
-    {                                               \
-        vector<S,bool> out {};                      \
-        for (size_t i = 0; i < S; ++i)              \
-            out[i] = a[i] OP b[i];                  \
-        return out;                                 \
+#define VECTOR_OP(OP)                                       \
+    template <                                              \
+        size_t S,                                           \
+        typename T,                                         \
+        typename U,                                         \
+        template <size_t,typename> class A,                 \
+        template <size_t,typename> class B,                 \
+        typename = std::enable_if_t<                        \
+            is_coord_v<A<S,T>> && is_coord_v<B<S,U>>, void  \
+        >                                                   \
+    >                                                       \
+    constexpr                                               \
+    vector<S,bool>                                          \
+    operator OP (const A<S,T> a, const B<S,U> b)            \
+    {                                                       \
+        vector<S,bool> out {};                              \
+        for (size_t i = 0; i < S; ++i)                      \
+            out[i] = a[i] OP b[i];                          \
+        return out;                                         \
     }
 
     VECTOR_OP(<)
@@ -746,7 +746,7 @@ namespace util {
         typename U,                         \
         template <size_t,typename> class K, \
         typename = std::enable_if_t<        \
-            is_coord_v<K>, void             \
+            is_coord_v<K<S,T>>, void        \
         >                                   \
     >                                       \
     constexpr                               \
@@ -772,7 +772,7 @@ namespace util {
         size_t S,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,bool>>, void
         >
     >
     constexpr
@@ -789,7 +789,7 @@ namespace util {
         size_t S,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K>, void
+            is_coord_v<K<S,bool>>, void
         >
     >
     constexpr
@@ -808,7 +808,7 @@ namespace util {
         typename T,
         template<size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K> && std::is_floating_point<T>::value, void
+            is_coord_v<K<S,T>> && std::is_floating_point<T>::value, void
         >
     >
     constexpr
