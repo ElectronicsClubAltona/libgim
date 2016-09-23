@@ -50,7 +50,7 @@ namespace util {
     template <typename T> using colour3 = colour<3,T>;
     template <typename T> using colour4 = colour<4,T>;
 
-    typedef colour3<uint8_t> colour1u;
+    typedef colour1<uint8_t> colour1u;
     typedef colour3<uint8_t> colour3u;
     typedef colour4<uint8_t> colour4u;
 
