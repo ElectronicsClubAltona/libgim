@@ -547,6 +547,23 @@ namespace util {
         return k;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // root of sum of squares
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K<S,T>>, void
+        >
+    >
+    constexpr
+    T
+    hypot (K<S,T> k)
+    {
+        return std::sqrt (sum (k * k));
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     template <

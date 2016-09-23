@@ -32,13 +32,3 @@ util::vector<S,T>::homog (void) const
     static_assert (D > S, "reducing size loses data");
     return (*this).template redim<D> (0.f);
 }
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-constexpr
-T
-util::hypot (util::vector<S,T> v)
-{
-    return std::sqrt (sum (v * v));
-}
