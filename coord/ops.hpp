@@ -752,6 +752,8 @@ namespace util {
     VECTOR_OP(>)
     VECTOR_OP(<=)
     VECTOR_OP(>=)
+    VECTOR_OP(&&)
+    VECTOR_OP(||)
 
 #undef VECTOR_OP
 
@@ -780,6 +782,8 @@ namespace util {
     SCALAR_OP(>)
     SCALAR_OP(<=)
     SCALAR_OP(>=)
+    SCALAR_OP(&&)
+    SCALAR_OP(||)
 
 #undef SCALAR_OP
 
