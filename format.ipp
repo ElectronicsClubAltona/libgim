@@ -89,6 +89,11 @@ namespace util { namespace format { namespace detail {
 
 
     ///////////////////////////////////////////////////////////////////////////
+    std::ostream&
+    operator<< (std::ostream &os, specifier::kind k);
+
+
+    ///////////////////////////////////////////////////////////////////////////
     // provides the kind, a conversion specifier, and expected length for a
     // given type.
     //
@@ -609,7 +614,7 @@ namespace util { namespace format { namespace detail {
         if (spec.k == specifier::kind::POINTER)
             return write (os, spec, reinterpret_cast<const void*> (t));
 
-        if (spec.k != specifier::kind::STRING)
+        if (spec.k != specifier::kind::STRING && spec.k != specifier::kind::OSTREAM)
             throw conversion_error ("invalid specifier kind for string argumetn");
 
         const auto len = spec.precision < 0                  ? spec.precision :
@@ -651,10 +656,10 @@ namespace util { namespace format { namespace detail {
     //-------------------------------------------------------------------------
     template <typename OutputT>
     OutputT
-    write (OutputT os, const specifier s, const char t)
+    write (OutputT os, const specifier spec, const char t)
     {
-        if (s.k != specifier::kind::CHARACTER)
-            throw conversion_error ("invalid specifier kind for char argument");
+        if (spec.k != specifier::kind::CHARACTER && spec.k != specifier::kind::OSTREAM)
+            throw conversion_error (render ("invalid specifier kind for char argument: %!", spec.k));
 
         *os = t;
         return ++os;
@@ -692,7 +697,7 @@ namespace util { namespace format { namespace detail {
     >
     write (OutputT &os, const specifier &spec, const T t)
     {
-        if (spec.k != specifier::kind::POINTER)
+        if (spec.k != specifier::kind::POINTER && spec.k != specifier::kind::OSTREAM)
             throw conversion_error ("invalid conversion specifier for pointer value");
 
         // glibc at least uses a special form for null pointers
@@ -730,15 +735,18 @@ namespace util { namespace format { namespace detail {
     >
     write (OutputT os, const specifier spec, ValueT t)
     {
-        if (spec.k == specifier::kind::POINTER && !t)
-        {
+        if (spec.k == specifier::kind::POINTER && !t) {
             return write (os, spec, reinterpret_cast<void*> (t));
         }
 
-        if (spec.k != (std::is_unsigned<ValueT>::value ? specifier::kind::UNSIGNED : specifier::kind::SIGNED))
-            throw conversion_error ("invalid conversion specifier for integer value");
+        if (!(spec.k == specifier::kind::UNSIGNED && std::is_unsigned<ValueT>::value ||
+              spec.k == specifier::kind::SIGNED   && std::is_signed  <ValueT>::value ||
+              spec.k == specifier::kind::OSTREAM))
+        {
+            throw conversion_error ("invalid conversion specifier for integer");
+        }
 
-        if (sizeof (ValueT) > spec.length)
+        if (sizeof (ValueT) > spec.length && spec.k != specifier::kind::OSTREAM)
             throw length_error ("overlength value parameter");
 
         const auto numerals   = digits (t, spec.base);
@@ -801,8 +809,13 @@ namespace util { namespace format { namespace detail {
         std::is_floating_point<T>::value,
         OutputT
     >
-    write (OutputT os, const specifier spec, T t)
+    write (OutputT os, specifier spec, T t)
     {
+        if (spec.k == specifier::kind::OSTREAM) {
+            spec   = specifier {};
+            spec.k = specifier::kind::REAL;
+        }
+
         if (spec.k != specifier::kind::REAL)
             throw conversion_error ("invalid conversion specifier for real value");
 
@@ -820,7 +833,8 @@ namespace util { namespace format { namespace detail {
             if (spec.left_adjusted)  *cursor++ = '-';
             if (spec.positive_char)  *cursor++ = spec.positive_char;
 
-            cursor += sprintf (cursor, "%u", spec.width);
+            if (spec.width)
+                cursor += sprintf (cursor, "%u", spec.width);
 
             if (spec.precision >= 0) {
                 *cursor++ = '.';

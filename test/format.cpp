@@ -55,6 +55,7 @@ main (void)
     CHECK_RENDER ("%ju", "1",  (uintmax_t)1);
     CHECK_RENDER ("%zu", "0",  (size_t)0);
     CHECK_RENDER ("%zu", "1",  (size_t)1);
+    CHECK_RENDER ("%!", "1", 1u);
 
     CHECK_RENDER ("%o", "1", 01u);
     CHECK_RENDER ("%o", "13", 013u);
@@ -122,7 +123,10 @@ main (void)
     CHECK_RENDER ("%3.2f", "1.23", 1.2345678);
     CHECK_RENDER ("%3.2f", "1234.57", 1234.5678);
 
+    CHECK_RENDER ("%!", "1", 1.);
+
     CHECK_RENDER ("%c", "A", 'A');
+    CHECK_RENDER ("%!", "A", 'A');
 
     CHECK_RENDER ("%s", "foo", "foo");
     CHECK_RENDER ("%s", "foo", std::string ("foo"));
@@ -134,6 +138,8 @@ main (void)
     CHECK_RENDER ("%.64s", "foo", "foo");
     CHECK_RENDER ("%3.1s", "  f", "foo");
     CHECK_RENDER ("%-3.1s", "f  ", "foo");
+    CHECK_RENDER ("%!", "foo", "foo");
+
     CHECK_RENDER ("%!", "userobj", userobj {});
 
     CHECK_RENDER ("%p", "0x1234567", (void*)0x01234567);
@@ -141,6 +147,7 @@ main (void)
     CHECK_RENDER ("%p", "0x1234567", (char*)0x01234567);
     CHECK_RENDER ("%p", "(nil)", nullptr);
     CHECK_RENDER ("%p", "(nil)", NULL);
+    CHECK_RENDER ("%!", "0x1234567", (void*)0x01234567);
 
     CHECK_RENDER ("%%", "%");
     CHECK_RENDER ("%10%", "%");
@@ -202,6 +209,4 @@ main (void)
 
     CHECK_THROW("%c", conversion_error, 1u);
     CHECK_THROW("%c", conversion_error, "foo");
-
-    CHECK_THROW("%!", conversion_error, 1u);
 }
