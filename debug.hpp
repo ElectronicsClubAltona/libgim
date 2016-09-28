@@ -25,9 +25,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #if !defined(NDEBUG)
-    #define _DEBUG_ONLY(X) do { X } while (0)
+    #define DEBUG_ONLY(X) do { X } while (0)
 #else
-    #define _DEBUG_ONLY(X) do {   } while (0)
+    #define DEBUG_ONLY(X) do {   } while (0)
 #endif
 
 
@@ -39,14 +39,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define TRACE {                                                                     \
-    _DEBUG_ONLY(                                                                    \
+    DEBUG_ONLY(                                                                    \
         std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << std::endl;   \
     );                                                                              \
 }
 
 
 #define WARN(C) do {                                                                                \
-    _DEBUG_ONLY(                                                                                    \
+    DEBUG_ONLY(                                                                                    \
         if (C) {                                                                                    \
             std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << ", " << #C << std::endl; \
         }                                                                                           \
@@ -64,7 +64,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK(C) do {   \
-    _DEBUG_ONLY(        \
+    DEBUG_ONLY(        \
         if (!(C))       \
             panic (#C); \
     );                  \
@@ -73,7 +73,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_SANITY(A) do {                                            \
-    _DEBUG_ONLY(                                                        \
+    DEBUG_ONLY(                                                        \
         const auto &__a = (A);                                          \
         if (!util::debug::is_valid (__a)) {                             \
             _CHECK_PANIC("failed sanity test for %s, %!\n", #A, __a);   \
@@ -84,7 +84,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_EQ(A,B) do {                                  \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         const auto &__a = (A);                              \
         const auto &__b = (B);                              \
                                                             \
@@ -101,7 +101,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LT(A,B) do {                                  \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         const auto &__a = (A);                              \
         const auto &__b = (B);                              \
                                                             \
@@ -118,7 +118,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LE(A,B) do {                                  \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         const auto &__a = (A);                              \
         const auto &__b = (B);                              \
                                                             \
@@ -135,7 +135,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_GT(A,B) do {                                  \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         const auto &__a = (A);                              \
         const auto &__b = (B);                              \
                                                             \
@@ -152,7 +152,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_GE(A,B) do {                                  \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         const auto &__a = (A);                              \
         const auto &__b = (B);                              \
                                                             \
@@ -169,7 +169,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LIMIT(V,L,H) do {                             \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         const auto &__v = (V);                              \
         const auto &__l = (L);                              \
         const auto &__h = (H);                              \
@@ -188,7 +188,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NEQ(A,B) do {                                 \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         const auto &__a = (A);                              \
         const auto &__b = (B);                              \
                                                             \
@@ -205,7 +205,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_ZERO(A) do {                                  \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         const auto &__a = (A);                              \
                                                             \
         if (!util::almost_zero (__a)) {                     \
@@ -219,7 +219,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NEZ(A) do {                                   \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         const auto &__a = (A);                              \
         if (util::exactly_zero (__a))                       \
             _CHECK_PANIC ("expected zero\n"                 \
@@ -231,7 +231,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_MOD(V,M) do {                                         \
-    _DEBUG_ONLY (                                                   \
+    DEBUG_ONLY (                                                   \
         const auto &__check_mod_v = (V);                            \
         const auto &__check_mod_m = (M);                            \
         if (!util::exactly_zero (__check_mod_v % __check_mod_m))    \
@@ -266,7 +266,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_THROWS(E,C) do {                              \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         bool caught = false;                                \
                                                             \
         try                                                 \
@@ -282,7 +282,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NOTHROW(C) do {                               \
-    _DEBUG_ONLY(                                            \
+    DEBUG_ONLY(                                            \
         try {                                               \
             C;                                              \
         } catch (const std::exception &e) {                 \
