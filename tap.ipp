@@ -29,9 +29,9 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename ...Args>
+template <typename ...Args, size_t N>
 void
-util::TAP::logger::expect (bool test, const std::string &fmt, Args&&... args)
+util::TAP::logger::expect (bool test, const char (&fmt)[N], Args&&... args)
 {
     std::cout << (test ? "ok " : "not ok ") << ++m_size
               << " - "
@@ -43,61 +43,46 @@ util::TAP::logger::expect (bool test, const std::string &fmt, Args&&... args)
 
 
 //-----------------------------------------------------------------------------
-template <typename... Args>
+template <typename ...Args, size_t N>
 void
-util::TAP::logger::expect (const std::function<bool(Args...)> &test, Args&&... args, const std::string &msg)
+util::TAP::logger::expect (const std::function<bool(Args...)> &test, Args&&... args, const char (&fmt)[N])
 {
-    expect (test (std::forward<Args> (args)...), msg);
+    try {
+        expect (test (std::forward<Args> (args)...), fmt);
+    } catch (...) {
+        expect (false, fmt);
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T, typename U, typename ...Args, size_t N>
+void
+util::TAP::logger::expect_eq (const T&a, const U &b, const char (&fmt)[N], Args&&... args)
+{
+    expect (almost_equal (a, b), fmt, std::forward<Args> (args)...);
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T, typename U, typename ...Args>
+template <typename T, typename U, typename ...Args, size_t N>
 void
-util::TAP::logger::expect_eq (const T&a, const U &b, const std::string &fmt, Args&&... args)
+util::TAP::logger::expect_neq (const T&a, const U &b, const char (&fmt)[N], Args&&... args)
 {
-    static const std::function<bool(const T&,const U&)> TEST = [] (const T &t, const U &u) -> bool {
-        return almost_equal (t, u);
-    };
-
-    expect<const T&, const U&> (TEST, a, b, util::format::render (fmt, std::forward<Args> (args)...));
+    expect (!almost_equal (a, b), fmt, std::forward<Args> (args)...);
 }
 
 
-//-----------------------------------------------------------------------------
-template <typename T, typename U, typename ...Args>
-void
-util::TAP::logger::expect_neq (const T&a, const U &b, const std::string &fmt, Args&&... args)
-{
-    static const std::function<bool(const T&,const U&)> TEST = [] (const T &t, const U &u) -> bool {
-        return !almost_equal (t, u);
-    };
-
-    expect<const T&, const U&> (TEST, a, b, util::format::render (fmt, std::forward<Args> (args)...));
-}
-
-
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 #define TAP_TEST(SUFFIX,OP)                                     \
-template <typename T, typename U, typename ...Args>             \
+template <typename T, typename U, typename ...Args, size_t N>   \
 void                                                            \
 util::TAP::logger::expect_ ## SUFFIX (const T &a,               \
                                       const U &b,               \
-                                      const std::string &fmt,   \
+                                      const char (&fmt)[N],     \
                                       Args&&... args)           \
 {                                                               \
-    static const std::function<                                 \
-        bool(const T&,const U&)                                 \
-    > TEST = [] (const T&t, const U&u) { return t OP u; };      \
-                                                                \
-    expect<const T&, const U&> (                                \
-        TEST,                                                   \
-        a, b,                                                   \
-        util::format::render (                                  \
-            fmt,                                                \
-            std::forward<Args> (args)...                        \
-        )                                                       \
-    );                                                          \
+    expect ((a) OP (b), fmt, std::forward<Args> (args)...);     \
 }
 
 TAP_TEST(gt, > )
@@ -109,23 +94,18 @@ TAP_TEST(le, <=)
 
 
 //-----------------------------------------------------------------------------
-template <typename T, typename ...Args>
+template <typename T, typename ...Args, size_t N>
 void
-util::TAP::logger::expect_nan (const T &t, const std::string &fmt, Args&&... args)
+util::TAP::logger::expect_nan (const T &t, const char (&fmt)[N], Args&&... args)
 {
-    bool(*func)(T) = std::isnan;
-    expect<const T&> (
-        std::function<bool(const T&)> (func),
-        t,
-        util::format::render (fmt, std::forward<Args> (args)...)
-    );
+    expect (std::isnan (t), fmt, std::forward<Args> (args)...);
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T, typename ...Args>
+template <typename T, typename ...Args, size_t N>
 void
-util::TAP::logger::expect_nothrow (T &&t, const std::string &fmt, Args&&... args)
+util::TAP::logger::expect_nothrow (T &&t, const char (&fmt)[N], Args&&... args)
 {
     bool success = true;
 
@@ -135,14 +115,14 @@ util::TAP::logger::expect_nothrow (T &&t, const std::string &fmt, Args&&... args
         success = false;
     }
 
-    expect (success, util::format::render (fmt, std::forward<Args> (args)...));
+    expect (success, fmt, std::forward<Args> (args)...);
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename E, typename T, typename ...Args>
+template <typename E, typename T, typename ...Args, size_t N>
 void
-util::TAP::logger::expect_throw (T &&t, const std::string &fmt, Args&&... args)
+util::TAP::logger::expect_throw (T &&t, const char (&fmt)[N], Args&&... args)
 {
     bool success = false;
 
@@ -154,5 +134,5 @@ util::TAP::logger::expect_throw (T &&t, const std::string &fmt, Args&&... args)
         success = false;
     }
 
-    expect (success, util::format::render (fmt, std::forward<Args> (args)...));
+    expect (success, fmt, std::forward<Args> (args)...);
 }

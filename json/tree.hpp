@@ -23,7 +23,7 @@
 #include "../iterator.hpp"
 #include "../view.hpp"
 
-#include <iostream>
+#include <ostream>
 #include <map>
 #include <memory>
 #include <string>

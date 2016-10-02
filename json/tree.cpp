@@ -30,7 +30,6 @@
 #include <cstdlib>
 #include <deque>
 #include <iomanip>
-#include <sstream>
 #include <stdexcept>
 
 #include <fcntl.h>
@@ -870,14 +869,26 @@ json::tree::number::operator ==(const json::tree::number &rhs) const {
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 json::tree::number::real_t
 json::tree::number::real (void) const
 {
-    if (m_repr != REAL)
-        throw json::type_error ("number is not a real");
+    switch (repr ()) {
+    case REAL:
+        return m_value.r;
 
-    return m_value.r;
+    case UINT:
+        if (uint_t (real_t (m_value.u)) != m_value.u)
+            throw type_error ("number is not a real");
+        return m_value.u;
+
+    case SINT:
+        if (sint_t (real_t (m_value.s)) != m_value.s)
+            throw type_error ("number is not a real");
+        return m_value.s;
+    }
+
+    unreachable ();
 }
 
 
@@ -885,10 +896,22 @@ json::tree::number::real (void) const
 json::tree::number::sint_t
 json::tree::number::sint (void) const
 {
-    if (m_repr != SINT)
-        throw json::type_error ("number is not a sint");
+    switch (repr ()) {
+    case SINT:
+        return m_value.s;
 
-    return m_value.s;
+    case REAL:
+        if (!::util::exactly_equal (real_t (sint_t (m_value.r)), m_value.r))
+            throw type_error ("number is not a sint");
+        return sint_t (m_value.r);
+
+    case UINT:
+        if (uint_t (sint_t (m_value.u)) != m_value.u)
+            throw type_error ("number is not a sint");
+        return m_value.s;
+    }
+
+    unreachable ();
 }
 
 
@@ -896,14 +919,26 @@ json::tree::number::sint (void) const
 json::tree::number::uint_t
 json::tree::number::uint (void) const
 {
-    if (m_repr != UINT)
-        throw json::type_error ("number is not a uint");
+    switch (repr ()) {
+    case UINT:
+        return m_value.u;
 
-    return m_value.u;
+    case REAL:
+        if (!::util::exactly_equal (real_t (uint_t (m_value.r)), m_value.r))
+            throw type_error ("number is not a uint");
+        return uint_t (m_value.r);
+
+    case SINT:
+        if (sint_t (uint_t (m_value.s)) != m_value.s)
+            throw type_error ("number is not a uint");
+        return m_value.s;
+    }
+
+    unreachable ();
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 json::tree::number::operator json::tree::number::real_t (void) const
 {
     return real ();

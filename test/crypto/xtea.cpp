@@ -49,17 +49,8 @@ main ()
         std::array<uint32_t,2> dec (t.enc);
         gen.decrypt (dec.data (), dec.size ());
 
-        {
-            std::ostringstream os;
-            os << "XTEA_enc " << i;
-            tap.expect (enc == t.enc, os.str ());
-        }
-
-        {
-            std::ostringstream os;
-            os << "XTEA_dec " << i;
-            tap.expect (dec == t.dec, os.str ());
-        }
+        tap.expect (enc == t.enc, "XTEA_enc %zu", i);
+        tap.expect (dec == t.dec, "XTEA_dec %zu", i);
     }
 
     return tap.status ();

@@ -44,34 +44,6 @@ extent<S,T>::extent (vector<S,T> _v)
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-T
-extent<S,T>::diameter (void) const
-{
-    return static_cast<T> (
-        std::sqrt (
-            std::accumulate (std::begin (this->data),
-                             std::end   (this->data),
-                             T {0},
-                             [] (auto a, auto b) { return a + b * b; })
-        )
-    );
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-T
-extent<S,T>::area (void) const
-{
-    return std::accumulate (std::begin (this->data),
-                            std::end   (this->data),
-                            T {1},
-                            std::multiplies<T> ());
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
 extent<S,T>
 extent<S,T>::expanded (util::vector<S,T> mag) const
 {
@@ -216,7 +188,7 @@ extent_range<S,T>::iterator::operator!= (const iterator &rhs) const
 ///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace debug {
     template <size_t S, typename T>
-    struct validator<extent,S,T> {
+    struct validator<extent<S,T>> {
         static bool is_valid (const extent<S,T> &e)
         {
             return std::all_of (std::begin (e.data),
@@ -226,11 +198,11 @@ namespace util { namespace debug {
     };
 } }
 
-template bool util::debug::valid (const extent<2,float>&);
-template bool util::debug::valid (const extent<2,double>&);
-template bool util::debug::valid (const extent<2,uint16_t>&);
-template bool util::debug::valid (const extent<2,uint32_t>&);
-template bool util::debug::valid (const extent<2,uint64_t>&);
+template bool util::debug::is_valid (const extent<2,float>&);
+template bool util::debug::is_valid (const extent<2,double>&);
+template bool util::debug::is_valid (const extent<2,uint16_t>&);
+template bool util::debug::is_valid (const extent<2,uint32_t>&);
+template bool util::debug::is_valid (const extent<2,uint64_t>&);
 
 
 //-----------------------------------------------------------------------------

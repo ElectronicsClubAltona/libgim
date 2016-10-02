@@ -17,7 +17,7 @@
 #ifndef __UTIL_STATS_HPP
 #define __UTIL_STATS_HPP
 
-#include <iostream>
+#include <ostream>
 
 
 namespace util {

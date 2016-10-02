@@ -20,7 +20,7 @@
 #include "point.hpp"
 #include "region.hpp"
 
-#include <iostream>
+#include <ostream>
 
 namespace util {
     template <size_t S>

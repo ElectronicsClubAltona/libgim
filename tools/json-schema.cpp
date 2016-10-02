@@ -23,9 +23,13 @@
 #include "io.hpp"
 
 #include <boost/filesystem.hpp>
+#include <iostream>
+
 
 namespace fs = boost::filesystem;
 
+
+///////////////////////////////////////////////////////////////////////////////
 enum {
     ARG_CMD,
     ARG_SCHEMA,
@@ -35,6 +39,7 @@ enum {
 };
 
 
+///////////////////////////////////////////////////////////////////////////////
 int
 main (int argc, char **argv) {
     if (argc != NUM_ARGS) {

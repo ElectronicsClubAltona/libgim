@@ -31,88 +31,6 @@ using util::vector3d;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-T
-util::vector<S,T>::magnitude (void) const
-{
-    // TODO: this should not truncate for integral types
-    return static_cast<T> (std::sqrt (magnitude2 ()));
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-T
-util::vector<S,T>::magnitude2 (void) const
-{
-    T total { 0 };
-    for (size_t i = 0; i < S; ++i)
-        total += pow2 (this->data[i]);
-    return total;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-T
-util::vector<S,T>::difference (vector<S,T> rhs) const
-{
-    // TODO: change the signature to ensure it does not truncate
-    return static_cast<T> (std::sqrt (difference2 (rhs)));
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-T
-util::vector<S,T>::difference2 (vector<S,T> rhs) const
-{
-    T sum {0};
-    for (size_t i = 0; i < S; ++i)
-        sum += pow2 (this->data[i] - rhs.data[i]);
-    return sum;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-bool
-vector<S,T>::is_normalised (void) const
-{
-    return almost_equal (magnitude2 (), T{1});
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>&
-util::vector<S,T>::normalise (void)
-{
-    T mag = magnitude ();
-
-    for (size_t i = 0; i < S; ++i)
-        this->data[i] /= mag;
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::vector<S,T>
-util::vector<S,T>::normalised (void) const
-{
-    T mag = magnitude ();
-    util::vector<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        out.data[i] = this->data[i] / mag;
-
-    return out;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 vector<2,T>
 util::polar_to_cartesian (vector<2,T> v)
@@ -157,10 +75,10 @@ template <typename T>
 vector<2,T>
 util::to_euler (vector<3,T> vec)
 {
-    vec.normalise ();
+    CHECK (is_normalised (vec));
 
     return {
-        std::acos  (vec.y / vec.magnitude ()),
+         std::acos  (vec.y),
         -std::atan2 (vec.z, vec.x),
     };
 }
@@ -204,7 +122,7 @@ template <typename T>
 vector<3,T>
 util::cartesian_to_spherical (vector<3,T> c)
 {
-    T mag = c.magnitude ();
+    T mag = norm (c);
 
     return vector<3,T> {
         mag,
@@ -214,29 +132,19 @@ util::cartesian_to_spherical (vector<3,T> c)
 }
 
 
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-util::vector<S,T>::is_zero (void) const
-{
-    return std::all_of (std::begin (this->data),
-                        std::end   (this->data),
-                        [] (T i) { return almost_zero (i); });
-}
-
-
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 const util::vector<S,T>
-util::vector<S,T>::UNIT (T{1});
+util::vector<S,T>::ONES (T{1});
 
 
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 const util::vector<S,T>
 util::vector<S,T>::ZERO (T{0});
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 void
 util::vector<S,T>::sanity (void) const

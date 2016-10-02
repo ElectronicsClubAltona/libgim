@@ -37,42 +37,42 @@ namespace util { namespace TAP {
         ~logger ();
 
         //---------------------------------------------------------------------
-        template <typename ...Args>
-        void expect (bool, const std::string &fmt, Args&&...);
+        template <typename ...Args, size_t N>
+        void expect (bool, const char (&fmt)[N], Args&&...);
 
-        template <typename ...Args>
-        void expect (const std::function<bool(Args...)>&, Args&&..., const std::string& msg);
-
-        //---------------------------------------------------------------------
-        template <typename T, typename U, typename ...Args>
-        void expect_eq (const T&, const U&, const std::string &fmt, Args&&...);
-
-        template <typename T, typename U, typename ...Args>
-        void expect_neq (const T&, const U&, const std::string &fmt, Args&&...);
+        template <typename ...Args, size_t N>
+        void expect (const std::function<bool(Args...)>&, Args&&..., const char (&msg)[N]);
 
         //---------------------------------------------------------------------
-        template <typename T, typename U, typename ...Args>
-        void expect_gt (const T&, const U&, const std::string &fmt, Args&&...);
+        template <typename T, typename U, typename ...Args, size_t N>
+        void expect_eq (const T&, const U&, const char (&fmt)[N], Args&&...);
 
-        template <typename T, typename U, typename ...Args>
-        void expect_ge (const T&, const U&, const std::string &fmt, Args&&...);
-
-        template <typename T, typename U, typename ...Args>
-        void expect_lt (const T&, const U&, const std::string &fmt, Args&&...);
-
-        template <typename T, typename U, typename ...Args>
-        void expect_le (const T&, const U&, const std::string &fmt, Args&&...);
+        template <typename T, typename U, typename ...Args, size_t N>
+        void expect_neq (const T&, const U&, const char (&fmt)[N], Args&&...);
 
         //---------------------------------------------------------------------
-        template <typename T, typename ...Args>
-        void expect_nan (const T&, const std::string &fmt, Args&&...);
+        template <typename T, typename U, typename ...Args, size_t N>
+        void expect_gt (const T&, const U&, const char (&fmt)[N], Args&&...);
+
+        template <typename T, typename U, typename ...Args, size_t N>
+        void expect_ge (const T&, const U&, const char (&fmt)[N], Args&&...);
+
+        template <typename T, typename U, typename ...Args, size_t N>
+        void expect_lt (const T&, const U&, const char (&fmt)[N], Args&&...);
+
+        template <typename T, typename U, typename ...Args, size_t N>
+        void expect_le (const T&, const U&, const char (&fmt)[N], Args&&...);
 
         //---------------------------------------------------------------------
-        template <typename T, typename ...Args>
-        void expect_nothrow (T&&, const std::string &fmt, Args&&...);
+        template <typename T, typename ...Args, size_t N>
+        void expect_nan (const T&, const char (&fmt)[N], Args&&...);
 
-        template <typename E, typename T, typename ...Args>
-        void expect_throw (T&&, const std::string &fmt, Args&&...);
+        //---------------------------------------------------------------------
+        template <typename T, typename ...Args, size_t N>
+        void expect_nothrow (T&&, const char (&fmt)[N], Args&&...);
+
+        template <typename E, typename T, typename ...Args, size_t N>
+        void expect_throw (T&&, const char (&fmt)[N], Args&&...);
 
         //---------------------------------------------------------------------
         void skip (const std::string &msg);

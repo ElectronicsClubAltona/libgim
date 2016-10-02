@@ -17,13 +17,18 @@
 #ifndef __MATHS_HPP
 #define __MATHS_HPP
 
-#include "./debug.hpp"
+// DO NOT INCLUDE debug.hpp
+// it triggers a circular dependency; debug -> format -> maths -> debug
+// instead, just use cassert
+
 #include "./types/traits.hpp"
 #include "./float.hpp"
 
+#include <cassert>
 #include <cmath>
 #include <cstdint>
 #include <limits>
+#include <numeric>
 #include <type_traits>
 #include <utility>
 
@@ -281,9 +286,40 @@ namespace util {
 
 
     //-----------------------------------------------------------------------------
-    template <typename T>
+    constexpr
     unsigned
-    digits (const T& value);
+    digits10 (uint32_t v) noexcept
+    {
+        return (v >= 1000000000) ? 10 :
+               (v >=  100000000) ?  9 :
+               (v >=   10000000) ?  8 :
+               (v >=    1000000) ?  7 :
+               (v >=     100000) ?  6 :
+               (v >=      10000) ?  5 :
+               (v >=       1000) ?  4 :
+               (v >=        100) ?  3 :
+               (v >=         10) ?  2 :
+                                    1;
+    }
+
+
+    template <typename ValueT, typename BaseT>
+    constexpr
+    std::enable_if_t<
+        std::is_integral<ValueT>::value && std::is_unsigned<BaseT>::value,
+        unsigned
+    >
+    digits (ValueT value, BaseT base) noexcept
+    {
+        if (value < 0)
+            value *= -1;
+
+        unsigned tally = 1;
+        while (value /= base)
+            ++tally;
+
+        return tally;
+    }
 
 
     ///----------------------------------------------------------------------------
@@ -326,8 +362,8 @@ namespace util {
     constexpr T
     gcd (T a, T b)
     {
-        CHECK_NEZ (a);
-        CHECK_NEZ (b);
+        assert (a);
+        assert (b);
 
         while (a != b) {
             if (a > b)
@@ -346,6 +382,32 @@ namespace util {
     identity (const T& t)
     {
         return t;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Modulus/etc
+
+    // namespaced wrapper for `man 3 fmod`
+    template <typename T>
+    constexpr
+    std::enable_if_t<
+        std::is_floating_point<T>::value, T
+    >
+    mod (T x, T y)
+    {
+        return std::fmod (x, y);
+    }
+
+
+    template <typename T>
+    constexpr
+    std::enable_if_t<
+        std::is_integral<T>::value, T
+    >
+    mod (T x, T y)
+    {
+        return x % y;
     }
 
 
@@ -434,13 +496,16 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////////
     // kahan summation for long floating point sequences
 
-    template <class InputIt>
-    typename std::iterator_traits<InputIt>::value_type
-    fsum (InputIt first, InputIt last)
+    template <class InputT>
+    std::enable_if_t<
+        std::is_floating_point<
+            typename std::iterator_traits<InputT>::value_type
+        >::value,
+        typename std::iterator_traits<InputT>::value_type
+    >
+    sum (InputT first, InputT last)
     {
-        using T = typename std::iterator_traits<InputIt>::value_type;
-        static_assert (std::is_floating_point<T>::value,
-                       "fsum only works for floating point types");
+        using T = typename std::iterator_traits<InputT>::value_type;
 
         T sum = 0;
         T c = 0;
@@ -453,6 +518,21 @@ namespace util {
         }
 
         return sum;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <class InputT>
+    std::enable_if_t<
+        std::is_integral<
+            typename std::iterator_traits<InputT>::value_type
+        >::value,
+        typename std::iterator_traits<InputT>::value_type
+    >
+    sum (InputT first, InputT last)
+    {
+        using T = typename std::iterator_traits<InputT>::value_type;
+        return std::accumulate (first, last, T{0});
     }
 
 
@@ -506,7 +586,7 @@ namespace util {
     constexpr T
     limit (const T val, const U lo, const V hi)
     {
-        CHECK_LE (lo, hi);
+        assert (lo <= hi);
 
         return val > hi ? hi:
                val < lo ? lo:
@@ -520,7 +600,7 @@ namespace util {
     T
     smoothstep  (T a, T b, T x)
     {
-        CHECK_LE(a, b);
+        assert (a <= b);
         x = limit ((x - a) / (b - a), T{0}, T{1});
         return x * x * (3 - 2 * x);
     }

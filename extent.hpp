@@ -34,10 +34,11 @@ namespace util {
         extent () = default;
         explicit extent (vector<S,T>);
 
-        T    area  (void) const;
-        T diameter (void) const;
+        constexpr T    area  (void) const;
+        constexpr T diameter (void) const;
 
         template <typename U = float>
+        constexpr
         U aspect (void) const;
 
         template <typename U>

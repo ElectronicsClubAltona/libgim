@@ -29,16 +29,17 @@ namespace util::posix {
         fd (const char *path, int flags, mode_t);
 
         fd (fd &&);
-        explicit fd (const fd&);
         explicit fd (int);
+
+        fd (const fd&) = delete;
+        fd dup (void) const;
+        static fd dup (int);
 
         ~fd ();
 
         struct ::stat stat (void) const;
 
         operator int (void) const;
-
-        static const fd INVALID;
 
     private:
         int m_fd;

@@ -45,7 +45,7 @@ namespace util { namespace coord {
         base () = default;
 
         constexpr explicit base (T val)
-        { for (size_t i = 0; i < S; ++i) this->data[i] = val; }
+        { std::fill (begin (), end (), val); }
 
         constexpr base (const base<S,T,KLASS,tags...> &rhs) = default;
         base& operator= (const base<S,T,KLASS,tags...> &rhs) = default;
@@ -53,6 +53,9 @@ namespace util { namespace coord {
         // element accessors
         T& operator[] (size_t i) { return this->data[i]; }
         constexpr const T& operator[] (size_t i) const { return this->data[i]; }
+
+        auto cbegin (void) const { return std::cbegin (this->data); }
+        auto cend   (void) const { return std::cend   (this->data); }
 
         auto begin (void) const { return std::begin (this->data); }
         auto end   (void) const { return std::end   (this->data); }

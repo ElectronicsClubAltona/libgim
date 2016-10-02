@@ -28,10 +28,10 @@ cylinder<S,T>::includes (util::point<S,T> p_) const
     auto p_0 = p_ - p0;
 
     auto l = dot (p10, p_0);
-    if (l < 0 || l > p10.magnitude2 ())
+    if (l < 0 || l > norm2 (p10))
         return false;
 
-    auto d = dot (p10, p10) - l * l * p10.magnitude2 ();
+    auto d = dot (p10, p10) - l * l * norm2 (p10);
     if (d > radius * radius)
         return false;
 

@@ -27,24 +27,22 @@
 using util::detail::posix::mapped_file;
 
 //////////////////////////////////////////////////////////////////////////////
-mapped_file::mapped_file (const char *_path, int fflags, int mflags)
+mapped_file::mapped_file (const char *path, int fflags, int mflags):
+    mapped_file (util::posix::fd (path, fflags), mflags)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+mapped_file::mapped_file (const ::util::posix::fd &src, int mflags)
 {
-    try {
-        ::util::posix::fd src (_path, fflags);
+    struct stat meta;
+    if (fstat (src, &meta) < 0)
+        throw errno_error ();
 
-        struct stat meta;
-        if (fstat (src, &meta) < 0)
-            throw errno_error ();
-
-        m_size = (size_t)meta.st_size;
-        m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, src, 0);
-        if (m_data == MAP_FAILED)
-            throw errno_error ();
-    } catch (const errno_error &e) {
-        // ignore zero length mapping error
-        if (e.code () == EINVAL && m_size == 0)
-            return;
-    }
+    m_size = (size_t)meta.st_size;
+    m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, src, 0);
+    if (m_data == MAP_FAILED)
+        throw errno_error ();
 }
 
 

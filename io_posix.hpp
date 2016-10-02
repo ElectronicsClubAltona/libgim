@@ -17,7 +17,7 @@
 #ifndef __UTIL_IO_POSIX_HPP
 #define __UTIL_IO_POSIX_HPP
 
-#include "io.hpp"
+#include "posix/fd.hpp"
 
 #include "view.hpp"
 
@@ -31,6 +31,7 @@ namespace util {
         class mapped_file {
         public:
             mapped_file (const char *path, int fflags = O_RDONLY | O_BINARY, int mflags = PROT_READ);
+            mapped_file (const util::posix::fd&,  int mflags = PROT_READ);
 
             mapped_file (const mapped_file&) = delete;
             mapped_file& operator= (const mapped_file&) = delete;

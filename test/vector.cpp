@@ -7,6 +7,7 @@ using util::vector;
 using util::vector2f;
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
 test_polar (util::TAP::logger &tap)
 {
@@ -47,7 +48,7 @@ test_polar (util::TAP::logger &tap)
         auto in_cart = t.cartesian;
         auto to_cart = util::polar_to_cartesian (t.polar);
 
-        tap.expect_lt ((in_cart - to_cart).magnitude (), 0.00001f, t.desc);
+        tap.expect_lt (norm (in_cart - to_cart), 0.00001f, "%s", t.desc);
 
         // Compare polar representations. Make sure to normalise them first.
         auto in_polar = t.polar;
@@ -56,11 +57,12 @@ test_polar (util::TAP::logger &tap)
         in_polar[1] = std::fmod (in_polar[1], 2 * util::PI<float>);
         to_polar[1] = std::fmod (to_polar[1], 2 * util::PI<float>);
 
-        tap.expect_eq (in_polar, to_polar, t.desc);
+        tap.expect_eq (in_polar, to_polar, "%s", t.desc);
     }
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
 test_euler (util::TAP::logger &tap)
 {
@@ -91,15 +93,16 @@ test_euler (util::TAP::logger &tap)
     for (auto i: TESTS) {
         auto trip = util::from_euler (util::to_euler (i.dir));
         auto diff = i.dir - trip;
-        auto norm = diff.magnitude ();
+        auto mag  = norm (diff);
 
         // trig functions reduce precision above almost_equal levels, so we
         // hard code a fairly low bound here instead.
-        tap.expect_lt (norm, 1e-7, "euler round-trip error, %s", i.name);
+        tap.expect_lt (mag, 1e-7, "euler round-trip error, %s", i.name);
     }
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 int
 main ()
 {
@@ -108,8 +111,14 @@ main ()
     test_polar (tap);
     test_euler (tap);
 
-    tap.expect (!util::vector3f::ZERO.is_normalised (), "zero isn't normalised");
-    tap.expect (!util::vector3f::UNIT.is_normalised (), "unit is normalised");
+    tap.expect (!is_normalised (util::vector3f::ZERO), "zero isn't normalised");
+    tap.expect (!is_normalised (util::vector3f::ONES), "ones isn't normalised");
+
+    tap.expect_eq (
+        util::hypot (util::vector3f{0,1,2} - util::vector3f{3,2,4}),
+        std::sqrt (14.f),
+        "vector3f hypot"
+    );
 
     return tap.status ();
 }

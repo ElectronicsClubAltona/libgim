@@ -25,6 +25,7 @@
 #include "preprocessor.hpp"
 
 #include <deque>
+#include <iostream>
 
 //-----------------------------------------------------------------------------
 %%{

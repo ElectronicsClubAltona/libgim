@@ -11,29 +11,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#include <windows.h>
+#ifndef __UTIL_ANNOTATION_HPP
+#define __UTIL_ANNOTATION_HPP
 
-namespace util { namespace win32 {
-    struct handle {
-        handle ();
-        explicit handle (HANDLE&&);
-        handle (handle&&);
-        handle (const handle&) = delete;
-        ~handle ();
+template <typename T>
+constexpr inline
+bool
+likely (T &&t)
+{ return __builtin_expect (!!t, true); }
 
-        operator HANDLE& (void) &; 
-        HANDLE& native (void) &;
-        const HANDLE& native (void) const &;
 
-        void reset (HANDLE);
-        void reset (handle&&);
+template <typename T>
+constexpr inline
+bool
+unlikely (T &&t)
+{ return __builtin_expect (!!t, false); }
 
-        static handle current_process (void);
-
-    private:
-        HANDLE m_native;
-    };
-} }
+#endif

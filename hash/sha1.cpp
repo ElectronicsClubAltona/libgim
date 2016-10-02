@@ -26,6 +26,7 @@
 #include <cassert>
 #include <cstdint>
 #include <limits>
+#include <ostream>
 
 
 using util::hash::SHA1;
@@ -36,8 +37,8 @@ std::ostream&
 operator<< (std::ostream &os, SHA1::state_t t)
 {
     switch (t) {
-        case SHA1::READY:       os << "READY";      return os;
-        case SHA1::FINISHED:    os << "FINISHED";   return os;
+    case SHA1::READY:    return os << "READY";
+    case SHA1::FINISHED: return os << "FINISHED";
     }
 
     unreachable ();

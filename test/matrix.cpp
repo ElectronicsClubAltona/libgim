@@ -3,14 +3,36 @@
 #include "debug.hpp"
 #include "tap.hpp"
 #include "vector.hpp"
+#include "coord/iostream.hpp"
+#include "quaternion.hpp"
 
 #include <cstdlib>
 
+
+///////////////////////////////////////////////////////////////////////////////
 int
 main (void)
 {
     util::TAP::logger tap;
 
+    static constexpr util::matrix4f SEQ { {
+        {  1,  2,  3,  4 },
+        {  5,  6,  7,  8 },
+        {  9, 10, 11, 12 },
+        { 13, 14, 15, 16 }
+    } };
+
+    tap.expect_eq (sum (SEQ), 136.f, "element summation");
+
+    // matrix-scalar operations
+    {
+        tap.expect_eq (sum (SEQ + 1.f), 152.f, "matrix-scalar addition");
+        tap.expect_eq (sum (SEQ - 1.f), 120.f, "matrix-scalar subtraction");
+        tap.expect_eq (sum (SEQ * 2.f), 272.f, "matrix-scalar multiplication");
+        tap.expect_eq (sum (SEQ / 2.f),  68.f, "matrix-scalar division");
+    }
+
+    // Simple matrix-vector multiplication
     {
         // Identity matrix-vector multiplication
         auto v = util::vector4f { 1.f, 2.f, 3.f, 4.f };
@@ -19,17 +41,9 @@ main (void)
     }
 
     {
-        // Simple matrix-vector multiplication
-        util::matrix4f m { {
-            {  1,  2,  3,  4 },
-            {  5,  6,  7,  8 },
-            {  9, 10, 11, 12 },
-            { 13, 14, 15, 16 }
-        } };
-
         util::vector<4,float> v { 1.f, 2.f, 3.f, 4.f };
 
-        auto r = m * v;
+        auto r = SEQ * v;
 
         tap.expect (
             util::almost_equal (r.x,  30.f) &&
@@ -141,6 +155,44 @@ main (void)
         } };
 
         tap.expect_eq (m.inverse (), r / 40.f, "4x4 inversion");
+    }
+
+    // sanity check euler rotations
+    {
+        static const struct {
+            util::vector3f euler;
+            const char *msg;
+        }  TESTS[] = {
+            { util::vector3f { 0 }, "zeroes" },
+
+            { { 1, 0, 0 }, "x-axis" },
+            { { 0, 1, 0 }, "y-axis" },
+            { { 0, 0, 1 }, "z-axis" },
+
+            { util::vector3f { 1 }, "ones" },
+
+            { {  3,  5,  7 }, "positive primes" },
+            { { -3, -5, -7 }, "negative primes" },
+            { {  3, -5,  7 }, "mixed primes" },
+        };
+
+        for (auto t: TESTS) {
+            constexpr auto PI2 = 2 * util::PI<float>;
+
+            auto matrix = (
+                util::quaternionf::rotation (t.euler[2], { 0, 0, 1 }) *
+                util::quaternionf::rotation (t.euler[1], { 0, 1, 0 }) *
+                util::quaternionf::rotation (t.euler[0], { 1, 0, 0 })
+            ).as_matrix ();
+
+            auto euler = to_euler (matrix);
+            auto truth = t.euler;
+
+            euler = mod (euler + 4 * PI2, PI2);
+            truth = mod (truth + 4 * PI2, PI2);
+
+            tap.expect_eq (truth, euler, "matrix-to-euler, %s", t.msg);
+        }
     }
 
     return tap.status ();

@@ -39,25 +39,59 @@ util::matrix<S,T>::operator[] (size_t idx) const
     return this->values[idx];
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//template <size_t S, typename T>
-//vector<3,T>
-//matrix<S,T>::operator* (vector<3,T> v) const
-//{
-//    return (
-//        *this * v.template homog<S> ()
-//    ).template redim<3> ();
-//}
-//
-//
-////-----------------------------------------------------------------------------
-//template <size_t S, typename T>
-//point<3,T>
-//matrix<S,T>::operator* (point<3,T> p) const
-//{
-//    return (*this * p.template homog<S> ()).template redim<3> ();
-//}
-//
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+const T*
+util::matrix<S,T>::begin (void) const
+{
+    return &(*this)[0][0];
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+const T*
+util::matrix<S,T>::end (void) const
+{
+    return &(*this)[S][0];
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+const T*
+util::matrix<S,T>::cbegin (void) const
+{
+    return begin ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+const T*
+util::matrix<S,T>::cend (void) const
+{
+    return end ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+T*
+util::matrix<S,T>::begin (void)
+{
+    return &(*this)[0][0];
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+T*
+util::matrix<S,T>::end (void)
+{
+    return &(*this)[S][0];
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,56 +101,124 @@ util::matrix<S,U>
 util::matrix<S,T>::cast (void) const
 {
     util::matrix<S,U> out;
-
-    for (size_t i = 0; i < rows; ++i)
-        for (size_t j = 0; j < cols; ++j)
-            out.values[i][j] = values[i][j];
-
+    std::copy (cbegin (), cend (), std::begin (out));
     return out;
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////
-//template <size_t S, typename T>
-//T
-//util::matrix<S,T>::determinant (void) const
-//{
-//    return util::determinant (*this);
-//}
-//
-//
-////-----------------------------------------------------------------------------
-//template <size_t S, typename T>
-//util::matrix<S,T>
-//util::matrix<S,T>::inverse (void) const
-//{
-//    return util::inverse (*this);
-//}
+///////////////////////////////////////////////////////////////////////////////
+#define MATRIX_ELEMENT_OP(OP)                                       \
+template <size_t S, typename T>                                     \
+constexpr                                                           \
+util::matrix<S,T>                                                   \
+util::operator OP (                                                 \
+    const util::matrix<S,T> &a,                                     \
+    const util::matrix<S,T> &b)                                     \
+{                                                                   \
+    util::matrix<S,T> res {};                                       \
+                                                                    \
+    for (size_t i = 0; i < a.rows; ++i)                             \
+        for (size_t j = 0; j < a.cols; ++j)                         \
+            res[i][j] = a[i][j] OP b[i][j];                         \
+                                                                    \
+    return res;                                                     \
+}
+
+MATRIX_ELEMENT_OP(-)
+MATRIX_ELEMENT_OP(+)
+
+#undef MATRIX_ELEMENT_OP
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//template <size_t S, typename T>
-//util::matrix<S,T>
-//util::matrix<S,T>::operator/ (T t) const
-//{
-//    auto out = *this;
-//
-//    for (auto &i: out.values)
-//        for (auto &j: i)
-//            j /= t;
-//
-//    return out;
-//}
-//
-//
-/////////////////////////////////////////////////////////////////////////////////
-//template <size_t S, typename T>
-//bool
-//util::matrix<S,T>::operator== (const matrix<S,T> &m) const
-//{
-//    for (size_t i = 0; i < S; ++i)
-//        for (size_t j = 0; j < S; ++j)
-//            if (!exactly_equal (values[i][j], m[i][j]))
-//                return false;
-//    return true;
-//}
+#define MATRIX_SCALAR_OP(OP)                                \
+template <size_t S, typename T>                             \
+constexpr                                                   \
+util::matrix<S,T>                                           \
+util::operator OP (const util::matrix<S,T> &m, const T t)   \
+{                                                           \
+    util::matrix<S,T> res {};                               \
+                                                            \
+    std::transform (                                        \
+        std::cbegin (m),                                    \
+        std::cend   (m),                                    \
+        std::begin  (res),                                  \
+        [&t] (auto x) { return x OP t; }                    \
+    );                                                      \
+                                                            \
+    return res;                                             \
+}                                                           \
+                                                            \
+                                                            \
+template <size_t S, typename T>                             \
+constexpr                                                   \
+util::matrix<S,T>                                           \
+util::operator OP (const T t, const util::matrix<S,T> &m)   \
+{                                                           \
+    return m OP t;                                          \
+}                                                           \
+                                                            \
+                                                            \
+template <size_t S, typename T>                             \
+constexpr                                                   \
+util::matrix<S,T>&                                          \
+util::operator OP##= (util::matrix<S,T> &m, T t)            \
+{                                                           \
+    std::transform (                                        \
+        std::cbegin (m),                                    \
+        std::cend   (m),                                    \
+        std::begin  (m),                                    \
+        [&t] (auto x) { return x OP t; }                    \
+    );                                                      \
+                                                            \
+    return m;                                               \
+}
+
+
+MATRIX_SCALAR_OP(*)
+MATRIX_SCALAR_OP(/)
+MATRIX_SCALAR_OP(+)
+MATRIX_SCALAR_OP(-)
+
+#undef MATRIX_SCALAR_OP
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+bool
+util::operator== (const matrix<S,T> &a, const matrix<S,T> &b)
+{
+    return std::equal (std::cbegin (a), std::cend (a), std::cbegin (b));
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+constexpr
+bool
+util::operator!= (const matrix<S,T> &a, const matrix<S,T> &b)
+{
+    return !(a == b);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+util::matrix<S,T>
+util::abs (const util::matrix<S,T> &src)
+{
+    util::matrix<S,T> dst;
+    std::transform (std::cbegin (src), std::cend (src), std::begin (dst), util::abs<T>);
+    return dst;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+T
+util::sum (const util::matrix<S,T> &src)
+{
+    return sum (std::cbegin (src), std::cend (src));
+}

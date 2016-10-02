@@ -27,7 +27,7 @@ using util::posix::fd;
 
 ///////////////////////////////////////////////////////////////////////////////
 fd::fd (const char *path, int flags):
-    m_fd (open (path, flags))
+    m_fd (::open (path, flags))
 {
     if (m_fd < 0)
         errno_error::throw_code ();
@@ -36,7 +36,7 @@ fd::fd (const char *path, int flags):
 
 //-----------------------------------------------------------------------------
 fd::fd (const char *path, int flags, mode_t mode):
-    m_fd (open (path, flags, mode))
+    m_fd (::open (path, flags, mode))
 {
     if (m_fd < 0)
         errno_error::throw_code ();
@@ -52,21 +52,35 @@ fd::fd (fd &&rhs):
 
 
 //-----------------------------------------------------------------------------
-fd::fd (const fd &rhs):
-    m_fd (dup (rhs.m_fd))
+fd::fd (int _fd):
+    m_fd (_fd)
 {
-    if (m_fd < 0)
-        errno_error::throw_code ();
+    if (_fd < 0)
+        throw std::invalid_argument ("invalid descriptor");
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+fd
+fd::dup (void) const
+{
+    return dup (m_fd);
 }
 
 
 //-----------------------------------------------------------------------------
-fd::fd (int _fd):
-    m_fd (_fd)
-{ ; }
+fd
+fd::dup (int _fd)
+{
+    auto res = ::dup (_fd);
+    if (res < 0)
+        errno_error::throw_code ();
+
+    return fd (res);
+}
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 fd::~fd ()
 {
     if (m_fd < 0)
@@ -93,7 +107,3 @@ fd::operator int (void) const
 {
     return m_fd;
 }
-
-
-///////////////////////////////////////////////////////////////////////////////
-const fd fd::INVALID (-1);

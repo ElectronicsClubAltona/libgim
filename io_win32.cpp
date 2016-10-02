@@ -59,39 +59,21 @@ DWORD
 mflags_to_protect (int mflags) {
     DWORD res = 0;
 
-    if (mflags & util::detail::win32::PROT_READ)  res |= PAGE_READONLY;
-    if (mflags & util::detail::win32::PROT_WRITE) res |= PAGE_READWRITE;
-    if (mflags & util::detail::win32::PROT_EXEC)  res |= PAGE_EXECUTE;
+    if (mflags & PROT_READ)  res |= PAGE_READONLY;
+    if (mflags & PROT_WRITE) res |= PAGE_READWRITE;
+    if (mflags & PROT_EXEC)  res |= PAGE_EXECUTE;
 
     return res;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-mapped_file::mapped_file (const boost::filesystem::path &path,
+mapped_file::mapped_file (::util::win32::handle &&src,
                           int fflags,
                           int mflags):
+    m_file (std::forward<::util::win32::handle> (src)),
     m_data (nullptr, UnmapViewOfFile)
 {
-    // Cache the ASCII path to avoid memory scoping issues.
-    std::string path_str = path.string ();
-
-    // Get hold of the file we're attempting to map. Emulate some level of POXIS mmap.
-    m_file.reset (
-        CreateFile (
-            path_str.c_str (),
-            fflags_to_generic (fflags),
-            fflags == O_RDONLY ? FILE_SHARE_READ : 0,
-            nullptr,
-            OPEN_EXISTING,
-            FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN,
-            nullptr
-        )
-    );
-
-    if (m_file == INVALID_HANDLE_VALUE)
-        win32_error::throw_code ();
-
     // I would rather perform checks on filesize after mapping, but mapping
     // requires a check for empty files before we perform the mapping to
     // detect errors it throws in that specific situation.
@@ -133,6 +115,38 @@ mapped_file::mapped_file (const boost::filesystem::path &path,
         static_cast<unsigned char*> (view)
     );
 }
+
+
+//-----------------------------------------------------------------------------
+mapped_file::mapped_file (const boost::filesystem::path &path,
+                          int fflags,
+                          int mflags):
+    mapped_file (
+        ::util::win32::handle (
+            ::CreateFile (
+                path.string ().c_str (),
+                fflags_to_generic (fflags),
+                fflags == O_RDONLY ? FILE_SHARE_READ : 0,
+                nullptr,
+                OPEN_EXISTING,
+                FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN,
+                nullptr
+            )
+        ),
+        fflags,
+        mflags
+    )
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+mapped_file::mapped_file (const util::fd &src,
+                          int fflags,
+                          int mflags):
+    mapped_file (util::win32::handle (reinterpret_cast<HANDLE> (_get_osfhandle (src))),
+                 fflags,
+                 mflags)
+{ };
 
 
 ///////////////////////////////////////////////////////////////////////////////

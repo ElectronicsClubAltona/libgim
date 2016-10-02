@@ -16,8 +16,9 @@
 
 #include "matrix.hpp"
 
-#include "point.hpp"
 #include "debug.hpp"
+#include "iterator.hpp"
+#include "point.hpp"
 
 #include <cstring>
 #include <cmath>
@@ -129,7 +130,22 @@ util::matrix<S,T>::inverse (void) const
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+matrix<S,T>
+util::transposed (const matrix<S,T> &m)
+{
+    util::matrix<S,T> res;
+
+    for (size_t y = 0; y < S; ++y)
+        for (size_t x = 0; x < S; ++x)
+            res[y][x] = m[x][y];
+
+    return res;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 matrix<S,T>
 matrix<S,T>::operator* (const matrix<S,T> &rhs) const
@@ -183,75 +199,6 @@ matrix<S,T>::operator* (const point<S,T> &rhs) const
         out[i] = dot (rhs, values[i]);
 
     return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-matrix<S,T>
-matrix<S,T>::operator* (T f) const
-{
-    matrix<S,T> out;
-
-    for (size_t i = 0; i < S; ++i)
-        for (size_t j = 0; j < S; ++j)
-            out.values[i][j] = values[i][j] * f;
-
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-matrix<S,T>&
-matrix<S,T>::operator*= (T f)
-{
-    for (size_t i = 0; i < S; ++i)
-        for (size_t j = 0; j < S; ++j)
-            values[i][j] *= f;
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::matrix<S,T>
-util::matrix<S,T>::operator/ (T t) const
-{
-    auto out = *this;
-
-    for (auto &i: out.values)
-        for (auto &j: i)
-            j /= t;
-
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-matrix<S,T>&
-matrix<S,T>::operator/= (T s)
-{
-    for (size_t r = 0; r < rows; ++r)
-        for (size_t c = 0; c < cols; ++c)
-            values[r][c] /= s;
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-matrix<S,T>::operator== (const matrix<S,T> &rhs) const
-{
-    for (size_t r = 0; r < rows; ++r)
-        for (size_t c = 0; c < cols; ++c)
-            if (!almost_equal (rhs.values[r][c], values[r][c]))
-                return false;
-    return true;
 }
 
 
@@ -330,35 +277,37 @@ matrix<S,T>::perspective (T fov, T aspect, range<T> Z)
 template <size_t S, typename T>
 matrix4<T>
 matrix<S,T>::look_at (util::point<3,T> eye,
-                      util::point<3,T> centre,
+                      util::point<3,T> target,
                       util::vector<3,T> up)
 {
-    const auto f = (centre - eye).normalise ();
-    const auto s = cross (f, up).normalise ();
-    const auto u = cross (s, f);
+    auto forward = normalised (eye.to (target));
+    auto side    = normalised (cross (forward, up));
+    up = cross (side, forward);
 
-    return { {
-        {  s.x,  s.y,  s.z, -dot (s, eye) },
-        {  u.x,  u.y,  u.z, -dot (u, eye) },
-        { -f.x, -f.y, -f.z,  dot (f, eye) },
-        {    0,    0,    0,  1 },
-    } };
+    auto rot = util::matrix4<T> {{
+        { side[0], up[0], -forward[0], 0 },
+        { side[1], up[1], -forward[1], 0 },
+        { side[2], up[2], -forward[2], 0 },
+        { 0, 0, 0, 1 }
+    }};
+
+    return util::matrix4<T>::translation (-eye.template as<vector> ()) * rot;
 }
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 matrix4<T>
-matrix<S,T>::translate (util::vector<2,T> v)
+matrix<S,T>::translation (util::vector<2,T> v)
 {
-    return translate ({v.x, v.y, 0});
+    return translation ({v.x, v.y, 0});
 }
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 matrix4<T>
-matrix<S,T>::translate (util::vector<3,T> v)
+matrix<S,T>::translation (util::vector<3,T> v)
 {
     return { {
         { 1.f, 0.f, 0.f, v.x },
@@ -394,9 +343,9 @@ matrix<S,T>::scale (util::vector<3,T> v)
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 matrix4<T>
-matrix<S,T>::rotate (T angle, util::vector<3,T> about)
+matrix<S,T>::rotation (T angle, util::vector<3,T> about)
 {
-    about.normalise ();
+    CHECK (is_normalised (about));
 
     T c = std::cos (angle);
     T s = std::sin (angle);
@@ -434,45 +383,64 @@ matrix<S,T>::ZEROES { 0 };
 
 
 //-----------------------------------------------------------------------------
-namespace util {
-    template struct matrix<2,float>;
-    template struct matrix<2,double>;
+template struct util::matrix<2,float>;
+template struct util::matrix<2,double>;
 
-    template struct matrix<3,float>;
-    template struct matrix<3,double>;
+template struct util::matrix<3,float>;
+template struct util::matrix<3,double>;
 
-    template struct matrix<4,float>;
-    template struct matrix<4,double>;
+template struct util::matrix<4,float>;
+template struct util::matrix<4,double>;
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Uses the algorithm from:
+//    "Extracting Euler Angles from a Rotation Matrix" by
+//    Mike Day, Insomniac Games.
+template <size_t S, typename T>
+util::vector<3,T>
+util::to_euler (const matrix<S,T> &m)
+{
+    static_assert (S == 3 || S == 4, "only defined for 3d affine transforms");
+
+    const auto theta0 = std::atan2 (m[2][1], m[2][2]);
+
+    const auto c1 = std::hypot (m[0][0], m[1][0]);
+    const auto theta1 = std::atan2 (-m[2][0], c1);
+
+    const auto s0 = std::sin(theta0);
+    const auto c0 = std::cos(theta0);
+    const auto theta2 = std::atan2(
+        s0 * m[0][2] - c0 * m[0][1],
+        c0 * m[1][1] - s0 * m[1][2]
+    );
+
+    return { theta0, theta1, theta2 };
 }
 
 
 //-----------------------------------------------------------------------------
-namespace util {
-    template <size_t S, typename T>
-    std::ostream&
-    operator<< (std::ostream &os, const matrix<S,T> &m)
-    {
-        os << "{ {" << m.values[0][0] << ", "
-                    << m.values[0][1] << ", "
-                    << m.values[0][2] << ", "
-                    << m.values[0][3] << "}, "
-           <<   "{" << m.values[1][0] << ", "
-                    << m.values[1][1] << ", "
-                    << m.values[1][2] << ", "
-                    << m.values[1][3] << "}, "
-           <<   "{" << m.values[2][0] << ", "
-                    << m.values[2][1] << ", "
-                    << m.values[2][2] << ", "
-                    << m.values[2][3] << "}, "
-           <<   "{" << m.values[3][0] << ", "
-                    << m.values[3][1] << ", "
-                    << m.values[3][2] << ", "
-                    << m.values[3][3] << "} }";
+template util::vector<3,float> util::to_euler (const matrix<3,float>&);
+template util::vector<3,float> util::to_euler (const matrix<4,float>&);
 
-        return os;
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+std::ostream&
+util::operator<< (std::ostream &os, const matrix<S,T> &m)
+{
+    os << "{ ";
+
+    for (size_t i = 0; i < S; ++i) {
+        os << "{ ";
+        std::copy (m[i], m[i]+S, util::infix_iterator<float> (os, ", "));
+        os << ((i == S - 1) ? " }" : " }, ");
     }
+
+    return os << " }";
 }
 
 
+//-----------------------------------------------------------------------------
 template std::ostream& util::operator<< (std::ostream&, const matrix<4,float>&);
 template std::ostream& util::operator<< (std::ostream&, const matrix<4,double>&);

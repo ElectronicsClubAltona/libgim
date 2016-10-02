@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_VECTOR_HPP
@@ -29,26 +29,11 @@ namespace util {
     {
         using coord::base<S,T,util::vector,coord::xyzw,coord::stpq>::base;
 
-        // vector size
-        bool is_zero (void) const;
-
-        T magnitude  (void) const;
-        T magnitude2 (void) const;
-
-        T difference  (vector<S,T>) const;
-        T difference2 (vector<S,T>) const;
-
-        // normalisation
-        bool is_normalised (void) const;
-
-        vector<S,T>& normalise  (void);
-        vector<S,T>  normalised [[gnu::warn_unused_result]] (void) const;
-
         // representations
         template <size_t D> vector<D,T> homog (void) const;
 
         // constants
-        static const vector<S,T> UNIT;
+        static const vector<S,T> ONES;
         static const vector<S,T> ZERO;
 
         void sanity (void) const;
@@ -67,13 +52,15 @@ namespace util {
 
     // output and serialisation operators
     template <size_t S, typename T>
-    const json::tree::node& operator>> (const json::tree::node&, vector<S,T>&);
+    const json::tree::node&
+    operator>> (const json::tree::node&, vector<S,T>&);
 
     // convenience typedefs
     template <typename T> using vector2 = vector<2,T>;
     template <typename T> using vector3 = vector<3,T>;
     template <typename T> using vector4 = vector<4,T>;
 
+    template <size_t S> using vectoru = vector<S,uintmax_t>;
     template <size_t S> using vectori = vector<S,intmax_t>;
     template <size_t S> using vectorf = vector<S,float>;
 

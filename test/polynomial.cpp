@@ -52,7 +52,7 @@ main (int, char**)
                 ok = false;
         }
 
-        test.expect (ok, i.name);
+        test.expect (ok, "%s", i.name);
     }
 
     return 0;

@@ -24,12 +24,10 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-#ifdef ENABLE_DEBUGGING
-#define DEBUG_ONLY(X) do {  \
-    X                       \
-} while (0)
+#if !defined(NDEBUG)
+    #define DEBUG_ONLY(X) do { X } while (0)
 #else
-#define DEBUG_ONLY(X)
+    #define DEBUG_ONLY(X) do {   } while (0)
 #endif
 
 
@@ -41,14 +39,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define TRACE {                                                                     \
-    DEBUG_ONLY(                                                                     \
+    DEBUG_ONLY(                                                                    \
         std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << std::endl;   \
     );                                                                              \
 }
 
 
 #define WARN(C) do {                                                                                \
-    DEBUG_ONLY(                                                                                     \
+    DEBUG_ONLY(                                                                                    \
         if (C) {                                                                                    \
             std::cerr << __FILE__ << ":" << __func__ << ":" << __LINE__ << ", " << #C << std::endl; \
         }                                                                                           \
@@ -59,14 +57,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define _CHECK_PANIC(FMT,...) do {                          \
     panic ("%s:%s:%i:%s\n" FMT,                             \
-           PACKAGE, __FILE__, __LINE__, __FUNCTION__,       \
+           PACKAGE, __FILE__, __LINE__, __func__,           \
            __VA_ARGS__);                                    \
 } while(0)
 
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK(C) do {   \
-    DEBUG_ONLY(         \
+    DEBUG_ONLY(        \
         if (!(C))       \
             panic (#C); \
     );                  \
@@ -75,9 +73,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_SANITY(A) do {                                            \
-    DEBUG_ONLY(                                                         \
+    DEBUG_ONLY(                                                        \
         const auto &__a = (A);                                          \
-        if (!util::debug::valid (__a)) {                                \
+        if (!util::debug::is_valid (__a)) {                             \
             _CHECK_PANIC("failed sanity test for %s, %!\n", #A, __a);   \
         }                                                               \
     );                                                                  \
@@ -86,9 +84,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_EQ(A,B) do {                                  \
-    DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+    DEBUG_ONLY(                                            \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (!util::almost_equal (__a, __b)) {               \
             _CHECK_PANIC("expected equality\n"              \
@@ -103,9 +101,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LT(A,B) do {                                  \
-    DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+    DEBUG_ONLY(                                            \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (__a >= __b) {                                   \
             _CHECK_PANIC("expected less than\n"             \
@@ -120,9 +118,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LE(A,B) do {                                  \
-    DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+    DEBUG_ONLY(                                            \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (__a > __b) {                                    \
             _CHECK_PANIC("expected less than or equal\n"    \
@@ -137,9 +135,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_GT(A,B) do {                                  \
-    DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+    DEBUG_ONLY(                                            \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (__a <= __b) {                                   \
             _CHECK_PANIC ("expected greater than\n"         \
@@ -154,9 +152,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_GE(A,B) do {                                  \
-    DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+    DEBUG_ONLY(                                            \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (__a < __b) {                                    \
             _CHECK_PANIC ("expected greater or equal\n"     \
@@ -171,10 +169,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_LIMIT(V,L,H) do {                             \
-    DEBUG_ONLY(                                             \
-        const auto __v = (V);                               \
-        const auto __l = (L);                               \
-        const auto __h = (H);                               \
+    DEBUG_ONLY(                                            \
+        const auto &__v = (V);                              \
+        const auto &__l = (L);                              \
+        const auto &__h = (H);                              \
                                                             \
         if (__v < __l || __v > __h) {                       \
             _CHECK_PANIC ("expected limit\n"                \
@@ -190,9 +188,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NEQ(A,B) do {                                 \
-    DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
-        const auto __b = (B);                               \
+    DEBUG_ONLY(                                            \
+        const auto &__a = (A);                              \
+        const auto &__b = (B);                              \
                                                             \
         if (util::almost_equal (__a, __b)) {                \
             _CHECK_PANIC ("expected inequality\n"           \
@@ -207,8 +205,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_ZERO(A) do {                                  \
-    DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
+    DEBUG_ONLY(                                            \
+        const auto &__a = (A);                              \
                                                             \
         if (!util::almost_zero (__a)) {                     \
             _CHECK_PANIC ("expected zero\n"                 \
@@ -221,13 +219,28 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NEZ(A) do {                                   \
-    DEBUG_ONLY(                                             \
-        const auto __a = (A);                               \
+    DEBUG_ONLY(                                            \
+        const auto &__a = (A);                              \
         if (util::exactly_zero (__a))                       \
             _CHECK_PANIC ("expected zero\n"                 \
                           "__a: %s is %!",                  \
                           #A, __a);                         \
     );                                                      \
+} while (0)
+
+
+///////////////////////////////////////////////////////////////////////////////
+#define CHECK_MOD(V,M) do {                                         \
+    DEBUG_ONLY (                                                   \
+        const auto &__check_mod_v = (V);                            \
+        const auto &__check_mod_m = (M);                            \
+        if (!util::exactly_zero (__check_mod_v % __check_mod_m))    \
+            _CHECK_PANIC ("expected zero modulus\n"                 \
+                          "__v: %s is %!\n"                         \
+                          "__m: %s is %!",                          \
+                          #V, __check_mod_v,                        \
+                          #M, __check_mod_m);                       \
+    );                                                              \
 } while (0)
 
 
@@ -253,7 +266,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_THROWS(E,C) do {                              \
-    DEBUG_ONLY(                                             \
+    DEBUG_ONLY(                                            \
         bool caught = false;                                \
                                                             \
         try                                                 \
@@ -269,7 +282,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #define CHECK_NOTHROW(C) do {                               \
-    DEBUG_ONLY(                                             \
+    DEBUG_ONLY(                                            \
         try {                                               \
             C;                                              \
         } catch (const std::exception &e) {                 \
@@ -286,8 +299,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 constexpr void panic [[noreturn]] (const char*);
 
-template <typename ...Args>
-constexpr void panic [[noreturn]] (const char *fmt, const Args&...);
+template <typename ...Args, size_t N>
+constexpr
+void panic [[noreturn]] (const char (&fmt)[N], const Args&...);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -328,7 +342,14 @@ namespace util { namespace debug {
 
 
     template <typename T>
-    bool valid (const T&);
+    struct validator {
+        static bool is_valid (const T&);
+    };
+
+
+    template <typename T>
+    bool is_valid (const T &t)
+    { return validator<T>::is_valid (t); }
 
 
     template <
@@ -336,7 +357,7 @@ namespace util { namespace debug {
         size_t S,
         typename ...Args
     >
-    struct validator {
+    struct validator<T<S,Args...>> {
         static bool is_valid (const T<S,Args...>&);
     };
 
@@ -346,15 +367,15 @@ namespace util { namespace debug {
         size_t S,
         typename ...Args
     >
-    bool valid (const T<S,Args...> &v)
-    { return validator<T,S,Args...>::is_valid (v); }
+    bool is_valid (const T<S,Args...> &v)
+    { return validator<T<S,Args...>>::is_valid (v); }
 
 
     template <typename T>
     void sanity (const T &t)
     {
         (void)t;
-        CHECK (valid (t));
+        CHECK (is_valid (t));
     }
 
 
@@ -365,12 +386,13 @@ namespace util { namespace debug {
     void sanity (const T<Args...> &t)
     {
         (void)t;
-        CHECK (valid (t));
+        CHECK (is_valid (t));
     }
 } }
 
 
 #include "./debug.ipp"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // XXX: maths needs to be included so that CHECK_EQ/NEQ can call almost_equal,

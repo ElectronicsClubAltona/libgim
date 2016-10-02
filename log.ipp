@@ -24,11 +24,11 @@
 
 //-----------------------------------------------------------------------------
 namespace util {
-    template <typename ...tail>
+    template <typename ...Args, size_t N>
     void
-    log (level_t l, const std::string &format, tail&& ..._tail)
+    log (level_t l, const char (&fmt)[N], const Args& ...args)
     {
-        log (l, format::render (format, std::forward<tail> (_tail)...));
+        log (l, format::render (fmt, args...));
     }
 }
 

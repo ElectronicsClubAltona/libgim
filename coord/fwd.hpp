@@ -14,26 +14,15 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include <windows.h>
+#ifndef __UTIL_COORD_FWD_HPP
+#define __UTIL_COORD_FWD_HPP
 
-namespace util { namespace win32 {
-    struct handle {
-        handle ();
-        explicit handle (HANDLE&&);
-        handle (handle&&);
-        handle (const handle&) = delete;
-        ~handle ();
+namespace util {
+    template <size_t,typename> struct colour;
+    template <size_t,typename> struct extent;
+    template <size_t,typename> struct point;
+    template <size_t,typename> struct quaternion;
+    template <size_t,typename> struct vector;
+}
 
-        operator HANDLE& (void) &; 
-        HANDLE& native (void) &;
-        const HANDLE& native (void) const &;
-
-        void reset (HANDLE);
-        void reset (handle&&);
-
-        static handle current_process (void);
-
-    private:
-        HANDLE m_native;
-    };
-} }
+#endif

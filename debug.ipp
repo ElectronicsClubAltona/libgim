@@ -28,9 +28,13 @@
 namespace util { namespace debug { namespace detail {
     void panic [[noreturn]] (const char *msg);
 
-    template <typename ...Args>
-    void panic [[noreturn]] (const char *msg, const Args& ...args)
-    { panic (util::format::render (msg, args...).c_str ()); }
+    template <typename ...Args, size_t N>
+    constexpr
+    void panic [[noreturn]] (const char (&fmt)[N], const Args& ...args)
+    {
+        auto msg = util::format::render (fmt, args...);
+        panic (msg.c_str ());
+    }
 
     void not_implemented [[noreturn]] (const char *msg);
     void unreachable [[noreturn]] (const char *msg);
@@ -92,12 +96,10 @@ constexpr void panic [[noreturn]] (const char *msg)
 
 
 //-----------------------------------------------------------------------------
-template <typename ...Args>
+template <typename ...Args, size_t N>
 constexpr
 void
-panic [[noreturn]] (const char *fmt, const Args& ...args)
+panic [[noreturn]] (const char (&fmt)[N], const Args& ...args)
 {
-    ! fmt
-    ? panic ("unreachable constexpr panic helper")
-    : util::debug::detail::panic (fmt, args...);
+    util::debug::detail::panic (fmt, args...);
 }

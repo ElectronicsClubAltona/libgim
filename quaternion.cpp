@@ -15,74 +15,44 @@
  */
 
 
-#include "quaternion.hpp"
+#include "./quaternion.hpp"
 
-#include "maths.hpp"
+#include "./debug.hpp"
+#include "./maths.hpp"
+#include "./vector.hpp"
 
+#include <iostream>
 
 //-----------------------------------------------------------------------------
 using util::quaternion;
-using util::matrix4;
 
 
 //-----------------------------------------------------------------------------
-template<> const quaternion< float> quaternion< float>::IDENTITY = { 1, 0, 0, 0 };
-template<> const quaternion<double> quaternion<double>::IDENTITY = { 1, 0, 0, 0 };
+template<> const quaternion<4,  float> quaternion<4,  float>::IDENTITY = { 1, 0, 0, 0 };
+template<> const quaternion<4, double> quaternion<4, double>::IDENTITY = { 1, 0, 0, 0 };
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-quaternion<T>::quaternion (T _a, T _b, T _c, T _d):
-    a (_a),
-    b (_b),
-    c (_c),
-    d (_d)
-{ ; }
+template <size_t S, typename T>
+quaternion<S,T>
+quaternion<S,T>::rotation (const T radians, const vector<3,T> axis)
+{
+    CHECK (is_normalised (axis));
 
-
-//-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>::quaternion (T _a):
-    a (_a),
-    b (T{}),
-    c (T{}),
-    d (T{})
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>::quaternion ():
-    quaternion (T{}, T{}, T{}, T{})
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>::quaternion (vector3<T> v):
-    quaternion (0, v.x, v.y, v.z)
-{ ; }
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-quaternion<T>
-quaternion<T>::rotation (const T radians, const vector<3,T> axis) {
-    CHECK (axis.is_normalised ());
+    auto w   = std::cos (radians / 2);
+    auto xyz = std::sin (radians / 2) * axis;
 
     return {
-        std::cos (radians / 2),
-        std::sin (radians / 2) * axis.x,
-        std::sin (radians / 2) * axis.y,
-        std::sin (radians / 2) * axis.z
+        w, xyz.x, xyz.y, xyz.z
     };
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>
-quaternion<T>::rotation (vector<3,T> src, vector<3,T> dst) {
+template <size_t S, typename T>
+quaternion<S,T>
+quaternion<S,T>::rotation (const vector<3,T> src, const vector<3,T> dst)
+{
     auto v = util::cross (src, dst);
 
     return {
@@ -96,195 +66,102 @@ quaternion<T>::rotation (vector<3,T> src, vector<3,T> dst) {
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-T
-quaternion<T>::norm2 (void) const
+quaternion<4,T>
+util::conjugate (quaternion<4,T> q)
 {
-    return a * a + b * b + c * c + d * d;
+    return { q.w, -q.x, -q.y, -q.z };
 }
 
 
-//-----------------------------------------------------------------------------
-template <typename T>
-T
-quaternion<T>::norm (void) const
-{
-    return std::sqrt (norm2 ());
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>
-quaternion<T>::normalised (void) const
-{
-    return *this / norm ();
-}
+template quaternion<4,float> util::conjugate (quaternion<4,float>);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-quaternion<T>
-quaternion<T>::operator- (void) const
-{
-    return { -a, -b, -c, -d };
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>
-quaternion<T>::conjugate (void) const
-{
-    return { a, -b, -c, -d };
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-quaternion<T>
-quaternion<T>::operator+ (const quaternion<T> q) const
+template <size_t S, typename T>
+quaternion<S,T>
+util::operator* (const quaternion<S,T> a, const quaternion<S,T> b)
 {
     return {
-        a + q.a,
-        b + q.b,
-        c + q.c,
-        d + q.d
+        a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z,
+        a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
+        a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
+        a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,
     };
 }
 
+template quaternion<4,float> util::operator* (quaternion<4,float>, quaternion<4,float>);
+
 
 //-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>
-quaternion<T>::operator- (const quaternion<T> q) const
+template <size_t S, typename T>
+quaternion<S,T>
+util::operator/ (const quaternion<S,T> a, const quaternion<S,T> b)
 {
-    return {
-        a - q.a,
-        b - q.b,
-        c - q.c,
-        d - q.d
+    CHECK (is_normalised (a));
+    CHECK (is_normalised (b));
+
+    return quaternion<S,T> {
+          a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z,
+        - a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
+        - a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
+        - a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,
     };
 }
 
-
-//-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>
-quaternion<T>::operator* (const quaternion<T> q) const {
-    return {
-        a * q.a - b * q.b - c * q.c - d * q.d,
-        a * q.b + b * q.a + c * q.d - d * q.c,
-        a * q.c - b * q.d + c * q.a + d * q.b,
-        a * q.d + b * q.c - c * q.b + d * q.a,
-    };
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>
-quaternion<T>::operator/ (const quaternion<T> q) const
-{
-    auto n = q.norm2 ();
-
-    return {
-        (  a * q.a + b * q.b + c * q.c + d * q.d) / n,
-        (- a * q.b + b * q.a + c * q.d - d * q.c) / n,
-        (- a * q.c - b * q.d + c * q.a + d * q.b) / n,
-        (- a * q.d + b * q.c - c * q.b + d * q.a) / n
-    };
-}
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-quaternion<T>
-quaternion<T>::operator+ (const T t) const
-{
-    return { a + t, b, c, d };
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>
-quaternion<T>::operator- (const T t) const
-{
-    return { a - t, b, c, d };
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>
-quaternion<T>::operator* (const T t) const
-{
-    return { a * t, b, c, d };
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-quaternion<T>
-quaternion<T>::operator/ (const T t) const
-{
-    return { a / t, b, c, d };
-}
+template quaternion<4,float> util::operator/ (quaternion<4,float>, quaternion<4,float>);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-bool
-quaternion<T>::operator== (const quaternion<T> rhs) const
+template <size_t S, typename T>
+util::matrix4<T>
+quaternion<S, T>::as_matrix (void) const
 {
-    return almost_equal (a, rhs.a) &&
-           almost_equal (b, rhs.b) &&
-           almost_equal (c, rhs.c) &&
-           almost_equal (d, rhs.d);
-}
+    CHECK (is_normalised (*this));
 
-
-//-----------------------------------------------------------------------------
-template <typename T>
-bool
-quaternion<T>::operator!= (const quaternion<T> rhs) const
-{
-    return !(*this == rhs);
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-matrix4<T>
-quaternion<T>::rotation_matrix (void) const
-{
-    CHECK_EQ (T{1}, norm ());
-
-    const T wx = w * x, wy = w * y, wz = w * z;
-    const T xx = x * x, xy = x * y, xz = x * z;
-    const T yy = y * y, yz = y * z, zz = z * z;
+    const T wx = this->w * this->x, wy = this->w * this->y, wz = this->w * this->z;
+    const T xx = this->x * this->x, xy = this->x * this->y, xz = this->x * this->z;
+    const T yy = this->y * this->y, yz = this->y * this->z, zz = this->z * this->z;
 
     return { {
-        { 1 - 2 * (yy - zz),     2 * (xy - wz),     2 * (xz + wy), 0 },
-        {     2 * (xy + wz), 1 - 2 * (xx - zz),     2 * (yz - wx), 0 },
-        {     2 * (xz - wy),     2 * (yz + wx), 1 - 2 * (xx - yy), 0 },
+        { 1 - 2 * (yy + zz),     2 * (xy - wz),     2 * (xz + wy), 0 },
+        {     2 * (xy + wz), 1 - 2 * (xx + zz),     2 * (yz - wx), 0 },
+        {     2 * (xz - wy),     2 * (yz + wx), 1 - 2 * (xx + yy), 0 },
         {                 0,                 0,                 0, 1 }
     } };
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, quaternion<T> q)
+util::operator<< (std::ostream &os, const quaternion<S,T> q)
 {
-    os << q.w << ' ' << q.x << "i " << q.y << "j " << q.z << 'k';
-    return os;
+    return os << "[" << q.w << ", " << q.x << ", " << q.y << ", " << q.z << "]";
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
-template struct util::quaternion<float>;
-template struct util::quaternion<double>;
+//-----------------------------------------------------------------------------
+template std::ostream& util::operator<< (std::ostream&, quaternion<4,float>);
+template std::ostream& util::operator<< (std::ostream&, quaternion<4,double>);
 
-template std::ostream& util::operator<< (std::ostream&, quaternion<float>);
-template std::ostream& util::operator<< (std::ostream&, quaternion<double>);
+
+///////////////////////////////////////////////////////////////////////////////
+namespace util { namespace debug {
+    template <size_t S, typename T>
+    struct validator<quaternion<S,T>> {
+        static bool is_valid (const quaternion<S,T> &q)
+        {
+            return is_normalised (q);
+        }
+    };
+} }
+
+
+//-----------------------------------------------------------------------------
+template bool util::debug::is_valid(const quaternion<4,float>&);
+template bool util::debug::is_valid(const quaternion<4,double>&);
+
+
+///////////////////////////////////////////////////////////////////////////////
+template struct util::quaternion<4,float>;
+template struct util::quaternion<4,double>;

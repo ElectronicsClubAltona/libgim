@@ -372,11 +372,11 @@ util::operator<< (std::ostream &os, const util::region<S,T> &rhs) {
 ///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace debug {
     template <size_t S, typename T>
-    struct validator<util::region,S,T> {
+    struct validator<util::region<S,T>> {
         static bool is_valid (const util::region<S,T> &r)
         {
-            CHECK_GE (r.area (), 0);
-            CHECK_GE (min (r.e), 0);
+            CHECK_GE (r.area (), 0u);
+            CHECK_GE (min (r.e), 0u);
 
             return r.area () >= 0 && min (r.e) >= 0;
         }
@@ -388,7 +388,7 @@ namespace util { namespace debug {
 #define INSTANTIATE_S_T(S,T)                                                \
 template struct util::region<S,T>;                                            \
 template std::ostream& util::operator<< (std::ostream&, const region<S,T>&);  \
-template struct util::debug::validator<util::region,S,T>;
+template struct util::debug::validator<util::region<S,T>>;
 
 #define INSTANTIATE(T)  \
 INSTANTIATE_S_T(2,T)    \

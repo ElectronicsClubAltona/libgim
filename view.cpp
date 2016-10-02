@@ -16,6 +16,8 @@
 
 #include "./view.hpp"
 
+#include <iterator>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 #define EQUALITY(A,B)                   \
@@ -56,6 +58,8 @@ namespace util {
 
     OSTREAM(const char*)
     OSTREAM(char*)
+    OSTREAM(unsigned char*)
+    OSTREAM(const unsigned char*)
     OSTREAM(std::string::const_iterator)
     OSTREAM(std::string::iterator)
 

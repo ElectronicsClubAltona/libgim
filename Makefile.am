@@ -32,6 +32,8 @@ UTIL_FILES   =			\
     alloc/null.hpp		\
     alloc/stack.cpp		\
     alloc/stack.hpp		\
+    annotation.hpp		\
+    ascii.hpp			\
     backtrace.hpp   		\
     bezier.cpp			\
     bezier.hpp			\
@@ -44,6 +46,7 @@ UTIL_FILES   =			\
     colour.cpp			\
     colour.hpp			\
     colour.ipp			\
+    coord/fwd.hpp		\
     coord/base.hpp		\
     coord.hpp			\
     coord/init.hpp		\
@@ -162,8 +165,6 @@ UTIL_FILES   =			\
     io.cpp			\
     io.hpp			\
     io.ipp			\
-    ip.cpp			\
-    ip.hpp			\
     iterator.hpp		\
     json/fwd.hpp		\
     json/except.cpp		\
@@ -274,14 +275,6 @@ UTIL_FILES   =			\
 
 
 POSIX_FILES = 			\
-    net/address.cpp		\
-    net/address.hpp		\
-    net/except.cpp		\
-    net/except.hpp		\
-    net/socket.cpp		\
-    net/socket.hpp		\
-    net/types.cpp		\
-    net/types.hpp		\
     memory/buffer/circular.cpp	\
     memory/buffer/circular.hpp	\
     memory/buffer/paged.cpp	\
@@ -348,8 +341,8 @@ BACKTRACE_FILES=$(firstword $(__BACKTRACE_FILES) backtrace_null.cpp)
 
 ###############################################################################
 ## Local build rules
-CLEANFILES = json.cpp version.cpp ip.cpp uri.cpp
-EXTRA_DIST = json/flat.cpp.rl version.cpp.rl ip.cpp.rl uri.cpp.rl
+CLEANFILES = json.cpp version.cpp uri.cpp
+EXTRA_DIST = json/flat.cpp.rl version.cpp.rl uri.cpp.rl
 
 RAGELFLAGS      = -F1
 SUFFIXES = .cpp .cpp.rl
@@ -394,6 +387,7 @@ TEST_BIN = 			\
     test/alloc/dynamic		\
     test/alloc/linear		\
     test/alloc/stack		\
+    test/affine			\
     test/backtrace 		\
     test/bezier			\
     test/bitwise		\
@@ -426,7 +420,6 @@ TEST_BIN = 			\
     test/hash/sha2		\
     test/hton			\
     test/introspection		\
-    test/ip 			\
     test/json_types		\
     test/maths			\
     test/matrix			\
@@ -434,6 +427,7 @@ TEST_BIN = 			\
     test/point			\
     test/polynomial		\
     test/pool			\
+    test/quaternion		\
     test/rand/buckets		\
     test/random			\
     test/range 			\

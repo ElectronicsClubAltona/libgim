@@ -21,6 +21,7 @@ NC_CXX
 NC_PLATFORM
 NC_OPTIMISATION
 NC_WARNINGS
+# NC_DEBUGGING is called further down, see notes at the call site.
 
 LT_INIT
 
@@ -83,8 +84,6 @@ AC_SEARCH_LIBS([clock_gettime], [rt c], [], [
 
 AC_SEARCH_LIBS([cos], [m], [], [AC_MSG_ERROR([unable to find the maths library])])
 
-AC_SEARCH_LIBS([htons], [ws2_32], [], [AC_MSG_ERROR([unable to find htons library])])
-
 
 ###############################################################################
 ## Debug features
@@ -126,7 +125,7 @@ AC_SUBST(LIBS)
 # failure on a clean build
 AX_APPEND_FLAG([-include config.h])
 
-NC_SUBPACKAGE([util])
+NC_SUBPACKAGE([cruft-util])
 
 AC_CONFIG_FILES([
     Doxyfile

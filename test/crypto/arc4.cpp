@@ -2,6 +2,7 @@
 #include "tap.hpp"
 #include "types.hpp"
 
+
 int
 main ()
 {
@@ -384,8 +385,6 @@ main ()
             success = success && std::equal (std::begin (data), std::end (data), std::begin (t.data[j]));
         };
 
-        std::ostringstream os;
-        os << "ARC4: " << i;
-        tap.expect (success, os.str ());
+        tap.expect (success, "ARC4 %zu", i);
     }
 }

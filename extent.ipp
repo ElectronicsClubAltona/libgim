@@ -26,7 +26,38 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
+constexpr
+T
+util::extent<S,T>::diameter (void) const
+{
+    return static_cast<T> (
+        std::sqrt (
+            std::accumulate (std::begin (this->data),
+                             std::end   (this->data),
+                             T {0},
+                             [] (auto a, auto b) { return a + b * b; })
+        )
+    );
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+T
+util::extent<S,T>::area (void) const
+{
+    return std::accumulate (std::begin (this->data),
+                            std::end   (this->data),
+                            T {1},
+                            std::multiplies<T> ());
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
 template <typename U>
+constexpr
 U
 util::extent<S,T>::aspect (void) const
 {

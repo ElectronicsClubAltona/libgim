@@ -14,9 +14,11 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "ray.hpp"
+#include "./ray.hpp"
 
-#include "ops.hpp"
+#include "./iostream.hpp"
+#include "./ops.hpp"
+
 #include "../debug.hpp"
 
 using util::geom::ray;
@@ -29,7 +31,7 @@ ray<S,T>::ray (util::point<S,T> _origin,
     origin (_origin),
     direction (_direction)
 {
-    CHECK (direction.is_normalised ());
+    CHECK (is_normalised (direction));
 }
 
 
@@ -41,7 +43,7 @@ ray<S,T>::make (util::point<S,T> origin,
 {
     return {
         origin,
-        (target - origin).normalised ()
+        normalised (target - origin)
     };
 }
 

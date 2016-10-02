@@ -17,3 +17,59 @@
 #include "format.hpp"
 
 #include <utility>
+
+
+namespace util { namespace format { namespace detail {
+    //-------------------------------------------------------------------------
+    std::ostream&
+    operator<< (std::ostream &os, specifier::repr r)
+    {
+        switch (r) {
+        case specifier::repr::FIXED:      return os << "FIXED";
+        case specifier::repr::SCIENTIFIC: return os << "SCIENTIFIC";
+        case specifier::repr::AUTO:       return os << "AUTO";
+        }
+
+        unreachable ();
+    }
+
+
+    //-------------------------------------------------------------------------
+    std::ostream&
+    operator<< (std::ostream &os, specifier::kind t)
+    {
+        switch (t) {
+        case specifier::kind::UNSIGNED:  return os << "UNSIGNED";
+        case specifier::kind::SIGNED:    return os << "SIGNED";
+        case specifier::kind::REAL:      return os << "REAL";
+        case specifier::kind::STRING:    return os << "STRING";
+        case specifier::kind::POINTER:   return os << "POINTER";
+        case specifier::kind::CHARACTER: return os << "CHARACTER";
+        case specifier::kind::ESCAPE:    return os << "ESCAPE";
+        case specifier::kind::OSTREAM:   return os << "OSTREAM";
+        }
+
+        unreachable ();
+    }
+
+
+    //-------------------------------------------------------------------------
+    std::ostream&
+    operator<< (std::ostream &os, const specifier &s)
+    {
+        return os << "specifier {"
+            "alternate_form: "     << s.alternate_form      << ", "
+            "left_adjusted: "      << s.left_adjusted       << ", "
+            "thousands_grouping: " << s.thousands_grouping  << ", "
+            "padding_char: '"      << s.padding_char        << "', "
+            "positive_char: '"     << s.positive_char       << "', "
+            "uppercase: "          << s.uppercase           << ", "
+            "base: "               << s.base                << ", "
+            "repr: "               << s.r                   << ", "
+            "kind: "               << s.k                   << ", "
+            "width: "              << s.width               << ", "
+            "precision: "          << s.precision           << ", "
+            "length: "             << s.length              <<
+        " }";
+    }
+} } }
