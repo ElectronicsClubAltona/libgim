@@ -38,8 +38,8 @@ namespace util::posix {
 
         uint8_t* begin (void);
         uint8_t* end   (void);
-        const uint8_t* begin (void) const;
-        const uint8_t* end   (void) const;
+        const uint8_t* begin  (void) const;
+        const uint8_t* end    (void) const;
         const uint8_t* cbegin (void) const;
         const uint8_t* cend   (void) const;
 
@@ -48,6 +48,7 @@ namespace util::posix {
 
         void sync (void *addr, size_t len, int flags);
 
+        bool empty (void) const;
         size_t size (void) const;
 
         enum class resize_t { MOVE, NOMOVE };
