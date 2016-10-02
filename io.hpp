@@ -20,6 +20,7 @@
 #include "types.hpp"
 #include "platform.hpp"
 #include "nocopy.hpp"
+#include "posix/fd.hpp"
 
 #include <sys/stat.h>
 
@@ -35,37 +36,20 @@
 #endif
 
 namespace util {
-    ///------------------------------------------------------------------------
-    /// A simple RAII wrapper for file descriptors
-    struct fd {
-    public:
-        explicit fd (int);
-        fd (const char *path, int flags, mode_t mode = 0660);
-        fd (const boost::filesystem::path&, int flags);
-
-        ~fd ();
-
-        operator int (void) const { return m_fd; }
-
-    private:
-        int m_fd;
-    };
-
-
     //-------------------------------------------------------------------------
     /// Reads an entire file into memory.
-    std::vector<char> slurp (const boost::filesystem::path&);
+    std::vector<char> slurp (const char *path);
     std::vector<char> slurp (FILE *);
 
 
     //-------------------------------------------------------------------------
-    void write (const fd&, const void *restrict data, size_t bytes);
+    void write (const posix::fd&, const void *restrict data, size_t bytes);
 
     template <typename T>
-    void write (const fd&, const T &data);
+    void write (const posix::fd&, const T &data);
 
     template <typename T>
-    void write (const fd&, const T *restrict first, const T *restrict last);
+    void write (const posix::fd&, const T *restrict first, const T *restrict last);
 
     //-------------------------------------------------------------------------
     class indenter : public std::streambuf {

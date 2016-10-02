@@ -61,11 +61,8 @@ namespace util {
             as_view () &;
 
         private:
-            fd m_fd;
             uint8_t *m_data;
             size_t   m_size;
-
-            void load_fd (int mflags);
         };
     } }
 

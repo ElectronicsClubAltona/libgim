@@ -297,6 +297,8 @@ POSIX_FILES = 			\
     posix/dir.cpp		\
     posix/dir.hpp		\
     posix/dir.ipp		\
+    posix/fd.cpp		\
+    posix/fd.hpp		\
     time_posix.cpp
 
 

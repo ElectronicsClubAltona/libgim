@@ -18,6 +18,7 @@
 
 #include "debug.hpp"
 #include "except.hpp"
+#include "posix/fd.hpp"
 
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -26,11 +27,19 @@
 using util::detail::posix::mapped_file;
 
 //////////////////////////////////////////////////////////////////////////////
-mapped_file::mapped_file (const char *_path, int fflags, int mflags):
-    m_fd (_path, fflags)
+mapped_file::mapped_file (const char *_path, int fflags, int mflags)
 {
     try {
-        load_fd (mflags);
+        ::util::posix::fd src (_path, fflags);
+
+        struct stat meta;
+        if (fstat (src, &meta) < 0)
+            throw errno_error ();
+
+        m_size = (size_t)meta.st_size;
+        m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, src, 0);
+        if (m_data == MAP_FAILED)
+            throw errno_error ();
     } catch (const errno_error &e) {
         // ignore zero length mapping error
         if (e.code () == EINVAL && m_size == 0)
@@ -44,20 +53,6 @@ mapped_file::~mapped_file ()
 {
     CHECK (m_data != NULL);
     munmap (m_data, m_size);
-}
-
-
-//----------------------------------------------------------------------------
-void
-mapped_file::load_fd (int mflags) {
-    struct stat meta;
-    if (fstat (m_fd, &meta) < 0)
-        throw errno_error ();
-
-    m_size = (size_t)meta.st_size;
-    m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, m_fd, 0);
-    if (m_data == MAP_FAILED)
-        throw errno_error ();
 }
 
 

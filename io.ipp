@@ -26,7 +26,7 @@ namespace util {
     //-------------------------------------------------------------------------
     template <typename T>
     void
-    write (const fd &_fd, const T &data)
+    write (const posix::fd &_fd, const T &data)
     {
         write (_fd, &data, sizeof (T));
     }
@@ -35,7 +35,7 @@ namespace util {
     //-------------------------------------------------------------------------
     template <typename T>
     void
-    write (const fd &_fd, const T *restrict first, const T *restrict last)
+    write (const posix::fd &_fd, const T *restrict first, const T *restrict last)
     {
         write (_fd, first, (last - first) * sizeof (T));
     }

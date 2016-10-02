@@ -36,8 +36,9 @@ using namespace util;
 
 //----------------------------------------------------------------------------
 std::vector<char>
-util::slurp (const boost::filesystem::path& path)  {
-    fd out (path, O_RDONLY | O_BINARY);
+util::slurp (const char *path)
+{
+    posix::fd out (path, O_RDONLY | O_BINARY);
 
     // Calculate the total file size
     off_t size = lseek (out, 0, SEEK_END);
@@ -117,7 +118,7 @@ util::slurp (FILE *stream)
 
 //-----------------------------------------------------------------------------
 void
-util::write (const fd &out,
+util::write (const posix::fd &out,
              const void *restrict data,
              size_t bytes)
 {
@@ -132,37 +133,6 @@ util::write (const fd &out,
         remaining -= sign_cast<size_t> (consumed);
         cursor    += sign_cast<size_t> (consumed);
     }
-}
-
-
-//////////////////////////////////////////////////////////////////////////////
-fd::fd (int _fd):
-    m_fd (_fd)
-{
-    if (_fd < 0)
-        throw std::invalid_argument ("invalid descriptor");
-}
-
-
-//-----------------------------------------------------------------------------
-fd::fd (const char *path, int flags, mode_t mode):
-    m_fd (open (path, flags, mode))
-{
-    if (m_fd < 0)
-        errno_error::throw_code ();
-}
-
-
-//-----------------------------------------------------------------------------
-fd::fd (const boost::filesystem::path &path, int flags):
-    fd (path.string ().c_str (), flags)
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-fd::~fd () {
-    CHECK (m_fd >= 0);
-    close (m_fd);
 }
 
 
