@@ -29,7 +29,7 @@ namespace util {
         using value_type = T;
         using tag_type   = Tag;
 
-        constexpr strongdef () = default;
+        constexpr strongdef () = delete;
         constexpr explicit strongdef (const T &_data): data (_data)    { ; }
         constexpr strongdef (const strongdef &rhs):    data (rhs.data) { ; }
 
