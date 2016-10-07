@@ -17,6 +17,8 @@
 #ifndef __CRUFT_UTIL_POSIX_FD_HPP
 #define __CRUFT_UTIL_POSIX_FD_HPP
 
+#include <string>
+
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -26,6 +28,8 @@ namespace util::posix {
     class fd {
     public:
         ///////////////////////////////////////////////////////////////////////
+        fd (const std::string &path, int flags);
+        fd (const std::string &path, int flags, mode_t);
         fd (const char *path, int flags);
         fd (const char *path, int flags, mode_t);
 

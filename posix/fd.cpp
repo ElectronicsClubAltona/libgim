@@ -43,6 +43,18 @@ fd::fd (const char *path, int flags, mode_t mode):
 }
 
 
+//-----------------------------------------------------------------------------
+fd::fd (const std::string &path, int flags):
+    fd (path.c_str (), flags)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+fd::fd (const std::string &path, int flags, mode_t mode):
+    fd (path.c_str (), flags, mode)
+{ ; }
+
+
 ///////////////////////////////////////////////////////////////////////////////
 fd::fd (fd &&rhs):
     m_fd (-1)
