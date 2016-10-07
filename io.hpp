@@ -27,7 +27,7 @@
 #include <cstdio>
 #include <cstdint>
 #include <memory>
-#include <boost/filesystem/path.hpp>
+#include <experimental/filesystem>
 
 #ifdef PLATFORM_WIN32
 #include <windows.h>
@@ -104,12 +104,12 @@ namespace util {
     //-------------------------------------------------------------------------
     class path_error : public std::runtime_error {
     public:
-        path_error (const boost::filesystem::path &path);
+        path_error (const std::experimental::filesystem::path &path);
 
         const char* path (void) const noexcept;
 
     private:
-        const boost::filesystem::path m_path;
+        const std::experimental::filesystem::path m_path;
     };
 
     class stream_error : public std::exception {

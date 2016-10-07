@@ -18,14 +18,14 @@
 
 #include "./string.hpp"
 
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 #include <cstdlib>
 #include <stdexcept>
 
 using util::term::csi::graphics;
 
 
-static const boost::filesystem::path DEFAULT_SEARCH_DIR = "/usr/share/terminfo";
+static const std::experimental::filesystem::path DEFAULT_SEARCH_DIR = "/usr/share/terminfo";
 
 constexpr char util::term::csi::code::CSI;
 
@@ -37,14 +37,14 @@ const graphics graphics::RESET (0);
 //
 // throws an exception if not found
 static
-boost::filesystem::path
-find_terminfo_path (const boost::filesystem::path &dir,
+std::experimental::filesystem::path
+find_terminfo_path (const std::experimental::filesystem::path &dir,
                     const std::string &key)
 {
     const char letter[2] = { key[0], '\0' };
     auto candidate = dir / letter / key;
 
-    if (!boost::filesystem::is_directory (candidate))
+    if (!std::experimental::filesystem::is_directory (candidate))
         throw std::runtime_error ("path not found");
 
     return candidate;
@@ -56,7 +56,7 @@ find_terminfo_path (const boost::filesystem::path &dir,
 //
 // throws an exception if not found
 static
-boost::filesystem::path
+std::experimental::filesystem::path
 find_terminfo_path (const std::string &key)
 {
     // check if the path is explicitly listed. must not fall through.
@@ -66,7 +66,7 @@ find_terminfo_path (const std::string &key)
 
     // check if we have a path at $HOME. falls through.
     if (const char *home = getenv ("HOME")) {
-        boost::filesystem::path HOME (home);
+        std::experimental::filesystem::path HOME (home);
         try {
             return find_terminfo_path (HOME / ".terminfo", key);
         } catch (...) { }
@@ -81,7 +81,7 @@ find_terminfo_path (const std::string &key)
                 return find_terminfo_path (
                     i.empty () ?
                     DEFAULT_SEARCH_DIR :
-                    boost::filesystem::path (i.cbegin (), i.cend ()), key
+                    std::experimental::filesystem::path (i.cbegin (), i.cend ()), key
                 );
             } catch (...) { }
         }

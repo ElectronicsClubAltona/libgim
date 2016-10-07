@@ -29,7 +29,7 @@
 #include <string>
 #include <vector>
 
-#include <boost/filesystem/path.hpp>
+#include <experimental/filesystem>
 
 
 namespace json { namespace tree {
@@ -48,7 +48,7 @@ namespace json { namespace tree {
     parse (util::view<T> data);
 
     std::unique_ptr<node>
-    parse (const boost::filesystem::path &);
+    parse (const std::experimental::filesystem::path &);
 
     extern void write (const json::tree::node&, std::ostream&);
 

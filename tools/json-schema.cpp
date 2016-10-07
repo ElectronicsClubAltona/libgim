@@ -22,11 +22,11 @@
 
 #include "io.hpp"
 
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 #include <iostream>
 
 
-namespace fs = boost::filesystem;
+namespace fs = std::experimental::filesystem;
 
 
 ///////////////////////////////////////////////////////////////////////////////

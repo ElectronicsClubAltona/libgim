@@ -17,10 +17,10 @@
 #ifndef __UTIL_EXE_HPP
 #define __UTIL_EXE_HPP
 
-#include <boost/filesystem/path.hpp>
+#include <experimental/filesystem>
 
 namespace util {
-    boost::filesystem::path image_path (void);
+    std::experimental::filesystem::path image_path (void);
 }
 
 #endif

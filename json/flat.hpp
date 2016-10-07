@@ -17,7 +17,7 @@
 #ifndef __UTIL_JSON_FLAT_HPP
 #define __UTIL_JSON_FLAT_HPP
 
-#include <boost/filesystem/path.hpp>
+#include <experimental/filesystem>
 #include <ostream>
 
 #include "../view.hpp"

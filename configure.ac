@@ -101,7 +101,7 @@ NC_DEBUGGING
 
 CHECK_RAGEL([ip.cpp])
 
-NC_BOOST([1.53], [system filesystem thread])
+NC_BOOST([1.53], [system thread])
 AC_SUBST(BOOST_CPPFLAGS)
 AC_SUBST(BOOST_LDFLAGS)
 

@@ -27,7 +27,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 #include <stdexcept>
 
 
@@ -201,7 +201,7 @@ scoped_cwd::~scoped_cwd ()
 
 
 ///////////////////////////////////////////////////////////////////////////////
-path_error::path_error (const boost::filesystem::path &_path):
+path_error::path_error (const std::experimental::filesystem::path &_path):
     runtime_error (format::render ("Unknown path: %!", m_path)),
     m_path (_path)
 { ; }

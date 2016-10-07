@@ -31,7 +31,7 @@
 #include <stdexcept>
 #include <vector>
 
-boost::filesystem::path
+std::experimental::filesystem::path
 util::image_path (void) {
         static const char PROC_SELF[] = "/proc/self/exe";
 
@@ -50,7 +50,7 @@ retry:
             goto retry;
         }
 
-        return boost::filesystem::path (resolved.data (), resolved.data () + written);
+        return std::experimental::filesystem::path (resolved.data (), resolved.data () + written);
 }
 
 #elif defined(PLATFORM_FREEBSD)
@@ -61,7 +61,7 @@ retry:
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-boost::filesystem::path
+std::experimental::filesystem::path
 util::image_path (void)
 {
     int name[] = {
@@ -77,7 +77,7 @@ util::image_path (void)
     auto err = sysctl (name, elems (name), data, &len, nullptr, 0);
     errno_error::try_code (err);
 
-    return boost::filesystem::path (std::cbegin (data), std::cbegin (data) + len);
+    return std::experimental::filesystem::path (std::cbegin (data), std::cbegin (data) + len);
 }
 
 #elif defined(PLATFORM_WIN32)
@@ -86,7 +86,7 @@ util::image_path (void)
 
 #include <windows.h>
 
-boost::filesystem::path
+std::experimental::filesystem::path
 util::image_path (void) {
         std::vector<char> resolved (256);
 
@@ -100,7 +100,7 @@ retry:
             goto retry;
         }
 
-        return boost::filesystem::path (resolved.data (), resolved.data () + written);
+        return std::experimental::filesystem::path (resolved.data (), resolved.data () + written);
 }
 
 #else

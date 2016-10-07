@@ -118,7 +118,7 @@ mapped_file::mapped_file (::util::win32::handle &&src,
 
 
 //-----------------------------------------------------------------------------
-mapped_file::mapped_file (const boost::filesystem::path &path,
+mapped_file::mapped_file (const std::experimental::filesystem::path &path,
                           int fflags,
                           int mflags):
     mapped_file (

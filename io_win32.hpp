@@ -22,7 +22,7 @@
 #include "./view.hpp"
 
 #include <cstdint>
-#include <boost/filesystem/path.hpp>
+#include <experimental/filesystem>
 #include <windows.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -57,7 +57,7 @@ namespace util {
             mapped_file (::util::win32::handle &&,
                          int fflags = O_RDONLY,
                          int mflags = PROT_READ);
-            mapped_file (const boost::filesystem::path &path,
+            mapped_file (const std::experimental::filesystem::path &path,
                          int fflags = O_RDONLY,
                          int mflags = PROT_READ);
             mapped_file (const util::fd&,
