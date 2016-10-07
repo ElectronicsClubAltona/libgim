@@ -72,6 +72,14 @@ util::slurp (const char *path)
 
 //-----------------------------------------------------------------------------
 std::vector<char>
+util::slurp (const std::string &path)
+{
+    return slurp (path.c_str ());
+}
+
+
+//-----------------------------------------------------------------------------
+std::vector<char>
 util::slurp (FILE *stream)
 {
     // find how much data is in this file
