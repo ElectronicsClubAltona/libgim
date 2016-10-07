@@ -280,6 +280,8 @@ matrix<S,T>::look_at (util::point<3,T> eye,
                       util::point<3,T> target,
                       util::vector<3,T> up)
 {
+    CHECK (is_normalised (up));
+
     auto forward = normalised (eye.to (target));
     auto side    = normalised (cross (forward, up));
     up = cross (side, forward);
