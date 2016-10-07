@@ -27,7 +27,7 @@ using util::posix::fd;
 
 ///////////////////////////////////////////////////////////////////////////////
 fd::fd (const char *path, int flags):
-    m_fd (::open (path, flags))
+    m_fd (::open (path, flags, 0666))
 {
     if (m_fd < 0)
         errno_error::throw_code ();
