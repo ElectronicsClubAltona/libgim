@@ -200,8 +200,8 @@ path_error::path_error (const std::experimental::filesystem::path &_path):
 
 
 //-----------------------------------------------------------------------------
-const char*
+const std::experimental::filesystem::path&
 path_error::path (void) const noexcept
 {
-    return m_path.string ().c_str ();
+    return m_path;
 }

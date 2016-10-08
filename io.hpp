@@ -105,7 +105,7 @@ namespace util {
     public:
         path_error (const std::experimental::filesystem::path &path);
 
-        const char* path (void) const noexcept;
+        const std::experimental::filesystem::path& path (void) const noexcept;
 
     private:
         const std::experimental::filesystem::path m_path;
