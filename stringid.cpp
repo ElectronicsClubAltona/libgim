@@ -19,8 +19,7 @@
 #include "raii.hpp"
 
 #include <stdexcept>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/lock_guard.hpp>
+#include <mutex>
 
 using util::stringid;
 
@@ -32,8 +31,8 @@ stringid::add (const std::string key) {
     if (pos != m_map.end ())
         throw std::invalid_argument ("duplicate stringid key");
 
-    static boost::mutex s_lock;
-    boost::lock_guard<boost::mutex> raii (s_lock);
+    static std::mutex s_lock;
+    std::lock_guard<std::mutex> guard (s_lock);
 
     id_t id = m_map.size ();
     m_map[key] = id;

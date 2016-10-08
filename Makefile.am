@@ -3,7 +3,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-AM_CXXFLAGS = $(BOOST_CPPFLAGS)
+AM_CXXFLAGS =
 AM_DEFAULT_SOURCE_EXT = .cpp
 
 ###############################################################################
@@ -368,7 +368,7 @@ EXTRA_DIST += ${top_srcdir}/build-aux/wine-crlf.sh
 ###############################################################################
 ## Utility programs
 
-LDADD = $(top_builddir)/libcruft-util.a $(BOOST_LDFLAGS) $(LIBS)
+LDADD = $(top_builddir)/libcruft-util.a $(LIBS)
 
 bin_PROGRAMS = 				\
     tools/json-clean			\
