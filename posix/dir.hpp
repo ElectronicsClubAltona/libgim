@@ -21,43 +21,23 @@
 #include <dirent.h>
 
 #include <functional>
+#include <experimental/filesystem>
 
 namespace util { namespace posix {
-    //struct entry {
-    //public:
-    //    entry (dirent *_handle, DIR *_parent): m_handle (_handle), m_parent (_parent) { ; }
-
-    //    const char* name (void) const { return m_handle->d_name; }
-
-    //    entry& operator++ (void) {
-    //        dirent *next = readdir (m_parent);
-    //        assert (!next || next != m_handle);
-    //        m_handle = next;
-    //        return *this;
-    //    }
-
-    //    entry& operator* (void) { return *this; }
-    //    const entry& operator* (void) const;
-    //    bool operator!= (entry rhs) const { return m_handle != rhs.m_handle || m_parent != rhs.m_parent; }
-
-    //    struct dirent *m_handle;
-    //    DIR *m_parent;
-    //};
-
     struct dir {
     public:
-        explicit dir (const char *path);
+        explicit dir (const std::experimental::filesystem::path&);
         ~dir ();
 
         operator DIR* (void);
 
         template <typename ...Args>
         void
-        scan (std::function<void(const char*, Args&...)>, Args&...);
+        scan (std::function<void(const std::experimental::filesystem::path&, Args&...)>, Args&...);
 
         template <typename ...Args>
         void
-        scan (void (*) (const char*, Args&...), Args&...);
+        scan (void (*) (const std::experimental::filesystem::path&, Args&...), Args&...);
 
         //entry begin (void) { rewind (); return { readdir (m_handle), m_handle }; }
         //entry end (void) { return { nullptr, m_handle }; }

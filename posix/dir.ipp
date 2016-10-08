@@ -22,7 +22,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 template <typename ...Args>
 void
-util::posix::dir::scan(std::function<void(const char*, Args&...)> cb, Args &...args)
+util::posix::dir::scan(std::function<void(const std::experimental::filesystem::path&, Args&...)> cb, Args &...args)
 {
     rewind ();
 
@@ -36,7 +36,7 @@ util::posix::dir::scan(std::function<void(const char*, Args&...)> cb, Args &...a
 //-----------------------------------------------------------------------------
 template <typename ...Args>
 void
-util::posix::dir::scan (void (*cb) (const char*, Args&...), Args &...args)
+util::posix::dir::scan (void (*cb) (const std::experimental::filesystem::path&, Args&...), Args &...args)
 {
     rewind ();
 

@@ -17,15 +17,15 @@
 #ifndef __UTIL_LIBRARY_WIN32_HPP
 #define __UTIL_LIBRARY_WIN32_HPP
 
-#include <string>
 #include <windows.h>
+
+#include <experimental/filesystem>
 
 namespace util {
     namespace detail { namespace win32 {
         class library {
         public:
-            library (const char *path);
-            library (const std::string &path);
+            library (const std::experimenal::filesystem::path&);
             ~library ();
 
             void* symbol (const char *name);

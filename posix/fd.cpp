@@ -26,33 +26,18 @@ using util::posix::fd;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-fd::fd (const char *path, int flags):
-    m_fd (::open (path, flags, 0666))
-{
-    if (m_fd < 0)
-        errno_error::throw_code ();
-}
-
-
-//-----------------------------------------------------------------------------
-fd::fd (const char *path, int flags, mode_t mode):
-    m_fd (::open (path, flags, mode))
-{
-    if (m_fd < 0)
-        errno_error::throw_code ();
-}
-
-
-//-----------------------------------------------------------------------------
-fd::fd (const std::string &path, int flags):
-    fd (path.c_str (), flags)
+fd::fd (const std::experimental::filesystem::path &path, int flags):
+    fd (path, flags, 0666)
 { ; }
 
 
 //-----------------------------------------------------------------------------
-fd::fd (const std::string &path, int flags, mode_t mode):
-    fd (path.c_str (), flags, mode)
-{ ; }
+fd::fd (const std::experimental::filesystem::path &path, int flags, mode_t mode):
+    m_fd (::open (path.c_str (), flags, mode))
+{
+    if (m_fd < 0)
+        errno_error::throw_code ();
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -26,8 +26,9 @@
 
 using util::detail::posix::mapped_file;
 
+
 //////////////////////////////////////////////////////////////////////////////
-mapped_file::mapped_file (const char *path, int fflags, int mflags):
+mapped_file::mapped_file (const std::experimental::filesystem::path &path, int fflags, int mflags):
     mapped_file (util::posix::fd (path, fflags), mflags)
 { ; }
 

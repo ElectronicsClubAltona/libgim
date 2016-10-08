@@ -22,6 +22,7 @@
 #include "view.hpp"
 
 #include <type_traits>
+#include <experimental/filesystem>
 
 #include <sys/mman.h>
 #include <fcntl.h>
@@ -30,7 +31,7 @@ namespace util {
     namespace detail { namespace posix {
         class mapped_file {
         public:
-            mapped_file (const char *path, int fflags = O_RDONLY | O_BINARY, int mflags = PROT_READ);
+            mapped_file (const std::experimental::filesystem::path&, int fflags = O_RDONLY | O_BINARY, int mflags = PROT_READ);
             mapped_file (const util::posix::fd&,  int mflags = PROT_READ);
 
             mapped_file (const mapped_file&) = delete;

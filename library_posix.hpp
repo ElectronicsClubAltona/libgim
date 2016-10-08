@@ -17,14 +17,13 @@
 #ifndef __UTIL_LIBRARY_POSIX_HPP
 #define __UTIL_LIBRARY_POSIX_HPP
 
-#include <string>
+#include <experimental/filesystem>
 
 namespace util {
     namespace detail {
         class library_posix {
         public:
-            explicit library_posix (const char *path);
-            explicit library_posix (const std::string &path);
+            explicit library_posix (const std::experimental::filesystem::path&);
             library_posix (library_posix&&);
             ~library_posix ();
 

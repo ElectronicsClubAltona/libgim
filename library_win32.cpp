@@ -22,18 +22,12 @@ using util::detail::win32::library;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-library::library (const char *path):
-    m_handle (LoadLibraryA (path))
+library::library (const std::experimental::filesystem::path &path)
+    m_handle (LoadLibraryA (path.c_str ()))
 {
     if (!m_handle)
         win32_error::throw_code ();
 }
-
-
-//-----------------------------------------------------------------------------
-library::library (const std::string &path):
-    library (path.c_str ())
-{ ; }
 
 
 //-----------------------------------------------------------------------------

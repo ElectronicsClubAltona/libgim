@@ -36,7 +36,7 @@ using namespace util;
 
 //----------------------------------------------------------------------------
 std::vector<char>
-util::slurp (const char *path)
+util::slurp (const std::experimental::filesystem::path &path)
 {
     posix::fd out (path, O_RDONLY | O_BINARY);
 
@@ -67,14 +67,6 @@ util::slurp (const char *path)
     }
 
     return buffer;
-}
-
-
-//-----------------------------------------------------------------------------
-std::vector<char>
-util::slurp (const std::string &path)
-{
-    return slurp (path.c_str ());
 }
 
 

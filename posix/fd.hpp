@@ -22,16 +22,16 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <experimental/filesystem>
+
 namespace util::posix {
     ///------------------------------------------------------------------------
     /// A simple RAII wrapper for file descriptors
     class fd {
     public:
         ///////////////////////////////////////////////////////////////////////
-        fd (const std::string &path, int flags);
-        fd (const std::string &path, int flags, mode_t);
-        fd (const char *path, int flags);
-        fd (const char *path, int flags, mode_t);
+        fd (const std::experimental::filesystem::path &path, int flags);
+        fd (const std::experimental::filesystem::path &path, int flags, mode_t);
 
         fd (fd &&);
 

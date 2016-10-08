@@ -38,8 +38,7 @@
 namespace util {
     //-------------------------------------------------------------------------
     /// Reads an entire file into memory.
-    std::vector<char> slurp (const char *path);
-    std::vector<char> slurp (const std::string &path);
+    std::vector<char> slurp (const std::experimental::filesystem::path&);
     std::vector<char> slurp (FILE *);
 
 

@@ -24,14 +24,8 @@ using util::detail::library_posix;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-library_posix::library_posix (const std::string &path):
-    library_posix (path.c_str ())
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-library_posix::library_posix (const char *path):
-    m_handle (dlopen (path, RTLD_NOW))
+library_posix::library_posix (const std::experimental::filesystem::path &path):
+    m_handle (dlopen (path.c_str (), RTLD_NOW))
 {
     if (!m_handle)
         throw std::runtime_error (dlerror ());

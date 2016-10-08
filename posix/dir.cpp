@@ -22,31 +22,8 @@ using util::posix::dir;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//struct entry {
-//public:
-//    entry (dirent *_handle, DIR *_parent): m_handle (_handle), m_parent (_parent) { ; }
-//
-//    const char* name (void) const { return m_handle->d_name; }
-//
-//    entry& operator++ (void) {
-//        dirent *next = readdir (m_parent);
-//        assert (!next || next != m_handle);
-//        m_handle = next;
-//        return *this;
-//    }
-//
-//    entry& operator* (void) { return *this; }
-//    const entry& operator* (void) const;
-//    bool operator!= (entry rhs) const { return m_handle != rhs.m_handle || m_parent != rhs.m_parent; }
-//
-//    struct dirent *m_handle;
-//    DIR *m_parent;
-//};
-
-
-///////////////////////////////////////////////////////////////////////////////
-dir::dir (const char *path):
-    m_handle (opendir (path))
+dir::dir (const std::experimental::filesystem::path &p):
+    m_handle (::opendir (p.c_str ()))
 {
     if (!m_handle)
         errno_error::throw_code ();
