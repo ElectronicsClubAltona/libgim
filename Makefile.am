@@ -71,7 +71,6 @@ UTIL_FILES   =			\
     endian.hpp			\
     except.cpp  		\
     except.hpp  		\
-    exe.cpp			\
     exe.hpp			\
     extent.cpp			\
     extent.hpp			\
@@ -298,16 +297,17 @@ POSIX_FILES = 			\
 
 
 if PLATFORM_LINUX
-UTIL_FILES += $(POSIX_FILES)
+UTIL_FILES += $(POSIX_FILES) exe_linux.cpp
 endif
 
 if PLATFORM_FREEBSD
-UTIL_FILES += $(POSIX_FILES)
+UTIL_FILES += $(POSIX_FILES) exe_freebsd.cpp
 endif
 
 if PLATFORM_WIN32
 UTIL_FILES += 			\
     debug_win32.cpp		\
+    exe_win32.cpp		\
     io_win32.cpp		\
     io_win32.hpp		\
     io_win32.ipp		\
