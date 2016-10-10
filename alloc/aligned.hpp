@@ -19,12 +19,12 @@
 
 namespace util::alloc {
     /// wraps a child allocator and enforces a fixed alignment
-    template <typename Successor>
+    template <typename ChildT>
     class aligned {
     public:
         ///////////////////////////////////////////////////////////////////////
         template <typename ...Args>
-        aligned (std::size_t _alignment, Args &&...args):
+        aligned (size_t _alignment, Args &&...args):
             m_successor (std::forward<Args> (args)...),
             m_alignment (_alignment)
         { ; }
@@ -71,8 +71,8 @@ namespace util::alloc {
 
 
     private:
-        Successor   m_successor;
-        std::size_t m_alignment;
+        ChildT m_successor;
+        size_t m_alignment;
     };
 }
 
