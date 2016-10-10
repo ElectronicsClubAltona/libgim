@@ -22,11 +22,17 @@
 namespace util::alloc {
     template <class parent, class prefix, class suffix>
     class affix {
-        void* allocate   (size_t bytes, size_t align = alignof (std::max_align_t));
-        void  deallocate (void *ptr, size_t bytes, size_t align = alignof (std::max_align_t));
+        void* allocate   (size_t bytes);
+        void* allocate   (size_t bytes, size_t align);
+
+        void  deallocate (void *ptr, size_t bytes);
+        void  deallocate (void *ptr, size_t bytes, size_t align);
+
+        void* base (void);
+        const void* base (void) const;
+
+        size_t offset (const void*) const;
     };
 }
-
-#include "./affix.hpp"
 
 #endif

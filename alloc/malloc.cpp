@@ -25,12 +25,29 @@ using util::alloc::malloc;
 
 ///////////////////////////////////////////////////////////////////////////////
 void*
+malloc::allocate (size_t bytes)
+{
+    return allocate (bytes, alignof (std::max_align_t));
+}
+
+
+//-----------------------------------------------------------------------------
+void*
 malloc::allocate (size_t bytes, size_t align)
 {
     // C malloc guarantees maximal alignment
+    CHECK_LE (align, alignof (std::max_align_t));
     (void)align;
 
     return ::malloc (bytes);
+}
+
+
+//-----------------------------------------------------------------------------
+void
+malloc::deallocate (void *ptr, size_t bytes)
+{
+    return deallocate (ptr, bytes, alignof (std::max_align_t));
 }
 
 

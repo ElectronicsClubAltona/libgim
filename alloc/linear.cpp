@@ -37,6 +37,14 @@ linear::linear (void *begin, void *end):
 
 ///////////////////////////////////////////////////////////////////////////////
 void*
+linear::allocate (size_t bytes)
+{
+    return allocate (bytes, alignof (std::max_align_t));
+}
+
+
+//-----------------------------------------------------------------------------
+void*
 linear::allocate (size_t bytes, size_t alignment)
 {
     auto ptr = align (m_cursor, alignment);
@@ -47,6 +55,14 @@ linear::allocate (size_t bytes, size_t alignment)
 
     CHECK_NEZ (ptr);
     return ptr;
+}
+
+
+//-----------------------------------------------------------------------------
+void
+linear::deallocate (void *ptr, size_t bytes)
+{
+    deallocate (ptr, bytes, alignof (std::max_align_t));
 }
 
 
@@ -63,6 +79,14 @@ linear::deallocate (void *ptr, size_t bytes, size_t alignment)
 //-----------------------------------------------------------------------------
 void*
 linear::base (void)
+{
+    return m_begin;
+}
+
+
+//-----------------------------------------------------------------------------
+const void*
+linear::base (void) const
 {
     return m_begin;
 }

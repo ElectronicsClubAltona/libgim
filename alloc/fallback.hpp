@@ -25,8 +25,11 @@ namespace util::alloc {
     public:
         fallback (A&, B&);
 
-        void* allocate (size_t bytes, size_t align = alignof (std::max_align_t));
-        void deallocate (void *ptr, size_t bytes, size_t align = alignof (std::max_align_t));
+        void* allocate (size_t bytes);
+        void* allocate (size_t bytes, size_t align);
+
+        void deallocate (void *ptr, size_t bytes);
+        void deallocate (void *ptr, size_t bytes, size_t align);
     };
 }
 

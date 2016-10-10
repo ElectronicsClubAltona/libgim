@@ -48,6 +48,14 @@ constexpr auto MIN_ALIGNMENT = sizeof (record::offset_t);
 
 ///////////////////////////////////////////////////////////////////////////////
 void*
+stack::allocate (size_t bytes)
+{
+    return allocate (bytes, alignof (std::max_align_t));
+}
+
+
+//-----------------------------------------------------------------------------
+void*
 stack::allocate (size_t bytes, size_t alignment)
 {
     alignment = util::max (MIN_ALIGNMENT, alignment);
@@ -76,6 +84,14 @@ stack::allocate (size_t bytes, size_t alignment)
 
 //-----------------------------------------------------------------------------
 void
+stack::deallocate (void *ptr, size_t bytes)
+{
+    return deallocate (ptr, bytes, alignof (std::max_align_t));
+}
+
+
+//-----------------------------------------------------------------------------
+void
 stack::deallocate (void *_ptr, size_t bytes, size_t alignment)
 {
     (void)bytes;
@@ -97,6 +113,14 @@ stack::deallocate (void *_ptr, size_t bytes, size_t alignment)
 //-----------------------------------------------------------------------------
 void*
 stack::base (void)
+{
+    return m_begin;
+}
+
+
+//-----------------------------------------------------------------------------
+const void*
+stack::base (void) const
 {
     return m_begin;
 }

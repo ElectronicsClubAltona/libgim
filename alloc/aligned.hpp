@@ -38,23 +38,39 @@ namespace util::alloc {
         }
 
         //---------------------------------------------------------------------
-        void
+        auto
+        allocate (size_t bytes, size_t alignment)
+        {
+            CHECK_EQ (alignment, m_alignment);
+            return m_successor.allocate (bytes, m_alignment);
+        }
+
+
+        //---------------------------------------------------------------------
+        auto
         deallocate (void *ptr, size_t bytes)
         {
             return m_successor.deallocate (ptr, bytes);
         }
 
 
-        ///////////////////////////////////////////////////////////////////////
-        auto base (void)
+        //---------------------------------------------------------------------
+        auto
+        deallocate (void *ptr, size_t bytes, size_t alignment)
         {
-            return m_successor.base ();
+            CHECK_EQ (alignment, m_alignment);
+            return m_successor.deallocate (ptr, bytes, m_alignment);
         }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        auto base (void)       { return m_successor.base (); }
+        auto base (void) const { return m_successor.base (); }
 
 
         //---------------------------------------------------------------------
         auto
-        offset (const void *ptr)
+        offset (const void *ptr) const
         {
             return m_successor.offset (ptr);
         }

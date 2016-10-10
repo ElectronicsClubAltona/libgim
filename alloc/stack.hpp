@@ -33,10 +33,14 @@ namespace util::alloc {
 
         stack (void *begin, void *end);
 
-        //[[gnu::alloc_align (2), gnu::alloc_size (1), gnu::returns_nonnull, gnu::warn_unused_result]
-        void *allocate  (size_t bytes, size_t alignment = alignof (std::max_align_t));
-        void deallocate (void *ptr, size_t bytes, size_t alignment = alignof (std::max_align_t));
+        void *allocate  (size_t bytes, size_t alignment);
+        void *allocate  (size_t bytes);
+
+        void deallocate (void *ptr, size_t bytes);
+        void deallocate (void *ptr, size_t bytes, size_t alignment);
+
         void* base (void);
+        const void* base (void) const;
         size_t offset (const void*) const;
 
         void reset (void);

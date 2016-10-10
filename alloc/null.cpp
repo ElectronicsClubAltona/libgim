@@ -26,12 +26,28 @@ using util::alloc::null;
 
 ///////////////////////////////////////////////////////////////////////////////
 void*
+null::allocate (size_t bytes)
+{
+    return allocate (bytes, alignof (std::max_align_t));
+}
+
+
+//-----------------------------------------------------------------------------
+void*
 null::allocate (size_t bytes, size_t align)
 {
     (void)bytes;
     (void)align;
 
     throw std::bad_alloc ();
+}
+
+
+//-----------------------------------------------------------------------------
+void
+null::deallocate (void *ptr, size_t bytes)
+{
+    return deallocate (ptr, bytes, alignof (std::max_align_t));
 }
 
 
@@ -47,4 +63,60 @@ null::deallocate (void *ptr, size_t bytes, size_t align)
 
     // cast to void* to assist some of the printing machinary in the assertion
     CHECK_EQ (ptr, (void*)nullptr);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+void*
+null::base (void)
+{
+    return nullptr;
+}
+
+
+//-----------------------------------------------------------------------------
+const void*
+null::base (void) const
+{
+    return nullptr;
+}
+
+
+//-----------------------------------------------------------------------------
+size_t
+null::offset (const void *ptr) const
+{
+    return reinterpret_cast<uintptr_t> (ptr);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+void
+null::reset (void)
+{
+    ;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+size_t
+null::capacity (void) const
+{
+    return 0;
+}
+
+
+//-----------------------------------------------------------------------------
+size_t
+null::used (void) const
+{
+    return 0;
+}
+
+
+//-----------------------------------------------------------------------------
+size_t
+null::remain (void) const
+{
+    return 0;
 }

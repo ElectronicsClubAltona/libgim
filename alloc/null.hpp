@@ -26,17 +26,24 @@ namespace util::alloc {
     // (it is likely to at least assert).
     class null {
     public:
-        void* allocate (size_t bytes, size_t align = alignof (std::max_align_t));
-        void deallocate (void *ptr, size_t bytes, size_t align = alignof (std::max_align_t));
+        null () = default;
+        null (const null&) = delete;
+        null& operator= (const null&) = delete;
 
-        constexpr void* base (void) { return nullptr; }
-        constexpr size_t offset (const void*) const { return 0; }
+        void* allocate (size_t bytes);
+        void* allocate (size_t bytes, size_t align);
+        void deallocate (void *ptr, size_t bytes);
+        void deallocate (void *ptr, size_t bytes, size_t align);
 
-        void reset (void) { ; }
+        void* base (void);
+        const void* base (void) const;
+        size_t offset (const void*) const;
 
-        constexpr size_t capacity (void) const { return 0u; }
-        constexpr size_t used     (void) const { return 0u; }
-        constexpr size_t remain   (void) const { return 0u; }
+        void reset (void);
+
+        size_t capacity (void) const;
+        size_t used     (void) const;
+        size_t remain   (void) const;
     };
 }
 

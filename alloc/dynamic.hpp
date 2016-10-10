@@ -26,8 +26,7 @@ namespace util::alloc {
     // allocator interface.
     class dynamic {
     public:
-        static constexpr auto DEFAULT_ALIGNMENT = alignof (std::max_align_t);
-
+        //---------------------------------------------------------------------
         // disable copying, but allow moving (required for calls to 'make')
         dynamic (const dynamic&) = delete;
         dynamic& operator= (const dynamic&) = delete;
@@ -35,6 +34,7 @@ namespace util::alloc {
         dynamic (dynamic &&rhs) = default;
         dynamic& operator= (dynamic&&) = default;
 
+        //---------------------------------------------------------------------
         // construct an inner wrapper for type T. used to get around lack of
         // ambiguous template constructors.
         template <typename T, typename ...Args>
@@ -48,38 +48,30 @@ namespace util::alloc {
             );
         }
 
+        //---------------------------------------------------------------------
         // allocation management
-        void*
-        allocate (size_t bytes,
-                  size_t alignment = DEFAULT_ALIGNMENT) &
-        {
-            return m_child->allocate (bytes, alignment);
-        }
+        auto allocate (size_t bytes)                   { return m_child->allocate (bytes); }
+        auto allocate (size_t bytes, size_t alignment) { return m_child->allocate (bytes, alignment); }
 
-        void
-        deallocate (void *ptr,
-                    size_t bytes,
-                    size_t alignment = DEFAULT_ALIGNMENT)
-        {
-            return m_child->deallocate (ptr, bytes, alignment);
-        }
+        auto deallocate (void *ptr, size_t bytes)                   { return m_child->deallocate (ptr, bytes); }
+        auto deallocate (void *ptr, size_t bytes, size_t alignment) { return m_child->deallocate (ptr, bytes, alignment); }
 
-        void*
-        base (void)
-        {
-            return m_child->base ();
-        }
+        //---------------------------------------------------------------------
+        auto base (void)       { return m_child->base (); }
+        auto base (void) const { return m_child->base (); }
 
-        size_t
-        offset (const void *ptr) const
+        auto offset (const void *ptr) const
         { return m_child->offset (ptr); }
 
-        void reset (void) { m_child->reset (); }
+        //---------------------------------------------------------------------
+        auto reset (void) { return m_child->reset (); }
 
+        //---------------------------------------------------------------------
         // capacity queries
-        size_t capacity (void) const { return m_child->capacity (); }
-        size_t used     (void) const { return m_child->used ();     }
-        size_t remain   (void) const { return m_child->remain ();   }
+        auto capacity (void) const { return m_child->capacity (); }
+        auto used     (void) const { return m_child->used ();     }
+        auto remain   (void) const { return m_child->remain ();   }
+
 
     private:
         // Internal base for arbitrary allocator types. Necessary for
@@ -95,17 +87,15 @@ namespace util::alloc {
             virtual ~interface () { ; }
 
             // allocation management
-            virtual void*
-            allocate (size_t bytes,
-                      size_t alignment = DEFAULT_ALIGNMENT) = 0;
+            virtual void* allocate (size_t bytes) = 0;
+            virtual void* allocate (size_t bytes, size_t alignment) = 0;
 
-            virtual void
-            deallocate (void *ptr,
-                        size_t bytes,
-                        size_t alignment = DEFAULT_ALIGNMENT) = 0;
+            virtual void deallocate (void *ptr, size_t bytes) = 0;
+            virtual void deallocate (void *ptr, size_t bytes, size_t alignment) = 0;
 
-            virtual void* base (void) = 0;
-            virtual size_t offset (const void*) const = 0;
+            virtual void*       base (void) = 0;
+            virtual const void* base (void) const = 0;
+            virtual size_t      offset (const void*) const = 0;
 
             virtual void reset (void) = 0;
 
@@ -127,34 +117,35 @@ namespace util::alloc {
 
             // allocation management
             void*
-            allocate (size_t bytes,
-                      size_t alignment = DEFAULT_ALIGNMENT) override
-            {
-                return m_target.allocate (bytes, alignment);
-            }
+            allocate (size_t bytes) override
+            { return m_target.allocate (bytes); }
+
+            void*
+            allocate (size_t bytes, size_t alignment) override
+            { return m_target.allocate (bytes, alignment); }
 
             void
-            deallocate (void *ptr,
-                        size_t bytes,
-                        size_t alignment = DEFAULT_ALIGNMENT) override
-            {
-                m_target.deallocate (ptr, bytes, alignment);
-            }
+            deallocate (void *ptr, size_t bytes) override
+            { m_target.deallocate (ptr, bytes); }
 
-            void *
+            void
+            deallocate (void *ptr, size_t bytes, size_t alignment) override
+            { m_target.deallocate (ptr, bytes, alignment); }
+
+            const void*
+            base (void) const override
+            { return m_target.base (); }
+
+            void*
             base (void) override
-            {
-                return m_target.base ();
-            }
+            { return m_target.base (); }
 
             size_t
             offset (const void *ptr) const override
-            {
-                return m_target.offset (ptr);
-            }
+            { return m_target.offset (ptr); }
 
             void reset (void) override
-            { m_target.reset (); }
+            { return m_target.reset (); }
 
             // capacity queries
             size_t capacity (void) const override { return m_target.capacity (); }
