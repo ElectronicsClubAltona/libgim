@@ -15,6 +15,7 @@ UTIL_FILES   =			\
     alloc/fwd.hpp		\
     alloc/affix.cpp		\
     alloc/affix.hpp		\
+    alloc/aligned.hpp		\
     alloc/allocator.cpp		\
     alloc/allocator.hpp		\
     alloc/allocator.ipp		\
@@ -385,6 +386,7 @@ noinst_PROGRAMS = tools/scratch
 AM_CXXFLAGS += -I$(top_srcdir)
 
 TEST_BIN = 			\
+    test/alloc/aligned		\
     test/alloc/arena		\
     test/alloc/dynamic		\
     test/alloc/linear		\
