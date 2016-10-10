@@ -21,7 +21,7 @@
 
 // C++11 allocator concept conformant allocator adaptor, going from our
 // allocator interface to that of the STL and friends.
-namespace util { namespace alloc {
+namespace util::alloc {
     template <class B, class T>
     class allocator {
     public:
@@ -36,7 +36,7 @@ namespace util { namespace alloc {
     private:
         B &m_backing;
     };
-} }
+}
 
 #include "./allocator.ipp"
 

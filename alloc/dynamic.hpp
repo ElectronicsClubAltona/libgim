@@ -20,7 +20,7 @@
 #include <cstddef>
 #include <memory>
 
-namespace util { namespace alloc {
+namespace util::alloc {
     // wraps an allocator given at construction time, forwarding all calls to
     // the inner object. used to allow virtual dispatch of the non-virtual
     // allocator interface.
@@ -172,6 +172,6 @@ namespace util { namespace alloc {
 
         std::unique_ptr<interface> m_child;
     };
-} }
+}
 
 #endif

@@ -18,7 +18,7 @@
 #define __UTIL_ALLOC_FWD_HPP
 
 
-namespace util { namespace alloc {
+namespace util::alloc {
     class affix;
     class dynamic;
     class fallback;
@@ -29,6 +29,6 @@ namespace util { namespace alloc {
 
     template <typename T> class arena;
     template <typename B, typename T> class allocator;
-} }
+}
 
 #endif

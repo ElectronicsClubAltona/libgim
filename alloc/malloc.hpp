@@ -20,13 +20,13 @@
 #include <cstddef>
 
 
-namespace util { namespace alloc {
+namespace util::alloc {
     class malloc {
     public:
         void* allocate (size_t bytes, size_t align = alignof (std::max_align_t));
         void  deallocate (void *ptr, size_t bytes, size_t align = alignof (std::max_align_t));
     };
-} }
+}
 
 
 #endif

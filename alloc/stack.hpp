@@ -21,7 +21,7 @@
 #include <cstdint>
 
 
-namespace util { namespace alloc {
+namespace util::alloc {
     // allocate memory from a buffer in a stacklike manner. deallocation that
     // is not correctly ordered has undefined (read 'bad') results.
     class stack {
@@ -48,6 +48,6 @@ namespace util { namespace alloc {
     private:
         char *m_begin, *m_end, *m_cursor;
     };
-} }
+}
 
 #endif

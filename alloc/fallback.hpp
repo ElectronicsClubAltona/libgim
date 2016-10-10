@@ -19,7 +19,7 @@
 
 #include <cstddef>
 
-namespace util { namespace alloc {
+namespace util::alloc {
     template <class A, class B>
     class fallback {
     public:
@@ -28,6 +28,6 @@ namespace util { namespace alloc {
         void* allocate (size_t bytes, size_t align = alignof (std::max_align_t));
         void deallocate (void *ptr, size_t bytes, size_t align = alignof (std::max_align_t));
     };
-} }
+}
 
 #endif

@@ -20,7 +20,7 @@
 #include <cstddef>
 
 
-namespace util { namespace alloc {
+namespace util::alloc {
     // allocator that always fails, throwing bad_alloc. deallocate will
     // succeed with nullptr as with delete, but is undefined with other values
     // (it is likely to at least assert).
@@ -38,6 +38,6 @@ namespace util { namespace alloc {
         constexpr size_t used     (void) const { return 0u; }
         constexpr size_t remain   (void) const { return 0u; }
     };
-} }
+}
 
 #endif

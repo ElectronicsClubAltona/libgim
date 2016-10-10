@@ -19,13 +19,13 @@
 
 #include <cstddef>
 
-namespace util { namespace alloc {
+namespace util::alloc {
     template <class parent, class prefix, class suffix>
     class affix {
         void* allocate   (size_t bytes, size_t align = alignof (std::max_align_t));
         void  deallocate (void *ptr, size_t bytes, size_t align = alignof (std::max_align_t));
     };
-} }
+}
 
 #include "./affix.hpp"
 

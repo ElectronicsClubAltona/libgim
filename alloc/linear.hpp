@@ -19,7 +19,7 @@
 
 #include <cstddef>
 
-namespace util { namespace alloc {
+namespace util::alloc {
     // allocate progressively across a buffer without concern for deallocation.
     // deallocation is a noop; the only way to free allocations is via reset.
     class linear {
@@ -45,7 +45,7 @@ namespace util { namespace alloc {
     protected:
         char *m_begin, *m_end, *m_cursor;
     };
-} }
+}
 
 #include "./linear.hpp"
 

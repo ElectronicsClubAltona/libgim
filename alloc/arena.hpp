@@ -22,7 +22,7 @@
 #include <memory>
 #include <utility>
 
-namespace util { namespace alloc {
+namespace util::alloc {
     template <class T>
     class arena {
     public:
@@ -64,7 +64,7 @@ namespace util { namespace alloc {
     private:
         T &m_store;
     };
-} }
+}
 
 #include "./arena.ipp"
 
