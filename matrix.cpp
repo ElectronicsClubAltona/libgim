@@ -145,6 +145,11 @@ util::transposed (const matrix<S,T> &m)
 }
 
 
+//-----------------------------------------------------------------------------
+template matrix3f util::transposed (const matrix3f&);
+template matrix4f util::transposed (const matrix4f&);
+
+
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 matrix<S,T>
