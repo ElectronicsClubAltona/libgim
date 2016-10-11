@@ -24,6 +24,18 @@ main (void)
 
     tap.expect_eq (sum (SEQ), 136.f, "element summation");
 
+    // tranposition
+    {
+        static constexpr util::matrix4f QES {{
+            {  1,  5,  9, 13 },
+            {  2,  6, 10, 14 },
+            {  3,  7, 11, 15 },
+            {  4,  8, 12, 16 }
+        }};
+        tap.expect_eq (transposed (SEQ), QES, "transposition");
+        tap.expect_eq (transposed (transposed (SEQ)), SEQ, "double tranposition is identity");
+    }
+
     // matrix-scalar operations
     {
         tap.expect_eq (sum (SEQ + 1.f), 152.f, "matrix-scalar addition");
