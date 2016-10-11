@@ -387,8 +387,11 @@ json::tree::node::as_chars (void) const&
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace json { namespace tree {
+#if defined(__clang__)
+#elif defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuseless-cast"
+#endif
     template <>
     bool node::as (void) const
     {
@@ -447,7 +450,10 @@ namespace json { namespace tree {
     {
         return static_cast<int64_t> (as_sint ());
     }
+#if defined(__clang__)
+#elif defined(__GNUC__)
 #pragma GCC diagnostic pop
+#endif
 } }
 
 
