@@ -41,6 +41,7 @@ namespace util::alloc {
         auto
         allocate (size_t bytes, size_t alignment)
         {
+            (void)alignment;
             CHECK_EQ (alignment, m_alignment);
             return m_successor.allocate (bytes, m_alignment);
         }
@@ -58,6 +59,7 @@ namespace util::alloc {
         auto
         deallocate (void *ptr, size_t bytes, size_t alignment)
         {
+            (void)alignment;
             CHECK_EQ (alignment, m_alignment);
             return m_successor.deallocate (ptr, bytes, m_alignment);
         }

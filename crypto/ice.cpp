@@ -392,6 +392,7 @@ ice::scheduleBuild (std::array<uint16_t,4> &kb,
 void
 ice::set (const uint64_t *_key_first, const uint64_t *_key_last)
 {
+    (void)_key_last;
     CHECK_EQ ((unsigned)(_key_last - _key_first), m_size);
 
     auto key = reinterpret_cast<const uint8_t*> (_key_first);

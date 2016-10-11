@@ -57,7 +57,7 @@ find_terminfo_path (const std::experimental::filesystem::path &dir,
 // throws an exception if not found
 static
 std::experimental::filesystem::path
-find_terminfo_path (const std::string &key)
+find_terminfo_path [[gnu::unused]] (const std::string &key)
 {
     // check if the path is explicitly listed. must not fall through.
     if (const char *dir = getenv ("TERMINFO")) {
