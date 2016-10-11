@@ -3,5 +3,5 @@ Description: A simple utility library in C++
 URL: http://nerdcruft.net/
 Version: @VERSION@
 Libs.private: @abs_top_builddir@/libcruft-util.a @LIBS@
-Libs: @BOOST_LDFLAGS@
-Cflags: -isystem @abs_top_builddir@/fake @BOOST_CPPFLAGS@
+Libs:
+Cflags: -isystem @abs_top_builddir@/fake

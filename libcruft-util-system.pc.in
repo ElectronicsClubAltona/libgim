@@ -8,5 +8,5 @@ Description: A simple utility library in C++
 URL: http://nerdcruft.net/
 Version: @VERSION@
 Libs.private: @LIBS@
-Libs: -L${libdir} -lcruft-util @BOOST_LDFLAGS@
-Cflags: -I${includedir} @BOOST_CPPFLAGS@
+Libs: -L${libdir} -lcruft-util
+Cflags: -I${includedir}
