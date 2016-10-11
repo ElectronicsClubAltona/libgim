@@ -97,6 +97,27 @@ fd::stat (void) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
+ssize_t
+fd::read (void *buffer, size_t count)
+{
+    auto res = ::read (m_fd, buffer, count);
+    if (res == -1)
+        errno_error::throw_code ();
+    return res;
+}
+
+//-----------------------------------------------------------------------------
+ssize_t
+fd::write (const void *buffer, size_t count)
+{
+    auto res = ::write (m_fd, buffer, count);
+    if (res == -1)
+        errno_error::throw_code ();
+    return res;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 fd::operator int (void) const
 {
     return m_fd;
