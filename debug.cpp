@@ -17,7 +17,6 @@
 #include "backtrace.hpp"
 #include "debug.hpp"
 #include "log.hpp"
-#include "platform.hpp"
 
 #include <cstdlib>
 #include <iostream>

@@ -22,7 +22,6 @@
 
 #include <tuple>
 #include <type_traits>
-#include <functional>
 
 
 namespace util { namespace tuple {

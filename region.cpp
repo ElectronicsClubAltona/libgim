@@ -18,12 +18,8 @@
 #include "./region.hpp"
 
 #include "./debug.hpp"
-#include "./cast.hpp"
 
 #include "./coord/iostream.hpp"
-
-#include <cmath>
-#include <type_traits>
 
 
 //-----------------------------------------------------------------------------

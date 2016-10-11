@@ -19,7 +19,6 @@
 
 #include "./fwd.hpp"
 
-#include <memory>
 #include <experimental/filesystem>
 
 namespace json { namespace schema {

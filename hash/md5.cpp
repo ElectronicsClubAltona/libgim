@@ -17,6 +17,7 @@
 #include "md5.hpp"
 
 #include "../bitwise.hpp"
+#include "../debug.hpp"
 
 #include <cstring>
 

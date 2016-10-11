@@ -17,9 +17,7 @@
 #include "./point.hpp"
 
 #include "./debug.hpp"
-#include "./maths.hpp"
 
-#include <cmath>
 #include <cstdlib>
 
 using util::point;

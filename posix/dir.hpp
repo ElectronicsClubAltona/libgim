@@ -17,7 +17,6 @@
 #ifndef __UTIL_POSIX_DIR_HPP
 #define __UTIL_POSIX_DIR_HPP
 
-#include <sys/types.h>
 #include <dirent.h>
 
 #include <functional>

@@ -16,9 +16,8 @@
 
 
 #include "json/except.hpp"
-#include "json/tree.hpp"
 #include "json/schema.hpp"
-#include "json/except.hpp"
+#include "json/tree.hpp"
 
 #include "io.hpp"
 

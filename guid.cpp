@@ -14,13 +14,12 @@
  * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "guid.hpp"
+#include "./guid.hpp"
 
-#include "debug.hpp"
-#include "endian.hpp"
-#include "types.hpp"
+#include "./debug.hpp"
 
 #include <algorithm>
+#include <iterator>
 #include <iomanip>
 #include <sstream>
 
@@ -36,7 +35,7 @@ guid::guid (uint32_t _data1,
     data2 (_data2),
     data3 (_data3)
 {
-    std::copy (_data4, _data4 + elems (data4), data4);
+    std::copy (_data4, _data4 + std::size (data4), data4);
 }
 
 
@@ -66,7 +65,7 @@ guid::operator= (const guid &rhs) {
     data1 = rhs.data1;
     data2 = rhs.data2;
     data3 = rhs.data3;
-    std::copy (rhs.data4 + 0, rhs.data4 + elems (rhs.data4), data4 + 0);
+    std::copy (rhs.data4 + 0, rhs.data4 + std::size (rhs.data4), data4 + 0);
 
     return *this;
 }
@@ -133,7 +132,7 @@ guid::operator< (const guid &rhs) const {
     if (data3 != rhs.data3)
         return data3 < rhs.data3;
 
-    for (unsigned i = 0; i < elems (data4); ++i) {
+    for (unsigned i = 0; i < std::size (data4); ++i) {
         if (data4[i] == rhs.data4[i])
             return data4[i] < rhs.data4[i];
     }

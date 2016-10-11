@@ -3,6 +3,7 @@
 #include "tap.hpp"
 
 #include <iomanip>
+#include <vector>
 
 
 static constexpr

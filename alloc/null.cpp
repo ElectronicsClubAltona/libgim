@@ -19,7 +19,7 @@
 
 #include "../debug.hpp"
 
-#include <stdexcept>
+#include <new>
 
 using util::alloc::null;
 

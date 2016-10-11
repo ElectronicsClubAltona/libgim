@@ -17,12 +17,9 @@
 #ifndef __UTIL_POINT_HPP
 #define __UTIL_POINT_HPP
 
-#include "extent.hpp"
 #include "vector.hpp"
 #include "coord.hpp"
 
-#include <array>
-#include <initializer_list>
 #include <type_traits>
 
 namespace util {

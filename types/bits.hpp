@@ -20,53 +20,54 @@
 #include <cstdint>
 #include <cstddef>
 
-template <size_t BITS>
-struct bits_type;
+namespace util {
+    template <size_t BITS>
+    struct bits_type;
 
 
-template <> struct bits_type< 8u> {
-    static const bool has_floating = false;
+    template <> struct bits_type< 8u> {
+        static const bool has_floating = false;
 
-    typedef    uint8_t uint;
-    typedef     int8_t sint;
-    typedef    uint8_t floating;
-};
-
-
-template <> struct bits_type<16u> {
-    static const bool has_floating = false;
-
-    typedef   uint16_t uint;
-    typedef    int16_t sint;
-    typedef   uint16_t floating;
-};
+        typedef    uint8_t uint;
+        typedef     int8_t sint;
+        typedef    uint8_t floating;
+    };
 
 
-template <> struct bits_type<32u> {
-    static const bool has_floating = true;
+    template <> struct bits_type<16u> {
+        static const bool has_floating = false;
 
-    typedef uint32_t uint;
-    typedef  int32_t sint;
-    typedef    float floating;
-};
-
-
-template <> struct bits_type<64u> {
-    static const bool has_floating = true;
-
-    typedef uint64_t uint;
-    typedef  int64_t sint;
-    typedef   double floating;
-};
+        typedef   uint16_t uint;
+        typedef    int16_t sint;
+        typedef   uint16_t floating;
+    };
 
 
-template <size_t BYTES>
-struct bytes_type : public bits_type<BYTES * 8u>
-{ };
+    template <> struct bits_type<32u> {
+        static const bool has_floating = true;
+
+        typedef uint32_t uint;
+        typedef  int32_t sint;
+        typedef    float floating;
+    };
 
 
-template <typename T>
-struct sized_type : public bits_type<sizeof(T) * 8u>
-{ };
+    template <> struct bits_type<64u> {
+        static const bool has_floating = true;
 
+        typedef uint64_t uint;
+        typedef  int64_t sint;
+        typedef   double floating;
+    };
+
+
+    template <size_t BYTES>
+    struct bytes_type : public bits_type<BYTES * 8u>
+    { };
+
+
+    template <typename T>
+    struct sized_type : public bits_type<sizeof(T) * 8u>
+    { };
+}
 #endif

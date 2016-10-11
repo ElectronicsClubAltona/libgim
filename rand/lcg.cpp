@@ -16,6 +16,8 @@
 
 #include "lcg.hpp"
 
+#include "../maths.hpp"
+
 using util::rand::lcg;
 
 

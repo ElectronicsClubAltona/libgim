@@ -18,13 +18,11 @@
 
 #include "debug.hpp"
 #include "except.hpp"
-#include "platform.hpp"
 #include "cast.hpp"
 
 #include <cstdio>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
 
 #include <experimental/filesystem>

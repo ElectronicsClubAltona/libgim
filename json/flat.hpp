@@ -17,8 +17,8 @@
 #ifndef __UTIL_JSON_FLAT_HPP
 #define __UTIL_JSON_FLAT_HPP
 
-#include <experimental/filesystem>
 #include <ostream>
+#include <vector>
 
 #include "../view.hpp"
 

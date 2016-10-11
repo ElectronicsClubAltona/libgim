@@ -12,8 +12,8 @@ void
 test_double (util::TAP::logger &tap)
 {
     struct sized_test {
-        ieee_double::uint_t bits;
-        double              floating;
+        util::ieee_double::uint_t bits;
+        double floating;
     };
 
     sized_test tests[] = {
@@ -35,7 +35,7 @@ test_double (util::TAP::logger &tap)
     bool success = true;
 
     for (unsigned int i = 0; i < elems (tests); ++i) {
-        ieee_double val;
+        util::ieee_double val;
         val.set_bits (tests[i].bits);
 
         success = success && util::exactly_equal (val, tests[i].floating);
@@ -50,8 +50,8 @@ void
 test_single (util::TAP::logger &tap)
 {
     struct sized_test {
-        ieee_single::uint_t bits;
-        float               floating;
+        util::ieee_single::uint_t bits;
+        float floating;
     };
 
     sized_test tests[] = {
@@ -71,7 +71,7 @@ test_single (util::TAP::logger &tap)
     bool success = true;
 
     for (unsigned int i = 0; i < elems (tests); ++i) {
-        ieee_single val;
+        util::ieee_single val;
         val.set_bits (tests[i].bits);
 
         success = success && util::exactly_equal (val, tests[i].floating);

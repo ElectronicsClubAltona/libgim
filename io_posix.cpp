@@ -20,9 +20,7 @@
 #include "except.hpp"
 #include "posix/fd.hpp"
 
-#include <fcntl.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 
 using util::detail::posix::mapped_file;
 

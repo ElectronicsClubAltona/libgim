@@ -21,10 +21,9 @@
 #include "../bitwise.hpp"
 
 #include <cstring>
-#include <stdexcept>
-
 
 using util::hash::RIPEMD;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 RIPEMD::RIPEMD()

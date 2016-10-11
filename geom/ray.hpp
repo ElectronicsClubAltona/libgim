@@ -23,8 +23,6 @@
 #include "../vector.hpp"
 #include "../point.hpp"
 
-#include <ostream>
-
 namespace util { namespace geom {
     template <size_t S, typename T>
     struct ray {

@@ -17,13 +17,11 @@
 #include "vector.hpp"
 
 #include "debug.hpp"
-#include "maths.hpp"
 #include "random.hpp"
 
-#include <algorithm>
+#include "json/tree.hpp"
+
 #include <cmath>
-#include <limits>
-#include <numeric>
 
 using util::vector;
 using util::vector3f;

@@ -18,7 +18,6 @@
 #define __UTIL_ALLOC_STACK_HPP
 
 #include <cstddef>
-#include <cstdint>
 
 
 namespace util::alloc {

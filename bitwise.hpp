@@ -17,62 +17,63 @@
 #ifndef __UTIL_BITWISE_HPP
 #define __UTIL_BITWISE_HPP
 
+#include <type_traits>
 #include <cstdint>
 
-#include "debug.hpp"
 
-const uint8_t BITMASK_1BITS = 0x01;
-const uint8_t BITMASK_2BITS = 0x03;
-const uint8_t BITMASK_3BITS = 0x07;
-const uint8_t BITMASK_4BITS = 0x0F;
-const uint8_t BITMASK_5BITS = 0x1F;
-const uint8_t BITMASK_6BITS = 0x3F;
-const uint8_t BITMASK_7BITS = 0x7F;
-const uint8_t BITMASK_8BITS = 0xFF;
+namespace util {
+    const uint8_t BITMASK_1BITS = 0x01;
+    const uint8_t BITMASK_2BITS = 0x03;
+    const uint8_t BITMASK_3BITS = 0x07;
+    const uint8_t BITMASK_4BITS = 0x0F;
+    const uint8_t BITMASK_5BITS = 0x1F;
+    const uint8_t BITMASK_6BITS = 0x3F;
+    const uint8_t BITMASK_7BITS = 0x7F;
+    const uint8_t BITMASK_8BITS = 0xFF;
 
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-constexpr T
-rotatel [[gnu::pure]] (const T value, size_t magnitude)
-{
-    return (value << magnitude) | (value >> sizeof (value) * 8 - magnitude);
-}
-
-
-template <typename T>
-constexpr T
-rotater [[gnu::pure]] (const T value, size_t magnitude)
-{
-    return (value >> magnitude) | (value << sizeof (value) * 8 - magnitude);
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// TODO: make constexpr for C++14
-template <typename T>
-T
-reverse (T value) {
-    T out = value;
-
-    size_t bits = sizeof (value) * 8 - 1;
-    for (value >>= 1; value; value >>= 1) {
-        out <<= 1;
-        out  |= value & 0x01;
-        --bits;
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    constexpr T
+    rotatel [[gnu::pure]] (const T value, std::size_t magnitude)
+    {
+        return (value << magnitude) | (value >> sizeof (value) * 8 - magnitude);
     }
 
-    out <<= bits;
-    return out;
-}
+
+    template <typename T>
+    constexpr T
+    rotater [[gnu::pure]] (const T value, std::size_t magnitude)
+    {
+        return (value >> magnitude) | (value << sizeof (value) * 8 - magnitude);
+    }
 
 
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-constexpr T
-popcount (std::enable_if_t<std::is_integral<T>::value,T> t)
-{
-    return __builtin_popcount (t);
+    ///////////////////////////////////////////////////////////////////////////
+    // TODO: make constexpr for C++14
+    template <typename T>
+    T
+    reverse (T value) {
+        T out = value;
+
+        std::size_t bits = sizeof (value) * 8 - 1;
+        for (value >>= 1; value; value >>= 1) {
+            out <<= 1;
+            out  |= value & 0x01;
+            --bits;
+        }
+
+        out <<= bits;
+        return out;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    constexpr T
+    popcount (std::enable_if_t<std::is_integral<T>::value,T> t)
+    {
+        return __builtin_popcount (t);
+    }
 }
 
 #endif
-

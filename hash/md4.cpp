@@ -18,8 +18,6 @@
 
 #include "../bitwise.hpp"
 #include "../debug.hpp"
-#include "../endian.hpp"
-#include "../types.hpp"
 
 #include <cstring>
 

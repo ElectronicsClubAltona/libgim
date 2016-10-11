@@ -273,7 +273,7 @@ ice::encrypt (const uint64_t _ptext) const
         uint8_t pbytes[8];
     };
 
-    pword = hton (_ptext);
+    pword = util::hton (_ptext);
 
     uint32_t l, r;
 
@@ -304,7 +304,7 @@ ice::encrypt (const uint64_t _ptext) const
         l >>= 8u;
     }
 
-    return hton (cword);
+    return util::hton (cword);
 }
 
 
@@ -320,7 +320,7 @@ ice::decrypt (const uint64_t _ctext) const
         uint8_t cbytes[8];
     };
 
-    cword = hton (_ctext);
+    cword = util::hton (_ctext);
 
     uint32_t l, r;
 
@@ -351,7 +351,7 @@ ice::decrypt (const uint64_t _ctext) const
         l >>= 8;
     }
 
-    return hton (pword);
+    return util::hton (pword);
 }
 
 

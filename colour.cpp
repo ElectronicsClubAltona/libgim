@@ -19,7 +19,6 @@
 #include "./debug.hpp"
 #include "./range.hpp"
 #include "./random.hpp"
-#include "./stream.hpp"
 
 #include <array>
 #include <map>

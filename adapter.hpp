@@ -17,9 +17,9 @@
 #ifndef __UTIL_ADAPTER_HPP
 #define __UTIL_ADAPTER_HPP
 
+#include <array>
 #include <cstddef>
 #include <iterator>
-#include <tuple>
 
 namespace util { namespace adapter {
     namespace container {

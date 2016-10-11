@@ -20,7 +20,6 @@
 
 #include "../point.hpp"
 #include "../extent.hpp"
-#include "../coord/iostream.hpp"
 
 #include <cstdint>
 

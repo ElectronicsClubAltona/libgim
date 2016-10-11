@@ -19,7 +19,6 @@
 
 #include "types/bits.hpp"
 
-#include <cstdint>
 #include <ostream>
 
 namespace util {

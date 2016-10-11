@@ -18,10 +18,9 @@
 #include "./quaternion.hpp"
 
 #include "./debug.hpp"
-#include "./maths.hpp"
 #include "./vector.hpp"
 
-#include <iostream>
+#include <cmath>
 
 //-----------------------------------------------------------------------------
 using util::quaternion;

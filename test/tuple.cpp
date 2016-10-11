@@ -3,6 +3,8 @@
 #include "tap.hpp"
 
 #include <typeindex>
+#include <vector>
+
 
 template <typename T>
 struct int_mapper

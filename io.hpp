@@ -17,16 +17,11 @@
 #ifndef __UTIL_IO_HPP
 #define __UTIL_IO_HPP
 
-#include "types.hpp"
 #include "platform.hpp"
-#include "nocopy.hpp"
 #include "posix/fd.hpp"
-
-#include <sys/stat.h>
 
 #include <cstdio>
 #include <cstdint>
-#include <memory>
 #include <experimental/filesystem>
 
 #ifdef PLATFORM_WIN32

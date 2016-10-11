@@ -16,10 +16,7 @@
 
 #include "./time.hpp"
 
-#include "./debug.hpp"
 #include "./log.hpp"
-#include "./platform.hpp"
-#include "./cast.hpp"
 
 #include <chrono>
 

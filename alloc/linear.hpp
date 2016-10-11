@@ -52,6 +52,4 @@ namespace util::alloc {
     };
 }
 
-#include "./linear.hpp"
-
 #endif

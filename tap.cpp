@@ -16,8 +16,6 @@
 
 #include "tap.hpp"
 
-#include "debug.hpp"
-
 #include <iostream>
 
 using util::TAP::logger;

@@ -18,7 +18,7 @@
 
 #include "./iostream.hpp"
 #include "./ops.hpp"
-
+#include "../coord/iostream.hpp"
 #include "../debug.hpp"
 
 using util::geom::ray;

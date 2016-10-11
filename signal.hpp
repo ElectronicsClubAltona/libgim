@@ -17,12 +17,10 @@
 #ifndef __UTIL_SIGNAL_HPP
 #define __UTIL_SIGNAL_HPP
 
-#include "nocopy.hpp"
 #include "types/traits.hpp"
 
 #include <functional>
 #include <list>
-#include <type_traits>
 
 namespace util {
     namespace combine {

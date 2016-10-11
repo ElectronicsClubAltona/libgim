@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <array>
 #include <iostream>
+#include <algorithm>
 
 #if 0
 #define FOR(i,n) for(i=0; i<n; ++i)
@@ -236,7 +237,7 @@ permute_theta (uint64_t m_words[5][5])
 
     for (unsigned x = 0; x < 5; ++x) {
         // Compute the θ effect for a given column
-        D = C[(x+4)%5] ^ rotatel (C[(x+1)%5], 1);
+        D = C[(x+4)%5] ^ util::rotatel (C[(x+1)%5], 1);
 
         // Add the θ effect to the whole column
         for (unsigned y = 0; y < 5; ++y)
@@ -248,30 +249,30 @@ permute_theta (uint64_t m_words[5][5])
 void
 permute_rho (uint64_t m_words[5][5])
 {
-    m_words[0][1] = rotatel (m_words[0][1],  1);
-    m_words[0][2] = rotatel (m_words[0][2], 62);
-    m_words[0][3] = rotatel (m_words[0][3], 28);
-    m_words[0][4] = rotatel (m_words[0][4], 27);
-    m_words[1][0] = rotatel (m_words[1][0], 36);
-    m_words[1][1] = rotatel (m_words[1][1], 44);
-    m_words[1][2] = rotatel (m_words[1][2],  6);
-    m_words[1][3] = rotatel (m_words[1][3], 55);
-    m_words[1][4] = rotatel (m_words[1][4], 20);
-    m_words[2][0] = rotatel (m_words[2][0],  3);
-    m_words[2][1] = rotatel (m_words[2][1], 10);
-    m_words[2][2] = rotatel (m_words[2][2], 43);
-    m_words[2][3] = rotatel (m_words[2][3], 25);
-    m_words[2][4] = rotatel (m_words[2][4], 39);
-    m_words[3][0] = rotatel (m_words[3][0], 41);
-    m_words[3][1] = rotatel (m_words[3][1], 45);
-    m_words[3][2] = rotatel (m_words[3][2], 15);
-    m_words[3][3] = rotatel (m_words[3][3], 21);
-    m_words[3][4] = rotatel (m_words[3][4],  8);
-    m_words[4][0] = rotatel (m_words[4][0], 18);
-    m_words[4][1] = rotatel (m_words[4][1],  2);
-    m_words[4][2] = rotatel (m_words[4][2], 61);
-    m_words[4][3] = rotatel (m_words[4][3], 56);
-    m_words[4][4] = rotatel (m_words[4][4], 14);
+    m_words[0][1] = util::rotatel (m_words[0][1],  1);
+    m_words[0][2] = util::rotatel (m_words[0][2], 62);
+    m_words[0][3] = util::rotatel (m_words[0][3], 28);
+    m_words[0][4] = util::rotatel (m_words[0][4], 27);
+    m_words[1][0] = util::rotatel (m_words[1][0], 36);
+    m_words[1][1] = util::rotatel (m_words[1][1], 44);
+    m_words[1][2] = util::rotatel (m_words[1][2],  6);
+    m_words[1][3] = util::rotatel (m_words[1][3], 55);
+    m_words[1][4] = util::rotatel (m_words[1][4], 20);
+    m_words[2][0] = util::rotatel (m_words[2][0],  3);
+    m_words[2][1] = util::rotatel (m_words[2][1], 10);
+    m_words[2][2] = util::rotatel (m_words[2][2], 43);
+    m_words[2][3] = util::rotatel (m_words[2][3], 25);
+    m_words[2][4] = util::rotatel (m_words[2][4], 39);
+    m_words[3][0] = util::rotatel (m_words[3][0], 41);
+    m_words[3][1] = util::rotatel (m_words[3][1], 45);
+    m_words[3][2] = util::rotatel (m_words[3][2], 15);
+    m_words[3][3] = util::rotatel (m_words[3][3], 21);
+    m_words[3][4] = util::rotatel (m_words[3][4],  8);
+    m_words[4][0] = util::rotatel (m_words[4][0], 18);
+    m_words[4][1] = util::rotatel (m_words[4][1],  2);
+    m_words[4][2] = util::rotatel (m_words[4][2], 61);
+    m_words[4][3] = util::rotatel (m_words[4][3], 56);
+    m_words[4][4] = util::rotatel (m_words[4][4], 14);
     return;
 
 
@@ -279,7 +280,7 @@ permute_rho (uint64_t m_words[5][5])
         //unsigned r = ((t+1)*(t+2)/2)%64;
         unsigned r = ((i + 1) * (i + 2) / 2) % 64;
 
-        m_words[i/5][i%5] = rotatel (m_words[i/5][i%5], r);
+        m_words[i/5][i%5] = util::rotatel (m_words[i/5][i%5], r);
     }
 }
 
@@ -344,7 +345,7 @@ void
 keccak::permute (void)
 {
     for (size_t i = 0; i < m_bitrate/64; ++i)
-        m_words[i/5][i%5] = ltoh (m_words[i/5][i%5]);
+        m_words[i/5][i%5] = util::ltoh (m_words[i/5][i%5]);
 
     lfsr86540 shift;
 
@@ -369,7 +370,7 @@ keccak::permute (void)
 
                 // Swap current and state(x,y), and rotate
                 temp = m_words[y][x];
-                m_words[y][x] = rotatel (current, r);
+                m_words[y][x] = util::rotatel (current, r);
                 current = temp;
             }
         }
@@ -403,8 +404,6 @@ A readable and compact implementation of the Keccak sponge functions
 that use the Keccak-f[1600] permutation.
 ================================================================
 */
-
-#include <cstring>
 
 
 void

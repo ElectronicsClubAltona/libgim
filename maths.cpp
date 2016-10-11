@@ -16,11 +16,6 @@
 
 #include "maths.hpp"
 
-#include "debug.hpp"
-
-#include "float.hpp"
-
-#include <cmath>
 #include <type_traits>
 
 

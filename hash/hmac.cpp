@@ -118,7 +118,7 @@ HMAC<T>::digest (void)
 #include "md5.hpp"
 #include "sha1.hpp"
 
-namespace util { namespace hash {
+namespace util::hash {
     template class HMAC<MD5>;
     template class HMAC<SHA1>;
-} }
+}

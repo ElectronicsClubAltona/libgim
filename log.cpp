@@ -20,10 +20,8 @@
 #include "debug.hpp"
 #include "term.hpp"
 #include "time.hpp"
-#include "types.hpp"
 #include "cast.hpp"
 
-#include <array>
 #include <cstring>
 #include <ctime>
 #include <iomanip>

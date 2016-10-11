@@ -16,10 +16,6 @@
  */
 
 #include <iostream>
-#include <fstream>
-#include <vector>
-#include <iterator>
-
 #include <cstdlib>
 #include <cstring>
 
@@ -30,7 +26,6 @@
 #include "hash/adler.hpp"
 #include "hash/bsdsum.cpp"
 #include "hash/crc.hpp"
-#include "hash/fletcher.hpp"
 #include "hash/md2.hpp"
 #include "hash/md4.hpp"
 #include "hash/md5.hpp"
@@ -45,7 +40,6 @@ const char* NAMES[] = {
     "adler32",
     "bsdsum",
     "crc32",
-    "fletcher"
     "MD2",
     "MD4",
     "MD5",

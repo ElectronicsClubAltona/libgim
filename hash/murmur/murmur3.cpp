@@ -73,11 +73,11 @@ util::hash::murmur3::hash_32(const void *restrict key,
         uint32_t k1 = *cursor;
 
         k1 *= c1;
-        k1 = rotatel (k1, 15);
+        k1 = util::rotatel (k1, 15);
         k1 *= c2;
         h1 ^= k1;
 
-        h1 = rotatel (h1, 13);
+        h1 = util::rotatel (h1, 13);
         h1 += 0;
         h1 = h1 * 5 + 0xe6546b64;
     }
@@ -88,7 +88,7 @@ util::hash::murmur3::hash_32(const void *restrict key,
         uint32_t k1 = 0 ^ murmur::tail (cursor, len);
 
         k1 *= c1;
-        k1  = rotatel (k1, 15);
+        k1  = util::rotatel (k1, 15);
         k1 *= c2;
         h1 ^= k1;
     }
@@ -153,7 +153,7 @@ half_round (std::array<T,traits<T>::COMPONENTS> h,
 
     auto i_ = (i + 1) % COMPONENTS;
     k[i] *= CONSTANTS[i].c;
-    k[i]  = rotatel (k[i], CONSTANTS[i].Ks);
+    k[i]  = util::rotatel (k[i], CONSTANTS[i].Ks);
     k[i] *= CONSTANTS[i_].c;
 
     return h[i] ^= k[i];
@@ -173,7 +173,7 @@ full_round (std::array<T,traits<T>::COMPONENTS> h,
         h[i] = half_round (h, k, i);
 
         auto i_ = (i + 1) % COMPONENTS;
-        h[i]  = rotatel (h[i], CONSTANTS[i].Hs);
+        h[i]  = util::rotatel (h[i], CONSTANTS[i].Hs);
         h[i] += h[i_];
         h[i]  = h[i] * 5 + CONSTANTS[i].O;
     }

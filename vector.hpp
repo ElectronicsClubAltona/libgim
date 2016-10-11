@@ -17,11 +17,8 @@
 #ifndef __UTIL_VECTOR_HPP
 #define __UTIL_VECTOR_HPP
 
-#include "json/tree.hpp"
 #include "coord.hpp"
-
-#include <array>
-#include <initializer_list>
+#include "json/fwd.hpp"
 
 namespace util {
     template <size_t S, typename T>

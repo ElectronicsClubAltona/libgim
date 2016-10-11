@@ -18,8 +18,6 @@
 #define __UTIL_TAP_HPP
 
 #include <functional>
-#include <vector>
-#include <initializer_list>
 
 namespace util { namespace TAP {
     /// A simple TAP (Test Anything Protocol) test case output

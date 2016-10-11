@@ -23,11 +23,9 @@
 #include "./cast.hpp"
 
 #include <sstream>
-#include <iomanip>
 #include <cstdio>
 #include <cstdlib>
 #include <execinfo.h>
-#include <algorithm>
 #include <memory>
 
 

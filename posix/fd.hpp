@@ -17,8 +17,6 @@
 #ifndef __CRUFT_UTIL_POSIX_FD_HPP
 #define __CRUFT_UTIL_POSIX_FD_HPP
 
-#include <string>
-
 #include <sys/types.h>
 #include <sys/stat.h>
 

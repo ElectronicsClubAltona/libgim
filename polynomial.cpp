@@ -21,7 +21,6 @@
 
 #include <limits>
 #include <cmath>
-#include <iostream>
 
 static const size_t NEWTON_ITERATIONS = 1u;
 

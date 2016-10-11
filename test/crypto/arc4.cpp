@@ -2,6 +2,7 @@
 #include "tap.hpp"
 #include "types.hpp"
 
+#include <vector>
 
 int
 main ()

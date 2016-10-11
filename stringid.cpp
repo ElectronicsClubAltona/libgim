@@ -16,8 +16,6 @@
 
 #include "stringid.hpp"
 
-#include "raii.hpp"
-
 #include <stdexcept>
 #include <mutex>
 

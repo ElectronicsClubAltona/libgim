@@ -19,6 +19,7 @@
 #endif
 
 #include "debug.hpp"
+#include "nocopy.hpp"
 
 #include <algorithm>
 

@@ -20,7 +20,6 @@
 #include "./except.hpp"
 #include "./flat.hpp"
 
-#include "../cast.hpp"
 #include "../debug.hpp"
 #include "../io.hpp"
 #include "../maths.hpp"
@@ -28,15 +27,7 @@
 
 #include <algorithm>
 #include <cstdlib>
-#include <deque>
 #include <iomanip>
-#include <stdexcept>
-
-#include <fcntl.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-
 
 using json::tree::node;
 using json::tree::object;

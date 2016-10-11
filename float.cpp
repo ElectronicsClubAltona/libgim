@@ -19,6 +19,8 @@
 
 #include <cmath>
 
+using util::ieee_float;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 template <unsigned int E, unsigned int S>
@@ -155,6 +157,6 @@ ieee_float<E, S>::almost_equal (floating_t _a,
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template class ieee_float< 5,  10>; // ieee_half
-template class ieee_float< 8,  23>; // ieee_single;
-template class ieee_float<11,  52>; // ieee_double;
+template class util::ieee_float< 5,  10>; // ieee_half
+template class util::ieee_float< 8,  23>; // ieee_single;
+template class util::ieee_float<11,  52>; // ieee_double;

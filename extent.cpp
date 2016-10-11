@@ -18,7 +18,6 @@
 
 #include "./debug.hpp"
 #include "./maths.hpp"
-#include "./stream.hpp"
 
 #include <algorithm>
 #include <numeric>

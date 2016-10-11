@@ -23,8 +23,6 @@
 #include "../../raii.hpp"
 #include "../../random.hpp"
 
-#include <cstring>
-#include <cstdio>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <fcntl.h>

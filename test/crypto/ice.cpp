@@ -28,7 +28,7 @@ main (int, char**)
 
     for (const auto &t: TESTS) {
         std::vector<uint64_t> k (t.key.cbegin (), t.key.cend ());
-        std::transform (k.cbegin (), k.cend (), k.begin (), hton<uint64_t>);
+        std::transform (k.cbegin (), k.cend (), k.begin (), util::hton<uint64_t>);
 
         ice key (t.level, k.data (), k.data () + k.size ());
 

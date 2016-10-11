@@ -17,7 +17,7 @@
 #ifndef __UTIL_EXTENT_HPP
 #define __UTIL_EXTENT_HPP
 
-#include "coord.hpp"
+#include "coord/base.hpp"
 #include "vector.hpp"
 #include "point.hpp"
 

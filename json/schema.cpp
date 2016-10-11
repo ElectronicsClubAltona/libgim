@@ -19,7 +19,6 @@
 #include "./tree.hpp"
 #include "./except.hpp"
 
-#include "../debug.hpp"
 #include "../io.hpp"
 #include "../maths.hpp"
 

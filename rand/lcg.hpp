@@ -17,7 +17,8 @@
 #ifndef __UTIL_RAND_LCG_HPP
 #define __UTIL_RAND_LCG_HPP
 
-#include "../maths.hpp"
+#include <cstdint>
+#include <type_traits>
 
 
 namespace util { namespace rand {

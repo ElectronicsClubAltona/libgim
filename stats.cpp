@@ -16,7 +16,6 @@
 
 #include "stats.hpp"
 
-#include <cmath>
 #include <limits>
 
 

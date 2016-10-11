@@ -15,10 +15,9 @@
  */
 
 #include "./except.hpp"
+
 #include "./debug.hpp"
 #include "./platform.hpp"
-#include "./cast.hpp"
-#include "./types.hpp"
 
 #include <cstring>
 #include <cerrno>

@@ -20,7 +20,7 @@
 
 #include <functional>
 #include <memory>
-#include <stdexcept>
+#include <exception>
 #include <string>
 #include <tuple>
 #include <vector>
