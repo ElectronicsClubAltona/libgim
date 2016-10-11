@@ -118,6 +118,17 @@ fd::write (const void *buffer, size_t count)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+off_t
+fd::lseek (off_t offset, int whence)
+{
+    auto res = ::lseek (m_fd, offset, whence);
+    if (res == -1)
+        errno_error::throw_code ();
+    return res;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 fd::operator int (void) const
 {
     return m_fd;

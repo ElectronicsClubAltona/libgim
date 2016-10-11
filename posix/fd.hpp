@@ -57,6 +57,9 @@ namespace util::posix {
         ssize_t read  (      void *buf, size_t count);
         ssize_t write (const void *buf, size_t count);
 
+        //---------------------------------------------------------------------
+        off_t lseek (off_t offset, int whence);
+
         ///////////////////////////////////////////////////////////////////////
         operator int (void) const;
 
