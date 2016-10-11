@@ -261,16 +261,19 @@ template <size_t S, typename T>
 matrix4<T>
 matrix<S,T>::perspective (T fov, T aspect, range<T> Z)
 {
-    T f = std::tan (fov / 2);
+    CHECK_GE (Z.min, 0);
+    CHECK_GE (Z.max, 0);
 
-    T tx = 1 / (f * aspect);
-    T ty = 1 / f;
+    T f = 1 / std::tan (fov / 2);
+
+    T  x = f / aspect;
+    T  y = f;
     T z1 =     (Z.max + Z.min) / (Z.min - Z.max);
     T z2 = (2 * Z.max * Z.min) / (Z.min - Z.max);
 
     return { {
-        { tx,  0,  0,  0 },
-        {  0, ty,  0,  0 },
+        {  x,  0,  0,  0 },
+        {  0,  y,  0,  0 },
         {  0,  0, z1, z2 },
         {  0,  0, -1,  0 }
     } };
