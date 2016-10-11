@@ -28,13 +28,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 struct length_error : public json::schema_error {
-    using schema_error::schema_error;
+    length_error (const std::string &what):
+        schema_error (what)
+    { ; }
 };
 
 
 //-----------------------------------------------------------------------------
 struct format_error : public json::schema_error {
-    using schema_error::schema_error;
+    format_error (const std::string &what):
+        schema_error (what)
+    { ; }
 };
 
 

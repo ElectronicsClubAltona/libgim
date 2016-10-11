@@ -24,13 +24,17 @@
 namespace json {
     /// The base class for all exceptions throw directly by the json namespace.
     struct error : public std::runtime_error {
-        using runtime_error::runtime_error;
+        error (const std::string &what):
+            runtime_error (what)
+        { ; }
     };
 
 
     /// Base class for all type conversion errors
     struct type_error : public error {
-        using error::error;
+        type_error (const std::string &what):
+            error (what)
+        { ; }
     };
 
 
@@ -47,7 +51,9 @@ namespace json {
 
     /// Base class for errors thrown during schema validation
     struct schema_error : public error {
-        using error::error;
+        schema_error (const std::string &what):
+            error (what)
+        { ; }
     };
 
 

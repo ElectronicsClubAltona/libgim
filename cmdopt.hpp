@@ -115,7 +115,7 @@ namespace util { namespace cmdopt {
 
         class bytes : public value<size_t> {
         public:
-            using value<size_t>::value;
+            bytes (size_t &_value): value (_value) { }
 
             using value<size_t>::execute;
             void execute (const char *restrict) override;
