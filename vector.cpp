@@ -59,11 +59,11 @@ template <typename T>
 vector<3,T>
 util::from_euler (vector<2,T> euler)
 {
-    return {
+    return normalised (util::vector<3,T> {
          std::sin (euler.x) * std::cos (euler.y),
          std::cos (euler.x),
         -std::sin (euler.x) * std::sin (euler.y),
-    };
+    });
 }
 
 template util::vector3f util::from_euler (util::vector2f);
