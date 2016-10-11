@@ -139,7 +139,7 @@ void
 SHA1::update (const void *restrict _data, size_t size) noexcept
 {
     CHECK (_data);
-    CHECK_EQ (state, READY);
+    CHECK_EQ (+state, +READY);
     CHECK_GE (std::numeric_limits<decltype(total)>::max () - total, size);
 
     auto data = static_cast<const uint8_t *restrict> (_data);
@@ -256,7 +256,7 @@ SHA1::finish (void)
 SHA1::digest_t
 SHA1::digest (void) const
 {
-    CHECK_EQ (state, FINISHED);
+    CHECK_EQ (+state, +FINISHED);
 
     return { {
         trunc_cast<uint8_t> ((H[0] >> 24u) & 0xFF),
