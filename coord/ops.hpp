@@ -19,8 +19,9 @@
 
 #include "./fwd.hpp"
 
-#include "../preprocessor.hpp"
+#include "../debug.hpp"
 #include "../maths.hpp"
+#include "../preprocessor.hpp"
 #include "../types/bits.hpp"
 
 #include <cmath>
@@ -489,7 +490,10 @@ namespace util {
     K<S,T>
     normalised (const K<S,T> &k)
     {
-        return k / norm (k);
+        auto n = norm (k);
+        CHECK_NEZ (n);
+
+        return k / n;
     }
 
 
