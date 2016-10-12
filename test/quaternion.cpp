@@ -76,7 +76,7 @@ main (void)
         for (size_t i = 0; i < elems (ROTATIONS); ++i) {
             const auto &r = ROTATIONS[i];
 
-            auto q = quaternionf::rotation    (r.mag, r.axis).as_matrix ();
+            auto q = quaternionf::angle_axis  (r.mag, r.axis).as_matrix ();
             auto m = util::matrix4f::rotation (r.mag, r.axis);
             auto diff = util::abs (q - m);
 
@@ -87,7 +87,7 @@ main (void)
         auto m = util::matrix4f::IDENTITY;
 
         for (auto r: ROTATIONS) {
-            q = q.rotation (r.mag, r.axis) * q;
+            q = q.angle_axis (r.mag, r.axis) * q;
             m = m.rotation (r.mag, r.axis) * m;
         }
 

@@ -29,7 +29,7 @@ namespace util {
     // quaternions must be 4 elements, but we include a size parameter so it
     // fits with the generic coord infrastructure more easily.
     //
-    // specifically: 
+    // specifically:
     // large regions of base code require a template template parameter with
     // size and type arguments, which is annoying to work around for this one
     // case.
@@ -41,8 +41,11 @@ namespace util {
 
         using coord::base<S,T,::util::quaternion,::util::coord::wxyz,::util::coord::abcd>::base;
 
-        static quaternion rotation (T radians, vector<3,T> axis);
-        static quaternion rotation (vector<3,T> src, vector<3,T> dst);
+        static quaternion angle_axis (T radians, vector<3,T> axis);
+        static quaternion from_euler (vector<3,T>);
+
+        static quaternion from_to (vector<3,T>, vector<3,T>);
+        static quaternion look (vector<3,T> fwd, vector<3,T> up);
 
         matrix4<T> as_matrix (void) const;
 
@@ -61,7 +64,12 @@ namespace util {
     quaternion<S,T>
     operator/ (const quaternion<S,T>, const quaternion<S,T>);
 
-    typedef quaternion<4,float> quaternionf;
+    typedef quaternion<4,float>  quaternionf;
+    typedef quaternion<4,double> quaterniond;
+
+    template <typename T>
+    vector3<T>
+    rotate (vector3<T>, quaternion<4,T>);
 
     template <size_t S, typename T>
     std::ostream&

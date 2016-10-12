@@ -192,9 +192,9 @@ main (void)
             constexpr auto PI2 = 2 * util::PI<float>;
 
             auto matrix = (
-                util::quaternionf::rotation (t.euler[2], { 0, 0, 1 }) *
-                util::quaternionf::rotation (t.euler[1], { 0, 1, 0 }) *
-                util::quaternionf::rotation (t.euler[0], { 1, 0, 0 })
+                util::quaternionf::angle_axis (t.euler[2], { 0, 0, 1 }) *
+                util::quaternionf::angle_axis (t.euler[1], { 0, 1, 0 }) *
+                util::quaternionf::angle_axis (t.euler[0], { 1, 0, 0 })
             ).as_matrix ();
 
             auto euler = to_euler (matrix);
