@@ -7,6 +7,40 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 void
+test_matrix_identities (util::TAP::logger &tap)
+{
+    static constexpr util::vector3f UP {0,1,0};
+
+    {
+        util::point3f p { 1, 2, 3 };
+
+        auto m = util::matrix4f::translation (0-p);
+        auto x = m * p.homog<4> ();
+        tap.expect_eq (x, util::point4f {0,0,0,1}, "trivial translation");
+    }
+
+    {
+        util::point3f eye { 1, 2, 3 };
+        util::point3f tgt { 0, 0, 0 };
+
+        auto m = util::matrix4f::look_at (eye, tgt, UP);
+        auto x = m * eye.homog<4> ();
+        tap.expect_eq (x, util::point4f {0,0,0,1}, "look_at eye translation");
+    }
+
+    {
+        util::point3f eye { 1, 2, 3 };
+        util::point3f tgt { 4, 5, 6 };
+
+        auto m = util::matrix4f::look_at (eye, tgt, UP);
+        auto x = m * eye.homog<4> ();
+        tap.expect_eq (x, util::point4f {0,0,0,1}, "look_at eye translation with target");
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+void
 test_mq_axis (util::TAP::logger &tap)
 {
     static const struct {
@@ -66,6 +100,7 @@ main (int, char**)
 {
     util::TAP::logger tap;
 
+    test_matrix_identities (tap);
     test_mq_axis  (tap);
     test_mq_euler (tap);
 

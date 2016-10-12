@@ -301,7 +301,7 @@ matrix<S,T>::look_at (util::point<3,T> eye,
         { 0, 0, 0, 1 }
     }};
 
-    return util::matrix4<T>::translation (-eye.template as<vector> ()) * rot;
+    return rot * util::matrix4<T>::translation (-eye.template as<vector> ());
 }
 
 
