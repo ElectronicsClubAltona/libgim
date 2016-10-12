@@ -2,6 +2,8 @@
 
 #include "tap.hpp"
 #include "types.hpp"
+#include "maths.hpp"
+#include "coord/iostream.hpp"
 
 using util::quaternion;
 using util::quaternionf;
@@ -13,6 +15,7 @@ main (void)
 {
     util::TAP::logger tap;
 
+    // identity relations
     tap.expect_eq (
         norm (quaternionf::IDENTITY), 1.f,
         "identity magnitude is unit"
@@ -24,6 +27,7 @@ main (void)
         "identity multiplication with identity"
     );
 
+    // normalisation
     {
         auto val = normalised (quaternionf (2, 3, 4, 7));
 
@@ -63,6 +67,9 @@ main (void)
         "identity quaternion to matrix"
     );
 
+
+    // check that concatenated transforms are identical to their matrix
+    // equivalent (which we are more likely to have correct).
     {
         static const struct {
             float mag;
@@ -93,6 +100,33 @@ main (void)
 
         auto diff = util::abs (q.as_matrix () - m);
         tap.expect_lt (util::sum (diff), 1e-6f, "chained single axis rotations");
+    }
+
+    // ensure vector rotation quaternions actually rotate a vector
+    {
+        const struct {
+            util::vector3f src;
+            util::vector3f dst;
+            const char *msg;
+        } TESTS[] = {
+            { {  1,  0,  0 }, {  1,  0,  0 }, "x-axis identity" },
+            { {  0,  1,  0 }, {  0,  1,  0 }, "y-axis identity" },
+            { {  0,  0,  1 }, {  0,  0,  1 }, "z-axis identity" },
+            { {  0,  0,  1 }, {  0,  0, -1 }, "+z to -z" },
+            { {  0,  0,  1 }, { -1,  0,  0 }, "+z to -x" },
+            { {  1, -2,  3 }, { -4,  5, -6 }, "incremental" },
+        };
+
+        for (const auto &t: TESTS) {
+            auto src = normalised (t.src);
+            auto dst = normalised (t.dst);
+
+            auto q = quaternionf::from_to (src, dst);
+            auto v = rotate (src, q);
+
+            auto diff = std::abs (util::sum (dst - v));
+            tap.expect_lt (diff, 1e-06f, "quaternion from-to, %s", t.msg);
+        }
     }
 
     return tap.status ();
