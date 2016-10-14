@@ -287,6 +287,7 @@ POSIX_FILES = 			\
     io_posix.ipp		\
     library_posix.hpp		\
     library_posix.cpp		\
+    posix/fwd.hpp		\
     posix/dir.cpp		\
     posix/dir.hpp		\
     posix/dir.ipp		\
