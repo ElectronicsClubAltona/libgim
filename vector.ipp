@@ -32,3 +32,17 @@ util::vector<S,T>::homog (void) const
     static_assert (D > S, "reducing size loses data");
     return (*this).template redim<D> (0.f);
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+constexpr
+util::vector<3,T>
+util::cross (util::vector<3,T> a, util::vector<3,T> b)
+{
+    return {
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    };
+}

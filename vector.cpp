@@ -85,23 +85,6 @@ template util::vector2f util::to_euler (util::vector3f);
 template util::vector2d util::to_euler (util::vector3d);
 
 
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-vector<3,T>
-util::cross (vector<3,T> a,
-             vector<3,T> b)
-{
-    return util::vector<3,T> {
-        a.y * b.z - a.z * b.y,
-        a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x
-    };
-}
-
-template vector3f util::cross(vector3f, vector3f);
-template vector3d util::cross(vector3d, vector3d);
-
-
 //-----------------------------------------------------------------------------
 template <typename T>
 vector<3,T>

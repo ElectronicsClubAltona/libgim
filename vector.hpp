@@ -36,11 +36,15 @@ namespace util {
         void sanity (void) const;
     };
 
+    template <typename T>
+    constexpr
+    vector<3,T>
+    cross (vector<3,T>, vector<3,T>);
+
     // polar/cartesian conversions; assumes (mag, angle) form.
     template <typename T> vector<2,T> polar_to_cartesian (vector<2,T>);
     template <typename T> vector<2,T> cartesian_to_polar (vector<2,T>);
 
-    template <typename T> vector<3,T> cross (vector<3,T>, vector<3,T>);
     template <typename T> vector<3,T> spherical_to_cartesian (vector<3,T>);
     template <typename T> vector<3,T> cartesian_to_spherical (vector<3,T>);
 
