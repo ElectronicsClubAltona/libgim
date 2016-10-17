@@ -4,6 +4,7 @@
 #include "matrix.hpp"
 #include "quaternion.hpp"
 
+#include "coord/iostream.hpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 void
@@ -16,7 +17,17 @@ test_matrix_identities (util::TAP::logger &tap)
 
         auto m = util::matrix4f::translation (0-p);
         auto x = m * p.homog<4> ();
-        tap.expect_eq (x, util::point4f {0,0,0,1}, "trivial translation");
+        tap.expect_eq (x, util::point4f {0,0,0,1}, "trivial translation to origin");
+    }
+
+    {
+        util::point3f p {0};
+        auto m = util::matrix4f::rotation (1, { 1, 0, 0 }) *
+                 util::matrix4f::rotation (1, { 0, 1, 0 }) *
+                 util::matrix4f::rotation (1, { 0, 0, 1 });
+        auto x = m * p.homog<4> ();
+
+        tap.expect_eq (x, util::point4f {0,0,0,1}, "trivial rotation at origin");
     }
 
     {
