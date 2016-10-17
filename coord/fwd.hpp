@@ -21,7 +21,6 @@ namespace util {
     template <size_t,typename> struct colour;
     template <size_t,typename> struct extent;
     template <size_t,typename> struct point;
-    template <size_t,typename> struct quaternion;
     template <size_t,typename> struct vector;
 }
 

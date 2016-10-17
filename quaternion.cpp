@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -22,19 +22,15 @@
 
 #include <cmath>
 
-//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 using util::quaternion;
 
 
-//-----------------------------------------------------------------------------
-template<> const quaternion<4,  float> quaternion<4,  float>::IDENTITY = { 1, 0, 0, 0 };
-template<> const quaternion<4, double> quaternion<4, double>::IDENTITY = { 1, 0, 0, 0 };
-
-
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-quaternion<S,T>
-quaternion<S,T>::angle_axis (const T radians, const vector<3,T> axis)
+template <typename T>
+quaternion<T>
+quaternion<T>::angle_axis (const T radians, const vector<3,T> axis)
 {
     CHECK (is_normalised (axis));
 
@@ -48,9 +44,9 @@ quaternion<S,T>::angle_axis (const T radians, const vector<3,T> axis)
 
 
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
-quaternion<S,T>
-quaternion<S,T>::from_euler (vector<3,T> angles)
+template <typename T>
+quaternion<T>
+quaternion<T>::from_euler (vector<3,T> angles)
 {
     auto half = angles / 2;
 
@@ -69,9 +65,9 @@ quaternion<S,T>::from_euler (vector<3,T> angles)
 ///////////////////////////////////////////////////////////////////////////////
 // vector-to-vector rotation algorithm from:
 //     http://lolengine.net/blog/2014/02/24/quaternion-from-two-vectors-final
-template <size_t S, typename T>
-quaternion<S,T>
-quaternion<S,T>::from_to (const vector<3,T> u, const vector<3,T> v)
+template <typename T>
+quaternion<T>
+quaternion<T>::from_to (const vector<3,T> u, const vector<3,T> v)
 {
     CHECK (is_normalised (u));
     CHECK (is_normalised (v));
@@ -103,28 +99,24 @@ quaternion<S,T>::from_to (const vector<3,T> u, const vector<3,T> v)
         w = cross(u, v);
     }
 
-    return normalised (util::quaternion<4,T> (real_part, w.x, w.y, w.z));
+    return normalised (util::quaternion<T> {real_part, w.x, w.y, w.z});
 #endif
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-quaternion<4,T>
-util::conjugate (quaternion<4,T> q)
+quaternion<T>
+util::conjugate (quaternion<T> q)
 {
     return { q.w, -q.x, -q.y, -q.z };
 }
 
 
-//-----------------------------------------------------------------------------
-template quaternion<4,float> util::conjugate (quaternion<4,float>);
-
-
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-quaternion<S,T>
-util::operator* (const quaternion<S,T> a, const quaternion<S,T> b)
+template <typename T>
+quaternion<T>
+util::operator* (const quaternion<T> a, const quaternion<T> b)
 {
     return {
         a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z,
@@ -134,18 +126,16 @@ util::operator* (const quaternion<S,T> a, const quaternion<S,T> b)
     };
 }
 
-template quaternion<4,float> util::operator* (quaternion<4,float>, quaternion<4,float>);
-
 
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
-quaternion<S,T>
-util::operator/ (const quaternion<S,T> a, const quaternion<S,T> b)
+template <typename T>
+quaternion<T>
+util::operator/ (const quaternion<T> a, const quaternion<T> b)
 {
     CHECK (is_normalised (a));
     CHECK (is_normalised (b));
 
-    return quaternion<S,T> {
+    return quaternion<T> {
           a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z,
         - a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
         - a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
@@ -153,13 +143,11 @@ util::operator/ (const quaternion<S,T> a, const quaternion<S,T> b)
     };
 }
 
-template quaternion<4,float> util::operator/ (quaternion<4,float>, quaternion<4,float>);
-
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
+template <typename T>
 util::matrix4<T>
-quaternion<S, T>::as_matrix (void) const
+quaternion<T>::as_matrix (void) const
 {
     CHECK (is_normalised (*this));
 
@@ -180,13 +168,13 @@ quaternion<S, T>::as_matrix (void) const
 // https://gamedev.stackexchange.com/questions/28395/rotating-vector3-by-a-quaternion
 template <typename T>
 util::vector3<T>
-util::rotate (vector3<T> v, quaternion<4,T> q)
+util::rotate (vector3<T> v, quaternion<T> q)
 {
     CHECK (is_normalised (v));
 
 #if 0
     // Naive:
-    quaternion<4,T> p { 0, v.x, v.y, v.z };
+    quaternion<T> p { 0, v.x, v.y, v.z };
     auto p_ = q * p * conjugate (q);
     return { p_.x, p_.y, p_.z };
 #else
@@ -196,17 +184,12 @@ util::rotate (vector3<T> v, quaternion<4,T> q)
 }
 
 
-//-----------------------------------------------------------------------------
-template util::vector3f util::rotate (util::vector3f, util::quaternionf);
-template util::vector3d util::rotate (util::vector3d, util::quaterniond);
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // based on the implementation at:
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/
-template <size_t S, typename T>
-quaternion<S,T>
-quaternion<S,T>::look (vector<3,T> fwd, vector<3,T> up)
+template <typename T>
+quaternion<T>
+quaternion<T>::look (vector<3,T> fwd, vector<3,T> up)
 {
     CHECK (is_normalised (fwd));
     CHECK (is_normalised (up));
@@ -232,36 +215,50 @@ quaternion<S,T>::look (vector<3,T> fwd, vector<3,T> up)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
+template <typename T>
+bool
+util::almost_equal (quaternion<T> a, quaternion<T> b)
+{
+    return almost_equal (a.w, b.w) &&
+           almost_equal (a.x, b.x) &&
+           almost_equal (a.y, b.y) &&
+           almost_equal (a.z, b.z);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
 std::ostream&
-util::operator<< (std::ostream &os, const quaternion<S,T> q)
+util::operator<< (std::ostream &os, const quaternion<T> q)
 {
     return os << "[" << q.w << ", " << q.x << ", " << q.y << ", " << q.z << "]";
 }
 
 
-//-----------------------------------------------------------------------------
-template std::ostream& util::operator<< (std::ostream&, quaternion<4,float>);
-template std::ostream& util::operator<< (std::ostream&, quaternion<4,double>);
-
-
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace debug {
-    template <size_t S, typename T>
-    struct validator<quaternion<S,T>> {
-        static bool is_valid (const quaternion<S,T> &q)
+namespace util::debug {
+    template <typename T>
+    struct validator<quaternion<T>> {
+        static constexpr
+        bool
+        is_valid (const quaternion<T> &q)
         {
             return is_normalised (q);
         }
     };
-} }
-
-
-//-----------------------------------------------------------------------------
-template bool util::debug::is_valid(const quaternion<4,float>&);
-template bool util::debug::is_valid(const quaternion<4,double>&);
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template struct util::quaternion<4,float>;
-template struct util::quaternion<4,double>;
+#define INSTANTIATE(T)                                                          \
+template util::vector3<T> util::rotate (util::vector3<T>, util::quaternion<T>);   \
+template quaternion<T> util::conjugate (quaternion<T>);                         \
+template quaternion<T> util::operator* (quaternion<T>, quaternion<T>);          \
+template quaternion<T> util::operator/ (quaternion<T>, quaternion<T>);          \
+template bool util::almost_equal (util::quaternion<T>, util::quaternion<T>);    \
+template std::ostream& util::operator<< (std::ostream&, quaternion<T>);         \
+template bool util::debug::is_valid(const quaternion<T>&);                      \
+template struct util::quaternion<T>;
+
+INSTANTIATE(float)
+INSTANTIATE(double)

@@ -206,6 +206,7 @@ UTIL_FILES   =			\
     preprocessor.hpp		\
     quaternion.cpp		\
     quaternion.hpp		\
+    quaternion.ipp		\
     raii.hpp			\
     rand/lcg.cpp		\
     rand/lcg.hpp		\

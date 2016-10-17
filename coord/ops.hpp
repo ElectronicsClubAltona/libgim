@@ -58,7 +58,6 @@ namespace util {
         struct has_norm : public std::false_type { };
 
         template <> struct has_norm<vector>     : public std::true_type { };
-        template <> struct has_norm<quaternion> : public std::true_type { };
 
         template <template <size_t,typename> class K>
         constexpr auto has_norm_v = has_norm<K>::value;
@@ -71,7 +70,6 @@ namespace util {
         template <> struct has_scalar_op<colour>     : public std::true_type { };
         template <> struct has_scalar_op<extent>     : public std::true_type { };
         template <> struct has_scalar_op<point>      : public std::true_type { };
-        template <> struct has_scalar_op<quaternion> : public std::true_type { };
         template <> struct has_scalar_op<vector>     : public std::true_type { };
 
         template <template <size_t,typename> class K>
@@ -84,7 +82,6 @@ namespace util {
     template <size_t S, typename T> struct is_coord<extent<S,T>>     : std::true_type { };
     template <size_t S, typename T> struct is_coord<vector<S,T>>     : std::true_type { };
     template <size_t S, typename T> struct is_coord<colour<S,T>>     : std::true_type { };
-    template <size_t S, typename T> struct is_coord<quaternion<S,T>> : std::true_type { };
 
     template <class K>
     constexpr bool

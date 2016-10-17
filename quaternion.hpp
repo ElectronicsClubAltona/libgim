@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_QUATERNION_HPP
@@ -26,20 +26,17 @@
 
 
 namespace util {
-    // quaternions must be 4 elements, but we include a size parameter so it
-    // fits with the generic coord infrastructure more easily.
+    // quaternion's are _just_ different enough to other coord types that we
+    // special case as a distinct POD type and provide many of the same
+    // functions as distinct declarations.
     //
-    // specifically:
-    // large regions of base code require a template template parameter with
-    // size and type arguments, which is annoying to work around for this one
-    // case.
-    //
-    // we protect against invalid instantiations through static_assert
-    template <size_t S, typename T>
-    struct quaternion : public coord::base<4,T,quaternion,coord::wxyz,coord::abcd> {
-        static_assert (S == 4, "quaternions must be 4 elements");
-
-        using coord::base<S,T,::util::quaternion,::util::coord::wxyz,::util::coord::abcd>::base;
+    // issues include:
+    // * strictly 4 dimensions
+    // * scalar operations sometimes don't make sense on the w component
+    // * objects must be normalised to make sense
+    template <typename T>
+    struct quaternion {
+        T w, x, y, z;
 
         static quaternion angle_axis (T radians, vector<3,T> axis);
         static quaternion from_euler (vector<3,T>);
@@ -49,32 +46,81 @@ namespace util {
 
         matrix4<T> as_matrix (void) const;
 
-        static const quaternion IDENTITY;
+        static constexpr quaternion<T> identity (void);
     };
 
-    template <typename T>
-    quaternion<4,T>
-    conjugate (quaternion<4,T>);
 
-    template <size_t S, typename T>
-    quaternion<S,T>
-    operator* (const quaternion<S,T>, const quaternion<S,T>);
-
-    template <size_t S, typename T>
-    quaternion<S,T>
-    operator/ (const quaternion<S,T>, const quaternion<S,T>);
-
-    typedef quaternion<4,float>  quaternionf;
-    typedef quaternion<4,double> quaterniond;
-
+    ///////////////////////////////////////////////////////////////////////////
     template <typename T>
     vector3<T>
-    rotate (vector3<T>, quaternion<4,T>);
+    rotate (vector3<T>, quaternion<T>);
 
-    template <size_t S, typename T>
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    constexpr
+    T
+    norm2 (quaternion<T>);
+
+    template <typename T>
+    constexpr
+    T
+    norm (quaternion<T>);
+
+    template <typename T>
+    constexpr
+    bool
+    is_normalised (quaternion<T>);
+
+    template <typename T>
+    constexpr
+    quaternion<T>
+    normalised (quaternion<T>);
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    quaternion<T>
+    conjugate (quaternion<T>);
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    quaternion<T>
+    operator* (quaternion<T>, quaternion<T>);
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    quaternion<T>
+    operator/ (quaternion<T>, quaternion<T>);
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    constexpr
+    quaternion<T>
+    operator/ (quaternion<T>, T);
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    constexpr
+    bool operator== (quaternion<T>, quaternion<T>);
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    bool almost_equal (quaternion<T>, quaternion<T>);
+
+    ///////////////////////////////////////////////////////////////////////////
+    typedef quaternion<float>  quaternionf;
+    typedef quaternion<double> quaterniond;
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
     std::ostream&
-    operator<< (std::ostream&, quaternion<S,T>);
+    operator<< (std::ostream&, quaternion<T>);
 }
 
+#include "./quaternion.ipp"
 
 #endif

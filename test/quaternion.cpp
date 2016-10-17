@@ -17,22 +17,22 @@ main (void)
 
     // identity relations
     tap.expect_eq (
-        norm (quaternionf::IDENTITY), 1.f,
+        norm (quaternionf::identity ()), 1.f,
         "identity magnitude is unit"
     );
 
     tap.expect_eq (
-        quaternionf::IDENTITY * quaternionf::IDENTITY,
-        quaternionf::IDENTITY,
+        quaternionf::identity () * quaternionf::identity (),
+        quaternionf::identity (),
         "identity multiplication with identity"
     );
 
     // normalisation
     {
-        auto val = normalised (quaternionf (2, 3, 4, 7));
+        auto val = normalised (quaternionf {2, 3, 4, 7});
 
         tap.expect_eq (
-            val * quaternionf::IDENTITY,
+            val * quaternionf::identity (),
             val,
             "identity multiplication with quaternion constant"
         );
@@ -47,9 +47,11 @@ main (void)
         // towards rotations than general maths).
         util::vector4f a_v { 2, -11,  5, -17};
         util::vector4f b_v { 3,  13, -7, -19};
+        a_v = normalised (a_v);
+        b_v = normalised (b_v);
 
-        auto a = normalised (a_v).as<quaternion> ();
-        auto b = normalised (b_v).as<quaternion> ();
+        auto a = quaternionf { a_v[0], a_v[1], a_v[2], a_v[3] };
+        auto b = quaternionf { b_v[0], b_v[1], b_v[2], b_v[3] };
         auto c = quaternionf {
             -0.27358657116960006f,
             -0.43498209092420004f,
@@ -62,7 +64,7 @@ main (void)
     }
 
     tap.expect_eq (
-        quaternionf::IDENTITY.as_matrix (),
+        quaternionf::identity ().as_matrix (),
         util::matrix4f::IDENTITY,
         "identity quaternion to matrix"
     );
@@ -90,7 +92,7 @@ main (void)
             tap.expect_lt (util::sum (diff), 1e-6f, "single basis rotation %zu", i);
         }
 
-        auto q = quaternionf::IDENTITY;
+        auto q = quaternionf::identity ();
         auto m = util::matrix4f::IDENTITY;
 
         for (auto r: ROTATIONS) {
