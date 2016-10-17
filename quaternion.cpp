@@ -76,6 +76,13 @@ quaternion<S,T>::from_to (const vector<3,T> u, const vector<3,T> v)
     CHECK (is_normalised (u));
     CHECK (is_normalised (v));
 
+#if 0
+    // Naive:
+    auto cos_theta = dot (u, v);
+    auto angle = std::acos (cos_theta);
+    auto axis = normalised (cross (u, v));
+    return angle_axis (angle, axis);
+#elif 1
     auto norm_u_norm_v = std::sqrt(dot(u, u) * dot(v, v));
     auto real_part = norm_u_norm_v + dot(u, v);
     util::vector<3,T> w;
@@ -97,6 +104,7 @@ quaternion<S,T>::from_to (const vector<3,T> u, const vector<3,T> v)
     }
 
     return normalised (util::quaternion<4,T> (real_part, w.x, w.y, w.z));
+#endif
 }
 
 
