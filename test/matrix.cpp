@@ -48,7 +48,7 @@ main (void)
     {
         // Identity matrix-vector multiplication
         auto v = util::vector4f { 1.f, 2.f, 3.f, 4.f };
-        auto r = util::matrix4f::IDENTITY * v;
+        auto r = util::matrix4f::identity () * v;
         tap.expect_eq (r, v, "identity matrix-vector multiplication");
     }
 
@@ -101,7 +101,7 @@ main (void)
         bool success = true;
 
         // Ensure identity inverts to identity
-        auto m = util::matrix4f::IDENTITY.inverse ();
+        auto m = util::matrix4f::identity ().inverse ();
         for (size_t r = 0; r < m.rows; ++r)
             for (size_t c = 0; c < m.cols; ++c)
                 if (r == c)

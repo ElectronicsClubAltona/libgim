@@ -186,6 +186,29 @@ MATRIX_SCALAR_OP(-)
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 constexpr
+util::matrix<S,T>
+util::matrix<S,T>::zeroes (void)
+{
+    return {0};
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+util::matrix<S,T>
+util::matrix<S,T>::identity (void)
+{
+    auto m = zeroes ();
+    for (size_t i = 0; i < S; ++i)
+        m[i][i] = 1;
+    return m;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
 bool
 util::operator== (const matrix<S,T> &a, const matrix<S,T> &b)
 {

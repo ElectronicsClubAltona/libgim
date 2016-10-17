@@ -78,8 +78,8 @@ namespace util {
         static matrix<4,T> rotation    (T angle, util::vector<3,T> about);
 
         // Constant matrices
-        static const matrix IDENTITY;
-        static const matrix ZEROES;
+        static constexpr matrix identity ();
+        static constexpr matrix zeroes ();
     };
 
 

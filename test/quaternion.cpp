@@ -65,7 +65,7 @@ main (void)
 
     tap.expect_eq (
         quaternionf::identity ().as_matrix (),
-        util::matrix4f::IDENTITY,
+        util::matrix4f::identity (),
         "identity quaternion to matrix"
     );
 
@@ -93,7 +93,7 @@ main (void)
         }
 
         auto q = quaternionf::identity ();
-        auto m = util::matrix4f::IDENTITY;
+        auto m = util::matrix4f::identity ();
 
         for (auto r: ROTATIONS) {
             q = q.angle_axis (r.mag, r.axis) * q;

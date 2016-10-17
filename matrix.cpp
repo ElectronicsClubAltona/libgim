@@ -392,11 +392,6 @@ matrix<S,T>::rotation (T angle, util::vector<3,T> about)
     } };
 }
 
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-const matrix<S,T>
-matrix<S,T>::ZEROES { 0 };
-
 
 //-----------------------------------------------------------------------------
 template struct util::matrix<2,float>;

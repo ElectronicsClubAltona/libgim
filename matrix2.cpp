@@ -33,7 +33,7 @@ template float  util::determinant (const matrix<2,float>&);
 template double util::determinant (const matrix<2,double>&);
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 matrix<S,T>
 util::inverse (const matrix<S,T> &m)
@@ -46,17 +46,10 @@ util::inverse (const matrix<S,T> &m)
     } / determinant (m);
 }
 
+
+//-----------------------------------------------------------------------------
 template util::matrix<2,float>  util::inverse (const matrix<2,float>&);
 template util::matrix<2,double> util::inverse (const matrix<2,double>&);
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-const matrix<S,T>
-matrix<S,T>::IDENTITY = { {
-    { 1, 0, },
-    { 0, 1  }
-} };
 
 
 ///////////////////////////////////////////////////////////////////////////////

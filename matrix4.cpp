@@ -76,14 +76,5 @@ template util::matrix<4,double> util::inverse (const matrix<4,double>&);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-const matrix<S,T>
-matrix<S,T>::IDENTITY = { { { 1, 0, 0, 0 },
-                            { 0, 1, 0, 0 },
-                            { 0, 0, 1, 0 },
-                            { 0, 0, 0, 1 } } };
-
-
-///////////////////////////////////////////////////////////////////////////////
 template struct util::matrix<4,float>;
 template struct util::matrix<4,double>;
