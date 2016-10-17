@@ -194,6 +194,8 @@ template util::vector3d util::rotate (util::vector3d, util::quaterniond);
 
 
 ///////////////////////////////////////////////////////////////////////////////
+// based on the implementation at:
+// http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/
 template <size_t S, typename T>
 quaternion<S,T>
 quaternion<S,T>::look (vector<3,T> fwd, vector<3,T> up)
@@ -201,22 +203,23 @@ quaternion<S,T>::look (vector<3,T> fwd, vector<3,T> up)
     CHECK (is_normalised (fwd));
     CHECK (is_normalised (up));
 
-    constexpr util::vector3<T> RH_FWD { 0, 0, -1 };
-    constexpr util::vector3<T> RH_UP  { 0, 1,  0 };
+    constexpr util::vector3<T> FWD { 0, 0, -1 };
+    constexpr util::vector3<T> UP  { 0, 1, 0 };
 
-    // rotate the right-handed fwd to face the given fwd
-    auto q1 = from_to (RH_FWD, fwd);
+    // find the rotation from the world fwd to the object fwd
+    auto q1 = from_to (FWD, fwd);
 
-    // can't retain the up direction if fwd is the same as up
-    if (norm2 (cross (fwd, up)) < 1e-6)
-        return q1;
+    // orthogonalise the up vector
+    auto right = cross (fwd, up);
+    auto orthup = normalised (cross (right, fwd));
 
-    // find the right-handed up rotated to the given fwd
-    auto new_up = rotate (RH_UP, q1);
+    // recompute the up vector in object space
+    auto newup = rotate (UP, q1);
 
-    // rotate first to the new forward, then align the right handed up with
-    // the given up.
-    return from_to (new_up, up) * q1;
+    // find rotation from object up to world up
+    auto q2 = from_to (newup, orthup);
+
+    return q2 * q1;
 }
 
 
