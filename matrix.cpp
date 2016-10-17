@@ -282,26 +282,32 @@ matrix<S,T>::perspective (T fov, T aspect, range<T> Z)
 
 //-----------------------------------------------------------------------------
 // Emulates gluLookAt
+//
+// Translates the viewpoint to the origin, then rotates the world to point
+// along eye to centre (negative-Z).
+// Implemented for right handed world coordinates.
+//
+// Assumes 'up' is normalised.
 template <size_t S, typename T>
 matrix4<T>
-matrix<S,T>::look_at (util::point<3,T> eye,
-                      util::point<3,T> target,
-                      util::vector<3,T> up)
+matrix<S,T>::look_at (const util::point<3,T> eye,
+                      const util::point<3,T> centre,
+                      const util::vector<3,T> up)
 {
     CHECK (is_normalised (up));
 
-    auto forward = normalised (eye.to (target));
-    auto side    = normalised (cross (forward, up));
-    up = cross (side, forward);
+    const auto f = normalised (centre - eye);
+    const auto s = normalised (cross (f, up));
+    const auto u = cross (s, f);
 
-    auto rot = util::matrix4<T> {{
-        { side[0], up[0], -forward[0], 0 },
-        { side[1], up[1], -forward[1], 0 },
-        { side[2], up[2], -forward[2], 0 },
-        { 0, 0, 0, 1 }
+    const util::matrix4<T> rot {{
+        { s.x, s.y, s.z, 0 },
+        { u.x, u.y, u.z, 0 },
+        {-f.x,-f.y,-f.z, 0 },
+        {   0,   0,   0, 1 },
     }};
 
-    return rot * util::matrix4<T>::translation (-eye.template as<vector> ());
+    return rot * util::matrix4<T>::translation (0-eye);
 }
 
 
