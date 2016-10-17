@@ -184,14 +184,14 @@ util::rotate (vector3<T> v, quaternion<4,T> q)
 {
     CHECK (is_normalised (v));
 
-#if 1
-    util::vector3<T> u { q.x, q.y, q.z };
-    return v + 2 * cross (u, cross (u, v) + q.w * v);
-#else
-    // Verbosely:
-    quaternionf p { 0, v.x, v.y, v.z };
+#if 0
+    // Naive:
+    quaternion<4,T> p { 0, v.x, v.y, v.z };
     auto p_ = q * p * conjugate (q);
     return { p_.x, p_.y, p_.z };
+#else
+    util::vector3<T> u { q.x, q.y, q.z };
+    return v + 2 * cross (u, cross (u, v) + q.w * v);
 #endif
 }
 
