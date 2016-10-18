@@ -180,13 +180,24 @@ util::vector3<T>
 util::rotate (vector3<T> v, quaternion<T> q)
 {
     CHECK (is_normalised (v));
+    CHECK (is_normalised (q));
 
 #if 0
     // Naive:
     quaternion<T> p { 0, v.x, v.y, v.z };
     auto p_ = q * p * conjugate (q);
     return { p_.x, p_.y, p_.z };
-#else
+#elif 1
+    // This code actually matches the stackexchange link, but is longer than
+    // the code below it (which also actually works)...
+    const util::vector3<T> u { q.x, q.y, q.z };
+    const auto s = q.w;
+
+    return 2 * dot (u, v) * u
+         + (s * s - dot (u, u)) * v
+         + 2 * s * cross (u, v);
+#elif 0
+    // I have no idea where this code is from or how it was derived...
     util::vector3<T> u { q.x, q.y, q.z };
     return v + 2 * cross (u, cross (u, v) + q.w * v);
 #endif
