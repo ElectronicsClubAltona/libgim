@@ -91,6 +91,11 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <typename T>
+    quaternion<T>&
+    operator*= (quaternion<T>&, quaternion<T>);
+
+    //-------------------------------------------------------------------------
+    template <typename T>
     quaternion<T>
     operator/ (quaternion<T>, quaternion<T>);
 

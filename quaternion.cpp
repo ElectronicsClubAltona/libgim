@@ -129,6 +129,15 @@ util::operator* (const quaternion<T> a, const quaternion<T> b)
 
 //-----------------------------------------------------------------------------
 template <typename T>
+quaternion<T>&
+util::operator*= (quaternion<T> &a, const quaternion<T> b)
+{
+    return a = a * b;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
 quaternion<T>
 util::operator/ (const quaternion<T> a, const quaternion<T> b)
 {
@@ -251,9 +260,10 @@ namespace util::debug {
 
 ///////////////////////////////////////////////////////////////////////////////
 #define INSTANTIATE(T)                                                          \
-template util::vector3<T> util::rotate (util::vector3<T>, util::quaternion<T>);   \
+template util::vector3<T> util::rotate (util::vector3<T>, util::quaternion<T>); \
 template quaternion<T> util::conjugate (quaternion<T>);                         \
 template quaternion<T> util::operator* (quaternion<T>, quaternion<T>);          \
+template quaternion<T>& util::operator*= (quaternion<T>&, quaternion<T>);       \
 template quaternion<T> util::operator/ (quaternion<T>, quaternion<T>);          \
 template bool util::almost_equal (util::quaternion<T>, util::quaternion<T>);    \
 template std::ostream& util::operator<< (std::ostream&, quaternion<T>);         \
