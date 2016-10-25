@@ -48,15 +48,18 @@ util::point<S,T>::from (point<S,T> rhs) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-void
-util::point<S,T>::sanity (void) const
-{
-    CHECK (std::all_of (this->begin (),
-                        this->end (),
-                        [] (auto i) { return !std::isnan (i); }));
+namespace util::debug  {
+    template <size_t S, typename T>
+    struct validator<point<S,T>> {
+        static bool is_valid (const point<S,T> &p)
+        {
+            // ensure we don't have a nan anywhere
+            return std::all_of (p.cbegin (), p.cend (), [] (auto i) {
+                return !(std::is_floating_point<T>::value && std::isnan (i));
+            });
+        }
+    };
 }
-
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
@@ -64,7 +67,8 @@ const util::point<S,T> util::point<S,T>::ORIGIN (T {0});
 
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)        \
-template struct util::point<S,T>;
+template struct util::point<S,T>;   \
+template bool util::debug::is_valid (const point<S,T>&);
 
 #define INSTANTIATE(T)  \
 INSTANTIATE_S_T(1,T)    \
