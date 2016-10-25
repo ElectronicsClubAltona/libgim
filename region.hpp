@@ -111,10 +111,13 @@ namespace util {
         void sanity (void) const;
     };
 
-    typedef region<2,unsigned> region2u;
-    typedef region<2,int>      region2i;
-    typedef region<2,float>    region2f;
-    typedef region<2,double>   region2d;
+    template <typename T> using region2 = region<2,T>;
+    template <typename T> using region3 = region<3,T>;
+
+    using region2u = region2<unsigned>;
+    using region2i = region2<int>;
+    using region2f = region2<float>;
+    using region2d = region2<double>;
 
     template <size_t S, typename T>
     std::ostream& operator<< (std::ostream&, const util::region<S,T>&);
