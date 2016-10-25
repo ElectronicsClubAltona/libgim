@@ -38,7 +38,7 @@ mapped_file::mapped_file (const ::util::posix::fd &src, int mflags)
     if (fstat (src, &meta) < 0)
         throw errno_error ();
 
-    m_size = (size_t)meta.st_size;
+    m_size = meta.st_size;
     m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, src, 0);
     if (m_data == MAP_FAILED)
         throw errno_error ();
@@ -54,7 +54,7 @@ mapped_file::~mapped_file ()
 
 
 //----------------------------------------------------------------------------
-size_t
+intmax_t
 mapped_file::size (void) const
 {
     return m_size;

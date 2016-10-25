@@ -40,7 +40,7 @@ namespace util {
             ~mapped_file ();
 
             bool empty (void) const;
-            size_t size (void) const;
+            intmax_t size (void) const;
 
             const uint8_t* data (void) const &;
             uint8_t*       data (void) &;
@@ -64,7 +64,7 @@ namespace util {
 
         private:
             uint8_t *m_data;
-            size_t   m_size;
+            intmax_t  m_size;
         };
     } }
 
