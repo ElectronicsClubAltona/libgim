@@ -68,6 +68,7 @@ sign_cast (const U u)
 
 
 ///----------------------------------------------------------------------------
+#if !defined(NDEBUG)
 /// assert if the value cannot be cast loslessly from U to T, else return the
 /// converted value.Note: this is only a debug-time check and is compiled out
 /// in optimised builds.
@@ -76,36 +77,40 @@ sign_cast (const U u)
 /// to preserve NaN values.
 ///
 /// allows the identity cast (if only to make cross-platform porting easier)
-template <
-    typename T,
-    typename U
->
+template <typename DstT, typename SrcT>
+constexpr
 std::enable_if_t<
-    // only enabled for builtin types. there's no reason this couldn't be
-    // extended, but we've only really tested on integers and floats.
-    std::is_fundamental<T>::value && std::is_fundamental<U>::value && (
-        // either we're casting between real and integer
-        std::is_floating_point<T>::value != std::is_floating_point<U>::value
-        // or we're reducing the size of the type
-        || sizeof (T) <= sizeof (U)
-    ),
-    T
+    std::is_arithmetic<SrcT>::value &&
+    std::is_arithmetic<DstT>::value,
+    DstT
 >
-trunc_cast (const U &u)
+trunc_cast (const SrcT src)
 {
-    auto t = static_cast<T> (u);
+    auto dst = static_cast<DstT> (src);
 
-    // if we're not a NaN then check equality by casting U-to-T-to-U. we can't
-    // explicitly check isnan because that call isn't valid for arbitrary
-    // types and we'll cause a compile-time error.
-    if (u == u)
-        CHECK_EQ  (static_cast<U> (t), u);
-    // we must be a NaN. test that t is a NaN too by self-equality.
-    else
-        CHECK_NEQ (t, t);
+    // check if we're testing a NaN by using self-equality. this will not hold
+    // for NaN, but makes specialisation easier given we don't need to special
+    // case for integers (which don't have std::isnan).
+    if (src == src) {
+        CHECK_EQ (static_cast<SrcT> (dst), src);
+    } else {
+        CHECK_NEQ (dst, dst);
+    }
 
-    return t;
+    return dst;
 }
+
+#else
+
+// in release mode we don't give a fuck what happens. cast away all safety.
+template <typename DstT, typename SrcT>
+DstT
+trunc_cast (const SrcT src)
+{
+    return static_cast<DstT> (src);
+}
+
+#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////
