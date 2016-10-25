@@ -63,7 +63,7 @@ util::region<S,T>::region (std::array<T,S*2> args)
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-typename util::region<S,T>::size_type
+T
 util::region<S,T>::area (void) const
 {
     return e.area ();
@@ -72,7 +72,7 @@ util::region<S,T>::area (void) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-typename util::region<S,T>::size_type
+T
 util::region<S,T>::diameter (void) const
 {
     return e.diameter ();
@@ -101,7 +101,7 @@ util::region<S,T>::magnitude (extent_t _e)
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 void
-util::region<S,T>::scale (size_type factor)
+util::region<S,T>::scale (T factor)
 {
     auto o = (e * factor - e) / T(2);
     p -= o;
@@ -371,8 +371,8 @@ namespace util { namespace debug {
     struct validator<util::region<S,T>> {
         static bool is_valid (const util::region<S,T> &r)
         {
-            CHECK_GE (r.area (), 0u);
-            CHECK_GE (min (r.e), 0u);
+            CHECK_GE (r.area (), T{0});
+            CHECK_GE (min (r.e), T{0});
 
             return r.area () >= 0 && min (r.e) >= 0;
         }

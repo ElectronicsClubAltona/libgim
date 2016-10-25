@@ -31,11 +31,8 @@ namespace util {
      */
     template <size_t S, typename T>
     struct region {
-        using position_type = T;
-        using size_type = typename try_unsigned<T>::type;
-
-        using extent_t = util::extent<S,size_type>;
-        using point_t  = util::point<S,position_type>;
+        using extent_t = util::extent<S,T>;
+        using point_t  = util::point<S,T>;
 
         using value_type = T;
 
@@ -66,12 +63,12 @@ namespace util {
         constexpr region<S,U> cast (void) const;
 
         //---------------------------------------------------------------------
-        size_type area     (void) const;
-        size_type diameter (void) const;
+        T area (void) const;
+        T diameter (void) const;
         extent_t magnitude (void) const;
         extent_t magnitude (extent_t);
 
-        void scale (size_type factor);
+        void scale (T factor);
 
         bool empty (void) const;
 

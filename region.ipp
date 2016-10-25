@@ -26,8 +26,8 @@ namespace util {
     region<S,T>::cast (void) const
     {
         return {
-            p.template cast<typename region<S,U>::position_type> (),
-            e.template cast<typename region<S,U>::size_type> ()
+            p.template cast<U> (),
+            e.template cast<U> ()
         };
     }
 }
