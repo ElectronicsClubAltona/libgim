@@ -86,17 +86,17 @@ namespace util {
     template <typename T> using extent2 = extent<2,T>;
     template <typename T> using extent3 = extent<3,T>;
 
-    template <size_t S> using extentu = extent<S,size_t>;
-    template <size_t S> using extenti = extent<S,intmax_t>;
+    template <size_t S> using extentu = extent<S,unsigned>;
+    template <size_t S> using extenti = extent<S,int>;
     template <size_t S> using extentf = extent<S,float>;
     template <size_t S> using extentd = extent<S,double>;
 
-    typedef extent2<intmax_t> extent2i;
-    typedef extent2<size_t> extent2u;
+    typedef extent2<int> extent2i;
+    typedef extent2<unsigned> extent2u;
     typedef extent2<float> extent2f;
     typedef extent2<double> extent2d;
 
-    typedef extent3<size_t> extent3u;
+    typedef extent3<unsigned> extent3u;
     typedef extent3<float> extent3f;
 
     template <typename T> using extent_range2 = extent_range<2,T>;

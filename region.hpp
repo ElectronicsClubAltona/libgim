@@ -122,8 +122,8 @@ namespace util {
         void sanity (void) const;
     };
 
-    typedef region<2,size_t>   region2u;
-    typedef region<2,intmax_t> region2i;
+    typedef region<2,unsigned> region2u;
+    typedef region<2,int>      region2i;
     typedef region<2,float>    region2f;
     typedef region<2,double>   region2d;
 

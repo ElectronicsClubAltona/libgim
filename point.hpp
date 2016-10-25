@@ -61,7 +61,7 @@ namespace util {
     template <typename T> using point3 = point<3,T>;
     template <typename T> using point4 = point<4,T>;
 
-    template <size_t S> using pointi = point<S,intmax_t>;
+    template <size_t S> using pointi = point<S,int>;
     template <size_t S> using pointf = point<S,float>;
 
     typedef point1<float> point1f;
@@ -73,14 +73,14 @@ namespace util {
     typedef point3<double> point3d;
     typedef point4<double> point4d;
 
-    typedef point1<size_t> point1u;
-    typedef point2<size_t> point2u;
-    typedef point3<size_t> point3u;
-    typedef point4<size_t> point4u;
+    typedef point1<unsigned> point1u;
+    typedef point2<unsigned> point2u;
+    typedef point3<unsigned> point3u;
+    typedef point4<unsigned> point4u;
 
-    typedef point2<intmax_t> point2i;
-    typedef point3<intmax_t> point3i;
-    typedef point4<intmax_t> point4i;
+    typedef point2<int> point2i;
+    typedef point3<int> point3i;
+    typedef point4<int> point4i;
 }
 
 #include <functional>

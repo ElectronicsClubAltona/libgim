@@ -61,15 +61,15 @@ namespace util {
     template <typename T> using vector3 = vector<3,T>;
     template <typename T> using vector4 = vector<4,T>;
 
-    template <size_t S> using vectoru = vector<S,uintmax_t>;
-    template <size_t S> using vectori = vector<S,intmax_t>;
+    template <size_t S> using vectoru = vector<S,unsigned>;
+    template <size_t S> using vectori = vector<S,int>;
     template <size_t S> using vectorf = vector<S,float>;
 
-    typedef vector2<size_t> vector2u;
-    typedef vector3<size_t> vector3u;
+    typedef vector2<unsigned> vector2u;
+    typedef vector3<unsigned> vector3u;
 
-    typedef vector2<intmax_t> vector2i;
-    typedef vector3<intmax_t> vector3i;
+    typedef vector2<int> vector2i;
+    typedef vector3<int> vector3i;
 
     typedef vector2<float> vector2f;
     typedef vector3<float> vector3f;
