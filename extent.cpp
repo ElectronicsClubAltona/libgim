@@ -218,15 +218,21 @@ template struct util::extent_range<1,T>;  \
 template struct util::extent_range<2,T>;  \
 template struct util::extent_range<3,T>;
 
+INSTANTIATE( int16_t)
+INSTANTIATE( int32_t)
+INSTANTIATE( int64_t)
+
 INSTANTIATE(uint16_t)
 INSTANTIATE(uint32_t)
 INSTANTIATE(uint64_t)
+
 INSTANTIATE(float)
 INSTANTIATE(double)
 
 INSTANTIATE_INT( int16_t)
 INSTANTIATE_INT( int32_t)
 INSTANTIATE_INT( int64_t)
+
 INSTANTIATE_INT(uint16_t)
 INSTANTIATE_INT(uint32_t)
 INSTANTIATE_INT(uint64_t)

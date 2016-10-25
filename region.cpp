@@ -390,8 +390,13 @@ template struct util::debug::validator<util::region<S,T>>;
 INSTANTIATE_S_T(2,T)    \
 INSTANTIATE_S_T(3,T)
 
+INSTANTIATE(int16_t);
+INSTANTIATE(int32_t);
+INSTANTIATE(int64_t);
+
 INSTANTIATE(uint16_t)
 INSTANTIATE(uint32_t)
 INSTANTIATE(uint64_t)
+
 INSTANTIATE(float)
 INSTANTIATE(double)

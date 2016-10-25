@@ -243,6 +243,8 @@ template std::ostream& util::geom::operator<< (std::ostream&, AABB<S,T>);
 INSTANTIATE_S_T(2,T)    \
 INSTANTIATE_S_T(3,T)
 
+INSTANTIATE( int32_t)
+INSTANTIATE( int64_t)
 INSTANTIATE(uint32_t)
 INSTANTIATE(uint64_t)
 INSTANTIATE(float)
