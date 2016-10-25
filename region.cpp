@@ -371,10 +371,7 @@ namespace util { namespace debug {
     struct validator<util::region<S,T>> {
         static bool is_valid (const util::region<S,T> &r)
         {
-            CHECK_GE (r.area (), T{0});
-            CHECK_GE (min (r.e), T{0});
-
-            return r.area () >= 0 && min (r.e) >= 0;
+            return util::debug::is_valid (r.p) && util::debug::is_valid (r.e);
         }
     };
 } }
