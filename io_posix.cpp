@@ -19,6 +19,7 @@
 #include "debug.hpp"
 #include "except.hpp"
 #include "posix/fd.hpp"
+#include "./cast.hpp"
 
 #include <sys/stat.h>
 
@@ -38,7 +39,7 @@ mapped_file::mapped_file (const ::util::posix::fd &src, int mflags)
     if (fstat (src, &meta) < 0)
         throw errno_error ();
 
-    m_size = meta.st_size;
+    m_size = sign_cast<size_t> (meta.st_size);
     m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, src, 0);
     if (m_data == MAP_FAILED)
         throw errno_error ();
@@ -54,7 +55,7 @@ mapped_file::~mapped_file ()
 
 
 //----------------------------------------------------------------------------
-intmax_t
+size_t
 mapped_file::size (void) const
 {
     return m_size;

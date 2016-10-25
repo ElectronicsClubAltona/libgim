@@ -40,7 +40,14 @@ namespace util {
             ~mapped_file ();
 
             bool empty (void) const;
-            intmax_t size (void) const;
+
+            /// returns the total allocated mapped region in bytes.
+            ///
+            /// result is typed size_t (rather than a signed type) because we
+            /// often use this in conjunction with sizeof and packed structure.
+            /// it is greatly simpler to cast to signed where it's actually
+            /// required rather than the other way around.
+            size_t size (void) const;
 
             const uint8_t* data (void) const &;
             uint8_t*       data (void) &;
@@ -64,7 +71,7 @@ namespace util {
 
         private:
             uint8_t *m_data;
-            intmax_t  m_size;
+            size_t   m_size;
         };
     } }
 
