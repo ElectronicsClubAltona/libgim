@@ -40,16 +40,8 @@ namespace util {
         static constexpr size_t dimension = S;
         static constexpr size_t elements = extent_t::elements + point_t::elements;
 
-        union {
-            struct {
-                point_t  p;
-                extent_t e;
-            };
-            struct {
-                T x, y;
-                T w, h;
-            };
-        };
+        point_t  p;
+        extent_t e;
 
         //---------------------------------------------------------------------
         region () = default;
