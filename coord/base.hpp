@@ -22,6 +22,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <type_traits>
 
 namespace util { namespace coord {
     /////////////////////////////////////////////////////////////////////////
@@ -32,7 +33,8 @@ namespace util { namespace coord {
         typename ...tags
     >
     struct base : public init<S,T,tags...> {
-        static_assert (S > 0, "coord dimensions must be strictly positive");
+        static_assert (S > 0);
+        static_assert (std::is_arithmetic<T>::value);
 
         using value_type = T;
         static constexpr size_t dimension = S;
