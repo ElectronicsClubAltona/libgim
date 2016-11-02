@@ -25,7 +25,7 @@ NC_WARNINGS
 
 LT_INIT
 
-AM_INIT_AUTOMAKE([1.14 dist-bzip2 dist-xz foreign subdir-objects])
+AM_INIT_AUTOMAKE([1.15 foreign dist-xz subdir-objects])
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE([enable])
 
