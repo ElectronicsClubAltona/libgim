@@ -44,7 +44,7 @@ namespace util {
         constexpr const T& cbegin (void) const noexcept;
         constexpr const T& cend   (void) const noexcept;
 
-        constexpr T find (value_type) const noexcept;
+        constexpr T find (const value_type&) const noexcept;
 
         constexpr bool empty (void) const noexcept;
         constexpr size_t size (void) const noexcept;

@@ -111,7 +111,7 @@ util::view<T>::cend (void) const noexcept
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 constexpr T
-util::view<T>::find (value_type v) const noexcept
+util::view<T>::find (const value_type &v) const noexcept
 {
    for (T i = cbegin (); i != cend (); ++i)
        if (*i == v)
