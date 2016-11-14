@@ -150,6 +150,16 @@ util::view<T>::operator[] (size_t idx) const noexcept
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
+constexpr
+typename util::view<T>::value_type&
+util::view<T>::operator[] (size_t idx) noexcept
+{
+    return m_begin[idx];
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 bool
