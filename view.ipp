@@ -27,16 +27,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-template <size_t S>
-constexpr
-util::view<T>::view (const value_type(&arr)[S]) noexcept:
-    m_begin (arr),
-    m_end   (arr + S)
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
 constexpr
 util::view<T>::view (T _begin, T _end) noexcept:
     m_begin (_begin),
@@ -171,6 +161,15 @@ util::view<T>::operator== (const view<T> rhs) const noexcept
 
 
 ///////////////////////////////////////////////////////////////////////////////
+template <typename T, size_t N>
+auto
+util::make_view (const T (&arr)[N])
+{
+    return util::view<T*> { arr, arr + N };
+}
+
+
+//-----------------------------------------------------------------------------
 template <typename T>
 auto
 util::make_view (T &t)

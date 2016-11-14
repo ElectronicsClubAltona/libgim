@@ -29,10 +29,6 @@ namespace util {
     public:
         using value_type = typename std::iterator_traits<remove_restrict_t<T>>::value_type;
 
-        template <size_t S>
-        constexpr explicit
-        view (const value_type (&arr)[S]) noexcept;
-
         constexpr
         view (T first, T last) noexcept;
 
@@ -62,6 +58,10 @@ namespace util {
         T m_begin;
         T m_end;
     };
+
+    template <typename T, size_t N>
+    auto
+    make_view (const T (&)[N]);
 
     template <typename T>
     auto
