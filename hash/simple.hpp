@@ -18,20 +18,21 @@
 #define __UTIL_HASH_SIMPLE_HPP
 
 #include <cstdint>
+#include <utility>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util { namespace hash {
     //template <class H, class InputT>
-    template <class H>
+    template <class H, typename ...Args>
     typename H::digest_t
-    simple (const void *restrict first, const void *restrict last) noexcept
+    simple (const void *restrict first, const void *restrict last, Args&&...args) noexcept
     {
-        H h;
+        H h (std::forward<Args> (args)...);
 
         h.update (
             static_cast<const uint8_t*restrict> (first),
-            static_cast<const uint8_t *restrict> (last)
+            static_cast<const uint8_t*restrict> (last)
         );
         h.finish ();
 
