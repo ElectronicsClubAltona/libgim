@@ -60,7 +60,7 @@ namespace util {
             mapped_file (const std::experimental::filesystem::path &path,
                          int fflags = O_RDONLY,
                          int mflags = PROT_READ);
-            mapped_file (const util::fd&,
+            mapped_file (const util::posix::fd&,
                          int fflag = O_RDONLY,
                          int mflags = PROT_READ);
 

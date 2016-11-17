@@ -140,7 +140,7 @@ mapped_file::mapped_file (const std::experimental::filesystem::path &path,
 
 
 //-----------------------------------------------------------------------------
-mapped_file::mapped_file (const util::fd &src,
+mapped_file::mapped_file (const util::posix::fd &src,
                           int fflags,
                           int mflags):
     mapped_file (util::win32::handle (reinterpret_cast<HANDLE> (_get_osfhandle (src))),
