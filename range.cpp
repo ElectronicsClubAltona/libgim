@@ -28,6 +28,27 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
+const util::range<T>
+util::range<T>::UNLIMITED (std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity () :
+                                                                   std::numeric_limits<T>::lowest   (),
+                           std::numeric_limits<T>::has_infinity ?  std::numeric_limits<T>::infinity () :
+                                                              std::numeric_limits<T>::max      ());
+
+//-----------------------------------------------------------------------------
+template <typename T>
+const util::range<T>
+util::range<T>::MAX (std::numeric_limits<T>::lowest (),
+                     std::numeric_limits<T>::max ());
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+const util::range<T>
+util::range<T>::UNIT (0.0, 1.0);
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
 util::range<T>::range (T _min, T _max):
         min (_min),
         max (_max)
@@ -180,27 +201,6 @@ util::range<T>::operator ==(const util::range<T> &rhs) const
 {
     return min == rhs.min && max == rhs.max;
 }
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-const util::range<T>
-util::range<T>::UNLIMITED (std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity () :
-                                                                   std::numeric_limits<T>::lowest   (),
-                           std::numeric_limits<T>::has_infinity ?  std::numeric_limits<T>::infinity () :
-                                                              std::numeric_limits<T>::max      ());
-
-//-----------------------------------------------------------------------------
-template <typename T>
-const util::range<T>
-util::range<T>::MAX (std::numeric_limits<T>::lowest (),
-                     std::numeric_limits<T>::max ());
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-const util::range<T>
-util::range<T>::UNIT (0.0, 1.0);
 
 
 ///////////////////////////////////////////////////////////////////////////////
