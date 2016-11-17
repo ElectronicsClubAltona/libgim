@@ -23,6 +23,8 @@
 #include <cstdio>
 #include <cstdint>
 #include <experimental/filesystem>
+#include <vector>
+#include <streambuf>
 
 #ifdef PLATFORM_WIN32
 #include <windows.h>
