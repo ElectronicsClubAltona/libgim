@@ -39,7 +39,7 @@ main ()
 
     util::TAP::logger tap;
 
-    for (size_t i = 0; i < elems (TESTS); ++i) {
+    for (size_t i = 0; i < std::size (TESTS); ++i) {
         const auto &t = TESTS[i];
         util::crypto::XTEA gen (t.key);
 

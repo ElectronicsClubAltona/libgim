@@ -273,7 +273,7 @@ main (int, char**)
 {
     util::TAP::logger tap;
 
-    for (size_t i = 0; i < elems (TESTS); ++i)
+    for (size_t i = 0; i < std::size (TESTS); ++i)
         tap.expect (TESTS[i].fun (TESTS[i].key, TESTS[i].dat, TESTS[i].res), "standard test vector %zu", i);
 
     return tap.status ();

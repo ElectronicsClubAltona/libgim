@@ -142,7 +142,7 @@ MD2::transform (void)
     // only change keeping us from conforming to the test-cases. Pulled from a
     // review of the reference implementation.
     uint8_t L = C[15];
-    for (size_t i = 0; i < elems (C); ++i)
+    for (size_t i = 0; i < std::size (C); ++i)
         L = C[i] ^= S[M[i] ^ L];
 
     uint8_t t = 0;

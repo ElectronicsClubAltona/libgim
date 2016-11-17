@@ -16,7 +16,7 @@ main ()
 
     struct {
         std::vector<uint8_t> key;
-        const uint64_t data[elems (OFFSETS)][16];
+        const uint64_t data[std::size (OFFSETS)][16];
     } TESTS[] = {
         {
             { 1, 2, 3, 4, 5 },
@@ -365,7 +365,7 @@ main ()
         },
     };
 
-    for (size_t i = 0; i < elems (TESTS); ++i) {
+    for (size_t i = 0; i < std::size (TESTS); ++i) {
         const auto &t = TESTS[i];
 
         util::crypto::ARC4 gen (t.key.data (), t.key.size ());
@@ -373,7 +373,7 @@ main ()
         size_t consumed = 0;
         bool success = true;
 
-        for (size_t j = 0; j < elems (OFFSETS); ++j) {
+        for (size_t j = 0; j < std::size (OFFSETS); ++j) {
             CHECK_GE (OFFSETS[j], consumed);
 
             size_t diff = OFFSETS[j] - consumed;

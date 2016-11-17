@@ -34,7 +34,7 @@ test_double (util::TAP::logger &tap)
 
     bool success = true;
 
-    for (unsigned int i = 0; i < elems (tests); ++i) {
+    for (unsigned int i = 0; i < std::size (tests); ++i) {
         util::ieee_double val;
         val.set_bits (tests[i].bits);
 
@@ -70,7 +70,7 @@ test_single (util::TAP::logger &tap)
 
     bool success = true;
 
-    for (unsigned int i = 0; i < elems (tests); ++i) {
+    for (unsigned int i = 0; i < std::size (tests); ++i) {
         util::ieee_single val;
         val.set_bits (tests[i].bits);
 

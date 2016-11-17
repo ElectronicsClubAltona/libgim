@@ -82,7 +82,7 @@ main (void)
             { 1.f, { 0.f, 0.f, 1.f } },
         };
 
-        for (size_t i = 0; i < elems (ROTATIONS); ++i) {
+        for (size_t i = 0; i < std::size (ROTATIONS); ++i) {
             const auto &r = ROTATIONS[i];
 
             auto q = quaternionf::angle_axis  (r.mag, r.axis).as_matrix ();

@@ -189,7 +189,7 @@ win32_error::code_string (DWORD code)
         code,
         MAKELANGID (LANG_NEUTRAL, SUBLANG_DEFAULT),
         message,
-        elems (message),
+        std::size (message),
         NULL
     );
 

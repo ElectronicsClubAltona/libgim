@@ -94,7 +94,7 @@ debug::operator<< (std::ostream &os, const debug::backtrace &b)
     } sym;
 
     sym.info.SizeOfStruct = sizeof (sym.info);
-    sym.info.MaxNameLength = elems (sym.name);
+    sym.info.MaxNameLength = std::size (sym.name);
 
     for (auto frame: b.frames ()) {
         // Find the symbol name

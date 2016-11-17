@@ -19,12 +19,12 @@ test_null (util::TAP::logger &tap)
 
     static const char *argv1[] = { "./foo", "-n", "foo" };
     tap.expect_nothrow ([&] () {
-        p.scan (elems (argv1), argv1);
+        p.scan (std::size (argv1), argv1);
     }, "nothrow null short form");
 
     static const char *argv2[] = { "./foo", "--null", "foo" };
     tap.expect_nothrow ([&] () {
-        p.scan (elems (argv2), argv2);
+        p.scan (std::size (argv2), argv2);
     }, "nothrow null long form");
 }
 
@@ -44,7 +44,7 @@ test_present (util::TAP::logger &tap)
     {
         static const char *argv1[] = { "./foo", "-p" };
         is_present = false;
-        p.scan (elems (argv1), argv1);
+        p.scan (std::size (argv1), argv1);
         tap.expect (is_present, "presence short form");
     }
 
@@ -52,7 +52,7 @@ test_present (util::TAP::logger &tap)
     {
         static const char *argv2[] = { "./foo", "--present" };
         is_present = false;
-        p.scan (elems (argv2), argv2);
+        p.scan (std::size (argv2), argv2);
         tap.expect (is_present, "presence long form");
     }
 
@@ -60,7 +60,7 @@ test_present (util::TAP::logger &tap)
     {
         static const char *argv3[] = { "./foo" };
         is_present = true;
-        p.scan (elems (argv3), argv3);
+        p.scan (std::size (argv3), argv3);
         tap.expect (!is_present, "presence null");
     }
 }
@@ -131,7 +131,7 @@ test_numeric (util::TAP::logger &tap)
     const char *argv_short[] = { "./foo", "-t", NULL };
     const char * argv_long[] = { "./foo", NULL };
 
-    for(size_t i = 0; i < elems (values); ++i) {
+    for(size_t i = 0; i < std::size (values); ++i) {
         std::ostringstream out_short, out_long;
         std::string        str_short, str_long;
 
@@ -142,7 +142,7 @@ test_numeric (util::TAP::logger &tap)
 
         // check short form reading
         value = 2;
-        p.scan (elems (argv_short), argv_short);
+        p.scan (std::size (argv_short), argv_short);
         tap.expect_eq (value, values[i], "equality, short form");
 
         // construct long form arguments
@@ -152,7 +152,7 @@ test_numeric (util::TAP::logger &tap)
 
         // check long form reading
         value = 2;
-        p.scan (elems (argv_long), argv_long);
+        p.scan (std::size (argv_long), argv_long);
         tap.expect_eq (value, values[i], "equality, long form");
     }
 }
@@ -186,7 +186,7 @@ test_bytes (util::TAP::logger &tap)
 
     for (auto &i: commands) {
         argv[2] = i.str;
-        p.scan (elems (argv), argv);
+        p.scan (std::size (argv), argv);
 
         tap.expect_eq (i.val, size, "bytes, %s", i.str);
     };
@@ -212,7 +212,7 @@ test_required (util::TAP::logger &tap)
     };
 
     tap.expect_nothrow ([&] () {
-        p.scan (elems (argv), argv);
+        p.scan (std::size (argv), argv);
     }, "required option, success");
 
     tap.expect_throw<util::cmdopt::invalid_required> ([&] () {
@@ -239,7 +239,7 @@ test_positional (util::TAP::logger &tap)
     };
 
     tap.expect_nothrow ([&] {
-        p.scan (elems (argv), argv);
+        p.scan (std::size (argv), argv);
     }, "positional, nothrow");
 
     tap.expect_eq (value, expected, "positiona, value success");
