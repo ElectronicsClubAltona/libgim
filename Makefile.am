@@ -160,6 +160,8 @@ UTIL_FILES   =			\
     hash/sha2.hpp		\
     hash/wang.hpp		\
     hash/wang.ipp		\
+    hash/xxhash.cpp		\
+    hash/xxhash.hpp		\
     introspection.cpp		\
     introspection.hpp		\
     io.cpp			\
@@ -425,6 +427,7 @@ TEST_BIN = 			\
     test/hash/ripemd		\
     test/hash/sha1		\
     test/hash/sha2		\
+    test/hash/xxhash		\
     test/hton			\
     test/introspection		\
     test/json_types		\

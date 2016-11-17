@@ -36,6 +36,8 @@ namespace util { namespace hash {
     class fletcher;
     class crc32;
 
+    class xxhash;
+
     // hash adapters
     class PBKDF1;
     class PBKDF2;
