@@ -344,6 +344,13 @@ if HAVE_CAPTURESTACKBACKTRACE
 __BACKTRACE_FILES += backtrace_stackwalk.cpp backtrace_win32.cpp
 endif
 
+if !HAVE_STD_EXPERIMENTAL_FILESYSTEM
+AM_CXXFLAGS += -isystem ${top_srcdir}/fixup
+UTIL_FILES += \
+	fixup/experimental/filesystem.hpp \
+	fixup/experimental/filesystem.cpp
+endif
+
 BACKTRACE_FILES=$(firstword $(__BACKTRACE_FILES) backtrace_null.cpp)
 
 

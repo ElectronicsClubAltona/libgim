@@ -52,6 +52,9 @@ AS_IF([test "x${host_os}" != "xmingw32"],[
 
 AC_FUNC_MMAP
 
+AC_CHECK_HEADERS([experimental/filesystem])
+AM_CONDITIONAL([HAVE_STD_EXPERIMENTAL_FILESYSTEM], [test "x$ac_cv_header_experimental_filesystem" == "xyes"])
+
 AC_SEARCH_LIBS([backtrace], [execinfo])
 AC_CHECK_FUNC([backtrace])
 AM_CONDITIONAL([HAVE_EXECINFO], [test "x$ac_cv_func_backtrace" == "xyes"])
