@@ -11,50 +11,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_RANDOM_HPP
 #define __UTIL_RANDOM_HPP
 
-#include <iterator>
+#include <random>
 
-namespace util {
-    template <typename T>
-    T& randomise (T &);
 
-    template <typename T, size_t N>
-    T* randomise (T(&)[N]);
+///////////////////////////////////////////////////////////////////////////////
+namespace util::rand {
+    //-------------------------------------------------------------------------
+    using default_generator = std::minstd_rand;
 
-    template <typename T>
-    T random (void);
 
-    template <typename T>
-    typename T::value_type&
-    choose (T &container) {
-        typename T::iterator  cursor = container.begin ();
-        typename T::size_type size   = container.size ();
-        typename T::size_type offset = random<typename T::size_type> () % size;
-
-        std::advance (cursor, offset);
-        return *cursor;
+    //-------------------------------------------------------------------------
+    template <typename Generator = default_generator>
+    Generator&
+    thread_engine (void)
+    {
+        std::random_device rd;
+        thread_local Generator gen (rd ());
+        return gen;
     }
 
-    template <typename T, size_t N>
+
+    //-------------------------------------------------------------------------
+    template <typename Generator = default_generator, typename T, size_t N>
     T&
-    choose (T (&v)[N]) {
-        return v[static_cast<size_t> (random<float> () * N)];
-    }
-
-    template <typename T>
-    typename T::value_type&
-    choose (T begin, T end) {
-        typename T::difference_type size = std::distance (begin, end);
-        std::advance (begin, random<T::size_type> () % size);
-        return *begin;
+    choose (T (&t)[N], Generator gen = thread_engine<Generator> ())
+    {
+        std::uniform_int_distribution<size_t> dist (0, N-1);
+        return t[dist (gen)];
     }
 }
-
-#include "random.ipp"
 
 #endif

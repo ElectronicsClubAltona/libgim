@@ -18,7 +18,6 @@
 
 #include "./debug.hpp"
 #include "./range.hpp"
-#include "./random.hpp"
 
 #include <array>
 #include <map>
@@ -359,24 +358,6 @@ namespace json { namespace tree {
         };
     }
 } }
-
-
-//-----------------------------------------------------------------------------
-namespace util {
-    template<>
-    colour4f
-    random (void) {
-        return colour4f ({ range<float>::UNIT.random (),
-                           range<float>::UNIT.random (),
-                           range<float>::UNIT.random (),
-                           range<float>::UNIT.random () });
-    }
-
-    template <>
-    colour4f&
-    randomise (colour4f &c)
-        { return c = random<colour4f> (); }
-}
 
 
 ///////////////////////////////////////////////////////////////////////////////

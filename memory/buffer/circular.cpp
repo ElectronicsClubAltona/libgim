@@ -47,9 +47,9 @@ tmpname (std::string &str, size_t length)
         "0123456789";
 
     str.resize (length);
-    std::generate_n (str.begin (),
-                     length,
-                     [&] (void) { return util::choose (alphanum); });
+    std::generate_n (str.begin (), length, [&] (void) {
+        return util::rand::choose (alphanum);
+    });
 }
 
 

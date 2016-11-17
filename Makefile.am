@@ -216,7 +216,6 @@ UTIL_FILES   =			\
     rand/mwc64x.hpp		\
     random.cpp			\
     random.hpp			\
-    random.ipp			\
     range.cpp			\
     range.hpp			\
     range.ipp			\
@@ -435,7 +434,6 @@ TEST_BIN = 			\
     test/pool			\
     test/quaternion		\
     test/rand/buckets		\
-    test/random			\
     test/range 			\
     test/rational		\
     test/region			\

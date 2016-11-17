@@ -11,49 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
-
 
 #include "random.hpp"
 
-#include "range.hpp"
-
-#include <type_traits>
-
-using namespace util;
-
-namespace util {
-    template <typename T>
-    T
-    random (void) {
-        static_assert (std::is_integral<T>::value, "random should only operate on integral types");
-        return range<T>::UNLIMITED.random ();
-    }
-
-    template <>
-    double
-    random (void)
-        { return range<double>::UNIT.random (); }
-
-    template <>
-    float
-    random (void)
-        { return range<float>::UNIT.random (); }
-
-    template <>
-    bool
-    random (void)
-        { return rand () & 0x01; }
-
-    template <typename T>
-    T&
-    randomise (T &val)
-        { return val = util::random<T> (); }
-}
-
-template double   util::random (void);
-template float    util::random (void);
-template uint64_t util::random (void);
-template uint32_t util::random (void);
-template uint16_t util::random (void);

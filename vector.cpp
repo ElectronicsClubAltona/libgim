@@ -17,7 +17,6 @@
 #include "vector.hpp"
 
 #include "debug.hpp"
-#include "random.hpp"
 
 #include "json/tree.hpp"
 
@@ -177,17 +176,5 @@ INSTANTIATE(double)
 
 
 //-----------------------------------------------------------------------------
-namespace util {
-    template vector<2,float> polar_to_cartesian (util::vector<2,float>);
-    template vector<2,float> cartesian_to_polar (util::vector<2,float>);
-
-    template <> vector<1,float> random (void) { util::vector<1,float> out; randomise (out.data); return out; }
-    template <> vector<2,float> random (void) { util::vector<2,float> out; randomise (out.data); return out; }
-    template <> vector<3,float> random (void) { util::vector<3,float> out; randomise (out.data); return out; }
-    template <> vector<4,float> random (void) { util::vector<4,float> out; randomise (out.data); return out; }
-
-    template <> vector<1,double> random (void) { util::vector<1,double> out; randomise (out.data); return out; }
-    template <> vector<2,double> random (void) { util::vector<2,double> out; randomise (out.data); return out; }
-    template <> vector<3,double> random (void) { util::vector<3,double> out; randomise (out.data); return out; }
-    template <> vector<4,double> random (void) { util::vector<4,double> out; randomise (out.data); return out; }
-}
+template vector<2,float> util::polar_to_cartesian (util::vector<2,float>);
+template vector<2,float> util::cartesian_to_polar (util::vector<2,float>);
