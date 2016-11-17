@@ -17,7 +17,6 @@
 #include "stringid.hpp"
 
 #include <stdexcept>
-#include <mutex>
 
 using util::stringid;
 
@@ -28,9 +27,6 @@ stringid::add (const std::string key) {
     auto pos = m_map.find (key);
     if (pos != m_map.end ())
         throw std::invalid_argument ("duplicate stringid key");
-
-    static std::mutex s_lock;
-    std::lock_guard<std::mutex> guard (s_lock);
 
     id_t id = m_map.size ();
     m_map[key] = id;
