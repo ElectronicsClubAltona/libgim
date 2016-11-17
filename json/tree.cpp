@@ -241,7 +241,7 @@ MAP(
 std::unique_ptr<json::tree::node>
 json::tree::parse (const std::experimental::filesystem::path &src)
 {
-    const util::mapped_file data (src.string ().c_str ());
+    const util::mapped_file data (src);
     return parse (data.as_view<char> ());
 }
 

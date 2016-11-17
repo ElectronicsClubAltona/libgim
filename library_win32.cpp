@@ -22,7 +22,7 @@ using util::detail::win32::library;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-library::library (const std::experimental::filesystem::path &path)
+library::library (const std::experimental::filesystem::path &path):
     m_handle (LoadLibraryA (path.c_str ()))
 {
     if (!m_handle)
