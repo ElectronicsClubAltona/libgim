@@ -201,7 +201,8 @@ namespace util::debug  {
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)        \
 template struct util::extent<S,T>;  \
-template bool util::debug::is_valid (const extent<S,T>&);
+template bool util::debug::is_valid (const extent<S,T>&); \
+template struct util::debug::validator<extent<S,T>>;
 
 #define INSTANTIATE(T)      \
 INSTANTIATE_S_T(1,T)        \
