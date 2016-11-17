@@ -288,11 +288,6 @@ POSIX_FILES = 			\
     library_posix.hpp		\
     library_posix.cpp		\
     posix/fwd.hpp		\
-    posix/dir.cpp		\
-    posix/dir.hpp		\
-    posix/dir.ipp		\
-    posix/fd.cpp		\
-    posix/fd.hpp		\
     posix/map.cpp		\
     posix/map.hpp		\
     time_posix.cpp
@@ -305,6 +300,13 @@ endif
 if PLATFORM_FREEBSD
 UTIL_FILES += $(POSIX_FILES) exe_freebsd.cpp
 endif
+
+UTIL_FILES += 			\
+    posix/dir.cpp		\
+    posix/dir.hpp		\
+    posix/dir.ipp		\
+    posix/fd.cpp		\
+    posix/fd.hpp
 
 if PLATFORM_WIN32
 UTIL_FILES += 			\
