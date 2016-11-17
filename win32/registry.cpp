@@ -94,7 +94,7 @@ key::values (void) const
         if (ERROR_SUCCESS != err)
             win32_error::throw_code (err);
 
-        CHECK_GT (size, 0);
+        CHECK_GT (size, 0u);
         name.resize (size - 1);
 
         all.insert (std::move (name));
