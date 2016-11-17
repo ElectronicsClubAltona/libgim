@@ -26,30 +26,32 @@
 #include <tuple>
 
 namespace util {
+    // XXX: we should be using a const char[] here, but clang-3.9 will not
+    // instantiate array values within template specialisations.
     template <typename T>
     struct type_name;
 
-    template <> struct type_name<bool> { static constexpr const char value[] = "bool"; };
+    template <> struct type_name<bool> { static constexpr const char *value = "bool"; };
 
-    template <> struct type_name<char> { static constexpr const char value[] = "char"; };
-    template <> struct type_name<void*> { static constexpr const char value[] = "void*"; };
+    template <> struct type_name<char> { static constexpr const char *value = "char"; };
+    template <> struct type_name<void*> { static constexpr const char *value = "void*"; };
 
-    template <> struct type_name<  int8_t> { static constexpr const char value[] = "int8"; };
-    template <> struct type_name< int16_t> { static constexpr const char value[] = "int16"; };
-    template <> struct type_name< int32_t> { static constexpr const char value[] = "int32"; };
-    template <> struct type_name< int64_t> { static constexpr const char value[] = "int64"; };
+    template <> struct type_name<  int8_t> { static constexpr const char *value = "int8"; };
+    template <> struct type_name< int16_t> { static constexpr const char *value = "int16"; };
+    template <> struct type_name< int32_t> { static constexpr const char *value = "int32"; };
+    template <> struct type_name< int64_t> { static constexpr const char *value = "int64"; };
 
-    template <> struct type_name< uint8_t> { static constexpr const char value[] = "uint8"; };
-    template <> struct type_name<uint16_t> { static constexpr const char value[] = "uint16"; };
-    template <> struct type_name<uint32_t> { static constexpr const char value[] = "uint32"; };
-    template <> struct type_name<uint64_t> { static constexpr const char value[] = "uint64"; };
+    template <> struct type_name< uint8_t> { static constexpr const char *value = "uint8"; };
+    template <> struct type_name<uint16_t> { static constexpr const char *value = "uint16"; };
+    template <> struct type_name<uint32_t> { static constexpr const char *value = "uint32"; };
+    template <> struct type_name<uint64_t> { static constexpr const char *value = "uint64"; };
 
-    template <> struct type_name<float   > { static constexpr const char value[] = "float32"; };
-    template <> struct type_name<double  > { static constexpr const char value[] = "float64"; };
+    template <> struct type_name<float   > { static constexpr const char *value = "float32"; };
+    template <> struct type_name<double  > { static constexpr const char *value = "float64"; };
 
-    template <> struct type_name<std::string> { static constexpr const char value[] = "string"; };
-    template <> struct type_name<char*>       { static constexpr const char value[] = "cstring"; };
-    template <> struct type_name<const char*> { static constexpr const char value[] = "cstring"; };
+    template <> struct type_name<std::string> { static constexpr const char *value = "string"; };
+    template <> struct type_name<char*>       { static constexpr const char *value = "cstring"; };
+    template <> struct type_name<const char*> { static constexpr const char *value = "cstring"; };
 
     template <typename T>
     constexpr
