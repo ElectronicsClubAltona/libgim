@@ -20,6 +20,12 @@
 #include "./view.hpp"
 
 
+namespace util {
+    std::string to_utf8 (const wchar_t*);
+    std::string to_utf8 (const std::wstring&);
+}
+
+
 bool
 strbegins(const char *restrict str,
           const char *restrict prefix);

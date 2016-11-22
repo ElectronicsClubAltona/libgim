@@ -17,8 +17,29 @@
 #include "./string.hpp"
 
 #include <cstring>
+#include <codecvt>
+#include <locale>
 
 using util::tokeniser;
+
+
+///////////////////////////////////////////////////////////////////////////////
+std::string
+util::to_utf8 (const wchar_t *src)
+{
+    using convert_t = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_t,wchar_t> converter;
+    return converter.to_bytes (src);
+}
+
+
+//-----------------------------------------------------------------------------
+std::string
+util::to_utf8 (const std::wstring &src)
+{
+    return to_utf8 (src.c_str ());
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // TODO: Horribly inefficient, but God help you if you're relying on this
