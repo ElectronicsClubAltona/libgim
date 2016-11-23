@@ -48,7 +48,7 @@ namespace util {
 
     #define MAP_LEVEL_T(F) MAP(F, EMERGENCY, ALERT, CRITICAL, ERROR, WARN, NOTICE, INFO, DEBUG)
 
-    constexpr auto DEFAULT_LOG_LEVEL = INFO;
+    constexpr auto DEFAULT_LOG_LEVEL = NOTICE;
 
     //-------------------------------------------------------------------------
     const std::string& to_string (level_t);
