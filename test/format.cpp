@@ -162,6 +162,8 @@ main (void)
     CHECK_RENDER ("%% %%", "% %");
     CHECK_RENDER (" %% %% ", " % % ");
 
+    CHECK_RENDER ("%%%d%%", "%0%", 0);
+
     CHECK_RENDER ("%u %u", "1 2", 1u, 2u);
 
     CHECK_RENDER ("%#o %o", "010 10", 8u, 8u);

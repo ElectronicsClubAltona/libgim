@@ -897,7 +897,11 @@ namespace util { namespace format { namespace detail {
 
         specifier spec;
         auto cursor = parse (start, last, spec);
-        return _render (write (os, spec, val), cursor, last, args...);
+
+        if (spec.k == specifier::kind::ESCAPE)
+            return _render (write (os, spec     ), cursor, last, val, args...);
+        else
+            return _render (write (os, spec, val), cursor, last,      args...);
     }
 
 
