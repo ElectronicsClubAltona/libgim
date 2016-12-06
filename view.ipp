@@ -143,7 +143,7 @@ util::view<T>::size (void) const noexcept
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 constexpr
-typename util::view<T>::value_type&
+const typename util::view<T>::value_type&
 util::view<T>::operator[] (size_t idx) const noexcept
 {
     return m_begin[idx];
@@ -184,7 +184,7 @@ template <typename T>
 auto
 util::make_view (T &t)
 {
-    return util::view<decltype(std::begin (t))> { t.begin (), t.end () };
+    return util::view<decltype(std::begin (t))> { std::begin (t), std::end (t) };
 }
 
 
@@ -193,5 +193,14 @@ template <typename T>
 auto
 util::make_view (const T &t)
 {
-    return util::view<decltype(std::cbegin (t))> { t.cbegin (), t.cend () };
+    return util::view<decltype(std::cbegin (t))> { std::cbegin (t), std::cend (t) };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+auto
+util::make_cview (const T &t)
+{
+    return util::view<decltype(std::cbegin (t))> { std::cbegin (t), std::cend (t) };
 }

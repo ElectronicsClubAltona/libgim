@@ -50,7 +50,7 @@ namespace util {
         constexpr size_t size (void) const noexcept;
 
         constexpr value_type& operator[] (size_t) noexcept;
-        constexpr value_type& operator[] (size_t) const noexcept;
+        constexpr const value_type& operator[] (size_t) const noexcept;
 
         bool operator== (view) const noexcept;
 
@@ -74,6 +74,10 @@ namespace util {
     template <typename T>
     auto
     make_view (T&&) = delete;
+
+    template <typename T>
+    auto
+    make_cview (const T&);
 
     bool operator== (const std::string&, view<const char*>);
     bool operator== (const std::string&, view<char*>);
