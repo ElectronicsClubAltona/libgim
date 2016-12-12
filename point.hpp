@@ -34,7 +34,7 @@ namespace util {
 
         template <size_t D> point<D,T> homog (void) const;
 
-        static const point<S,T> ORIGIN;
+        static constexpr point<S,T> origin (void);
 
         void sanity (void) const;
     };

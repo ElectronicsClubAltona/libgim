@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::region<S,T>::region (extent_t _extent):
-    region (point_t::ORIGIN, _extent)
+    region (point_t::origin (), _extent)
 {
     debug::sanity (*this);
 }

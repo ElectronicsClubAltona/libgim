@@ -63,10 +63,6 @@ namespace util::debug  {
 
 
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
-const util::point<S,T> util::point<S,T>::ORIGIN (T {0});
-
-//-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)        \
 template struct util::point<S,T>;   \
 template bool util::debug::is_valid (const point<S,T>&); \

@@ -18,7 +18,8 @@
 
 #include <algorithm>
 
-///------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 /// expand point to use homogenous coordinates of a higher dimension.
 /// ie, fill with (0,..,0,1)
 template <size_t S, typename T>
@@ -45,7 +46,17 @@ util::point<S,T>::homog (void) const
 }
 
 
-//-------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+util::point<S,T>
+util::point<S,T>::origin (void)
+{
+    return point<S,T> {0};
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T, typename U>
 typename std::common_type<T,U>::type
 util::distance (point<S,T> a, point<S,U> b)
@@ -58,7 +69,7 @@ util::distance (point<S,T> a, point<S,U> b)
 }
 
 
-//-------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T, typename U>
 constexpr typename std::common_type<T,U>::type
 util::distance2 (point<S,T> a, point<S,U> b)
@@ -72,7 +83,7 @@ util::distance2 (point<S,T> a, point<S,U> b)
 }
 
 
-//-------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <typename T, typename U>
 typename std::common_type<T,U>::type
 util::octile (point2<T> a, point2<U> b)
@@ -96,7 +107,7 @@ util::octile (point2<T> a, point2<U> b)
 }
 
 
-//-------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T, typename U>
 constexpr typename std::common_type<T,U>::type
 util::manhattan (point<S,T> a, point<S,U> b)
@@ -110,7 +121,7 @@ util::manhattan (point<S,T> a, point<S,U> b)
 }
 
 
-//-------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T, typename U>
 constexpr typename std::common_type<T,U>::type
 util::chebyshev(point<S,T> a, point<S,U> b)
