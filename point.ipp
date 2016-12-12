@@ -18,104 +18,102 @@
 
 #include <algorithm>
 
-namespace util {
-    ///------------------------------------------------------------------------
-    /// expand point to use homogenous coordinates of a higher dimension.
-    /// ie, fill with (0,..,0,1)
-    template <size_t S, typename T>
-    template <size_t D>
-    point<D,T>
-    point<S,T>::homog (void) const
-    {
-        static_assert (D > S, "homog will not overwrite data");
+///------------------------------------------------------------------------
+/// expand point to use homogenous coordinates of a higher dimension.
+/// ie, fill with (0,..,0,1)
+template <size_t S, typename T>
+template <size_t D>
+util::point<D,T>
+util::point<S,T>::homog (void) const
+{
+    static_assert (D > S, "homog will not overwrite data");
 
-        point<D,T> out;
+    point<D,T> out;
 
-        // Copy the existing data
-        auto c = std::copy (this->begin (),
-                            this->end (),
-                            out.begin ());
+    // Copy the existing data
+    auto c = std::copy (this->begin (),
+                        this->end (),
+                        out.begin ());
 
-        // Fill until the second last element with zeros
-        auto f = std::fill_n (c, D - S - 1, T{0});
+    // Fill until the second last element with zeros
+    auto f = std::fill_n (c, D - S - 1, T{0});
 
-        // Last element should be one
-        *f = T{1};
+    // Last element should be one
+    *f = T{1};
 
-        return out;
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename U>
-    typename std::common_type<T,U>::type
-    distance (point<S,T> a, point<S,U> b)
-    {
-        using type_t = typename std::common_type<T,U>::type;
-        static_assert (std::is_floating_point<type_t>::value,
-                       "sqrt likely requires fractional types");
-
-        return std::sqrt (distance2 (a, b));
-    }
+    return out;
+}
 
 
-    //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename U>
-    constexpr typename std::common_type<T,U>::type
-    distance2 (point<S,T> a, point<S,U> b)
-    {
-        typename std::common_type<T,U>::type sum {0};
+//-------------------------------------------------------------------------
+template <size_t S, typename T, typename U>
+typename std::common_type<T,U>::type
+util::distance (point<S,T> a, point<S,U> b)
+{
+    using type_t = typename std::common_type<T,U>::type;
+    static_assert (std::is_floating_point<type_t>::value,
+                   "sqrt likely requires fractional types");
 
-        for (size_t i = 0; i < S; ++i)
-            sum += pow2 (a.data[i] - b.data[i]);
-
-        return sum;
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <typename T, typename U>
-    typename std::common_type<T,U>::type
-    octile (point2<T> a, point2<U> b)
-    {
-        using type_t = typename std::common_type<T,U>::type;
-        static_assert (!std::is_integral<type_t>::value,
-                       "octile requires more than integer precision");
-
-        const type_t D1 = 1;
-        const type_t D2 = std::sqrt (type_t {2});
-
-        auto diff = util::abs (a - b);
-
-        // distance for axis-aligned walks
-        auto axis = D1 * (diff.x + diff.y);
-
-        // the savings from diagonal walks
-        auto diag = (D2 - 2 * D1) * util::min (diff);
-
-        return axis + diag;
-    }
+    return std::sqrt (distance2 (a, b));
+}
 
 
-    //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename U>
-    constexpr typename std::common_type<T,U>::type
-    manhattan (point<S,T> a, point<S,U> b)
-    {
-        typename std::common_type<T,U>::type sum {0};
+//-------------------------------------------------------------------------
+template <size_t S, typename T, typename U>
+constexpr typename std::common_type<T,U>::type
+util::distance2 (point<S,T> a, point<S,U> b)
+{
+    typename std::common_type<T,U>::type sum {0};
 
-        for (size_t i = 0; i < S; ++i)
-            sum += util::abs (a.data[i] - b.data[i]);
+    for (size_t i = 0; i < S; ++i)
+        sum += pow2 (a.data[i] - b.data[i]);
 
-        return sum;
-    }
+    return sum;
+}
 
 
-    //-------------------------------------------------------------------------
-    template <size_t S, typename T, typename U>
-    constexpr typename std::common_type<T,U>::type
-    chebyshev(point<S,T> a, point<S,U> b)
-    {
-        return util::max (abs (a - b));
-    }
+//-------------------------------------------------------------------------
+template <typename T, typename U>
+typename std::common_type<T,U>::type
+util::octile (point2<T> a, point2<U> b)
+{
+    using type_t = typename std::common_type<T,U>::type;
+    static_assert (!std::is_integral<type_t>::value,
+                   "octile requires more than integer precision");
+
+    const type_t D1 = 1;
+    const type_t D2 = std::sqrt (type_t {2});
+
+    auto diff = util::abs (a - b);
+
+    // distance for axis-aligned walks
+    auto axis = D1 * (diff.x + diff.y);
+
+    // the savings from diagonal walks
+    auto diag = (D2 - 2 * D1) * util::min (diff);
+
+    return axis + diag;
+}
+
+
+//-------------------------------------------------------------------------
+template <size_t S, typename T, typename U>
+constexpr typename std::common_type<T,U>::type
+util::manhattan (point<S,T> a, point<S,U> b)
+{
+    typename std::common_type<T,U>::type sum {0};
+
+    for (size_t i = 0; i < S; ++i)
+        sum += util::abs (a.data[i] - b.data[i]);
+
+    return sum;
+}
+
+
+//-------------------------------------------------------------------------
+template <size_t S, typename T, typename U>
+constexpr typename std::common_type<T,U>::type
+util::chebyshev(point<S,T> a, point<S,U> b)
+{
+    return util::max (abs (a - b));
 }
