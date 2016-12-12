@@ -88,19 +88,6 @@ extent<S,T>::empty (void) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-const extent<S,T> extent<S,T>::MIN { 0 };
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-const extent<S,T> extent<S,T>::MAX
-{
-    std::numeric_limits<T>::max ()
-};
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
 extent_range<S,T>::extent_range (extent<S,T> _target):
     m_target (_target)
 { ; }

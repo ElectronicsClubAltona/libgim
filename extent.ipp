@@ -22,6 +22,7 @@
 #define __UTIL_EXTENT_IPP
 
 #include <algorithm>
+#include <limits>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,4 +76,26 @@ util::extent<S,T>::includes (point<S,U> p) const
         if (p[i] < 0 || static_cast<T> (p[i]) >= this->data[i])
             return false;
     return true;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+util::extent<S,T>
+util::extent<S,T>::max (void)
+{
+    return extent<S,T> {
+        std::numeric_limits<T>::max ()
+    };
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+constexpr
+util::extent<S,T>
+util::extent<S,T>::min (void)
+{
+    return extent<S,T> { 0 };
 }

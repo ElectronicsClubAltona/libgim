@@ -51,8 +51,8 @@ namespace util {
 
         bool empty (void) const;
 
-        static const extent MAX;
-        static const extent MIN;
+        static constexpr extent max (void);
+        static constexpr extent min (void);
     };
 
     template <size_t S, typename T>
