@@ -46,3 +46,23 @@ util::cross (util::vector<3,T> a, util::vector<3,T> b)
         a.x * b.y - a.y * b.x
     };
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+util::vector<S,T>
+util::vector<S,T>::ones (void)
+{
+    return vector<S,T> {1};
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+constexpr
+util::vector<S,T>
+util::vector<S,T>::zeros (void)
+{
+    return vector<S,T> {0};
+}

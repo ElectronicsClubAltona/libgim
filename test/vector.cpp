@@ -111,8 +111,8 @@ main ()
     test_polar (tap);
     test_euler (tap);
 
-    tap.expect (!is_normalised (util::vector3f::ZERO), "zero isn't normalised");
-    tap.expect (!is_normalised (util::vector3f::ONES), "ones isn't normalised");
+    tap.expect (!is_normalised (util::vector3f::zeros ()), "zeros isn't normalised");
+    tap.expect (!is_normalised (util::vector3f::ones  ()), "ones isn't normalised");
 
     tap.expect_eq (
         util::hypot (util::vector3f{0,1,2} - util::vector3f{3,2,4}),

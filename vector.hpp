@@ -30,8 +30,8 @@ namespace util {
         template <size_t D> vector<D,T> homog (void) const;
 
         // constants
-        static const vector<S,T> ONES;
-        static const vector<S,T> ZERO;
+        static constexpr vector<S,T> ones  (void);
+        static constexpr vector<S,T> zeros (void);
 
         void sanity (void) const;
     };
