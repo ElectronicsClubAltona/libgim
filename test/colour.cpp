@@ -8,9 +8,6 @@ main (int, char**)
 {
     util::TAP::logger tap;
 
-    // Simple check for symbol visibility
-    tap.expect_eq (util::colour4f::WHITE, util::colour4f (1), "WHITE available");
-
     // Check casting works between intergral and floating formats
     {
         util::colour4f f (1);
@@ -20,8 +17,8 @@ main (int, char**)
     }
 
     // Check lookups are working
-    tap.expect_eq (util::colour4f::from_html ("white"), util::colour4f::WHITE, "HTML lookup");
-    tap.expect_eq ( util::colour4f::from_x11  ("white"), util::colour4f::WHITE, "X11 lookup");
+    tap.expect_eq (util::colour4f::from_html  ("white"), util::colour4f {1}, "HTML lookup");
+    tap.expect_eq ( util::colour4f::from_x11  ("white"), util::colour4f {1}, "X11 lookup");
 
     // Check HSV conversions
     {

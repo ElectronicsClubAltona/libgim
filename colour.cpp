@@ -29,22 +29,6 @@ using util::colour4f;
 
 
 //-----------------------------------------------------------------------------
-#define CONSTANT_COLOUR(NAME,R,G,B)     \
-template <size_t S, typename T>         \
-const util::colour<S,T>                 \
-util::colour<S,T>::NAME =               \
-    util::colour<4,float> (R,G,B,1)     \
-    .template redim<S> ()               \
-    .template cast<T> ()
-
-CONSTANT_COLOUR(WHITE,1,1,1);
-CONSTANT_COLOUR(BLACK,0,0,0);
-CONSTANT_COLOUR(RED,  1,0,0);
-CONSTANT_COLOUR(GREEN,0,1,0);
-CONSTANT_COLOUR(BLUE, 0,0,1);
-
-
-//-----------------------------------------------------------------------------
 static const std::map<std::string, colour<4,uint8_t>>
 HTML_COLOURS { {
     { "white",      { 0xff, 0xff, 0xff, 0xff } },

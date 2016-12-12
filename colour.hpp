@@ -34,12 +34,6 @@ namespace util {
         colour<S,U>
         cast (void) const;
 
-        static const colour WHITE;
-        static const colour BLACK;
-        static const colour RED;
-        static const colour BLUE;
-        static const colour GREEN;
-
         static colour from_html (const std::string&);
         static colour from_x11  (const std::string&);
         static colour from_string (const std::string&);
