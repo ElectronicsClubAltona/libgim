@@ -19,15 +19,15 @@
 #endif
 #define __UTIL_REGION_IPP
 
-namespace util {
-    template <size_t S, typename T>
-    template <typename U>
-    constexpr region<S,U>
-    region<S,T>::cast (void) const
-    {
-        return {
-            p.template cast<U> (),
-            e.template cast<U> ()
-        };
-    }
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+template <typename U>
+constexpr util::region<S,U>
+util::region<S,T>::cast (void) const
+{
+    return {
+        p.template cast<U> (),
+        e.template cast<U> ()
+    };
 }
