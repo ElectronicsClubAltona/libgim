@@ -31,3 +31,29 @@ util::region<S,T>::cast (void) const
         e.template cast<U> ()
     };
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+constexpr
+util::region<S,T>
+util::region<S,T>::max (void)
+{
+    return {
+        util::point <S,T> {std::numeric_limits<T>::lowest () / 2},
+        util::extent<S,T> {std::numeric_limits<T>::max ()}
+    };
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+constexpr
+util::region<S,T>
+util::region<S,T>::unit (void)
+{
+    return {
+        point_t::origin (),
+        extent_t {1}
+    };
+}

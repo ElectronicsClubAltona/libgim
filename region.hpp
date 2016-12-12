@@ -105,8 +105,8 @@ namespace util {
             { return !(*this == rhs); }
 
         // Utility constants
-        static const region<S,T> MAX;
-        static const region<S,T> UNIT;
+        static constexpr region<S,T> max  (void);
+        static constexpr region<S,T> unit (void);
 
         void sanity (void) const;
     };

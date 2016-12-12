@@ -23,13 +23,13 @@ main (int, char **)
         tap.expect (!a.intersects (b), "simple 2d intersection");
     }
 
-    tap.expect (util::region2d::MAX.intersects (util::region2d::UNIT), "maximal region2d intersection");
-    tap.expect (util::region2f::MAX.intersects (util::region2f::UNIT), "maximal region2f intersection");
+    tap.expect (util::region2d::max ().intersects (util::region2d::unit ()), "maximal region2d intersection");
+    tap.expect (util::region2f::max ().intersects (util::region2f::unit ()), "maximal region2f intersection");
 
-    tap.expect_eq (util::region2d::UNIT.area (), 1.0,  "unit region2d area");
-    tap.expect_eq (util::region2f::UNIT.area (), 1.0f, "unit region2f area");
+    tap.expect_eq (util::region2d::unit ().area (), 1.0,  "unit region2d area");
+    tap.expect_eq (util::region2f::unit ().area (), 1.0f, "unit region2f area");
 
-    util::point2u p0 { 0 };
+    util::point2u  p0 { 0 };
     util::extent2u e0 { 2 };
 
     tap.expect (util::region2u (p0, e0).includes (util::point2u {1, 1}), "unsigned region centre inclusion");

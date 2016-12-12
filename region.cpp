@@ -232,8 +232,8 @@ util::region<S,T>::intersection (region<S,T> rhs) const
     point_t a, b;
 
     for (size_t i = 0; i < S; ++i) {
-        a[i] = max (p[i],        rhs.p[i]);
-        b[i] = min (p[i] + e[i], rhs.p[i] + rhs.e[i]);
+        a[i] = util::max (p[i],        rhs.p[i]);
+        b[i] = util::min (p[i] + e[i], rhs.p[i] + rhs.e[i]);
 
         if (b[i] < a[i])
             throw std::logic_error ("no overlap");
@@ -336,28 +336,7 @@ util::region<S,T>::operator== (region rhs) const
 }
 
 
-///----------------------------------------------------------------------------
-/// The largest specifiable finite region.
-///
-/// Starts at half the minimum value to allow the width to cover some positive
-/// range rather than just cancelling out the lowest value for signed types.
-///
-/// Specifically does not allow infinities. Use/define INFINITE when required.
-
-template <size_t S, typename T>
-const util::region<S,T>
-util::region<S,T>::MAX (
-    util::point<S,T> {std::numeric_limits<T>::lowest () / 2},
-    util::extent<S,T> {std::numeric_limits<T>::max ()}
-);
-
-
-template  <size_t S, typename T>
-const util::region<S,T>
-util::region<S,T>::UNIT (util::point<S,T>{0}, util::extent<S,T>{1});
-
-
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 std::ostream&
 util::operator<< (std::ostream &os, const util::region<S,T> &rhs) {
