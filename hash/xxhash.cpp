@@ -1060,10 +1060,10 @@ xxhash<T>::update (const uint8_t *restrict first, const uint8_t *restrict last)
 
     if (p <= bEnd - 16) {
         const uint8_t* const limit = bEnd - 16;
-        U32 v1 = m_state.v1;
-        U32 v2 = m_state.v2;
-        U32 v3 = m_state.v3;
-        U32 v4 = m_state.v4;
+        T v1 = m_state.v1;
+        T v2 = m_state.v2;
+        T v3 = m_state.v3;
+        T v4 = m_state.v4;
 
         do {
             v1 = round<T> (v1, read_le (p)); p += sizeof (T);
@@ -1107,38 +1107,38 @@ xxhash<T>::digest (void) const
 #if 1
     const BYTE * p = (const BYTE*)m_state.mem32;
     const BYTE* const bEnd = (const BYTE*)(m_state.mem32) + m_state.memsize;
-    U32 h32;
+    T h;
 
     if (m_state.large_len) {
-        h32 = rotatel (m_state.v1,  1) +
-              rotatel (m_state.v2,  7) +
-              rotatel (m_state.v3, 12) +
-              rotatel (m_state.v4, 18);
+        h = rotatel (m_state.v1, T{ 1}) +
+            rotatel (m_state.v2, T{ 7}) +
+            rotatel (m_state.v3, T{12}) +
+            rotatel (m_state.v4, T{18});
     } else {
-        h32 = m_state.v3 /* == seed */ + constants<T>::prime[4];
+        h = m_state.v3 /* == seed */ + constants<T>::prime[4];
     }
 
-    h32 += m_state.total_len_32;
+    h += m_state.total_len_32;
 
     while (p+4<=bEnd) {
-        h32 += read_le (p)       * constants<T>::prime[2];
-        h32  = rotatel (h32, 17) * constants<T>::prime[3];
+        h += read_le (p)       * constants<T>::prime[2];
+        h  = rotatel (h, 17) * constants<T>::prime[3];
         p+=4;
     }
 
     while (p<bEnd) {
-        h32 += (*p) * PRIME32_5;
-        h32  = rotatel (h32, 11) * constants<T>::prime[0];
+        h += (*p) * PRIME32_5;
+        h  = rotatel (h, 11) * constants<T>::prime[0];
         p++;
     }
 
-    h32 ^= h32 >> 15;
-    h32 *= constants<T>::prime[1];
-    h32 ^= h32 >> 13;
-    h32 *= constants<T>::prime[2];
-    h32 ^= h32 >> 16;
+    h ^= h >> 15;
+    h *= constants<T>::prime[1];
+    h ^= h >> 13;
+    h *= constants<T>::prime[2];
+    h ^= h >> 16;
 
-    return h32;
+    return h;
 #else
     switch (sizeof (T)) {
         case 4: return XXH32_digest(reinterpret_cast<const XXH32_state_s*> (&m_state));
