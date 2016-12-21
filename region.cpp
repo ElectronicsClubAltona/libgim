@@ -340,7 +340,7 @@ util::region<S,T>::operator== (region rhs) const
 template <size_t S, typename T>
 std::ostream&
 util::operator<< (std::ostream &os, const util::region<S,T> &rhs) {
-    return os << "{position: " << rhs.p << ", extent: " << rhs.e << "}";
+    return os << "{ position: " << rhs.p << ", extent: " << rhs.e << " }";
 }
 
 
@@ -357,9 +357,9 @@ namespace util { namespace debug {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INSTANTIATE_S_T(S,T)                                                \
-template struct util::region<S,T>;                                            \
-template std::ostream& util::operator<< (std::ostream&, const region<S,T>&);  \
+#define INSTANTIATE_S_T(S,T)                                                 \
+template struct util::region<S,T>;                                           \
+template std::ostream& util::operator<< (std::ostream&, const region<S,T>&); \
 template struct util::debug::validator<util::region<S,T>>;
 
 #define INSTANTIATE(T)  \
