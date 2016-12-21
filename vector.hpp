@@ -41,6 +41,11 @@ namespace util {
     vector<3,T>
     cross (vector<3,T>, vector<3,T>);
 
+    template <typename T>
+    constexpr
+    T
+    cross (vector<2,T>, vector<2,T>);
+
     // polar/cartesian conversions; assumes (mag, angle) form.
     template <typename T> vector<2,T> polar_to_cartesian (vector<2,T>);
     template <typename T> vector<2,T> cartesian_to_polar (vector<2,T>);

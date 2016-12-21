@@ -48,6 +48,16 @@ util::cross (util::vector<3,T> a, util::vector<3,T> b)
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
+constexpr
+T
+util::cross (util::vector<2,T> a, util::vector<2,T> b)
+{
+    return a[0] * b[1] - a[1] * b[0];
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 constexpr
