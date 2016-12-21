@@ -28,8 +28,8 @@ namespace util {
      */
     template <typename T>
     struct range {
-        T min;
-        T max;
+        T lo;
+        T hi;
 
         range (T _min, T _max);
 
@@ -78,10 +78,10 @@ namespace util {
             { return !(*this == rhs); }
 
         /// A range which is guaranteed to contain all elements type T
-        static const range<T> UNLIMITED;
-        static const range<T> MAX;
+        static constexpr range<T> unlimited (void);
+        static constexpr range<T> max (void);
         /// A range which only contains elements between 0 and 1 inclusive
-        static const range<T> UNIT;
+        static constexpr range<T> unit (void);
 
         void sanity (void) const;
     };

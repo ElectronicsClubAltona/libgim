@@ -20,19 +20,59 @@
 #define __UTIL_RANGE_IPP
 #endif
 
+#include <limits>
 #include <type_traits>
 
 
 //-----------------------------------------------------------------------------
-namespace util {
-    template <typename T>
-    template <typename U>
-    U
-    range<T>::normalise (T val) const {
-        static_assert (std::is_floating_point<U>::value,
-                       "normalise isn't implemented for integer types");
+template <typename T>
+template <typename U>
+U
+util::range<T>::normalise (T val) const
+{
+    static_assert (std::is_floating_point<U>::value,
+                   "normalise isn't implemented for integer types");
 
-        return static_cast<U> (val - min) /
-               static_cast<U> (max - min);
-    }
+    return static_cast<U> (val - lo) /
+           static_cast<U> ( hi - lo);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+constexpr
+util::range<T>
+util::range<T>::unlimited (void)
+{
+    return {
+        std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity () :
+                                                std::numeric_limits<T>::lowest   (),
+        std::numeric_limits<T>::has_infinity ?  std::numeric_limits<T>::infinity () :
+                                                std::numeric_limits<T>::max      ()
+    };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+constexpr
+util::range<T>
+util::range<T>::max (void)
+{
+    return {
+        std::numeric_limits<T>::lowest (),
+        std::numeric_limits<T>::max ()
+    };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+constexpr
+util::range<T>
+util::range<T>::unit (void)
+{
+    return {
+        T {0}, T {1}
+    };
 }

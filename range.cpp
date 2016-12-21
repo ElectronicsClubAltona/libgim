@@ -21,37 +21,15 @@
 #include "json/tree.hpp"
 #include "maths.hpp"
 
-#include <limits>
 #include <cmath>
 #include <cstdint>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-const util::range<T>
-util::range<T>::UNLIMITED (std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity () :
-                                                                   std::numeric_limits<T>::lowest   (),
-                           std::numeric_limits<T>::has_infinity ?  std::numeric_limits<T>::infinity () :
-                                                              std::numeric_limits<T>::max      ());
-
-//-----------------------------------------------------------------------------
-template <typename T>
-const util::range<T>
-util::range<T>::MAX (std::numeric_limits<T>::lowest (),
-                     std::numeric_limits<T>::max ());
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-const util::range<T>
-util::range<T>::UNIT (0.0, 1.0);
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-util::range<T>::range (T _min, T _max):
-        min (_min),
-        max (_max)
+util::range<T>::range (T _lo, T _hi):
+        lo (_lo),
+        hi (_hi)
 {
     sanity ();
 }
@@ -62,7 +40,7 @@ template <typename T>
 T
 util::range<T>::magnitude (void) const
 {
-    return max - min;
+    return hi - lo;
 }
 
 
@@ -71,7 +49,7 @@ template <typename T>
 bool
 util::range<T>::contains (T val) const
 {
-    return val >= min && val <= max;
+    return val >= lo && val <= hi;
 }
 
 
@@ -80,7 +58,7 @@ template <typename T>
 bool
 util::range<T>::contains (const range <T> &r) const
 {
-    return r.min >= min && r.max <= max;
+    return r.lo >= lo && r.hi <= hi;
 }
 
 
@@ -89,7 +67,7 @@ template <typename T>
 T
 util::range<T>::at (float t) const
 {
-    return static_cast<T> (min + (max - min) * t);
+    return static_cast<T> (lo + (hi - lo) * t);
 }
 
 
@@ -98,7 +76,7 @@ template <typename T>
 T
 util::range<T>::clamp (T val) const
 {
-    return std::max (min, std::min (val, max));
+    return std::max (lo, std::min (val, hi));
 }
 
 
@@ -109,8 +87,8 @@ util::range<T>::expand (T val)
 {
     // The arguments to min and max are such that expansion from initial NaN
     // values should change both min and max to be that value.
-    min = std::min (val, min);
-    max = std::max (val, max);
+    lo = std::min (val, lo);
+    hi = std::max (val, hi);
 }
 
 
@@ -119,8 +97,8 @@ template <typename T>
 util::range<T>&
 util::range<T>::operator*= (T val)
 {
-    min *= val;
-    max *= val;
+    lo *= val;
+    hi *= val;
 
     return *this;
 }
@@ -131,7 +109,7 @@ template <typename T>
 util::range<T>
 util::range<T>::operator* (T val) const
 {
-    return util::range<T> (min * val, max * val);
+    return util::range<T> (lo * val, hi * val);
 }
 
 
@@ -140,7 +118,7 @@ template <typename T>
 util::range<T>
 util::range<T>::operator- (T val) const
 {
-    return util::range<T> (min - val, max - val);
+    return util::range<T> (lo - val, hi - val);
 }
 
 
@@ -151,7 +129,7 @@ namespace util {
     range<double>::random (void) const
     {
         double pos = ::rand () / (double)(RAND_MAX);
-        return (max - min) * pos + min;
+        return (hi - lo) * pos + lo;
     }
 
     template <>
@@ -159,7 +137,7 @@ namespace util {
     range<float>::random (void) const
     {
         float pos = ::rand () / (float)(RAND_MAX);
-        return (max - min) * pos + min;
+        return (hi - lo) * pos + lo;
     }
 }
 
@@ -169,7 +147,7 @@ template <typename T>
 T
 util::range<T>::random (void) const
 {
-    return min + (T)::rand () % (max - min);
+    return lo + (T)::rand () % (hi - lo);
 }
 
 
@@ -179,8 +157,8 @@ namespace util {
     bool
     range<float>::operator ==(const range<float> &rhs) const
     {
-        return almost_equal (min, rhs.min) &&
-               almost_equal (max, rhs.max);
+        return almost_equal (lo, rhs.lo) &&
+               almost_equal (hi, rhs.hi);
     }
 
 
@@ -188,8 +166,8 @@ namespace util {
     bool
     range<double>::operator ==(const range<double> &rhs) const
     {
-        return almost_equal (min, rhs.min) &&
-               almost_equal (max, rhs.max);
+        return almost_equal (lo, rhs.lo) &&
+               almost_equal (hi, rhs.hi);
     }
 }
 
@@ -199,7 +177,7 @@ template <typename T>
 bool
 util::range<T>::operator ==(const util::range<T> &rhs) const
 {
-    return min == rhs.min && max == rhs.max;
+    return lo == rhs.lo && hi == rhs.hi;
 }
 
 
@@ -208,7 +186,7 @@ template <typename T>
 void
 util::range<T>::sanity (void) const
 {
-    CHECK (min <= max);
+    CHECK (lo <= hi);
 }
 
 
@@ -218,9 +196,9 @@ namespace util {
     void
     range<double>::sanity (void) const
     {
-        if (std::isnan (min) || std::isnan (max))
+        if (std::isnan (lo) || std::isnan (hi))
             return;
-        CHECK (min <= max);
+        CHECK (lo <= hi);
     }
 }
 
@@ -237,17 +215,17 @@ namespace util {
 
 
 //-----------------------------------------------------------------------------
-namespace json { namespace tree {
+namespace json::tree {
     template <>
     util::range<double>
     io<util::range<double>>::deserialise (const json::tree::node &node)
     {
         if (node.is_string () && (node == "UNIT" ||
                                   node == "unit")) {
-            return util::range<double>::UNIT;
+            return util::range<double>::unit ();
         } else if (node.is_string () && (node == "UNLIMITED" ||
                                          node == "unlimited")) {
-            return util::range<double>::UNLIMITED;
+            return util::range<double>::unlimited ();
         } else {
             return {
                 node[0].as_number (),
@@ -255,4 +233,4 @@ namespace json { namespace tree {
             };
         }
     }
-} }
+}
