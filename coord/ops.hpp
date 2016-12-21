@@ -448,10 +448,7 @@ namespace util {
     T
     norm2 (const K<S,T> &k)
     {
-        T sum = T{0};
-        for (auto &t: k)
-            sum += t * t;
-        return sum;
+        return dot (k, k);
     }
 
 
