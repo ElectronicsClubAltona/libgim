@@ -582,7 +582,8 @@ namespace util {
 
     // min/max clamping
     template <typename T, typename U, typename V>
-    constexpr T
+    constexpr
+    T
     limit (const T val, const U lo, const V hi)
     {
         assert (lo <= hi);
@@ -596,6 +597,7 @@ namespace util {
     //-------------------------------------------------------------------------
     // clamped cubic hermite interpolation
     template <typename T>
+    constexpr
     T
     smoothstep  (T a, T b, T x)
     {
@@ -604,6 +606,18 @@ namespace util {
         return x * x * (3 - 2 * x);
     }
 
+
+    //-------------------------------------------------------------------------
+    template <typename U, typename T>
+    constexpr
+    std::enable_if_t<std::is_floating_point<T>::value, U>
+    mix (U a, U b, T t)
+    {
+        assert (t >= 0);
+        assert (t <= 1);
+
+        return a * (1 - t) + b * t;
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////
