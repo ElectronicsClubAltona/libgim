@@ -26,36 +26,48 @@
 #include <tuple>
 
 namespace util {
-    // XXX: we should be using a const char[] here, but clang-3.9 will not
-    // instantiate array values within template specialisations.
+    // XXX: clang-3.9/clang-4.0 will not instantiate static constexpr member
+    // variables from class specialisations, so we have to use detail classes
+    // to hold the variables and instantiate _those_ members instead.
     template <typename T>
     struct type_name;
 
-    template <> struct type_name<bool> { static constexpr const char *value = "bool"; };
+    #define CLANG_WORKAROUND(TYPE,TAG,NAME)                         \
+    namespace detail {                                              \
+        struct type_name_##TAG {                                    \
+            static constexpr const char value[] = (NAME);           \
+        };                                                          \
+    }                                                               \
+                                                                    \
+    template <>                                                     \
+    struct type_name<TYPE> : public detail::type_name_##TAG { };
 
-    template <> struct type_name<char> { static constexpr const char *value = "char"; };
-    template <> struct type_name<void*> { static constexpr const char *value = "void*"; };
+    CLANG_WORKAROUND(bool,bool,"bool")
+    CLANG_WORKAROUND(char,char,"char")
+    CLANG_WORKAROUND(void*,voidp,"void*")
 
-    template <> struct type_name<  int8_t> { static constexpr const char *value = "int8"; };
-    template <> struct type_name< int16_t> { static constexpr const char *value = "int16"; };
-    template <> struct type_name< int32_t> { static constexpr const char *value = "int32"; };
-    template <> struct type_name< int64_t> { static constexpr const char *value = "int64"; };
+    CLANG_WORKAROUND( uint8_t, u08, "u08")
+    CLANG_WORKAROUND(uint16_t, u16, "u16")
+    CLANG_WORKAROUND(uint32_t, u32, "u32")
+    CLANG_WORKAROUND(uint64_t, u64, "u64")
 
-    template <> struct type_name< uint8_t> { static constexpr const char *value = "uint8"; };
-    template <> struct type_name<uint16_t> { static constexpr const char *value = "uint16"; };
-    template <> struct type_name<uint32_t> { static constexpr const char *value = "uint32"; };
-    template <> struct type_name<uint64_t> { static constexpr const char *value = "uint64"; };
+    CLANG_WORKAROUND( int8_t, s08, "s08")
+    CLANG_WORKAROUND(int16_t, s16, "s16")
+    CLANG_WORKAROUND(int32_t, s32, "s32")
+    CLANG_WORKAROUND(int64_t, s64, "s64")
 
-    template <> struct type_name<float   > { static constexpr const char *value = "float32"; };
-    template <> struct type_name<double  > { static constexpr const char *value = "float64"; };
+    CLANG_WORKAROUND(float,  f32, "f32")
+    CLANG_WORKAROUND(double, f64, "f64")
 
-    template <> struct type_name<std::string> { static constexpr const char *value = "string"; };
-    template <> struct type_name<char*>       { static constexpr const char *value = "cstring"; };
-    template <> struct type_name<const char*> { static constexpr const char *value = "cstring"; };
+    CLANG_WORKAROUND(const char*, const_cstring, "cstring")
+    CLANG_WORKAROUND(char*, cstring, "cstring")
+    CLANG_WORKAROUND(std::string, string, "string")
+
+    #undef CLANG_WORKAROUND
 
     template <typename T>
     constexpr
-    const char* type_name_v = type_name<T>::value;
+    auto type_name_v = type_name<T>::value;
 
     template <typename T>
     const char*
@@ -67,69 +79,77 @@ namespace util {
     /// Lists valid values of an enumeration
     ///
     /// E: enumeration type
+    ///
+    /// Specialisations must provide the following constexpr:
+    /// value_type:  typename
+    /// value_count: size_t
+    /// values:      static const std::array<value_type,value_count>
     template <
         typename E
     >
-    struct enum_traits {
-        /// Specialisations must provide the following constexpr:
-        ///
-        /// value_type: typename
-        /// value_count: size_t
-        /// values: static const std::array<value_type,value_count>
-    };
+    struct enum_traits;
 
     ///////////////////////////////////////////////////////////////////////////
     /// Defines specialisations for introspection data structures for an
     /// enum E, in namespace NS, with variadic values __VA_ARGS__.
     ///
     /// Expects to be caleld from outside all namespaces.
+    ///
+    /// XXX: If we define the constexpr fields in a template specialised class
+    /// clang has trouble instantiating them (with std=c++1z) resulting in
+    /// undefined symbols at link time. By using a simple struct and inheriting
+    /// from it we can avoid this problem. Revist this solution at clang-4.0.
 
-    #define INTROSPECTION_ENUM_DECL(NS,E, ...)                  \
-    namespace util {                                            \
-        template <>                                             \
-        struct enum_traits<::NS::E> {                           \
-            using value_type = ::NS::E;                         \
-                                                                \
-            static constexpr                                    \
-            size_t value_count = VA_ARGS_COUNT(__VA_ARGS__);    \
-                                                                \
-            static constexpr                                    \
-            std::array<value_type,value_count>                  \
-            values = {                                          \
-                MAP1(NAMESPACE_LIST, ::NS::E, __VA_ARGS__)      \
-            };                                                  \
-                                                                \
-            static constexpr                                    \
-            std::array<const char*,value_count>                 \
-            names = { MAP(STRINGIZE_LIST, __VA_ARGS__) };       \
-        };                                                      \
-                                                                \
-        template <>                                             \
-        struct type_name<::NS::E> {                             \
-            static constexpr const char ns[] = #NS;             \
-            static constexpr const char value[] = #E;           \
-        };                                                      \
-    }                                                           \
+    #define INTROSPECTION_ENUM_DECL(NS,E, ...)                          \
+    namespace util {                                                    \
+        struct PASTE(__enum_traits_,E) {                                \
+            using value_type = ::NS::E;                                 \
+                                                                        \
+            static constexpr                                            \
+            size_t value_count = VA_ARGS_COUNT(__VA_ARGS__);            \
+                                                                        \
+            static const                                                \
+            std::array<value_type,value_count>                          \
+            values;                                                     \
+                                                                        \
+            static const                                                \
+            std::array<const char*,value_count>                         \
+            names;                                                      \
+        };                                                              \
+                                                                        \
+        template <>                                                     \
+        struct enum_traits<::NS::E> : public PASTE(__enum_traits_,E)    \
+        { };                                                            \
+                                                                        \
+        template <>                                                     \
+        struct type_name<::NS::E> {                                     \
+            static constexpr const char ns[] = #NS;                     \
+            static constexpr const char value[] = #E;                   \
+        };                                                              \
+    }                                                                   \
 
 
     ///------------------------------------------------------------------------
     /// Declares specialisations for introspection data structures for an
     /// enum E, in namespace NS, with variadic values __VA_ARGS__.
     ///
-    /// Expects to be caleld from outside all namespaces.
-
+    /// Expects to be called from outside all namespaces.
     #define INTROSPECTION_ENUM_IMPL(NS,E, ...)                  \
     constexpr                                                   \
     std::array<                                                 \
         util::enum_traits<::NS::E>::value_type,                 \
         util::enum_traits<::NS::E>::value_count                 \
-    > util::enum_traits<::NS::E>::values;                       \
+    > PASTE(util::__enum_traits_,E)::values = {                 \
+        MAP1(NAMESPACE_LIST, ::NS::E, __VA_ARGS__)              \
+    };                                                          \
                                                                 \
-    constexpr                                                   \
+    const                                                       \
     std::array<                                                 \
         const char*,                                            \
         util::enum_traits<::NS::E>::value_count                 \
-    > util::enum_traits<::NS::E>::names;                        \
+    > PASTE(util::__enum_traits_,E)::names = {                  \
+      MAP(STRINGIZE_LIST, __VA_ARGS__)                          \
+    };                                                          \
                                                                 \
     constexpr                                                   \
     const char util::type_name<::NS::E>::ns[];                  \
@@ -224,7 +244,7 @@ namespace util {
 
     /// Defines an enum, its values, associated introspection structures, and
     /// istream and ostream operators.
-    /// 
+    ///
     /// This must be called from outside all namespaces as
     /// INTROSPECTION_ENUM_DECL and INTROSPECTION_ENUM_IMPL need to declare
     /// and define structures outside the user's namespace.
@@ -295,7 +315,7 @@ namespace util {
     ///         field<foo,int,&foo::b>
     ///     > fields;
     /// };
-    /// 
+    ///
     /// template <> const std::string field<foo,int,&foo::a>::name = "a";
     /// template <> const std::string field<foo,int,&foo::b>::name = "b";
 

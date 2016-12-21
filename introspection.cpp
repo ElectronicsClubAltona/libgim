@@ -18,21 +18,23 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-constexpr const char* ::util::type_name<bool>::value;
+constexpr const char ::util::detail::type_name_bool::value[];
+constexpr const char ::util::detail::type_name_char::value[];
+constexpr const char ::util::detail::type_name_voidp::value[];
 
-constexpr const char* ::util::type_name<  int8_t>::value;
-constexpr const char* ::util::type_name< int16_t>::value;
-constexpr const char* ::util::type_name< int32_t>::value;
-constexpr const char* ::util::type_name< int64_t>::value;
+constexpr const char ::util::detail::type_name_u08::value[];
+constexpr const char ::util::detail::type_name_u16::value[];
+constexpr const char ::util::detail::type_name_u32::value[];
+constexpr const char ::util::detail::type_name_u64::value[];
 
-constexpr const char* ::util::type_name< uint8_t>::value;
-constexpr const char* ::util::type_name<uint16_t>::value;
-constexpr const char* ::util::type_name<uint32_t>::value;
-constexpr const char* ::util::type_name<uint64_t>::value;
+constexpr const char ::util::detail::type_name_s08::value[];
+constexpr const char ::util::detail::type_name_s16::value[];
+constexpr const char ::util::detail::type_name_s32::value[];
+constexpr const char ::util::detail::type_name_s64::value[];
 
-constexpr const char* ::util::type_name<float>::value;
-constexpr const char* ::util::type_name<double>::value;
+constexpr const char ::util::detail::type_name_f32::value[];
+constexpr const char ::util::detail::type_name_f64::value[];
 
-constexpr const char* ::util::type_name<std::string>::value;
-constexpr const char* ::util::type_name<char*>::value;
-constexpr const char* ::util::type_name<const char*>::value;
+constexpr const char ::util::detail::type_name_string::value[];
+constexpr const char ::util::detail::type_name_cstring::value[];
+constexpr const char ::util::detail::type_name_const_cstring::value[];
