@@ -26,7 +26,7 @@ static const size_t NEWTON_ITERATIONS = 1u;
 
 
 //-----------------------------------------------------------------------------
-namespace util { namespace polynomial {
+namespace util::polynomial {
     template <>
     std::array<float,1>
     roots (std::array<float,2> coeff)
@@ -39,10 +39,11 @@ namespace util { namespace polynomial {
 
         return { -b / a };
     }
-} }
+}
+
 
 //-----------------------------------------------------------------------------
-namespace util { namespace polynomial {
+namespace util::polynomial {
     template <>
     std::array<float,2>
     roots (std::array<float,3> coeff)
@@ -56,16 +57,18 @@ namespace util { namespace polynomial {
             return { s[0], std::numeric_limits<float>::quiet_NaN () };
         }
 
-        auto d = std::sqrt (pow2 (b) - 4 * a * c);
-        return { (-b - d) / (2 * a),
-                 (-b + d) / (2 * a) };
+        auto descriminator = std::sqrt (pow2 (b) - 4 * a * c);
+        return {
+            (-b - descriminator) / (2 * a),
+            (-b + descriminator) / (2 * a)
+        };
     }
-} }
+}
 
 
 //-----------------------------------------------------------------------------
 // From graphics gems: http://tog.acm.org/resources/GraphicsGems/gemsiv/vec_mat/ray/solver.c
-namespace util { namespace polynomial {
+namespace util::polynomial {
     template <>
     std::array<float,3>
     roots (std::array<float,4> coeffs)
@@ -151,4 +154,10 @@ namespace util { namespace polynomial {
 
         return s;
     }
-} }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template std::array<float,1> util::polynomial::roots (std::array<float,1+1>);
+template std::array<float,2> util::polynomial::roots (std::array<float,1+2>);
+template std::array<float,3> util::polynomial::roots (std::array<float,1+3>);

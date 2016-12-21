@@ -20,19 +20,17 @@
 #include <array>
 #include <cstdlib>
 
-namespace util {
-    namespace polynomial {
-        // Invalid solutions are represented by NaN. They are guaranteed to
-        // be at the end of the solution list, so they are safe to skip on the
-        // first instance.
-        template <size_t S>
-        std::array<float,S>
-        roots (std::array<float,S+1>);
+namespace util::polynomial {
+    // Invalid solutions are represented by NaN. They are guaranteed to
+    // be at the end of the solution list, so they are safe to skip on the
+    // first instance.
+    template <size_t S>
+    std::array<float,S>
+    roots (std::array<float,S+1>);
 
-        template <size_t S, typename T, typename U>
-        T
-        eval (std::array<T,S>, U x);
-    }
+    template <size_t S, typename T, typename U>
+    T
+    eval (std::array<T,S>, U x);
 }
 
 #include "polynomial.ipp"

@@ -22,7 +22,7 @@
 #define __UTIL_POLYNOMIAL_IPP
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T, typename U>
 T
 util::polynomial::eval (const std::array<T,S> coeffs, const U x)
@@ -37,4 +37,3 @@ util::polynomial::eval (const std::array<T,S> coeffs, const U x)
 
     return sum;
 }
-
