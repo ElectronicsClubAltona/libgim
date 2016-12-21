@@ -37,6 +37,9 @@ UTIL_FILES   =			\
     ascii.hpp			\
     backtrace.hpp   		\
     bezier.cpp			\
+    bezier1.cpp			\
+    bezier2.cpp			\
+    bezier3.cpp			\
     bezier.hpp			\
     bitwise.cpp			\
     bitwise.hpp			\

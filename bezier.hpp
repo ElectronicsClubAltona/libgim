@@ -23,22 +23,41 @@
 #include <ostream>
 
 namespace util {
-    template <size_t S>
+    struct sdot_t {
+        float distance;
+        float dot;
+    };
+
+    template <size_t N>
     class bezier {
     public:
         using value_type = point2f::value_type;
 
-        bezier (const util::point2f (&)[S+1]);
+        bezier (const util::point2f (&)[N+1]);
 
         point2f eval (float t) const;
 
         // Calculate the expanded polynomial coeffecients in terms of t
-        std::array<vector2f,S+1>
+        std::array<vector2f,N+1>
         coeffs (void) const;
 
         size_t intersections (point2f from, point2f to) const;
 
-        float distance (point2f) const;
+        util::vector2f tangent (float t) const;
+        // 1st derivative w.r.t. t
+        util::vector2f d1 (float t) const noexcept;
+        // 2nd derivative w.r.t. t
+        util::vector2f d2 (float t) const noexcept;
+
+        float closest (point2f) const noexcept;
+
+        sdot_t sdot (point2f) const noexcept;
+
+        float sdistance2 (point2f) const noexcept;
+        float sdistance  (point2f) const noexcept;
+
+        float distance2 (point2f) const noexcept;
+        float distance  (point2f) const noexcept;
 
         region2f region (void) const;
 
@@ -54,13 +73,13 @@ namespace util {
         // HACK: allow easy access to component-wise arithmetic using
         // vector2f rather than point2f in the implementation.
         union {
-            point2f  m_points[S+1];
-            vector2f m_coeffs[S+1];
+            point2f  m_points[N+1];
+            vector2f m_coeffs[N+1];
         };
     };
 
-    template <size_t S>
-    std::ostream& operator<< (std::ostream&, const bezier<S>&);
+    template <size_t N>
+    std::ostream& operator<< (std::ostream&, const bezier<N>&);
 }
 
 #endif
