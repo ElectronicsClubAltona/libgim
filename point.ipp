@@ -74,12 +74,7 @@ template <size_t S, typename T, typename U>
 constexpr typename std::common_type<T,U>::type
 util::distance2 (point<S,T> a, point<S,U> b)
 {
-    typename std::common_type<T,U>::type sum {0};
-
-    for (size_t i = 0; i < S; ++i)
-        sum += pow2 (a.data[i] - b.data[i]);
-
-    return sum;
+    return sum (pow2 (a - b));
 }
 
 
@@ -112,12 +107,7 @@ template <size_t S, typename T, typename U>
 constexpr typename std::common_type<T,U>::type
 util::manhattan (point<S,T> a, point<S,U> b)
 {
-    typename std::common_type<T,U>::type sum {0};
-
-    for (size_t i = 0; i < S; ++i)
-        sum += util::abs (a.data[i] - b.data[i]);
-
-    return sum;
+    return sum (abs (a - b));
 }
 
 
