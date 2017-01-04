@@ -175,7 +175,7 @@ template <typename T, size_t N>
 auto
 util::make_view (const T (&arr)[N])
 {
-    return util::view<T*> { arr, arr + N };
+    return util::view<const T*> (arr + 0, arr + N);
 }
 
 
