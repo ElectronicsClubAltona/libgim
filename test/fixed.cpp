@@ -3,15 +3,17 @@
 
 #include "tap.hpp"
 
+
+///////////////////////////////////////////////////////////////////////////////
 template <typename T, unsigned I, unsigned E>
 void
 test_simple (util::TAP::logger &tap)
 {
-    using fixed_t = util::fixed<T,I,E>;
-    using integer_t = typename fixed_t::integer_t;
+    using fixed   = util::fixed<T,I,E>;
+    using integer = typename fixed::integer_type;
 
-    const fixed_t lo {integer_t{0}};
-    const fixed_t hi {integer_t{1}};
+    const auto lo = fixed::from_integer (integer {0});
+    const auto hi = fixed::from_integer (integer {1});
 
     std::ostringstream os;
     os << "fixed<" << type_to_string<T> () << ',' << I << ',' << E << '>';
@@ -32,6 +34,7 @@ test_simple (util::TAP::logger &tap)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 int
 main (void)
 {
