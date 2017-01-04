@@ -38,7 +38,7 @@ union record {
     using offset_t = uint32_t;
 
     char     *as_bytes;
-    offset_t *as_uint32;
+    offset_t *as_offset;
 };
 
 
@@ -58,26 +58,26 @@ stack::allocate (size_t bytes)
 void*
 stack::allocate (size_t bytes, size_t alignment)
 {
-    alignment = util::max (MIN_ALIGNMENT, alignment);
-
     // reserve space at the front of the allocation to record the total
     // allocation size so we can account for alignment if required.
     auto ptr = m_cursor + sizeof (record::offset_t);
 
     // align the outgoing pointer if required
+    alignment = util::max (MIN_ALIGNMENT, alignment);
     ptr = align (ptr, alignment);
 
     // ensure we haven't overrun our allocated segment
     if (ptr + bytes > m_end)
         throw std::bad_alloc ();
 
-    // store the total size and record the new stack head
+    // use a 'record' struct as a window into the reserved space at the front
+    // of the allocation and store the offset to the previous allocation head
+    // (from the record struct). allows us to account for alignment.
     record record;
-    record.as_bytes = ptr - sizeof (record::offset_t);
-    *record.as_uint32 = trunc_cast<uint32_t> (ptr - m_cursor);
+     record.as_bytes  = ptr - sizeof (record::offset_t);
+    *record.as_offset = trunc_cast<uint32_t> (ptr - m_cursor);
 
     m_cursor = ptr + bytes;
-
     return ptr;
 }
 
@@ -103,10 +103,11 @@ stack::deallocate (void *_ptr, size_t bytes, size_t alignment)
     record record;
     record.as_bytes = ptr - sizeof (record::offset_t);
 
-    CHECK_LE (bytes, *record.as_uint32);
-    CHECK_GE (m_cursor - *record.as_uint32, m_begin);
+    //CHECK_LE (bytes, *record.as_offset);
+    CHECK_GE (m_cursor - *record.as_offset, m_begin);
 
-    m_cursor -= *record.as_uint32 + bytes;
+    m_cursor -= bytes;
+    m_cursor -= *record.as_offset;
 }
 
 
