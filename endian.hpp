@@ -35,12 +35,29 @@ namespace util {
     constexpr T
     bswap (T);
 
-    //template <> constexpr  int8_t bswap ( int8_t v) { return v; }
-    //template <> constexpr int16_t bswap (int16_t v) { return __builtin_bswap16 (v); }
-    //template <> constexpr int32_t bswap (int32_t v) { return __builtin_bswap32 (v); }
-    //template <> constexpr int64_t bswap (int64_t v) { return __builtin_bswap64 (v); }
+    // CXX: Update using "if constexpr" when available. It doesn't seem to be
+    // worth the dicking about to use enable_if_t to differentiate the
+    // signed/unsigned cases.
+    #define SIGNED_BSWAP(S)                 \
+    template <>                             \
+    constexpr                               \
+    int##S##_t                              \
+    bswap (int##S##_t v) {                  \
+        const union {                       \
+             int##S##_t s;                  \
+            uint##S##_t u;                  \
+        } vu = { v };                       \
+                                            \
+        return __builtin_bswap##S (vu.u);   \
+    }
 
-    template <> constexpr  uint8_t bswap ( uint8_t v) { return v; }
+    SIGNED_BSWAP(16)
+    SIGNED_BSWAP(32)
+    SIGNED_BSWAP(64)
+
+    template <> constexpr  int8_t bswap ( int8_t v) { return v; }
+    template <> constexpr uint8_t bswap (uint8_t v) { return v; }
+
     template <> constexpr uint16_t bswap (uint16_t v) { return __builtin_bswap16 (v); }
     template <> constexpr uint32_t bswap (uint32_t v) { return __builtin_bswap32 (v); }
     template <> constexpr uint64_t bswap (uint64_t v) { return __builtin_bswap64 (v); }
