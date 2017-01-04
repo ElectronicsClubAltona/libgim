@@ -245,10 +245,23 @@ namespace util {
 
     //-----------------------------------------------------------------------------
     template <typename T>
+    constexpr
     std::enable_if_t<
         std::is_integral<T>::value, T
     >
-    round_pow2  (T value);
+    round_pow2  (T value)
+    {
+        using return_type = std::enable_if_t<std::is_integral<T>::value, T>;
+
+        --value;
+
+        for (unsigned i = 1; i < sizeof (T) * 8; i <<= 1) {
+            value |= value >> i;
+        }
+
+        ++value;
+        return (return_type)value;
+    }
 
 
     //-----------------------------------------------------------------------------

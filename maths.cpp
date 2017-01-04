@@ -53,33 +53,6 @@ template uint64_t util::log2 (uint64_t);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-std::enable_if_t<
-    std::is_integral<T>::value, T
->
-util::round_pow2 (T value)
-{
-    using return_type = std::enable_if_t<std::is_integral<T>::value, T>;
-
-    --value;
-
-    for (unsigned i = 1; i < sizeof (T) * 8; i <<= 1) {
-        value |= value >> i;
-    }
-
-    ++value;
-    return (return_type)value;
-}
-
-
-//-----------------------------------------------------------------------------
-template uint8_t  util::round_pow2 (uint8_t);
-template uint16_t util::round_pow2 (uint16_t);
-template uint32_t util::round_pow2 (uint32_t);
-template uint64_t util::round_pow2 (uint64_t);
-
-
-///////////////////////////////////////////////////////////////////////////////
 template const float  util::PI<float>;
 template const double util::PI<double>;
 
