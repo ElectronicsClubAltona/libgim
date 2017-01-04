@@ -50,7 +50,7 @@ namespace util {
     std::ostream&                                                           \
     operator<< (std::ostream &os, view<A> a) {                              \
         std::copy (a.cbegin (),                                             \
-                   a.cend (),                                               \
+                   std::find (a.cbegin (), a.cend (), '\0'),                \
                    std::ostream_iterator<decltype(a)::value_type> (os));    \
                                                                             \
         return os;                                                          \
@@ -58,7 +58,9 @@ namespace util {
 
     OSTREAM(const char*)
     OSTREAM(char*)
+    OSTREAM(  signed char*)
     OSTREAM(unsigned char*)
+    OSTREAM(const   signed char*)
     OSTREAM(const unsigned char*)
     OSTREAM(std::string::const_iterator)
     OSTREAM(std::string::iterator)
