@@ -24,6 +24,8 @@
 #include <cstdlib>
 #include <type_traits>
 
+
+///////////////////////////////////////////////////////////////////////////////
 // Calculate a reasonable alignment for the given type and arity given what we
 // know about the platform. Only intended to be used with alignas specifiers.
 namespace util::coord::detail {
@@ -32,6 +34,8 @@ namespace util::coord::detail {
     size_t
     alignment (size_t S)
     {
+        (void)S;
+
 #if defined(__SSE_MATH__)
         // Align to 16 if we have 4x floats on SSE/NEON. There are other
         // possiblities, but we don't care about them right at this point.
