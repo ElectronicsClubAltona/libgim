@@ -22,24 +22,49 @@
 #include "../platform.hpp"
 
 #include <cstdlib>
+#include <type_traits>
+
+// Calculate a reasonable alignment for the given type and arity given what we
+// know about the platform. Only intended to be used with alignas specifiers.
+namespace util::coord::detail {
+    template <typename T>
+    constexpr
+    size_t
+    alignment (size_t S)
+    {
+#if defined(__SSE_MATH__)
+        // Align to 16 if we have 4x floats on SSE/NEON. There are other
+        // possiblities, but we don't care about them right at this point.
+        if (!std::is_same<T,float>::value)
+            return alignof (T);
+
+        if (S % 4 == 0)
+            return 16;
+#elif defined (__ARM_NEON__)
+        // TODO: deal with alignment issues before adding alignas specifiers
+#endif
+
+        return alignof (T);
+    }
+}
+
+#define SIMD_ALIGN(S,T) alignas (util::coord::detail::alignment<T> (S))
 
 
 namespace util::coord {
     ///////////////////////////////////////////////////////////////////////////
     // Coordinate storage class.
     //
-    // Types of arity multiples of 4 with payloads of at least 16 bytes
-    // (T >= uint16_t) are guaranteed to be aligned appropriately for SSE (see
-    // specialisations below).
+    // Types with trivially suitable arity are aligned appropriately to take
+    // advantage of native platform SIMD. eg, 4f types are aligned to 16 bytes
+    // on SSE platforms.
     template <
         size_t S,
         typename T,
         typename...
     >
     struct
-    alignas (
-        sizeof (T) * S % 16 == 0 && sizeof (T) * S >= 16 ? 16 : alignof (T)
-    )
+    SIMD_ALIGN(S,T)
     store {
         T data[S];
     };
@@ -63,9 +88,7 @@ namespace util::coord {
     // TODO: expand this for other instruction sets. maybe switch on type.
     template <typename T>
     struct
-    alignas (
-        sizeof (T) * 4u >= 16 ? 16 : alignof (T)
-    )
+    SIMD_ALIGN(4,T)
     store<4,T,rgba,hsv> {
         union {
             T data[4];
@@ -101,9 +124,7 @@ namespace util::coord {
     // TODO: expand this for other instruction sets. maybe switch on type.
     template <typename T>
     struct
-    alignas (
-        sizeof (T) * 4u >= 16 ? 16 : alignof (T)
-    )
+    SIMD_ALIGN(4,T)
     store<4,T,xyzw> {
         union {
             T data[4];
@@ -140,9 +161,7 @@ namespace util::coord {
     // TODO: expand this for other instruction sets. maybe switch on type.
     template <typename T>
     struct
-    alignas (
-        sizeof (T) * 4u >= 16 ? 16 : alignof (T)
-    )
+    SIMD_ALIGN(4,T)
     store<4,T,xyzw,stpq> {
         union {
             T data[4];
@@ -173,7 +192,9 @@ namespace util::coord {
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    struct store<4,T,wxyz,abcd> {
+    struct
+    SIMD_ALIGN(4,T)
+    store<4,T,wxyz,abcd> {
         union {
             T data[4];
             struct { T w,x,y,z; };
