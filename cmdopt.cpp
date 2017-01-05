@@ -367,7 +367,7 @@ parser::parse_short (int pos, int argc, const char *const *argv)
                                       m_short.end (),
                                       [letter] (auto j) { return std::get<char> (j) == letter; });
             if (hpos == m_short.end ())
-                throw invalid_key (std::to_string (letter));
+                throw invalid_key (std::string (1, letter));
             std::get<option::base&> (*hpos).execute ();
         }
 
@@ -380,7 +380,7 @@ parser::parse_short (int pos, int argc, const char *const *argv)
                               m_short.end (),
                               [letter] (auto i) { return std::get<char> (i) == letter; });
     if (hpos == m_short.end ())
-        throw invalid_key (std::to_string (letter));
+        throw invalid_key (std::string (1, letter));
     std::get<option::base&> (*hpos).execute (argv[pos+1]);
 
     return 2;
