@@ -20,6 +20,7 @@
 #include <cstring>
 
 #include "io.hpp"
+#include "stream.hpp"
 
 #include "hash/simple.hpp"
 
@@ -62,12 +63,12 @@ template <size_t S>
 std::ostream&
 print_digest (std::ostream &os, std::array<uint8_t,S> digest)
 {
+    util::stream::scoped::flags f (os);
     os << std::hex;
 
     for (auto c: digest)
         os << +(c >> 4) << +(c & 0x0F);
 
-    os << std::dec;
     return os;
 }
 

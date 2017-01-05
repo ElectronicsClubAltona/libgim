@@ -18,48 +18,69 @@
 #define __UTIL_STREAM_HPP
 
 #include <ostream>
+#include <ios>
 
-namespace util {
-    namespace stream {
-        ///////////////////////////////////////////////////////////////////////
-        class null_streambuf : public std::basic_streambuf<char> {
-        public:
-            virtual ~null_streambuf () { ; }
-        };
+namespace util::stream {
+    namespace scoped {
+        #define SCOPED(NAME,TYPE)   \
+        class NAME {                \
+        public:                     \
+            NAME (std::ios_base&);  \
+            ~NAME ();               \
+                                    \
+        private:                    \
+            std::ios_base &m_ios;   \
+            TYPE m_state;           \
+        }
 
+        SCOPED(flags, std::ios_base::fmtflags);
+        SCOPED(precision, std::streamsize);
+        SCOPED(width, std::streamsize);
 
-        ///////////////////////////////////////////////////////////////////////
-        class null_ostream : public std::basic_ostream<char> {
-        public:
-            virtual ~null_ostream () { ; }
-
-            std::ostream & put   (char c);
-            std::ostream & write (const char *s, std::streamsize n);
-
-            std::streampos tellp (void);
-            std::ostream & seekp (std::streampos pos);
-            std::ostream & seekp (std::streamoff off,
-                                  std::ios_base::seekdir dir);
-
-            std::ostream & flush (void);
-
-            bool good (void) const;
-            bool bad  (void) const;
-            bool eof  (void) const;
-            bool fail (void) const;
-        };
+        #undef SCOPED
+    };
 
 
-        ///////////////////////////////////////////////////////////////////////
-        struct bits {
-            bits (uintmax_t value, unsigned count);
+    ///////////////////////////////////////////////////////////////////////////
+    class null_streambuf : public std::basic_streambuf<char> {
+    public:
+        virtual ~null_streambuf () { ; }
+    };
 
-            uintmax_t value;
-            unsigned  count;
-        };
 
-        std::ostream& operator<< (std::ostream&, bits);
-    }
+    ///////////////////////////////////////////////////////////////////////////
+    class null_ostream : public std::basic_ostream<char> {
+    public:
+        virtual ~null_ostream () { ; }
+
+        std::ostream & put   (char c);
+        std::ostream & write (const char *s, std::streamsize n);
+
+        std::streampos tellp (void);
+        std::ostream & seekp (std::streampos pos);
+        std::ostream & seekp (std::streamoff off,
+                              std::ios_base::seekdir dir);
+
+        std::ostream & flush (void);
+
+        bool good (void) const;
+        bool bad  (void) const;
+        bool eof  (void) const;
+        bool fail (void) const;
+    };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    struct bits {
+        bits (uintmax_t value, unsigned count);
+
+        uintmax_t value;
+        unsigned  count;
+    };
+
+
+    //---------------------------------------------------------------------
+    std::ostream& operator<< (std::ostream&, bits);
 }
 
 

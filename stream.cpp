@@ -21,7 +21,50 @@
 using util::stream::null_ostream;
 using util::stream::bits;
 
+
+///////////////////////////////////////////////////////////////////////////////
+util::stream::scoped::flags::flags (std::ios_base &_ios):
+    m_ios (_ios),
+    m_state (_ios.flags ())
+{ ; }
+
+
 //-----------------------------------------------------------------------------
+util::stream::scoped::flags::~flags ()
+{
+    m_ios.flags (m_state);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+util::stream::scoped::precision::precision (std::ios_base &_ios):
+    m_ios (_ios),
+    m_state (_ios.precision ())
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+util::stream::scoped::precision::~precision ()
+{
+    m_ios.precision (m_state);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+util::stream::scoped::width::width (std::ios_base &_ios):
+    m_ios (_ios),
+    m_state (_ios.width ())
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+util::stream::scoped::width::~width ()
+{
+    m_ios.width (m_state);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 std::ostream&
 null_ostream::put (char)
 {

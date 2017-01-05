@@ -24,11 +24,14 @@
 #include "../io.hpp"
 #include "../maths.hpp"
 #include "../preprocessor.hpp"
+#include "../stream.hpp"
 
 #include <algorithm>
 #include <cstdlib>
 #include <iomanip>
 
+
+///////////////////////////////////////////////////////////////////////////////
 using json::tree::node;
 using json::tree::object;
 using json::tree::array;
@@ -838,12 +841,12 @@ json::tree::number::clone (void) const
 std::ostream&
 json::tree::number::write (std::ostream &os) const
 {
-    auto old = os.precision ();
+    util::stream::scoped::precision p (os);
 
     switch (m_repr) {
-    case REAL: return os << std::numeric_limits<real_t>::digits10 << m_value.r << std::setprecision (old);
-    case SINT: return os << std::numeric_limits<sint_t>::digits10 << m_value.s << std::setprecision (old);
-    case UINT: return os << std::numeric_limits<uint_t>::digits10 << m_value.u << std::setprecision (old);
+    case REAL: return os << std::setprecision (std::numeric_limits<real_t>::digits10) << m_value.r;
+    case SINT: return os << std::setprecision (std::numeric_limits<sint_t>::digits10) << m_value.s;
+    case UINT: return os << std::setprecision (std::numeric_limits<uint_t>::digits10) << m_value.u;
     }
 
     unreachable ();

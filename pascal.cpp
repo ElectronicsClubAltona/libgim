@@ -139,7 +139,9 @@ template <typename T>
 std::ostream&
 util::operator<< (std::ostream &os, parray<T> p)
 {
-    os << "[" << p.size () << ", " << std::hex << p.data () << std::dec << "]";
+    auto size = p.size ();
+    uintptr_t ptr = reinterpret_cast<uintptr_t> (p.data ());
+    os << "[" << size << ", " << std::hex << ptr << std::dec << "]";
     return os;
 }
 
