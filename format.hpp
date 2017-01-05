@@ -20,7 +20,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace util { namespace format {
+namespace util::format {
     //-------------------------------------------------------------------------
     // render a format string using the provided values.
     //
@@ -69,7 +69,7 @@ namespace util { namespace format {
             error ("missing argument for specifier")
         { ; }
     };
-} }
+}
 
 #include "format.ipp"
 

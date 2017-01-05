@@ -19,8 +19,8 @@
 
 #include <cstddef>
 
-namespace util { namespace memory {
+namespace util::memory {
     size_t pagesize (void);
-} }
+}
 
 #endif

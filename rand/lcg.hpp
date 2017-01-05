@@ -21,7 +21,7 @@
 #include <type_traits>
 
 
-namespace util { namespace rand {
+namespace util::rand {
     /// linear congruential generator
     ///
     /// T: output/state type
@@ -50,6 +50,6 @@ namespace util { namespace rand {
 
     // glibc: typedef lcg<uint32_t, pow2(31), 1103515245, 12345> lcg_t;
     using lcg_t = lcg<uint64_t,0u,6364136223846793005ul, 1ul>;
-} }
+}
 
 #endif

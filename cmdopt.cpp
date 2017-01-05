@@ -155,11 +155,11 @@ present::finish (void)
 
 
 //-----------------------------------------------------------------------------
-namespace util { namespace cmdopt { namespace option {
+namespace util::cmdopt::option {
     template class value<uint16_t>;
     template class value<uint32_t>;
     template class value<uint64_t>;
-} } }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -180,9 +180,9 @@ count<T>::execute (void)
 
 
 //-----------------------------------------------------------------------------
-namespace util { namespace cmdopt { namespace option {
+namespace util::cmdopt::option {
     template class count<unsigned>;
-} } }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////

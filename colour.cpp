@@ -330,7 +330,7 @@ util::hsv_to_rgb (colour3f hsv)
 /// Extract a colour object from a JSON node.
 #include "json/tree.hpp"
 
-namespace json { namespace tree {
+namespace json::tree {
     template <>
     util::colour4f
     io<util::colour4f>::deserialise (const node &root) {
@@ -341,7 +341,7 @@ namespace json { namespace tree {
             root[3].as<float> (),
         };
     }
-} }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////

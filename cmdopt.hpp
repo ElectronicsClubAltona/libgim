@@ -25,7 +25,9 @@
 #include <tuple>
 #include <vector>
 
-namespace util { namespace cmdopt {
+
+///////////////////////////////////////////////////////////////////////////////
+namespace util::cmdopt {
     namespace option {
         class base {
         public:
@@ -199,7 +201,7 @@ namespace util { namespace cmdopt {
     private:
         const int m_index;
     };
-} }
+}
 
 #include "cmdopt.ipp"
 

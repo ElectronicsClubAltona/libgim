@@ -17,7 +17,7 @@
 #ifndef __UTIL_COORD_NAMES_HPP
 #define __UTIL_COORD_NAMES_HPP
 
-namespace util { namespace coord {
+namespace util::coord {
     ///////////////////////////////////////////////////////////////////////
     // tags for accessor names
     //
@@ -37,6 +37,6 @@ namespace util { namespace coord {
     // quaternions
     struct wxyz { };
     struct abcd { };
-} }
+}
 
 #endif

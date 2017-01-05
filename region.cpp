@@ -345,7 +345,7 @@ util::operator<< (std::ostream &os, const util::region<S,T> &rhs) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace debug {
+namespace util::debug {
     template <size_t S, typename T>
     struct validator<util::region<S,T>> {
         static bool is_valid (const util::region<S,T> &r)
@@ -353,7 +353,7 @@ namespace util { namespace debug {
             return util::debug::is_valid (r.p) && util::debug::is_valid (r.e);
         }
     };
-} }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////

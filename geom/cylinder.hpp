@@ -19,8 +19,8 @@
 
 #include "../point.hpp"
 
-namespace util { namespace geom {
-    ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+namespace util::geom {
     template <size_t S, typename T>
     struct cylinder {
         util::point<S,T> p0, p1;
@@ -30,6 +30,6 @@ namespace util { namespace geom {
         bool includes (util::point<S,T>) const;
     };
 
-} }
+}
 
 #endif

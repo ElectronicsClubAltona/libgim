@@ -21,12 +21,12 @@
 #include <cstdint>
 
 // Zilong Tan's FastHash, via George Marsaglia's "Xorshift RNGs"
-namespace util { namespace hash { namespace fasthash {
+namespace util::hash::fasthash {
     uint64_t mix (uint64_t);
 
     uint32_t hash32 (const void *restrict data, size_t len, uint32_t seed);
     uint64_t hash64 (const void *restrict data, size_t len, uint64_t seed);
-} } }
+}
 
 #endif
 

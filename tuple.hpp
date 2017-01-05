@@ -24,7 +24,7 @@
 #include <type_traits>
 
 
-namespace util { namespace tuple {
+namespace util::tuple {
     ///////////////////////////////////////////////////////////////////////////
     /// call a provided object with type_tag<T> for each type in a tuple
     template <
@@ -163,7 +163,7 @@ namespace util { namespace tuple {
             >::type...
         > type;
     };
-} }
+}
 
 
 #endif

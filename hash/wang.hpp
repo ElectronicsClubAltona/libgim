@@ -19,11 +19,11 @@
 
 #include <cstdint>
 
-namespace util { namespace hash {
+namespace util::hash {
     // Thomas Wang's integer mixing functions, ca 2007
     constexpr uint32_t wang (uint32_t);
     constexpr uint64_t wang (uint64_t);
-} }
+}
 
 #include "wang.ipp"
 

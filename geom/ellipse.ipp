@@ -26,7 +26,7 @@
 #include <random>
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace geom {
+namespace util::geom {
     template <typename T, template <size_t,typename> class K, typename G>
     struct sampler<2,T,K,G>
     {
@@ -43,4 +43,4 @@ namespace util { namespace geom {
             } * rho * k.radius + k.origin.template as<util::vector> ();
         }
     };
-} }
+}

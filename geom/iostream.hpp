@@ -21,7 +21,9 @@
 
 #include <ostream>
 
-namespace util { namespace geom {
+
+///////////////////////////////////////////////////////////////////////////////
+namespace util::geom {
     template <size_t S, typename T>
     std::ostream&
     operator<< (std::ostream&, AABB<S,T>);
@@ -33,6 +35,6 @@ namespace util { namespace geom {
     template <size_t S, typename T>
     std::ostream&
     operator<< (std::ostream&, sphere<S,T>);
-} }
+}
 
 #endif

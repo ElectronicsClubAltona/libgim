@@ -22,14 +22,14 @@
 #include <cstdint>
 
 // Austin Appleby's MurmurHash3
-namespace util { namespace hash { namespace murmur3 {
+namespace util::hash::murmur3 {
     uint32_t mix (uint32_t);
     uint64_t mix (uint64_t);
 
     uint32_t hash_32 (const void *restrict data, size_t len, uint32_t seed);
     std::array<uint32_t,4> hash_128_x86 (const void *restrict data, size_t len, uint32_t seed);
     std::array<uint64_t,2> hash_128_x64 (const void *restrict data, size_t len, uint32_t seed);
-} } }
+}
 
 #endif
 

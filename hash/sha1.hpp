@@ -24,7 +24,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash {
+namespace util::hash {
     class SHA1 {
     public:
         typedef std::array<uint8_t,20> digest_t;
@@ -59,6 +59,6 @@ namespace util { namespace hash {
             uint32_t W[16  +64  ];
         };
     };
-} }
+}
 
 #endif

@@ -22,7 +22,9 @@
 
 #include "../view.hpp"
 
-namespace json { namespace flat {
+
+///////////////////////////////////////////////////////////////////////////////
+namespace json::flat {
     enum class type {
         UNKNOWN,
 
@@ -53,6 +55,6 @@ namespace json { namespace flat {
     std::vector<item<T>> parse (util::view<T> data);
 
     std::ostream& operator<< (std::ostream&, type);
-} }
+}
 
 #endif

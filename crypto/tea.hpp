@@ -21,7 +21,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace util { namespace crypto {
+namespace util::crypto {
     // http://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm
     class TEA {
     public:
@@ -35,6 +35,6 @@ namespace util { namespace crypto {
     private:
         key_t m_key;
     };
-} }
+}
 
 #endif

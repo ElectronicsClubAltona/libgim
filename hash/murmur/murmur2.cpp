@@ -31,7 +31,7 @@ util::hash::murmur2::hash_32 (const void *restrict key,
 
     // setup
     constexpr auto m = detail::constants<uint32_t>::m;
-    uint32_t h = seed ^ uint32_t (len);
+    uint32_t h = seed ^ (len & 0xffffffff);
 
     // body
     auto cursor = reinterpret_cast<const uint32_t*> (key);
@@ -41,7 +41,7 @@ util::hash::murmur2::hash_32 (const void *restrict key,
 
     // tail
     if (len % sizeof (uint32_t)) {
-        h ^= murmur::tail (cursor, len);
+        h ^= murmur::tail<uint32_t> (reinterpret_cast<const uint8_t*> (cursor), len);
         h *= m;
     }
 
@@ -74,7 +74,7 @@ util::hash::murmur2::hash_64 (const void *restrict key,
 
     // tail
     if (len % sizeof (uint64_t)) {
-        h ^= murmur::tail (cursor, len);
+        h ^= murmur::tail<uint64_t> (reinterpret_cast<const uint8_t*> (cursor), len);
         h *= m;
     }
 

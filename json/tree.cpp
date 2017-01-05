@@ -377,7 +377,7 @@ json::tree::node::as_chars (void) const&
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace json { namespace tree {
+namespace json::tree {
 #if defined(__clang__)
 #elif defined(__GNUC__)
 #pragma GCC diagnostic push
@@ -445,7 +445,7 @@ namespace json { namespace tree {
 #elif defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif
-} }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1009,7 +1009,7 @@ json::tree::operator<< (std::ostream &os, const json::tree::node &n)
 //-----------------------------------------------------------------------------
 // to_json
 
-namespace json { namespace tree {
+namespace json::tree {
     template <>
     std::unique_ptr<node>
     io<bool>::serialise (const bool &b) {
@@ -1057,4 +1057,4 @@ namespace json { namespace tree {
     io<float>::serialise (const float &f) {
         return std::unique_ptr<node> (new number (f));
     }
-} }
+}

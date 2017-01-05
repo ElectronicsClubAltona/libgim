@@ -19,7 +19,7 @@
 #include <utility>
 
 
-namespace util { namespace format { namespace detail {
+namespace util::format::detail {
     //-------------------------------------------------------------------------
     std::ostream&
     operator<< (std::ostream &os, specifier::repr r)
@@ -72,4 +72,4 @@ namespace util { namespace format { namespace detail {
             "length: "             << s.length              <<
         " }";
     }
-} } }
+}

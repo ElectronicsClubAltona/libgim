@@ -19,7 +19,7 @@
 
 #include <cstdlib>
 
-namespace util { namespace geom {
+namespace util::geom {
     template <size_t S, typename T> struct ray;
     template <size_t S, typename T> struct plane;
     template <size_t S, typename T> struct AABB;
@@ -28,6 +28,6 @@ namespace util { namespace geom {
     template <size_t S, typename T> struct rect;
     template <size_t S, typename T> struct cylinder;
     template <size_t S, typename T> struct tri;
-} }
+}
 
 #endif

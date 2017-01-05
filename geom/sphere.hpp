@@ -19,7 +19,9 @@
 
 #include "../point.hpp"
 
-namespace util { namespace geom {
+
+///////////////////////////////////////////////////////////////////////////////
+namespace util::geom {
     template <size_t S, typename T>
     struct sphere {
         point<S,T> centre;
@@ -28,6 +30,6 @@ namespace util { namespace geom {
 
     typedef sphere<2,float> sphere2f;
     typedef sphere<3,float> sphere3f;
-} }
+}
 
 #endif

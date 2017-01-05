@@ -24,7 +24,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash {
+namespace util::hash {
     template <typename DIGEST>
     class fletcher {
     public:
@@ -51,7 +51,7 @@ namespace util { namespace hash {
         const state_t m_initial;
         state_t m_state;
     };
-} }
+}
 
 
 #endif

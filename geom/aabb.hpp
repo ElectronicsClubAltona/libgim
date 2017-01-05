@@ -23,7 +23,7 @@
 
 #include <cstdint>
 
-namespace util { namespace geom {
+namespace util::geom {
     template <size_t S, typename T>
     struct AABB {
         AABB () = default;
@@ -64,7 +64,7 @@ namespace util { namespace geom {
     typedef AABB<3,float> AABB3f;
     typedef AABB<3,unsigned> AABB3u;
     typedef AABB<3,int> AABB3i;
-} }
+}
 
 #include "aabb.ipp"
 

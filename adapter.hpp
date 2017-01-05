@@ -21,7 +21,7 @@
 #include <cstddef>
 #include <iterator>
 
-namespace util { namespace adapter {
+namespace util::adapter {
     namespace container {
         // reverse a container for range-based-for
         template <typename T>
@@ -144,6 +144,6 @@ namespace util { namespace adapter {
         //    size_t m_sequence;
         //};
     }
-} }
+}
 
 #endif

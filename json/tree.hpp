@@ -32,7 +32,8 @@
 #include <experimental/filesystem>
 
 
-namespace json { namespace tree {
+///////////////////////////////////////////////////////////////////////////////
+namespace json::tree {
     enum type_t {
         OBJECT,
         ARRAY,
@@ -354,8 +355,10 @@ namespace json { namespace tree {
         static std::unique_ptr<json::tree::node> serialise (const T&);
         static T deserialise (const json::tree::node&);
     };
-} }
+}
 
+
+///////////////////////////////////////////////////////////////////////////////
 template <typename T, class ...Args>
 std::unique_ptr<json::tree::node>
 to_json (const T &t, Args&&... args)
@@ -365,6 +368,8 @@ to_json (const T &t, Args&&... args)
     );
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
 template <typename T, class ...Args>
 T
 from_json (const json::tree::node &n, Args&&... args)
@@ -375,5 +380,3 @@ from_json (const json::tree::node &n, Args&&... args)
 }
 
 #endif
-
-

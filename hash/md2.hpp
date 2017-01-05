@@ -22,7 +22,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash {
+namespace util::hash {
     class MD2 {
         public:
             typedef std::array<uint8_t,16> digest_t;
@@ -45,6 +45,6 @@ namespace util { namespace hash {
             uint8_t C[16];
             uint8_t X[48];
     };
-} }
+}
 
 #endif

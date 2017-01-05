@@ -19,7 +19,7 @@
 
 #include <cstdint>
 
-namespace util { namespace rand {
+namespace util::rand {
     // multiply-with-carry style generator suitable for rapid seeking and
     // GPU generation.
     //
@@ -37,7 +37,7 @@ namespace util { namespace rand {
     private:
         uint64_t m_state;
     };
-} }
+}
 
 
 #endif

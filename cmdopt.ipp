@@ -25,7 +25,7 @@
 #include "./introspection.hpp"
 #include "./iterator.hpp"
 
-namespace util { namespace cmdopt {
+namespace util::cmdopt {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
     option::value<T>::value (T &_data):
@@ -194,4 +194,4 @@ namespace util { namespace cmdopt {
         m_options.emplace_back (std::move (description), std::move (handler));
         return ref;
     }
-} }
+}

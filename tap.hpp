@@ -19,7 +19,7 @@
 
 #include <functional>
 
-namespace util { namespace TAP {
+namespace util::TAP {
     /// A simple TAP (Test Anything Protocol) test case output
     class logger {
     public:
@@ -84,7 +84,7 @@ namespace util { namespace TAP {
         int m_status;
         size_t m_size;
     };
-} }
+}
 
 #include "tap.ipp"
 

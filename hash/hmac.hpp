@@ -21,7 +21,7 @@
 #include <cstdint>
 #include <cstdlib>
 
-namespace util { namespace hash {
+namespace util::hash {
     template <class T>
     /// RFC 2104 key-hashing for message authentication
     class HMAC {
@@ -42,6 +42,6 @@ namespace util { namespace hash {
 
         T m_hash;
     };
-} }
+}
 
 #endif

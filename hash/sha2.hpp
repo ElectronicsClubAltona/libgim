@@ -23,7 +23,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash {
+namespace util::hash {
     class SHA256 {
     public:
         typedef std::array<uint8_t,32> digest_t;
@@ -50,6 +50,6 @@ namespace util { namespace hash {
             std::array<uint8_t,  64> C;
         };
     };
-} }
+}
 
 #endif

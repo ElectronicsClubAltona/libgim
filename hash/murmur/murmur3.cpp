@@ -23,6 +23,18 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
+static
+uint32_t
+read_u32 (const uint8_t *bytes)
+{
+    return bytes[0] <<  0 |
+           bytes[1] <<  8 |
+           bytes[2] << 16 |
+           bytes[3] << 24;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 // Finalization mix - force all bits of a hash block to avalanche
 uint32_t
 util::hash::murmur3::mix (uint32_t h)
@@ -67,10 +79,10 @@ util::hash::murmur3::hash_32(const void *restrict key,
 
     //----------
     // body
-    auto cursor = reinterpret_cast<const uint32_t *> (data);
-    auto last   = cursor + nblocks;
-    for (; cursor < last; ++cursor) {
-        uint32_t k1 = *cursor;
+    auto cursor = data;
+    auto last   = cursor + nblocks * sizeof (uint32_t);
+    for (; cursor < last; cursor += sizeof (uint32_t)) {
+        uint32_t k1 = read_u32 (cursor);
 
         k1 *= c1;
         k1 = util::rotatel (k1, 15);
@@ -85,7 +97,7 @@ util::hash::murmur3::hash_32(const void *restrict key,
     //----------
     // tail
     if (len % sizeof (uint32_t)) {
-        uint32_t k1 = 0 ^ murmur::tail (cursor, len);
+        uint32_t k1 = 0 ^ murmur::tail<uint32_t> (cursor, len);
 
         k1 *= c1;
         k1  = util::rotatel (k1, 15);
@@ -208,7 +220,7 @@ hash_128 (const void *restrict key,
 
     // process the tail
     if (len % 16) {
-        auto k = util::hash::murmur::tail_array (cursor, len);
+        auto k = util::hash::murmur::tail_array<T> (reinterpret_cast<const uint8_t*> (cursor), len);
 
         for (auto &v: k)
             v = 0 ^ v;

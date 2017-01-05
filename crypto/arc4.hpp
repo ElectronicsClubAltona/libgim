@@ -21,7 +21,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace util { namespace crypto {
+namespace util::crypto {
     class ARC4 {
     public:
         ARC4 (const uint8_t *restrict key, size_t len);
@@ -35,6 +35,6 @@ namespace util { namespace crypto {
         size_t x, y;
         std::array<uint8_t,256> S;
     };
-} }
+}
 
 #endif

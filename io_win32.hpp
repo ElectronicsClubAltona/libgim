@@ -51,7 +51,7 @@ enum : int {
 ///////////////////////////////////////////////////////////////////////////////
 // implementation definitions
 namespace util {
-    namespace detail { namespace win32 {
+    namespace detail::win32 {
         class mapped_file {
         public:
             mapped_file (::util::win32::handle &&,
@@ -97,7 +97,7 @@ namespace util {
             std::unique_ptr<uint8_t,BOOL(*)(LPCVOID)> m_data;
             uint64_t m_size;
         };
-    } }
+    }
 
     typedef detail::win32::mapped_file mapped_file;
 }

@@ -22,7 +22,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash { namespace murmur2 { namespace detail {
+namespace util::hash::murmur2::detail {
     template <typename T> struct constants;
 
     template <>
@@ -36,7 +36,7 @@ namespace util { namespace hash { namespace murmur2 { namespace detail {
         static const uint64_t m = 0xc6a4a7935bd1e995;
         static const  int64_t r = 47;
     };
-} } } }
+}
 
 
 /////////////////////////////////////////////////////////////////////

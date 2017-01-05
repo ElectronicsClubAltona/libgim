@@ -22,7 +22,7 @@
 #include <cstdint>
 #include <stdexcept>
 
-namespace util { namespace ascii {
+namespace util::ascii {
     ///////////////////////////////////////////////////////////////////////////
     constexpr inline
     bool
@@ -87,6 +87,6 @@ namespace util { namespace ascii {
             return false;
         }
     }
-} }
+}
 
 #endif

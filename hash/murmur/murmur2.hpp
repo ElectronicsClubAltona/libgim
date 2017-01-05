@@ -23,13 +23,13 @@
 // Austin Appleby's MumurHash2, and MurmurHash64A. The exhaustive list of
 // variants is deliberately not provided. You can damn well align your data or
 // fix the algorithm.
-namespace util { namespace hash { namespace murmur2 {
+namespace util::hash::murmur2 {
     constexpr uint32_t mix (uint32_t, uint32_t);
     constexpr uint64_t mix (uint64_t, uint64_t);
 
     uint32_t hash_32 (const void *restrict data, size_t len, uint32_t seed);
     uint64_t hash_64 (const void *restrict data, size_t len, uint64_t seed);
-} } }
+}
 
 #include "./murmur2.ipp"
 

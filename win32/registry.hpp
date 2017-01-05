@@ -22,7 +22,7 @@
 #include <set>
 #include <string>
 
-namespace util { namespace win32 {
+namespace util::win32 {
     class key {
     public:
         key (HKEY root, const char *child, REGSAM rights = KEY_READ);
@@ -37,6 +37,6 @@ namespace util { namespace win32 {
     private:
         HKEY m_handle;
     };
-} }
+}
 
 #endif

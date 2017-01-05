@@ -23,7 +23,9 @@
 #include "../vector.hpp"
 #include "../point.hpp"
 
-namespace util { namespace geom {
+
+///////////////////////////////////////////////////////////////////////////////
+namespace util::geom {
     template <size_t S, typename T>
     struct ray {
         ray (point<S,T> origin,
@@ -50,6 +52,6 @@ namespace util { namespace geom {
 
     typedef ray<2,float> ray2f;
     typedef ray<3,float> ray3f;
-} }
+}
 
 #endif

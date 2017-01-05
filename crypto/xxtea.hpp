@@ -21,7 +21,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace util { namespace crypto {
+namespace util::crypto {
     // http://en.wikipedia.org/wiki/XXTEA
     // 'corrected' block TEA
     class XXTEA {
@@ -36,7 +36,7 @@ namespace util { namespace crypto {
     private:
         key_t m_key;
     };
-} }
+}
 
 #endif
 

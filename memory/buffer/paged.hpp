@@ -19,7 +19,7 @@
 
 #include <cstddef>
 
-namespace util { namespace memory { namespace buffer {
+namespace util::memory::buffer {
     class paged {
     public:
         using value_type = char;
@@ -54,6 +54,6 @@ namespace util { namespace memory { namespace buffer {
         char *m_begin, *m_end, *m_cursor;
         size_t m_window;
     };
-} } }
+}
 
 #endif

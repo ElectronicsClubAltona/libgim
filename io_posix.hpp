@@ -28,7 +28,7 @@
 #include <fcntl.h>
 
 namespace util {
-    namespace detail { namespace posix {
+    namespace detail::posix {
         class mapped_file {
         public:
             mapped_file (const std::experimental::filesystem::path&, int fflags = O_RDONLY | O_BINARY, int mflags = PROT_READ);
@@ -73,7 +73,7 @@ namespace util {
             uint8_t *m_data;
             size_t   m_size;
         };
-    } }
+    }
 
     typedef detail::posix::mapped_file mapped_file;
 }

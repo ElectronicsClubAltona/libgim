@@ -21,9 +21,9 @@
 #include <cstddef>
 
 // Austin Appleby's MumurHash1
-namespace util { namespace hash { namespace murmur1 {
+namespace util::hash::murmur1 {
     uint32_t mix (uint32_t, uint32_t);
     uint32_t hash_32 (const void *restrict data, size_t len, uint32_t seed);
-} } }
+}
 
 #endif

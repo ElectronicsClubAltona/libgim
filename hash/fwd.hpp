@@ -27,7 +27,7 @@
 
 
 // Forward declerations of class based hashes
-namespace util { namespace hash {
+namespace util::hash {
     template <class T> class HMAC;
 
     // checksums
@@ -49,6 +49,6 @@ namespace util { namespace hash {
     class RIPEMD;
     class SHA1;
     class SHA256;
-} }
+}
 
 #endif

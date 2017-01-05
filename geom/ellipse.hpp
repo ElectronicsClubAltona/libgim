@@ -22,14 +22,14 @@
 #include "../point.hpp"
 #include "../vector.hpp"
 
-namespace util { namespace geom {
+namespace util::geom {
     ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T>
     struct ellipse {
         util::point<S,T> origin;
         util::vector<S,T> radius;
     };
-} }
+}
 
 #include "ellipse.ipp"
 

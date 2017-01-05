@@ -23,7 +23,8 @@
 
 #include <cstdlib>
 
-namespace util { namespace coord {
+
+namespace util::coord {
     ///////////////////////////////////////////////////////////////////////////
     // Coordinate storage class.
     //
@@ -179,6 +180,6 @@ namespace util { namespace coord {
             struct { T a,b,c,d; };
         };
     };
-} }
+}
 
 #endif

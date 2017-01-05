@@ -21,7 +21,9 @@
 
 #include <experimental/filesystem>
 
-namespace json { namespace schema {
+
+///////////////////////////////////////////////////////////////////////////////
+namespace json::schema {
     // Validate the json tree using the provide schema object or path.
     //
     // Note that the data object being validated may be altered in the process
@@ -29,6 +31,6 @@ namespace json { namespace schema {
     // default, it will be realised in the data object.
     void validate (json::tree::node &data, const json::tree::object &schema);
     void validate (json::tree::node &data, const std::experimental::filesystem::path &schema);
-} }
+}
 
 #endif

@@ -21,7 +21,7 @@
 
 #include <cmath>
 
-namespace util { namespace roots {
+namespace util::roots {
     /// find a root of a function using the bisection method
     ///
     /// the user is responsible for ensuring there is in fact a root. there
@@ -64,6 +64,6 @@ namespace util { namespace roots {
         // valid mathematically.
         return (a + b) / T{2};
     }
-} }
+}
 
 #endif

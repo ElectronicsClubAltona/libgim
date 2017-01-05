@@ -19,7 +19,9 @@
 
 #include "../point.hpp"
 
-namespace util { namespace geom {
+
+///////////////////////////////////////////////////////////////////////////////
+namespace util::geom {
     template <
         size_t S,
         typename T,
@@ -41,7 +43,7 @@ namespace util { namespace geom {
     {
         return sampler<S,T,K,G>::fn (k, g);
     }
-} }
+}
 
 #include "sample.ipp"
 

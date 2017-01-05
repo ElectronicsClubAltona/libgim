@@ -19,7 +19,7 @@
 
 #include <ostream>
 
-namespace util { namespace term {
+namespace util::term {
     bool has_csi_support (void);
 
     namespace csi {
@@ -63,6 +63,6 @@ namespace util { namespace term {
         std::ostream& operator<< (std::ostream&, code);
         std::ostream& operator<< (std::ostream&, graphics);
     }
-} }
+}
 
 #endif

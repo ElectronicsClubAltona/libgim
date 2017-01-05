@@ -337,7 +337,7 @@ void disable_fpe (void);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace debug {
+namespace util::debug {
     void init (void);
 
 
@@ -388,7 +388,7 @@ namespace util { namespace debug {
         (void)t;
         CHECK (is_valid (t));
     }
-} }
+}
 
 
 #include "./debug.ipp"

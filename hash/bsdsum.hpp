@@ -22,7 +22,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash {
+namespace util::hash {
     class bsdsum {
     public:
         using digest_t = uint16_t;
@@ -40,6 +40,6 @@ namespace util { namespace hash {
     private:
         digest_t m_accum;
     };
-} }
+}
 
 #endif

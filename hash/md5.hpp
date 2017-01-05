@@ -23,7 +23,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash {
+namespace util::hash {
     class MD5 {
     public:
         typedef std::array<uint8_t,16> digest_t;
@@ -51,6 +51,6 @@ namespace util { namespace hash {
             uint8_t  Xb[64];
         };
     };
-} }
+}
 
 #endif

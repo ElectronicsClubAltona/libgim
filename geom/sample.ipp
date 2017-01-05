@@ -22,7 +22,7 @@
 
 #include "ops.hpp"
 
-namespace util { namespace geom {
+namespace util::geom {
     // use rejection sampling by default
     template <
         size_t S,
@@ -41,5 +41,5 @@ namespace util { namespace geom {
                 return p;
         }
     }
-} }
+}
 

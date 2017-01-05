@@ -42,7 +42,7 @@ util::hash::murmur1::hash_32 (const void *restrict data,
     CHECK (data);
 
     static const uint32_t m = 0xc6a4a793;
-    uint32_t h = seed ^ (uint32_t (len) * m);
+    uint32_t h = seed ^ ((len & 0xffffffff) * m);
 
     // mix the body
     auto cursor = reinterpret_cast<const uint32_t*> (data);
@@ -52,7 +52,7 @@ util::hash::murmur1::hash_32 (const void *restrict data,
 
     // mix the tail
     if (len % sizeof (uint32_t))
-        h = mix (h, murmur::tail (cursor, len));
+        h = mix (h, murmur::tail<uint32_t> (reinterpret_cast<const uint8_t*> (cursor), len));
 
     // finalise
     h *= m; h ^= h >> 10;

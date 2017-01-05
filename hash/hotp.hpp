@@ -22,7 +22,7 @@
 
 #include <cstdint>
 
-namespace util { namespace hash {
+namespace util::hash {
     /// HMAC one-time password (RFC 4226)
     class HOTP {
     public:
@@ -38,6 +38,6 @@ namespace util { namespace hash {
         uint64_t m_counter;
         HMAC<SHA1> m_hash;
     };
-} }
+}
 
 #endif

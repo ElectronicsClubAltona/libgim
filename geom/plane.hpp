@@ -20,7 +20,7 @@
 #include "../point.hpp"
 #include "../vector.hpp"
 
-namespace util { namespace geom {
+namespace util::geom {
     template <size_t S, typename T>
     struct plane {
         plane (util::point<S,T> p,
@@ -33,6 +33,6 @@ namespace util { namespace geom {
 
     typedef plane<2,float> plane2f;
     typedef plane<3,float> plane3f;
-} }
+}
 
 #endif

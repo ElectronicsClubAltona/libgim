@@ -23,11 +23,11 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash {
+namespace util::hash {
     class adler32 : public fletcher<uint32_t> {
     public:
         adler32 ();
     };
-} }
+}
 
 #endif

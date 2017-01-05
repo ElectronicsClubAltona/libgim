@@ -20,7 +20,9 @@
 #include "aabb.hpp"
 #include "../point.hpp"
 
-namespace util { namespace geom {
+
+///////////////////////////////////////////////////////////////////////////////
+namespace util::geom {
     template <
         size_t S,
         typename T,
@@ -87,6 +89,6 @@ namespace util { namespace geom {
     >
     K<S,T>
     scale (K<S,T>, T);
-} }
+}
 
 #endif

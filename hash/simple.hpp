@@ -22,7 +22,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash {
+namespace util::hash {
     //template <class H, class InputT>
     template <class H, typename ...Args>
     typename H::digest_t
@@ -38,6 +38,6 @@ namespace util { namespace hash {
 
         return h.digest ();
     }
-} }
+}
 
 #endif

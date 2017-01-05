@@ -26,7 +26,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace geom {
+namespace util::geom {
     template <size_t S, typename T, typename G>
     struct sampler<S,T,AABB,G> {
         static point<S,T>
@@ -40,4 +40,4 @@ namespace util { namespace geom {
             return p * (b.p1 - b.p0) + b.p0.template as<util::vector> ();
         }
     };
-} }
+}

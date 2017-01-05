@@ -22,7 +22,7 @@
 #include <experimental/filesystem>
 
 namespace util {
-    namespace detail { namespace win32 {
+    namespace detail::win32 {
         class library {
         public:
             library (const std::experimental::filesystem::path&);
@@ -33,7 +33,7 @@ namespace util {
         private:
             HMODULE m_handle;
         };
-    } }
+    }
 
     typedef detail::win32::library library;
 }

@@ -19,13 +19,12 @@
 #include <cstdint>
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash { namespace murmur {
-    uint32_t tail (const uint32_t *restrict data, size_t len);
-    uint64_t tail (const uint64_t *restrict data, size_t len);
+namespace util::hash::murmur {
+    template <typename T>
+    T
+    tail (const uint8_t *restrict data, size_t len);
 
-    std::array<uint32_t,4>
-    tail_array (const uint32_t *restrict data, size_t len);
-
-    std::array<uint64_t,2>
-    tail_array (const uint64_t *restrict data, size_t len);
-} } }
+    template <typename T>
+    std::array<T,16/sizeof(T)>
+    tail_array (const uint8_t *restrict data, size_t len);
+}

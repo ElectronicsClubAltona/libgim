@@ -25,7 +25,7 @@
 #include <limits>
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace debug { namespace detail {
+namespace util::debug::detail {
     void panic [[noreturn]] (const char *msg);
 
     template <typename ...Args, size_t N>
@@ -38,7 +38,7 @@ namespace util { namespace debug { namespace detail {
 
     void not_implemented [[noreturn]] (const char *msg);
     void unreachable [[noreturn]] (const char *msg);
-} } }
+}
 
 // not_implemented/unreachable/panic must be callable from constexpr contexts.
 // but they rely on functions that aren't constexpr to perform the controlled

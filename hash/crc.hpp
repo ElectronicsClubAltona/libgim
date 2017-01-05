@@ -22,7 +22,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash {
+namespace util::hash {
     class crc32 {
     public:
         using digest_t = uint32_t;
@@ -36,7 +36,7 @@ namespace util { namespace hash {
 
         digest_t digest (void) const;
     };
+}
 
-} }
 #endif
 

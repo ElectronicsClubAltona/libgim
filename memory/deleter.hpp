@@ -19,7 +19,7 @@
 
 #include <functional>
 
-namespace util { namespace memory {
+namespace util::memory {
     template <typename T>
     class func_deleter {
     public:
@@ -57,6 +57,6 @@ namespace util { namespace memory {
     private:
         U& m_owner;
     };
-} }
+}
 
 #endif

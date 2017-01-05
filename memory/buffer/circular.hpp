@@ -19,7 +19,7 @@
 
 #include <cstddef>
 
-namespace util { namespace memory { namespace buffer {
+namespace util::memory::buffer {
     // buffer size is advisory and will likely depend on page size. the user
     // must check the size after creation if this field is important for
     // their usage.
@@ -50,6 +50,6 @@ namespace util { namespace memory { namespace buffer {
         char *m_begin, *m_end;
 
     };
-} } }
+}
 
 #endif

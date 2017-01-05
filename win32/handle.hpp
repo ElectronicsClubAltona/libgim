@@ -16,7 +16,7 @@
 
 #include <windows.h>
 
-namespace util { namespace win32 {
+namespace util::win32 {
     struct handle {
         handle ();
         explicit handle (HANDLE&&);
@@ -36,4 +36,4 @@ namespace util { namespace win32 {
     private:
         HANDLE m_native;
     };
-} }
+}

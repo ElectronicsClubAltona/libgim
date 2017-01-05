@@ -22,7 +22,7 @@
 #include <functional>
 #include <experimental/filesystem>
 
-namespace util { namespace posix {
+namespace util::posix {
     struct dir {
     public:
         explicit dir (const std::experimental::filesystem::path&);
@@ -46,7 +46,7 @@ namespace util { namespace posix {
     private:
         DIR *m_handle;
     };
-} }
+}
 
 #include "./dir.ipp"
 

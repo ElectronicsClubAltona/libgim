@@ -23,7 +23,7 @@
 #include <sstream>
 
 
-namespace util { namespace format { namespace detail {
+namespace util::format::detail {
     ///////////////////////////////////////////////////////////////////////////
     // GCC: workaround which allows a throw to appear in constexpr codepaths
     // that do not execute at compile time. See gcc#67371
@@ -933,11 +933,11 @@ namespace util { namespace format { namespace detail {
 
         return _render (os, first, last);
     }
-} } }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace format {
+namespace util::format {
     template <typename ...Args, size_t N>
     std::string
     render (const char (&fmt)[N], const Args& ...args)
@@ -946,4 +946,4 @@ namespace util { namespace format {
         detail::render (std::back_inserter (res), fmt, args...);
         return res;
     }
-} }
+}

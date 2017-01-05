@@ -17,7 +17,7 @@
 #ifndef __UTIL_RAND_XORSHIFT_HPP
 #define __UTIL_RAND_XORSHIFT_HPP
 
-namespace util { namespace rand {
+namespace util::rand {
     // implements a naive xorshift random generator.
     //
     // * does not comply with the c++11 rng class requirements
@@ -40,6 +40,6 @@ namespace util { namespace rand {
     private:
         T m_state;
     };
-} }
+}
 
 #endif

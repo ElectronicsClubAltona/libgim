@@ -24,7 +24,7 @@
 #include <cstdlib>
 #include <type_traits>
 
-namespace util { namespace coord {
+namespace util::coord {
     /////////////////////////////////////////////////////////////////////////
     template <
         size_t S,
@@ -142,7 +142,7 @@ namespace util { namespace coord {
             return out;
         }
     };
-} }
+}
 
 
 #endif

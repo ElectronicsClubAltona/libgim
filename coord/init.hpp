@@ -21,7 +21,7 @@
 
 #include <cstdlib>
 
-namespace util { namespace coord {
+namespace util::coord {
     template <size_t S, typename T, typename...>
     struct init;
 
@@ -71,6 +71,6 @@ namespace util { namespace coord {
             store<4,T,tags...> ({ v0, v1, v2, v3 })
         { ; }
     };
-} }
+}
 
 #endif
