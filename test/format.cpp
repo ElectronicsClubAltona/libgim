@@ -33,12 +33,12 @@ main (void)
     CHECK_RENDER ("% .i", " ", 0); // zero precision still requires a space
 
     CHECK_RENDER ("%hhi", "1", (signed char)1);
-    CHECK_RENDER ("%hi", "1",  (signed short)1);
-    CHECK_RENDER ("%li", "1",  (signed long)1);
+    CHECK_RENDER ("%hi",  "1", (signed short)1);
+    CHECK_RENDER ("%li",  "1", (signed long)1);
     CHECK_RENDER ("%lli", "1", (signed long long)1);
-    CHECK_RENDER ("%ji", "1",  (intmax_t)1);
-    CHECK_RENDER ("%zi", "1",  (ssize_t)1);
-    CHECK_RENDER ("%ti", "1",  (ptrdiff_t)1);
+    CHECK_RENDER ("%ji",  "1", intmax_t{1});
+    CHECK_RENDER ("%zi",  "1", ssize_t{1});
+    CHECK_RENDER ("%ti",  "1", ptrdiff_t{1});
 
     CHECK_RENDER ("%u", "1", 1u);
     CHECK_RENDER ("%03u", "001", 1u);
@@ -49,13 +49,13 @@ main (void)
     CHECK_RENDER ("%64u", "                                                               1", 1u);
 
     CHECK_RENDER ("%hhu", "1", (unsigned char)1);
-    CHECK_RENDER ("%hu", "1",  (unsigned short)1);
-    CHECK_RENDER ("%lu", "1",  (unsigned long)1);
+    CHECK_RENDER ("%hu",  "1", (unsigned short)1);
+    CHECK_RENDER ("%lu",  "1", (unsigned long)1);
     CHECK_RENDER ("%llu", "1", (unsigned long long)1);
-    CHECK_RENDER ("%ju", "1",  (uintmax_t)1);
-    CHECK_RENDER ("%zu", "0",  (size_t)0);
-    CHECK_RENDER ("%zu", "1",  (size_t)1);
-    CHECK_RENDER ("%!", "1", 1u);
+    CHECK_RENDER ("%ju",  "1", uintmax_t{1});
+    CHECK_RENDER ("%zu",  "0", size_t{0});
+    CHECK_RENDER ("%zu",  "1", size_t{1});
+    CHECK_RENDER ("%!",   "1", 1u);
 
     CHECK_RENDER ("%o", "1", 01u);
     CHECK_RENDER ("%o", "13", 013u);

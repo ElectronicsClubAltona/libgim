@@ -28,8 +28,8 @@ util::sleep (uint64_t ns)
 {
     struct timespec req, rem;
 
-    req.tv_sec  = sign_cast<time_t> (ns / SECOND);
-    req.tv_nsec = sign_cast<long>   (ns % SECOND);
+    req.tv_sec  = trunc_cast<time_t> (ns / SECOND);
+    req.tv_nsec = trunc_cast<long  > (ns % SECOND);
 
     while (nanosleep (&req, &rem)) {
         req = rem;

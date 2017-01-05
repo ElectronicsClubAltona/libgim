@@ -838,7 +838,7 @@ json::tree::number::clone (void) const
 std::ostream&
 json::tree::number::write (std::ostream &os) const
 {
-    auto old = int (os.precision ());
+    auto old = os.precision ();
 
     switch (m_repr) {
     case REAL: return os << std::numeric_limits<real_t>::digits10 << m_value.r << std::setprecision (old);

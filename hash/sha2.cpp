@@ -207,8 +207,8 @@ void
 SHA256::finish (void)
 {
     // Append a single 1 bit followed by 0s.
-    size_t buffered = m_total % sizeof (M);
-    size_t used     = m_total * 8;
+    auto buffered = m_total % sizeof (M);
+    auto used     = m_total * 8u;
 
     C[buffered++] = 0x80;
     ++m_total;
