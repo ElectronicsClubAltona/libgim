@@ -112,8 +112,6 @@ UTIL_FILES   =			\
     geom/sphere.hpp		\
     geom/tri.cpp		\
     geom/tri.hpp		\
-    guid.cpp			\
-    guid.hpp			\
     hash.hpp			\
     hash/fwd.hpp		\
     hash/simple.hpp		\
