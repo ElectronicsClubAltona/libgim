@@ -36,6 +36,9 @@ namespace util {
         T* operator[] (size_t);
         const T* operator[] (size_t) const;
 
+        T* data (void);
+        const T* data (void) const;
+
         const T* begin (void) const;
         const T* end   (void) const;
         T* begin (void);

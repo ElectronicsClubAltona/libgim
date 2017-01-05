@@ -42,6 +42,24 @@ util::matrix<S,T>::operator[] (size_t idx) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
+T*
+util::matrix<S,T>::data (void)
+{
+    return begin ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+const T*
+util::matrix<S,T>::data (void) const
+{
+    return begin ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
 const T*
 util::matrix<S,T>::begin (void) const
 {
