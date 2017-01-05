@@ -98,7 +98,7 @@ namespace util {
         // save what will become the next node shortly. it could be overwritten
         // in the constructor we're about to call.
         node *newnext = m_next->_node;
-        T *data = reinterpret_cast<T*> (m_next->_data);
+        T *data = reinterpret_cast<T*> (m_next);
 
         // try to construct the returnable object.
         try {

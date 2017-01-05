@@ -28,39 +28,39 @@ namespace util {
     /// item destructors at pool destruction time.
     template <typename T>
     class pool : public nocopy {
-        protected:
-            union node {
-                node *_node;
-                char  _data[sizeof (T)];
-            };
+    protected:
+        union alignas (T) node {
+            node *_node;
+            char _data[sizeof (T)];
+        };
 
-            node *m_head; // root address of allocation
-            node *m_next; // next available entry in the linked list
+        node *m_head; // root address of allocation
+        node *m_next; // next available entry in the linked list
 
-            const size_t m_capacity;
-            size_t m_size;
+        const size_t m_capacity;
+        size_t m_size;
 
-        public:
-            explicit
-            pool (unsigned int _capacity);
+    public:
+        explicit
+        pool (unsigned int _capacity);
 
-            ~pool ();
+        ~pool ();
 
-            // Data management
-            template <typename ...Args>
-            T*   acquire (Args&... args);
+        // Data management
+        template <typename ...Args>
+        T*   acquire (Args&... args);
 
-            void release (T *data);
+        void release (T *data);
 
-            size_t capacity (void) const;
-            size_t size (void) const;
-            bool empty (void) const;
+        size_t capacity (void) const;
+        size_t size (void) const;
+        bool empty (void) const;
 
-            // Indexing
-            size_t index (const T*) const;
+        // Indexing
+        size_t index (const T*) const;
 
-            T& operator[] (size_t idx) &;
-            const T& operator[] (size_t idx) const&;
+        T& operator[] (size_t idx) &;
+        const T& operator[] (size_t idx) const&;
     };
 }
 
