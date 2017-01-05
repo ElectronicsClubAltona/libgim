@@ -24,13 +24,17 @@ using util::stream::bits;
 //-----------------------------------------------------------------------------
 std::ostream&
 null_ostream::put (char)
-    { return *this; }
+{
+    return *this;
+}
 
 
 //-----------------------------------------------------------------------------
 bool
 null_ostream::good (void) const
-    { return !bad () && !eof () && !fail (); }
+{
+    return !bad () && !eof () && !fail ();
+}
 
 
 //-----------------------------------------------------------------------------
@@ -39,7 +43,7 @@ bool null_ostream::eof  (void) const { return false; }
 bool null_ostream::fail (void) const { return false; }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 bits::bits (uintmax_t _value, unsigned _count):
     value (_value),
     count (_count)
