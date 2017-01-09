@@ -452,6 +452,7 @@ TEST_BIN = 			\
     test/region			\
     test/roots/bisection	\
     test/signal			\
+    test/stream			\
     test/string			\
     test/stringid		\
     test/strongdef		\
