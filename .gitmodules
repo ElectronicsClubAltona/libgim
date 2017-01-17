@@ -1,3 +1,6 @@
 [submodule "m4/nc"]
 	path = m4/nc
 	url = git://git.nerdcruft.net/autocruft
+[submodule "cmake"]
+	path = cmake
+	url = git://git.nerdcruft.net/cmake
