@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.7.1)
 project(util-cruft)
-add_definitions(-DPACKAGE="libcruft-util")
 
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
@@ -10,17 +9,9 @@ set(CMAKE_MODULE_PATH
 include(CheckFunctionExists)
 include(CheckCXXCompilerFlag)
 
-include (nc_cxx)
-include (nc_platform)
-include (nc_optimisation)
-include (nc_warnings)
+include (nc)
 
-include (compile_flag)
-include (link_flag)
 include (search_libs)
-
-#append_compile_flag(-std=c++1z)
-#set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z")
 
 find_package(RAGEL 6.9 REQUIRED)
 
@@ -92,6 +83,8 @@ search_libs (DL_LIBS dlopen dl)
 search_libs (CLOCK_LIB clock_gettime rt c)
 search_libs (MATH_LIB cos m)
 
+list (APPEND LIBS ${DL_LIBS} ${CLOCK_LIB} ${MATH_LIB})
+
 
 ###############################################################################
 # platform wrappers
@@ -151,6 +144,7 @@ endif ()
 # Common files
 list (
     APPEND UTIL_FILES
+    hash/md2.cpp
     adapter.hpp
     adapter.cpp
     alloc/fwd.hpp
@@ -421,15 +415,6 @@ list (
 add_library(cruft-util ${UTIL_FILES})
 
 
-##-----------------------------------------------------------------------------
-option(INLINE "build pkg-config for immediate local usage")
-if (INLINE)
-    configure_file(libcruft-util-inline.pc.in libcruft-util.pc)
-else ()
-    configure_file(libcruft-util-system.pc.in libcruft-util.pc)
-endif ()
-
-
 ###############################################################################
 add_executable(hash tools/hash.cpp)
 add_executable(json-clean tools/json-clean.cpp)
@@ -439,6 +424,7 @@ add_executable(scratch tools/scratch.cpp)
 
 
 ###############################################################################
+configure_file(libcruft-util-system.pc.in libcruft-util.pc)
 configure_file(Doxyfile.in Doxyfile)
 
 
@@ -449,7 +435,12 @@ add_subdirectory(test)
 
 
 ###############################################################################
-list (APPEND LIBS cruft-util stdc++fs)
+list (APPEND LIBS cruft-util)
+
+get_directory_property(HAS_PARENT PARENT_DIRECTORY)
+if (HAS_PARENT)
+    set (CRUFT_UTIL_LIBS ${LIBS} PARENT_SCOPE)
+endif ()
 
 target_link_libraries(hash ${LIBS})
 target_link_libraries(json-clean ${LIBS})
