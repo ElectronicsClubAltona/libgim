@@ -436,7 +436,7 @@ add_subdirectory(test)
 
 
 ###############################################################################
-list (APPEND LIBS cruft-util)
+set (LIBS "cruft-util;${LIBS}")
 
 get_directory_property(HAS_PARENT PARENT_DIRECTORY)
 if (HAS_PARENT)
