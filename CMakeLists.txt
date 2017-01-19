@@ -417,25 +417,6 @@ add_library(cruft-util ${UTIL_FILES})
 
 
 ###############################################################################
-add_executable(hash tools/hash.cpp)
-add_executable(json-clean tools/json-clean.cpp)
-add_executable(json-schema tools/json-schema.cpp)
-add_executable(json-validate tools/json-validate.cpp)
-add_executable(scratch tools/scratch.cpp)
-
-
-###############################################################################
-configure_file(libcruft-util-system.pc.in libcruft-util.pc)
-configure_file(Doxyfile.in Doxyfile)
-
-
-###############################################################################
-include(CTest)
-enable_testing()
-add_subdirectory(test)
-
-
-###############################################################################
 set (LIBS "cruft-util;${LIBS}")
 
 get_directory_property(HAS_PARENT PARENT_DIRECTORY)
@@ -443,8 +424,25 @@ if (HAS_PARENT)
     set (CRUFT_UTIL_LIBS ${LIBS} PARENT_SCOPE)
 endif ()
 
-target_link_libraries(hash ${LIBS})
-target_link_libraries(json-clean ${LIBS})
-target_link_libraries(json-schema ${LIBS})
-target_link_libraries(json-validate ${LIBS})
-target_link_libraries(scratch ${LIBS})
+
+###############################################################################
+foreach (tool hash json-clean json-schema json-validate scratch)
+    add_executable (util_${tool} tools/${tool}.cpp)
+    set_target_properties (util_${tool} PROPERTIES OUTPUT_NAME ${tool})
+    target_link_libraries (util_${tool} ${LIBS})
+endforeach ()
+
+
+###############################################################################
+option (TESTS "enable unit testing" ON)
+
+if (TESTS)
+    include(CTest)
+    enable_testing()
+    add_subdirectory(test)
+endif ()
+
+
+###############################################################################
+configure_file(libcruft-util-system.pc.in libcruft-util.pc)
+configure_file(Doxyfile.in Doxyfile)
