@@ -79,11 +79,12 @@ endif ()
 
 ###############################################################################
 # platform libraries
+search_libs (SHM_LIBS shm_open rt)
 search_libs (DL_LIBS dlopen dl)
 search_libs (CLOCK_LIB clock_gettime rt c)
 search_libs (MATH_LIB cos m)
 
-list (APPEND LIBS ${DL_LIBS} ${CLOCK_LIB} ${MATH_LIB})
+list (APPEND LIBS ${SHM_LIIBS} ${DL_LIBS} ${CLOCK_LIB} ${MATH_LIB})
 
 
 ###############################################################################
