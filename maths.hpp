@@ -64,7 +64,8 @@ namespace util {
     inline
     typename std::enable_if_t<
         std::is_floating_point<A>::value &&
-        std::is_floating_point<B>::value,
+        std::is_floating_point<B>::value &&
+        !std::is_same<A,B>::value ,
         bool
     >
     almost_equal (const A &a, const B &b)
