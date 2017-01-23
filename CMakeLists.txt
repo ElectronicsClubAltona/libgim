@@ -48,10 +48,12 @@ if (BACKTRACE_LIB)
     list (APPEND backtrace_files execinfo)
 endif ()
 
-find_program(ADDR2LINE NAMES addr2line)
-if (ADDR2LINE)
-    add_definitions(-DADDR2LINE="${ADDR2LINE}")
-endif()
+if (NOT WIN32)
+    find_program(ADDR2LINE NAMES addr2line)
+    if (ADDR2LINE)
+        add_definitions(-DADDR2LINE="${ADDR2LINE}")
+    endif()
+endif ()
 
 
 ##-----------------------------------------------------------------------------
