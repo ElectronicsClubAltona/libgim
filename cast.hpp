@@ -88,10 +88,7 @@ trunc_cast (const SrcT src)
 {
     auto dst = static_cast<DstT> (src);
 
-    // check if we're testing a NaN by using self-equality. this will not hold
-    // for NaN, but makes specialisation easier given we don't need to special
-    // case for integers (which don't have std::isnan).
-    if (src == src) {
+    if (!util::is_nan (src)) {
         CHECK_EQ (static_cast<SrcT> (dst), src);
     } else {
         CHECK_NEQ (dst, dst);
