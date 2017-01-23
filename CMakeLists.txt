@@ -88,7 +88,7 @@ search_libs (DL_LIBS dlopen dl)
 search_libs (CLOCK_LIB clock_gettime rt c)
 search_libs (MATH_LIB cos m)
 
-list (APPEND LIBS ${SHM_LIIBS} ${DL_LIBS} ${CLOCK_LIB} ${MATH_LIB})
+list (APPEND LIBS ${SHM_LIBS} ${DL_LIBS} ${CLOCK_LIB} ${MATH_LIB})
 
 
 ###############################################################################
@@ -101,6 +101,7 @@ list (
     posix/fd.cpp
     posix/fd.hpp
 )
+
 
 if (NOT WINDOWS)
     list (
@@ -418,22 +419,14 @@ list (
 
 ###############################################################################
 add_library(cruft-util ${UTIL_FILES})
-
-
-###############################################################################
-set (LIBS "cruft-util;${LIBS}")
-
-get_directory_property(HAS_PARENT PARENT_DIRECTORY)
-if (HAS_PARENT)
-    set (CRUFT_UTIL_LIBS ${LIBS} PARENT_SCOPE)
-endif ()
+target_link_libraries (cruft-util ${LIBS})
 
 
 ###############################################################################
 foreach (tool hash json-clean json-schema json-validate scratch)
     add_executable (util_${tool} tools/${tool}.cpp)
     set_target_properties (util_${tool} PROPERTIES OUTPUT_NAME ${tool})
-    target_link_libraries (util_${tool} ${LIBS})
+    target_link_libraries (util_${tool} cruft-util)
 endforeach ()
 
 
@@ -448,5 +441,12 @@ endif ()
 
 
 ###############################################################################
+get_directory_property (HAS_PARENT PARENT_DIRECTORY)
+if (HAS_PARENT)
+    set (CRUFT_UTIL_FOUND 1 PARENT_SCOPE)
+endif ()
+
+
+##-----------------------------------------------------------------------------
 configure_file(libcruft-util-system.pc.in libcruft-util.pc)
 configure_file(Doxyfile.in Doxyfile)
