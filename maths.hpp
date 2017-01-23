@@ -176,6 +176,30 @@ namespace util {
     }
 
 
+    //-------------------------------------------------------------------------
+    template <typename T>
+    constexpr
+    typename std::enable_if_t<
+        std::is_floating_point<T>::value, bool
+    >
+    is_nan (T t)
+    {
+        return std::isnan (t);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    constexpr
+    typename std::enable_if_t<
+        !std::is_floating_point<T>::value, bool
+    >
+    is_nan (const T&)
+    {
+        return false;
+    }
+
+
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
     T
