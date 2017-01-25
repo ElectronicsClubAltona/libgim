@@ -7,9 +7,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 int
-main (int, char**)
+main (int, char **argv)
 {
     util::TAP::logger tap;
-    tap.expect_eq (util::image_path ().stem (), "exe", "identify executable path");
+
+    auto path = util::image_path ();
+    tap.expect_eq (path, argv[0], "identify executable path");
     return tap.status ();
 }
