@@ -23,6 +23,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util::hash {
+    // Implements the crc32 checksum (from ethernet, png, etc).
+    // Adapted from the PNG specification (ISO/IEC 15948:2003), appendix D.
     class crc32 {
     public:
         using digest_t = uint32_t;
