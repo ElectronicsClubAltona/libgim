@@ -27,7 +27,9 @@ namespace util::hash {
     public:
         using digest_t = uint32_t;
 
-        void reset (void);
+        crc32 () noexcept;
+
+        void reset (void) noexcept;
 
         void update (const void *restrict data, size_t bytes) noexcept;
         void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
@@ -35,6 +37,9 @@ namespace util::hash {
         void finish (void);
 
         digest_t digest (void) const;
+
+    private:
+        digest_t m_digest;
     };
 }
 

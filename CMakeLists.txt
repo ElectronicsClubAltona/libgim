@@ -464,6 +464,7 @@ if (TESTS)
         geom/aabb
         geom/ray
         hash/checksum
+        hash/crc
         hash/fasthash
         hash/hmac
         hash/hotp

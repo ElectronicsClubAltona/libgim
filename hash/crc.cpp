@@ -18,13 +18,53 @@
 
 #include "../debug.hpp"
 
+#include <array>
+
 using util::hash::crc32;
 
 
 ///////////////////////////////////////////////////////////////////////////////
+static
+std::array<uint32_t,256>
+make_table (void)
+{
+    std::array<uint32_t,256> value {};
+
+    for (int i = 0; i < 256; ++i) {
+        std::uint32_t c = i;
+
+        for (int k = 0; k < 8; ++k) {
+            if (c & 1)
+                c = 0xEDB88320L ^ (c >> 1);
+            else
+                c >>= 1;
+        }
+
+        value[i] = c;
+    }
+
+    return value;
+};
+
+
+//-----------------------------------------------------------------------------
+static std::array<uint32_t,256> table = make_table ();
+
+
+///////////////////////////////////////////////////////////////////////////////
+crc32::crc32 () noexcept
+{
+    reset ();
+}
+
+
+//-----------------------------------------------------------------------------
 void
-crc32::reset (void)
-{ ; }
+crc32::reset (void) noexcept
+{
+    m_digest = 0;
+    m_digest = ~m_digest;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,55 +74,32 @@ crc32::update (const uint8_t *restrict first,
 {
     CHECK_LE (first, last);
 
-    return update (first, last - first);
+    for (auto cursor = first; cursor != last; ++cursor) {
+        m_digest = table[*cursor ^ (m_digest & 0xFF)] ^ (m_digest >> 8u);
+    }
 }
 
 
 //-----------------------------------------------------------------------------
 void
-crc32::update (const void *restrict, size_t) noexcept
+crc32::update (const void *restrict _data, size_t len) noexcept
 {
-    not_implemented ();
-
-    /*
-    const uint8_t *restrict data = static_cast<const uint8_t*> (_data);
-    static const uint32_t POLYNOMIAL = hton (static_cast<uint32_t>(0x04C11DB7));
-
-    uint64_t bits = 0;
-    unsigned int i = 0;
-
-    if (size == 0)
-        return POLYNOMIAL;
-
-    switch (size) {
-        default:    bits |= static_cast<uint64_t>(data[3]) << 32U;
-        case 3:     bits |= static_cast<uint64_t>(data[2]) << 40U;
-        case 2:     bits |= static_cast<uint64_t>(data[1]) << 48U;
-        case 1:     bits |= static_cast<uint64_t>(data[0]) << 56U;
-    }
-
-    for (size_t i = 0; i < size; ++i) {
-        for (unsigned j = 0; j < 32; ++j) {
-            bool mix = bits 0x7000000000000000ULL;
-            bits <<= 1;
-
-            if (mix)
-                bits ^= POLYNOMIAL << 32;
-        }
-
-
-    }
-    */
+    auto data = reinterpret_cast<const uint8_t *restrict> (_data);
+    return update(data, data + len);
 }
 
 
 //-----------------------------------------------------------------------------
 void
 crc32::finish (void)
-{ not_implemented (); }
+{
+    ;
+}
 
 
 //-----------------------------------------------------------------------------
 typename crc32::digest_t
 crc32::digest (void) const
-{ not_implemented (); }
+{
+    return ~m_digest;
+}
