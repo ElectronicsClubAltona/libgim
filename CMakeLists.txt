@@ -436,7 +436,79 @@ option (TESTS "enable unit testing" ON)
 if (TESTS)
     include(CTest)
     enable_testing()
-    add_subdirectory(test)
+
+    list (
+        APPEND TEST_BIN
+        alloc/aligned
+        alloc/arena
+        alloc/dynamic
+        alloc/linear
+        alloc/stack
+        affine
+        backtrace
+        bezier
+        bitwise
+        cmdopt
+        colour
+        coord
+        crypto/arc4
+        crypto/ice
+        crypto/tea
+        crypto/xtea
+        crypto/xxtea
+        exe
+        extent
+        fixed
+        float
+        format
+        geom/aabb
+        geom/ray
+        hash/checksum
+        hash/fasthash
+        hash/hmac
+        hash/hotp
+        hash/keccak
+        hash/md2
+        hash/md4
+        hash/md5
+        hash/murmur
+        hash/ripemd
+        hash/sha1
+        hash/sha2
+        hash/xxhash
+        hton
+        introspection
+        json_types
+        maths
+        matrix
+        memory/deleter
+        point
+        polynomial
+        pool
+        quaternion
+        rand/buckets
+        range
+        rational
+        region
+        roots/bisection
+        signal
+        stream
+        string
+        stringid
+        strongdef
+        tuple
+        uri
+        vector
+        version
+        view
+    )
+
+    foreach(t ${TEST_BIN})
+        string(REPLACE "/" "_" name "test/${t}")
+        add_executable(util_${name} test/${t}.cpp)
+        target_link_libraries(util_${name} PRIVATE cruft-util)
+        add_test(NAME util_${name} COMMAND util_${name})
+    endforeach(t)
 endif ()
 
 
