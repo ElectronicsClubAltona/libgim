@@ -31,7 +31,6 @@ namespace util {
 
         constexpr strongdef () = delete;
         constexpr explicit strongdef (const T &_data): data (_data)    { ; }
-        constexpr strongdef (const strongdef &rhs):    data (rhs.data) { ; }
 
         // explicitly disable assignment with unequal types or tags. this
         // prevents the converion operator getting invoked and falsely
