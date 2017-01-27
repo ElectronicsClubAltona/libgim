@@ -25,7 +25,6 @@ using util::crypto::XXTEA;
 
 //-----------------------------------------------------------------------------
 static const uint32_t MAGIC = 0x9E3779B9;
-static const unsigned ITERATIONS = 32; // each iteration performs two feistel rounds
 
 
 //-----------------------------------------------------------------------------
