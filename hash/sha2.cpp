@@ -70,26 +70,33 @@ uint64_t K_80[] = {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-static constexpr uint32_t
-Ch (uint32_t x, uint32_t y, uint32_t z) {
+static constexpr
+uint32_t
+Ch (uint32_t x, uint32_t y, uint32_t z)
+{
     return (x & y) ^ (~x & z);
 }
 
-static constexpr uint32_t
-Maj (uint32_t x, uint32_t y, uint32_t z) {
+
+//-----------------------------------------------------------------------------
+static constexpr
+uint32_t
+Maj (uint32_t x, uint32_t y, uint32_t z)
+{
     return (x & y) ^ (x & z) ^ (y & z);
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 #define FUNC(NAME,r0,r1,r2)                     \
-static constexpr uint32_t                       \
-NAME (uint32_t x) {                             \
+static constexpr                                \
+uint32_t                                        \
+NAME (uint32_t x)                               \
+{                                               \
     return util::rotater (x, (r0)) ^            \
            util::rotater (x, (r1)) ^            \
            util::rotater (x, (r2));             \
 }
-
 
 FUNC(S0, 2, 13, 22)
 FUNC(S1, 6, 11, 25)
@@ -100,7 +107,9 @@ FUNC(S1, 6, 11, 25)
 ///////////////////////////////////////////////////////////////////////////////
 #define FUNC(NAME,r0,r1,s)                      \
 static constexpr                                \
-uint32_t NAME (uint32_t x) {                    \
+uint32_t                                        \
+NAME (uint32_t x)                               \
+{                                               \
     return util::rotater (x, (r0)) ^            \
            util::rotater (x, (r1)) ^            \
            (x >> (s));                          \
