@@ -28,7 +28,7 @@ using namespace util::hash;
 // First 32 bits of the fractional parts
 //               of the cube roots
 //               of the first 64 prime numbers
-static const
+static constexpr
 uint32_t K_64[] = {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
     0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -44,7 +44,7 @@ uint32_t K_64[] = {
 // First 64 bits of the fractional parts
 //               of the cube roots
 //               of the first 80 prime numbers
-static const
+static constexpr
 uint64_t K_80[] = {
     0x428a2f98d728ae22, 0x7137449123ef65cd, 0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc,
     0x3956c25bf348b538, 0x59f111f1b605d019, 0x923f82a4af194f9b, 0xab1c5ed5da6d8118,
@@ -111,9 +111,11 @@ FUNC(s1, 17, 19, 10)
 
 #undef FUNC
 
+
 ///////////////////////////////////////////////////////////////////////////////
-static const
-uint32_t H_224[] = {
+static constexpr
+uint32_t
+H_224[] = {
     0xc1059ed8,
     0x367cd507,
     0x3070dd17,
@@ -125,8 +127,10 @@ uint32_t H_224[] = {
 };
 
 
-static const
-uint32_t H_256[] = {
+//-----------------------------------------------------------------------------
+static constexpr
+uint32_t
+H_256[] = {
     0x6a09e667,
     0xbb67ae85,
     0x3c6ef372,
@@ -138,8 +142,10 @@ uint32_t H_256[] = {
 };
 
 
-static const
-uint64_t H_384[] = {
+//-----------------------------------------------------------------------------
+static constexpr
+uint64_t
+H_384[] = {
     0xcbbb9d5dc1059ed8,
     0x629a292a367cd507,
     0x9159015a3070dd17,
@@ -151,8 +157,10 @@ uint64_t H_384[] = {
 };
 
 
-static const
-uint64_t H_512[] = {
+//-----------------------------------------------------------------------------
+static constexpr
+uint64_t
+H_512[] = {
     0x6a09e667f3bcc908,
     0xbb67ae8584caa73b,
     0x3c6ef372fe94f82b,
@@ -163,10 +171,16 @@ uint64_t H_512[] = {
     0x5be0cd19137e2179,
 };
 
+
 ///////////////////////////////////////////////////////////////////////////////
 SHA256::SHA256 ():
     m_total (0)
 {
+    (void)K_80;
+    (void)H_224;
+    (void)H_384;
+    (void)H_512;
+
     std::copy (std::begin (H_256), std::end (H_256), std::begin (H));
 }
 
