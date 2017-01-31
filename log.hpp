@@ -32,7 +32,6 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     // rfc5424 log levels. It is assumed they are contiguous to simplify array
     // indexing in logging code.
-    //
     enum level_t {
         EMERGENCY,              /** system is unusable */
         ALERT,                  /** action must be taken immediately */
@@ -59,13 +58,38 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
+    // Query or set the global logging level filter. If the severity passed to
+    // a logging call is less than this then the output is discarded.
+    //
+    // The initial logging level can be controlled by setting the environment
+    // variable LOG_LEVEL to a string corresponding to the names of the values
+    // in level_t.
+    //
+    // Otherwise we fall back to the hard coded default from above.
+    //
+    // As a special case, a blank value for the environment variable LOG_LEVEL
+    // corresponds to the maximum log level. It indicates a preference for
+    // minimum output, and may be changed to disable all output in future
+    // updates.
+    level_t log_level (void);
+    level_t log_level (level_t);
+
+    ///////////////////////////////////////////////////////////////////////////
     void log (level_t, const std::string &msg);
 
+
     template <typename ...Args, size_t N>
-    void log (level_t, const char (&fmt)[N], const Args&...);
+    void
+    log (level_t, const char (&fmt)[N], const Args&...);
 
 
     //-------------------------------------------------------------------------
+    // Various convenience macros for logging specific strings with a well
+    // known severity.
+    //
+    // LOG_DEBUG is treated similarly to assert; if NDEBUG is defined then we
+    // compile out the statement so as to gain a little runtime efficiency
+    // speed.
     #define LOG_EMERGENCY(...)  do { util::log(util::EMERGENCY, ##__VA_ARGS__); } while (0)
     #define LOG_ALERT(...)      do { util::log(util::ALERT,     ##__VA_ARGS__); } while (0)
     #define LOG_CRITICAL(...)   do { util::log(util::CRITICAL,  ##__VA_ARGS__); } while (0)
@@ -74,7 +98,7 @@ namespace util {
     #define LOG_WARN(...)       do { util::log(util::WARN,      ##__VA_ARGS__); } while (0)
     #define LOG_NOTICE(...)     do { util::log(util::NOTICE,    ##__VA_ARGS__); } while (0)
     #define LOG_INFO(...)       do { util::log(util::INFO,      ##__VA_ARGS__); } while (0)
-#if defined(ENABLE_DEBUGGING)
+#if !defined(NDEBUG)
     #define LOG_DEBUG(...)      do { util::log(util::DEBUG,     ##__VA_ARGS__); } while (0)
 #else
     #define LOG_DEBUG(...)      do { ; } while (0)

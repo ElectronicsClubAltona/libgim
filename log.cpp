@@ -54,6 +54,9 @@ ALL_LEVELS[] = {
 static util::level_t
 to_level (std::string name)
 {
+    if (std::empty (name))
+        return util::EMERGENCY;
+
     static const std::map<std::string, util::level_t> NAME_LEVELS = {
         { "EMERGENCY",     util::EMERGENCY },
         { "ALERT",         util::ALERT },
@@ -106,8 +109,14 @@ util::operator<< (std::ostream& os, util::level_t l)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-static util::level_t
-log_level (void)
+// Determine what the value for LOG_LEVEL should be at the beginning of
+// execution given the system environment.
+//
+// Note that the LOG macros _cannot_ be used from within this function as it
+// will likely result in infinite recursion.
+static
+util::level_t
+initial_log_level (void)
 {
     const char *env = getenv ("LOG_LEVEL");
     if (!env)
@@ -116,9 +125,39 @@ log_level (void)
     try {
         return to_level (env);
     } catch (...) {
-        LOG_ERROR("Invalid environment LOG_LEVEL: '%s'", env);
+        std::clog << "Invalid environment LOG_LEVEL: '" << env << "'\n";
         return util::DEFAULT_LOG_LEVEL;
     }
+}
+
+
+//-----------------------------------------------------------------------------
+// We shouldn't ever actually get to use the default value, but we set it to
+// the most verbose option just in case we've made a mistake elsewhere.
+
+static bool          s_log_level_done;
+static util::level_t s_log_level_value;
+
+//-----------------------------------------------------------------------------
+util::level_t
+util::log_level (level_t _level)
+{
+    s_log_level_value = _level;
+    s_log_level_done  = true;
+    return s_log_level_value;
+}
+
+
+//-----------------------------------------------------------------------------
+util::level_t
+util::log_level (void)
+{
+    if (!s_log_level_done) {
+        s_log_level_value = initial_log_level ();
+        s_log_level_done  = true;
+    }
+
+    return s_log_level_value;
 }
 
 
@@ -195,8 +234,7 @@ level_width (void)
 void
 util::log (util::level_t level, const std::string &msg)
 {
-    static const util::level_t LOG_LEVEL = log_level ();
-    if (level <= LOG_LEVEL) {
+    if (level <= log_level ()) {
         static const size_t time_len = strlen("YYYY-mm-dd HHMMhSS") + 1;
         std::string time_string (time_len - 1, '\0');
         time_t unix_time = time (nullptr);
@@ -209,7 +247,7 @@ util::log (util::level_t level, const std::string &msg)
             return;
         }
 
-        std::cerr << time_string << " ["
+        std::clog << time_string << " ["
             << level_colour (level)
             << std::setw (trunc_cast<int> (level_width ()))
             << std::left
