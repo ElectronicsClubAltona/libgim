@@ -38,3 +38,5 @@ constexpr const char ::util::detail::type_name_f64::value[];
 constexpr const char ::util::detail::type_name_string::value[];
 constexpr const char ::util::detail::type_name_cstring::value[];
 constexpr const char ::util::detail::type_name_const_cstring::value[];
+
+constexpr const char ::util::detail::type_name_path::value[];

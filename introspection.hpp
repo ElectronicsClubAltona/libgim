@@ -24,6 +24,8 @@
 #include <cstdint>
 #include <string>
 #include <tuple>
+#include <experimental/filesystem>
+
 
 namespace util {
     // XXX: clang-3.9/clang-4.0 will not instantiate static constexpr member
@@ -62,6 +64,7 @@ namespace util {
     CLANG_WORKAROUND(const char*, const_cstring, "cstring")
     CLANG_WORKAROUND(char*, cstring, "cstring")
     CLANG_WORKAROUND(std::string, string, "string")
+    CLANG_WORKAROUND(std::experimental::filesystem::path, path, "path");
 
     #undef CLANG_WORKAROUND
 
