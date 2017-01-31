@@ -33,7 +33,7 @@ namespace util::cmdopt {
         public:
             // we deal almost exclusively with vtables, so disable copying
             // just in case we do something stupid.
-            base () { }
+            base () = default;
             base (const base&) = delete;
             base& operator= (const base&) = delete;
 
