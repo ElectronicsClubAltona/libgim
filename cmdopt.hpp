@@ -125,6 +125,7 @@ namespace util::cmdopt {
     }
 
 
+    //-------------------------------------------------------------------------
     class parser {
     public:
         template <typename T, typename ...Args>
@@ -161,40 +162,46 @@ namespace util::cmdopt {
     };
 
 
+    ///////////////////////////////////////////////////////////////////////////
     class error : public std::exception { };
 
+    //-------------------------------------------------------------------------
     class invalid_key : public error {
     public:
         invalid_key (std::string _key);
-        virtual const char* what (void) const noexcept override;
+        const char* what (void) const noexcept override;
 
     private:
         const std::string m_key;
     };
 
+    //-------------------------------------------------------------------------
     class invalid_value : public error {
     public:
         invalid_value (std::string _value);
-        virtual const char* what (void) const noexcept override;
+        const char* what (void) const noexcept override;
 
     private:
         const std::string m_value;
     };
 
+    //-------------------------------------------------------------------------
     class invalid_null : public error {
     public:
-        virtual const char* what (void) const noexcept override;
+        const char* what (void) const noexcept override;
     };
 
+    //-------------------------------------------------------------------------
     class invalid_required : public error {
     public:
-        virtual const char* what (void) const noexcept override;
+        const char* what (void) const noexcept override;
     };
 
+    //-------------------------------------------------------------------------
     class unhandled_argument : public error {
     public:
         unhandled_argument (int index);
-        virtual const char* what (void) const noexcept override;
+        const char* what (void) const noexcept override;
 
         int index (void) const noexcept;
 
