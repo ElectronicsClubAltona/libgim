@@ -38,34 +38,27 @@ set (UTIL_FILES)
 
 ###############################################################################
 search_libs (BACKTRACE_LIB backtrace execinfo)
-check_function_exists (RtlCaptureStackBackTrace HAVE_CAPTURESTACKBACKTRACE)
 search_libs (DBGHELP_LIB SymFromAddr dbghelp)
-check_function_exists(RtlCaptureStackBackTrace HAVE_STACKWALK)
+check_function_exists (RtlCaptureStackBackTrace HAVE_CAPTURESTACKBACKTRACE)
 
 
 ##-----------------------------------------------------------------------------
-if (BACKTRACE_LIB)
-    list (APPEND backtrace_files execinfo)
+if (BACKTRACE_LIB_FOUND)
+    list (APPEND UTIL_FILES backtrace_execinfo.cpp)
+elseif (HAVE_CAPTURESTACKBACKTRACE)
+    list (APPEND UTIL_FILES backtrace_stackwalk.cpp)
+else ()
+    list (APPEND UTIL_FILES backtrace_null.cpp)
 endif ()
 
+
+##-----------------------------------------------------------------------------
 if (NOT WIN32)
     find_program(ADDR2LINE NAMES addr2line)
     if (ADDR2LINE)
         add_definitions(-DADDR2LINE="${ADDR2LINE}")
     endif()
 endif ()
-
-
-##-----------------------------------------------------------------------------
-if (HAVE_CAPTURESTACKBACTRACE)
-    list (APPEND backtrace_files stackwalk win32)
-endif ()
-
-
-##-----------------------------------------------------------------------------
-list (APPEND backtrace_files null)
-list (GET backtrace_files 0 backtrace_scheme)
-list (APPEND UTIL_FILES backtrace_${backtrace_scheme}.cpp)
 
 
 ###############################################################################
