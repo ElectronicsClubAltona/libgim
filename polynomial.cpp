@@ -155,9 +155,3 @@ namespace util::polynomial {
         return s;
     }
 }
-
-
-///////////////////////////////////////////////////////////////////////////////
-template std::array<float,1> util::polynomial::roots (std::array<float,1+1>);
-template std::array<float,2> util::polynomial::roots (std::array<float,1+2>);
-template std::array<float,3> util::polynomial::roots (std::array<float,1+3>);
