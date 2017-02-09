@@ -79,6 +79,26 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    struct type_char;
+
+    template <> struct type_char<float > { static constexpr char value = 'f'; };
+    template <> struct type_char<double> { static constexpr char value = 'd'; };
+
+    template <> struct type_char<  int8_t> { static constexpr char value = 'i'; };
+    template <> struct type_char< int16_t> { static constexpr char value = 'i'; };
+    template <> struct type_char< int32_t> { static constexpr char value = 'i'; };
+    template <> struct type_char< int64_t> { static constexpr char value = 'i'; };
+
+    template <> struct type_char< uint8_t> { static constexpr char value = 'u'; };
+    template <> struct type_char<uint16_t> { static constexpr char value = 'u'; };
+    template <> struct type_char<uint32_t> { static constexpr char value = 'u'; };
+    template <> struct type_char<uint64_t> { static constexpr char value = 'u'; };
+
+    template <typename T>
+    constexpr auto type_char_v = type_char<T>::value;
+
+    ///////////////////////////////////////////////////////////////////////////
     /// Lists valid values of an enumeration
     ///
     /// E: enumeration type
