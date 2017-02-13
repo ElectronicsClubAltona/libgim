@@ -43,8 +43,8 @@ namespace util {
         size_t size (void) const;
 
     private:
-        size_t   m_size;
-        T       *m_data;
+        const size_t m_size;
+        T *m_data;
     };
 
     template <typename T>
