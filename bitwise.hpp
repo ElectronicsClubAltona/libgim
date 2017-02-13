@@ -49,21 +49,34 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    // TODO: make constexpr for C++14
+    // adapted from 'bit twiddling hacks'
     template <typename T>
-    T
-    reverse (T value) {
-        T out = value;
+    constexpr
+    std::enable_if_t<std::is_integral<T>::value, T>
+    reverse (T src)
+    {
+        T dst = src; // dst will be reversed bits of v; first get LSB of v
 
-        std::size_t bits = sizeof (value) * 8 - 1;
-        for (value >>= 1; value; value >>= 1) {
-            out <<= 1;
-            out  |= value & 0x01;
-            --bits;
+        int bits = sizeof (src) * 8 - 1; // extra shift needed at end
+        for (src >>= 1; src; src >>= 1) {
+            dst <<= 1;
+            dst  |= src & 1;
+            bits--;
         }
 
-        out <<= bits;
-        return out;
+        dst <<= bits; // shift when src's highest bits are zero
+        return dst;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // adapted from 'bit twiddling hacks'
+    template <>
+    constexpr
+    uint8_t
+    reverse (uint8_t val)
+    {
+        return ((val * 0x80200802ULL) & 0x0884422110ULL) * 0x0101010101ULL >> 32;
     }
 
 
