@@ -40,7 +40,7 @@ static
 const char* NAMES[] = {
     "adler32",
     "bsdsum",
-    "crc32",
+    "crc",
     "MD2",
     "MD4",
     "MD5",

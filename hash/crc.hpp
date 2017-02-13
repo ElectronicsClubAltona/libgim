@@ -17,19 +17,25 @@
 #ifndef __UTIL_HASH_CRC_HPP
 #define __UTIL_HASH_CRC_HPP
 
+#include <array>
 #include <cstdint>
 #include <cstdlib>
+#include <type_traits>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util::hash {
-    // Implements the crc32 checksum (from ethernet, png, etc).
+    // Implements the crc checksum (from ethernet, png, etc).
     // Adapted from the PNG specification (ISO/IEC 15948:2003), appendix D.
-    class crc32 {
+    template <typename DigestT = uint32_t, DigestT Generator = 0xEDB88320>
+    class crc {
     public:
-        using digest_t = uint32_t;
+        static_assert (std::is_same<DigestT, std::uint32_t>::value,
+                       "only 32 bit crc is supported at this time");
 
-        crc32 () noexcept;
+        using digest_t = DigestT;
+
+        crc () noexcept;
 
         void reset (void) noexcept;
 
@@ -40,10 +46,17 @@ namespace util::hash {
 
         digest_t digest (void) const;
 
+        static
+        std::array<DigestT,256>
+        table (void);
+
     private:
         digest_t m_digest;
+
+        static const std::array<DigestT,256> s_table;
     };
+
+    using crc32 = crc<uint32_t, 0xEDB88320>;
 }
 
 #endif
-

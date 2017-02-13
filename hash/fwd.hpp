@@ -34,7 +34,7 @@ namespace util::hash {
     class adler32;
     class bsdsum;
     class fletcher;
-    class crc32;
+    class crc;
 
     class xxhash;
 

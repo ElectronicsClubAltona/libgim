@@ -20,22 +20,90 @@
 
 #include <array>
 
-using util::hash::crc32;
+using util::hash::crc;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-static
-std::array<uint32_t,256>
-make_table (void)
+template <typename DigestT, DigestT Generator>
+const std::array<DigestT,256>
+crc<DigestT,Generator>::s_table = crc<DigestT,Generator>::table ();
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename DigestT, DigestT Generator>
+crc<DigestT,Generator>::crc () noexcept
 {
-    std::array<uint32_t,256> value {};
+    reset ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename DigestT, DigestT Generator>
+void
+crc<DigestT,Generator>::reset (void) noexcept
+{
+    m_digest = 0;
+    m_digest = ~m_digest;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename DigestT, DigestT Generator>
+void
+crc<DigestT,Generator>::update (const uint8_t *restrict first,
+                                 const uint8_t *restrict last) noexcept
+{
+    CHECK_LE (first, last);
+
+    for (auto cursor = first; cursor != last; ++cursor) {
+        m_digest = s_table[*cursor ^ (m_digest & 0xFF)] ^ (m_digest >> 8u);
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename DigestT, DigestT Generator>
+void
+crc<DigestT,Generator>::update (const void *restrict _data, size_t len) noexcept
+{
+    auto data = reinterpret_cast<const uint8_t *restrict> (_data);
+    return update(data, data + len);
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename DigestT, DigestT Generator>
+void
+crc<DigestT,Generator>::finish (void)
+{
+    ;
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename DigestT, DigestT Generator>
+DigestT
+crc<DigestT,Generator>::digest (void) const
+{
+    return ~m_digest;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename DigestT, DigestT Generator>
+std::array<DigestT,256>
+util::hash::crc<DigestT,Generator>::table (void)
+{
+    auto gen = Generator;
+
+    std::array<digest_t,256> value {};
 
     for (int i = 0; i < 256; ++i) {
-        std::uint32_t c = i;
+        digest_t c = i;
 
         for (int k = 0; k < 8; ++k) {
             if (c & 1)
-                c = 0xEDB88320L ^ (c >> 1);
+                c = gen ^ (c >> 1);
             else
                 c >>= 1;
         }
@@ -47,59 +115,6 @@ make_table (void)
 };
 
 
-//-----------------------------------------------------------------------------
-static std::array<uint32_t,256> table = make_table ();
-
-
 ///////////////////////////////////////////////////////////////////////////////
-crc32::crc32 () noexcept
-{
-    reset ();
-}
-
-
-//-----------------------------------------------------------------------------
-void
-crc32::reset (void) noexcept
-{
-    m_digest = 0;
-    m_digest = ~m_digest;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-crc32::update (const uint8_t *restrict first,
-               const uint8_t *restrict last) noexcept
-{
-    CHECK_LE (first, last);
-
-    for (auto cursor = first; cursor != last; ++cursor) {
-        m_digest = table[*cursor ^ (m_digest & 0xFF)] ^ (m_digest >> 8u);
-    }
-}
-
-
-//-----------------------------------------------------------------------------
-void
-crc32::update (const void *restrict _data, size_t len) noexcept
-{
-    auto data = reinterpret_cast<const uint8_t *restrict> (_data);
-    return update(data, data + len);
-}
-
-
-//-----------------------------------------------------------------------------
-void
-crc32::finish (void)
-{
-    ;
-}
-
-
-//-----------------------------------------------------------------------------
-typename crc32::digest_t
-crc32::digest (void) const
-{
-    return ~m_digest;
-}
+template class util::hash::crc<uint32_t, 0xEDB88320>; // png
+//template class util::hash::crc<uint32_t, 0X04C11DB7>; // ogg
