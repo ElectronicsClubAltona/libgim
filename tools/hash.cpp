@@ -80,12 +80,12 @@ compute (const std::string &name,
          const unsigned char *restrict first,
          const unsigned char *restrict last)
 {
-    #define stream(TYPE) do {                                       \
+    #define stream(TYPE, ...) do {                                  \
         if (name != #TYPE)                                          \
             break;                                                  \
                                                                     \
         auto sum = util::hash::simple<util::hash::TYPE> (           \
-            first, last                                             \
+            first, last, ##__VA_ARGS__                              \
         );                                                          \
                                                                     \
         print_digest (std::cout, sum) << '\n';                      \

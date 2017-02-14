@@ -24,16 +24,24 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util::hash {
+namespace util { namespace hash {
     // Implements the crc checksum (from ethernet, png, etc).
-    // Adapted from the PNG specification (ISO/IEC 15948:2003), appendix D.
-    template <typename DigestT = uint32_t, DigestT Generator = 0xEDB88320>
+    //
+    // Adapted from the PNG specification (ISO/IEC 15948:2003), appendix D and
+    // the public domain implementation of Ross Williams.
+    template <
+        typename DigestT,
+        DigestT Generator,
+        DigestT Initial,
+        DigestT Final,
+        bool ReflectIn,
+        bool ReflectOut
+    >
     class crc {
     public:
-        static_assert (std::is_same<DigestT, std::uint32_t>::value,
-                       "only 32 bit crc is supported at this time");
-
         using digest_t = DigestT;
+
+        static constexpr auto generator = Generator;
 
         crc () noexcept;
 
@@ -46,7 +54,7 @@ namespace util::hash {
 
         digest_t digest (void) const;
 
-        static
+        static constexpr
         std::array<DigestT,256>
         table (void);
 
@@ -56,7 +64,12 @@ namespace util::hash {
         static const std::array<DigestT,256> s_table;
     };
 
-    using crc32 = crc<uint32_t, 0xEDB88320>;
-}
+    using crc32  = crc<uint32_t, 0x04c11db7, 0xffffffff, 0xffffffff, true,  true>;
+    using crc32b = crc<uint32_t, 0x04c11db7, 0xffffffff, 0xffffffff, false, false>;
+    using crc32c = crc<uint32_t, 0x1edc6f41, 0xffffffff, 0xffffffff, true,  true>;
+    using crc32d = crc<uint32_t, 0xa833982b, 0xffffffff, 0xffffffff, true,  true>;
+
+    using crc64 = crc<uint64_t, 0x42f0e1eba9ea3693, 0, 0, false, false>;
+} }
 
 #endif
