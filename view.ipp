@@ -170,6 +170,15 @@ util::view<T>::operator== (const view<T> rhs) const noexcept
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename T>
+bool
+util::operator!= (const view<T> a, const view<T> b)
+{
+    return !(a == b);
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T, size_t N>
 auto

@@ -79,6 +79,9 @@ namespace util {
     auto
     make_cview (const T&);
 
+    template <typename T>
+    bool operator!= (view<T>, view<T>);
+
     bool operator== (const std::string&, view<const char*>);
     bool operator== (const std::string&, view<char*>);
     bool operator== (const std::string&, view<std::string::const_iterator>);

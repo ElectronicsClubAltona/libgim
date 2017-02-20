@@ -31,6 +31,7 @@ util::operator== (A a, B b)             \
 }
 
 
+//-----------------------------------------------------------------------------
 EQUALITY(const std::string&, view<const char*>)
 EQUALITY(const std::string&, view<char*>)
 EQUALITY(const std::string&, view<std::string::const_iterator>)
@@ -42,6 +43,7 @@ EQUALITY(view<std::string::const_iterator>, const std::string&)
 EQUALITY(view<std::string::iterator>, const std::string&)
 
 #undef EQUALITY
+
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util {
