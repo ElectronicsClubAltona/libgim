@@ -173,6 +173,9 @@ util::hash::crc<
     DigestT,Generator,Initial,Final,ReflectIn,ReflectOut
 >::table (void)
 {
+    // We want to use a std::array here for a (slight) safety advantage, but
+    // it means that we have to use calls to array::data instead of operator[]
+    // to retain constexpr.
     std::array<digest_t,256> values {};
 
     if (ReflectIn) {

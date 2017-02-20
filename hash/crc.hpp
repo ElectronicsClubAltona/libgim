@@ -29,6 +29,16 @@ namespace util { namespace hash {
     //
     // Adapted from the PNG specification (ISO/IEC 15948:2003), appendix D and
     // the public domain implementation of Ross Williams.
+    //
+    // Generator: the polynomial, with the leading (ie, 32nd) high bit truncated.
+    // Initial:   value used to initialise the digest
+    // Final: value to xor against the digest at finish time
+    // ReflectIn: whether to reverse the bits of each data byte
+    // ReflectOut: whether to reverse the bits of the digest at finish time
+    //
+    // Note that reflection isn't necessarily explicitly performed at update
+    // time. Instead we construct the lookup table appropriately to directly
+    // use the data values directly.
     template <
         typename DigestT,
         DigestT Generator,
