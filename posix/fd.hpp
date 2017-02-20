@@ -52,11 +52,11 @@ namespace util::posix {
         struct ::stat stat (void) const;
 
         //---------------------------------------------------------------------
-        ssize_t read  (      void *buf, size_t count);
-        ssize_t write (const void *buf, size_t count);
+        [[gnu::warn_unused_result]] ssize_t read  (      void *buf, size_t count);
+        [[gnu::warn_unused_result]] ssize_t write (const void *buf, size_t count);
 
         //---------------------------------------------------------------------
-        off_t lseek (off_t offset, int whence);
+        [[gnu::warn_unused_result]] off_t lseek (off_t offset, int whence);
 
         ///////////////////////////////////////////////////////////////////////
         operator int (void) const;
