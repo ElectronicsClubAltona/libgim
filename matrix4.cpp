@@ -20,11 +20,11 @@ using util::matrix;
 
 
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
+template <size_t Rows, size_t Cols, typename T>
 T
-util::determinant (const matrix<S,T> &m)
+util::determinant (const matrix<Rows,Cols,T> &m)
 {
-    static_assert (S == 4, "hard coded 4x4 specialisation");
+    static_assert (Rows == 4 && Cols == 4);
 
     return m[0][3] * m[1][2] * m[2][1] * m[3][0] - m[0][2] * m[1][3] * m[2][1] * m[3][0] -
            m[0][3] * m[1][1] * m[2][2] * m[3][0] + m[0][1] * m[1][3] * m[2][2] * m[3][0] +
@@ -40,18 +40,18 @@ util::determinant (const matrix<S,T> &m)
            m[0][1] * m[1][0] * m[2][2] * m[3][3] + m[0][0] * m[1][1] * m[2][2] * m[3][3];
 }
 
-template float  util::determinant (const matrix<4,float>&);
-template double util::determinant (const matrix<4,double>&);
+template float  util::determinant (const matrix<4,4,float>&);
+template double util::determinant (const matrix<4,4,double>&);
 
 
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
-matrix<S,T>
-util::inverse (const matrix<S,T> &m)
+template <size_t Rows, size_t Cols, typename T>
+matrix<Rows,Cols,T>
+util::inverse (const matrix<Rows,Cols,T> &m)
 {
-    static_assert (S == 4, "hard coded 4x4 specialisation");
+    static_assert (Rows == 4 && Cols == 4);
 
-    return matrix<S,T> {
+    return matrix<4,4,T> {
         m[1][2]*m[2][3]*m[3][1] - m[1][3]*m[2][2]*m[3][1] + m[1][3]*m[2][1]*m[3][2] - m[1][1]*m[2][3]*m[3][2] - m[1][2]*m[2][1]*m[3][3] + m[1][1]*m[2][2]*m[3][3],
         m[0][3]*m[2][2]*m[3][1] - m[0][2]*m[2][3]*m[3][1] - m[0][3]*m[2][1]*m[3][2] + m[0][1]*m[2][3]*m[3][2] + m[0][2]*m[2][1]*m[3][3] - m[0][1]*m[2][2]*m[3][3],
         m[0][2]*m[1][3]*m[3][1] - m[0][3]*m[1][2]*m[3][1] + m[0][3]*m[1][1]*m[3][2] - m[0][1]*m[1][3]*m[3][2] - m[0][2]*m[1][1]*m[3][3] + m[0][1]*m[1][2]*m[3][3],
@@ -71,10 +71,10 @@ util::inverse (const matrix<S,T> &m)
     } / determinant (m);
 }
 
-template util::matrix<4,float> util::inverse  (const matrix<4,float>&);
-template util::matrix<4,double> util::inverse (const matrix<4,double>&);
+template util::matrix<4,4,float>  util::inverse (const matrix<4,4,float>&);
+template util::matrix<4,4,double> util::inverse (const matrix<4,4,double>&);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template struct util::matrix<4,float>;
-template struct util::matrix<4,double>;
+template struct util::matrix<4,4,float>;
+template struct util::matrix<4,4,double>;

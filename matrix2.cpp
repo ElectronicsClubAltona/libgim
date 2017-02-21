@@ -20,27 +20,27 @@ using util::matrix;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
+template <size_t Rows, size_t Cols, typename T>
 T
-util::determinant (const matrix<S,T> &m)
+util::determinant (const matrix<Rows,Cols,T> &m)
 {
-    static_assert (S == 2, "partial specialization for 2 dimensions");
+    static_assert (Rows == 2 && Cols == 2);
 
     return m[0][0] * m[1][1] - m[0][1] * m[1][0];
 }
 
-template float  util::determinant (const matrix<2,float>&);
-template double util::determinant (const matrix<2,double>&);
+template float  util::determinant (const matrix<2,2,float>&);
+template double util::determinant (const matrix<2,2,double>&);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-matrix<S,T>
-util::inverse (const matrix<S,T> &m)
+template <size_t Rows, size_t Cols, typename T>
+matrix<Rows,Cols,T>
+util::inverse (const matrix<Rows,Cols,T> &m)
 {
-    static_assert (S == 2, "partial specialization for 2 dimensions");
+    static_assert (Rows == 2 && Cols == 2);
 
-    return matrix<S,T> {
+    return matrix<2,2,T> {
          m[1][1], -m[0][1],
         -m[1][0],  m[0][0]
     } / determinant (m);
@@ -48,10 +48,10 @@ util::inverse (const matrix<S,T> &m)
 
 
 //-----------------------------------------------------------------------------
-template util::matrix<2,float>  util::inverse (const matrix<2,float>&);
-template util::matrix<2,double> util::inverse (const matrix<2,double>&);
+template util::matrix<2,2,float>  util::inverse (const matrix<2,2,float>&);
+template util::matrix<2,2,double> util::inverse (const matrix<2,2,double>&);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template struct util::matrix<2,float>;
-template struct util::matrix<2,double>;
+template struct util::matrix<2,2,float>;
+template struct util::matrix<2,2,double>;
