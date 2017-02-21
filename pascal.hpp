@@ -21,35 +21,43 @@
 #include <ostream>
 
 namespace util {
-    template <typename T>
+    template <typename DataT, typename SizeT = std::size_t>
     class parray {
     public:
-        parray (size_t size, T *data);
+        parray (SizeT size, DataT *data);
 
-        T& operator[] (size_t idx);
-        const T& operator[] (size_t idx) const;
+        DataT& operator[] (SizeT idx);
+        const DataT& operator[] (SizeT idx) const;
 
-        T& at (size_t idx);
-        const T& at (size_t idx) const;
+        DataT& at (SizeT idx);
+        const DataT& at (SizeT idx) const;
 
-        T* begin (void);
-        T* end   (void);
+        DataT* begin (void);
+        DataT* end   (void);
 
-        const T* cbegin (void) const;
-        const T* cend   (void) const;
+        const DataT* cbegin (void) const;
+        const DataT* cend   (void) const;
 
-        const T* data (void) const;
-        T* data (void);
-        size_t size (void) const;
+        const DataT* data (void) const;
+        DataT* data (void);
+        SizeT size (void) const;
 
     private:
-        const size_t m_size;
-        T *m_data;
+        const SizeT m_size;
+        DataT *m_data;
     };
 
-    template <typename T>
+    template <typename SizeT>
     std::ostream&
-    operator<< (std::ostream&, util::parray<T>);
+    operator<< (std::ostream&, util::parray<const char, SizeT>);
+
+    template <typename SizeT>
+    std::ostream&
+    operator<< (std::ostream&, util::parray<char, SizeT>);
+
+    template <typename DataT, typename SizeT>
+    std::ostream&
+    operator<< (std::ostream&, util::parray<DataT, SizeT>);
 }
 
 

@@ -16,41 +16,46 @@
 
 #include "pascal.hpp"
 
+#include "debug.hpp"
+
+#include <iterator>
 #include <stdexcept>
 
 using util::parray;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-parray<T>::parray (size_t _size, T *_data):
+template <typename DataT, typename SizeT>
+parray<DataT,SizeT>::parray (SizeT _size, DataT *_data):
     m_size (_size),
     m_data (_data)
 { ; }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-T&
-parray<T>::operator[] (size_t idx)
+template <typename DataT, typename SizeT>
+DataT&
+parray<DataT, SizeT>::operator[] (SizeT idx)
 {
+    CHECK_LIMIT(idx, 0u, m_size);
     return data ()[idx];
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-const T&
-parray<T>::operator[] (size_t idx) const
+template <typename DataT, typename SizeT>
+const DataT&
+parray<DataT, SizeT>::operator[] (SizeT idx) const
 {
+    CHECK_LIMIT(idx, 0u, m_size);
     return data ()[idx];
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-T&
-parray<T>::at (size_t idx)
+template <typename DataT, typename SizeT>
+DataT&
+parray<DataT, SizeT>::at (SizeT idx)
 {
     if (idx >= size ())
         throw std::out_of_range ("invalid index for parray");
@@ -60,9 +65,9 @@ parray<T>::at (size_t idx)
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-const T&
-parray<T>::at (size_t idx) const
+template <typename DataT, typename SizeT>
+const DataT&
+parray<DataT, SizeT>::at (SizeT idx) const
 {
     if (idx >= size ())
         throw std::out_of_range ("invalid index for parray");
@@ -72,110 +77,129 @@ parray<T>::at (size_t idx) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-T*
-parray<T>::begin (void)
+template <typename DataT, typename SizeT>
+DataT*
+parray<DataT, SizeT>::begin (void)
 {
     return data ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-T*
-parray<T>::end (void)
+template <typename DataT, typename SizeT>
+DataT*
+parray<DataT, SizeT>::end (void)
 {
     return data () + size ();
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-const T*
-parray<T>::cbegin (void) const
+template <typename DataT, typename SizeT>
+const DataT*
+parray<DataT, SizeT>::cbegin (void) const
 {
     return data ();
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-const T*
-parray<T>::cend (void) const
+template <typename DataT, typename SizeT>
+const DataT*
+parray<DataT, SizeT>::cend (void) const
 {
     return data () + size ();
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-const T*
-parray<T>::data (void) const
+template <typename DataT, typename SizeT>
+const DataT*
+parray<DataT, SizeT>::data (void) const
 {
     return m_data;
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-T*
-parray<T>::data (void)
+template <typename DataT, typename SizeT>
+DataT*
+parray<DataT, SizeT>::data (void)
 {
     return m_data;
 }
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-size_t
-parray<T>::size (void) const
+template <typename DataT, typename SizeT>
+SizeT
+parray<DataT, SizeT>::size (void) const
 {
     return m_size;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <typename SizeT>
 std::ostream&
-util::operator<< (std::ostream &os, parray<T> p)
+util::operator<< (std::ostream &os, parray<const char,SizeT> p)
 {
-    auto size = p.size ();
-    uintptr_t ptr = reinterpret_cast<uintptr_t> (p.data ());
-    os << "[" << size << ", " << std::hex << ptr << std::dec << "]";
+    std::copy_n (
+        p.cbegin (),
+        p.size (),
+        std::ostream_iterator<const char> (os)
+    );
+
     return os;
 }
 
 
 //-----------------------------------------------------------------------------
-template std::ostream& util::operator<< (std::ostream&, parray<uint16_t>);
-template std::ostream& util::operator<< (std::ostream&, parray<uint32_t>);
-template std::ostream& util::operator<< (std::ostream&, parray<uint64_t>);
+template <typename SizeT>
+std::ostream&
+util::operator<< (std::ostream &os, parray<char,SizeT> p)
+{
+    std::copy_n (
+        p.cbegin (),
+        p.size (),
+        std::ostream_iterator<char> (os)
+    );
 
-template std::ostream& util::operator<< (std::ostream&, parray<const uint16_t>);
-template std::ostream& util::operator<< (std::ostream&, parray<const uint32_t>);
-template std::ostream& util::operator<< (std::ostream&, parray<const uint64_t>);
+    return os;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template class util::parray<char>;
-template class util::parray<const char>;
+template <typename DataT, typename SizeT>
+std::ostream&
+util::operator<< (std::ostream &os, parray<DataT,SizeT> p)
+{
+    auto size = p.size ();
+    uintptr_t ptr = reinterpret_cast<uintptr_t> (p.data ());
+    os << "[" << +size << ", " << std::hex << ptr << std::dec << "]";
+    return os;
+}
 
-template class util::parray<int8_t>;
-template class util::parray<int16_t>;
-template class util::parray<int32_t>;
-template class util::parray<int64_t>;
 
-template class util::parray<uint8_t>;
-template class util::parray<uint16_t>;
-template class util::parray<uint32_t>;
-template class util::parray<uint64_t>;
 
-template class util::parray<const int8_t>;
-template class util::parray<const int16_t>;
-template class util::parray<const int32_t>;
-template class util::parray<const int64_t>;
 
-template class util::parray<const uint8_t>;
-template class util::parray<const uint16_t>;
-template class util::parray<const uint32_t>;
-template class util::parray<const uint64_t>;
+///////////////////////////////////////////////////////////////////////////////
+#define INSTANTIATE_D_S(D,S)                                                \
+template std::ostream& util::operator<< (std::ostream&, parray<      D,S>); \
+template std::ostream& util::operator<< (std::ostream&, parray<const D,S>); \
+                                                                            \
+template class util::parray<      D,S>;                                     \
+template class util::parray<const D,S>;
+
+//-----------------------------------------------------------------------------
+#define INSTANTIATE_D(D)        \
+INSTANTIATE_D_S(D, uint16_t)    \
+INSTANTIATE_D_S(D, uint32_t)    \
+INSTANTIATE_D_S(D, uint64_t)
+
+
+//-----------------------------------------------------------------------------
+INSTANTIATE_D (char)
+INSTANTIATE_D (uint16_t)
+INSTANTIATE_D (uint32_t)
+INSTANTIATE_D (uint64_t)
