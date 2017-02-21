@@ -80,6 +80,13 @@ namespace util {
     make_cview (const T&);
 
     template <typename T>
+    auto
+    make_view (T first, T last)
+    {
+        return view<T> {first, last};
+    }
+
+    template <typename T>
     bool operator!= (view<T>, view<T>);
 
     bool operator== (const std::string&, view<const char*>);
