@@ -143,7 +143,22 @@ namespace util {
         size_t R1, size_t C1,
         size_t R2, size_t C2,
         typename T
-    > constexpr matrix<R1,C2,T> operator* (const matrix<R1,C1,T>&, const matrix<R2,C2,T>&);
+    >
+    constexpr
+    matrix<R1,C2,T>
+    operator* (const matrix<R1,C1,T>&, const matrix<R2,C2,T>&);
+
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t R1, size_t C1,
+        size_t R2, size_t C2,
+        typename T
+    >
+    constexpr
+    matrix<R1,C2,T>&
+    operator*= (matrix<R1,C1,T> &a, const matrix<R2,C2,T> &b)
+    { return a = a * b; };
 
 
     ///////////////////////////////////////////////////////////////////////////
