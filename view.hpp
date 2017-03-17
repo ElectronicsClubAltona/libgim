@@ -22,6 +22,7 @@
 
 #include <cstdlib>
 #include <ostream>
+#include <string>
 
 namespace util {
     template <typename T>
@@ -86,6 +87,27 @@ namespace util {
         return view<T> {first, last};
     }
 
+    // string conversions
+    view<const char*> make_view (const char *str);
+    view<char*> make_view (char *str);
+
+    template <typename CharT, typename TraitsT, typename AllocT>
+    view<const CharT*>
+    make_view (const std::basic_string<CharT,TraitsT,AllocT>&);
+
+    template <typename CharT, typename TraitsT, typename AllocT>
+    view<CharT*>
+    make_view (std::basic_string<CharT,TraitsT,AllocT>&);
+
+    template <typename CharT, typename TraitsT, typename AllocT>
+    view<const CharT*>
+    make_view (const std::basic_string<CharT,TraitsT,AllocT>&&) = delete;
+
+    template <typename CharT, typename TraitsT, typename AllocT>
+    view<CharT*>
+    make_view (std::basic_string<CharT,TraitsT,AllocT>&&) = delete;
+
+    // boolean operationrs
     template <typename T>
     bool operator!= (view<T>, view<T>);
 

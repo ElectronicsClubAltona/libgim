@@ -213,3 +213,44 @@ util::make_cview (const T &t)
 {
     return util::view<decltype(std::cbegin (t))> { std::cbegin (t), std::cend (t) };
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+inline
+util::view<const char*>
+util::make_view (const char *str)
+{
+    return { str, str + strlen (str) };
+}
+
+//-----------------------------------------------------------------------------
+inline
+util::view<char*>
+util::make_view (char *str)
+{
+    return { str, str + strlen (str) };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename CharT, typename TraitsT, typename AllocT>
+util::view<const CharT*>
+util::make_view (const std::basic_string<CharT,TraitsT,AllocT> &str)
+{
+    return {
+        std::data (str),
+        std::data (str) + std::size (str)
+    };
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename CharT, typename TraitsT, typename AllocT>
+util::view<CharT*>
+util::make_view (std::basic_string<CharT,TraitsT,AllocT> &str)
+{
+    return {
+        std::data (str),
+        std::data (str) + std::size (str)
+    };
+}
