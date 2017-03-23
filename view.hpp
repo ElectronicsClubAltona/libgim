@@ -87,6 +87,13 @@ namespace util {
         return view<T> {first, last};
     }
 
+    template <typename T>
+    auto
+    make_cview (T *first, T *last)
+    {
+        return view<const T*> {first, last};
+    }
+
     // string conversions
     view<const char*> make_view (const char *str);
     view<char*> make_view (char *str);
