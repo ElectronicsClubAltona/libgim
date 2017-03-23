@@ -87,6 +87,27 @@ namespace util {
     constexpr bool
     is_coord_v = is_coord<K>::value;
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    constexpr
+    std::enable_if_t<is_coord_v<T>, std::size_t>
+    arity (void)
+    {
+        return T::dimension;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    constexpr
+    std::enable_if_t<std::is_arithmetic<T>::value, std::size_t>
+    arity (void)
+    {
+        return 1;
+    }
+
+
     ///////////////////////////////////////////////////////////////////////////
     // vector operators
 #define ELEMENT_OP(OP)                                  \
