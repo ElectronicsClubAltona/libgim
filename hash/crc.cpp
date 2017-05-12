@@ -16,9 +16,8 @@
 
 #include "./crc.hpp"
 
+#include "../bitwise.hpp"
 #include "../debug.hpp"
-
-#include <cruft/util/bitwise.hpp>
 
 #include <array>
 
