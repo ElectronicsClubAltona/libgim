@@ -159,7 +159,7 @@ namespace util {
     ///
     /// Expects to be called from outside all namespaces.
     #define INTROSPECTION_ENUM_IMPL(NS,E, ...)                  \
-    constexpr                                                   \
+    const                                                       \
     std::array<                                                 \
         util::enum_traits<::NS::E>::value_type,                 \
         util::enum_traits<::NS::E>::value_count                 \
