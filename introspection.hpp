@@ -20,6 +20,7 @@
 #include "./preprocessor.hpp"
 #include "./variadic.hpp"
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <string>

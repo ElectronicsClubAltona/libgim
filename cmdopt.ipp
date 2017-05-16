@@ -19,8 +19,9 @@
 #endif
 #define __UTIL_CMDLINE_IPP
 
-#include <sstream>
 #include <algorithm>
+#include <iterator>
+#include <sstream>
 
 #include "./introspection.hpp"
 #include "./iterator.hpp"

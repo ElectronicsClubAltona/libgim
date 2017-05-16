@@ -21,6 +21,8 @@
 
 #include "./coord/iostream.hpp"
 
+#include <array>
+
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>

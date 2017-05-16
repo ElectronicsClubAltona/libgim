@@ -24,6 +24,7 @@
 #include "./types/traits.hpp"
 #include "./float.hpp"
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <cstdint>
