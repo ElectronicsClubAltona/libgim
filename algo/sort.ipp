@@ -98,9 +98,17 @@ cruft::util::sort::soa (RandomIt key_first,
 
     std::sort (std::begin (indices),
                std::end   (indices),
-               [&] (const auto &a, const auto &b)
+               [&] (const auto &cruft_util_sort_soa_a, const auto &cruft_util_sort_soa_b)
     {
-        return comp (key_first[a], key_first[b]);
+        // GCC: we use the ridiculous parameter names to avoid a name aliasing
+        // bug/warning under gcc 6.3.0; if the client passes a comparator
+        // lambda that uses the same parameter names then a warning will be
+        // generated. given 'a' and 'b' aren't unlikely names we try to avoid
+        // them here.
+        return comp (
+            key_first[cruft_util_sort_soa_a],
+            key_first[cruft_util_sort_soa_b]
+        );
     });
 
     // convert from a sorted list of pointers to a mapping of pointers to
