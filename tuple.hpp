@@ -163,6 +163,24 @@ namespace util::tuple {
             >::type...
         > type;
     };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // do nothing with a set of parameters.
+    //
+    // useful for temporarily silencing unused argument warnings in parameter
+    // packs.
+    void
+    ignore (void)
+    { ; }
+
+    //-------------------------------------------------------------------------
+    template <typename T, typename ...Args>
+    void
+    ignore (T, Args ...args)
+    {
+        ignore (std::forward<Args> (args)...);
+    };
 }
 
 
