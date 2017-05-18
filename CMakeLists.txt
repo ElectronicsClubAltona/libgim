@@ -146,6 +146,9 @@ list (
     hash/md2.cpp
     adapter.hpp
     adapter.cpp
+    algo/sort.cpp
+    algo/sort.hpp
+    algo/sort.ipp
     alloc/fwd.hpp
     alloc/affix.cpp
     alloc/affix.hpp
@@ -432,6 +435,7 @@ if (TESTS)
 
     list (
         APPEND TEST_BIN
+        algo/sort
         alloc/aligned
         alloc/arena
         alloc/dynamic
