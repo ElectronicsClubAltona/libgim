@@ -75,7 +75,7 @@
 #define CHECK_SANITY(A) do {                                            \
     DEBUG_ONLY (                                                        \
         const auto &__a = (A);                                          \
-        if (!util::debug::is_valid (__a)) {                             \
+        if (!::util::debug::is_valid (__a)) {                           \
             _CHECK_PANIC("failed sanity test for %s, %!\n", #A, __a);   \
         }                                                               \
     );                                                                  \
@@ -88,7 +88,7 @@
         const auto &__a = (A);                              \
         const auto &__b = (B);                              \
                                                             \
-        if (!util::almost_equal (__a, __b)) {               \
+        if (!::util::almost_equal (__a, __b)) {             \
             _CHECK_PANIC("expected equality\n"              \
                          "__a: %s is %!\n"                  \
                          "__b: %s is %!\n",                 \
@@ -192,7 +192,7 @@
         const auto &__a = (A);                              \
         const auto &__b = (B);                              \
                                                             \
-        if (util::almost_equal (__a, __b)) {                \
+        if (::util::almost_equal (__a, __b)) {              \
             _CHECK_PANIC ("expected inequality\n"           \
                           "__a: %s is %!\n"                 \
                           "__b: %s is %!\n",                \
@@ -208,7 +208,7 @@
     DEBUG_ONLY (                                            \
         const auto &__a = (A);                              \
                                                             \
-        if (!util::almost_zero (__a)) {                     \
+        if (!::util::almost_zero (__a)) {                   \
             _CHECK_PANIC ("expected zero\n"                 \
                           "__a: %s is %!\n"                 \
                           #A, __a);                         \
@@ -221,7 +221,7 @@
 #define CHECK_NEZ(A) do {                                   \
     DEBUG_ONLY (                                            \
         const auto &__a = (A);                              \
-        if (util::exactly_zero (__a))                       \
+        if (::util::exactly_zero (__a))                     \
             _CHECK_PANIC ("expected zero\n"                 \
                           "__a: %s is %!",                  \
                           #A, __a);                         \
@@ -234,7 +234,7 @@
     DEBUG_ONLY (                                                    \
         const auto &__check_mod_v = (V);                            \
         const auto &__check_mod_m = (M);                            \
-        if (!util::exactly_zero (__check_mod_v % __check_mod_m))    \
+        if (!::util::exactly_zero (__check_mod_v % __check_mod_m))  \
             _CHECK_PANIC ("expected zero modulus\n"                 \
                           "__v: %s is %!\n"                         \
                           "__m: %s is %!",                          \
