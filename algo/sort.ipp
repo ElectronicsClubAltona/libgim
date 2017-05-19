@@ -26,6 +26,8 @@
 #include <iterator>
 #include <numeric>
 #include <vector>
+#include <iterator>
+#include <type_traits>
 
 #include "../debug.hpp"
 #include "../tuple.hpp"
@@ -37,6 +39,13 @@ namespace cruft::util::sort::detail {
     void
     index_swap (IndexA a, IndexB b, RandomIt value)
     {
+        static_assert(
+            std::is_base_of<
+                std::random_access_iterator_tag,
+                typename std::iterator_traits<RandomIt>::iterator_category
+            >::value
+        );
+
         std::swap (value[a], value[b]);
     }
 
@@ -58,6 +67,20 @@ cruft::util::sort::reorder (IndexIt idx_first,
                             ValueIt value,
                             OtherIt ...tail)
 {
+    static_assert (
+        std::is_base_of<
+            std::random_access_iterator_tag,
+            typename std::iterator_traits<IndexIt>::iterator_category
+        >::value
+    );
+
+    static_assert (
+        std::is_base_of<
+            std::random_access_iterator_tag,
+            typename std::iterator_traits<ValueIt>::iterator_category
+        >::value
+    );
+
     // Bail early on zero size arrays, partly so we can simplify some
     // debugging checks
     auto size = std::distance (idx_first, idx_last);
@@ -84,6 +107,13 @@ cruft::util::sort::soa (RandomIt key_first,
                         Comparator comp,
                         Args ...values)
 {
+    static_assert (
+        std::is_base_of<
+            std::random_access_iterator_tag,
+            typename std::iterator_traits<RandomIt>::iterator_category
+        >::value
+    );
+
     // bail early on guaranteed sorted or degenerate cases. we can make some
     // assumptions about minimum array sizes and non-wrapping indices later on
     // this way.
