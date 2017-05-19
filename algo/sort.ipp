@@ -54,7 +54,7 @@ namespace cruft::util::sort::detail {
     index_swap (IndexA a, IndexB b, RandomIt value, Tail ...tail)
     {
         index_swap (a, b, value);
-        index_swap (a, b, std::forward<Tail> (tail)...);
+        index_swap (a, b, tail...);
     };
 }
 
@@ -93,7 +93,7 @@ cruft::util::sort::reorder (IndexIt idx_first,
         while (i != (decltype(size))idx_first[i]) {
             auto j = idx_first[i];
 
-            detail::index_swap (i, j, value, std::forward<OtherIt> (tail)..., idx_first);
+            detail::index_swap (i, j, value, tail..., idx_first);
         }
     }
 };
@@ -151,5 +151,5 @@ cruft::util::sort::soa (RandomIt key_first,
     }
 
     // reorder all the arrays using the mapping we have discovered.
-    reorder (std::begin (dest), std::end (dest), key_first, std::forward<Args> (values)...);
+    reorder (std::begin (dest), std::end (dest), key_first, values...);
 };
