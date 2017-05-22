@@ -51,6 +51,42 @@ namespace util::ascii {
     }
 
 
+    //-------------------------------------------------------------------------
+    constexpr inline
+    bool
+    is_lower (char c) noexcept
+    {
+        return c >= 'a' && c <= 'z';
+    }
+
+
+    //-------------------------------------------------------------------------
+    constexpr inline
+    bool
+    is_hex (const char c) noexcept
+    {
+        switch (c) {
+        case '0'...'9': return true;
+        case 'a'...'f': return true;
+        case 'A'...'F': return true;
+        }
+
+        return false;
+    }
+
+
+    //-------------------------------------------------------------------------
+    constexpr inline
+    unsigned
+    from_hex (char c)
+    {
+        return c >= '0' && c <= '9' ? (c - '0'     ) :
+               c >= 'a' && c <= 'f' ? (c - 'a' + 10) :
+               c >= 'A' && c <= 'F' ? (c - 'A' + 10) :
+               throw std::invalid_argument ("character is not hexademical");
+    }
+
+
     ///////////////////////////////////////////////////////////////////////////
     constexpr inline
     char

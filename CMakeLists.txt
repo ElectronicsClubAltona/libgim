@@ -435,6 +435,7 @@ if (TESTS)
 
     list (
         APPEND TEST_BIN
+        ascii
         algo/sort
         alloc/aligned
         alloc/arena
