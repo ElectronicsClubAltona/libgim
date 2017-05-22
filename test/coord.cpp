@@ -17,13 +17,13 @@ main (void)
     static_assert (sizeof (util::point3f) == 3 * sizeof (util::point3f::value_type), "point3f is not packed");
     static_assert (sizeof (util::point4f) == 4 * sizeof (util::point4f::value_type), "point4f is not packed");
 
-    util::TAP::logger t;
+    util::TAP::logger tap;
 
     constexpr util::point2i p { -1,  2 };
 
-    t.expect_eq (-p, util::point2i { 1, -2 }, "unary point negation");
-    t.expect_eq ( p, p, "unary point addition");
-    t.expect (
+    tap.expect_eq (-p, util::point2i { 1, -2 }, "unary point negation");
+    tap.expect_eq ( p, p, "unary point addition");
+    tap.expect (
         std::is_same<
             bool,
             decltype(!p)::value_type
@@ -32,9 +32,9 @@ main (void)
     );
 
     auto vec = util::vector4f (0.5f);
-    t.expect_eq (vec, util::normalised (vec), "normalisation of normalised vector");
+    tap.expect_eq (vec, util::normalised (vec), "normalisation of normalised vector");
 
-    t.expect_eq (sum (util::vector4f::ones ()), 4.f, "elementwise summation");
+    tap.expect_eq (sum (util::vector4f::ones ()), 4.f, "elementwise summation");
 
-    return t.status ();
+    return tap.status ();
 }

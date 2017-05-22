@@ -388,4 +388,6 @@ main ()
 
         tap.expect (success, "ARC4 %zu", i);
     }
+
+    return tap.status ();
 }

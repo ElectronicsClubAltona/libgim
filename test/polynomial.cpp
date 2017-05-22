@@ -31,7 +31,7 @@ main (int, char**)
         { "cubic 1 uniq",   {  1, -3,  3, -1 }, { 1, nan, nan } },
     };
 
-    util::TAP::logger test;
+    util::TAP::logger tap;
 
     for (auto &i: CUBICS) {
         std::array<float,3> s = util::polynomial::roots<3> (i.coeffs);
@@ -52,8 +52,8 @@ main (int, char**)
                 ok = false;
         }
 
-        test.expect (ok, "%s", i.name);
+        tap.expect (ok, "%s", i.name);
     }
 
-    return 0;
+    return tap.status ();
 }

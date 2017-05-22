@@ -55,4 +55,6 @@ main ()
 
         tap.expect (std::is_same<dst_t, std::tuple<int>>::value, "tuple type mapping");
     }
+
+    return tap.status ();
 }

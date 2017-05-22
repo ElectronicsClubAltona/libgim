@@ -47,4 +47,6 @@ main (void)
     test_simple<unsigned,16,16> (tap);
     test_simple<unsigned,26, 6> (tap);
     test_simple<unsigned,32,32> (tap);
+
+    return tap.status ();
 }

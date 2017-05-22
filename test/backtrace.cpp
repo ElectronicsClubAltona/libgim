@@ -14,5 +14,5 @@ main (int, char **) {
     debug::backtrace ();
     tap.noop ();
 
-    return EXIT_SUCCESS;
+    return tap.status ();
 }

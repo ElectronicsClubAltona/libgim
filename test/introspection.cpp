@@ -50,4 +50,6 @@ int main ()
                     util::exactly_equal (d_foo.b, std::get<1> (f_tuple)),
                     "dynamic member access after conversion to tuple");
     }
+
+    return tap.status ();
 }

@@ -51,5 +51,5 @@ main (int, char**) {
             "bsdsum checksum: %s", t.msg);
     }
 
-    return EXIT_SUCCESS;
+    return tap.status ();
 }

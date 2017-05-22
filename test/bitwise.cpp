@@ -61,5 +61,5 @@ main (int, char**)
     test_rotate (tap);
     test_reverse (tap);
 
-    return 0;
+    return tap.status ();
 }

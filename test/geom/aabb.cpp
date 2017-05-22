@@ -48,4 +48,6 @@ main (int, char**)
 
         tap.expect_eq<AABB2f, AABB2f> (small, { { 0.5f, 0.5f }, { 0.5f, 0.5f }}, "unsigned over-contract");
     }
+
+    return tap.status ();
 }

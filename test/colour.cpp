@@ -46,4 +46,6 @@ main (int, char**)
             tap.expect_eq (util::hsv_to_rgb (i.hsv), i.rgb, "hsv-to-rgb %s", i.name);
         }
     }
+
+    return tap.status ();
 }

@@ -249,5 +249,5 @@ main (int, char**)
     test_region<2> (tap);
     test_region<3> (tap);
 
-    return EXIT_SUCCESS;
+    return tap.status ();
 }

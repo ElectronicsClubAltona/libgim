@@ -211,4 +211,6 @@ main (void)
 
     CHECK_THROW("%c", conversion_error, 1u);
     CHECK_THROW("%c", conversion_error, "foo");
+
+    return tap.status ();
 }
