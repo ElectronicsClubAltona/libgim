@@ -16,6 +16,47 @@ main (int, char**)
         tap.expect_eq (u.cast<float> (), f, "cast u8 to float");
     }
 
+    // Check parsing is working
+    tap.expect_eq (
+        util::colour4u::parse_html ("#11223344"),
+        util::colour4u (0x11, 0x22, 0x33, 0x44),
+        "4-component html parsing with hash"
+    );
+
+    tap.expect_eq (
+        util::colour4u::parse_html ("11223344"),
+        util::colour4u (0x11, 0x22, 0x33, 0x44),
+        "4-component html parsing without hash"
+    );
+
+    tap.expect_eq (
+        util::colour1f::parse_html ("ff"),
+        util::colour1f (1.f),
+        "1-component html parsing"
+    );
+
+    tap.expect_eq (
+        util::colour3u::parse_html ("3399ff"),
+        util::colour3u (0x33, 0x99, 0xff),
+        "3-component html parsing"
+    );
+
+    tap.expect_throw<std::invalid_argument> (
+        [] () { util::colour1f::parse_html ("00112233"); },
+        "1-component parsing with 4-component format"
+    );
+
+    tap.expect_throw<std::invalid_argument> (
+        [] () { util::colour4f::parse_html ("00"); },
+        "4-component parsing with 1-component format"
+    );
+
+    tap.expect_throw<std::invalid_argument> (
+        [] () { util::colour4f::parse_html ("0011223"); },
+        "4-component parsing with one too few digits"
+    );
+
+
     // Check lookups are working
     tap.expect_eq (util::colour4f::from_html  ("white"), util::colour4f {1}, "HTML lookup");
     tap.expect_eq ( util::colour4f::from_x11  ("white"), util::colour4f {1}, "X11 lookup");

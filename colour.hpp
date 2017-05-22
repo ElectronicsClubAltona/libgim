@@ -34,9 +34,22 @@ namespace util {
         colour<S,U>
         cast (void) const;
 
-        static colour from_html (const std::string&);
-        static colour from_x11  (const std::string&);
-        static colour from_string (const std::string&);
+        /// parse colours specified as "#AABBCCDD".
+        ///
+        /// * the leading hash is optional.
+        /// * all components must be 2 hex digits.
+        static colour parse_html (const char*);
+        static colour parse_html (const std::string&);
+
+        /// look up the name of a colour from those specified in
+        /// html/x11/etc specifications.
+        static colour from_html (const std::string &name);
+        static colour from_x11  (const std::string &name);
+
+        /// look up all the specifications and returns the colour from one
+        /// that matches. the search order is unspecified, so if you want a
+        /// known colour then try them first yourself.
+        static colour from_string (const std::string &name);
     };
 
     // Convenience types

@@ -16,19 +16,56 @@
 
 #include "./colour.hpp"
 
+#include "./ascii.hpp"
 #include "./debug.hpp"
+#include "./log.hpp"
 #include "./range.hpp"
 
 #include <array>
 #include <map>
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 using util::colour;
 using util::colour3f;
 using util::colour4f;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+colour<S,T>
+colour<S,T>::parse_html (const char *fmt)
+{
+    // ensure the format is the correct length
+    auto len = strlen (fmt);
+
+    switch (len) {
+    case 1 + 2 * S:
+        if (*fmt != '#')
+            throw std::invalid_argument ("missing leading hash");
+        ++fmt;
+        break;
+
+    case 2 * S:
+        break;
+
+    default:
+        throw std::invalid_argument ("format is the wrong length");
+    }
+
+    // parse the octets
+    util::colour<S,uint8_t> res;
+    for (size_t i = 0; i < res.size (); ++i) {
+        auto a = util::ascii::from_hex (fmt[i*2+0]);
+        auto b = util::ascii::from_hex (fmt[i*2+1]);
+
+        res[i] = (a << 4u) | b;
+    }
+
+    return res.template cast<T> ();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 static const std::map<std::string, colour<4,uint8_t>>
 HTML_COLOURS { {
     { "white",      { 0xff, 0xff, 0xff, 0xff } },
