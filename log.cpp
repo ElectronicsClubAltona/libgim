@@ -38,9 +38,7 @@ ALL_LEVELS[] = {
     util::CRITICAL,
     util::ERROR,
     util::WARN,
-    util::WARN,
     util::NOTICE,
-    util::INFO,
     util::INFO,
     util::DEBUG,
 };
