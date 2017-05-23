@@ -26,7 +26,7 @@ namespace util::adapter {
         // reverse a container for range-based-for
         template <typename T>
         struct reverse {
-            reverse (T &_target):
+            explicit reverse (T &_target):
                 m_target (_target)
             { ; }
 
@@ -49,7 +49,7 @@ namespace util::adapter {
         struct indices {
             using typename T::size_type;
 
-            indices (T &_target):
+            explicit indices (T &_target):
                 m_target (_target)
             { ; }
 
@@ -79,7 +79,7 @@ namespace util::adapter {
             using reference  = typename std::iterator_traits<scalar<I,It>>::reference;
             using value_type = typename std::iterator_traits<scalar<I,It>>::value_type;
 
-            scalar (It _inner):
+            explicit scalar (It _inner):
                 m_inner (_inner)
             { ; }
 

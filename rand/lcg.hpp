@@ -35,7 +35,7 @@ namespace util::rand {
 
         static_assert (std::is_unsigned<T>::value,
                        "LCG generates integer overflow which is undefined behaviour for signed types");
-        lcg (T seed);
+        explicit lcg (T seed);
 
         result_type operator() (void);
 

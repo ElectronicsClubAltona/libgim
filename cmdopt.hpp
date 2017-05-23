@@ -117,7 +117,7 @@ namespace util::cmdopt {
 
         class bytes : public value<size_t> {
         public:
-            bytes (size_t &_value): value (_value) { }
+            explicit bytes (size_t &_value): value (_value) { }
 
             using value<size_t>::execute;
             void execute (const char *restrict) override;
@@ -168,7 +168,7 @@ namespace util::cmdopt {
     //-------------------------------------------------------------------------
     class invalid_key : public error {
     public:
-        invalid_key (std::string _key);
+        explicit invalid_key (std::string _key);
         const char* what (void) const noexcept override;
 
     private:
@@ -178,7 +178,7 @@ namespace util::cmdopt {
     //-------------------------------------------------------------------------
     class invalid_value : public error {
     public:
-        invalid_value (std::string _value);
+        explicit invalid_value (std::string _value);
         const char* what (void) const noexcept override;
 
     private:
@@ -200,7 +200,7 @@ namespace util::cmdopt {
     //-------------------------------------------------------------------------
     class unhandled_argument : public error {
     public:
-        unhandled_argument (int index);
+        explicit unhandled_argument (int index);
         const char* what (void) const noexcept override;
 
         int index (void) const noexcept;

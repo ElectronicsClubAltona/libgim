@@ -29,7 +29,7 @@ namespace std::experimental::filesystem {
         static constexpr value_type preferred_separator = '/';
 
         path ();
-        path (const path&);
+        explicit path (const path&);
 
         template <class Source>
         path (const Source &s):

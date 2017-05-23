@@ -109,7 +109,7 @@ namespace util {
     template <typename T>
     class value_signal : public signal<void(T)> {
     public:
-        value_signal (T);
+        explicit value_signal (T);
         value_signal () = default;
 
         operator const T&() const;

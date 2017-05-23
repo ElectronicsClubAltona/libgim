@@ -26,7 +26,7 @@ namespace util::alloc {
     template <class T>
     class arena {
     public:
-        arena (T &store);
+        explicit arena (T &store);
 
         //---------------------------------------------------------------------
         template <typename U, typename ...Args>

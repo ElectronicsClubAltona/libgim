@@ -25,7 +25,7 @@ namespace util::memory {
     public:
         using func_t = std::function<void(T*)>;
 
-        func_deleter (func_t _func):
+        explicit func_deleter (func_t _func):
             m_func (_func)
         { ; }
 

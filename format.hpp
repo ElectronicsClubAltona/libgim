@@ -53,7 +53,7 @@ namespace util::format {
     public:
         using value_type = ValueT;
 
-        invalid_specifier (char specifier);
+        explicit invalid_specifier (char specifier);
 
         char specifier (void) const;
 

@@ -28,7 +28,7 @@ namespace util::alloc {
         typedef T value_type;
 
         template <typename ...Args>
-        allocator (Args&& ...args);
+        explicit allocator (Args&& ...args);
 
         T* allocate (size_t count);
         void deallocate (T*, size_t count);

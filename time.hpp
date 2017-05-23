@@ -48,7 +48,7 @@ namespace util {
     // ------------------------------------------------------------------------
     class period_query {
         public:
-            period_query (float seconds);
+            explicit period_query (float seconds);
 
             bool poll (void);
 
@@ -62,7 +62,7 @@ namespace util {
     // ------------------------------------------------------------------------
     class rate_limiter {
         public:
-            rate_limiter (unsigned rate);
+            explicit rate_limiter (unsigned rate);
 
             void poll (void);
 

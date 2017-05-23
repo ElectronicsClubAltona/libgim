@@ -30,7 +30,7 @@ namespace util::rand {
         using value_type = uint32_t;
         using seed_type  = uint64_t;
 
-        mwc64x (seed_type);
+        explicit mwc64x (seed_type);
 
         value_type operator() (void);
 

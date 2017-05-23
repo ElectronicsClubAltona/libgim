@@ -22,15 +22,15 @@
 
 namespace util::stream {
     namespace scoped {
-        #define SCOPED(NAME,TYPE)   \
-        class NAME {                \
-        public:                     \
-            NAME (std::ios_base&);  \
-            ~NAME ();               \
-                                    \
-        private:                    \
-            std::ios_base &m_ios;   \
-            TYPE m_state;           \
+        #define SCOPED(NAME,TYPE)           \
+        class NAME {                        \
+        public:                             \
+            explicit NAME (std::ios_base&); \
+            ~NAME ();                       \
+                                            \
+        private:                            \
+            std::ios_base &m_ios;           \
+            TYPE m_state;                   \
         }
 
         SCOPED(flags, std::ios_base::fmtflags);

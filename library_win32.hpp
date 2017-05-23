@@ -25,7 +25,7 @@ namespace util {
     namespace detail::win32 {
         class library {
         public:
-            library (const std::experimental::filesystem::path&);
+            explicit library (const std::experimental::filesystem::path&);
             ~library ();
 
             void* symbol (const char *name);

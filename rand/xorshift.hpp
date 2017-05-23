@@ -28,7 +28,7 @@ namespace util::rand {
     public:
         using result_type = T;
 
-        xorshift (T seed);
+        explicit xorshift (T seed);
 
         result_type operator() (void);
 

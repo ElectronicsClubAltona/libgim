@@ -69,7 +69,7 @@ namespace util {
     //-------------------------------------------------------------------------
     template <typename T>
     struct indented {
-        indented (const T &_data);
+        explicit indented (const T &_data);
         const T &data;
     };
 
@@ -100,7 +100,7 @@ namespace util {
     //-------------------------------------------------------------------------
     class path_error : public std::runtime_error {
     public:
-        path_error (const std::experimental::filesystem::path &path);
+        explicit path_error (const std::experimental::filesystem::path &path);
 
         const std::experimental::filesystem::path& path (void) const noexcept;
 

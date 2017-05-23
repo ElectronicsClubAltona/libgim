@@ -25,7 +25,7 @@
 namespace util {
     class input_error : public std::runtime_error {
         public:
-            input_error (const std::string &_what):
+            explicit input_error (const std::string &_what):
                     runtime_error (_what)
             { ; }
     };
@@ -33,7 +33,7 @@ namespace util {
 
     class output_error : public std::runtime_error {
         public:
-            output_error (const std::string &_what):
+            explicit output_error (const std::string &_what):
                 runtime_error (_what)
             { ; }
     };
@@ -41,7 +41,7 @@ namespace util {
 
     class unavailable_error : public std::runtime_error {
         public:
-            unavailable_error (const std::string &_what):
+            explicit unavailable_error (const std::string &_what):
                     runtime_error (_what)
             { ; }
     };
@@ -50,7 +50,7 @@ namespace util {
     /// An exception class used for reporting errors signalled by errno.
     class errno_error : public std::runtime_error {
     public:
-        errno_error (int code);
+        explicit errno_error (int code);
         errno_error ();
 
         int code (void) const;
@@ -73,7 +73,7 @@ namespace util {
 namespace  util {
     class win32_error : public std::runtime_error {
     public:
-        win32_error (DWORD _code);
+        explicit win32_error (DWORD _code);
         win32_error ();
 
         DWORD code (void) const;
