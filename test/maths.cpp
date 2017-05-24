@@ -122,6 +122,24 @@ test_normalisations (util::TAP::logger &tap)
     tap.expect_eq (util::renormalise<uint8_t,uint32_t> (0x00), 0x00000000u, "normalise lo u8-to-u32");
 
     tap.expect_eq (util::renormalise<uint32_t,uint8_t> (0xffffffff), 0xffu, "normalise hi u32-to-u8");
+
+    // sint32 to uint32
+    {
+        static const struct {
+             int32_t sint;
+            uint32_t uint;
+            const char *msg;
+        } TESTS[] = {
+            { std::numeric_limits<int32_t>::min (), std::numeric_limits<uint32_t>::min (), "min" },
+            { std::numeric_limits<int32_t>::max (), std::numeric_limits<uint32_t>::max (), "max" },
+            { 0, std::numeric_limits<uint32_t>::max () / 2u + 1, "mid" },
+        };
+
+        for (const auto &t: TESTS) {
+            tap.expect_eq (util::renormalise<int32_t,uint32_t> (t.sint), t.uint, "%s s32-to-u32", t.msg);
+            tap.expect_eq (util::renormalise<uint32_t,int32_t> (t.uint), t.sint, "%s u32-to-s32", t.msg);
+        }
+    }
 }
 
 

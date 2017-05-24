@@ -660,13 +660,18 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    // renormalisation of unit floating point and/or normalised integers
+    /// convert between different representations of normalised quantities.
+    ///
+    /// * floating point values must be within [0, 1] (otherwise undefined)
+    /// * signed values are handled by converting to unsigned representations
+    /// * may introduce small biases when expanding values so that low order
+    ///   bits have some meaning (particularly when dealing with UINTMAX)
 
-    // int -> float
+    // uint -> float
     template <typename T, typename U>
     constexpr
     typename std::enable_if<
-        !std::is_floating_point<T>::value && std::is_floating_point<U>::value, U
+        std::is_unsigned<T>::value && std::is_floating_point<U>::value, U
     >::type
     renormalise (T t)
     {
@@ -675,11 +680,11 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-    // float -> int
+    // float -> uint
     template <typename T, typename U>
     constexpr
     typename std::enable_if<
-        std::is_floating_point<T>::value && !std::is_floating_point<U>::value, U
+        std::is_floating_point<T>::value && std::is_unsigned<U>::value, U
     >::type
     renormalise (T t)
     {
@@ -708,7 +713,7 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-    // float -> float, avoid identity conversion as we don't want to create
+    // float -> float, avoids identity conversion as we don't want to create
     // ambiguous overloads
     template <typename T, typename U>
     constexpr
@@ -724,12 +729,12 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-    // hi_int -> lo_int
+    // hi_uint -> lo_uint
     template <typename T, typename U>
     constexpr
     typename std::enable_if<
-        std::is_integral<T>::value &&
-        std::is_integral<U>::value &&
+        std::is_unsigned<T>::value &&
+        std::is_unsigned<U>::value &&
         (sizeof (T) > sizeof (U)), U
     >::type
     renormalise (T t)
@@ -744,12 +749,12 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-    // lo_int -> hi_int
+    // lo_uint -> hi_uint
     template <typename T, typename U>
     constexpr
     typename std::enable_if<
-        std::is_integral<T>::value &&
-        std::is_integral<U>::value &&
+        std::is_unsigned<T>::value &&
+        std::is_unsigned<U>::value &&
         sizeof (T) < sizeof (U), U
     >::type
     renormalise (T t)
@@ -775,6 +780,8 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
+    // identity transformation. must precede the signed cases, as they may rely
+    // on this as a side effect of casts.
     template <typename T, typename U>
     constexpr
     typename std::enable_if<
@@ -782,6 +789,46 @@ namespace util {
     >::type
     renormalise (T t)
     { return t; }
+
+
+    //-------------------------------------------------------------------------
+    // anything-to-sint
+    template <typename T, typename U>
+    constexpr
+    typename std::enable_if<
+        std::is_signed<U>::value &&
+        std::is_integral<U>::value &&
+        !std::is_same<T,U>::value,
+        U
+    >::type
+    renormalise (T t)
+    {
+        using uint_t = typename std::make_unsigned<U>::type;
+
+        return static_cast<U> (
+            ::util::renormalise<T,uint_t> (t) + std::numeric_limits<U>::min ()
+        );
+    };
+
+
+    //-------------------------------------------------------------------------
+    // sint-to-anything
+    template <typename T, typename U>
+    constexpr
+    typename std::enable_if<
+        std::is_signed<T>::value &&
+        std::is_integral<T>::value &&
+        !std::is_same<T,U>::value,
+        U
+    >::type
+    renormalise (T sint)
+    {
+        using uint_t = typename std::make_unsigned<T>::type;
+
+        return ::util::renormalise<uint_t,U> (
+            static_cast<uint_t> (sint) - std::numeric_limits<T>::min ()
+        );
+    };
 }
 
 
