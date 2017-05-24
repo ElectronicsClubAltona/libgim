@@ -24,6 +24,9 @@
 
 namespace util {
     /// An n-dimensional position in space.
+    ///
+    /// \tparam S number of dimensions
+    /// \tparam T the underlying per-dimension datatype
     template <size_t S, typename T>
     struct point : public coord::base<S,T,point,coord::xyzw>
     {
@@ -39,19 +42,36 @@ namespace util {
         void sanity (void) const;
     };
 
+    ///////////////////////////////////////////////////////////////////////////
     // distance operators
+
+    /// computes the exact euclidean distance between two points.
     template <size_t S, typename T, typename U>
     typename std::common_type<T,U>::type distance  (point<S,T>, point<S,U>);
 
+    /// computes the squared euclidean distance between two points.
+    ///
+    /// useful if you just need to compare distances because it avoids a sqrt
+    /// operation.
     template <size_t S, typename T, typename U>
     constexpr typename std::common_type<T,U>::type distance2 (point<S,T>, point<S,U>);
 
+    /// computes the octile distance between two points. that is, the shortest
+    /// distance between `a' and `b' where travel is only allowed beween the 8
+    /// grid neighbours and cost for diagonals is proportionally larger than
+    /// cardinal movement. see also: chebyshev.
     template <typename T, typename U>
     typename std::common_type<T,U>::type octile (point<2,T>, point<2,U>);
 
+    /// computes the manhattan distance between two points. that is, the
+    /// distance where travel is only allowed along cardinal directions.
     template <size_t S, typename T, typename U>
     constexpr typename std::common_type<T,U>::type manhattan (point<S,T>, point<S,U>);
 
+    /// computes the cheyvshev distance between two points. that is, the
+    /// shortest distance between `a' and `b' where travel is only allowed
+    /// between the 8 grid neighbours and cost for diagonals is the same as
+    /// cardinal movement. see also: octile.
     template <size_t S, typename T, typename U>
     constexpr typename std::common_type<T,U>::type chebyshev (point<S,T>, point<S,U>);
 
