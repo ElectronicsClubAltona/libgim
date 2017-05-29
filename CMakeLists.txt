@@ -391,6 +391,8 @@ list (
     time.ipp
     tuple.cpp
     tuple.hpp
+    typeidx.cpp
+    typeidx.hpp
     types/bits.hpp
     types/comparator.hpp
     types/comparator.ipp
@@ -496,6 +498,7 @@ if (TESTS)
         stringid
         strongdef
         tuple
+        typeidx
         uri
         vector
         version
