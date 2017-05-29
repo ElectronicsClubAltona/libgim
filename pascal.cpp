@@ -200,6 +200,13 @@ INSTANTIATE_D_S(D, uint64_t)
 
 //-----------------------------------------------------------------------------
 INSTANTIATE_D (char)
+
+INSTANTIATE_D (uint8_t)
 INSTANTIATE_D (uint16_t)
 INSTANTIATE_D (uint32_t)
 INSTANTIATE_D (uint64_t)
+
+INSTANTIATE_D (int8_t)
+INSTANTIATE_D (int16_t)
+INSTANTIATE_D (int32_t)
+INSTANTIATE_D (int64_t)
