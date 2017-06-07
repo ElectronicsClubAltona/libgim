@@ -11,29 +11,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_VARIADIC_HPP
 #define __UTIL_VARIADIC_HPP
 
-#include <cstddef>
-
-namespace util {
-    template <size_t ...N>
-    struct indices
-    {
-        typedef indices<N..., sizeof...(N)> next;
-    };
+namespace util::variadic {
 
 
-    template <size_t N>
-    struct make_indices
-    {
-        typedef typename make_indices<N-1>::type::next type;
-    };
 }
-
-#include "variadic.ipp"
 
 #endif

@@ -25,6 +25,7 @@
 #include <cstdint>
 #include <string>
 #include <tuple>
+#include <utility>
 #include <experimental/filesystem>
 
 
@@ -360,11 +361,11 @@ namespace util {
 
     template <
         typename K,
-        typename I = typename make_indices<
+        typename I = typename std::make_index_sequence<
             std::tuple_size<
                 typename type<K>::fields
             >::value
-        >::type
+        >
     > struct _type_tuple;
 
     template <
@@ -372,7 +373,7 @@ namespace util {
         size_t ...I
     > struct _type_tuple <
         K,
-        indices<I...>
+        std::index_sequence<I...>
     > {
         typedef std::tuple<
             typename std::tuple_element<
@@ -394,11 +395,11 @@ namespace util {
     namespace detail {
         template <
             typename K,
-            typename I = typename make_indices<
+            typename I = typename std::make_index_sequence<
                 std::tuple_size<
                     typename type<K>::fields
                 >::value
-            >::type
+            >
         >
         struct _as_tuple;
 
@@ -408,7 +409,7 @@ namespace util {
         >
         struct _as_tuple <
             K,
-            indices<I...>
+            std::index_sequence<I...>
         >
         {
             static typename type_tuple<K>::type

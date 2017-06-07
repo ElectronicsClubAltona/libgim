@@ -74,7 +74,7 @@ namespace util::tuple {
             size_t ...I
         >
         auto
-        call (const Func &func, std::tuple<Args...> args, indices<I...>)
+        call (const Func &func, std::tuple<Args...> args, std::index_sequence<I...>)
         {
             // quiet unused variable warning with zero args
             (void)args;
@@ -91,7 +91,7 @@ namespace util::tuple {
     auto
     call (const Func &func, std::tuple<Args...> args)
     {
-        return detail::call (func, args, typename make_indices<sizeof...(Args)>::type {});
+        return detail::call (func, args, std::make_index_sequence<sizeof...(Args)> {});
     }
 
 
@@ -137,9 +137,9 @@ namespace util::tuple {
         template <
             typename
         > class F,
-        typename I = typename make_indices<
+        typename I = std::make_index_sequence<
             std::tuple_size<T>::value
-        >::type
+        >
     >
     struct map;
 
@@ -155,7 +155,7 @@ namespace util::tuple {
     struct map<
         T,
         F,
-        indices<I...>
+        std::index_sequence<I...>
     > {
         typedef std::tuple<
             typename F<
