@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "./colour.hpp"
@@ -441,17 +441,6 @@ util::operator>> (std::istream &is, util::colour<S,T> &c)
 template std::istream& util::operator>> (std::istream&, util::colour<3,uint8_t>&);
 
 ///////////////////////////////////////////////////////////////////////////////
-// we need to instantiate the various type_name specialisations for colour.
-//
-// we provide a declaration here, before then instantiating a routine that we
-// know will cause an implicit instantiation (ie util::to_string) for each
-// colour specialisation we require.
-template <size_t S, typename T>
-constexpr
-const char util::type_name<colour<S,T>>::value[];
-
-
-//-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)                            \
 template                                                \
 struct util::colour<S,T>;                               \

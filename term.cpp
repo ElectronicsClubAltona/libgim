@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2016-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "./term.hpp"
@@ -24,10 +24,7 @@
 
 using util::term::csi::graphics;
 
-
 static const std::experimental::filesystem::path DEFAULT_SEARCH_DIR = "/usr/share/terminfo";
-
-constexpr char util::term::csi::code::CSI;
 
 const graphics graphics::RESET (0);
 

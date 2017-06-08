@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_INTROSPECTION_HPP
@@ -173,13 +173,7 @@ namespace util {
         util::enum_traits<::NS::E>::value_count                 \
     > PASTE(util::__enum_traits_,E)::names = {                  \
       MAP(STRINGIZE_LIST, __VA_ARGS__)                          \
-    };                                                          \
-                                                                \
-    constexpr                                                   \
-    const char util::type_name<::NS::E>::ns[];                  \
-                                                                \
-    constexpr                                                   \
-    const char util::type_name<::NS::E>::value[];               \
+    };
 
 
     ///------------------------------------------------------------------------
