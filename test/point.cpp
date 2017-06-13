@@ -13,24 +13,22 @@ main (void)
 
     // Redim to lower dimension
     {
-        const point3f p(0.f, 1.f, 2.f);
+        const point3f p { 0.f, 1.f, 2.f };
         const point2f q = p.redim<2> ();
+        const point2f r { 0.f, 1.f };
 
-        tap.expect (
-            almost_equal (q[0], p[0]) &&
-            almost_equal (q[1], p[1]),
-            "redim to lower dimension"
-        );
+        tap.expect_eq (q, r, "redim to lower dimension");
     }
 
     // Redim to higher dimension without fill
     {
         const point2f p(0.f, 1.f);
-        const point3f q = p.redim<3> ();
+        const point2f q = p.redim<2> ();
 
+        // GCC: we can't use the equality operator here because it triggers
+        // an ICE on GCC 7.1.0
         tap.expect (
-            almost_equal (p[0], q[0]) &&
-            almost_equal (p[1], q[1]),
+            std::equal (std::cbegin (p), std::cend (p), std::cbegin (q)),
             "redim to higher dimension"
         );
     }
