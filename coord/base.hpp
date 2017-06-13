@@ -87,9 +87,9 @@ namespace util::coord {
         cast (void) const
         {
             KLASS<S,U> out;
-            std::copy (std::begin (this->data),
-                       std::end   (this->data),
-                       std::begin (out.data));
+            std::copy (std::cbegin (this->data),
+                       std::cend   (this->data),
+                       std::begin  (out.data));
             return out;
         }
 
@@ -100,9 +100,9 @@ namespace util::coord {
         redim (void) const
         {
             KLASS<D,T> out;
-            std::copy_n (std::begin (this->data),
+            std::copy_n (std::cbegin (this->data),
                          min (S, D),
-                         std::begin (out.data));
+                         std::begin  (out.data));
             return out;
         }
 
@@ -117,7 +117,7 @@ namespace util::coord {
             static constexpr auto L1 = min (S, D);
             static constexpr auto L2 = D - L1;
 
-            std::copy_n (std::begin (this->data),
+            std::copy_n (std::cbegin (this->data),
                          L1,
                          std::begin (out.data));
 
@@ -134,7 +134,7 @@ namespace util::coord {
         {
             KLASS<D,T> out;
 
-            auto cursor = std::copy_n (std::begin (this->data),
+            auto cursor = std::copy_n (std::cbegin (this->data),
                                        min (S, D),
                                        std::begin (out.data));
             std::fill (cursor, std::end (out.data), fill);
