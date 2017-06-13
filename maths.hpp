@@ -115,7 +115,7 @@ namespace util {
         std::is_arithmetic<Tb>::value,
         bool
     >
-    exactly_equal (const Ta a, const Tb b)
+    exactly_equal (const Ta &a, const Tb &b)
     {
         return a == b;
     }
