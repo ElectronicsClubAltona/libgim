@@ -94,7 +94,7 @@ namespace util {
 
     //-----------------------------------------------------------------------------
     template <typename Ta, typename Tb>
-    inline
+    constexpr inline
     typename std::enable_if<
         !std::is_arithmetic<Ta>::value ||
         !std::is_arithmetic<Tb>::value,
