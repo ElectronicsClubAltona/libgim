@@ -18,8 +18,18 @@
 #define __UTIL_VARIADIC_HPP
 
 namespace util::variadic {
+    /// return a reference to the first item in a parameter pack
+    template <typename T, typename ...Tail>
+    T&
+    first (T &t, Tail&&...)
+    { return t; }
 
 
+    /// return a reference to the first item in a const parameter pack
+    template <typename T, typename ...Tail>
+    const T&
+    first (const T &t, const Tail&&...)
+    { return t; }
 }
 
 #endif
