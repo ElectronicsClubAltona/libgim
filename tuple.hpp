@@ -166,10 +166,14 @@ namespace util::tuple {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    // do nothing with a set of parameters.
-    //
-    // useful for temporarily silencing unused argument warnings in parameter
-    // packs.
+    /// do nothing with a set of parameters.
+    ///
+    /// useful for temporarily silencing unused argument warnings in parameter
+    /// packs.
+    ///
+    /// it is guaranteed that this function will never be defined out in
+    /// debug/release/whatever builds. so it is safe to use to guarantee
+    /// parameter evaluation.
     void
     ignore (void)
     { ; }
