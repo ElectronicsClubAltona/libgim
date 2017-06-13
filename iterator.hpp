@@ -19,6 +19,7 @@
 #define __UTIL_ITERATOR_HPP
 
 #include "types/traits.hpp"
+#include "variadic.hpp"
 
 
 template <typename Base>
@@ -69,6 +70,7 @@ class referencing_iterator {
 
 
 namespace util {
+    ///////////////////////////////////////////////////////////////////////////
     template <
         typename T,
         class CharT = char,
@@ -106,6 +108,177 @@ namespace util {
         ostream_type &m_output;
         const CharT *m_delimiter;
     };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename ContainerT>
+    class indices {
+    public:
+        indices (const ContainerT &_container):
+            m_container (_container)
+        { ; }
+
+        class iterator : public std::iterator<std::forward_iterator_tag, std::size_t, std::size_t> {
+        public:
+
+            iterator (std::size_t _index):
+                m_index (_index)
+            { ; }
+
+            bool
+            operator!= (const iterator &rhs) const
+            {
+                return m_index != rhs.m_index;
+            }
+
+            bool
+            operator== (const iterator &rhs) const
+            {
+                return m_index == rhs.m_index;
+            }
+
+            iterator&
+            operator++ (void) &
+            {
+                ++m_index;
+                return *this;
+            };
+
+            const std::size_t&
+            operator* (void) const&
+            {
+                return m_index;
+            }
+
+        private:
+            std::size_t m_index;
+        };
+
+        iterator begin (void) const { return iterator { 0 }; }
+        iterator end   (void) const { return iterator { m_container.size () }; }
+
+    private:
+        const ContainerT &m_container;
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    indices<T>
+    make_indices (const T &_t)
+    {
+        return indices<T> (_t);
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    namespace detail::zip {
+        template <
+            typename ContainerT,
+            typename IteratorT,
+            typename I = std::make_index_sequence<std::tuple_size<ContainerT>::value>
+        >
+        struct collection;
+
+        template <
+            typename ContainerT,
+            typename IteratorT,
+            std::size_t ...I
+        >
+        struct collection<
+            ContainerT,
+            IteratorT,
+            std::index_sequence<I...>
+        > {
+            collection (const ContainerT &_containers):
+                m_containers { _containers }
+            { ; }
+
+            struct iterator : std::iterator<
+                std::forward_iterator_tag,
+                std::tuple<
+                    typename std::iterator_traits<
+                        typename std::tuple_element<I,IteratorT>::type
+                    >::value_type...
+                >,
+                std::size_t
+            > {
+                IteratorT m_iterators;
+
+                iterator (IteratorT _iterators):
+                    m_iterators (_iterators)
+                { ; }
+
+                iterator& operator++ (void)
+                {
+                    // HACK: we don't actually need to create a tuple here,
+                    // but it's a zero cost method to expand the parameter
+                    // pack.
+                    std::make_tuple (++std::get<I> (m_iterators)...);
+                    return *this;
+                }
+
+                iterator operator++ (int);
+
+                auto operator* (void)
+                {
+                    return std::make_tuple (*std::get<I> (m_iterators)...);
+                }
+
+                bool operator== (const iterator &rhs) const
+                {
+                    return m_iterators == rhs.m_iterators;
+                }
+
+                bool operator!= (const iterator &rhs) const
+                {
+                    return !(*this == rhs);
+                }
+            };
+
+            iterator begin (void)
+            {
+                return iterator { { std::begin (std::get<I> (m_containers))... } };
+            }
+
+            iterator end (void)
+            {
+                return iterator { { std::end (std::get<I> (m_containers))... } };
+            }
+
+            ContainerT m_containers;
+        };
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename ...ContainerT>
+    auto
+    zip (const ContainerT&... data)
+    {
+        using container = std::tuple<ContainerT...>;
+        using iterator = std::tuple<decltype(std::begin(data))...>;
+
+        return detail::zip::collection<
+            container,
+            iterator,
+            std::make_index_sequence<sizeof...(ContainerT)>
+        > (
+            std::make_tuple (data...)
+        );
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <typename ...ContainerT>
+    auto
+    izip (const ContainerT&... data)
+    {
+        return zip (
+            ::util::make_indices (::util::variadic::first (data...)),
+            data...
+        );
+    }
 }
 
 #endif

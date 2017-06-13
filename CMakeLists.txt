@@ -404,7 +404,6 @@ list (
     uri.hpp
     variadic.cpp
     variadic.hpp
-    variadic.ipp
     vector.cpp
     vector.hpp
     vector.ipp
@@ -479,6 +478,7 @@ if (TESTS)
         hash/xxhash
         hton
         introspection
+        iterator
         json_types
         maths
         matrix
