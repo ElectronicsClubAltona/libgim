@@ -366,6 +366,8 @@ list (
     region.hpp
     region.ipp
     roots/bisection.hpp
+    sarray.cpp
+    sarray.hpp
     si.cpp
     signal.cpp
     signal.hpp
@@ -492,6 +494,7 @@ if (TESTS)
         rational
         region
         roots/bisection
+        sarray
         signal
         stream
         string
