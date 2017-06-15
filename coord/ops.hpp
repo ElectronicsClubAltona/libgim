@@ -864,6 +864,113 @@ namespace util {
                         floor_func);
         return out;
     }
+
+    /// returns the data at a templated index in a coordinate.
+    ///
+    /// specifically required for structured bindings support.
+    ///
+    /// \tparam I index of the requested data
+    /// \tparam S dimensionality of the coordinate
+    /// \tparam T underlying data type of the coordinate
+    /// \tparam K coordinate data type to operate on
+    template <
+        size_t I,
+        size_t S,
+        typename T,
+        template<
+        size_t,
+        typename
+    > class K
+    >
+    const std::enable_if_t<
+        is_coord_v<K<S,T>>,
+        T
+    >&
+    get (const K<S,T> &k)
+    {
+        static_assert (I < S);
+        return k[I];
+    };
+
+
+    /// returns the data at a templated index in a coordinate.
+    ///
+    /// specifically required for structured bindings support.
+    ///
+    /// \tparam I index of the requested data
+    /// \tparam S dimensionality of the coordinate
+    /// \tparam T underlying data type of the coordinate
+    /// \tparam K coordinate data type to operate on
+    template <
+        size_t I,
+        size_t S,
+        typename T,
+        template<
+            size_t,
+            typename
+        > class K
+    >
+    std::enable_if_t<
+        is_coord_v<K<S,T>>,
+        T
+    >&
+    get (K<S,T> &k)
+    {
+        static_assert (I < S);
+        return k[I];
+    };
 }
+
+
+#include <tuple>
+
+
+namespace std {
+    /// returns the dimensions of a coordinate type.
+    ///
+    /// specifically required for structured bindings support.
+    ///
+    /// \tparam S dimensions
+    /// \tparam T data type
+    /// \tparam K coordinate class
+    template <
+        size_t S,
+        typename T,
+        template<
+            size_t,
+            typename
+        > class K
+    >
+    class tuple_size<K<S,T>> : public std::enable_if_t<
+        ::util::is_coord_v<K<S,T>>,
+        std::integral_constant<decltype(S), S>
+    > { };
+
+
+    /// indicates the type at a given index of a coordinate type
+    ///
+    /// specifically required for structured bindings support.
+    ///
+    /// \tparam I data index
+    /// \tparam S dimensionality of the coordinate
+    /// \tparam T data type for the coordinate
+    /// \tparam K the underlying coordinate class
+    template <
+        size_t I,
+        size_t S,
+        typename T,
+        template<
+            size_t,
+            typename
+        > class K
+    >
+    class tuple_element<
+        I, K<S,T>
+    > : public enable_if<
+        ::util::is_coord_v<K<S,T>>,
+        T
+    > { };
+}
+
 
 #endif

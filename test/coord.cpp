@@ -36,5 +36,12 @@ main (void)
 
     tap.expect_eq (sum (util::vector4f::ones ()), 4.f, "elementwise summation");
 
+    // check that structured bindings work
+    {
+        const auto &[x,y] = p;
+        tap.expect (x == p.x && y == p.y, "structured bindings extract correct data");
+    }
+
+
     return tap.status ();
 }
