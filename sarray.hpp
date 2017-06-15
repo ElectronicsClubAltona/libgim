@@ -20,6 +20,8 @@
 #include "./iterator.hpp"
 
 #include <cstdlib>
+#include <stdexcept>
+
 
 namespace util {
     /// An array with constant maximum size, but with actual used storage
@@ -30,23 +32,26 @@ namespace util {
     template <std::size_t S, typename T>
     class sarray {
     public:
+        template <typename InputIt>
+        sarray (InputIt first, InputIt last):
+            m_size (std::distance (first, last))
+        {
+            if (m_size > S)
+                throw std::length_error ("oversize sarray");
+
+            std::size_t i = 0;
+            for (auto cursor = first; cursor != last; ++cursor)
+                ::new (&m_data.objects[i++]) (T) (*cursor);
+        }
+
         //---------------------------------------------------------------------
         template <typename ContainerT>
         explicit
         sarray (const ContainerT &_data):
-            m_size (std::size (_data))
-        {
-            if (m_size > S)
-                throw std::length_error("exceeded maximum size");
+            sarray (std::begin (_data), std::end (_data))
+        { ; }
 
-            // I'd like to use izip and structured bindings here, but we run
-            // afoul of clang#3349 so we use a seperate index variable.
-            std::size_t i = 0;
-            for (auto &d: _data) {
-                ::new (&m_data.objects[i++]) (T) (d);
-            }
-        }
-
+        //---------------------------------------------------------------------
         ~sarray ()
         {
             for (std::size_t i = 0; i < m_size; ++i)
