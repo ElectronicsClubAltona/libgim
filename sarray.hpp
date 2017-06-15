@@ -94,6 +94,15 @@ namespace util {
 
         const std::size_t m_size;
     };
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, std::size_t S>
+    auto
+    make_sarray (const T(&data)[S], std::size_t count = S)
+    {
+        return sarray<S,T> (data, data + count);
+    }
 }
 
 #endif
