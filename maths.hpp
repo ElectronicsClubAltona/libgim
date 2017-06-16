@@ -549,8 +549,14 @@ namespace util {
         T c = 0;
 
         for (auto cursor = first; cursor != last; ++cursor) {
+            // Infinities are handled poorly in this implementation. We tend
+            // to produce NaNs because of the subtraction where we compute
+            // `c'. For the time being just panic in this scenario.
+            assert(!std::isinf (*cursor));
+
             T y = *cursor - c;
             T t = sum + y;
+
             c = (t - sum) - y;
             sum = t;
         }

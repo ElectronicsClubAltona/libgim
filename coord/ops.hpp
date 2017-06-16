@@ -24,8 +24,10 @@
 #include "../preprocessor.hpp"
 #include "../types/bits.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <iterator>
 
 namespace util {
     ///////////////////////////////////////////////////////////////////////
@@ -741,7 +743,17 @@ namespace util {
     T
     sum (const K<S,T> k)
     {
-        return sum (std::cbegin (k), std::cend (k));
+        // DO NOT USE util::sum(begin, end) from maths.hpp
+        //
+        // It would be nice to use kahan summation from maths.hpp but speed
+        // and simplicity is more important for these fixed sized
+        // coordinates. Infinities tend to crop up using these classes and
+        // they cause a few headaches in the kahan code.
+        //
+        // So, if the user wants kahan summation they can request it
+        // explicitly.
+
+        return std::accumulate (std::cbegin (k), std::cend (k), T{0});
     }
 
 

@@ -42,6 +42,16 @@ main (void)
         tap.expect (x == p.x && y == p.y, "structured bindings extract correct data");
     }
 
+    {
+        util::point3f a { 103, 0, 14 };
+        util::point3f b { 104, INFINITY, 15 };
+
+        tap.expect_eq (
+            std::numeric_limits<float>::infinity (),
+            ::util::distance (a, b),
+            "distance with an infinity is infinite"
+        );
+    }
 
     return tap.status ();
 }
