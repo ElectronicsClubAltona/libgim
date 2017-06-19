@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifdef __UTIL_TYPES_COMPARATOR_IPP
@@ -22,7 +22,7 @@
 
 
 //-----------------------------------------------------------------------------
-namespace util {
+namespace util::comparator {
     template <typename T>
     bool
     pointer_comparator<T>::operator() (const std::unique_ptr<T> &lhs,

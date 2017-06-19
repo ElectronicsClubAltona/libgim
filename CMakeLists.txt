@@ -451,6 +451,7 @@ if (TESTS)
         bitwise
         cmdopt
         colour
+        comparator
         coord
         crypto/arc4
         crypto/ice
