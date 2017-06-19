@@ -1,3 +1,5 @@
 A simple cross-platform C++ utility library.
 
+Supported compilers: >=clang-4.x, >=gcc7.x; specifically, we require c++17 features such as structured bindings which aren't present in older compilers. No attempt has been made to compile under MSVC.
+
 For the love of God, do not use the crypto routines. I am not a cryptographer or a security specialist. You have been warned.
