@@ -397,7 +397,6 @@ list (
     typeidx.hpp
     types/bits.hpp
     types/comparator.hpp
-    types/comparator.ipp
     types.hpp
     types/string.cpp
     types/string.hpp

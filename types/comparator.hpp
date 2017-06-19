@@ -14,19 +14,38 @@
  * Copyright 2012-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_TYPES_COMPARATOR_HPP
-#define __UTIL_TYPES_COMPARATOR_HPP
+#ifndef UTIL_TYPES_COMPARATOR_HPP
+#define UTIL_TYPES_COMPARATOR_HPP
 
 #include <memory>
 
 #include "./iterator.hpp"
 
 namespace util::comparator {
+    ///////////////////////////////////////////////////////////////////////////
+    /// Compares standard types that can be reduced to pointers.
     template <typename T>
-    struct pointer_comparator {
-        bool operator() (const std::unique_ptr<T> &lhs, const std::unique_ptr<T> &rhs);
-        bool operator() (const T                  *lhs, const std::unique_ptr<T> &rhs);
-        bool operator() (const std::unique_ptr<T> &lhs, const T                  *rhs);
+    struct pointer {
+        constexpr
+        bool
+        operator() (const std::unique_ptr<T> &a, const std::unique_ptr<T> &b)
+        {
+            return a < b;
+        }
+
+        constexpr
+        bool
+        operator() (const T *a, const std::unique_ptr<T> &b)
+        {
+            return a < b.get ();
+        }
+
+        constexpr
+        bool
+        operator() (const std::unique_ptr<T> &a, const T *b)
+        {
+            return a.get () < b;
+        }
     };
 
 
@@ -55,5 +74,4 @@ namespace util::comparator {
     };
 }
 
-#include "./comparator.ipp"
 #endif
