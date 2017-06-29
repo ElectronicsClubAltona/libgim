@@ -19,7 +19,7 @@
 
 #include <memory>
 
-#include "./iterator.hpp"
+#include "../iterator.hpp"
 
 namespace util::comparator {
     ///////////////////////////////////////////////////////////////////////////
