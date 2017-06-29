@@ -61,7 +61,7 @@ namespace util::comparator {
     template <typename T>
     struct indexed {
         constexpr
-        bool operator() (const T &a, const T &b)
+        bool operator() (const T &a, const T &b) const
         {
             for (auto x: util::zip (a, b)) {
                 const auto &[i,j] = x; // clang-4.0: workaround for segfault.
