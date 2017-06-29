@@ -103,23 +103,6 @@ namespace util {
     typedef point4<int> point4i;
 }
 
-#include <functional>
-
-namespace std {
-    template <size_t S, typename T>
-    struct hash<util::point<S,T>> {
-        size_t operator() (util::point<S,T> p) const {
-            std::hash<T> h;
-
-            size_t k = 0;
-            for (size_t i = 0; i < S; ++i)
-                k = h (p.data[i] ^ k);
-
-            return k;
-        }
-    };
-}
-
 #include "point.ipp"
 
 #endif // __UTIL_POINT_HPP

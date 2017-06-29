@@ -934,8 +934,8 @@ namespace util {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 #include <tuple>
-
 
 namespace std {
     /// returns the dimensions of a coordinate type.
@@ -982,6 +982,37 @@ namespace std {
         ::util::is_coord_v<K<S,T>>,
         T
     > { };
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+#include <functional>
+
+#include "../hash.hpp"
+
+namespace std {
+    template <
+        size_t S,
+        typename T,
+        template <
+            std::size_t,typename
+        > class K
+    >
+    struct hash<
+        K<S,T>
+    > : public ::std::enable_if<
+        ::util::is_coord_v<K<S,T>>
+    > {
+        std::size_t
+        operator() (K<S,T> k) const {
+            size_t v = 0xdeadbeef;
+
+            for (auto t: k)
+                v = ::util::hash::mix (t, v);
+
+            return v;
+        }
+    };
 }
 
 
