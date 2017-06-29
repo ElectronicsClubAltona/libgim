@@ -64,7 +64,7 @@ namespace util::comparator {
         bool operator() (const T &a, const T &b) const
         {
             for (auto x: util::zip (a, b)) {
-                const auto &[i,j] = x; // clang-4.0: workaround for segfault.
+                const auto &[i,j] = x; // BUG: clang-4.0: workaround for segfault.
                 if (i  < j) return true;
                 if (i != j) return false;
             }
