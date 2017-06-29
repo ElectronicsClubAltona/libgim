@@ -17,14 +17,14 @@
 #ifndef __UTIL_HASH_HPP
 #define __UTIL_HASH_HPP
 
-#include "hash/wang.hpp"
+#include "hash/murmur/murmur2.hpp"
 
 #include <cstdint>
 #include <cstdlib>
 
 namespace util::hash {
-    uint32_t mix (uint32_t v) { return wang (v); }
-    uint64_t mix (uint64_t v) { return wang (v); }
+    constexpr std::uint32_t mix (std::uint32_t a, std::uint32_t b) { return murmur2::mix (a, b); }
+    constexpr std::uint64_t mix (std::uint64_t a, std::uint64_t b) { return murmur2::mix (a, b); }
 }
 
 #endif
