@@ -20,5 +20,10 @@ main (int, char**)
         "compare initializer_list as a coordinate, failure"
     );
 
+    tap.expect (
+        !util::comparator::indexed<decltype (a)> ()(a, a),
+        "self compare initializer_list as a coordinate, failure"
+    );
+
     return tap.status ();
 }
