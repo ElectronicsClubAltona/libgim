@@ -306,6 +306,8 @@ list (
     io.hpp
     io.ipp
     iterator.hpp
+    job/queue.cpp
+    job/queue.hpp
     json/fwd.hpp
     json/except.cpp
     json/except.hpp
@@ -481,6 +483,7 @@ if (TESTS)
         hton
         introspection
         iterator
+        job/queue
         json_types
         maths
         matrix
