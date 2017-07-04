@@ -73,7 +73,7 @@ namespace util {
             extent<S,T> m_target;
         };
 
-        extent_range (extent<S,T> target);
+        explicit extent_range (extent<S,T> target);
 
         iterator begin (void) const;
         iterator end   (void) const;
@@ -81,6 +81,13 @@ namespace util {
     private:
         extent<S,T> m_target;
     };
+
+    template <size_t S, typename T>
+    extent_range<S,T>
+    make_range (extent<S,T> e)
+    {
+        return extent_range<S,T> {e};
+    }
 
     // convenience typedefs
     template <typename T> using extent2 = extent<2,T>;
