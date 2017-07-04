@@ -93,6 +93,7 @@ namespace util::job {
             } while (!done.load ());
         }
 
+
     private:
         /// stores a functor and associated arguments in a fixed size buffer
         /// for later execution.
@@ -112,8 +113,8 @@ namespace util::job {
             template <class Function, typename ...Args>
             args (Function &&func, Args&&...params)
             {
-                using tuple_t = std::tuple<Args...>;
-                static_assert ((std::is_trivial_v<decltype(params)> && ...));
+                using tuple_t = std::tuple<std::decay_t<Args>...>;
+                static_assert ((std::is_trivial_v<std::decay_t<decltype(params)>> && ...));
                 static_assert (sizeof (tuple_t) <= sizeof data);
 
                 union {
@@ -121,7 +122,7 @@ namespace util::job {
                     tuple_t        *args_ptr;
                 };
                  byte_ptr = &data;
-                *args_ptr = std::make_tuple (std::forward (params)...);
+                *args_ptr = std::make_tuple (params...);
 
                 function = [func] (args &base) {
                     std::apply (func, *reinterpret_cast<tuple_t*> (&base.data));
