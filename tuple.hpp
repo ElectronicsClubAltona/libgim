@@ -185,7 +185,31 @@ namespace util::tuple {
     {
         ignore (std::forward<Args> (args)...);
     };
-}
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// query the index of the first occurrence of type `T' in the tuple type
+    /// `TupleT'.
+    ///
+    /// if the query type does not occur in the tuple type a compiler error
+    /// should be generated.
+    template <class T, class TupleT>
+    struct index;
+
+
+    //-------------------------------------------------------------------------
+    template <class T, class ...Types>
+    struct index<T, std::tuple<T, Types...>> {
+        static constexpr std::size_t value = 0;
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <class T, class U, class ...Types>
+    struct index<T,std::tuple<U, Types...>> {
+        static constexpr std::size_t value = 1 + index<T, std::tuple<Types...>>::value;
+    };
+};
 
 
 #endif
