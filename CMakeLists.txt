@@ -199,6 +199,8 @@ list (
     crypto/arc4.hpp
     crypto/ice.cpp
     crypto/ice.hpp
+    crypto/salsa.cpp
+    crypto/salsa.hpp
     crypto/tea.cpp
     crypto/tea.hpp
     crypto/xtea.cpp
@@ -456,6 +458,7 @@ if (TESTS)
         coord
         crypto/arc4
         crypto/ice
+        crypto/salsa
         crypto/tea
         crypto/xtea
         crypto/xxtea
