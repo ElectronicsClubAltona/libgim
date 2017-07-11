@@ -174,7 +174,7 @@ namespace util::tuple {
     /// it is guaranteed that this function will never be defined out in
     /// debug/release/whatever builds. so it is safe to use to guarantee
     /// parameter evaluation.
-    void
+    inline void
     ignore (void)
     { ; }
 
