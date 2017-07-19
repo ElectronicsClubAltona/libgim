@@ -56,15 +56,6 @@ util::region<S,T>::region (point_t _a,
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::region<S,T>::region (std::array<T,S*2> args)
-{
-    std::copy (&args[0], &args[S],   p.data);
-    std::copy (&args[S], &args[S*2], e.data);
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
 T
 util::region<S,T>::area (void) const
 {

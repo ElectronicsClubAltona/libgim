@@ -48,7 +48,6 @@ namespace util {
         explicit region (extent_t);
         region (point_t, extent_t);
         region (point_t, point_t);
-        explicit region (std::array<T,S*2>);
 
         //---------------------------------------------------------------------
         template <typename U>
