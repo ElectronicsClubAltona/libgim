@@ -161,13 +161,17 @@ main (void)
 
     tap.expect_eq (util::pow2 (4u), 16u, "pow2");
 
-    static const double POS_ZERO =  1.0 / numeric_limits<double>::infinity ();
-    static const double NEG_ZERO = -1.0 / numeric_limits<double>::infinity ();
+    static const float POS_ZERO =  1.f / numeric_limits<float>::infinity ();
+
+    union {
+        uint32_t neg_zero_bits = 0x80000000;
+        float NEG_ZERO;
+    };
 
     tap.expect_eq (util::sign (-1), -1, "sign(-1)");
     tap.expect_eq (util::sign ( 1),  1, "sign( 1)");
-    tap.expect_eq (util::sign (POS_ZERO),  1., "sign (POS_ZERO)");
-    tap.expect_eq (util::sign (NEG_ZERO), -1., "sign (NEG_ZERO)");
+    tap.expect_eq (util::sign (POS_ZERO),  1.f, "sign (POS_ZERO)");
+    tap.expect_eq (util::sign (NEG_ZERO), -1.f, "sign (NEG_ZERO)");
     tap.expect_eq (util::sign ( numeric_limits<double>::infinity ()),  1., "sign +inf");
     tap.expect_eq (util::sign (-numeric_limits<double>::infinity ()), -1., "sign -inf");
 
