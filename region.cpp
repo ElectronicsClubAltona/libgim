@@ -181,6 +181,15 @@ util::region<S,T>::contains (point_t q) const
 
 
 //-----------------------------------------------------------------------------
+template <size_t S, typename T>
+bool
+util::region<S,T>::has (const point_t q) const noexcept
+{
+    return all (q >= p) && all (q < p + e);
+}
+
+
+//-----------------------------------------------------------------------------
 // FIXME: This will fail with an actual infinite range (NaNs will be generated
 // in the conditionals).
 template <size_t S, typename T>

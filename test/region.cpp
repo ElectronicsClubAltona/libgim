@@ -57,6 +57,10 @@ main (int, char **)
         tap.expect ( r.contains (util::point2u {1, 1}), "unsigned region center contains");
         tap.expect (!r.contains (util::point2u {0, 0}), "unsigned region base contains");
         tap.expect (!r.contains (util::point2u {2, 2}), "unsigned region corner contains");
+
+        tap.expect ( r.has (util::point2u {1, 1}), "unsigned region centre has");
+        tap.expect ( r.has (util::point2u {1, 1}), "unsigned region base has");
+        tap.expect (!r.has (util::point2u {2, 2}), "unsigned region corner has");
     }
 
     //CHECK (region<2,intmax_t> (0, 0, 10, 10).includes (point2d (0.4, 0.01)));

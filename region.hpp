@@ -74,6 +74,7 @@ namespace util {
         bool includes (point_t) const; // inclusive of borders
         bool contains (point_t) const; // exclusive of borders
         bool intersects (region<S,T>) const;  // exclusive of borders
+        bool has (point_t) const noexcept; // inclusive of top and left borders
 
         // Move a point to be within the region bounds
         void constrain (point_t&) const;
