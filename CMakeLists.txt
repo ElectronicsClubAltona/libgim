@@ -334,6 +334,8 @@ list (
     memory/deleter.cpp
     memory/deleter.hpp
     nocopy.hpp
+    parse.cpp
+    parse.hpp
     pascal.cpp
     pascal.hpp
     platform.hpp
@@ -491,6 +493,7 @@ if (TESTS)
         maths
         matrix
         memory/deleter
+        parse
         point
         polynomial
         pool
