@@ -45,6 +45,9 @@ namespace util {
         constexpr const T& cbegin (void) const noexcept;
         constexpr const T& cend   (void) const noexcept;
 
+        auto data (void)       { return begin (); }
+        auto data (void) const { return begin (); }
+
         constexpr T find (const value_type&) const noexcept;
 
         constexpr bool empty (void) const noexcept;
