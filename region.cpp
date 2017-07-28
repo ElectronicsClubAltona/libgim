@@ -50,6 +50,11 @@ util::region<S,T>::region (point_t _a,
                            point_t _b):
     region (_a, extent_t { _b - _a })
 {
+    // This check must allow for zero area (but non-zero dimension) regions.
+    // Some code paths need to support this degenerate case. It's ugly but
+    // simplifies generalisation. eg, vertical linear bezier curves.
+    CHECK (all (_a <= _b));
+
     debug::sanity (*this);
 }
 
