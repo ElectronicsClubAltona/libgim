@@ -931,6 +931,38 @@ namespace util {
         static_assert (I < S);
         return k[I];
     };
+
+
+    /// create a coord from supplied arguments, optionally specifying the
+    /// underlying type.
+    ///
+    /// much like experimental::make_array we use a void type to signal we
+    /// need to deduce the underlying type.
+#define MAKE_COORD(KLASS)                   \
+    template <                              \
+        typename _T = void,                 \
+        typename ...Args                    \
+    >                                       \
+    auto                                    \
+    make_##KLASS (Args &&...args)           \
+    {                                       \
+        using T = std::conditional_t<       \
+            std::is_void_v<_T>,             \
+            std::common_type_t<Args...>,    \
+            _T                              \
+        >;                                  \
+                                            \
+        return KLASS<sizeof...(Args),T> {   \
+            std::forward<Args> (args)...    \
+        };                                  \
+    }
+
+    MAKE_COORD(extent)
+    MAKE_COORD(point)
+    MAKE_COORD(colour)
+    MAKE_COORD(vector)
+
+#undef MAKE_COORD
 }
 
 
