@@ -663,15 +663,18 @@ namespace util {
         template <size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
-        >
+        >,
+        typename ...Args
     >
     constexpr
     K<S,T>
-    min (K<S,T> a, K<S,T> b)
+    min (K<S,T> a, K<S,T> b, Args &&...args)
     {
+        static_assert ((... && std::is_same<K<S,T>, std::decay_t<Args>>::value));
+
         K<S,T> out {};
         for (size_t i = 0; i < S; ++i)
-            out[i] = min (a[i], b[i]);
+            out[i] = min (a[i], b[i], args[i]...);
         return out;
     }
 
@@ -684,15 +687,18 @@ namespace util {
         template <size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
-        >
+        >,
+        typename ...Args
     >
     constexpr
     K<S,T>
-    max (K<S,T> a, K<S,T> b)
+    max (K<S,T> a, K<S,T> b, Args &&...args)
     {
+        static_assert ((... && std::is_same<K<S,T>, std::decay_t<Args>>::value));
+
         K<S,T> out {};
         for (size_t i = 0; i < S; ++i)
-            out[i] = max (a[i], b[i]);
+            out[i] = max (a[i], b[i], args[i]...);
         return out;
     }
 
