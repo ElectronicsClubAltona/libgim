@@ -854,6 +854,30 @@ namespace util {
     }
 
 
+    ///------------------------------------------------------------------------
+    /// returns an instance of K elementwise using a when s is true, and b
+    /// otherwise. ie, k[i] = s[i] ? a[i] : b[i];
+    ///
+    /// corresponds to the function `select' from OpenCL.
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K<S,T>>,
+            void
+        >
+    >
+    constexpr
+    K<S,T>
+    select (vector<S,bool> s, K<S,T> a, K<S,T> b)
+    {
+        K<S,T> k {};
+        for (size_t i = 0; i < S; ++i)
+            k[i] = s[i] ? a[i] : b[i];
+        return k;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     template <
         size_t S,

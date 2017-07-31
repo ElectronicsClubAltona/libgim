@@ -53,5 +53,16 @@ main (void)
         );
     }
 
+    {
+        const util::point3f a { -1, 2, 0 };
+        const util::point3f b {  1, 0, 2 };
+
+        const util::point3f lo { -1, 0, 0 };
+        const util::point3f hi {  1, 2, 2 };
+
+        tap.expect_eq (select (a < b, a, b), lo, "select with points and min");
+        tap.expect_eq (select (a > b, a, b), hi, "select with points and max");
+    };
+
     return tap.status ();
 }
