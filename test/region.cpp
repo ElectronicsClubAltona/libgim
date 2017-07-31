@@ -63,6 +63,28 @@ main (int, char **)
         tap.expect (!r.has (util::point2u {2, 2}), "unsigned region corner has");
     }
 
+    // ensure make_union behaves as expected
+    {
+        const util::point2f  p { -1 };
+        const util::extent2f e {  2 };
+        const util::region2f r { p, e };
+
+        tap.expect_eq (util::make_union (r, util::point2f { 0, 0 }), r, "identity union");
+        tap.expect_eq (
+            util::make_union (r, util::point2f { 2, 3 }),
+            util::region2f { p, util::extent2f { 3, 4 } },
+            "positive expanding union"
+        );
+        tap.expect_eq (
+            util::make_union (r, util::point2f { -3, -2 }),
+            util::region2f {
+                util::point2f { -3, -2 },
+                util::extent2f { 4, 3 }
+            },
+            "negative expanding union"
+        );
+    };
+
     //CHECK (region<2,intmax_t> (0, 0, 10, 10).includes (point2d (0.4, 0.01)));
     //CHECK (region<2,intmax_t> (0, 0, 10, 10).contains (point2d (0.4, 0.01)));
 

@@ -111,6 +111,19 @@ namespace util {
         void sanity (void) const;
     };
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// constructs the minimal region that encompasses a region and a point.
+    template <typename T, size_t S>
+    region<S,T>
+    make_union (region<S,T> r, point<S,T> p)
+    {
+        const auto p0 = select (r.p < p,       r.p,       p);
+        const auto p1 = select (r.away () > p, r.away (), p);
+        return { p0, p1 };
+    }
+
+
     template <typename T> using region2 = region<2,T>;
     template <typename T> using region3 = region<3,T>;
 
