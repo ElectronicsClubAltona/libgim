@@ -51,14 +51,14 @@ namespace util {
             m_end   (std::end   (klass))
         { ; }
 
-        constexpr T& begin (void) noexcept { return m_begin; }
-        constexpr T& end   (void) noexcept { return m_end;   }
+        constexpr T begin (void) noexcept { return m_begin; }
+        constexpr T end   (void) noexcept { return m_end;   }
 
-        constexpr const T& begin (void) const noexcept { return cbegin (); }
-        constexpr const T& end   (void) const noexcept { return cend   (); }
+        constexpr const T begin (void) const noexcept { return cbegin (); }
+        constexpr const T end   (void) const noexcept { return cend   (); }
 
-        constexpr const T& cbegin (void) const noexcept { return m_begin; }
-        constexpr const T& cend   (void) const noexcept { return m_end;   }
+        constexpr const T cbegin (void) const noexcept { return m_begin; }
+        constexpr const T cend   (void) const noexcept { return m_end;   }
 
         auto data (void)       { return begin (); }
         auto data (void) const { return begin (); }
