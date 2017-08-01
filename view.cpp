@@ -16,6 +16,7 @@
 
 #include "./view.hpp"
 
+#include <algorithm>
 #include <iterator>
 
 

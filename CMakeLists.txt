@@ -417,7 +417,6 @@ list (
     version.cpp
     version.hpp
     view.cpp
-    view.ipp
     view.hpp
 )
 

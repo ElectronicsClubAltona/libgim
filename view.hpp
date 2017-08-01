@@ -23,6 +23,7 @@
 #include <cstdlib>
 #include <ostream>
 #include <string>
+#include <cstring>
 
 namespace util {
     template <typename T>
@@ -31,32 +32,80 @@ namespace util {
         using value_type = typename std::iterator_traits<remove_restrict_t<T>>::value_type;
 
         constexpr
-        view (T first, T last) noexcept;
+        view (T first, T last) noexcept:
+            m_begin (first),
+            m_end   (last)
+        { ; }
 
-        template <typename K> constexpr explicit view (      K &klass);
-        template <typename K> constexpr explicit view (const K &klass);
+        template <typename K>
+        constexpr explicit
+        view (K &klass):
+            m_begin (std::begin (klass)),
+            m_end   (std::end   (klass))
+        { ; }
 
-        constexpr T& begin (void) noexcept;
-        constexpr T& end   (void) noexcept;
+        template <typename K>
+        constexpr explicit
+        view (const K &klass):
+            m_begin (std::begin (klass)),
+            m_end   (std::end   (klass))
+        { ; }
 
-        constexpr const T& begin (void) const noexcept;
-        constexpr const T& end   (void) const noexcept;
+        constexpr T& begin (void) noexcept { return m_begin; }
+        constexpr T& end   (void) noexcept { return m_end;   }
 
-        constexpr const T& cbegin (void) const noexcept;
-        constexpr const T& cend   (void) const noexcept;
+        constexpr const T& begin (void) const noexcept { return cbegin (); }
+        constexpr const T& end   (void) const noexcept { return cend   (); }
+
+        constexpr const T& cbegin (void) const noexcept { return m_begin; }
+        constexpr const T& cend   (void) const noexcept { return m_end;   }
 
         auto data (void)       { return begin (); }
         auto data (void) const { return begin (); }
 
-        constexpr T find (const value_type&) const noexcept;
+        constexpr T
+        find (const value_type &v) const noexcept
+        {
+            for (T i = cbegin (); i != cend (); ++i)
+                if (*i == v)
+                    return i;
+            return cend ();
+        }
 
-        constexpr bool empty (void) const noexcept;
-        constexpr size_t size (void) const noexcept;
+        constexpr bool
+        empty (void) const noexcept
+        {
+            return m_begin == m_end;
+        }
 
-        constexpr value_type& operator[] (size_t) noexcept;
-        constexpr const value_type& operator[] (size_t) const noexcept;
+        constexpr auto
+        size (void) const noexcept
+        {
+            return std::distance (m_begin, m_end);
+        }
 
-        bool operator== (view) const noexcept;
+        constexpr value_type&
+        operator[] (size_t idx) noexcept
+        {
+            auto it = begin ();
+            std::advance (it, idx);
+            return *it;
+        }
+
+        constexpr const value_type&
+        operator[] (size_t idx) const noexcept
+        {
+            auto it = begin ();
+            std::advance (it, idx);
+            return *it;
+        }
+
+        bool
+        operator== (const view &rhs) const noexcept
+        {
+            return rhs.m_begin == m_begin &&
+                   rhs.m_end   == m_end;
+        }
 
     private:
         T m_begin;
@@ -65,15 +114,24 @@ namespace util {
 
     template <typename T, size_t N>
     auto
-    make_view (const T (&)[N]);
+    make_view (const T (&arr)[N])
+    {
+        return util::view<const T*> (arr + 0, arr + N);
+    }
 
     template <typename T>
     auto
-    make_view (T&);
+    make_view (T &t)
+    {
+        return util::view<decltype(std::begin (t))> { std::begin (t), std::end (t) };
+    }
 
     template <typename T>
     auto
-    make_view (const T&);
+    make_view (const T &t)
+    {
+        return util::view<decltype(std::cbegin (t))> { std::cbegin (t), std::cend (t) };
+    }
 
     template <typename T>
     auto
@@ -81,7 +139,10 @@ namespace util {
 
     template <typename T>
     auto
-    make_cview (const T&);
+    make_cview (const T &t)
+    {
+        return util::view<decltype(std::cbegin (t))> { std::cbegin (t), std::cend (t) };
+    }
 
     template <typename T>
     auto
@@ -98,16 +159,37 @@ namespace util {
     }
 
     // string conversions
-    view<const char*> make_view (const char *str);
-    view<char*> make_view (char *str);
+    inline
+    view<const char*> make_view (const char *str)
+    {
+        return { str, str + strlen (str) };
+    }
+
+    inline
+    view<char*> make_view (char *str)
+    {
+        return { str, str + strlen (str) };
+    }
 
     template <typename CharT, typename TraitsT, typename AllocT>
     view<const CharT*>
-    make_view (const std::basic_string<CharT,TraitsT,AllocT>&);
+    make_view (const std::basic_string<CharT,TraitsT,AllocT> &str)
+    {
+        return {
+            std::data (str),
+            std::data (str) + std::size (str)
+        };
+    }
 
     template <typename CharT, typename TraitsT, typename AllocT>
     view<CharT*>
-    make_view (std::basic_string<CharT,TraitsT,AllocT>&);
+    make_view (std::basic_string<CharT,TraitsT,AllocT> &str)
+    {
+        return {
+            std::data (str),
+            std::data (str) + std::size (str)
+        };
+    }
 
     template <typename CharT, typename TraitsT, typename AllocT>
     view<const CharT*>
@@ -135,7 +217,5 @@ namespace util {
     std::ostream&
     operator<< (std::ostream&, view<T>);
 }
-
-#include "./view.ipp"
 
 #endif

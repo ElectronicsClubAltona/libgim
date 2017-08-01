@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with libgim.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "json/flat.hpp"
 
+#include "debug.hpp"
 #include "json/except.hpp"
 #include "preprocessor.hpp"
 
