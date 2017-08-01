@@ -279,6 +279,22 @@ namespace util {
             data...
         );
     }
-}
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// an output iterator that always discards any parameters on assignment.
+    ///
+    /// sometimes useful to pass to algorithms that generate useful results as
+    /// a return value, while not caring about the implicit OutputIterator
+    /// results.
+    struct discard_iterator : public std::iterator<std::output_iterator_tag, discard_iterator> {
+        template <typename T>
+        void operator= (const T&) { ; }
+
+        discard_iterator& operator++ (   ) { return *this; }
+        discard_iterator  operator++ (int) { return *this; }
+        discard_iterator& operator*  (   ) { return *this; }
+    };
+};
 
 #endif
