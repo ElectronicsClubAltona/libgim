@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __DEBUG_HPP
@@ -222,7 +222,7 @@
     DEBUG_ONLY (                                            \
         const auto &__a = (A);                              \
         if (::util::exactly_zero (__a))                     \
-            _CHECK_PANIC ("expected zero\n"                 \
+            _CHECK_PANIC ("expected non-zero\n"             \
                           "__a: %s is %!",                  \
                           #A, __a);                         \
     );                                                      \
