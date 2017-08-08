@@ -81,8 +81,8 @@ namespace util {
             ~signal ();
 
             /// Add a callback to list.
-            cookie connect (callback&&);
-            cookie connect (const callback&);
+            cookie connect [[gnu::warn_unused_result]] (callback&&);
+            cookie connect [[gnu::warn_unused_result]] (const callback&);
 
             void disconnect (cookie&);
 
