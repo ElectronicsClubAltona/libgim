@@ -32,7 +32,7 @@ namespace util {
             R operator() (T first, T last, Args&&... args)
             {
                 while (first != last)
-                    if (!(*first++)(std::forward<Args> (args)...))
+                    if (!(*first++)(args...))
                         return false;
 
                 return true;
@@ -47,7 +47,7 @@ namespace util {
             R operator() (T first, T last, Args&&... args)
             {
                 while (first != last)
-                    if ((*first++)(std::forward<Args> (args)...))
+                    if ((*first++)(args...))
                         return true;
 
                 return false;
@@ -62,7 +62,7 @@ namespace util {
             R operator() (T first, T last, Args&&... args)
             {
                 while (first != last) {
-                    (*first++)(std::forward<Args> (args)...);
+                    (*first++)(args...);
                 }
             }
         };
