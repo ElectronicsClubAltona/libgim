@@ -87,7 +87,8 @@ namespace util {
         region& resize (extent<S,T>);
 
         // Compute a region `mag` units into the region
-        region inset (T mag);
+        region inset (T mag) const;
+        region inset (vector<S,T> mag) const;
 
         region expanded (T mag) const;
         region expanded (vector<S,T>) const;

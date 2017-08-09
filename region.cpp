@@ -262,14 +262,23 @@ util::region<S,T>::resize (extent<S,T> _e)
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::region<S,T>
-util::region<S,T>::inset (T mag)
+util::region<S,T>::inset (T mag) const
 {
-    // ensure we have enough space to inset
-    CHECK (min (e) >= 2 * mag);
+    return inset (util::vector<S,T> {mag});
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+util::region<S,T>
+util::region<S,T>::inset (vector<S,T> mag) const
+{
+    // ensure we have enough space to trim off our total extent
+    CHECK (all (e >= 2 * mag));
 
     return {
-        p + mag,
-        e - static_cast<T> (2 * mag)
+        p +        mag,
+        e - T{2} * mag
     };
 }
 
