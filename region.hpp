@@ -84,8 +84,6 @@ namespace util {
         region intersection (region<S,T>) const;
 
         //---------------------------------------------------------------------
-        region& resize (extent<S,T>);
-
         // Compute a region `mag` units into the region
         region inset (T mag) const;
         region inset (vector<S,T> mag) const;

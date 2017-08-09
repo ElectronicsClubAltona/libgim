@@ -252,15 +252,6 @@ util::region<S,T>::intersection (region<S,T> rhs) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::region<S,T>&
-util::region<S,T>::resize (extent<S,T> _e)
-{
-    e = _e;
-    return *this;
-}
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
 util::region<S,T>
 util::region<S,T>::inset (T mag) const
 {
