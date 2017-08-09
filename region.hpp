@@ -88,11 +88,8 @@ namespace util {
         region inset (T mag) const;
         region inset (vector<S,T> mag) const;
 
-        region expanded (T mag) const;
-        region expanded (vector<S,T>) const;
-
-        region& expand (T mag);
-        region& expand (vector<S,T>);
+        region expand (T mag) const;
+        region expand (vector<S,T>) const;
 
         // arithmetic operators
         region operator+ (vector<S,T>) const;

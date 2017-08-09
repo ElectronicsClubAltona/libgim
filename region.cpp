@@ -276,29 +276,8 @@ util::region<S,T>::inset (vector<S,T> mag) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::region<S,T>&
-util::region<S,T>::expand (vector<S,T> v)
-{
-    p -= v;
-    e += v * T{2};
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::region<S,T>&
-util::region<S,T>::expand (T mag)
-{
-    return expand (vector<S,T> {mag});
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
 util::region<S,T>
-util::region<S,T>::expanded (vector<S,T> v) const
+util::region<S,T>::expand (vector<S,T> v) const
 {
     return {
         p - v,
@@ -310,9 +289,9 @@ util::region<S,T>::expanded (vector<S,T> v) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::region<S,T>
-util::region<S,T>::expanded (T mag) const
+util::region<S,T>::expand (T mag) const
 {
-    return expanded (vector<S,T> {mag});
+    return expand (vector<S,T> {mag});
 }
 
 
