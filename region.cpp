@@ -179,20 +179,11 @@ util::region<S,T>::intersects (region<S,T> rhs) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-void
-util::region<S,T>::constrain (point_t &q) const
+typename region<S,T>::point_t
+region<S,T>::constrain (point_t q) const noexcept
 {
     for (size_t i = 0; i < S; ++i)
         q[i] = limit (q[i], p[i], p[i] + e[i]);
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-typename util::region<S,T>::point_t
-util::region<S,T>::constrained (point_t q) const
-{
-    constrain (q);
     return q;
 }
 

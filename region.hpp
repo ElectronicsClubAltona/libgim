@@ -81,8 +81,7 @@ namespace util {
         bool covers (point<S,T>) const noexcept;
 
         // Move a point to be within the region bounds
-        void constrain (point_t&) const;
-        point_t constrained (point_t) const;
+        point_t constrain (point_t) const noexcept;
 
         //---------------------------------------------------------------------
         // Compute a region `mag` units into the region
