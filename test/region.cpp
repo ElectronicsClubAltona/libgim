@@ -46,21 +46,16 @@ main (int, char **)
 
     // test boundary cases of includes and contains
     {
-        const util::point2u  p0 { 0 };
-        const util::extent2u e0 { 2 };
-        const util::region2u r  {p0, e0};
+        const util::point2f  p0 { 0 };
+        const util::extent2f e0 { 2 };
+        const util::region2f r  {p0, e0};
 
-        tap.expect (r.includes (util::point2u {1, 1}), "unsigned region centre inclusion");
-        tap.expect (r.includes (util::point2u {0, 0}), "unsigned region base inclusion");
-        tap.expect (r.includes (util::point2u {2, 2}), "unsigned region corner inclusion");
+        tap.expect (!r.covers (util::point2f {-1, 1}), "region/point covers, invalid x");
+        tap.expect (!r.covers (util::point2f { 1, 3}), "region/point covers, invalid y ");
 
-        tap.expect ( r.contains (util::point2u {1, 1}), "unsigned region center contains");
-        tap.expect (!r.contains (util::point2u {0, 0}), "unsigned region base contains");
-        tap.expect (!r.contains (util::point2u {2, 2}), "unsigned region corner contains");
-
-        tap.expect ( r.has (util::point2u {1, 1}), "unsigned region centre has");
-        tap.expect ( r.has (util::point2u {1, 1}), "unsigned region base has");
-        tap.expect (!r.has (util::point2u {2, 2}), "unsigned region corner has");
+        tap.expect (r.covers (util::point2f {1, 1}), "region/point covers, centre");
+        tap.expect (r.covers (util::point2f {0, 0}), "region/point covers, base");
+        tap.expect (r.covers (util::point2f {2, 2}), "region/point covers, corner");
     }
 
     // ensure make_union behaves as expected

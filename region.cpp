@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -22,6 +22,8 @@
 #include "./coord/iostream.hpp"
 
 #include <array>
+
+using util::region;
 
 
 //-----------------------------------------------------------------------------
@@ -160,41 +162,6 @@ util::region<S,T>::closest (point_t q) const
 
 
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-util::region<S,T>::includes (point_t q) const
-{
-    for (size_t i = 0; i < S; ++i)
-        if (q[i] < p[i] || q[i] > p[i] + e[i])
-            return false;
-
-    return true;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-util::region<S,T>::contains (point_t q) const
-{
-    for (size_t i = 0; i < S; ++i)
-        if (q[i] <= p[i] || q[i] >= p[i] + e[i])
-            return false;
-
-    return true;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-util::region<S,T>::has (const point_t q) const noexcept
-{
-    return all (q >= p) && all (q < p + e);
-}
-
-
-//-----------------------------------------------------------------------------
 // FIXME: This will fail with an actual infinite range (NaNs will be generated
 // in the conditionals).
 template <size_t S, typename T>
@@ -202,7 +169,7 @@ bool
 util::region<S,T>::intersects (region<S,T> rhs) const
 {
     for (size_t i = 0; i < S; ++i)
-        if (p[i]     >= rhs.p[i] + rhs.e[i] ||
+        if (    p[i] >= rhs.p[i] + rhs.e[i] ||
             rhs.p[i] >=     p[i] +     e[i])
         { return false; }
 
@@ -253,9 +220,18 @@ util::region<S,T>::intersection (region<S,T> rhs) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 bool
-util::region<S,T>::encloses (const region<S,T> r) const noexcept
+util::region<S,T>::covers (region<S, T> r) const noexcept
 {
     return all (p <= r.p) && all (p + e >= r.p + r.e);
+}
+
+
+//-----------------------------------------------------------------------------
+template <size_t S, typename T>
+bool
+region<S,T>::covers (const point<S,T> q) const noexcept
+{
+    return all (p <= q) && all (p + e >= q);
 }
 
 

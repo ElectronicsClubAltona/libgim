@@ -70,21 +70,19 @@ namespace util {
         point_t closest (point_t) const;
 
         //---------------------------------------------------------------------
-        // Point and region relation queries
-        bool includes (point_t) const; // inclusive of borders
-        bool contains (point_t) const; // exclusive of borders
-        bool intersects (region<S,T>) const;  // exclusive of borders
-        bool has (point_t) const noexcept; // inclusive of top and left borders
-
-        // Move a point to be within the region bounds
-        void constrain (point_t&) const;
-        point_t constrained (point_t) const;
-
+        // exclusive of borders
+        bool intersects (region<S,T>) const;
         // Compute binary region combinations
         region intersection (region<S,T>) const;
 
         // Test if a region lies completely within our space
-        bool encloses (region<S,T>) const noexcept;
+        bool covers (region<S,T>) const noexcept;
+        // Test if a point lies within out space. Inclusive of borders
+        bool covers (point<S,T>) const noexcept;
+
+        // Move a point to be within the region bounds
+        void constrain (point_t&) const;
+        point_t constrained (point_t) const;
 
         //---------------------------------------------------------------------
         // Compute a region `mag` units into the region
