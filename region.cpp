@@ -252,6 +252,15 @@ util::region<S,T>::intersection (region<S,T> rhs) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
+bool
+util::region<S,T>::encloses (const region<S,T> r) const noexcept
+{
+    return all (p <= r.p) && all (p + e >= r.p + r.e);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
 util::region<S,T>
 util::region<S,T>::inset (T mag) const
 {

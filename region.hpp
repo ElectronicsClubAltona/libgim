@@ -83,6 +83,9 @@ namespace util {
         // Compute binary region combinations
         region intersection (region<S,T>) const;
 
+        // Test if a region lies completely within our space
+        bool encloses (region<S,T>) const noexcept;
+
         //---------------------------------------------------------------------
         // Compute a region `mag` units into the region
         region inset (T mag) const;
