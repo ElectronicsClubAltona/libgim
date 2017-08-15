@@ -204,14 +204,16 @@ namespace util {
 
 
 //-----------------------------------------------------------------------------
-namespace util {
-    template struct range<double>;
-    template struct range<float>;
-    template struct range<uint8_t>;
-    template struct range<uint16_t>;
-    template struct range<uint32_t>;
-    template struct range<uint64_t>;
-}
+template struct util::range<double>;
+template struct util::range<float>;
+template struct util::range<int8_t>;
+template struct util::range<int16_t>;
+template struct util::range<int32_t>;
+template struct util::range<int64_t>;
+template struct util::range<uint8_t>;
+template struct util::range<uint16_t>;
+template struct util::range<uint32_t>;
+template struct util::range<uint64_t>;
 
 
 //-----------------------------------------------------------------------------
