@@ -703,6 +703,25 @@ namespace util {
     }
 
 
+    //-------------------------------------------------------------------------
+
+    template <
+        size_t S,
+        typename T,
+        template<size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K<S,T>>, void
+        >
+    >
+    constexpr
+    K<S,T>
+    limit (K<S,T> k, K<S,T> lo, K<S,T> hi)
+    {
+        assert (all (lo <= hi));
+        return max (min (k, hi), lo);
+    }
+
+
     ///------------------------------------------------------------------------
     template <
         size_t S,
