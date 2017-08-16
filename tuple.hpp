@@ -169,7 +169,8 @@ namespace util::tuple {
     /// do nothing with a set of parameters.
     ///
     /// useful for temporarily silencing unused argument warnings in parameter
-    /// packs.
+    /// packs, or for avoiding assignment of [[gnu::warn_unused_result]] to a
+    /// temporary value we'd just cast to void anyway (GCC#66425).
     ///
     /// it is guaranteed that this function will never be defined out in
     /// debug/release/whatever builds. so it is safe to use to guarantee
