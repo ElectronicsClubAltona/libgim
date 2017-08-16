@@ -102,6 +102,9 @@ namespace util {
         static constexpr region<S,T> max  (void);
         static constexpr region<S,T> unit (void);
 
+        static constexpr region<S,T> zero (void)
+        { return { point_t {0}, extent_t {0} }; }
+
         void sanity (void) const;
     };
 
