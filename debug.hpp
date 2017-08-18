@@ -221,6 +221,7 @@
 #define CHECK_NEZ(A) do {                                   \
     DEBUG_ONLY (                                            \
         const auto &__a = (A);                              \
+                                                            \
         if (::util::exactly_zero (__a))                     \
             _CHECK_PANIC ("expected non-zero\n"             \
                           "__a: %s is %!",                  \
@@ -234,6 +235,7 @@
     DEBUG_ONLY (                                                    \
         const auto &__check_mod_v = (V);                            \
         const auto &__check_mod_m = (M);                            \
+                                                                    \
         if (!::util::exactly_zero (__check_mod_v % __check_mod_m))  \
             _CHECK_PANIC ("expected zero modulus\n"                 \
                           "__v: %s is %!\n"                         \
@@ -294,6 +296,70 @@
         }                                                   \
     );                                                      \
 } while (0)
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// make the compiler think a particular variable may now be aliased somewhere.
+///
+/// useful for preventing optimisations eliding a variable.
+///
+/// stolen from Chandler Carruth's 2015 talk: "Tuning C++".
+namespace util::debug {
+    template <class T>
+    inline T*
+    escape (T *t)
+    {
+        asm volatile ("": : "g"(t): "memory");
+        return t;
+    }
+
+
+    template <class T>
+    inline const T*
+    escape (const T *t)
+    {
+        asm volatile ("": : "g"(t): "memory");
+        return t;
+    }
+
+
+    template <class T>
+    inline const T&
+    escape (const T &t)
+    {
+        return *escape (&t);
+    }
+
+
+    template <class T>
+    inline T&
+    escape (T &t)
+    {
+        return *escape (&t);
+    }
+
+
+    template <typename T, typename ...Args>
+    inline void
+    escape (T t, Args ...args)
+    {
+        escape (t);
+        escape (args...);
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// force the compiler to conceptually dirty the global memory space.
+///
+/// stolen from Chandler Carruth's 2015 talk: "Tuning C++".
+namespace util::debug {
+    inline void
+    clobber (void)
+    {
+        asm volatile ("": : : "memory");
+    }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
