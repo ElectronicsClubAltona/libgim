@@ -44,6 +44,14 @@ namespace util::adapter {
         };
 
 
+        template <typename Container>
+        auto
+        make_reverse (Container &c)
+        {
+            return reverse<Container> { c };
+        };
+
+
         // adapt a container's range methods to return indices rather than iterators
         template <typename T>
         struct indices {
