@@ -30,14 +30,14 @@ namespace util::adapter {
                 m_target (_target)
             { ; }
 
-            auto begin (void) { return m_target.begin (); }
-            auto end   (void) { return m_target.end (); }
+            auto begin (void) & { return m_target.rbegin (); }
+            auto end   (void) & { return m_target.rend (); }
 
-            auto begin (void) const { return m_target.begin (); }
-            auto end   (void) const { return m_target.end (); }
+            auto begin (void) const& { return m_target.rbegin (); }
+            auto end   (void) const& { return m_target.rend (); }
 
-            auto cbegin (void) { return m_target.cbegin (); }
-            auto cend   (void) { return m_target.cend (); }
+            auto cbegin (void) const& { return m_target.crbegin (); }
+            auto cend   (void) const& { return m_target.crend (); }
 
         private:
             T &m_target;
