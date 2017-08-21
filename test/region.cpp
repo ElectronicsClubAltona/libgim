@@ -3,6 +3,7 @@
 #include "point.hpp"
 #include "tap.hpp"
 
+#include <vector>
 
 //-----------------------------------------------------------------------------
 int
@@ -78,6 +79,29 @@ main (int, char **)
             },
             "negative expanding union"
         );
+    };
+
+    // ensure make_region covers the expected values
+    {
+        const util::region2i REGION {
+            util::point2i { -1, 1 },
+            util::point2i {  1, 3 }
+        };
+
+        const util::point2i EXPECTED[] = {
+            { -1,  1 }, {  0,  1 }, {  1,  1 },
+            { -1,  2 }, {  0,  2 }, {  1,  2 },
+            { -1,  3 }, {  0,  3 }, {  1,  3 },
+        };
+
+        std::vector<util::point2i> values;
+        auto sequence = util::make_range (REGION);
+        std::copy (std::cbegin (sequence), std::cend (sequence), std::back_inserter (values));
+
+        bool success = values.size () == std::size (EXPECTED)
+                       && std::equal (std::cbegin (values),   std::cend (values),
+                                      std::cbegin (EXPECTED), std::cend (EXPECTED));
+        tap.expect (success, "make_range(region2i)");
     };
 
     //CHECK (region<2,intmax_t> (0, 0, 10, 10).includes (point2d (0.4, 0.01)));

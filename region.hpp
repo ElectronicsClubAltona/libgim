@@ -11,17 +11,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 
-#ifndef __UTIL_REGION_HPP
-#define __UTIL_REGION_HPP
+#ifndef CRUFT_UTIL_REGION_HPP
+#define CRUFT_UTIL_REGION_HPP
 
-#include "extent.hpp"
-#include "point.hpp"
-#include "vector.hpp"
-#include "types/traits.hpp"
+#include "./extent.hpp"
+#include "./point.hpp"
+#include "./vector.hpp"
+#include "./types/traits.hpp"
 
 #include <ostream>
 
@@ -119,6 +119,89 @@ namespace util {
         const auto p1 = select (r.away () > p, r.away (), p);
         return { p0, p1 };
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// construct a point iterator across a given region, generating each
+    /// valid point in row-major sequence.
+    ///
+    /// this is only defined for integral types as it's not clear how to
+    /// handle floats; it's _super_ unlikely anyone actually wants to visit
+    /// every single floating point value for a region (and if so they can
+    /// damn well code that monstrosity themselves).
+    template <
+        typename T,
+        std::size_t S,
+        typename = std::enable_if_t<
+            std::is_integral_v<T>, void
+        >
+    >
+    auto
+    make_range (region<S,T> r)
+    {
+        using region_t = region<S,T>;
+        using point_t = typename region_t::point_t;
+        using vector_t = util::vector<S,T>;
+
+        // this range object is mostly a wrapper around the existing
+        // extent_range object with a constant offset. it's not going to be as
+        // performant, but when we discover this is an issue we can do write a
+        // better version of this object & iterator.
+        class region_range {
+        public:
+            class iterator : public std::iterator<std::forward_iterator_tag, point_t, size_t> {
+            public:
+                iterator (typename extent_range<S,T>::iterator _inner, vector_t _offset):
+                    m_inner (_inner),
+                    m_offset (_offset)
+                { ; }
+
+
+                point_t operator* (void) const { return *m_inner + m_offset; }
+
+                iterator&
+                operator++ (void)
+                {
+                    ++m_inner;
+                    return *this;
+                }
+
+
+                bool operator== (const iterator &rhs) const
+                {
+                    assert (m_offset == rhs.m_offset);
+                    return m_inner == rhs.m_inner;
+                }
+
+
+                bool operator!= (const iterator &rhs) const
+                { return !(*this == rhs); }
+
+
+            private:
+                typename extent_range<S,T>::iterator m_inner;
+                vector_t m_offset;
+            };
+
+            region_range (region_t _r):
+                m_range { _r.e + T{1} },
+                m_offset { _r.p.template as<util::vector> () }
+            { ; }
+
+            iterator begin (void) const { return { m_range.begin (), m_offset }; }
+            iterator end   (void) const { return { m_range.end   (), m_offset }; }
+
+            iterator cbegin (void) const { return begin (); }
+            iterator cend   (void) const { return end   (); }
+
+        private:
+            const extent_range<S,T> m_range;
+            const vector_t m_offset;
+        };
+
+
+        return region_range { r };
+    };
 
 
     template <typename T> using region2 = region<2,T>;
