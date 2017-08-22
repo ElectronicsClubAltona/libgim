@@ -28,13 +28,17 @@
 namespace util::geom {
     template <size_t S, typename T>
     struct ray {
-        ray (point<S,T> origin,
-             vector<S,T> direction);
+        constexpr ray (point<S,T> _origin, vector<S,T> _direction) noexcept:
+            origin (_origin),
+            direction (_direction)
+        { ; }
 
-        static
-        ray<S,T> make (point<S,T> origin,
-                       point<S,T> target);
+        constexpr ray (point<S,T> _origin, point <S,T> _distant) noexcept:
+            ray (_origin, _origin.to (_distant ))
+        { ; }
 
+
+        //---------------------------------------------------------------------
         // intersection tests
         T intersect (plane<S,T>) const;
         T intersect (AABB<S,T>) const;
@@ -48,6 +52,20 @@ namespace util::geom {
         // data members
         point<S,T>  origin;
         vector<S,T> direction;
+    };
+
+    template <std::size_t S, typename T>
+    constexpr auto
+    make_ray (point<S,T> p, vector<S,T> d) noexcept
+    {
+        return ray<S,T> { p, d };
+    }
+
+    template <std::size_t S, typename T>
+    constexpr auto
+    make_ray (point<S,T> p, point<S,T> q)
+    {
+        return ray<S,T> { p, q };
     };
 
     typedef ray<2,float> ray2f;
