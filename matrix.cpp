@@ -27,15 +27,6 @@ using util::matrix;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t Rows, size_t Cols, typename T>
-matrix<Rows,Cols,T>&
-matrix<Rows,Cols,T>::invert (void)
-{
-    return *this = inverse ();
-}
-
-
-//-----------------------------------------------------------------------------
 //template <size_t S, typename T>
 //matrix<S,T>&
 //matrix<S,T>::invert_affine (void)

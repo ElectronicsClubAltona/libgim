@@ -50,9 +50,7 @@ namespace util {
         T determinant (void) const;
 
         matrix  inverse (void) const;
-        matrix& invert  (void);
         matrix  inverse_affine (void) const;
-        matrix& invert_affine  (void);
 
         vector<Rows,T> operator* (const vector<Rows,T>&) const;
         point<Rows,T>  operator* (const point<Rows,T> &) const;
