@@ -28,6 +28,8 @@
 namespace util::geom {
     template <size_t S, typename T>
     struct ray {
+        constexpr ray () = default;
+
         constexpr ray (point<S,T> _origin, vector<S,T> _direction) noexcept:
             origin (_origin),
             direction (_direction)
