@@ -49,8 +49,14 @@ namespace util {
 
         T determinant (void) const;
 
-        matrix  inverse (void) const;
-        matrix  inverse_affine (void) const;
+        matrix inverse (void) const;
+
+        matrix
+        inverse_affine (void) const
+        {
+            // TODO: ensure we have specialisations for typical dimensions
+            return inverse ();
+        }
 
         vector<Rows,T> operator* (const vector<Rows,T>&) const;
         point<Rows,T>  operator* (const point<Rows,T> &) const;
