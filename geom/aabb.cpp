@@ -60,11 +60,7 @@ template <size_t S, typename T>
 bool
 aabb<S,T>::inclusive (point<S,T> p) const
 {
-    for (size_t i = 0; i < S; ++i)
-        if (p0[i] > p[i] || p1[i] < p[i])
-            return false;
-
-    return true;
+    return all (p0 <= p && p1 >= p);
 }
 
 
