@@ -91,5 +91,13 @@ main (void)
         tap.expect_eq (limit (val, 0.f, 2.f), util::vector3f { 0, 0, 2 }, "limit with vec/num/num");
     }
 
+    // ensure that klass::indices appears to link correctly
+    {
+        const util::vector3i seq { 0, 1, 2 };
+        const util::vector4i res { 2, 0, 0, 1 };
+
+        tap.expect_eq (seq.indices<2,0,0,1> (), res, "coord::indices expansion");
+    };
+
     return tap.status ();
 }

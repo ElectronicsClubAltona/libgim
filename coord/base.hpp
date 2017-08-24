@@ -160,6 +160,21 @@ namespace util::coord {
             std::fill (next, std::end (out), fill);
             return out;
         }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /// returns an instance with elements specified by the Indices
+        /// parameter. eg, point2f p{}.indices<0,2> would return {p.x, p.z}.
+        ///
+        /// it's ugly as sin, but simplifies some situations where we don't
+        /// want a temporary.
+        template <std::size_t ...Indices>
+        KLASS<sizeof...(Indices),T>
+        indices (void) const
+        {
+            static_assert (all (make_vector ((Indices < S)...)));
+            return KLASS<sizeof...(Indices),T> { this->data[Indices]... };
+        }
     };
 }
 
