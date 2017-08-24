@@ -89,27 +89,19 @@ aabb<S,T>
 aabb<S,T>::expand (vector<S,T> mag) const noexcept
 {
     CHECK (all (mag >= T{0}));
-    CHECK (all (mag <  p1 - p0));
 
-    return {
-        p0 - mag / T{2},
-        p1 + mag / T{2}
-    };
+    return { p0 - mag, p1 + mag };
 }
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::expand (T t) const noexcept
+aabb<S,T>::expand (T mag) const noexcept
 {
-    CHECK_GE (t, T{0});
-    CHECK (all (t < p1 - p0));
+    CHECK_GE (mag, T{0});
 
-    return {
-        p0 - t / T{2},
-        p1 + t / T{2}
-    };
+    return { p0 - mag, p1 + mag };
 }
 
 
@@ -118,13 +110,10 @@ template <size_t S, typename T>
 aabb<S,T>
 aabb<S,T>::contract (util::vector<S,T> mag) const noexcept
 {
-    CHECK (all (mag > T{0}));
-    CHECK (all (mag <= p1 - p0));
+    CHECK (all (mag >= T{0}));
+    CHECK (all (2 * mag <= p1 - p0));
 
-    return {
-        p0 + mag / T{2},
-        p1 - mag / T{2}
-    };
+    return { p0 + mag, p1 - mag };
 }
 
 
@@ -134,12 +123,9 @@ aabb<S,T>
 aabb<S,T>::contract (T mag) const noexcept
 {
     CHECK_GE (mag, T{0});
-    CHECK (all (mag <= p1 - p0));
+    CHECK (all (2 * mag <=  p1 - p0));
 
-    return {
-        p0 + mag / T{2},
-        p1 - mag / T{2}
-    };
+    return { p0 + mag, p1 - mag };
 }
 
 
