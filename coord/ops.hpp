@@ -1099,7 +1099,7 @@ namespace util {
         typename _T = void,                 \
         typename ...Args                    \
     >                                       \
-    auto                                    \
+    constexpr auto                          \
     make_##KLASS (Args &&...args)           \
     {                                       \
         using T = std::conditional_t<       \
