@@ -54,6 +54,18 @@ main (void)
         );
     }
 
+    // test expected outputs for various logical operations
+    {
+        constexpr util::point3i a {  0, -1,  2 };
+        constexpr util::point3i b {  0,  1, -2 };
+        constexpr util::point3i c { -9, -9, -9 };
+
+        tap.expect (!all (a <= b), "all, expected failure");
+        tap.expect ( all (a <= a), "all, expected success");
+        tap.expect (!any (a <= c), "any, expected failure");
+        tap.expect ( any (a <= b), "any, expected success");
+    };
+
     // ensure the util::select function behaves as expected
     {
         const util::point3f a { -1, 2, 0 };

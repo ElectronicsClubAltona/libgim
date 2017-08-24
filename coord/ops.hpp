@@ -899,38 +899,90 @@ namespace util {
 #undef SCALAR_OP
 
 
-    //-------------------------------------------------------------------------
+    ///////////////////////////////////////////////////////////////////////////
+    namespace detail {
+        template <
+            std::size_t S,
+            template <std::size_t,typename> class K,
+            std::size_t ...I,
+            typename = std::enable_if_t<
+                is_coord_v<K<S,bool>>,
+                void
+            >
+        >
+        constexpr bool
+        any (const K<S,bool> k, std::index_sequence<I...>)
+        {
+            return (k[I] || ...);
+        }
+    };
+
+
+    ///---------------------------------------------------------------------------
+    /// returns true if any element is true.
+    ///
+    /// this function must be suitable for use in static_assert, so it must remain
+    /// constexpr.
+    ///
+    /// we would ideally use std::any_of, but it is not constexpr.
+    /// we would ideally use range-for, but cbegin is not constexpr.
+    /// so... moar templates.
     template <
         size_t S,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,bool>>, void
-        >
+        >,
+        typename Indices = std::make_index_sequence<S>
     >
     constexpr
     bool
     any (const K<S,bool> k)
     {
-        return std::any_of (std::cbegin (k),
-                            std::cend   (k),
-                            identity<bool>);
+        return detail::any (k, Indices{});
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    namespace detail {
+        template <
+            std::size_t S,
+            template <size_t,typename> class K,
+            std::size_t ...I,
+            typename = std::enable_if_t<
+                is_coord_v<K<S,bool>>,
+                void
+            >
+        >
+        constexpr bool
+        all (const K<S,bool> k, std::index_sequence<I...>)
+        {
+            return (k[I] && ...);
+        }
     }
 
     //-------------------------------------------------------------------------
+    /// returns true if all elements are true.
+    ///
+    /// this function must be suitable for use in static_assert, so it must be
+    /// constexpr.
+    ///
+    /// we would ideally use std::all_of, but it is not constexpr.
+    /// we would ideally use range-for, but cbegin is not constexpr.
+    /// so... moar templates.
     template <
         size_t S,
         template <size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,bool>>, void
-        >
+        >,
+        typename Indices = std::make_index_sequence<S>
     >
     constexpr
     bool
     all (const K<S,bool> k)
     {
-        return std::all_of (std::cbegin (k),
-                            std::cend   (k),
-                            identity<bool>);
+        return detail::all (k, Indices {});
     }
 
 
