@@ -628,7 +628,10 @@ namespace util {
     // min/max clamping
     template <typename T, typename U, typename V>
     constexpr
-    T
+    std::enable_if_t<
+        std::is_scalar_v<T> && std::is_scalar_v<U> && std::is_scalar_v<V>,
+        std::common_type_t<T,U,V>
+    >
     limit (const T val, const U lo, const V hi)
     {
         assert (lo <= hi);
