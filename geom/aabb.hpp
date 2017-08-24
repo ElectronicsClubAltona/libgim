@@ -11,12 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 
-#ifndef __UTIL_GEOM_AABB_HPP
-#define __UTIL_GEOM_AABB_HPP
+#ifndef CRUFT_UTIL_GEOM_AABB_HPP
+#define CRUFT_UTIL_GEOM_AABB_HPP
 
 #include "../point.hpp"
 #include "../extent.hpp"
@@ -24,6 +24,7 @@
 #include <cstdint>
 
 namespace util::geom {
+    ///////////////////////////////////////////////////////////////////////////
     template <size_t S, typename T>
     struct aabb {
         aabb () = default;
@@ -47,12 +48,21 @@ namespace util::geom {
         aabb<S,T> operator+ (vector<S,T>) const;
         aabb<S,T> operator- (vector<S,T>) const;
 
-        bool operator== (aabb) const;
-
         point<S,T> p0;
         point<S,T> p1;
     };
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <std::size_t S, typename T>
+    constexpr bool
+    operator== (const aabb<S,T> &a, const aabb<S,T> &b) noexcept
+    {
+        return a.p0 == b.p0 && a.p1 == b.p1;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
     typedef aabb<2,float> aabb2f;
     typedef aabb<2,unsigned> aabb2u;
     typedef aabb<2,int> aabb2i;

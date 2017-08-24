@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -22,6 +22,7 @@
 #include "../debug.hpp"
 
 using util::geom::aabb;
+
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
@@ -158,16 +159,6 @@ aabb<S,T>::operator- (vector<S,T> v) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-bool
-aabb<S,T>::operator== (const aabb<S,T> rhs) const
-{
-    return rhs.p0 == p0 && rhs.p1 == p1;
-}
-
-
-
-//-----------------------------------------------------------------------------
 namespace util::debug {
     template <size_t S, typename T>
     struct validator<aabb<S,T>> {
