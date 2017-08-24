@@ -704,7 +704,12 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-
+    /// returns a coordinate type where each element has been clamped to the
+    /// range [lo,hi].
+    ///
+    /// we specifically do not allow different coordinate types for val, lo,
+    /// and hi because the min and max calls are ill definied for varying
+    /// types (not because varying types would not be useful).
     template <
         size_t S,
         typename T,
@@ -719,6 +724,56 @@ namespace util {
     {
         assert (all (lo <= hi));
         return max (min (k, hi), lo);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K<S,T>>, void
+        >
+    >
+    constexpr
+    K<S,T>
+    limit (K<S,T> k, T lo, K<S,T> hi)
+    {
+        return limit (k, K<S,T> {lo}, hi);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K<S,T>>, void
+        >
+    >
+    constexpr
+    K<S,T>
+    limit (K<S,T> k, K<S,T> lo, T hi)
+    {
+        return limit (k, lo, K<S,T> {hi});
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K<S,T>>, void
+        >
+    >
+    constexpr K<S,T>
+    limit (K<S,T> k, T lo, T hi)
+    {
+        return limit (k, K<S,T> {lo}, K<S,T> {hi});
     }
 
 
