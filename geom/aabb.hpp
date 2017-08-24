@@ -25,6 +25,10 @@
 
 namespace util::geom {
     ///////////////////////////////////////////////////////////////////////////
+    /// represents an axis-aligned bounding-box through two opposing corners.
+    ///
+    /// p0 must be less-than-or-equal to p1. equality is allowed so that we
+    /// can represent zero sized bounding-boxes.
     template <size_t S, typename T>
     struct aabb {
         aabb () = default;
