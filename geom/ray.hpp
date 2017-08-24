@@ -33,11 +33,15 @@ namespace util::geom {
         constexpr ray (point<S,T> _origin, vector<S,T> _direction) noexcept:
             origin (_origin),
             direction (_direction)
-        { ; }
+        {
+            CHECK (is_normalised (direction));
+        }
 
         constexpr ray (point<S,T> _origin, point <S,T> _distant) noexcept:
             ray (_origin, _origin.to (_distant ))
-        { ; }
+        {
+            CHECK (is_normalised (direction));
+        }
 
 
         //---------------------------------------------------------------------
