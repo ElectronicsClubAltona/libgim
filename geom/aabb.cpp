@@ -86,7 +86,7 @@ aabb<S,T>::closest (point<S,T> q) const
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::expanded (vector<S,T> mag) const noexcept
+aabb<S,T>::expand (vector<S,T> mag) const noexcept
 {
     CHECK (all (mag >= T{0}));
     CHECK (all (mag <  p1 - p0));
@@ -101,7 +101,7 @@ aabb<S,T>::expanded (vector<S,T> mag) const noexcept
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::expanded (T t) const noexcept
+aabb<S,T>::expand (T t) const noexcept
 {
     CHECK_GE (t, T{0});
     CHECK (all (t < p1 - p0));
@@ -116,7 +116,7 @@ aabb<S,T>::expanded (T t) const noexcept
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::contracted (util::vector<S,T> mag) const noexcept
+aabb<S,T>::contract (util::vector<S,T> mag) const noexcept
 {
     CHECK (all (mag > T{0}));
     CHECK (all (mag <= p1 - p0));
@@ -131,7 +131,7 @@ aabb<S,T>::contracted (util::vector<S,T> mag) const noexcept
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::contracted (T mag) const noexcept
+aabb<S,T>::contract (T mag) const noexcept
 {
     CHECK_GE (mag, T{0});
     CHECK (all (mag <= p1 - p0));
