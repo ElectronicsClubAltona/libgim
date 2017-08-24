@@ -48,19 +48,7 @@ template <size_t S, typename T>
 util::extent<S,T>
 aabb<S,T>::magnitude (void) const
 {
-    extent<S,T> out;
-    for (size_t i = 0; i < S; ++i)
-        out[i] = p1[i] - p0[i];
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-aabb<S,T>::inclusive (point<S,T> p) const
-{
-    return all (p0 <= p && p1 >= p);
+    return (p1 - p0).template as<util::extent> ();
 }
 
 

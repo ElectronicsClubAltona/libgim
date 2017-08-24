@@ -30,11 +30,13 @@ namespace util::geom {
         aabb () = default;
         aabb (point<S,T>, point<S,T>);
 
-        T diameter (void) const;
         extent<S,T> magnitude (void) const;
+        T diameter (void) const;
 
         /// tests whether a point lies within the region, inclusive of borders
-        bool inclusive (point<S,T>) const;
+        constexpr bool
+        inclusive (point<S,T> p) const noexcept
+        { return all (p0 <= p && p1 >= p); }
 
         point<S,T> closest (point<S,T>) const;
 
