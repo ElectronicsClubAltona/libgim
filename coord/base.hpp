@@ -18,6 +18,8 @@
 #define __UTIL_COORD_BASE_HPP
 
 #include "init.hpp"
+
+#include "./ops.hpp"
 #include "../maths.hpp"
 
 #include <algorithm>
@@ -103,51 +105,59 @@ namespace util::coord {
         }
 
         ///////////////////////////////////////////////////////////////////////
-        // redimension
-        template <size_t D>
-        KLASS<D,T>
+        /// returns an instance with the same data, but truncated to `D'
+        /// elements
+        ///
+        /// explicitly does not allow a fill parameter given it can't be used
+        /// when reducing dimensions.
+        template <std::size_t D>
+        std::enable_if_t<
+            D <= S, KLASS<D,T>
+        >
         redim (void) const
         {
             KLASS<D,T> out;
-            std::copy_n (std::cbegin (this->data),
-                         min (S, D),
-                         std::begin  (out.data));
+            std::copy_n (cbegin (), D, std::begin  (out.data));
             return out;
         }
 
 
         //---------------------------------------------------------------------
-        template<size_t D>
-        KLASS<D,T>
+        /// returns an instance with the same data, but more elements, where
+        /// the new elements are initialised with values with the same index
+        /// in the coordinate `fill'.
+        ///
+        /// explicitly requires a fill parameter so that we avoid undefined
+        /// values.
+        template <std::size_t D>
+        std::enable_if_t<
+            (D > S), KLASS<D,T>
+        >
         redim (const KLASS<D,T> fill) const
         {
             KLASS<D,T> out;
 
-            static constexpr auto L1 = min (S, D);
-            static constexpr auto L2 = D - L1;
-
-            std::copy_n (std::cbegin (this->data),
-                         L1,
-                         std::begin (out.data));
-
-            std::copy_n (fill.data + L1,
-                         L2,
-                         out.data + L1);
+            auto next = std::copy (cbegin (), cend (), std::begin (out));
+            std::copy (std::cbegin (fill) + S, std::cend (fill), next);
             return out;
         }
 
         //---------------------------------------------------------------------
-        template <size_t D>
-        KLASS<D,T>
+        /// returns an instance with the same data, but more elements, where
+        /// all the new elemenst are initialised with the scalar `fill'.
+        ///
+        /// explicitly requires a fill parameter so that we avoid undefined
+        /// values.
+        template <std::size_t D>
+        std::enable_if_t<
+            (D > S), KLASS<D,T>
+        >
         redim (T fill) const
         {
             KLASS<D,T> out;
 
-            auto cursor = std::copy_n (std::cbegin (this->data),
-                                       min (S, D),
-                                       std::begin (out.data));
-            std::fill (cursor, std::end (out.data), fill);
-
+            auto next = std::copy (cbegin (), cend (), std::begin (out));
+            std::fill (next, std::end (out), fill);
             return out;
         }
     };
