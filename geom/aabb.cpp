@@ -24,9 +24,9 @@
 using util::geom::aabb;
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-aabb<S,T>::aabb (point<S,T> _p0, point<S,T> _p1):
+aabb<S,T>::aabb (const point<S,T> _p0, const point<S,T> _p1):
     p0 (_p0),
     p1 (_p1)
 {
@@ -34,7 +34,7 @@ aabb<S,T>::aabb (point<S,T> _p0, point<S,T> _p1):
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 T
 aabb<S,T>::diameter (void) const
@@ -55,7 +55,7 @@ aabb<S,T>::magnitude (void) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::point<S,T>
-aabb<S,T>::closest (point<S,T> q) const
+aabb<S,T>::closest (const point<S,T> q) const
 {
     return limit (q, p0, p1);
 }
@@ -64,7 +64,7 @@ aabb<S,T>::closest (point<S,T> q) const
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::expand (vector<S,T> mag) const noexcept
+aabb<S,T>::expand (const vector<S,T> mag) const noexcept
 {
     CHECK (all (mag >= T{0}));
 
@@ -75,7 +75,7 @@ aabb<S,T>::expand (vector<S,T> mag) const noexcept
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::expand (T mag) const noexcept
+aabb<S,T>::expand (const T mag) const noexcept
 {
     CHECK_GE (mag, T{0});
 
@@ -83,10 +83,10 @@ aabb<S,T>::expand (T mag) const noexcept
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::contract (util::vector<S,T> mag) const noexcept
+aabb<S,T>::contract (const util::vector<S,T> mag) const noexcept
 {
     CHECK (all (mag >= T{0}));
     CHECK (all (2 * mag <= p1 - p0));
@@ -98,7 +98,7 @@ aabb<S,T>::contract (util::vector<S,T> mag) const noexcept
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::contract (T mag) const noexcept
+aabb<S,T>::contract (const T mag) const noexcept
 {
     CHECK_GE (mag, T{0});
     CHECK (all (2 * mag <=  p1 - p0));
@@ -107,10 +107,10 @@ aabb<S,T>::contract (T mag) const noexcept
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------
 template <size_t S, typename T>
 void
-aabb<S,T>::cover (point<S,T> p)
+aabb<S,T>::cover (const point<S,T> p)
 {
     p0 = min (p, p0);
     p1 = max (p, p1);
@@ -120,7 +120,7 @@ aabb<S,T>::cover (point<S,T> p)
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::operator+ (vector<S,T> v) const
+aabb<S,T>::operator+ (const vector<S,T> v) const
 {
     return { p0 + v, p1 + v };
 }
@@ -129,7 +129,7 @@ aabb<S,T>::operator+ (vector<S,T> v) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 aabb<S,T>
-aabb<S,T>::operator- (vector<S,T> v) const
+aabb<S,T>::operator- (const vector<S,T> v) const
 {
     return { p0 - v, p1 - v };
 }
