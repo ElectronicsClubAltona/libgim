@@ -40,13 +40,22 @@ namespace util::coord {
         static constexpr size_t dimension = S;
         static constexpr size_t elements = S;
 
+        /// returns the number of elements we contain
         static constexpr size_t size (void) { return S; }
 
-        // constructors
+        // inherit the fancy elementwise constructors from `init'.
         using init<S,T,tags...>::init;
+
+        /// constructs, but does not initialise, the data.
+        ///
+        /// used to avoid unnecessary initialisation in many situations where
+        /// we have arrays of these types that are about to be overwritten. it
+        /// is a very important performance optimisation.
         base () = default;
 
-        constexpr explicit base (T val)
+        /// constructs an instance where all elements are initialised to `val'.
+        constexpr explicit
+        base (T val)
         { std::fill (begin (), end (), val); }
 
         constexpr base (const base<S,T,KLASS,tags...> &rhs) = default;
