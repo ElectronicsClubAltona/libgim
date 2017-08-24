@@ -14,39 +14,18 @@ main (int, char**)
 
     {
         // Test contraction
-        AABB2f box {
-            { 2, 2 },
-            { 8, 8 }
-        };
+        const AABB2f val { { 2, 2 }, { 8, 8 } };
+        const AABB2f res { { 3, 3 }, { 7, 7 } };
 
-        box.contract (2.f);
-
-        tap.expect_eq<AABB2f, AABB2f> (box, { { 3, 3 }, { 7, 7 }}, "over contraction");
+        tap.expect_eq (val.contracted (2.f), res, "over contraction");
     }
 
     {
         // Test expansion
-        AABB2f box {
-            { 2, 2 },
-            { 8, 8 }
-        };
+        const AABB2f val { { 2, 2 }, { 8, 8 } };
+        const AABB2f res { { 1, 1 }, { 9, 9 } };
 
-        box.expand (2.f);
-
-        tap.expect_eq<AABB2f, AABB2f> (box, { { 1, 1 }, { 9, 9 }}, "expansion");
-    }
-
-
-    {
-        // Ensure we don't wrap-around on unsigned position types when contracting
-        AABB2f small {
-            { 0, 0 },
-            { 1, 1 }
-        };
-
-        small.contract (10);
-
-        tap.expect_eq<AABB2f, AABB2f> (small, { { 0.5f, 0.5f }, { 0.5f, 0.5f }}, "unsigned over-contract");
+        tap.expect_eq (val.expanded (2.f), res, "expansion");
     }
 
     return tap.status ();

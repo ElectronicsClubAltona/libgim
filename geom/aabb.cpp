@@ -85,91 +85,65 @@ AABB<S,T>::closest (point<S,T> q) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-AABB<S,T>&
-AABB<S,T>::expand (util::vector<S,T> mag)
+AABB<S,T>
+AABB<S,T>::expanded (vector<S,T> mag) const noexcept
 {
-    p0 -= mag / T{2};
-    p1 += mag / T{2};
+    CHECK (all (mag >= T{0}));
+    CHECK (all (mag <  p1 - p0));
 
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-AABB<S,T>&
-AABB<S,T>::expand (T t)
-{
-    return expand (vector<S,T> {t});
+    return {
+        p0 - mag / T{2},
+        p1 + mag / T{2}
+    };
 }
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 AABB<S,T>
-AABB<S,T>::expanded (vector<S,T> mag)
+AABB<S,T>::expanded (T t) const noexcept
 {
-    auto ret = *this;
-    ret.expand (mag);
-    return ret;
-}
+    CHECK_GE (t, T{0});
+    CHECK (all (t < p1 - p0));
 
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-AABB<S,T>
-AABB<S,T>::expanded (T t)
-{
-    return expanded (vector<S,T> {t});
+    return {
+        p0 - t / T{2},
+        p1 + t / T{2}
+    };
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-AABB<S,T>&
-AABB<S,T>::contract (util::vector<S,T> mag)
+AABB<S,T>
+AABB<S,T>::contracted (util::vector<S,T> mag) const noexcept
 {
-    // Avoid contracting magnitudes larger than our extent
-    auto diff = p1 - p0;
-    auto delta = min (diff, mag);
+    CHECK (all (mag > T{0}));
+    CHECK (all (mag <= p1 - p0));
 
-    p0 += delta / T{2};
-    p1 -= delta / T{2};
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-AABB<S,T>&
-AABB<S,T>::contract (T mag)
-{
-    return contract (util::vector<S,T> {mag});
+    return {
+        p0 + mag / T{2},
+        p1 - mag / T{2}
+    };
 }
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 AABB<S,T>
-AABB<S,T>::contracted (util::vector<S,T> mag) const
+AABB<S,T>::contracted (T mag) const noexcept
 {
-    AABB<S,T> res = *this;
-    res.contract (mag);
-    return res;
+    CHECK_GE (mag, T{0});
+    CHECK (all (mag <= p1 - p0));
+
+    return {
+        p0 + mag / T{2},
+        p1 - mag / T{2}
+    };
 }
 
 
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-AABB<S,T>
-AABB<S,T>::contracted (T mag) const
-{
-    return contracted (vector<S,T> {mag});
-}
-
-
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 void
 AABB<S,T>::cover (point<S,T> p)
