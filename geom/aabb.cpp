@@ -152,8 +152,7 @@ template <size_t S, typename T>
 std::ostream&
 util::geom::operator<< (std::ostream &os, util::geom::aabb<S,T> b)
 {
-    os << "aabb(" << b.p0 << ", " << b.p1 << ")";
-    return os;
+    return os << "[ " << b.p0 << ", " << b.p1 << " ]";
 }
 
 
