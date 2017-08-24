@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_EXTENT_HPP
@@ -41,8 +41,27 @@ namespace util {
         constexpr
         U aspect (void) const;
 
-        template <typename U>
-        bool includes (util::point<S,U>) const;
+
+        /// tests whether a point would lie within:
+        ///     region { origin, *this }, inclusive of borders.
+        ///
+        /// included for parity with util::region.
+        constexpr bool
+        inclusive (util::point<S,T> p) const
+        {
+            return all (p >= T{0} && p <= *this);
+        }
+
+
+        /// tests whether a point would like within:
+        ///     region { origin, *this }, exclusive of the bottom-right border
+        /// included for parity with util::region
+        constexpr bool
+        exclusive (point<S,T> p) const
+        {
+            return all (p >= T{0} && p < *this);
+        }
+
 
         extent expanded (vector<S,T>) const;
         extent expanded (T) const;

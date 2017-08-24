@@ -206,15 +206,6 @@ util::region<S,T>::covers (region<S, T> r) const noexcept
 }
 
 
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-region<S,T>::covers (const point<S,T> q) const noexcept
-{
-    return all (p <= q) && all (p + e >= q);
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 util::region<S,T>

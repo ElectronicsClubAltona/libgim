@@ -70,13 +70,28 @@ namespace util {
         //---------------------------------------------------------------------
         // exclusive of borders
         bool intersects (region<S,T>) const;
+
         // Compute binary region combinations
         region intersection (region<S,T>) const;
 
         // Test if a region lies completely within our space
         bool covers (region<S,T>) const noexcept;
-        // Test if a point lies within out space. Inclusive of borders
-        bool covers (point<S,T>) const noexcept;
+
+        /// Test if a point lies within our space. Inclusive of borders
+        constexpr
+        bool
+        inclusive (point<S,T> q) const noexcept
+        {
+            return all (p <= q && p + e >= q);
+        }
+
+        /// test if a point lies within our space, exclusive of the
+        /// bottom-right border
+        constexpr bool
+        exclusive (point<S,T> q) const noexcept
+        {
+            return all (p <= q && p + e > q);
+        }
 
         // Move a point to be within the region bounds
         point_t constrain (point_t) const noexcept;

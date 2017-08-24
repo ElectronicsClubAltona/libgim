@@ -51,12 +51,12 @@ main (int, char **)
         const util::extent2f e0 { 2 };
         const util::region2f r  {p0, e0};
 
-        tap.expect (!r.covers (util::point2f {-1, 1}), "region/point covers, invalid x");
-        tap.expect (!r.covers (util::point2f { 1, 3}), "region/point covers, invalid y ");
+        tap.expect (!r.inclusive (util::point2f {-1, 1}), "region/point inclusive, invalid x");
+        tap.expect (!r.inclusive (util::point2f { 1, 3}), "region/point inclusive, invalid y ");
 
-        tap.expect (r.covers (util::point2f {1, 1}), "region/point covers, centre");
-        tap.expect (r.covers (util::point2f {0, 0}), "region/point covers, base");
-        tap.expect (r.covers (util::point2f {2, 2}), "region/point covers, corner");
+        tap.expect (r.inclusive (util::point2f {1, 1}), "region/point inclusive, centre");
+        tap.expect (r.inclusive (util::point2f {0, 0}), "region/point inclusive, base");
+        tap.expect (r.inclusive (util::point2f {2, 2}), "region/point inclusive, corner");
     }
 
     // ensure make_union behaves as expected
