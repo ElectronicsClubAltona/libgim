@@ -33,7 +33,8 @@ namespace util::geom {
         T diameter (void) const;
         extent<S,T> magnitude (void) const;
 
-        bool overlaps (point<S,T>) const;
+        /// tests whether a point lies within the region, inclusive of borders
+        bool inclusive (point<S,T>) const;
 
         point<S,T> closest (point<S,T>) const;
 
