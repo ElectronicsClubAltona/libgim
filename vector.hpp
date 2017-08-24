@@ -61,7 +61,6 @@ namespace util {
     const json::tree::node&
     operator>> (const json::tree::node&, vector<S,T>&);
 
-    // convenience typedefs
     template <typename T> using vector2 = vector<2,T>;
     template <typename T> using vector3 = vector<3,T>;
     template <typename T> using vector4 = vector<4,T>;
@@ -72,9 +71,11 @@ namespace util {
 
     typedef vector2<unsigned> vector2u;
     typedef vector3<unsigned> vector3u;
+    typedef vector4<unsigned> vector4u;
 
     typedef vector2<int> vector2i;
     typedef vector3<int> vector3i;
+    typedef vector4<int> vector4i;
 
     typedef vector2<float> vector2f;
     typedef vector3<float> vector3f;
@@ -82,7 +83,7 @@ namespace util {
 
     typedef vector2<double> vector2d;
     typedef vector3<double> vector3d;
-    typedef vector3<double> vector4d;
+    typedef vector4<double> vector4d;
 }
 
 #include "vector.ipp"
