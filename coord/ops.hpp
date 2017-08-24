@@ -887,6 +887,25 @@ namespace util {
         for (size_t i = 0; i < S; ++i)      \
             out[i] = k[i] OP u;             \
         return out;                         \
+    }                                       \
+                                            \
+    template <                              \
+        size_t S,                           \
+        typename T,                         \
+        typename U,                         \
+        template <size_t,typename> class K, \
+        typename = std::enable_if_t<        \
+            is_coord_v<K<S,T>>, void        \
+        >                                   \
+    >                                       \
+    constexpr                               \
+    vector<S,bool>                          \
+    operator OP (const U u, const K<S,T> k) \
+    {                                       \
+        vector<S,bool> out {};              \
+        for (size_t i = 0; i < S; ++i)      \
+            out[i] = u OP k[i];             \
+        return out;                         \
     }
 
     SCALAR_OP(<)
