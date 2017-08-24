@@ -21,11 +21,11 @@
 #include "../coord/iostream.hpp"
 #include "../debug.hpp"
 
-using util::geom::AABB;
+using util::geom::aabb;
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-AABB<S,T>::AABB (point<S,T> _p0, point<S,T> _p1):
+aabb<S,T>::aabb (point<S,T> _p0, point<S,T> _p1):
     p0 (_p0),
     p1 (_p1)
 {
@@ -36,7 +36,7 @@ AABB<S,T>::AABB (point<S,T> _p0, point<S,T> _p1):
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 T
-AABB<S,T>::diameter (void) const
+aabb<S,T>::diameter (void) const
 {
     return magnitude ().diameter ();
 }
@@ -45,7 +45,7 @@ AABB<S,T>::diameter (void) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::extent<S,T>
-AABB<S,T>::magnitude (void) const
+aabb<S,T>::magnitude (void) const
 {
     extent<S,T> out;
     for (size_t i = 0; i < S; ++i)
@@ -57,7 +57,7 @@ AABB<S,T>::magnitude (void) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 bool
-AABB<S,T>::overlaps (point<S,T> p) const
+aabb<S,T>::overlaps (point<S,T> p) const
 {
     for (size_t i = 0; i < S; ++i)
         if (p0[i] > p[i] || p1[i] < p[i])
@@ -70,7 +70,7 @@ AABB<S,T>::overlaps (point<S,T> p) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::point<S,T>
-AABB<S,T>::closest (point<S,T> q) const
+aabb<S,T>::closest (point<S,T> q) const
 {
     point<S,T> res;
 
@@ -85,8 +85,8 @@ AABB<S,T>::closest (point<S,T> q) const
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-AABB<S,T>
-AABB<S,T>::expanded (vector<S,T> mag) const noexcept
+aabb<S,T>
+aabb<S,T>::expanded (vector<S,T> mag) const noexcept
 {
     CHECK (all (mag >= T{0}));
     CHECK (all (mag <  p1 - p0));
@@ -100,8 +100,8 @@ AABB<S,T>::expanded (vector<S,T> mag) const noexcept
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-AABB<S,T>
-AABB<S,T>::expanded (T t) const noexcept
+aabb<S,T>
+aabb<S,T>::expanded (T t) const noexcept
 {
     CHECK_GE (t, T{0});
     CHECK (all (t < p1 - p0));
@@ -115,8 +115,8 @@ AABB<S,T>::expanded (T t) const noexcept
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-AABB<S,T>
-AABB<S,T>::contracted (util::vector<S,T> mag) const noexcept
+aabb<S,T>
+aabb<S,T>::contracted (util::vector<S,T> mag) const noexcept
 {
     CHECK (all (mag > T{0}));
     CHECK (all (mag <= p1 - p0));
@@ -130,8 +130,8 @@ AABB<S,T>::contracted (util::vector<S,T> mag) const noexcept
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-AABB<S,T>
-AABB<S,T>::contracted (T mag) const noexcept
+aabb<S,T>
+aabb<S,T>::contracted (T mag) const noexcept
 {
     CHECK_GE (mag, T{0});
     CHECK (all (mag <= p1 - p0));
@@ -146,7 +146,7 @@ AABB<S,T>::contracted (T mag) const noexcept
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 void
-AABB<S,T>::cover (point<S,T> p)
+aabb<S,T>::cover (point<S,T> p)
 {
     p0 = min (p, p0);
     p1 = max (p, p1);
@@ -155,8 +155,8 @@ AABB<S,T>::cover (point<S,T> p)
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-AABB<S,T>
-AABB<S,T>::operator+ (vector<S,T> v) const
+aabb<S,T>
+aabb<S,T>::operator+ (vector<S,T> v) const
 {
     return { p0 + v, p1 + v };
 }
@@ -164,8 +164,8 @@ AABB<S,T>::operator+ (vector<S,T> v) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-AABB<S,T>
-AABB<S,T>::operator- (vector<S,T> v) const
+aabb<S,T>
+aabb<S,T>::operator- (vector<S,T> v) const
 {
     return { p0 - v, p1 - v };
 }
@@ -174,7 +174,7 @@ AABB<S,T>::operator- (vector<S,T> v) const
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 bool
-AABB<S,T>::operator== (const AABB<S,T> rhs) const
+aabb<S,T>::operator== (const aabb<S,T> rhs) const
 {
     return rhs.p0 == p0 && rhs.p1 == p1;
 }
@@ -184,8 +184,8 @@ AABB<S,T>::operator== (const AABB<S,T> rhs) const
 //-----------------------------------------------------------------------------
 namespace util::debug {
     template <size_t S, typename T>
-    struct validator<AABB<S,T>> {
-        static bool is_valid (const AABB<S,T> &b)
+    struct validator<aabb<S,T>> {
+        static bool is_valid (const aabb<S,T> &b)
         {
             for (size_t i = 0; i < S; ++i)
                 if (b.p1[i] < b.p0[i])
@@ -200,18 +200,18 @@ namespace util::debug {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 std::ostream&
-util::geom::operator<< (std::ostream &os, util::geom::AABB<S,T> b)
+util::geom::operator<< (std::ostream &os, util::geom::aabb<S,T> b)
 {
-    os << "AABB(" << b.p0 << ", " << b.p1 << ")";
+    os << "aabb(" << b.p0 << ", " << b.p1 << ")";
     return os;
 }
 
 
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)                             \
-namespace util::geom { template struct AABB<S,T>; }      \
-template bool util::debug::is_valid (const AABB<S,T>&);  \
-template std::ostream& util::geom::operator<< (std::ostream&, AABB<S,T>);
+namespace util::geom { template struct aabb<S,T>; }      \
+template bool util::debug::is_valid (const aabb<S,T>&);  \
+template std::ostream& util::geom::operator<< (std::ostream&, aabb<S,T>);
 
 #define INSTANTIATE(T)  \
 INSTANTIATE_S_T(2,T)    \

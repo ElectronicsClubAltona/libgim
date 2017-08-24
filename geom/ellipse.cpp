@@ -47,7 +47,7 @@ template bool util::geom::intersects (ellipse<3,float>, util::point<3,float>);
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-static util::geom::AABB<S,T>
+static util::geom::aabb<S,T>
 bounds (ellipse<S,T> e)
 {
     return {
@@ -59,7 +59,7 @@ bounds (ellipse<S,T> e)
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T, template <size_t,typename> class K>
-util::geom::AABB<S,T>
+util::geom::aabb<S,T>
 util::geom::bounds (K<S,T> k)
 {
     return ::bounds (k);
@@ -67,5 +67,5 @@ util::geom::bounds (K<S,T> k)
 
 
 //-----------------------------------------------------------------------------
-template util::geom::AABB<2,float> util::geom::bounds (ellipse<2,float>);
-template util::geom::AABB<3,float> util::geom::bounds (ellipse<3,float>);
+template util::geom::aabb<2,float> util::geom::bounds (ellipse<2,float>);
+template util::geom::aabb<3,float> util::geom::bounds (ellipse<3,float>);

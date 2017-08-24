@@ -25,9 +25,9 @@
 
 namespace util::geom {
     template <size_t S, typename T>
-    struct AABB {
-        AABB () = default;
-        AABB (point<S,T>, point<S,T>);
+    struct aabb {
+        aabb () = default;
+        aabb (point<S,T>, point<S,T>);
 
         T diameter (void) const;
         extent<S,T> magnitude (void) const;
@@ -36,30 +36,30 @@ namespace util::geom {
 
         point<S,T> closest (point<S,T>) const;
 
-        AABB<S,T>  expanded (util::vector<S,T>) const noexcept;
-        AABB<S,T>  expanded (T) const noexcept;
+        aabb<S,T>  expanded (util::vector<S,T>) const noexcept;
+        aabb<S,T>  expanded (T) const noexcept;
 
-        AABB<S,T>  contracted (util::vector<S,T>) const noexcept;
-        AABB<S,T>  contracted (T) const noexcept;
+        aabb<S,T>  contracted (util::vector<S,T>) const noexcept;
+        aabb<S,T>  contracted (T) const noexcept;
 
         void cover (point<S,T>);
 
-        AABB<S,T> operator+ (vector<S,T>) const;
-        AABB<S,T> operator- (vector<S,T>) const;
+        aabb<S,T> operator+ (vector<S,T>) const;
+        aabb<S,T> operator- (vector<S,T>) const;
 
-        bool operator== (AABB) const;
+        bool operator== (aabb) const;
 
         point<S,T> p0;
         point<S,T> p1;
     };
 
-    typedef AABB<2,float> AABB2f;
-    typedef AABB<2,unsigned> AABB2u;
-    typedef AABB<2,int> AABB2i;
+    typedef aabb<2,float> aabb2f;
+    typedef aabb<2,unsigned> aabb2u;
+    typedef aabb<2,int> aabb2i;
 
-    typedef AABB<3,float> AABB3f;
-    typedef AABB<3,unsigned> AABB3u;
-    typedef AABB<3,int> AABB3i;
+    typedef aabb<3,float> aabb3f;
+    typedef aabb<3,unsigned> aabb3u;
+    typedef aabb<3,int> aabb3i;
 }
 
 #include "aabb.ipp"

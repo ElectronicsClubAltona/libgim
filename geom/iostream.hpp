@@ -26,7 +26,7 @@
 namespace util::geom {
     template <size_t S, typename T>
     std::ostream&
-    operator<< (std::ostream&, AABB<S,T>);
+    operator<< (std::ostream&, aabb<S,T>);
 
     template <size_t S, typename T>
     std::ostream&

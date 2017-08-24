@@ -55,7 +55,7 @@ namespace util::geom {
         typename T,
         template <size_t,typename> class K
     >
-    AABB<S,T>
+    aabb<S,T>
     bounds (K<S,T>);
 
     template <

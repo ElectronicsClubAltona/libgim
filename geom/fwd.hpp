@@ -22,7 +22,7 @@
 namespace util::geom {
     template <size_t S, typename T> struct ray;
     template <size_t S, typename T> struct plane;
-    template <size_t S, typename T> struct AABB;
+    template <size_t S, typename T> struct aabb;
     template <size_t S, typename T> struct sphere;
     template <size_t S, typename T> struct ellipse;
     template <size_t S, typename T> struct rect;

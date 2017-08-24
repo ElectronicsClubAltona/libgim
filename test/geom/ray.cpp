@@ -23,10 +23,10 @@ test_intersect_plane (util::TAP::logger &tap)
 void
 test_intersect_aabb (util::TAP::logger &tap)
 {
-    using util::geom::AABB2f;
+    using util::geom::aabb2f;
 
     // trivial case: unit aabb at origin, ray from (0.5,-0.5) upwards
-    const AABB2f box {
+    const aabb2f box {
         { 0.f, 0.f },
         { 1.f, 1.f }
     };

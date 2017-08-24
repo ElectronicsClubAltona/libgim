@@ -47,7 +47,7 @@ namespace util::geom {
         //---------------------------------------------------------------------
         // intersection tests
         T intersect (plane<S,T>) const;
-        T intersect (AABB<S,T>) const;
+        T intersect (aabb<S,T>) const;
         T intersect (sphere<S,T>) const;
 
         // queries

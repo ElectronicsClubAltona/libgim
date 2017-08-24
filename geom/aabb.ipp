@@ -28,9 +28,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 namespace util::geom {
     template <size_t S, typename T, typename G>
-    struct sampler<S,T,AABB,G> {
+    struct sampler<S,T,aabb,G> {
         static point<S,T>
-        fn (AABB<S,T> b, G &g)
+        fn (aabb<S,T> b, G &g)
         {
             std::uniform_real_distribution<T> d;
 

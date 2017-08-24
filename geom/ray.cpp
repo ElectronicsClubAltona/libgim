@@ -44,7 +44,7 @@ ray<S,T>::intersect (plane<S,T> q) const
 /// returns NaN if behind
 template <size_t S, typename T>
 T
-ray<S,T>::intersect (AABB<S,T> r) const
+ray<S,T>::intersect (aabb<S,T> r) const
 {
     auto t1 = (r.p0 - origin) / direction;
     auto t2 = (r.p1 - origin) / direction;
