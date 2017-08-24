@@ -32,7 +32,7 @@ namespace util::job {
     class queue {
     public:
         queue ();
-        queue (unsigned thread_count);
+        explicit queue (unsigned thread_count);
         ~queue ();
 
         using cookie = int;
