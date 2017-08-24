@@ -42,6 +42,7 @@ main (void)
         tap.expect (x == p.x && y == p.y, "structured bindings extract correct data");
     }
 
+    // ensure the distance function behaves correctly with non-normal numbers.
     {
         util::point3f a { 103, 0, 14 };
         util::point3f b { 104, INFINITY, 15 };
@@ -53,6 +54,7 @@ main (void)
         );
     }
 
+    // ensure the util::select function behaves as expected
     {
         const util::point3f a { -1, 2, 0 };
         const util::point3f b {  1, 0, 2 };
@@ -63,6 +65,19 @@ main (void)
         tap.expect_eq (select (a < b, a, b), lo, "select with points and min");
         tap.expect_eq (select (a > b, a, b), hi, "select with points and max");
     };
+
+    // ensure that util::limit resolves to the coord overload. the exact
+    // values are less useful than exercising the compiler/linker.
+    {
+        const util::vector3f val {  0, -1,  2 };
+        const util::vector3f lo  { -1,  1, -2 };
+        const util::vector3f hi  {  1,  2,  0 };
+
+        tap.expect_eq (limit (val,  lo,  hi), util::vector3f { 0, 1, 0 }, "limit with vec/vec/vec");
+        tap.expect_eq (limit (val, 0.f,  hi), util::vector3f { 0, 0, 0 }, "limit with vec/num/vec");
+        tap.expect_eq (limit (val,  lo, 2.f), util::vector3f { 0, 1, 2 }, "limit with vec/vec/num");
+        tap.expect_eq (limit (val, 0.f, 2.f), util::vector3f { 0, 0, 2 }, "limit with vec/num/num");
+    }
 
     return tap.status ();
 }
