@@ -19,6 +19,12 @@ struct counter {
         counter (rhs.var)
     { ; }
 
+    counter& operator= (const counter &rhs)
+    {
+        var = rhs.var;
+        return *this;
+    }
+
     ~counter ()
     { --var; }
 
