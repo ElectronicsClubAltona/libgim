@@ -57,14 +57,7 @@ template <size_t S, typename T>
 util::point<S,T>
 aabb<S,T>::closest (point<S,T> q) const
 {
-    point<S,T> res;
-
-    for (size_t i = 0; i < S; ++i)
-        res[i] = q[i] < p0[i] ? p0[i] :
-                 q[i] > p1[i] ? p1[i] :
-                 q[i];
-
-    return res;
+    return limit (q, p0, p1);
 }
 
 
@@ -148,11 +141,7 @@ namespace util::debug {
     struct validator<aabb<S,T>> {
         static bool is_valid (const aabb<S,T> &b)
         {
-            for (size_t i = 0; i < S; ++i)
-                if (b.p1[i] < b.p0[i])
-                    return false;
-
-            return true;
+            return all (b.p0 <= b.p1);
         }
     };
 }
