@@ -31,7 +31,7 @@ namespace util::coord {
     {
         using store<1,T,tags...>::store;
         constexpr init () = default;
-        constexpr init (T v0):
+        constexpr explicit init (T v0):
             store<1,T,tags...> ({v0})
         { ; }
     };
