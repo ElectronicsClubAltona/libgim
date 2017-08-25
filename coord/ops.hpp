@@ -1052,6 +1052,53 @@ namespace util {
         return out;
     }
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// shifts all elements `num' indices to the right, setting the left-most
+    /// `num' indices to the value `fill'.
+    ///
+    /// num must be between 0 and S. when 0 it is equivalent to an ordinary
+    /// fill, when S it is equivalent to a noop.
+    template<
+        std::size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K<S,T>>, void
+        >
+    >
+    constexpr
+    K<S,T>
+    rshift (const K<S,T> k, const int num, const K<S,T> fill)
+    {
+        CHECK_LIMIT (num, 0, int (S));
+
+        K<S,T> res {};
+
+        std::copy_n (std::cbegin (k), S - num, std::begin (res) + num);
+        std::copy_n (std::cbegin (fill), num, std::begin (res));
+
+        return res;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template<
+        std::size_t S,
+        typename T,
+        template <size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K<S,T>>, void
+        >
+    >
+    constexpr
+    K<S,T>
+    rshift (const K<S,T> k, const int num, T fill)
+    {
+        return rshift (k, num, K<S,T> {fill});
+    }
+
+
     /// returns the data at a templated index in a coordinate.
     ///
     /// specifically required for structured bindings support.

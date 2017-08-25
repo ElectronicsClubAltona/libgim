@@ -99,5 +99,17 @@ main (void)
         tap.expect_eq (seq.indices<2,0,0,1> (), res, "coord::indices expansion");
     };
 
+    // ensure that util::shift operations appear to operate correctly
+    {
+        const util::vector3i seq { 0, 1, 2 };
+        tap.expect_eq (rshift (seq, 1, 0), util::make_vector (0, 0, 1), "rshift, scalar fill");
+
+        tap.expect_eq (
+            rshift (seq, 2, util::make_vector (3, 4, 5 )),
+            util::make_vector (3, 4, 0),
+            "rshift, coord fill"
+        );
+    };
+
     return tap.status ();
 }
