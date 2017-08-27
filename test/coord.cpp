@@ -54,7 +54,7 @@ main (void)
         );
     }
 
-    // test expected outputs for various logical operations
+    // test expected outputs for various vector-logical operations
     {
         constexpr util::point3i a {  0, -1,  2 };
         constexpr util::point3i b {  0,  1, -2 };
