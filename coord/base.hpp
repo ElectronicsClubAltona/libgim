@@ -175,7 +175,11 @@ namespace util::coord {
         KLASS<sizeof...(Indices),T>
         indices (void) const
         {
-            static_assert (all (make_vector ((Indices < S)...)));
+            static_assert (
+                all (make_vector ((Indices < S)...)),
+                "indices must fall within the defined range for the type"
+            );
+
             return KLASS<sizeof...(Indices),T> { this->data[Indices]... };
         }
     };
