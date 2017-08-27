@@ -57,8 +57,11 @@ namespace util::coord {
 
         /// constructs an instance where all elements are initialised to `val'.
         constexpr explicit
-        base (T val)
-        { std::fill (begin (), end (), val); }
+        base (T fill)
+        {
+            for (decltype(S) i = 0; i < S; ++i)
+                this->data[i] = fill;
+        }
 
         constexpr base (const base<S,T,KLASS,tags...> &rhs) = default;
         base& operator= (const base<S,T,KLASS,tags...> &rhs) = default;
