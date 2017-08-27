@@ -367,10 +367,7 @@ namespace util {
     vector<S,std::common_type_t<T,U>>
     operator- (point<S,T> a, point<S,U> b)
     {
-        vector<S,std::common_type_t<T,U>> out {};
-        for (size_t i = 0; i < S; ++i)
-            out[i] = a[i] - b[i];
-        return out;
+        return a.template as<vector> () - b.template as<vector> ();
     }
 
 
