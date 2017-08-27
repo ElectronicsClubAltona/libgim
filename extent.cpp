@@ -98,7 +98,7 @@ template <size_t S, typename T>
 typename extent_range<S,T>::iterator
 extent_range<S,T>::begin (void) const
 {
-    return iterator (m_target, util::point<S,T> (0));
+    return { m_target, util::point<S,T> (0) };
 }
 
 
@@ -110,7 +110,7 @@ extent_range<S,T>::end (void) const
     util::point<S,T> cursor (0);
     cursor[S-1] = m_target[S-1];
 
-    return iterator (m_target, cursor);
+    return { m_target, cursor };
 }
 
 
