@@ -185,5 +185,6 @@ namespace util::coord {
     };
 }
 
+#include "../vector.hpp"
 
 #endif

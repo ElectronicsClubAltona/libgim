@@ -11,11 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COORDS_OPS
-#define __UTIL_COORDS_OPS
+#ifndef CRUFT_UTIL_COORDS_OPS
+#define CRUFT_UTIL_COORDS_OPS
 
 #include "./fwd.hpp"
 
@@ -28,6 +28,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iterator>
+#include <functional>
 
 namespace util {
     ///////////////////////////////////////////////////////////////////////
@@ -293,6 +294,63 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     // logic operators
+    namespace detail {
+        template <
+            std::size_t S,
+            typename T,
+            template <std::size_t,typename> class K,
+            typename FuncT,
+            typename = std::enable_if_t<
+                is_coord_v<K<S,T>>,
+                void
+            >,
+            std::size_t ...Indices
+        >
+        constexpr auto
+        compare (FuncT &&func, std::index_sequence<Indices...>, const K<S,T> a, const K<S,T> b)
+        {
+            return vector<S,bool> {
+                std::invoke (func, a[Indices], b[Indices])...
+            };
+        }
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        std::size_t S,
+        typename T,
+        template <std::size_t,typename> class K,
+        typename FuncT,
+        typename = std::enable_if_t<
+            is_coord_v<K<S,T>>,
+            void
+        >,
+        typename Indices = std::make_index_sequence<S>
+    >
+    constexpr auto
+    compare (const K<S,T> a, const K<S,T> b, FuncT &&func)
+    {
+        return detail::compare (std::forward<FuncT> (func), Indices{}, a, b);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        std::size_t S,
+        typename T,
+        template <std::size_t,typename> class K,
+        typename = std::enable_if_t<
+            is_coord_v<K<S,T>>,
+            void
+        >
+    >
+    constexpr auto
+    compare (const K<S,T> a, const K<S,T> b)
+    {
+        return compare (a, b, std::equal_to<T> {});
+    }
+
 
     /// elementwise equality operator
     template <
@@ -303,16 +361,10 @@ namespace util {
             is_coord_v<K<S,T>>, void
         >
     >
-    constexpr
-    bool
+    constexpr bool
     operator== (const K<S,T> a, const K<S,T> b)
     {
-        bool (*predicate)(const T&, const T&) = almost_equal;
-
-        return std::equal (std::cbegin (a),
-                           std::cend   (a),
-                           std::cbegin (b),
-                           predicate);
+        return all (compare (a, b, std::equal_to<T> {}));
     }
 
     ///------------------------------------------------------------------------
@@ -325,11 +377,10 @@ namespace util {
             is_coord_v<K<S,T>>, void
         >
     >
-    constexpr
-    bool
-    operator!= (K<S,T> a, K<S,T> b)
+    constexpr bool
+    operator!= (const K<S,T> a, const K<S,T> b)
     {
-        return !(a == b);
+        return any (compare (a, b, std::not_equal_to<T> {}));
     }
 
 
@@ -909,6 +960,7 @@ namespace util {
     SCALAR_OP(>)
     SCALAR_OP(<=)
     SCALAR_OP(>=)
+    SCALAR_OP(==)
     SCALAR_OP(&&)
     SCALAR_OP(||)
 
@@ -1025,6 +1077,7 @@ namespace util {
             k[i] = s[i] ? a[i] : b[i];
         return k;
     }
+
 
     ///////////////////////////////////////////////////////////////////////////
     template <

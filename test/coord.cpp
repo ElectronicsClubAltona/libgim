@@ -23,13 +23,6 @@ main (void)
 
     tap.expect_eq (-p, util::point2i { 1, -2 }, "unary point negation");
     tap.expect_eq ( p, p, "unary point addition");
-    tap.expect (
-        std::is_same<
-            bool,
-            decltype(!p)::value_type
-        >::value,
-        "unary point boolean negation has type bool"
-    );
 
     auto vec = util::vector4f (0.5f);
     tap.expect_eq (vec, util::normalised (vec), "normalisation of normalised vector");

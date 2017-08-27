@@ -11,15 +11,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_VECTOR_HPP
-#define __UTIL_VECTOR_HPP
+#ifndef CRUFT_UTIL_VECTOR_HPP
+#define CRUFT_UTIL_VECTOR_HPP
 
-#include "coord.hpp"
+#include "./coord/fwd.hpp"
+#include "./coord.hpp"
+
 #include "json/fwd.hpp"
 
+#include <cstddef>
+
+
+///////////////////////////////////////////////////////////////////////////////
 namespace util {
     template <size_t S, typename T>
     struct vector : public coord::base<S,T,vector,coord::xyzw,coord::stpq>
