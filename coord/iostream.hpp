@@ -11,21 +11,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2016-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_IOSTREAM
-#define __UTIL_IOSTREAM
+#ifndef CRUFT_UTIL_IOSTREAM
+#define CRUFT_UTIL_IOSTREAM
 
 #include "../iterator.hpp"
 
+#include <cstddef>
 #include <ostream>
 #include <algorithm>
 
 namespace util {
     template <
-        template <size_t,typename> class K,
-        size_t S,
+        template <std::size_t,typename> class K,
+        std::size_t S,
         typename T
     >
     std::ostream&
@@ -40,7 +41,6 @@ namespace util {
 
         return os;
     }
-
 }
 
 #endif

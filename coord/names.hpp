@@ -14,8 +14,8 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COORD_NAMES_HPP
-#define __UTIL_COORD_NAMES_HPP
+#ifndef CRUFT_UTIL_COORD_NAMES_HPP
+#define CRUFT_UTIL_COORD_NAMES_HPP
 
 namespace util::coord {
     ///////////////////////////////////////////////////////////////////////

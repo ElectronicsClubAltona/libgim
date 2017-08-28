@@ -35,39 +35,39 @@ namespace util {
     // operation traits
     namespace coord {
         template <
-            template <size_t,typename> class A,
-            template <size_t,typename> class B
+            template <std::size_t,typename> class A,
+            template <std::size_t,typename> class B
         >
         struct result { };
 
         //-------------------------------------------------------------------------
-        template <> struct result<colour,colour> { template <size_t S, typename T> using type = colour<S,T>; };
-        template <> struct result<extent,extent> { template <size_t S, typename T> using type = extent<S,T>; };
-        template <> struct result<extent,vector> { template <size_t S, typename T> using type = extent<S,T>; };
-        template <> struct result<point,extent>  { template <size_t S, typename T> using type = point <S,T>; };
-        template <> struct result<point,vector>  { template <size_t S, typename T> using type = point <S,T>; };
-        template <> struct result<vector,point>  { template <size_t S, typename T> using type = point <S,T>; };
-        template <> struct result<vector,vector> { template <size_t S, typename T> using type = vector<S,T>; };
+        template <> struct result<colour,colour> { template <std::size_t S, typename T> using type = colour<S,T>; };
+        template <> struct result<extent,extent> { template <std::size_t S, typename T> using type = extent<S,T>; };
+        template <> struct result<extent,vector> { template <std::size_t S, typename T> using type = extent<S,T>; };
+        template <> struct result<point,extent>  { template <std::size_t S, typename T> using type = point <S,T>; };
+        template <> struct result<point,vector>  { template <std::size_t S, typename T> using type = point <S,T>; };
+        template <> struct result<vector,point>  { template <std::size_t S, typename T> using type = point <S,T>; };
+        template <> struct result<vector,vector> { template <std::size_t S, typename T> using type = vector<S,T>; };
 
         template <
-            template <size_t,typename> class A,
-            template <size_t,typename> class B
+            template <std::size_t,typename> class A,
+            template <std::size_t,typename> class B
         >
         using result_t = typename result<A,B>::type;
 
 
         //---------------------------------------------------------------------
-        template <template <size_t,typename> class K>
+        template <template <std::size_t,typename> class K>
         struct has_norm : public std::false_type { };
 
         template <> struct has_norm<vector>     : public std::true_type { };
 
-        template <template <size_t,typename> class K>
+        template <template <std::size_t,typename> class K>
         constexpr auto has_norm_v = has_norm<K>::value;
 
 
         //---------------------------------------------------------------------
-        template <template <size_t,typename> class K>
+        template <template <std::size_t,typename> class K>
         struct has_scalar_op : public std::false_type { };
 
         template <> struct has_scalar_op<colour>     : public std::true_type { };
@@ -75,16 +75,16 @@ namespace util {
         template <> struct has_scalar_op<point>      : public std::true_type { };
         template <> struct has_scalar_op<vector>     : public std::true_type { };
 
-        template <template <size_t,typename> class K>
+        template <template <std::size_t,typename> class K>
         constexpr auto has_scalar_op_v = has_scalar_op<K>::value;
     }
 
     template <class> struct is_coord : std::false_type { };
 
-    template <size_t S, typename T> struct is_coord<point<S,T>>      : std::true_type { };
-    template <size_t S, typename T> struct is_coord<extent<S,T>>     : std::true_type { };
-    template <size_t S, typename T> struct is_coord<vector<S,T>>     : std::true_type { };
-    template <size_t S, typename T> struct is_coord<colour<S,T>>     : std::true_type { };
+    template <std::size_t S, typename T> struct is_coord<point<S,T>>      : std::true_type { };
+    template <std::size_t S, typename T> struct is_coord<extent<S,T>>     : std::true_type { };
+    template <std::size_t S, typename T> struct is_coord<vector<S,T>>     : std::true_type { };
+    template <std::size_t S, typename T> struct is_coord<colour<S,T>>     : std::true_type { };
 
     template <class K>
     constexpr bool
@@ -115,11 +115,11 @@ namespace util {
     // vector operators
 #define ELEMENT_OP(OP)                                  \
     template <                                          \
-        size_t S,                                       \
+        std::size_t S,                                  \
         typename T,                                     \
         typename U,                                     \
-        template <size_t,typename> class A,             \
-        template <size_t,typename> class B,             \
+        template <std::size_t,typename> class A,        \
+        template <std::size_t,typename> class B,        \
         typename = std::enable_if_t<                    \
             is_coord_v<A<S,T>> && is_coord_v<B<S,U>>,   \
             void                                        \
@@ -132,17 +132,17 @@ namespace util {
         typename coord::result<A,B>::template type<     \
             S,std::common_type_t<T,U>                   \
         > out {};                                       \
-        for (size_t i = 0; i < S; ++i)                  \
+        for (std::size_t i = 0; i < S; ++i)             \
             out[i] = a[i] OP b[i];                      \
         return out;                                     \
     }                                                   \
                                                         \
     template <                                          \
-        size_t S,                                       \
+        std::size_t S,                                  \
         typename T,                                     \
         typename U,                                     \
-        template <size_t,typename> class A,             \
-        template <size_t,typename> class B,             \
+        template <std::size_t,typename> class A,        \
+        template <std::size_t,typename> class B,        \
         typename = std::enable_if_t<                    \
             is_coord_v<A<S,T>> &&                       \
             is_coord_v<B<S,U>> &&                       \
@@ -155,7 +155,7 @@ namespace util {
     auto&                                               \
     operator PASTE(OP,=) (A<S,T>& a, B<S,U> b)          \
     {                                                   \
-        for (size_t i = 0; i < S; ++i)                  \
+        for (std::size_t i = 0; i < S; ++i)             \
             a[i] PASTE(OP,=) b[i];                      \
         return a;                                       \
     }
@@ -171,10 +171,10 @@ namespace util {
     // scalar operators
 #define SCALAR_OP(OP)                                   \
     template <                                          \
-        size_t S,                                       \
+        std::size_t S,                                  \
         typename T,                                     \
         typename U,                                     \
-        template <size_t,typename> class K,             \
+        template <std::size_t,typename> class K,        \
         typename = std::enable_if_t<                    \
             coord::has_scalar_op_v<K>, void             \
         >                                               \
@@ -185,16 +185,16 @@ namespace util {
     {                                                   \
         K<S,std::common_type_t<T,U>> out{};             \
                                                         \
-        for (size_t i = 0; i < S; ++i)                  \
+        for (std::size_t i = 0; i < S; ++i)             \
             out[i] = u OP k[i];                         \
         return out;                                     \
     }                                                   \
                                                         \
     template <                                          \
-        size_t S,                                       \
+        std::size_t S,                                  \
         typename T,                                     \
         typename U,                                     \
-        template <size_t,typename> class K,             \
+        template <std::size_t,typename> class K,        \
         typename = std::enable_if_t<                    \
             coord::has_scalar_op_v<K>,void              \
         >                                               \
@@ -205,7 +205,7 @@ namespace util {
     {                                                   \
         K<S,std::common_type_t<T,U>> out {};            \
                                                         \
-        for (size_t i = 0; i < S; ++i)                  \
+        for (std::size_t i = 0; i < S; ++i)             \
             out[i] = k[i] OP u;                         \
         return out;                                     \
     }
@@ -226,10 +226,10 @@ namespace util {
     // destination type to avoid silent errors accumulating.
 #define SCALAR_OP(OP)                                       \
     template <                                              \
-        size_t S,                                           \
+        std::size_t S,                                      \
         typename T,                                         \
         typename U,                                         \
-        template <size_t,typename> class K,                 \
+        template <std::size_t,typename> class K,            \
         typename = std::enable_if_t<                        \
             is_coord<K<S,T>>::value &&                      \
             std::is_arithmetic<T>::value &&                 \
@@ -246,7 +246,7 @@ namespace util {
     >&                                                      \
     operator OP (K<S,T> &k, U u)                            \
     {                                                       \
-        for (size_t i = 0; i < S; ++i)                      \
+        for (std::size_t i = 0; i < S; ++i)                 \
             k[i] OP u;                                      \
                                                             \
         return k;                                           \
@@ -265,9 +265,9 @@ namespace util {
 
 #define UNARY_OP(OP)                                \
     template <                                      \
-        size_t S,                                   \
+        std::size_t S,                              \
         typename T,                                 \
-        template <size_t,typename> class K,         \
+        template <std::size_t,typename> class K,    \
         typename = std::enable_if_t<                \
             is_coord_v<K<S,T>>, void                \
         >                                           \
@@ -278,7 +278,7 @@ namespace util {
     {                                               \
         K<S,decltype(OP std::declval<T> ())> out{}; \
                                                     \
-        for (size_t i = 0; i < S; ++i)              \
+        for (std::size_t i = 0; i < S; ++i)         \
             out[i] = OP k[i];                       \
                                                     \
         return out;                                 \
@@ -354,9 +354,9 @@ namespace util {
 
     /// elementwise equality operator
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -370,9 +370,9 @@ namespace util {
     ///------------------------------------------------------------------------
     /// elementwise inquality operator
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -386,9 +386,9 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -410,7 +410,7 @@ namespace util {
 
     /// point-point subtraction giving a vector difference
     template <
-        size_t S,
+        std::size_t S,
         typename T,
         typename U
     >
@@ -424,7 +424,7 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
         typename U,
         typename = std::enable_if_t<
@@ -442,7 +442,7 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        size_t S,
+        std::size_t S,
         typename T
     >
     constexpr
@@ -450,7 +450,7 @@ namespace util {
     dot (const T (&a)[S], const T (&b)[S])
     {
         T sum = 0;
-        for (size_t i = 0; i < S; ++i)
+        for (std::size_t i = 0; i < S; ++i)
             sum += a[i] * b[i];
         return sum;
     }
@@ -458,10 +458,10 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class A,
-        template <size_t,typename> class B,
+        template <std::size_t,typename> class A,
+        template <std::size_t,typename> class B,
         typename = std::enable_if_t<
             is_coord_v<A<S,T>> && is_coord_v<B<S,T>>, void
         >
@@ -476,9 +476,9 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -493,9 +493,9 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -510,9 +510,9 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<coord::has_norm_v<K>,void>
     >
     constexpr
@@ -525,9 +525,9 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             coord::has_norm_v<K>,
             void
@@ -543,9 +543,9 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             coord::has_norm_v<K>,
             void
@@ -564,9 +564,9 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             coord::has_norm_v<K>,
             void
@@ -582,9 +582,9 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -600,9 +600,9 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -619,9 +619,9 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     // root of sum of squares
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -636,9 +636,9 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -659,9 +659,9 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     // trigonometric functions
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<is_coord_v<K<S,T>>,void>
     >
     constexpr
@@ -681,9 +681,9 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<is_coord_v<K<S,T>>,void>
     >
     constexpr
@@ -706,9 +706,9 @@ namespace util {
 
     /// return a coord type containing the max element at each offset
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >,
@@ -721,7 +721,7 @@ namespace util {
         static_assert ((... && std::is_same<K<S,T>, std::decay_t<Args>>::value));
 
         K<S,T> out {};
-        for (size_t i = 0; i < S; ++i)
+        for (std::size_t i = 0; i < S; ++i)
             out[i] = min (a[i], b[i], args[i]...);
         return out;
     }
@@ -730,9 +730,9 @@ namespace util {
     ///------------------------------------------------------------------------
     // /return a coord type containing the max element at each offset
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >,
@@ -745,7 +745,7 @@ namespace util {
         static_assert ((... && std::is_same<K<S,T>, std::decay_t<Args>>::value));
 
         K<S,T> out {};
-        for (size_t i = 0; i < S; ++i)
+        for (std::size_t i = 0; i < S; ++i)
             out[i] = max (a[i], b[i], args[i]...);
         return out;
     }
@@ -759,9 +759,9 @@ namespace util {
     /// and hi because the min and max calls are ill definied for varying
     /// types (not because varying types would not be useful).
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template<size_t,typename> class K,
+        template<std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -777,9 +777,9 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -794,9 +794,9 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -811,9 +811,9 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -827,9 +827,9 @@ namespace util {
 
     ///------------------------------------------------------------------------
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template<size_t,typename> class K,
+        template<std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -843,9 +843,9 @@ namespace util {
 
 
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template<size_t,typename> class K,
+        template<std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -860,9 +860,9 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -888,11 +888,11 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
 #define VECTOR_OP(OP)                                       \
     template <                                              \
-        size_t S,                                           \
+        std::size_t S,                                      \
         typename T,                                         \
         typename U,                                         \
-        template <size_t,typename> class A,                 \
-        template <size_t,typename> class B,                 \
+        template <std::size_t,typename> class A,            \
+        template <std::size_t,typename> class B,            \
         typename = std::enable_if_t<                        \
             is_coord_v<A<S,T>> && is_coord_v<B<S,U>>, void  \
         >                                                   \
@@ -902,7 +902,7 @@ namespace util {
     operator OP (const A<S,T> a, const B<S,U> b)            \
     {                                                       \
         vector<S,bool> out {};                              \
-        for (size_t i = 0; i < S; ++i)                      \
+        for (std::size_t i = 0; i < S; ++i)                 \
             out[i] = a[i] OP b[i];                          \
         return out;                                         \
     }
@@ -917,43 +917,43 @@ namespace util {
 #undef VECTOR_OP
 
 
-#define SCALAR_OP(OP)                       \
-    template <                              \
-        size_t S,                           \
-        typename T,                         \
-        typename U,                         \
-        template <size_t,typename> class K, \
-        typename = std::enable_if_t<        \
-            is_coord_v<K<S,T>>, void        \
-        >                                   \
-    >                                       \
-    constexpr                               \
-    vector<S,bool>                          \
-    operator OP (const K<S,T> k, const U u) \
-    {                                       \
-        vector<S,bool> out {};              \
-        for (size_t i = 0; i < S; ++i)      \
-            out[i] = k[i] OP u;             \
-        return out;                         \
-    }                                       \
-                                            \
-    template <                              \
-        size_t S,                           \
-        typename T,                         \
-        typename U,                         \
-        template <size_t,typename> class K, \
-        typename = std::enable_if_t<        \
-            is_coord_v<K<S,T>>, void        \
-        >                                   \
-    >                                       \
-    constexpr                               \
-    vector<S,bool>                          \
-    operator OP (const U u, const K<S,T> k) \
-    {                                       \
-        vector<S,bool> out {};              \
-        for (size_t i = 0; i < S; ++i)      \
-            out[i] = u OP k[i];             \
-        return out;                         \
+#define SCALAR_OP(OP)                               \
+    template <                                      \
+        std::size_t S,                              \
+        typename T,                                 \
+        typename U,                                 \
+        template <std::size_t,typename> class K,    \
+        typename = std::enable_if_t<                \
+            is_coord_v<K<S,T>>, void                \
+        >                                           \
+    >                                               \
+    constexpr                                       \
+    vector<S,bool>                                  \
+    operator OP (const K<S,T> k, const U u)         \
+    {                                               \
+        vector<S,bool> out {};                      \
+        for (std::size_t i = 0; i < S; ++i)         \
+            out[i] = k[i] OP u;                     \
+        return out;                                 \
+    }                                               \
+                                                    \
+    template <                                      \
+        std::size_t S,                              \
+        typename T,                                 \
+        typename U,                                 \
+        template <std::size_t,typename> class K,    \
+        typename = std::enable_if_t<                \
+            is_coord_v<K<S,T>>, void                \
+        >                                           \
+    >                                               \
+    constexpr                                       \
+    vector<S,bool>                                  \
+    operator OP (const U u, const K<S,T> k)         \
+    {                                               \
+        vector<S,bool> out {};                      \
+        for (std::size_t i = 0; i < S; ++i)         \
+            out[i] = u OP k[i];                     \
+        return out;                                 \
     }
 
     SCALAR_OP(<)
@@ -996,8 +996,8 @@ namespace util {
     /// we would ideally use range-for, but cbegin is not constexpr.
     /// so... moar templates.
     template <
-        size_t S,
-        template <size_t,typename> class K,
+        std::size_t S,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,bool>>, void
         >,
@@ -1015,7 +1015,7 @@ namespace util {
     namespace detail {
         template <
             std::size_t S,
-            template <size_t,typename> class K,
+            template <std::size_t,typename> class K,
             std::size_t ...I,
             typename = std::enable_if_t<
                 is_coord_v<K<S,bool>>,
@@ -1039,8 +1039,8 @@ namespace util {
     /// we would ideally use range-for, but cbegin is not constexpr.
     /// so... moar templates.
     template <
-        size_t S,
-        template <size_t,typename> class K,
+        std::size_t S,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,bool>>, void
         >,
@@ -1060,9 +1060,9 @@ namespace util {
     ///
     /// corresponds to the function `select' from OpenCL.
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>,
             void
@@ -1073,7 +1073,7 @@ namespace util {
     select (vector<S,bool> s, K<S,T> a, K<S,T> b)
     {
         K<S,T> k {};
-        for (size_t i = 0; i < S; ++i)
+        for (std::size_t i = 0; i < S; ++i)
             k[i] = s[i] ? a[i] : b[i];
         return k;
     }
@@ -1081,9 +1081,9 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template<size_t,typename> class K,
+        template<std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>> && std::is_floating_point<T>::value, void
         >
@@ -1112,7 +1112,7 @@ namespace util {
     template<
         std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -1136,7 +1136,7 @@ namespace util {
     template<
         std::size_t S,
         typename T,
-        template <size_t,typename> class K,
+        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
             is_coord_v<K<S,T>>, void
         >
@@ -1158,11 +1158,11 @@ namespace util {
     /// \tparam T underlying data type of the coordinate
     /// \tparam K coordinate data type to operate on
     template <
-        size_t I,
-        size_t S,
+        std::size_t I,
+        std::size_t S,
         typename T,
         template<
-        size_t,
+        std::size_t,
         typename
     > class K
     >
@@ -1186,11 +1186,11 @@ namespace util {
     /// \tparam T underlying data type of the coordinate
     /// \tparam K coordinate data type to operate on
     template <
-        size_t I,
-        size_t S,
+        std::size_t I,
+        std::size_t S,
         typename T,
         template<
-            size_t,
+            std::size_t,
             typename
         > class K
     >
@@ -1250,10 +1250,10 @@ namespace std {
     /// \tparam T data type
     /// \tparam K coordinate class
     template <
-        size_t S,
+        std::size_t S,
         typename T,
         template<
-            size_t,
+            std::size_t,
             typename
         > class K
     >
@@ -1272,11 +1272,11 @@ namespace std {
     /// \tparam T data type for the coordinate
     /// \tparam K the underlying coordinate class
     template <
-        size_t I,
-        size_t S,
+        std::size_t I,
+        std::size_t S,
         typename T,
         template<
-            size_t,
+            std::size_t,
             typename
         > class K
     >
@@ -1296,7 +1296,7 @@ namespace std {
 
 namespace std {
     template <
-        size_t S,
+        std::size_t S,
         typename T,
         template <
             std::size_t,typename
@@ -1309,7 +1309,7 @@ namespace std {
     > {
         std::size_t
         operator() (K<S,T> k) const {
-            size_t v = 0xdeadbeef;
+            std::size_t v = 0xdeadbeef;
 
             for (auto t: k)
                 v = ::util::hash::mix (t, v);

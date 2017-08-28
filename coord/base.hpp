@@ -11,11 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COORD_BASE_HPP
-#define __UTIL_COORD_BASE_HPP
+#ifndef CRUFT_UTIL_COORD_BASE_HPP
+#define CRUFT_UTIL_COORD_BASE_HPP
 
 #include "init.hpp"
 
@@ -29,9 +29,9 @@
 namespace util::coord {
     /////////////////////////////////////////////////////////////////////////
     template <
-        size_t S,
+        std::size_t S,
         typename T,
-        template <size_t, typename> class KLASS,
+        template <std::size_t, typename> class KLASS,
         typename ...tags
     >
     struct base : public init<S,T,tags...> {
@@ -39,11 +39,11 @@ namespace util::coord {
         static_assert (std::is_arithmetic<T>::value);
 
         using value_type = T;
-        static constexpr size_t dimension = S;
-        static constexpr size_t elements = S;
+        static constexpr std::size_t dimension = S;
+        static constexpr std::size_t elements = S;
 
         /// returns the number of elements we contain
-        static constexpr size_t size (void) { return S; }
+        static constexpr std::size_t size (void) { return S; }
 
         // inherit the fancy elementwise constructors from `init'.
         using init<S,T,tags...>::init;
@@ -67,8 +67,8 @@ namespace util::coord {
         base& operator= (const base<S,T,KLASS,tags...> &rhs) = default;
 
         // element accessors
-        T& operator[] (size_t i) { return this->data[i]; }
-        constexpr const T& operator[] (size_t i) const { return this->data[i]; }
+        T& operator[] (std::size_t i) { return this->data[i]; }
+        constexpr const T& operator[] (std::size_t i) const { return this->data[i]; }
 
         auto cbegin (void) const { return std::cbegin (this->data); }
         auto cend   (void) const { return std::cend   (this->data); }
@@ -87,7 +87,7 @@ namespace util::coord {
 
         ///////////////////////////////////////////////////////////////////////
         // conversions
-        template <template <size_t, typename> class K>
+        template <template <std::size_t, typename> class K>
         K<S,T> as (void) const
         {
             K<S,T> k;

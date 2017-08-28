@@ -11,17 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2016-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COORD_FWD_HPP
-#define __UTIL_COORD_FWD_HPP
+#ifndef CRUFT_UTIL_COORD_FWD_HPP
+#define CRUFT_UTIL_COORD_FWD_HPP
+
+#include <cstddef>
 
 namespace util {
-    template <size_t,typename> struct colour;
-    template <size_t,typename> struct extent;
-    template <size_t,typename> struct point;
-    template <size_t,typename> struct vector;
+    template <std::size_t,typename> struct colour;
+    template <std::size_t,typename> struct extent;
+    template <std::size_t,typename> struct point;
+    template <std::size_t,typename> struct vector;
 }
 
 #endif

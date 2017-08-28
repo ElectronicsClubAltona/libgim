@@ -11,11 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COORD_STORE_HPP
-#define __UTIL_COORD_STORE_HPP
+#ifndef CRUFT_UTIL_COORD_STORE_HPP
+#define CRUFT_UTIL_COORD_STORE_HPP
 
 #include "names.hpp"
 
@@ -31,8 +31,8 @@
 namespace util::coord::detail {
     template <typename T>
     constexpr
-    size_t
-    alignment (size_t S)
+    std::size_t
+    alignment (std::size_t S)
     {
         (void)S;
 
@@ -63,7 +63,7 @@ namespace util::coord {
     // advantage of native platform SIMD. eg, 4f types are aligned to 16 bytes
     // on SSE platforms.
     template <
-        size_t S,
+        std::size_t S,
         typename T,
         typename...
     >

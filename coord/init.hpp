@@ -14,15 +14,15 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COORD_INIT_HPP
-#define __UTIL_COORD_INIT_HPP
+#ifndef CRUFT_UTIL_COORD_INIT_HPP
+#define CRUFT_UTIL_COORD_INIT_HPP
 
 #include "store.hpp"
 
-#include <cstdlib>
+#include <cstddef>
 
 namespace util::coord {
-    template <size_t S, typename T, typename...>
+    template <std::size_t S, typename T, typename...>
     struct init;
 
     //-------------------------------------------------------------------------
