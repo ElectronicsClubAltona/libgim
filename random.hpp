@@ -38,7 +38,7 @@ namespace util::random {
     std::enable_if_t<std::is_floating_point_v<T>,T>
     uniform (T lo, T hi)
     {
-        return std::uniform_real_distribution { lo, hi } (generator ());
+        return std::uniform_real_distribution<T> { lo, hi } (generator ());
     }
 
 
@@ -48,7 +48,7 @@ namespace util::random {
     std::enable_if_t<std::is_integral_v<T>,T>
     uniform (T lo, T hi)
     {
-        return std::uniform_int_distribution { lo, hi } (generator ());
+        return std::uniform_int_distribution<T> { lo, hi } (generator ());
     }
 
 
