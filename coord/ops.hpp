@@ -335,6 +335,47 @@ namespace util {
 
 #undef UNARY_OP
 
+    ///////////////////////////////////////////////////////////////////////////
+    namespace detail {
+        template <
+            typename RetT,
+            typename ArgT,
+            typename FuncT,
+            std::size_t ...Indices,
+            typename = std::enable_if_t<
+                is_coord_v<ArgT> && is_coord_v<RetT>, void
+            >
+        >
+        constexpr auto
+        apply (const std::index_sequence<Indices...>,
+               FuncT &&func,
+               const ArgT &a,
+               const ArgT &b)
+        {
+            return RetT {
+                std::invoke (func, a[Indices], b[Indices])...
+            };
+        }
+    }
+
+
+    template <
+        typename RetT,
+        std::size_t S,
+        typename T,
+        template <std::size_t,typename> class ArgT,
+        typename FuncT,
+        typename = std::enable_if_t<
+            is_coord_v<RetT> && is_coord_v<ArgT>, void
+        >,
+        typename Indices = std::make_index_sequence<S>
+    >
+    constexpr auto
+    apply (FuncT &&func, const ArgT<S,T> &a, const ArgT<S,T> &b)
+    {
+        return detail::apply (Indices{}, std::forward<FuncT> (func), a, b);
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // logic operators
