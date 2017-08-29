@@ -23,6 +23,8 @@
 #include <utility>
 
 namespace util::alloc {
+    /// wraps a block allocator with an interface suitable for allocating
+    /// individual objects.
     template <class T>
     class arena {
     public:
