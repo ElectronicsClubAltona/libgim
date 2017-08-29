@@ -11,44 +11,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./stack.hpp"
+#include "./linear.hpp"
 
-#include "../debug.hpp"
-#include "../pointer.hpp"
-#include "../cast.hpp"
+#include "../../pointer.hpp"
+#include "../../debug.hpp"
 
-using util::alloc::stack;
+using util::alloc::raw::linear;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-stack::stack (void *begin, void *end):
+linear::linear (void *begin, void *end):
     m_begin  (reinterpret_cast<char*> (begin)),
     m_end    (reinterpret_cast<char*> (end)),
     m_cursor (reinterpret_cast<char*> (begin))
 {
-    CHECK_LE (m_begin, m_end);
+    CHECK_NEZ (begin);
+    CHECK_NEZ (end);
+
+    CHECK_LE (begin, end);
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-union record {
-    using offset_t = uint32_t;
-
-    char     *as_bytes;
-    offset_t *as_offset;
-};
-
-
-//-----------------------------------------------------------------------------
-constexpr auto MIN_ALIGNMENT = sizeof (record::offset_t);
-
-
-///////////////////////////////////////////////////////////////////////////////
 void*
-stack::allocate (size_t bytes)
+linear::allocate (size_t bytes)
 {
     return allocate (bytes, alignof (std::max_align_t));
 }
@@ -56,64 +45,40 @@ stack::allocate (size_t bytes)
 
 //-----------------------------------------------------------------------------
 void*
-stack::allocate (size_t bytes, size_t alignment)
+linear::allocate (size_t bytes, size_t alignment)
 {
-    // reserve space at the front of the allocation to record the total
-    // allocation size so we can account for alignment if required.
-    auto ptr = m_cursor + sizeof (record::offset_t);
-
-    // align the outgoing pointer if required
-    alignment = util::max (MIN_ALIGNMENT, alignment);
-    ptr = align (ptr, alignment);
-
-    // ensure we haven't overrun our allocated segment
+    auto ptr = align (m_cursor, alignment);
     if (ptr + bytes > m_end)
         throw std::bad_alloc ();
 
-    // use a 'record' struct as a window into the reserved space at the front
-    // of the allocation and store the offset to the previous allocation head
-    // (from the record struct). allows us to account for alignment.
-    record record;
-     record.as_bytes  = ptr - sizeof (record::offset_t);
-    *record.as_offset = trunc_cast<uint32_t> (ptr - m_cursor);
-
     m_cursor = ptr + bytes;
+
+    CHECK_NEZ (ptr);
     return ptr;
 }
 
 
 //-----------------------------------------------------------------------------
 void
-stack::deallocate (void *ptr, size_t bytes)
+linear::deallocate (void *ptr, size_t bytes)
 {
-    return deallocate (ptr, bytes, alignof (std::max_align_t));
+    deallocate (ptr, bytes, alignof (std::max_align_t));
 }
 
 
 //-----------------------------------------------------------------------------
 void
-stack::deallocate (void *_ptr, size_t bytes, size_t alignment)
+linear::deallocate (void *ptr, size_t bytes, size_t alignment)
 {
+    (void)ptr;
     (void)bytes;
-
-    alignment = util::max (MIN_ALIGNMENT, alignment);
-    
-    auto ptr = reinterpret_cast<char*> (_ptr);
-
-    record record;
-    record.as_bytes = ptr - sizeof (record::offset_t);
-
-    //CHECK_LE (bytes, *record.as_offset);
-    CHECK_GE (m_cursor - *record.as_offset, m_begin);
-
-    m_cursor -= bytes;
-    m_cursor -= *record.as_offset;
+    (void)alignment;
 }
 
 
 //-----------------------------------------------------------------------------
 void*
-stack::base (void)
+linear::base (void)
 {
     return m_begin;
 }
@@ -121,7 +86,7 @@ stack::base (void)
 
 //-----------------------------------------------------------------------------
 const void*
-stack::base (void) const
+linear::base (void) const
 {
     return m_begin;
 }
@@ -129,7 +94,7 @@ stack::base (void) const
 
 //-----------------------------------------------------------------------------
 size_t
-stack::offset (const void *_ptr) const
+linear::offset (const void *_ptr) const
 {
     auto ptr = reinterpret_cast<const char*> (_ptr);
 
@@ -138,9 +103,9 @@ stack::offset (const void *_ptr) const
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 void
-stack::reset (void)
+linear::reset (void)
 {
     m_cursor = m_begin;
 }
@@ -148,7 +113,7 @@ stack::reset (void)
 
 ///////////////////////////////////////////////////////////////////////////////
 size_t
-stack::capacity (void) const
+linear::capacity (void) const
 {
     return m_end - m_begin;
 }
@@ -156,7 +121,7 @@ stack::capacity (void) const
 
 //-----------------------------------------------------------------------------
 size_t
-stack::used (void) const
+linear::used (void) const
 {
     return m_cursor - m_begin;
 }
@@ -164,7 +129,7 @@ stack::used (void) const
 
 //-----------------------------------------------------------------------------
 size_t
-stack::remain (void) const
+linear::remain (void) const
 {
     return capacity () - used ();
 }

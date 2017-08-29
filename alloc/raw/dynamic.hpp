@@ -14,13 +14,13 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_ALLOC_DYNAMIC_HPP
-#define __UTIL_ALLOC_DYNAMIC_HPP
+#ifndef CRUFT_UTIL_ALLOC_RAW_DYNAMIC_HPP
+#define CRUFT_UTIL_ALLOC_RAW_DYNAMIC_HPP
 
 #include <cstddef>
 #include <memory>
 
-namespace util::alloc {
+namespace util::alloc::raw {
     // wraps an allocator given at construction time, forwarding all calls to
     // the inner object. used to allow virtual dispatch of the non-virtual
     // allocator interface.

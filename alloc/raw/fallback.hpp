@@ -11,39 +11,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_ALLOC_NULL_HPP
-#define __UTIL_ALLOC_NULL_HPP
+#ifndef CRUFT_UTIL_ALLOC_RAW_FALLBACK_HPP
+#define CRUFT_UTIL_ALLOC_RAW_FALLBACK_HPP
 
 #include <cstddef>
+#include <tuple>
 
-
-namespace util::alloc {
-    // allocator that always fails, throwing bad_alloc. deallocate will
-    // succeed with nullptr as with delete, but is undefined with other values
-    // (it is likely to at least assert).
-    class null {
+namespace util::alloc::raw {
+    /// A raw memory allocator that allocates memory series of child
+    /// allocators, preferring earlier allocators.
+    template <typename ...ChildT>
+    class fallback {
     public:
-        null () = default;
-        null (const null&) = delete;
-        null& operator= (const null&) = delete;
+        fallback (ChildT &..._children):
+            m_children (_children...)
+        { ; }
 
         void* allocate (size_t bytes);
         void* allocate (size_t bytes, size_t align);
+
         void deallocate (void *ptr, size_t bytes);
         void deallocate (void *ptr, size_t bytes, size_t align);
 
-        void* base (void);
-        const void* base (void) const;
-        size_t offset (const void*) const;
-
-        void reset (void);
-
-        size_t capacity (void) const;
-        size_t used     (void) const;
-        size_t remain   (void) const;
+    private:
+        std::tuple<ChildT&...> m_children;
     };
 }
 

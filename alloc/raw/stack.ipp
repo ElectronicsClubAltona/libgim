@@ -14,23 +14,10 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_ALLOC_FALLBACK_HPP
-#define __UTIL_ALLOC_FALLBACK_HPP
-
-#include <cstddef>
-
-namespace util::alloc {
-    template <class A, class B>
-    class fallback {
-    public:
-        fallback (A&, B&);
-
-        void* allocate (size_t bytes);
-        void* allocate (size_t bytes, size_t align);
-
-        void deallocate (void *ptr, size_t bytes);
-        void deallocate (void *ptr, size_t bytes, size_t align);
-    };
-}
-
+#ifdef CRUFT_UTIL_ALLOC_RAW_STACK_IPP
+#error
 #endif
+
+#define CRUFT_UTIL_ALLOC_RAW_STACK_IPP
+
+

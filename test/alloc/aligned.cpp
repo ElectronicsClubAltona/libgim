@@ -1,7 +1,7 @@
 #include "tap.hpp"
 
-#include "alloc/aligned.hpp"
-#include "alloc/linear.hpp"
+#include "alloc/raw/aligned.hpp"
+#include "alloc/raw/linear.hpp"
 
 
 int
@@ -20,7 +20,7 @@ main (int, char**)
     // we're probably operating correctly. 
     static constexpr std::size_t alignment = 3;
 
-    util::alloc::aligned<util::alloc::linear> alloc (
+    util::alloc::raw::aligned<util::alloc::raw::linear> alloc (
         alignment, std::begin (buffer), std::end (buffer)
     );
 

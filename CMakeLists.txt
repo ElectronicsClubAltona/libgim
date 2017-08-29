@@ -150,26 +150,26 @@ list (
     algo/sort.hpp
     algo/sort.ipp
     alloc/fwd.hpp
-    alloc/affix.cpp
-    alloc/affix.hpp
-    alloc/aligned.hpp
     alloc/allocator.cpp
     alloc/allocator.hpp
     alloc/allocator.ipp
     alloc/arena.cpp
     alloc/arena.hpp
     alloc/arena.ipp
-    alloc/dynamic.hpp
-    alloc/fallback.cpp
-    alloc/fallback.hpp
-    alloc/linear.cpp
-    alloc/linear.hpp
-    alloc/malloc.cpp
-    alloc/malloc.hpp
-    alloc/null.cpp
-    alloc/null.hpp
-    alloc/stack.cpp
-    alloc/stack.hpp
+    alloc/raw/affix.cpp
+    alloc/raw/affix.hpp
+    alloc/raw/aligned.hpp
+    alloc/raw/dynamic.hpp
+    alloc/raw/fallback.cpp
+    alloc/raw/fallback.hpp
+    alloc/raw/linear.cpp
+    alloc/raw/linear.hpp
+    alloc/raw/malloc.cpp
+    alloc/raw/malloc.hpp
+    alloc/raw/null.cpp
+    alloc/raw/null.hpp
+    alloc/raw/stack.cpp
+    alloc/raw/stack.hpp
     annotation.hpp
     ascii.hpp
     backtrace.hpp

@@ -14,28 +14,26 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_ALLOC_LINEAR_HPP
-#define __UTIL_ALLOC_LINEAR_HPP
+#ifndef CRUFT_UTIL_ALLOC_RAW_NULL_HPP
+#define CRUFT_UTIL_ALLOC_RAW_NULL_HPP
 
 #include <cstddef>
 
-namespace util::alloc {
-    // allocate progressively across a buffer without concern for deallocation.
-    // deallocation is a noop; the only way to free allocations is via reset.
-    class linear {
-    public:
-        linear (const linear&) = delete;
-        linear (linear&&) = delete;
-        linear& operator= (const linear&) = delete;
-        linear& operator= (linear&&) = delete;
 
-        linear (void *begin, void *end);
+namespace util::alloc::raw {
+    // allocator that always fails, throwing bad_alloc. deallocate will
+    // succeed with nullptr as with delete, but is undefined with other values
+    // (it is likely to at least assert).
+    class null {
+    public:
+        null () = default;
+        null (const null&) = delete;
+        null& operator= (const null&) = delete;
 
         void* allocate (size_t bytes);
-        void* allocate (size_t bytes, size_t alignment);
-
-        void  deallocate (void *ptr, size_t bytes);
-        void  deallocate (void *ptr, size_t bytes, size_t alignment);
+        void* allocate (size_t bytes, size_t align);
+        void deallocate (void *ptr, size_t bytes);
+        void deallocate (void *ptr, size_t bytes, size_t align);
 
         void* base (void);
         const void* base (void) const;
@@ -46,9 +44,6 @@ namespace util::alloc {
         size_t capacity (void) const;
         size_t used     (void) const;
         size_t remain   (void) const;
-
-    protected:
-        char *m_begin, *m_end, *m_cursor;
     };
 }
 

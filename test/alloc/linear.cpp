@@ -1,7 +1,8 @@
 #include "tap.hpp"
-#include "alloc/linear.hpp"
+#include "alloc/raw/linear.hpp"
 
 
+///////////////////////////////////////////////////////////////////////////////
 int
 main (void)
 {
@@ -10,7 +11,7 @@ main (void)
     constexpr size_t BUFFER_SIZE = 1024;
 
     alignas (std::max_align_t) char memory[BUFFER_SIZE];
-    util::alloc::linear store (std::begin (memory), std::end (memory));
+    util::alloc::raw::linear store (std::begin (memory), std::end (memory));
 
     tap.expect_eq (store.base (), std::begin (memory), "base pointers match");
     tap.expect_eq (store.offset (std::begin (memory)), 0u, "base offset is 0");

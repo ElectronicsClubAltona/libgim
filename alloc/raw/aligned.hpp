@@ -14,10 +14,10 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __CRUFT_UTIL_ALLOC_ALIGNED_HPP
-#define __CRUFT_UTIL_ALLOC_ALIGNED_HPP
+#ifndef CRUFT_UTIL_ALLOC_RAW_ALIGNED_HPP
+#define CRUFT_UTIL_ALLOC_RAW_ALIGNED_HPP
 
-namespace util::alloc {
+namespace util::alloc::raw {
     /// wraps a child allocator and enforces a fixed alignment
     template <typename ChildT>
     class aligned {

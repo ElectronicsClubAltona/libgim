@@ -14,13 +14,20 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_ALLOC_AFFIX_HPP
-#define __UTIL_ALLOC_AFFIX_HPP
+#ifndef CRUFT_UTIL_ALLOC_RAW_AFFIX_HPP
+#define CRUFT_UTIL_ALLOC_RAW_AFFIX_HPP
 
 #include <cstddef>
 
-namespace util::alloc {
-    template <class parent, class prefix, class suffix>
+namespace util::alloc::raw {
+    /// a raw memory allocator which initialises an instance of PrefixT
+    /// immediately before each allocation and, if specified, an instance
+    /// of SuffixT after the allocation.
+    ///
+    /// uses an instance of ParentT to actually perform the bulk allocations.
+    ///
+    /// useful for sentinels, reference counts, etc.
+    template <class ParentT, class PrefixT, class SuffixT>
     class affix {
         void* allocate   (size_t bytes);
         void* allocate   (size_t bytes, size_t align);

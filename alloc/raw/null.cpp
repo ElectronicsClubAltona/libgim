@@ -17,11 +17,11 @@
 
 #include "./null.hpp"
 
-#include "../debug.hpp"
+#include "../../debug.hpp"
 
 #include <new>
 
-using util::alloc::null;
+using util::alloc::raw::null;
 
 
 ///////////////////////////////////////////////////////////////////////////////
