@@ -79,6 +79,26 @@ namespace util::geom {
     typedef aabb<3,int> aabb3i;
 }
 
-#include "aabb.ipp"
+
+///////////////////////////////////////////////////////////////////////////////
+#include "./sample.hpp"
+
+#include <random>
+
+namespace util::geom {
+    template <size_t S, typename T, typename G>
+    struct sampler<S,T,aabb,G> {
+        static point<S,T>
+        fn (aabb<S,T> b, G &g)
+        {
+            std::uniform_real_distribution<T> d;
+
+            point<S,T> p;
+            std::generate (p.begin (), p.end (), [&] (void) { return d (g); });
+
+            return p * (b.p1 - b.p0) + b.p0.template as<util::vector> ();
+        }
+    };
+}
 
 #endif

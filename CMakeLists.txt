@@ -230,7 +230,6 @@ list (
     geom/fwd.hpp
     geom/aabb.cpp
     geom/aabb.hpp
-    geom/aabb.ipp
     geom/cylinder.cpp
     geom/cylinder.hpp
     geom/ellipse.cpp
