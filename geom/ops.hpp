@@ -17,7 +17,7 @@
 #ifndef __UTIL_GEOM_OPS_HPP
 #define __UTIL_GEOM_OPS_HPP
 
-#include "aabb.hpp"
+#include "./fwd.hpp"
 #include "../point.hpp"
 
 

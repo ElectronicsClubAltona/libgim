@@ -245,7 +245,6 @@ list (
     geom/rect.cpp
     geom/rect.hpp
     geom/sample.hpp
-    geom/sample.ipp
     geom/sphere.cpp
     geom/sphere.hpp
     geom/tri.cpp

@@ -11,12 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "ellipse.hpp"
+#include "./ellipse.hpp"
 
-#include "ops.hpp"
+#include "./ops.hpp"
+#include "./aabb.hpp"
 
 using util::geom::ellipse;
 
