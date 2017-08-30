@@ -30,7 +30,6 @@ linear::linear (void *begin, void *end):
 {
     CHECK_NEZ (begin);
     CHECK_NEZ (end);
-
     CHECK_LE (begin, end);
 }
 

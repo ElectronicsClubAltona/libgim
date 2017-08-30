@@ -18,6 +18,7 @@
 #define CRUFT_UTIL_ALLOC_RAW_LINEAR_HPP
 
 #include <cstddef>
+#include <iterator>
 
 namespace util::alloc::raw {
     // allocate progressively across a buffer without concern for deallocation.
@@ -30,6 +31,11 @@ namespace util::alloc::raw {
         linear& operator= (linear&&) = delete;
 
         linear (void *begin, void *end);
+
+        template <typename T>
+        linear (T &&view):
+            linear (std::begin (view), std::end (view))
+        { ; }
 
         void* allocate (size_t bytes);
         void* allocate (size_t bytes, size_t alignment);
