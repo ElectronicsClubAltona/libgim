@@ -260,7 +260,7 @@ namespace util {
         std::enable_if_t<std::is_integral<T>::value,T>,
         std::enable_if_t<std::is_integral<U>::value,U>
     >::type
-    round_to (T value, U size)
+    round_up (T value, U size)
     {
         // we perform this as two steps to avoid unnecessarily incrementing when
         // remainder is zero.
