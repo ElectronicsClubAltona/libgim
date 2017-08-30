@@ -63,15 +63,6 @@ namespace util {
         auto data (void)       { return begin (); }
         auto data (void) const { return begin (); }
 
-        constexpr T
-        find (const value_type &v) const noexcept
-        {
-            for (T i = cbegin (); i != cend (); ++i)
-                if (*i == v)
-                    return i;
-            return cend ();
-        }
-
         constexpr bool
         empty (void) const noexcept
         {
@@ -111,6 +102,7 @@ namespace util {
         T m_begin;
         T m_end;
     };
+
 
     template <typename T, size_t N>
     auto
