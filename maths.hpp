@@ -253,7 +253,7 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Rounding
+    /// round T up to the nearest multiple of U
     template <typename T, typename U>
     inline
     typename std::common_type<
@@ -262,14 +262,13 @@ namespace util {
     >::type
     round_to (T value, U size)
     {
-        if (value % size == 0)
-            return value;
-
-        return value + (size - value % size);
+        auto remainder = value % size;
+        return value + size - remainder;
     }
 
 
-    //-----------------------------------------------------------------------------
+    ///----------------------------------------------------------------------------
+    /// round T up to the nearest power-of-2
     template <typename T>
     constexpr
     std::enable_if_t<
@@ -290,7 +289,8 @@ namespace util {
     }
 
 
-    //-----------------------------------------------------------------------------
+    ///----------------------------------------------------------------------------
+    /// round T up to the nearest multiple of U and return the quotient.
     template <typename T, typename U>
     constexpr std::enable_if_t<
         std::is_integral<T>::value &&
