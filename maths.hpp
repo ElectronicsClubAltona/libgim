@@ -262,8 +262,11 @@ namespace util {
     >::type
     round_to (T value, U size)
     {
-        auto remainder = value % size;
-        return value + size - remainder;
+        // we perform this as two steps to avoid unnecessarily incrementing when
+        // remainder is zero.
+        if (value % size)
+            value += size - value % size;
+        return value;
     }
 
 
