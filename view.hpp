@@ -24,6 +24,7 @@
 #include <ostream>
 #include <string>
 #include <cstring>
+#include <stdexcept>
 
 namespace util {
     template <typename T>
@@ -74,6 +75,14 @@ namespace util {
         {
             return std::distance (m_begin, m_end);
         }
+
+        constexpr auto
+        redim (int count) const noexcept
+        {
+            if (count > size ())
+                throw std::invalid_argument ("redim to higher size not allowed");
+            return view { m_begin, m_begin + count };
+        };
 
         constexpr value_type&
         operator[] (size_t idx) noexcept
