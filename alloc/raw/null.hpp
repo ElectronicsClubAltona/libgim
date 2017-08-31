@@ -35,8 +35,8 @@ namespace util::alloc::raw {
         void deallocate (void *ptr, size_t bytes);
         void deallocate (void *ptr, size_t bytes, size_t align);
 
-        void* base (void);
-        const void* base (void) const;
+        void* begin (void);
+        const void* begin (void) const;
         size_t offset (const void*) const;
 
         void reset (void);

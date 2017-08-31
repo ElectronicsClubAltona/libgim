@@ -68,7 +68,7 @@ null::deallocate (void *ptr, size_t bytes, size_t align)
 
 ///////////////////////////////////////////////////////////////////////////////
 void*
-null::base (void)
+null::begin (void)
 {
     return nullptr;
 }
@@ -76,7 +76,7 @@ null::base (void)
 
 //-----------------------------------------------------------------------------
 const void*
-null::base (void) const
+null::begin (void) const
 {
     return nullptr;
 }

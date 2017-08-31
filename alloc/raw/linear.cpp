@@ -77,7 +77,7 @@ linear::deallocate (void *ptr, size_t bytes, size_t alignment)
 
 //-----------------------------------------------------------------------------
 void*
-linear::base (void)
+linear::begin (void)
 {
     return m_begin;
 }
@@ -85,7 +85,7 @@ linear::base (void)
 
 //-----------------------------------------------------------------------------
 const void*
-linear::base (void) const
+linear::begin (void) const
 {
     return m_begin;
 }

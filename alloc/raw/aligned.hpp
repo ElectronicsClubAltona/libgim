@@ -66,8 +66,8 @@ namespace util::alloc::raw {
 
 
         ///////////////////////////////////////////////////////////////////////
-        auto base (void)       { return m_successor.base (); }
-        auto base (void) const { return m_successor.base (); }
+        auto begin (void)       { return m_successor.begin (); }
+        auto begin (void) const { return m_successor.begin (); }
 
 
         //---------------------------------------------------------------------
