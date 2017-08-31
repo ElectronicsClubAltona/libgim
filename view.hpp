@@ -11,13 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 
-#ifndef __UTIL_VIEW_HPP
-#define __UTIL_VIEW_HPP
+#ifndef CRUFT_UTIL_VIEW_HPP
+#define CRUFT_UTIL_VIEW_HPP
 
+#include "./debug.hpp"
 #include "./types/traits.hpp"
 
 #include <cstdlib>
@@ -77,8 +78,9 @@ namespace util {
         }
 
         constexpr auto
-        redim (int count) const noexcept
+        redim (int count) const
         {
+            CHECK_GT (count, 0);
             if (count > size ())
                 throw std::invalid_argument ("redim to higher size not allowed");
             return view { m_begin, m_begin + count };
