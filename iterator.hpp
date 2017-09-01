@@ -120,6 +120,39 @@ namespace util {
     };
 
 
+    namespace detail {
+        template <typename ContainerT, typename CharT>
+        struct infix_t {
+            const ContainerT &_container;
+            const CharT *_delimiter;
+        };
+
+        template <typename ContainerT, typename CharT>
+        std::ostream&
+        operator<< (std::ostream &os, const infix_t<ContainerT,CharT> &val)
+        {
+            std::copy (std::cbegin (val._container),
+                       std::cend (val._container),
+                       infix_iterator<typename ContainerT::value_type> (os, val._delimiter));
+            return os;
+        }
+
+    };
+
+
+    /// a helper function that returns an object that will use a
+    /// util::infix_iterator to output a container's values to an ostream with
+    /// the given delimiter.
+    ///
+    /// reduces boilerplate code required to output lists of things
+    template <typename ContainerT, typename CharT = char>
+    auto
+    make_infix (const ContainerT &_container, const CharT *_delimiter = ", ")
+    {
+        return detail::infix_t<ContainerT,CharT> { _container, _delimiter };
+    };
+
+
     ///////////////////////////////////////////////////////////////////////////
     template <typename ContainerT>
     class indices {
