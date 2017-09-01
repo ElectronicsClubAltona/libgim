@@ -71,6 +71,16 @@ class referencing_iterator {
 
 namespace util {
     ///////////////////////////////////////////////////////////////////////////
+    /// an output iterator that inserts a delimiter between successive
+    /// assignments
+    ///
+    /// very useful for outputting comma seperated lists to an ostream, eg:
+    ///
+    /// std::copy (
+    ///     std::cbegin (container),
+    ///     std::cend   (container),
+    ///     util::infix_iterator<value_type> (os, ", ")
+    /// );
     template <
         typename T,
         class CharT = char,
