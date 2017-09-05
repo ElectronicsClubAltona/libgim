@@ -11,17 +11,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_PREPROCESSOR_HPP
-#define __UTIL_PREPROCESSOR_HPP
+#ifndef CRUFT_UTIL_PREPROCESSOR_HPP
+#define CRUFT_UTIL_PREPROCESSOR_HPP
+
+//-----------------------------------------------------------------------------
+//
+// HERE BE DRAGONS.
+//
+// Don't use this code unless you need to do minor token pasting.
+// Don't judge me...
+//
+//-----------------------------------------------------------------------------
 
 
+///////////////////////////////////////////////////////////////////////////////
+// token concatenation operations. you should probably prefer PASTE over
+// PASTE2. PASTE2 is defined purely so that PASTE can make use of this macro
+// (because it clearly can't use itself).
+//
+// do not use PASTE_DETAIL directly.
 #define PASTE_DETAIL(x, y) x##y
-#define PASTE(x, y) PASTE_DETAIL(x, y)
+#define PASTE2(x, y) PASTE_DETAIL(x, y)
 
-#define PASTE_LIST(x,y) PASTE(x,y),
+#define PASTE_LIST(x,y) PASTE2(x,y),
 
 #define NAMESPACE_LIST(x,y) x::y,
 
@@ -37,6 +52,18 @@
 //
 // Based off a technique seen on StackOverflow:
 // http://stackoverflow.com/questions/11761703/overloading-macro-on-number-of-arguments
+
+#define REDUCE_2_01(F,X,  ...) X
+#define REDUCE_2_02(F,X,Y,...) F(X,Y)
+#define REDUCE_2_03(F,X,Y,...) REDUCE_2_02(F,F(X,Y),__VA_ARGS__)
+#define REDUCE_2_04(F,X,Y,...) REDUCE_2_03(F,F(X,Y),__VA_ARGS__)
+#define REDUCE_2_05(F,X,Y,...) REDUCE_2_04(F,F(X,Y),__VA_ARGS__)
+#define REDUCE_2_06(F,X,Y,...) REDUCE_2_05(F,F(X,Y),__VA_ARGS__)
+#define REDUCE_2_07(F,X,Y,...) REDUCE_2_06(F,F(X,Y),__VA_ARGS__)
+#define REDUCE_2_08(F,X,Y,...) REDUCE_2_07(F,F(X,Y),__VA_ARGS__)
+
+
+//-----------------------------------------------------------------------------
 #define MAP_0_01(F, X)      F(X)
 #define MAP_0_02(F, X, ...) F(X)MAP_0_01(F, __VA_ARGS__)
 #define MAP_0_03(F, X, ...) F(X)MAP_0_02(F, __VA_ARGS__)
@@ -146,6 +173,7 @@
 #define MAP_0_96(F, X, ...) F(X)MAP_0_95(F, __VA_ARGS__)
 
 
+//-----------------------------------------------------------------------------
 #define MAP_1_01(F, A, X)      F(A, X)
 #define MAP_1_02(F, A, X, ...) F(A, X)MAP_1_01(F, A, __VA_ARGS__)
 #define MAP_1_03(F, A, X, ...) F(A, X)MAP_1_02(F, A, __VA_ARGS__)
@@ -254,6 +282,8 @@
 #define MAP_1_95(F, A, X, ...) F(A, X)MAP_1_94(F, A, __VA_ARGS__)
 #define MAP_1_96(F, A, X, ...) F(A, X)MAP_1_95(F, A, __VA_ARGS__)
 
+
+//-----------------------------------------------------------------------------
 // Uses the sliding pairs dispatch technique: by passing __VA_ARGS__ as the
 // first set of variables and appending (reverse orderred) names of the
 // corresponding macros, we get the name of the correct arity macro.
@@ -275,6 +305,37 @@
     _89,_90,_91,_92,_93,_94,_95,_96,    \
     NAME,...                            \
 ) NAME
+
+
+//-----------------------------------------------------------------------------
+// reduces a series of values by repeated application of some macro 'func'.
+//
+// useful for things like variadic 'paste'
+//
+// it's only implemented for up to 8 arguments (because that's all you should
+// need you monster...) but we need to have enough arguments to make
+// ARITY_DISPATCH work so we fill it with nonces.
+#define REDUCE(FUNC,...)                                \
+ARITY_DISPATCH(__VA_ARGS__,                             \
+    _96, _95, _94, _93, _92, _91, _90, _89,             \
+    _88, _87, _86, _85, _84, _83, _82, _81,             \
+    _80, _79, _78, _77, _76, _75, _74, _73,             \
+    _72, _71, _70, _69, _68, _67, _66, _65,             \
+    _64, _63, _62, _61, _60, _59, _58, _57,             \
+    _56, _55, _54, _53, _52, _51, _50, _49,             \
+    _48, _47, _46, _45, _44, _43, _42, _41,             \
+    _40, _39, _38, _37, _36, _35, _34, _33,             \
+    _32, _31, _30, _29, _28, _27, _26, _25,             \
+    _24, _23, _22, _21, _20, _19, _18, _17,             \
+    _16, _15, _14, _13, _12, _11, _10, _09,             \
+    REDUCE_2_08, REDUCE_2_07, REDUCE_2_06, REDUCE_2_05, \
+    REDUCE_2_04, REDUCE_2_03, REDUCE_2_02, REDUCE_2_01, \
+    STATIC_ASSERT("invalid arity for REDUCE")           \
+)(FUNC,__VA_ARGS__)
+
+
+// concatenate a series of tokens
+#define PASTE(...) REDUCE(PASTE2,__VA_ARGS__)
 
 
 // Map a macro across __VA_ARGS__. Can be easily expanded, but has non-obvious
