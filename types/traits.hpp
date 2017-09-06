@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_TYPES_TRAITS_HPP
@@ -84,31 +84,79 @@ template <typename T, typename U> struct is_lossless_cast : std::enable_if<
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-struct func_traits : public func_traits<decltype(&T::operator())>
-{ };
-
-
-//-----------------------------------------------------------------------------
-template <typename C, typename R, typename ...Args>
-struct func_traits<R(C::*)(Args...) const> {
-    typedef R return_type;
-};
-
-
-//-----------------------------------------------------------------------------
-template <typename R, typename ...Args>
-struct func_traits<R(Args...)> {
-    typedef R return_type;
-};
-
-
-///////////////////////////////////////////////////////////////////////////////
 template <typename T> struct remove_restrict              { using type = T;  };
 template <typename T> struct remove_restrict<T *restrict> { using type = T*; };
 
 template <typename T>
 using remove_restrict_t = typename remove_restrict<T>::type;
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// removes the noexcept type specifier from invokable types
+template <typename T>
+struct remove_noexcept
+{ using type = T; };
+
+
+//-----------------------------------------------------------------------------
+template <typename ResultT, typename ...Args>
+struct remove_noexcept<ResultT(&)(Args...) noexcept> {
+    using type = ResultT(&)(Args...);
+};
+
+
+//-----------------------------------------------------------------------------
+template <typename ResultT, typename ...Args>
+struct remove_noexcept<ResultT(*)(Args...) noexcept> {
+    using type = ResultT(*)(Args...);
+};
+
+
+//-----------------------------------------------------------------------------
+template <typename ClassT, typename ResultT, typename ...Args>
+struct remove_noexcept<ResultT(ClassT::*)(Args...) noexcept> {
+    using type = ResultT(ClassT::*)(Args...);
+};
+
+
+//-----------------------------------------------------------------------------
+template <typename T>
+using remove_noexcept_t = typename remove_noexcept<T>::type;
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// type traits class for querying invokable type return values and argument
+/// types.
+///
+/// if the type is invokable the alias `return_type' will be defined for the
+/// return type, and the alias tuple `argument_types' will be defined for the
+/// arguments;
+template <typename T>
+struct func_traits : public func_traits<remove_noexcept_t<T>> { };
+
+
+//-----------------------------------------------------------------------------
+template <typename ClassT, typename ResultT, typename ...Args>
+struct func_traits<ResultT(ClassT::*)(Args...) const> {
+    using return_type = ResultT;
+    using argument_types = std::tuple<Args...>;
+};
+
+
+//-----------------------------------------------------------------------------
+template <typename ResultT, typename ...Args>
+struct func_traits<ResultT(*)(Args...)>  {
+    using return_type = ResultT;
+    using argument_types = std::tuple<Args...>;
+};
+
+
+//-----------------------------------------------------------------------------
+template <typename ResultT, typename ...Args>
+struct func_traits<ResultT(&)(Args...)>  {
+    using return_type = ResultT;
+    using argument_types = std::tuple<Args...>;
+};
 
 
 #endif
