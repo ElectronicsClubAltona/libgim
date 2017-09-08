@@ -26,7 +26,7 @@ using namespace util::debug;
 
 ////////////////////////////////////////////////////////////////////////////////
 void
-detail::panic (const char *msg)
+util::debug::detail::panic (const char *msg)
 {
     std::cerr << "PANIC: " << msg << "\n" << ::debug::backtrace () << std::endl;
     breakpoint ();
@@ -36,7 +36,7 @@ detail::panic (const char *msg)
 
 ////////////////////////////////////////////////////////////////////////////////
 void
-detail::not_implemented (const char *msg)
+util::debug::detail::not_implemented (const char *msg)
 {
     panic (msg);
 }
@@ -44,7 +44,7 @@ detail::not_implemented (const char *msg)
 
 //-----------------------------------------------------------------------------
 void
-detail::unreachable (const char *msg)
+util::debug::detail::unreachable (const char *msg)
 {
     panic (msg);
 }
