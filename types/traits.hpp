@@ -14,11 +14,47 @@
  * Copyright 2012-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_TYPES_TRAITS_HPP
-#define __UTIL_TYPES_TRAITS_HPP
+#ifndef CRUFT_UTIL_TYPES_TRAITS_HPP
+#define CRUFT_UTIL_TYPES_TRAITS_HPP
 
 #include <memory>
 #include <type_traits>
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// applies a series of type-modifiers to a provided type.
+///
+/// modifiers are applied in the order they are provided.
+///
+/// use without any modifiers results in the identity modifier.
+namespace util {
+    //-------------------------------------------------------------------------
+    template <typename TypeT, template <typename> class ...ModifierT>
+    struct chain;
+
+
+    //-------------------------------------------------------------------------
+    template <typename TypeT>
+    struct chain<TypeT> { using type = TypeT; };
+
+
+    //-------------------------------------------------------------------------
+    template <
+        typename TypeT,
+        template <typename> class HeadT,
+        template <typename> class ...TailT
+    >
+    struct chain<TypeT, HeadT, TailT...> : public chain<
+        typename HeadT<TypeT>::type,
+        TailT...
+    > { };
+
+
+    //-------------------------------------------------------------------------
+    template <typename T, template <typename> class ...Args>
+    using chain_t = typename chain<T, Args...>::type;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T> struct is_dereferencable     : std::false_type { };
