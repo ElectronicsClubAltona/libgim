@@ -209,31 +209,51 @@ struct remove_member_const<ReturnT(ClassT::*)(Args...) const> {
 /// if the type is invokable the alias `return_type' will be defined for the
 /// return type, and the alias tuple `argument_types' will be defined for the
 /// arguments;
+namespace detail {
+    template <typename T>
+    struct func_traits { };
+
+
+    //-------------------------------------------------------------------------
+    template <typename ClassT, typename ResultT, typename ...Args>
+    struct func_traits<ResultT(ClassT::*)(Args...)> {
+        using return_type = ResultT;
+        using argument_types = std::tuple<Args...>;
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <typename ResultT, typename ...Args>
+    struct func_traits<ResultT(*)(Args...)>  {
+        using return_type = ResultT;
+        using argument_types = std::tuple<Args...>;
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <typename ResultT, typename ...Args>
+    struct func_traits<ResultT(&)(Args...)>  {
+        using return_type = ResultT;
+        using argument_types = std::tuple<Args...>;
+    };
+};
+
+
+//-----------------------------------------------------------------------------
 template <typename T>
-struct func_traits : public func_traits<remove_noexcept_t<T>> { };
-
-
-//-----------------------------------------------------------------------------
-template <typename ClassT, typename ResultT, typename ...Args>
-struct func_traits<ResultT(ClassT::*)(Args...) const> {
-    using return_type = ResultT;
-    using argument_types = std::tuple<Args...>;
-};
-
-
-//-----------------------------------------------------------------------------
-template <typename ResultT, typename ...Args>
-struct func_traits<ResultT(*)(Args...)>  {
-    using return_type = ResultT;
-    using argument_types = std::tuple<Args...>;
-};
-
-
-//-----------------------------------------------------------------------------
-template <typename ResultT, typename ...Args>
-struct func_traits<ResultT(&)(Args...)>  {
-    using return_type = ResultT;
-    using argument_types = std::tuple<Args...>;
+struct func_traits : public ::detail::func_traits<
+    // we apply as many transforms as possible before palming it off to the
+    // detail class so that we don't have to write as many distinct cases.
+    ::util::chain_t<T,
+        std::remove_cv,
+        std::decay,
+        remove_member_const,
+        remove_noexcept
+    >
+> {
+    // we may as well record the underlying type here. it might prove useful
+    // to someone.
+    using type = T;
 };
 
 
