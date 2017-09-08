@@ -129,22 +129,62 @@ using remove_restrict_t = typename remove_restrict<T>::type;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// removes the noexcept type specifier from invokable types
-template <typename T>
-struct remove_noexcept
-{ using type = T; };
+namespace detail {
+    template <typename T>
+    struct remove_noexcept
+    { using type = T; };
 
 
-//-----------------------------------------------------------------------------
-template <typename ResultT, typename ...Args>
-struct remove_noexcept<ResultT(&)(Args...) noexcept> {
-    using type = ResultT(&)(Args...);
+    //-------------------------------------------------------------------------
+    template <typename ResultT, typename ...Args>
+    struct remove_noexcept<ResultT(&)(Args...) noexcept> {
+        using type = ResultT(&)(Args...);
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <typename ResultT, typename ...Args>
+    struct remove_noexcept<ResultT(*const)(Args...) noexcept> {
+        using type = ResultT(*const)(Args...);
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <typename ResultT, typename ...Args>
+    struct remove_noexcept<ResultT(*)(Args...) noexcept> {
+        using type = ResultT(*)(Args...);
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <typename ClassT, typename ResultT, typename ...Args>
+    struct remove_noexcept<ResultT(ClassT::*)(Args...) noexcept> {
+        using type = ResultT(ClassT::*)(Args...);
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <typename ClassT, typename ResultT, typename ...Args>
+    struct remove_noexcept<ResultT(ClassT::*)(Args...) const noexcept> {
+        using type = ResultT(ClassT::*)(Args...) const;
+    };
 };
 
 
 //-----------------------------------------------------------------------------
-template <typename ResultT, typename ...Args>
-struct remove_noexcept<ResultT(*)(Args...) noexcept> {
-    using type = ResultT(*)(Args...);
+template <typename T>
+struct remove_noexcept : public detail::remove_noexcept<T> { };
+
+//-----------------------------------------------------------------------------
+template <typename T>
+using remove_noexcept_t = typename remove_noexcept<T>::type;
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// removes any `const' qualifier from the supplied member function
+template <typename FuncT>
+struct remove_member_const {
+    using type = FuncT;
 };
 
 
