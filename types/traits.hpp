@@ -189,15 +189,17 @@ struct remove_member_const {
 
 
 //-----------------------------------------------------------------------------
-template <typename ClassT, typename ResultT, typename ...Args>
-struct remove_noexcept<ResultT(ClassT::*)(Args...) noexcept> {
-    using type = ResultT(ClassT::*)(Args...);
+template <typename ClassT, typename ReturnT, typename ...Args>
+struct remove_member_const<ReturnT(ClassT::*const)(Args...) const> {
+    using type = ReturnT(ClassT::*const)(Args...);
 };
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-using remove_noexcept_t = typename remove_noexcept<T>::type;
+template <typename ClassT, typename ReturnT, typename ...Args>
+struct remove_member_const<ReturnT(ClassT::*)(Args...) const> {
+    using type = ReturnT(ClassT::*)(Args...);
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////
