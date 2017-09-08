@@ -31,9 +31,9 @@
 
 
 namespace util {
-    // XXX: clang-3.9/clang-4.0 will not instantiate static constexpr member
-    // variables from class specialisations, so we have to use detail classes
-    // to hold the variables and instantiate _those_ members instead.
+    // clang#18781: clang-3.9/clang-4.0 will not instantiate static constexpr
+    // member variables from class specialisations, so we have to use detail
+    // classes to hold the variables and instantiate _those_ members instead.
     template <typename T>
     struct type_name;
 
