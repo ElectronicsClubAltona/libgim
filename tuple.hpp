@@ -176,16 +176,14 @@ namespace util::tuple {
     /// debug/release/whatever builds. so it is safe to use to guarantee
     /// parameter evaluation.
     inline void
-    ignore (void)
+    ignore (void) noexcept
     { ; }
 
     //-------------------------------------------------------------------------
     template <typename T, typename ...Args>
     void
-    ignore (T, Args ...args)
-    {
-        ignore (std::forward<Args> (args)...);
-    };
+    ignore (T, const Args&...) noexcept
+    { ; }
 
 
     ///////////////////////////////////////////////////////////////////////////
