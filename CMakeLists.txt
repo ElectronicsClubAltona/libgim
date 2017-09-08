@@ -507,6 +507,7 @@ if (TESTS)
         stringid
         strongdef
         tuple
+        traits
         typeidx
         uri
         vector
