@@ -257,4 +257,17 @@ struct func_traits : public ::detail::func_traits<
 };
 
 
+
+///////////////////////////////////////////////////////////////////////////////
+template <std::size_t N, typename FuncT>
+struct nth_argument : std::tuple_element<
+    N,
+    typename func_traits<FuncT>::argument_types
+> { };
+
+
+template <std::size_t N, typename FuncT>
+using nth_argument_t = typename nth_argument<N, FuncT>::type;
+
+
 #endif
