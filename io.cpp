@@ -32,10 +32,15 @@
 using namespace util;
 
 
-//----------------------------------------------------------------------------
-std::vector<char>
+//////////////////////////////////////////////////////////////////////////////
+template <typename T>
+std::vector<T>
 util::slurp (const std::experimental::filesystem::path &path)
 {
+    static_assert (
+        sizeof (T) == 1,
+        "slurp is designed for grabbing bytes, not complex structures"
+    );
     posix::fd out (path, O_RDONLY | O_BINARY);
 
     // Calculate the total file size
@@ -47,11 +52,11 @@ util::slurp (const std::experimental::filesystem::path &path)
         throw errno_error ();
 
     // Allocate a buffer, and keep reading until it's full.
-    std::vector<char> buffer (size);
+    std::vector<T> buffer (size);
 
     CHECK_GE (size, 0);
     size_t remaining = (size_t)size;
-    char *cursor = buffer.data ();
+    T *cursor = buffer.data ();
 
     while (remaining) {
         ssize_t consumed = ::read (out, cursor, remaining);
@@ -69,9 +74,20 @@ util::slurp (const std::experimental::filesystem::path &path)
 
 
 //-----------------------------------------------------------------------------
-std::vector<char>
+template std::vector<char> util::slurp (const std::experimental::filesystem::path&);
+template std::vector<std::byte> util::slurp (const std::experimental::filesystem::path&);
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename T>
+std::vector<T>
 util::slurp (FILE *stream)
 {
+    static_assert (
+        sizeof (T) == 1,
+        "slurp is designed for grabbing bytes, not complex structures"
+    );
+
     // find how much data is in this file
     const int desc = fileno (stream);
     if (desc < 0)
@@ -81,7 +97,7 @@ util::slurp (FILE *stream)
     if (fstat (desc, &meta) < 0)
         errno_error::throw_code ();
 
-    std::vector<char> buf;
+    std::vector<T> buf;
 
     // we think we know the size, so try to do a simple read
     if (meta.st_size) {
@@ -113,8 +129,12 @@ util::slurp (FILE *stream)
 }
 
 
-
 //-----------------------------------------------------------------------------
+template std::vector<char> util::slurp (FILE*);
+template std::vector<std::byte> util::slurp (FILE*);
+
+
+///////////////////////////////////////////////////////////////////////////////
 void
 util::write (const posix::fd &out,
              const void *restrict data,

@@ -20,8 +20,9 @@
 #include "platform.hpp"
 #include "posix/fd.hpp"
 
-#include <cstdio>
+#include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <experimental/filesystem>
 #include <vector>
 #include <streambuf>
@@ -35,8 +36,11 @@
 namespace util {
     //-------------------------------------------------------------------------
     /// Reads an entire file into memory.
-    std::vector<char> slurp (const std::experimental::filesystem::path&);
-    std::vector<char> slurp (FILE *);
+    template <typename T = std::byte>
+    std::vector<T> slurp (const std::experimental::filesystem::path&);
+
+    template <typename T = std::byte>
+    std::vector<T> slurp (FILE *);
 
 
     //-------------------------------------------------------------------------
