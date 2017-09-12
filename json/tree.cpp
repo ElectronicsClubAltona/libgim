@@ -23,8 +23,9 @@
 #include "../debug.hpp"
 #include "../io.hpp"
 #include "../maths.hpp"
-#include "../preprocessor.hpp"
 #include "../stream.hpp"
+
+#include "preprocessor.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -226,9 +227,7 @@ template                            \
 std::unique_ptr<json::tree::node>   \
 json::tree::parse (util::view<KLASS>);
 
-MAP(
-    INSTANTIATE,
-
+MAP0(INSTANTIATE,
     std::string::iterator,
     std::string::const_iterator,
     const char* restrict,

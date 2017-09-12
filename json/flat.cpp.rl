@@ -172,9 +172,7 @@ template                                \
 std::vector<json::flat::item<KLASS>>    \
 json::flat::parse (util::view<KLASS>);
 
-MAP(
-    INSTANTIATE,
-
+MAP0(INSTANTIATE,
     std::string::iterator,
     std::string::const_iterator,
     const char* restrict,

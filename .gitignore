@@ -17,6 +17,7 @@
 Makefile
 Makefile.in
 /missing
+/preprocessor.hpp
 /stamp-h1
 /test-driver
 /uri.cpp

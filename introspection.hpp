@@ -174,7 +174,7 @@ namespace util {
         const char*,                                            \
         util::enum_traits<::NS::E>::value_count                 \
     > PASTE(util::__enum_traits_,E)::names = {                  \
-      MAP(STRINGIZE_LIST, __VA_ARGS__)                          \
+      MAP0(STRINGIZE_LIST, __VA_ARGS__)                         \
     };
 
 

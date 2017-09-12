@@ -13,7 +13,8 @@ include (nc)
 
 include (search_libs)
 
-find_package(RAGEL 6.9 REQUIRED)
+find_package (PythonInterp 3 REQUIRED)
+find_package (RAGEL 6.9 REQUIRED)
 
 
 ###############################################################################
@@ -418,6 +419,25 @@ list (
     view.hpp
 )
 
+
+##-----------------------------------------------------------------------------
+## We shouldn't be building into the source directory, but I can't stand trying
+## to coax CMake into behaving here any longer. Feel free to fix it.
+add_custom_command (
+OUTPUT
+    "${CMAKE_CURRENT_SOURCE_DIR}/preprocessor.hpp"
+COMMENT
+    "[preprocessor.py] preprocessor.hpp"
+COMMAND
+    "${PYTHON_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/preprocessor.py"
+    "${CMAKE_CURRENT_SOURCE_DIR}/preprocessor.hpp"
+    320
+DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/preprocessor.py"
+)
+
+
 ###############################################################################
 add_library(cruft-util ${UTIL_FILES})
 target_link_libraries (cruft-util ${LIBS})
@@ -494,6 +514,7 @@ if (TESTS)
         point
         polynomial
         pool
+        preprocessor
         quaternion
         rand/buckets
         range

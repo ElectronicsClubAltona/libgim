@@ -21,8 +21,9 @@
 
 #include "../debug.hpp"
 #include "../maths.hpp"
-#include "../preprocessor.hpp"
 #include "../types/bits.hpp"
+
+#include "../preprocessor.hpp"
 
 #include <algorithm>
 #include <cmath>
