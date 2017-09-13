@@ -24,11 +24,20 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
+// it is fractionally easier to define a constexpr variable which can be used
+// in constexpr-if to enable/disable some codepaths rather than deal with
+// macros in some scenarios. eg, templates are complicated enough without
+// (more) macros.
 #if !defined(NDEBUG)
-    #define DEBUG_ONLY(X) do { X } while (0)
+    constexpr bool debug_enabled = true;
 #else
-    #define DEBUG_ONLY(X) do {   } while (0)
+    constexpr bool debug_enabled = false;
 #endif
+
+
+///----------------------------------------------------------------------------
+/// enable some code only if assertions et al are enabled
+#define DEBUG_ONLY(X) do { if constexpr (debug_enabled) { X } } while (0)
 
 
 ///////////////////////////////////////////////////////////////////////////////
