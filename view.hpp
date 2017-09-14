@@ -39,6 +39,26 @@ namespace util {
             m_end   (last)
         { ; }
 
+
+        constexpr
+        view (const view &rhs) noexcept:
+            m_begin (rhs.m_begin),
+            m_end   (rhs.m_end)
+        { ; }
+
+
+        // technically we could get away without explicitly defining a move
+        // constructor here, but by nulling rhs we can more easily use this
+        // class as a base for unique owning pointers without exposing
+        // begin/end to them directly.
+        constexpr view (view &&rhs) noexcept:
+            view (T{}, T{})
+        {
+            std::swap (m_begin, rhs.m_begin);
+            std::swap (m_end,   rhs.m_end);
+        }
+
+
         template <typename K>
         constexpr explicit
         view (K &klass):
@@ -52,6 +72,29 @@ namespace util {
             m_begin (std::begin (klass)),
             m_end   (std::end   (klass))
         { ; }
+
+
+        view&
+        operator= (const view &rhs) noexcept
+        {
+            m_begin = rhs.m_begin;
+            m_end   = rhs.m_end;
+            return *this;
+        }
+
+
+        view&
+        operator= (view &&rhs) noexcept
+        {
+            m_begin = rhs.m_begin;
+            m_end = rhs.m_end;
+
+            m_begin = T{};
+            m_end = T{};
+
+            return *this;
+        };
+
 
         constexpr T begin (void) noexcept { return m_begin; }
         constexpr T end   (void) noexcept { return m_end;   }
