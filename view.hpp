@@ -34,7 +34,7 @@ namespace util {
         using value_type = typename std::iterator_traits<remove_restrict_t<T>>::value_type;
 
         constexpr
-        view (T first, T last) noexcept:
+        view (const T &first, const T &last) noexcept:
             m_begin (first),
             m_end   (last)
         { ; }
@@ -65,6 +65,7 @@ namespace util {
             m_begin (std::begin (klass)),
             m_end   (std::end   (klass))
         { ; }
+
 
         template <typename K>
         constexpr explicit
