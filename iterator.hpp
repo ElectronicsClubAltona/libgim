@@ -216,25 +216,31 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     namespace detail::zip {
+        // holds a tuple of iterators for begin and end, and returns an
+        // iterator that transforms these iterators into tuples of value_types.
+        //
+        // this must be expressed in terms of iterators, rather than containers,
+        // because it dramatically simplifies iterating over raw arrays.
         template <
-            typename ContainerT,
             typename IteratorT,
-            typename I = std::make_index_sequence<std::tuple_size<ContainerT>::value>
+            typename I = std::make_index_sequence<std::tuple_size<IteratorT>::value>
         >
-        struct collection;
+        class collection;
 
+
+        //---------------------------------------------------------------------
         template <
-            typename ContainerT,
             typename IteratorT,
             std::size_t ...I
         >
-        struct collection<
-            ContainerT,
+        class collection<
             IteratorT,
             std::index_sequence<I...>
         > {
-            collection (const ContainerT &_containers):
-                m_containers { _containers }
+        public:
+            collection (const IteratorT &_begin, const IteratorT &_end):
+                m_begin { _begin },
+                m_end   { _end   }
             { ; }
 
             struct iterator : std::iterator<
@@ -246,13 +252,14 @@ namespace util {
                 >,
                 std::size_t
             > {
-                IteratorT m_iterators;
-
-                iterator (IteratorT _iterators):
+            public:
+                iterator (const IteratorT &_iterators):
                     m_iterators (_iterators)
                 { ; }
 
-                iterator& operator++ (void)
+
+                iterator&
+                operator++ (void)
                 {
                     // HACK: we don't actually need to create a tuple here,
                     // but it's a zero cost method to expand the parameter
@@ -261,58 +268,86 @@ namespace util {
                     return *this;
                 }
 
+
                 iterator operator++ (int);
 
-                auto operator* (void)
+
+                auto
+                operator* (void)
                 {
                     return std::make_tuple (*std::get<I> (m_iterators)...);
                 }
 
-                bool operator== (const iterator &rhs) const
+
+                bool
+                operator== (const iterator &rhs) const
                 {
                     return m_iterators == rhs.m_iterators;
                 }
 
-                bool operator!= (const iterator &rhs) const
+
+                bool
+                operator!= (const iterator &rhs) const
                 {
                     return !(*this == rhs);
                 }
+
+            private:
+                IteratorT m_iterators;
             };
 
-            iterator begin (void)
+
+            iterator
+            begin (void)
             {
-                return iterator { { std::begin (std::get<I> (m_containers))... } };
+                return iterator { { std::get<I> (m_begin)... } };
             }
 
-            iterator end (void)
+
+            iterator
+            end (void)
             {
-                return iterator { { std::end (std::get<I> (m_containers))... } };
+                return iterator { { std::get<I> (m_end)... } };
             }
 
-            ContainerT m_containers;
+
+        private:
+            IteratorT m_begin;
+            IteratorT m_end;
         };
     }
 
 
-    //-------------------------------------------------------------------------
+    ///------------------------------------------------------------------------
+    /// takes a variable number of container arguments and returns an interable
+    /// object with a value_type of tuple of the argument's value_types.
+    ///
+    /// the returned iterator value_type is suitable for using in range-for
+    /// and structured bindings (and really, that's the entire point here).
+    ///
+    /// eg, util::zip ({1,2,3}, {4,5,6}) ~= {{1,4},{2,5},{3,6}}
     template <typename ...ContainerT>
     auto
     zip (const ContainerT&... data)
     {
-        using container = std::tuple<ContainerT...>;
-        using iterator = std::tuple<decltype(std::begin(data))...>;
+        using IteratorT = std::tuple<decltype(std::begin(data))...>;
 
         return detail::zip::collection<
-            container,
-            iterator,
+            IteratorT,
             std::make_index_sequence<sizeof...(ContainerT)>
-        > (
-            std::make_tuple (data...)
-        );
+        > {
+            std::make_tuple (std::begin (data)...),
+            std::make_tuple (std::end   (data)...)
+        };
     };
 
 
-    //-------------------------------------------------------------------------
+    ///------------------------------------------------------------------------
+    /// takes a variable number of containers and returns a zipped iterable
+    /// object where the first of the iterator's value_types is the index of
+    /// that iterator. ie, it combines container offsets with value_types.
+    ///
+    /// eg, util::izip ("abc") ~= {{0,'a'},{1,'b'},{2,'c'}}
     template <typename ...ContainerT>
     auto
     izip (const ContainerT&... data)
