@@ -1,6 +1,9 @@
 #include "tap.hpp"
 #include "string.hpp"
 #include "types.hpp"
+#include "iterator.hpp"
+
+#include <vector>
 
 int
 main (int, char**)
@@ -8,28 +11,23 @@ main (int, char**)
     util::TAP::logger tap;
     
     const char csv[] = "\0,a,123,,this is a test,";
-    const std::string values[] = {
-        { "\0", 1 },
-        { "a" },
-        { "123" },
-        { "" },
-        { "this is a test" },
-        { "" }
+
+    // expected test data must be a std::string so we can check embedded
+    // nulls (which are ambiguous when using a cstr).
+    struct foo {
+        const std::string value;
+        const char *message;
+    } TESTS[] = {
+        { "\0",             "null" },
+        { "a",              "single letter" },
+        { "123",            "three digits" },
+        { "",               "empty string" },
+        { "this is a test", "string with spaces" },
+        { "",               "trailing empty" }
     };
 
-    std::string str (std::cbegin (csv), std::cbegin (csv) + std::size (csv));
-    auto tok = util::make_tokeniser (str, ',');
-    auto t_cursor = tok.cbegin ();
-    auto v_cursor = std::cbegin (values);
-
-    tap.expect_eq (*t_cursor++, *v_cursor++, "tokeniser, single letter");
-    tap.expect_eq (*t_cursor++, *v_cursor++, "tokeniser, three digits");
-    tap.expect_eq (*t_cursor++, *v_cursor++, "tokeniser, embedded null");
-    tap.expect_eq (*t_cursor++, *v_cursor++, "tokeniser, empty string");
-    tap.expect_eq (*t_cursor++, *v_cursor++, "tokeniser, string with spaces");
-    tap.expect_eq (*t_cursor++, *v_cursor++, "tokeniser, trailing empty");
-
-    tap.expect_eq (t_cursor, tok.cend (), "tokeniser iterator at end");
+    for (const auto &[tok, expected]: util::zip (util::make_tokeniser (csv, ','), TESTS))
+        tap.expect (equal (tok, expected.value), "%s", expected.message);
 
     return tap.status ();
 }

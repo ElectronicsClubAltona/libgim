@@ -40,7 +40,20 @@ namespace util {
 
         tokeniser (Iterator first, Iterator last, value_type separator);
 
-        struct iterator {
+        template <typename ContainerT>
+        tokeniser (ContainerT &container, typename ContainerT::value_type _separator):
+            tokeniser (
+                std::begin (container),
+                std::end (container),
+                _separator
+            )
+        { ; }
+
+        struct iterator : public std::iterator<
+            std::forward_iterator_tag,
+            range_type,
+            std::size_t
+        > {
         public:
             iterator  operator++ (int);
             iterator& operator++ (void)&;
@@ -71,10 +84,29 @@ namespace util {
         const value_type m_separator;
     };
 
-    
-    tokeniser<std::string::const_iterator> make_tokeniser (const std::string&, std::string::value_type);
-    tokeniser<std::string::const_iterator> make_tokeniser (std::string&&, std::string::value_type) = delete;
-    tokeniser<const char*> make_tokeniser (const char*, char);
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename CharT, std::size_t LengthV>
+    auto
+    make_tokeniser (CharT (&data)[LengthV], CharT separator)
+    {
+        return tokeniser { std::begin (data), std::end (data), separator };
+    }
+
+
+    //-------------------------------------------------------------------------
+    tokeniser<std::string::const_iterator>
+    make_tokeniser (const std::string&, std::string::value_type);
+
+
+    //-------------------------------------------------------------------------
+    tokeniser<std::string::const_iterator>
+    make_tokeniser (std::string&&, std::string::value_type) = delete;
+
+
+    //-------------------------------------------------------------------------
+    tokeniser<const char*>
+    make_tokeniser (const char*, char);
 
 }
 
