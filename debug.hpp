@@ -393,6 +393,17 @@ constexpr void unreachable [[noreturn]] (const char*);
 
 
 ///////////////////////////////////////////////////////////////////////////////
+/// report a fatal error induced by an unhandled value, especially in switch
+/// statements. will almost invariably abort the application.
+template <typename T>
+constexpr void
+unhandled [[noreturn]] (T &&t) noexcept
+{
+    panic ("unhandled value %!", std::forward<T> (t));
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 void warn (void);
 void warn (const std::string&);
 void warn (const char *);
