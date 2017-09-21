@@ -18,6 +18,7 @@
 #define CRUFT_UTIL_RANDOM_HPP
 
 #include <random>
+#include <limits>
 
 
 namespace util::random {
@@ -49,6 +50,18 @@ namespace util::random {
     uniform (T lo, T hi)
     {
         return std::uniform_int_distribution<T> { lo, hi } (generator ());
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    std::enable_if_t<std::is_integral_v<T>,T>
+    uniform (void)
+    {
+        return uniform (
+            std::numeric_limits<T>::min (),
+            std::numeric_limits<T>::max ()
+        );
     }
 
 
