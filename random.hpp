@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2016-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef CRUFT_UTIL_RANDOM_HPP
@@ -24,7 +24,7 @@ namespace util::random {
     ///////////////////////////////////////////////////////////////////////////
     /// return correctly initialised thread-local generator of an unspecified,
     /// but not entirely useless, type. ie, not LCG.
-    auto&
+    inline auto&
     generator (void)
     {
         static thread_local std::mt19937_64 gen { std::random_device {}() };
