@@ -111,15 +111,16 @@ util::utf8::decode (view<const std::byte*> src)
         codepoint_t shift = 0;
 
         // check every following data byte has the appropriate prefix
+        constexpr auto CONTINUATION = "0b10xxxxxx"_test;
         for (int i = 1; i <= len; ++i) {
-            if ((std::to_integer<codepoint_t> (cursor[i]) & 0b11'000000u) != 0b10'000000u)
+            if (!CONTINUATION.valid (std::to_integer<codepoint_t> (cursor[i])))
                 throw malformed_error {};
         }
 
         switch (len) {
-        case 3: accum |= (std::to_integer<codepoint_t> (cursor[3]) & 0b00111111u) << (shift++ * 6u);
-        case 2: accum |= (std::to_integer<codepoint_t> (cursor[2]) & 0b00111111u) << (shift++ * 6u);
-        case 1: accum |= (std::to_integer<codepoint_t> (cursor[1]) & 0b00111111u) << (shift++ * 6u);
+        case 3: accum |= CONTINUATION.value (std::to_integer<codepoint_t> (cursor[3])) << (shift++ * 6u);
+        case 2: accum |= CONTINUATION.value (std::to_integer<codepoint_t> (cursor[2])) << (shift++ * 6u);
+        case 1: accum |= CONTINUATION.value (std::to_integer<codepoint_t> (cursor[1])) << (shift++ * 6u);
         }
 
         // describes the bits required to be present for a valid minimally
