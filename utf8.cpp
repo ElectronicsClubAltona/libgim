@@ -74,53 +74,52 @@ operator"" _test (const char *str, size_t len)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-std::vector<util::utf8::codepoint_t>
-util::utf8::decode (view<const std::byte*> src)
+template <
+    typename InputT,
+    typename OutputT>
+static OutputT
+decode (util::view<InputT> src, OutputT dst)
 {
-    std::vector<codepoint_t> dst;
-    dst.reserve (src.size ());
+    using namespace util::utf8;
 
     static constexpr
-    test<codepoint_t> TESTS[] = {
+    test<codepoint_t> PREFIX[] = {
         "0b0xxxxxxx"_test,
         "0b110xxxxx"_test,
         "0b1110xxxx"_test,
         "0b11110xxx"_test
     };
 
-    for (auto cursor = src.cbegin (); cursor != src.cend (); ++cursor) {
-        codepoint_t c = std::to_integer<codepoint_t> (*cursor);
+    for (auto cursor = src.cbegin (); cursor != src.cend (); ) {
+        codepoint_t c = std::to_integer<codepoint_t> (*cursor++);
 
-        int len = TESTS[0].valid (c) ? 0 :
-                  TESTS[1].valid (c) ? 1 :
-                  TESTS[2].valid (c) ? 2 :
-                  TESTS[3].valid (c) ? 3 :
+        int len = PREFIX[0].valid (c) ? 0 :
+                  PREFIX[1].valid (c) ? 1 :
+                  PREFIX[2].valid (c) ? 2 :
+                  PREFIX[3].valid (c) ? 3 :
                   throw malformed_error {};
-
-        if (cursor + len >= src.cend ())
-            throw malformed_error {};
 
         // get the simple ANSI case out of the way
         if (!len) {
-            dst.push_back (c);
+            *dst++ = c;
             continue;
         }
 
-        codepoint_t head = codepoint_t { c & ~TESTS[len].mask } << (len * 6);
-        codepoint_t accum = head;
-        codepoint_t shift = 0;
+        codepoint_t accum { PREFIX[len].value (c) };
 
         // check every following data byte has the appropriate prefix
-        constexpr auto CONTINUATION = "0b10xxxxxx"_test;
-        for (int i = 1; i <= len; ++i) {
-            if (!CONTINUATION.valid (std::to_integer<codepoint_t> (cursor[i])))
-                throw malformed_error {};
-        }
+        static constexpr auto CONTINUATION = "0b10xxxxxx"_test;
 
-        switch (len) {
-        case 3: accum |= CONTINUATION.value (std::to_integer<codepoint_t> (cursor[3])) << (shift++ * 6u);
-        case 2: accum |= CONTINUATION.value (std::to_integer<codepoint_t> (cursor[2])) << (shift++ * 6u);
-        case 1: accum |= CONTINUATION.value (std::to_integer<codepoint_t> (cursor[1])) << (shift++ * 6u);
+        for (int i = 1; i <= len; ++i) {
+            if (cursor == src.cend ())
+                throw malformed_error {};
+
+            codepoint_t now = std::to_integer<codepoint_t> (*cursor++);
+            if (!CONTINUATION.valid (now))
+                throw malformed_error {};
+
+            accum <<= 6;
+            accum  |= CONTINUATION.value (now);
         }
 
         // describes the bits required to be present for a valid minimally
@@ -144,9 +143,21 @@ util::utf8::decode (view<const std::byte*> src)
         if (accum == 0xfffe || accum == 0xffff)
             throw illegal_codepoint {};
 
-        dst.push_back (accum);
-        std::advance (cursor, len);
+        *dst++ = accum;
     }
 
+
+    return dst;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+std::vector<util::utf8::codepoint_t>
+util::utf8::decode (view<const std::byte*> src)
+{
+    std::vector<codepoint_t> dst;
+    dst.reserve (src.size ());
+
+    ::decode (src, std::back_inserter (dst));
     return dst;
 }
