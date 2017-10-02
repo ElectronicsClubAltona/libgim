@@ -108,7 +108,7 @@ namespace util {
         };
 
 
-        //---------------------------------------------------------------------
+        ///////////////////////////////////////////////////////////////////////
         constexpr IteratorT begin (void) noexcept { return m_begin; }
         constexpr IteratorT end   (void) noexcept { return m_end;   }
 
@@ -124,7 +124,7 @@ namespace util {
         auto data (void)       { return begin (); }
         auto data (void) const { return begin (); }
 
-        //---------------------------------------------------------------------
+        ///////////////////////////////////////////////////////////////////////
         constexpr bool
         empty (void) const noexcept
         {
@@ -148,7 +148,7 @@ namespace util {
             return view { m_begin, m_begin + count };
         };
 
-        //---------------------------------------------------------------------
+        ///////////////////////////////////////////////////////////////////////
         constexpr value_type&
         operator[] (size_t idx)& noexcept
         {
@@ -166,9 +166,8 @@ namespace util {
             return *it;
         }
 
-
     private:
-        //---------------------------------------------------------------------
+        ///////////////////////////////////////////////////////////////////////
         IteratorT m_begin;
         IteratorT m_end;
     };
