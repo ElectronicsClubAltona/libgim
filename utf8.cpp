@@ -21,21 +21,25 @@
 template <typename T>
 struct test {
     constexpr
-    test (T _mask, T _value, T _shift):
+    test (T _mask, T _bits) noexcept:
         mask (_mask),
-        value (_value),
-        shift (_shift)
+        bits (_bits)
     { ; }
 
     constexpr bool
-    operator() (T t) const
+    valid (T t) const noexcept
     {
-        return (t & mask) == value;
+        return (t & mask) == bits;
+    }
+
+    constexpr T
+    value (T t) const noexcept
+    {
+        return t & ~mask;
     }
 
     T mask;
-    T value;
-    T shift;
+    T bits;
 };
 
 
@@ -44,8 +48,7 @@ static constexpr test<uint32_t>
 operator"" _test (const char *str, size_t len)
 {
     uint32_t mask = 0;
-    uint32_t value = 0;
-    uint32_t shift = 0;
+    uint32_t bits = 0;
 
     if (str[0] != '0' || str[1] != 'b')
         throw std::invalid_argument ("invalid bit test prefix");
@@ -53,20 +56,20 @@ operator"" _test (const char *str, size_t len)
     for (size_t i = 2; i < len; ++i) {
         auto c = str[i];
 
-        mask  <<= 1;
-        value <<= 1;
+        mask <<= 1;
+        bits <<= 1;
 
         switch (c) {
-        case '0': mask |= 0x1; value |= 0x0;          break;
-        case '1': mask |= 0x1; value |= 0x1;          break;
-        case 'x': mask |= 0x0; value |= 0x0; ++shift; break;
+        case '0': mask |= 0x1; bits |= 0x0; break;
+        case '1': mask |= 0x1; bits |= 0x1; break;
+        case 'x': mask |= 0x0; bits |= 0x0; break;
         default:
             throw std::invalid_argument ("invalid bit test character");
         }
 
     }
 
-    return { mask, value, shift };
+    return { mask, bits };
 }
 
 
@@ -88,10 +91,10 @@ util::utf8::decode (view<const std::byte*> src)
     for (auto cursor = src.cbegin (); cursor != src.cend (); ++cursor) {
         codepoint_t c = std::to_integer<codepoint_t> (*cursor);
 
-        int len = TESTS[0] (c) ? 0 :
-                  TESTS[1] (c) ? 1 :
-                  TESTS[2] (c) ? 2 :
-                  TESTS[3] (c) ? 3 :
+        int len = TESTS[0].valid (c) ? 0 :
+                  TESTS[1].valid (c) ? 1 :
+                  TESTS[2].valid (c) ? 2 :
+                  TESTS[3].valid (c) ? 3 :
                   throw malformed_error {};
 
         if (cursor + len >= src.cend ())
