@@ -408,6 +408,8 @@ list (
     types/traits.hpp
     uri.cpp
     uri.hpp
+    utf8.cpp
+    utf8.hpp
     variadic.cpp
     variadic.hpp
     vector.cpp
@@ -531,6 +533,7 @@ if (TESTS)
         traits
         typeidx
         uri
+        utf8
         vector
         version
         view
