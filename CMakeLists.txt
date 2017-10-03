@@ -318,6 +318,18 @@ list (
     json/schema.hpp
     json/tree.cpp
     json/tree.hpp
+    json2/fwd.hpp
+    json2/event.hpp
+    json2/event.cpp
+    json2/except.hpp
+    json2/personality/base.cpp
+    json2/personality/base.hpp
+    json2/personality/jsonish.cpp
+    json2/personality/jsonish.hpp
+    json2/personality/rfc7519.cpp
+    json2/personality/rfc7519.hpp
+    json2/tree.cpp
+    json2/tree.hpp
     library.hpp
     log.cpp
     log.hpp
@@ -509,6 +521,7 @@ if (TESTS)
         iterator
         job/queue
         json_types
+        json2/event
         maths
         matrix
         memory/deleter
