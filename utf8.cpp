@@ -107,10 +107,9 @@ decode (util::view<InputT> src, OutputT dst)
 
         codepoint_t accum { PREFIX[len].value (c) };
 
-        // check every following data byte has the appropriate prefix
-        static constexpr auto CONTINUATION = "0b10xxxxxx"_test;
-
+        // prepend each of the remaining bytes data to an accumulator
         for (int i = 1; i <= len; ++i) {
+            static constexpr auto CONTINUATION = "0b10xxxxxx"_test;
             if (cursor == src.cend ())
                 throw malformed_error {};
 
@@ -122,8 +121,11 @@ decode (util::view<InputT> src, OutputT dst)
             accum  |= CONTINUATION.value (now);
         }
 
-        // describes the bits required to be present for a valid minimally
-        // sized codepoint of a given byte length.
+        // check that the codepoint is the right size by seeing if the unique
+        // bits present in the decoded size codepoint are actually used.
+        //
+        // these could theoretically be provided to the user, but they may be
+        // misused so we will throw an error instead.
         static constexpr
         codepoint_t LEVEL_MASK[] {
             0b00000000'00000000'01111111,
