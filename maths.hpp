@@ -347,15 +347,17 @@ namespace util {
     template <typename ValueT, typename BaseT>
     constexpr
     std::enable_if_t<
-        std::is_integral<ValueT>::value && std::is_unsigned<BaseT>::value,
-        unsigned
+        std::is_integral_v<ValueT> && std::is_integral_v<BaseT>,
+        int
     >
     digits (ValueT value, BaseT base) noexcept
     {
+        assert (base > 0);
+
         if (value < 0)
             value *= -1;
 
-        unsigned tally = 1;
+        int tally = 1;
         while (value /= base)
             ++tally;
 
