@@ -7,6 +7,7 @@
 #include <functional>
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
 test_numbers (util::TAP::logger &tap)
 {
@@ -18,6 +19,7 @@ test_numbers (util::TAP::logger &tap)
         { "1", true, "single digit" },
         { "01", false, "leading zero" },
         { "-1", true, "leading minus" },
+        { "+1", false, "leading plus" },
         { "1.", false, "truncated fraction" },
         { "1.0", true, "fraction" },
         { "1.0e", false, "truncated exponential" },
@@ -57,6 +59,7 @@ test_numbers (util::TAP::logger &tap)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
 test_literals (util::TAP::logger &tap)
 {
@@ -103,6 +106,7 @@ test_literals (util::TAP::logger &tap)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
 void
 test_strings (util::TAP::logger &tap)
 {
@@ -155,16 +159,100 @@ test_arrays (util::TAP::logger &tap)
         std::vector<util::json2::event::type_t> types;
         const char *message;
     } TESTS[] = {
-        { "[]", true, { type_t::ARRAY_BEGIN, type_t::ARRAY_END }, "empty" },
-        { "[1]", true, { type_t::ARRAY_BEGIN, type_t::NUMBER, type_t::ARRAY_END }, "single number" },
-        { "[1true]", false, { type_t::ARRAY_BEGIN, type_t::NUMBER }, "contatenated number/bool" },
-        { "[1,2]", true, { type_t::ARRAY_BEGIN, type_t::NUMBER, type_t::NUMBER, type_t::ARRAY_END }, "two numbers" },
-        { "[1,]", false, { type_t::ARRAY_BEGIN, type_t::NUMBER }, "single trailing comma" },
-        { "[1,2,]", false, { type_t::ARRAY_BEGIN, type_t::NUMBER, type_t::NUMBER }, "double trailing comma" },
-        { "[,]", false, { type_t::ARRAY_BEGIN }, "only comma" },
-        { "[", false, { type_t::ARRAY_BEGIN }, "missing terminator" },
-        { "[[]]", true, { type_t::ARRAY_BEGIN, type_t::ARRAY_BEGIN, type_t::ARRAY_END, type_t::ARRAY_END }, "nested array" },
-        { "[[]", false, { type_t::ARRAY_BEGIN, type_t::ARRAY_END }, "unbalanced nested array" },
+        {
+            "[]",
+            true,
+            {
+                type_t::ARRAY_BEGIN,
+                type_t::ARRAY_END
+            },
+            "empty"
+        },
+        {
+            "[1]",
+            true,
+            {
+                type_t::ARRAY_BEGIN,
+                type_t::NUMBER,
+                type_t::ARRAY_END
+            },
+            "single number"
+        },
+        {
+            "[1true]",
+            false,
+            {
+                type_t::ARRAY_BEGIN,
+                type_t::NUMBER
+            },
+            "contatenated number/bool"
+        },
+        {
+            "[1,2]",
+            true,
+            {
+                type_t::ARRAY_BEGIN,
+                type_t::NUMBER,
+                type_t::NUMBER,
+                type_t::ARRAY_END
+            },
+            "two numbers"
+        },
+        {
+            "[1,]",
+            false,
+            {
+                type_t::ARRAY_BEGIN,
+                type_t::NUMBER
+            },
+            "single trailing comma"
+        },
+        {
+            "[1,2,]",
+            false,
+            {
+                type_t::ARRAY_BEGIN,
+                type_t::NUMBER,
+                type_t::NUMBER
+            },
+            "double trailing comma"
+        },
+        {
+            "[,]",
+            false,
+            {
+                type_t::ARRAY_BEGIN
+            },
+            "only comma"
+        },
+        {
+            "[",
+            false,
+            {
+                type_t::ARRAY_BEGIN
+            },
+            "missing terminator"
+        },
+        {
+            "[[]]",
+            true,
+            {
+                type_t::ARRAY_BEGIN,
+                type_t::ARRAY_BEGIN,
+                type_t::ARRAY_END,
+                type_t::ARRAY_END
+            },
+            "nested array"
+        },
+        {
+            "[[]",
+            false,
+            {
+                type_t::ARRAY_BEGIN,
+                type_t::ARRAY_END
+            },
+            "unbalanced nested array"
+        },
     };
 
     for (const auto &t: TESTS) {
@@ -199,12 +287,65 @@ test_objects (util::TAP::logger &tap)
         std::vector<std::string> strings;
         const char *message;
     } TESTS[] = {
-        { "{}", true, { type_t::OBJECT_BEGIN, type_t::OBJECT_END }, {}, "empty" },
-        { "{", false, { type_t::OBJECT_BEGIN }, {}, "missing terminator" },
-        { "{\"a\":1}", true, { type_t::OBJECT_BEGIN, type_t::STRING, type_t::NUMBER, type_t::OBJECT_END }, {"\"a\""}, "empty" },
-        { "{1:1}", false, { type_t::OBJECT_BEGIN }, {}, "integer key" },
-        { "{:1}", false, { type_t::OBJECT_BEGIN }, {}, "no key" },
-        { "{\"a\":}", false, { type_t::OBJECT_BEGIN, type_t::STRING }, {}, "no value" },
+        {
+            "{}",
+            true,
+            {
+                type_t::OBJECT_BEGIN,
+                type_t::OBJECT_END
+            },
+            {},
+            "empty"
+        },
+        {
+            "{",
+            false,
+            { type_t::OBJECT_BEGIN },
+            {},
+            "missing terminator"
+        },
+        {
+            R"json({"a":1})json",
+            true,
+            {
+                type_t::OBJECT_BEGIN,
+                type_t::STRING,
+                type_t::NUMBER,
+                type_t::OBJECT_END
+            },
+            {
+                "\"a\""
+            },
+            "empty"
+        },
+        {
+            "{1:1}",
+            false,
+            {
+                type_t::OBJECT_BEGIN
+            },
+            {},
+            "integer key"
+        },
+        {
+            "{:1}",
+            false,
+            {
+                type_t::OBJECT_BEGIN
+            },
+            {},
+            "no key"
+        },
+        {
+            R"json({"a":})json",
+            false,
+            {
+                type_t::OBJECT_BEGIN,
+                type_t::STRING
+            },
+            {},
+            "no value"
+        },
         {
             R"json({"a":[]})json",
             true,
@@ -229,7 +370,10 @@ test_objects (util::TAP::logger &tap)
                 type_t::OBJECT_END,
                 type_t::OBJECT_END
             },
-            { "\"a\"", "\"b\"" },
+            {
+                "\"a\"",
+                "\"b\""
+            },
             "recursive object"
         }
     };
@@ -261,6 +405,47 @@ test_objects (util::TAP::logger &tap)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+void
+test_jsonish (util::TAP::logger &tap)
+{
+    static const struct {
+        const char *data;
+        const char *message;
+    } TESTS[] = {
+        //{ "{}", "empty object" },
+        //{ "0xdeadbeef", "hex literal" },
+        //{ "0b11011100", "binary literal" },
+        //{ "0666", "octal literal" },
+        //{ "0.", "float without frac" },
+        //{ "+0.", "float with leading +" },
+        //{ "-0.", "float with leading -" },
+        //{ "string", "bare literal string" },
+        //{ "{foo: 1}", "bare string key" },
+        //{ "{foo: bar}", "bare string key and value" },
+        //{ "{foo: bar,}", "trailing object comma" },
+        //{ "[1,]", "trailing array comma" },
+        //{ "1 #comment", "trailing comment" },
+        { "#comment\n1", "leading comment" },
+    };
+
+    for (const auto &t: TESTS) {
+        bool success = true;
+        try {
+            util::json2::event::parse<util::json2::personality::jsonish> (
+                [] (auto) {},
+                t.data,
+                t.data + strlen (t.data)
+            );
+        } catch (const util::json2::error&) {
+            success = false;
+        }
+
+        tap.expect (success, "jsonish, %s", t.message);
+    }
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
 int
 main (void)
 {
@@ -271,6 +456,8 @@ main (void)
     test_strings (tap);
     test_arrays (tap);
     test_objects (tap);
+
+    test_jsonish (tap);
 
     return tap.status ();
 }

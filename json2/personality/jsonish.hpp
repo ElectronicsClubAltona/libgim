@@ -27,8 +27,10 @@
 namespace util::json2::personality {
     struct jsonish {
         static const char*
-        consume_whitespace [[nodiscard]] (const char *first, const char *last) noexcept
-        { return base<jsonish>::consume_whitespace (first, last); }
+        consume_whitespace [[nodiscard]] (
+            const char *first,
+            const char *last
+        ) noexcept;
 
 
         static const char*
@@ -43,7 +45,7 @@ namespace util::json2::personality {
             const std::function<callback_t> &cb,
             const char *first,
             const char *last
-        ) { return base<jsonish>::parse_number (cb, first, last); }
+        );
 
 
         template <int N>
@@ -61,7 +63,7 @@ namespace util::json2::personality {
             const std::function<callback_t> &cb,
             const char *first,
             const char *last
-        ) { return base<jsonish>::parse_string (cb, first, last); }
+        );
 
 
         static const char*
@@ -73,11 +75,26 @@ namespace util::json2::personality {
 
 
         static const char*
+        parse_key [[nodiscard]] (
+            const std::function<callback_t> &cb,
+            const char *first,
+            const char *last);
+
+
+        static const char*
         parse_object [[nodiscard]] (
             const std::function<callback_t> &cb,
             const char *first,
             const char *last
         ) { return base<jsonish>::parse_object (cb, first, last); }
+
+
+        static const char*
+        parse_unknown [[nodiscard]] (
+            const std::function<callback_t> &cb,
+            const char *first,
+            const char *last
+        ) { return parse_string (cb, first, last); }
     };
 };
 

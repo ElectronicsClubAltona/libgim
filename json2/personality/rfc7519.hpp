@@ -72,11 +72,27 @@ namespace util::json2::personality {
 
 
         static const char*
+        parse_key [[nodiscard]] (
+            const std::function<callback_t> &cb,
+            const char *first,
+            const char *last)
+        { return parse_string (cb, first, last); }
+
+
+        static const char*
         parse_object [[nodiscard]] (
             const std::function<callback_t> &cb,
             const char *first,
             const char *last
         ) { return base<rfc7159>::parse_object (cb, first, last); }
+
+
+        static const char *
+        parse_unknown [[noreturn]] (
+            const std::function<callback_t> &cb,
+            const char *first,
+            const char *last)
+        { throw base<rfc7159>::parse_unknown (cb, first, last); }
     };
 };
 

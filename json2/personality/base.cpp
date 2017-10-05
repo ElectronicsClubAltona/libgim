@@ -254,7 +254,7 @@ base<ParentT>::parse_object (const std::function<util::json2::callback_t> &cb,
     };
 
     auto parse_member = [] (auto _cb, auto _cursor, auto _last) {
-        _cursor = parse_string (_cb, _cursor, _last);
+        _cursor = ParentT::parse_key (_cb, _cursor, _last);
 
         _cursor = ParentT::consume_whitespace (_cursor, _last);
         _cursor = expect (_cursor, _last, ':');
@@ -294,6 +294,7 @@ base<ParentT>::parse_value (const std::function<util::json2::callback_t> &cb,
                             const char *last)
 {
     switch (*first) {
+    case '+':
     case '-':
     case '0'...'9':
         return ParentT::parse_number (cb, first, last);
@@ -309,8 +310,20 @@ base<ParentT>::parse_value (const std::function<util::json2::callback_t> &cb,
     case '{': return ParentT::parse_object (cb, first, last);
     }
 
-    throw util::json2::parse_error (first);
+    return ParentT::parse_unknown (cb, first, last);
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename ParentT>
+const char*
+base<ParentT>::parse_unknown (const std::function<util::json2::callback_t>&,
+                              const char *first,
+                              const char *last)
+{
+    (void)last;
+    throw parse_error {first};
+};
 
 
 

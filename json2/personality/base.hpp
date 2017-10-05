@@ -77,6 +77,13 @@ namespace util::json2::personality {
             const char *first,
             const char *last
         );
+
+        static const char*
+        parse_unknown [[noreturn]] (
+            const std::function<callback_t>&,
+            const char *first,
+            const char *last
+        );
     };
 };
 

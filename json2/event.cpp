@@ -42,7 +42,11 @@ packet::type (void) const noexcept
     case 'f':
         return type_t::BOOLEAN;
 
+    // TODO: leading plus isn't valid json, but other similar formats support
+    // this syntax and it's easier to claim it as a number globally here until
+    // we do a little refactoring.
     case '-':
+    case '+':
     case '0'...'9':
         return type_t::NUMBER;
     }
