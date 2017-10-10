@@ -216,7 +216,31 @@ namespace util {
     >
     constexpr
     matrix<R1,C2,T>
-    operator* (const matrix<R1,C1,T>&, const matrix<R2,C2,T>&);
+    operator* (const matrix<R1,C1,T> &a, const matrix<R2,C2,T> &b) noexcept
+    {
+        static_assert (R2 == C1);
+
+        matrix<R1,C2,T> res {0};
+
+        // TODO: iterating over r,c rather than c,r will cause an ICE with
+        // clang#xxxx: 'X86 DAG->DAG Instruction Selection'.
+        //
+        // this is likely related to gold and LTO support. for the time being
+        // we switch the orders because it appears to confuse the optimiser
+        // sufficiently. :(
+        for (size_t c = 0; c < C2; ++c) {
+            for (size_t r = 0; r < R1; ++r) {
+                T accum{0};
+
+                for (size_t i = 0; i < R2; ++i)
+                    accum += a[r][i] * b[i][c];
+
+                res[r][c] = accum;
+            }
+        }
+
+        return res;
+    }
 
 
     //-------------------------------------------------------------------------

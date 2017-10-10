@@ -100,29 +100,6 @@ MATRIX_SCALAR_OP(-)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <
-    std::size_t R1, std::size_t C1,
-    std::size_t R2, std::size_t C2,
-    typename T
->
-constexpr
-util::matrix<R1,C2,T>
-util::operator* (const matrix<R1,C1,T> &a, const matrix<R2,C2,T> &b)
-{
-    static_assert (R2 == C1);
-
-    matrix<R1,C2,T> res {0};
-
-    for (size_t r = 0; r < R1; ++r)
-        for (size_t c = 0; c < C2; ++c)
-            for (size_t i = 0; i < R2; ++i)
-                res[r][c] += a[r][i] * b[i][c];
-
-    return res;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 template <size_t Rows, size_t Cols, typename T>
 constexpr
 util::matrix<Rows,Cols,T>
