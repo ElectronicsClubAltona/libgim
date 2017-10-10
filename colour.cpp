@@ -456,6 +456,7 @@ util::to_string<util::colour<S,T>> (void);
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S(S)    \
 INSTANTIATE_S_T(S,uint8_t)  \
+INSTANTIATE_S_T(S,uint16_t) \
 INSTANTIATE_S_T(S,float)    \
 INSTANTIATE_S_T(S,double)
 
