@@ -384,12 +384,9 @@ namespace json::tree {
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 std::ostream&
-util::operator<< (std::ostream &os, util::colour<S,T> c) {
-    os << "colour(";
-    for (size_t i = 0; i < S - 1; ++i)
-        os << +c[i] << ", ";
-    os << +c[S-1] << ")";
-    return os;
+util::operator<< (std::ostream &os, util::colour<S,T> c)
+{
+    return os << "[ " << util::make_infix (util::numeric_view (c), ", ") << ']';
 }
 
 
@@ -438,7 +435,9 @@ util::operator>> (std::istream &is, util::colour<S,T> &c)
     return is;
 }
 
+//-----------------------------------------------------------------------------
 template std::istream& util::operator>> (std::istream&, util::colour<3,uint8_t>&);
+
 
 ///////////////////////////////////////////////////////////////////////////////
 #define INSTANTIATE_S_T(S,T)                            \
