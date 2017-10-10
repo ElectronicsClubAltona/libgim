@@ -788,7 +788,7 @@ namespace util::format::detail {
                 "0123456789abcdef";
 
             char buffer[numerals];
-            size_t remain = numerals;
+            auto remain = numerals;
 
             for (auto cursor = buffer; remain--; t /= spec.base)
                 *cursor++ = NUMERALS[t % spec.base];
