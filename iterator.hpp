@@ -20,6 +20,7 @@
 
 #include "types/traits.hpp"
 #include "variadic.hpp"
+#include "view.hpp"
 
 
 template <typename Base>
@@ -151,6 +152,70 @@ namespace util {
     {
         return detail::infix_t<ContainerT,CharT> { _container, _delimiter };
     };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    template <typename IteratorT>
+    struct numeric_iterator : public std::iterator<
+        typename std::iterator_traits<IteratorT>::iterator_category,
+        decltype (+std::declval<typename std::iterator_traits<IteratorT>::value_type> ()),
+        typename std::iterator_traits<IteratorT>::difference_type,
+        typename std::iterator_traits<IteratorT>::pointer,
+        typename std::iterator_traits<IteratorT>::reference
+    > {
+        static_assert (std::is_arithmetic_v<typename std::iterator_traits<numeric_iterator>::value_type>);
+
+        explicit numeric_iterator (IteratorT _inner):
+            m_inner (_inner)
+        { ; }
+
+        auto operator++ (void) { ++m_inner; return *this; }
+
+        auto
+        operator- (const numeric_iterator &rhs) const
+        {
+            return typename std::iterator_traits<IteratorT>::difference_type { m_inner - rhs.m_inner };
+        }
+
+        auto
+        operator* (void) const
+        {
+            return +*m_inner;
+        }
+
+        auto operator== (const numeric_iterator &rhs) const { return m_inner == rhs.m_inner; }
+        auto operator!= (const numeric_iterator &rhs) const { return m_inner != rhs.m_inner; }
+
+    private:
+        IteratorT m_inner;
+    };
+
+
+    //-------------------------------------------------------------------------
+    // convenience function that constructs a view of numeric_iterators for a
+    // provided container
+    template <typename ContainerT>
+    auto
+    numeric_view (ContainerT &data)
+    {
+        return util::view {
+            numeric_iterator (std::begin (data)),
+            numeric_iterator (std::end   (data))
+        };
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename ContainerT>
+    auto
+    numeric_view (const ContainerT &data)
+    {
+        return util::view {
+            numeric_iterator (std::begin (data)),
+            numeric_iterator (std::end   (data))
+        };
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////
