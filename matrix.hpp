@@ -31,22 +31,81 @@ namespace util {
 
         T values[Rows][Cols];
 
+        ///////////////////////////////////////////////////////////////////////
         // index operators return a pointer into the data array so that
         // multidimensional array syntax can be used transparently on this
         // type.
-        T* operator[] (size_t);
-        const T* operator[] (size_t) const;
+        constexpr T*
+        operator[] (size_t idx) noexcept
+        {
+            return this->values[idx];
+        }
 
-        T* data (void);
-        const T* data (void) const;
+        //---------------------------------------------------------------------
+        constexpr const T*
+        operator[] (size_t idx) const noexcept
+        {
+            return this->values[idx];
+        }
 
-        const T* begin (void) const;
-        const T* end   (void) const;
-        T* begin (void);
-        T* end   (void);
-        const T* cbegin (void) const;
-        const T* cend   (void) const;
+        //---------------------------------------------------------------------
+        constexpr T*
+        data (void) noexcept
+        {
+            return begin ();
+        }
 
+        //---------------------------------------------------------------------
+        constexpr const T*
+        data (void) const noexcept
+        {
+            return begin ();
+        }
+
+        //---------------------------------------------------------------------
+        constexpr const T*
+        begin (void) const noexcept
+        {
+            return &(*this)[0][0];
+        }
+
+        //---------------------------------------------------------------------
+        constexpr const T*
+        end (void) const noexcept
+        {
+            return &(*this)[Rows][0];
+        }
+
+        //---------------------------------------------------------------------
+        constexpr T*
+        begin (void) noexcept
+        {
+            return &(*this)[0][0];
+        }
+
+        //---------------------------------------------------------------------
+        constexpr T*
+        end (void) noexcept
+        {
+            return &(*this)[Rows][0];
+        }
+
+        //---------------------------------------------------------------------
+        constexpr auto
+        cbegin (void) const noexcept
+        {
+            return begin ();
+        }
+
+        //---------------------------------------------------------------------
+        constexpr auto
+        cend (void) const noexcept
+        {
+            return end ();
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////
         T determinant (void) const;
 
         matrix inverse (void) const;
@@ -58,6 +117,8 @@ namespace util {
             return inverse ();
         }
 
+
+        ///////////////////////////////////////////////////////////////////////
         vector<Rows,T> operator* (const vector<Rows,T>&) const;
         point<Rows,T>  operator* (const point<Rows,T> &) const;
 
@@ -65,7 +126,12 @@ namespace util {
 
         template <typename U>
         matrix<Rows,Cols,U>
-        cast (void) const;
+        cast (void) const
+        {
+            util::matrix<Rows,Cols,T> out;
+            std::copy (cbegin (), cend (), std::begin (out));
+            return out;
+        }
 
         // Perspective matrices
         static matrix<4,4,T> ortho   (T left, T right, T bottom, T top, T near, T far);
