@@ -27,11 +27,12 @@ struct has_return_type<
 
 
 ///////////////////////////////////////////////////////////////////////////////
-int plain (char, float);
-int with_noexcept (char, float) noexcept;
+extern int plain (char, float) { return 0; }
+extern int with_noexcept (char, float) noexcept { return 0; }
+
 struct foo {
-    int bar (double, char) const;
-    int with_noexcept (double, char) noexcept;
+    int bar (double, char) const { return 0; }
+    int with_noexcept (double, char) noexcept { return 0; }
 };
 
 
