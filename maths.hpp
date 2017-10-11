@@ -764,32 +764,48 @@ namespace util {
 
     //-------------------------------------------------------------------------
     // lo_uint -> hi_uint
-    template <typename T, typename U>
-    constexpr
-    typename std::enable_if<
-        std::is_unsigned<T>::value &&
-        std::is_unsigned<U>::value &&
-        sizeof (T) < sizeof (U), U
-    >::type
-    renormalise (T t)
+    template <
+        typename SrcT,
+        typename DstT,
+        typename = std::enable_if_t<
+            std::is_unsigned<SrcT>::value &&
+            std::is_unsigned<DstT>::value &&
+            sizeof (SrcT) < sizeof (DstT), DstT
+        >
+    >
+    constexpr DstT
+    renormalise (SrcT src)
     {
-        static_assert (sizeof (T) < sizeof (U),
+        // we can make some simplifying assumptions for the shift distances if
+        // we assume the integers are powers of two. this is probably going to
+        // be the case for every conceivable input type, but we don't want to
+        // get caught out if we extend this routine to more general types
+        // (eg, OpenGL DEPTH24).
+        static_assert (is_pow2 (sizeof (SrcT)));
+        static_assert (is_pow2 (sizeof (DstT)));
+
+        static_assert (sizeof (SrcT) < sizeof (DstT),
                        "assumes bit creation is required to fill space");
 
         // we need to create bits. fill the output integer with copies of ourself.
         // this is approximately correct in the general case (introducing a small
-        // linear positive bias), but allows us to fill the output space in the
-        // case of input maximum.
-
-        static_assert (sizeof (U) % sizeof (T) == 0,
+        // linear positive bias), but it allows us to set all output bits high
+        // when we receive the maximum allowable input value.
+        static_assert (sizeof (DstT) % sizeof (SrcT) == 0,
                        "assumes integer multiple of sizes");
 
-        U out = 0;
 
-        for (size_t i = 0; i < sizeof (U) / sizeof (T); ++i)
-            out |= U (t) << sizeof (T) * 8 * i;
-
-        return out;
+        // clang#xxxx: ideally we wouldn't use a multiplication here, but we
+        // trigger a segfault in clang-5.0 when using ld.gold+lto;
+        // 'X86 DAG->DAG Instruction Selection'
+        //
+        // create a mask of locations we'd like copies of the src bit pattern.
+        //
+        // this replicates repeatedly or'ing and shifting dst with itself.
+        DstT dst { 1 };
+        for (unsigned i = sizeof (SrcT) * 8; i < sizeof (DstT) * 8; i *= 2)
+            dst |= dst << i;
+        return dst * src;
     }
 
 
