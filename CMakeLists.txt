@@ -495,6 +495,7 @@ if (TESTS)
         crypto/tea
         crypto/xtea
         crypto/xxtea
+        endian
         exe
         extent
         fixed
