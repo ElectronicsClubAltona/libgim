@@ -103,6 +103,56 @@ test_euler (util::TAP::logger &tap)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+void
+test_spherical (util::TAP::logger &tap)
+{
+    static constexpr struct {
+        util::vector3f spherical;
+        util::vector3f cartesian;
+        const char *message;
+    } TESTS[] = {
+        { {  1,  0,  0 }, {  0,  0,  1 }, "+zero", },
+        { { -1,  0,  0 }, {  0,  0, -1 }, "-zero", },
+
+        { {  1,  1,  0 }, {  1,  0,  0 }, "90-theta", },
+        { {  1,  2,  0 }, {  0,  0, -1 }, "180-theta", },
+        { {  1,  3,  0 }, { -1,  0,  0 }, "270-theta", },
+
+        { {  1,  0,  1 }, {  0,  0,  1 }, "90-phi", },
+        { {  1,  0,  2 }, {  0,  0,  1 }, "180-phi", },
+        { {  1,  0,  3 }, {  0,  0,  1 }, "270-phi", },
+
+        { {  1,  1,  1 }, {  0,  1,  0 }, "90-theta,  90-phi" },
+        { {  1,  1,  2 }, { -1,  0,  0 }, "90-theta, 180-phi" },
+        { {  1,  1,  3 }, {  0, -1,  0 }, "90-theta, 270-phi" },
+    };
+
+    for (const auto t: TESTS) {
+        tap.expect_eq (
+            util::spherical_to_cartesian (t.spherical),
+            t.cartesian,
+            "%s, spherical-cartesian",
+            t.message
+        );
+
+        tap.expect_eq (
+            util::cartesian_to_spherical (t.cartesian),
+            t.spherical,
+            "%s, cartesian-spherical",
+            t.message
+        );
+    }
+
+
+    {
+        //util::vector3f s { 1, .5f, 2/3.f };
+        //util::vector3f c { 0.35f, 0.61f, 0.71f };
+        //tap.expect_eq
+    }
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
 int
 main ()
 {
@@ -110,6 +160,7 @@ main ()
 
     test_polar (tap);
     test_euler (tap);
+    test_spherical (tap);
 
     tap.expect (!is_normalised (util::vector3f::zeros ()), "zeros isn't normalised");
     tap.expect (!is_normalised (util::vector3f::ones  ()), "ones isn't normalised");

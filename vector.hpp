@@ -23,6 +23,7 @@
 #include "json/fwd.hpp"
 
 #include <cstddef>
+#include <cmath>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,8 +57,32 @@ namespace util {
     template <typename T> vector<2,T> polar_to_cartesian (vector<2,T>);
     template <typename T> vector<2,T> cartesian_to_polar (vector<2,T>);
 
-    template <typename T> vector<3,T> spherical_to_cartesian (vector<3,T>);
-    template <typename T> vector<3,T> cartesian_to_spherical (vector<3,T>);
+    // convert vector in spherical coordinates (r,theta,phi) with theta
+    // inclination and phi azimuth to cartesian coordinates (x,y,z)
+    template <typename T>
+    constexpr vector<3,T>
+    spherical_to_cartesian (const vector<3,T> s)
+    {
+        return {
+            s.x * std::sin (s.y) * std::cos (s.z),
+            s.x * std::sin (s.y) * std::sin (s.z),
+            s.x * std::cos (s.y)
+        };
+    }
+
+    // convert vector in cartesian coordinates (x,y,z) to spherical
+    // coordinates (r,theta,phi) with theta inclination and phi azimuth.
+    template <typename T>
+    constexpr vector<3,T>
+    cartesian_to_spherical (vector<3,T> c)
+    {
+        auto r = norm (c);
+        return {
+            r,
+            std::acos (c.z / r),
+            std::atan (c.y / c.z)
+        };
+    }
 
     template <typename T> vector<2,T> to_euler   (vector<3,T>);
     template <typename T> vector<3,T> from_euler (vector<2,T>);

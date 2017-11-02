@@ -84,34 +84,6 @@ template util::vector2f util::to_euler (util::vector3f);
 template util::vector2d util::to_euler (util::vector3d);
 
 
-//-----------------------------------------------------------------------------
-template <typename T>
-vector<3,T>
-util::spherical_to_cartesian (vector<3,T> s)
-{
-    return vector<3,T> {
-        s.x * sin (s.y) * cos (s.z),
-        s.x * sin (s.y) * sin (s.z),
-        s.x * cos (s.y),
-    };
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-vector<3,T>
-util::cartesian_to_spherical (vector<3,T> c)
-{
-    T mag = norm (c);
-
-    return vector<3,T> {
-        mag,
-        acos  (c.z / mag),
-        atan2 (c.y, c.x)
-    };
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 void
