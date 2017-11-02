@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "tap.hpp"
@@ -23,6 +23,11 @@ using util::TAP::logger;
 
 ///////////////////////////////////////////////////////////////////////////////
 logger::logger ():
+    logger (std::cout)
+{ ; }
+
+logger::logger (std::ostream &_output):
+    m_output (_output),
     m_status (EXIT_SUCCESS),
     m_size (0)
 { ; }

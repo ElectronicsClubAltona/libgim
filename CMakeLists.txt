@@ -402,7 +402,6 @@ list (
     strongdef.hpp
     tap.cpp
     tap.hpp
-    tap.ipp
     term.cpp
     term.hpp
     time.cpp
