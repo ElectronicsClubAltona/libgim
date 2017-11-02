@@ -3,6 +3,7 @@
 #include "debug.hpp"
 #include "tap.hpp"
 
+#include <iostream>
 #include <cstdlib>
 #include <cmath>
 #include <limits>
