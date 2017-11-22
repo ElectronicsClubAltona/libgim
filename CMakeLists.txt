@@ -29,8 +29,6 @@ RAGEL_TARGET(json-flat json/flat.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/json/flat.cp
 RAGEL_TARGET(uri uri.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/uri.cpp)
 RAGEL_TARGET(version version.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
 
 ###############################################################################
 set (UTIL_FILES)
@@ -72,16 +70,6 @@ elseif (WIN32)
 else ()
     message (FATAL_ERROR "unhandled platform")
 endif ()
-
-
-###############################################################################
-# platform libraries
-search_libs (SHM_LIBS shm_open rt)
-search_libs (DL_LIBS dlopen dl)
-search_libs (CLOCK_LIB clock_gettime rt c)
-search_libs (MATH_LIB cos m)
-
-list (APPEND LIBS ${SHM_LIBS} ${DL_LIBS} ${CLOCK_LIB} ${MATH_LIB})
 
 
 ###############################################################################
@@ -415,9 +403,23 @@ list (
     view.hpp
 )
 
+
 ###############################################################################
 add_library(cruft-util ${UTIL_FILES})
-target_link_libraries (cruft-util ${LIBS})
+target_link_libraries (cruft-util PUBLIC ${LIBS})
+target_include_directories(cruft-util PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+
+###############################################################################
+# platform libraries
+search_libs (SHM_LIBS shm_open rt)
+search_libs (DL_LIBS dlopen dl)
+search_libs (CLOCK_LIBS clock_gettime rt c)
+search_libs (MATH_LIBS cos m)
+
+target_link_libraries(cruft-util PUBLIC ${SHM_LIBS})
+target_link_libraries(cruft-util PUBLIC ${DL_LIBS})
+target_link_libraries(cruft-util PUBLIC ${CLOCK_LIBS})
+target_link_libraries(cruft-util PUBLIC ${MATH_LIBS})
 
 
 ###############################################################################
@@ -425,6 +427,7 @@ foreach (tool hash json-clean json-schema json-validate scratch)
     add_executable (util_${tool} tools/${tool}.cpp)
     set_target_properties (util_${tool} PROPERTIES OUTPUT_NAME ${tool})
     target_link_libraries (util_${tool} cruft-util)
+    target_include_directories(util_${tool} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 endforeach ()
 
 
@@ -512,6 +515,7 @@ if (TESTS)
         string(REPLACE "/" "_" name "test/${t}")
         add_executable(util_${name} test/${t}.cpp)
         target_link_libraries(util_${name} PRIVATE cruft-util)
+        target_include_directories(util_${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
         add_test(NAME util_${name} COMMAND util_${name})
     endforeach(t)
 endif ()
