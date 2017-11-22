@@ -11,13 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_COORDS_OPS
 #define __UTIL_COORDS_OPS
 
-#include "./fwd.hpp"
+#include "fwd.hpp"
 
 #include "../debug.hpp"
 #include "../maths.hpp"

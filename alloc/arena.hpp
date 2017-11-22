@@ -66,6 +66,6 @@ namespace util::alloc {
     };
 }
 
-#include "./arena.ipp"
+#include "arena.ipp"
 
 #endif

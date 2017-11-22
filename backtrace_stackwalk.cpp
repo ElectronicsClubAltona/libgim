@@ -14,11 +14,11 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./backtrace.hpp"
+#include "backtrace.hpp"
 
-#include "./debug.hpp"
-#include "./except.hpp"
-#include "./types.hpp"
+#include "debug.hpp"
+#include "except.hpp"
+#include "types.hpp"
 
 #include <windows.h>
 #include <dbghelp.h>

@@ -17,8 +17,8 @@
 #ifndef __UTIL_INTROSPECTION_HPP
 #define __UTIL_INTROSPECTION_HPP
 
-#include "./preprocessor.hpp"
-#include "./variadic.hpp"
+#include "preprocessor.hpp"
+#include "variadic.hpp"
 
 #include <array>
 #include <cstddef>

@@ -17,9 +17,9 @@
 #ifndef __UTIL_FIXED_HPP
 #define __UTIL_FIXED_HPP
 
-#include "./types/bits.hpp"
-#include "./maths.hpp"
-#include "./endian.hpp"
+#include "types/bits.hpp"
+#include "maths.hpp"
+#include "endian.hpp"
 
 #include <ostream>
 

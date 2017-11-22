@@ -21,7 +21,7 @@
 // Software Encryption - Fourth International Workshop, Haifa, Israel,
 // Springer-Verlag, pp. 69-82, 1997
 
-#include "./ice.hpp"
+#include "ice.hpp"
 
 #include "../endian.hpp"
 #include "../debug.hpp"

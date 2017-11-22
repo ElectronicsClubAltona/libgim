@@ -14,11 +14,11 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./xxhash.hpp"
+#include "xxhash.hpp"
 
-#include "./debug.hpp"
-#include "./bitwise.hpp"
-#include "./endian.hpp"
+#include "../bitwise.hpp"
+#include "../debug.hpp"
+#include "../endian.hpp"
 
 using util::hash::xxhash;
 

@@ -17,7 +17,7 @@
 #ifndef __CRUFT_UTIL_POSIX_HPP
 #define __CRUFT_UTIL_POSIX_HPP
 
-#include "./fd.hpp"
+#include "fd.hpp"
 
 #include <sys/mman.h>
 #include <cstdint>

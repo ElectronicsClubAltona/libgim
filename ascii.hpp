@@ -17,7 +17,7 @@
 #ifndef __CRUFT_UTIL_ASCII_HPP
 #define __CRUFT_UTIL_ASCII_HPP
 
-#include "./annotation.hpp"
+#include "annotation.hpp"
 
 #include <cstdint>
 #include <stdexcept>

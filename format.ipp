@@ -14,9 +14,9 @@
  * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./ascii.hpp"
-#include "./debug.hpp"
-#include "./maths.hpp"
+#include "ascii.hpp"
+#include "debug.hpp"
+#include "maths.hpp"
 
 #include <cstring>
 #include <cstddef>

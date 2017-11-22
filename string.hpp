@@ -17,7 +17,7 @@
 #ifndef __UTIL_STRING_HPP
 #define __UTIL_STRING_HPP
 
-#include "./view.hpp"
+#include "view.hpp"
 
 
 namespace util {

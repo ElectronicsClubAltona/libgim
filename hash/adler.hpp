@@ -17,7 +17,7 @@
 #ifndef __UTIL_HASH_ADLER_HPP
 #define __UTIL_HASH_ADLER_HPP
 
-#include "./fletcher.hpp"
+#include "fletcher.hpp"
 
 #include <cstdint>
 

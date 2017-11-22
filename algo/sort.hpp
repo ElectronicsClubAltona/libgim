@@ -44,6 +44,6 @@ namespace cruft::util::sort {
     soa (RandomIt key_first, RandomIt key_last, Comparator comp, Args ...values);
 }
 
-#include "./sort.ipp"
+#include "sort.ipp"
 
 #endif

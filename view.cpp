@@ -14,7 +14,7 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./view.hpp"
+#include "view.hpp"
 
 #include <iterator>
 

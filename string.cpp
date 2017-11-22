@@ -14,7 +14,7 @@
  * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./string.hpp"
+#include "string.hpp"
 
 #include <cstring>
 #include <codecvt>

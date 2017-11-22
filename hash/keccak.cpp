@@ -1,4 +1,4 @@
-#include "./keccak.hpp"
+#include "keccak.hpp"
 
 #include "../endian.hpp"
 #include "../maths.hpp"

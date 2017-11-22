@@ -116,11 +116,11 @@ namespace util {
 }
 
 #ifdef PLATFORM_WIN32
-#include "./io_win32.hpp"
+#include "io_win32.hpp"
 #else
-#include "./io_posix.hpp"
+#include "io_posix.hpp"
 #endif
 
-#include "./io.ipp"
+#include "io.ipp"
 
 #endif

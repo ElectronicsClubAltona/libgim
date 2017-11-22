@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./dir.hpp"
+#include "dir.hpp"
 
 #include "../except.hpp"
 

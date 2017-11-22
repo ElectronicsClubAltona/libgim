@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./matrix.hpp"
+#include "matrix.hpp"
 
 using util::matrix;
 

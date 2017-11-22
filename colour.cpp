@@ -14,12 +14,12 @@
  * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./colour.hpp"
+#include "colour.hpp"
 
-#include "./ascii.hpp"
-#include "./debug.hpp"
-#include "./log.hpp"
-#include "./range.hpp"
+#include "ascii.hpp"
+#include "debug.hpp"
+#include "log.hpp"
+#include "range.hpp"
 
 #include <array>
 #include <map>

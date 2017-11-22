@@ -14,11 +14,11 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./debug.hpp"
+#include "debug.hpp"
 
-#include "./except.hpp"
-#include "./log.hpp"
-#include "./except.hpp"
+#include "except.hpp"
+#include "log.hpp"
+#include "except.hpp"
 
 #include <windows.h>
 #include <iostream>

@@ -14,10 +14,10 @@
  * Copyright 2014 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./io_win32.hpp"
+#include "io_win32.hpp"
 
-#include "./debug.hpp"
-#include "./except.hpp"
+#include "debug.hpp"
+#include "except.hpp"
 
 #include <windows.h>
 

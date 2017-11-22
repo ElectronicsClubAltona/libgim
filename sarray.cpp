@@ -14,4 +14,4 @@
  * Copyright 2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./sarray.hpp"
+#include "sarray.hpp"

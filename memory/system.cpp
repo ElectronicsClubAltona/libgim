@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./system.hpp"
+#include "system.hpp"
 
 #include "../except.hpp"
 #include "../cast.hpp"

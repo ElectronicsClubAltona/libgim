@@ -14,4 +14,4 @@
  * Copyright 2016, Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./simple.hpp"
+#include "simple.hpp"

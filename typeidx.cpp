@@ -14,7 +14,7 @@
  * Copyright 2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./typeidx.hpp"
+#include "typeidx.hpp"
 
 
 ///////////////////////////////////////////////////////////////////////////////

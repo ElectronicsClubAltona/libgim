@@ -31,7 +31,7 @@ namespace util::hash::murmur2 {
     uint64_t hash_64 (const void *restrict data, size_t len, uint64_t seed);
 }
 
-#include "./murmur2.ipp"
+#include "murmur2.ipp"
 
 #endif
 

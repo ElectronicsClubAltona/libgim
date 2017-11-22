@@ -1,6 +1,6 @@
-#include "./tap.hpp"
+#include "../tap.hpp"
 
-#include "./exe.hpp"
+#include "../exe.hpp"
 
 #include <iostream>
 

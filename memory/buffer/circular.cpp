@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./circular.hpp"
+#include "circular.hpp"
 
 #include "../system.hpp"
 #include "../../debug.hpp"

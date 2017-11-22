@@ -21,8 +21,8 @@
 // it triggers a circular dependency; debug -> format -> maths -> debug
 // instead, just use cassert
 
-#include "./types/traits.hpp"
-#include "./float.hpp"
+#include "types/traits.hpp"
+#include "float.hpp"
 
 #include <algorithm>
 #include <cassert>

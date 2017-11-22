@@ -15,9 +15,9 @@
  */
 
 
-#include "./aabb.hpp"
+#include "aabb.hpp"
 
-#include "./iostream.hpp"
+#include "iostream.hpp"
 #include "../coord/iostream.hpp"
 #include "../debug.hpp"
 

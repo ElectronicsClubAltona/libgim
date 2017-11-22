@@ -17,8 +17,8 @@
 #ifndef __UTIL_JSON_TREE_HPP
 #define __UTIL_JSON_TREE_HPP
 
-#include "./flat.hpp"
-#include "./fwd.hpp"
+#include "flat.hpp"
+#include "fwd.hpp"
 
 #include "../iterator.hpp"
 #include "../view.hpp"

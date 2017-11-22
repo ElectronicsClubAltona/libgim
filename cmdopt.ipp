@@ -23,8 +23,8 @@
 #include <iterator>
 #include <sstream>
 
-#include "./introspection.hpp"
-#include "./iterator.hpp"
+#include "introspection.hpp"
+#include "iterator.hpp"
 
 namespace util::cmdopt {
     ///////////////////////////////////////////////////////////////////////////

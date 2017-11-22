@@ -15,11 +15,11 @@
  */
 
 
-#include "./region.hpp"
+#include "region.hpp"
 
-#include "./debug.hpp"
+#include "debug.hpp"
 
-#include "./coord/iostream.hpp"
+#include "coord/iostream.hpp"
 
 #include <array>
 

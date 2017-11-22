@@ -16,10 +16,10 @@
 
 #include "io.hpp"
 
+#include "cast.hpp"
 #include "debug.hpp"
 #include "except.hpp"
 #include "posix/fd.hpp"
-#include "./cast.hpp"
 
 #include <sys/stat.h>
 

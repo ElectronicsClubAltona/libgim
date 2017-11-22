@@ -14,7 +14,7 @@
  * Copyright 2013 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./sha1.hpp"
+#include "sha1.hpp"
 
 #include "../bitwise.hpp"
 #include "../debug.hpp"

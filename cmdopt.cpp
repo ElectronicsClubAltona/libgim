@@ -14,10 +14,10 @@
  * Copyright 2013-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./cmdopt.hpp"
+#include "cmdopt.hpp"
 
-#include "./cast.hpp"
-#include "./debug.hpp"
+#include "cast.hpp"
+#include "debug.hpp"
 
 #include <cstring>
 #include <iostream>

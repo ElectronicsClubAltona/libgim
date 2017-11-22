@@ -17,11 +17,12 @@
 #ifndef __UTIL_TIME_HPP
 #define __UTIL_TIME_HPP
 
+#include "stats.hpp"
+
 #include <chrono>
 #include <cstdint>
 #include <string>
 
-#include "./stats.hpp"
 
 namespace util {
     // ------------------------------------------------------------------------
@@ -89,6 +90,6 @@ namespace util {
     };
 }
 
-#include "./time.ipp"
+#include "time.ipp"
 
 #endif // __UTIL_TIME_HPP

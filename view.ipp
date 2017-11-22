@@ -20,9 +20,10 @@
 #endif
 #define __UTIL_VIEW_IPP
 
+#include "view.hpp"
 
-#include "./debug.hpp"
-#include "./iterator.hpp"
+#include "debug.hpp"
+#include "iterator.hpp"
 
 
 ///////////////////////////////////////////////////////////////////////////////

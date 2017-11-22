@@ -14,10 +14,10 @@
  * Copyright 2010 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./except.hpp"
+#include "except.hpp"
 
-#include "./debug.hpp"
-#include "./platform.hpp"
+#include "debug.hpp"
+#include "platform.hpp"
 
 #include <cstring>
 #include <cerrno>

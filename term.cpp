@@ -14,9 +14,9 @@
  * Copyright 2016-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./term.hpp"
+#include "term.hpp"
 
-#include "./string.hpp"
+#include "string.hpp"
 
 #include <experimental/filesystem>
 #include <cstdlib>

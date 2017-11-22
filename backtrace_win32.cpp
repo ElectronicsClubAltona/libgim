@@ -15,11 +15,11 @@
  *      2012-2016, Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./backtrace.hpp"
+#include "backtrace.hpp"
 
-#include "./win32/handle.hpp"
-#include "./debug.hpp"
-#include "./except.hpp"
+#include "win32/handle.hpp"
+#include "debug.hpp"
+#include "except.hpp"
 
 #include <cstdlib>
 #include <windows.h>

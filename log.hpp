@@ -17,8 +17,8 @@
 #ifndef __UTIL_LOG_HPP
 #define __UTIL_LOG_HPP
 
-#include "./nocopy.hpp"
-#include "./preprocessor.hpp"
+#include "nocopy.hpp"
+#include "preprocessor.hpp"
 
 #include <ostream>
 #include <string>

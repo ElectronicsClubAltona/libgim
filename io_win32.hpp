@@ -17,9 +17,9 @@
 #ifndef __UTIL_IO_WIN32_HPP
 #define __UTIL_IO_WIN32_HPP
 
-#include "./io.hpp"
-#include "./win32/handle.hpp"
-#include "./view.hpp"
+#include "io.hpp"
+#include "win32/handle.hpp"
+#include "view.hpp"
 
 #include <cstdint>
 #include <experimental/filesystem>

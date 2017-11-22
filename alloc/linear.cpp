@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./linear.hpp"
+#include "linear.hpp"
 
 #include "../pointer.hpp"
 #include "../debug.hpp"

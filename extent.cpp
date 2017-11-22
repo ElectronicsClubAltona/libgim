@@ -14,10 +14,10 @@
  * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./extent.hpp"
+#include "extent.hpp"
 
-#include "./debug.hpp"
-#include "./maths.hpp"
+#include "debug.hpp"
+#include "maths.hpp"
 
 #include <algorithm>
 #include <numeric>

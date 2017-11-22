@@ -20,7 +20,7 @@
 
 #define __UTIL_DEBUG_IPP
 
-#include "./format.hpp"
+#include "format.hpp"
 
 #include <limits>
 

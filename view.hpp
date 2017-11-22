@@ -18,7 +18,7 @@
 #ifndef __UTIL_VIEW_HPP
 #define __UTIL_VIEW_HPP
 
-#include "./types/traits.hpp"
+#include "types/traits.hpp"
 
 #include <cstdlib>
 #include <ostream>
@@ -133,6 +133,6 @@ namespace util {
     operator<< (std::ostream&, view<T>);
 }
 
-#include "./view.ipp"
+#include "view.ipp"
 
 #endif

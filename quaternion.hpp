@@ -126,6 +126,6 @@ namespace util {
     operator<< (std::ostream&, quaternion<T>);
 }
 
-#include "./quaternion.ipp"
+#include "quaternion.ipp"
 
 #endif

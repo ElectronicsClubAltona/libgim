@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./paged.hpp"
+#include "paged.hpp"
 
 #include "../system.hpp"
 #include "../../except.hpp"
