@@ -6,8 +6,12 @@ int
 main (int, char**)
 {
     util::TAP::logger tap;
-    
-    const char csv[] = "\0,a,123,,this is a test,";
+
+    // the string_literal prefix is required to (easily) construct a string
+    // with an internal null character.
+    using namespace std::literals::string_literals;
+    const std::string csv = "\0,a,123,,this is a test,"s;
+
     const std::string values[] = {
         { "\0", 1 },
         { "a" },
@@ -17,8 +21,7 @@ main (int, char**)
         { "" }
     };
 
-    std::string str (std::cbegin (csv), std::cbegin (csv) + std::size (csv));
-    auto tok = util::make_tokeniser (str, ',');
+    auto tok = util::make_tokeniser (csv, ',');
     auto t_cursor = tok.cbegin ();
     auto v_cursor = std::cbegin (values);
 

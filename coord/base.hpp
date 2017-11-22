@@ -17,44 +17,56 @@
 #ifndef __UTIL_COORD_BASE_HPP
 #define __UTIL_COORD_BASE_HPP
 
+#include "fwd.hpp"
+
 #include "init.hpp"
+#include "traits.hpp"
 #include "../maths.hpp"
 
 #include <algorithm>
 #include <cstdlib>
 #include <type_traits>
 
+
 namespace util::coord {
     /////////////////////////////////////////////////////////////////////////
+    // the base class for all coordinate-like types.
+    //
+    // SelfT should not be exposed as a template template directly because
+    // some types (eg, XYZ colours) do not conform to the same template
+    // parameters are others (eg, vector2f). ie, it does not make sense to
+    // allow redim, or type changing on some types so they just aren't exposed.
     template <
         size_t S,
         typename T,
-        template <size_t, typename> class KLASS,
-        typename ...tags
+        typename SelfT
     >
-    struct base : public init<S,T,tags...> {
+    struct base : public init<S,T,SelfT> {
         static_assert (S > 0);
         static_assert (std::is_arithmetic<T>::value);
+        static_assert (sizeof (init<S,T,SelfT>) == S * sizeof (T));
 
         using value_type = T;
         static constexpr size_t dimension = S;
         static constexpr size_t elements = S;
 
-        static constexpr size_t size (void) { return S; }
+        static constexpr auto size (void) { return S; }
 
         // constructors
-        using init<S,T,tags...>::init;
+        using init<S,T,SelfT>::init;
         base () = default;
 
         constexpr explicit base (T val)
         { std::fill (begin (), end (), val); }
 
-        constexpr base (const base<S,T,KLASS,tags...> &rhs) = default;
-        base& operator= (const base<S,T,KLASS,tags...> &rhs) = default;
+        constexpr base (const base<S,T,SelfT> &rhs) = default;
+        base& operator= (const base<S,T,SelfT> &rhs) = default;
 
         // element accessors
         T& operator[] (size_t i) { return this->data[i]; }
         constexpr const T& operator[] (size_t i) const { return this->data[i]; }
+        T& operator[] (int i) { return this->data[i]; }
+        constexpr const T& operator[] (int i) const { return this->data[i]; }
 
         auto cbegin (void) const { return std::cbegin (this->data); }
         auto cend   (void) const { return std::cend   (this->data); }
@@ -81,12 +93,28 @@ namespace util::coord {
             return k;
         }
 
+
+        //---------------------------------------------------------------------
+        template <
+            typename K,
+            typename = std::enable_if_t<is_coord_v<K>,void>
+        >
+        K as (void) const
+        {
+            static_assert (K::elements == elements);
+            K k;
+            std::copy (begin (), end (), k.begin ());
+            return k;
+        }
+
+
         //---------------------------------
         template <typename U>
-        KLASS<S,U>
+        auto
         cast (void) const
         {
-            KLASS<S,U> out;
+            typename revalue_type<SelfT>::template type<U> out;
+
             std::copy (std::cbegin (this->data),
                        std::cend   (this->data),
                        std::begin  (out.data));
@@ -95,11 +123,18 @@ namespace util::coord {
 
         ///////////////////////////////////////////////////////////////////////
         // redimension
-        template <size_t D>
-        KLASS<D,T>
+        template <
+            size_t D,
+            typename _sfinae = SelfT
+        >
+        std::enable_if_t<
+            has_redim_v<_sfinae>,
+            redim_t<_sfinae,D>
+        >
         redim (void) const
         {
-            KLASS<D,T> out;
+            redim_t<SelfT,D> out;
+
             std::copy_n (std::cbegin (this->data),
                          min (S, D),
                          std::begin  (out.data));
@@ -108,11 +143,14 @@ namespace util::coord {
 
 
         //---------------------------------------------------------------------
-        template<size_t D>
-        KLASS<D,T>
-        redim (const KLASS<D,T> fill) const
+        template<size_t D,typename _sfinae = SelfT>
+        std::enable_if_t<
+            has_redim_v<_sfinae>,
+            redim_t<_sfinae,D>
+        >
+        redim (const redim_t<_sfinae,D> fill) const
         {
-            KLASS<D,T> out;
+            redim_t<SelfT,D> out;
 
             static constexpr auto L1 = min (S, D);
             static constexpr auto L2 = D - L1;
@@ -128,11 +166,17 @@ namespace util::coord {
         }
 
         //---------------------------------------------------------------------
-        template <size_t D>
-        KLASS<D,T>
+        template <
+            size_t D,
+            typename _sfinae = SelfT
+        >
+        std::enable_if_t<
+            has_redim_v<_sfinae>,
+            redim_t<_sfinae,D>
+        >
         redim (T fill) const
         {
-            KLASS<D,T> out;
+            redim_t<SelfT,D> out;
 
             auto cursor = std::copy_n (std::cbegin (this->data),
                                        min (S, D),
@@ -144,5 +188,6 @@ namespace util::coord {
     };
 }
 
+#include "ops.hpp"
 
 #endif

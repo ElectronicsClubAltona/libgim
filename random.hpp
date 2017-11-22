@@ -17,6 +17,7 @@
 #ifndef __UTIL_RANDOM_HPP
 #define __UTIL_RANDOM_HPP
 
+#include <algorithm>
 #include <random>
 
 
@@ -45,6 +46,43 @@ namespace util::rand {
         std::uniform_int_distribution<size_t> dist (0, N-1);
         return t[dist (gen)];
     }
-}
+
+
+    //-------------------------------------------------------------------------
+    template <
+        typename T,
+        typename IteratorT,
+        typename GeneratorT = default_generator
+    >
+    void
+    uniform (T lo, T hi, IteratorT first, IteratorT last)
+    {
+        static_assert (std::is_same_v<T, typename std::iterator_traits<IteratorT>::value_type>);
+        auto &gen = thread_engine<GeneratorT> ();
+
+        static_assert (std::is_integral_v<T> || std::is_floating_point_v<T>);
+
+        if constexpr (std::is_integral_v<T>) {
+            std::generate (
+                first,
+                last,
+                [&gen, d = std::uniform_int_distribution<T> (lo, hi)]
+            {
+                return d (gen);
+            });
+        }
+
+        if constexpr (std::is_floating_point_v<T>) {
+            auto d = std::uniform_real_distribution<T> (lo, hi);
+            std::generate (
+                first,
+                last,
+                [&]
+            {
+                    return d (gen);
+            });
+        }
+    }
+};
 
 #endif

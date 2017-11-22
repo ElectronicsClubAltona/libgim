@@ -203,7 +203,7 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    T
+    std::enable_if_t<std::is_arithmetic_v<T>, T>
     abs [[gnu::const]] (T t)
     {
         return t > 0 ? t : -t;
@@ -604,9 +604,9 @@ namespace util {
     //-------------------------------------------------------------------------
     /// Variadic maximum
     template <typename T>
-    constexpr T
+    constexpr std::enable_if_t<std::is_arithmetic_v<T>, T>
     max  (const T a)
-        { return a; }
+    { return a; }
 
 
     //-------------------------------------------------------------------------

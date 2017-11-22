@@ -28,9 +28,9 @@ namespace util {
     /// \tparam S number of dimensions
     /// \tparam T the underlying per-dimension datatype
     template <size_t S, typename T>
-    struct point : public coord::base<S,T,point,coord::xyzw>
+    struct point : public coord::base<S,T,point<S,T>>
     {
-        using coord::base<S,T,util::point,coord::xyzw>::base;
+        using coord::base<S,T,point<S,T>>::base;
 
         vector<S,T> to (point) const;
         vector<S,T> from (point) const;

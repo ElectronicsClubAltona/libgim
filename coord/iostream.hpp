@@ -24,8 +24,8 @@
 
 namespace util {
     template <
-        template <size_t,typename> class K,
-        size_t S,
+        template <std::size_t,typename> class K,
+        std::size_t S,
         typename T
     >
     std::ostream&

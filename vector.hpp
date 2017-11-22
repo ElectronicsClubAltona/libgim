@@ -22,9 +22,9 @@
 
 namespace util {
     template <size_t S, typename T>
-    struct vector : public coord::base<S,T,vector,coord::xyzw,coord::stpq>
+    struct vector : public coord::base<S,T,vector<S,T>>
     {
-        using coord::base<S,T,util::vector,coord::xyzw,coord::stpq>::base;
+        using coord::base<S,T,vector<S,T>>::base;
 
         // representations
         template <size_t D> vector<D,T> homog (void) const;

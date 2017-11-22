@@ -180,9 +180,9 @@ list (
     coord.hpp
     coord/init.hpp
     coord/iostream.hpp
-    coord/names.hpp
     coord/ops.hpp
     coord/store.hpp
+    coord/traits.hpp
     crypto/arc4.cpp
     crypto/arc4.hpp
     crypto/ice.cpp

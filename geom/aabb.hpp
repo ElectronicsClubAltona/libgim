@@ -36,16 +36,6 @@ namespace util::geom {
 
         point<S,T> closest (point<S,T>) const;
 
-        AABB<S,T>& expand (util::vector<S,T>);
-        AABB<S,T>& expand (T);
-        AABB<S,T>  expanded (util::vector<S,T>);
-        AABB<S,T>  expanded (T);
-
-        AABB<S,T>& contract (util::vector<S,T>);
-        AABB<S,T>& contract (T);
-        AABB<S,T>  contracted (util::vector<S,T>) const;
-        AABB<S,T>  contracted (T) const;
-
         void cover (point<S,T>);
 
         AABB<S,T> operator+ (vector<S,T>) const;
@@ -53,8 +43,8 @@ namespace util::geom {
 
         bool operator== (AABB) const;
 
-        point<S,T> p0;
-        point<S,T> p1;
+        ::util::point<S,T> p0;
+        ::util::point<S,T> p1;
     };
 
     typedef AABB<2,float> AABB2f;

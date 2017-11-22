@@ -14,11 +14,20 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COORD_FWD_HPP
-#define __UTIL_COORD_FWD_HPP
+#ifndef CRUFT_UTIL_COORD_FWD_HPP
+#define CRUFT_UTIL_COORD_FWD_HPP
+
+#include <cstddef>
 
 namespace util {
-    template <size_t,typename> struct colour;
+    namespace coord {
+        template <size_t S,typename T,typename ParentT> struct store;
+        template <size_t,typename,typename> struct init;
+        template <size_t,typename,typename> struct base;
+    }
+
+    template <size_t,typename> struct srgba;
+    template <size_t,typename> struct hsva;
     template <size_t,typename> struct extent;
     template <size_t,typename> struct point;
     template <size_t,typename> struct vector;

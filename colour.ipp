@@ -19,15 +19,3 @@
 #endif
 #define __UTIL_COLOUR_IPP
 
-template <size_t S, typename T>
-template <typename U>
-util::colour<S,U>
-util::colour<S,T>::cast (void) const
-{
-    colour<S,U> ret;
-    std::transform (this->begin (),
-                    this->end (),
-                    ret.begin (),
-                    renormalise<T,U>);
-    return ret;
-}

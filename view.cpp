@@ -24,7 +24,7 @@
 bool                                    \
 util::operator== (A a, B b)             \
 {                                       \
-    return a.size () == a.size () &&    \
+    return a.size () == b.size () &&    \
            std::equal (a.cbegin (),     \
                        a.cend (),       \
                        b.cbegin ());    \

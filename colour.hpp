@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_COLOUR_HPP
@@ -21,68 +21,94 @@
 #include "introspection.hpp"
 
 #include <ostream>
+#include <type_traits>
 
 namespace util {
-    /// An RGBA colour POD type.
-    template <size_t S, typename T>
-    struct colour : public coord::base<S,T,colour,coord::rgba,coord::hsv> {
-        using coord::base<S,T,util::colour,coord::rgba,coord::hsv>::base;
-        using base_t = coord::base<S,T,util::colour,coord::rgba,coord::hsv>;
+    /// An abstract colour POD type componsed of S components of type T.
+    ///
+    /// Not to be used directly, instead the use of derived types is required.
+    /// This exists purely to simplify generic colour code.
+    template <
+        size_t S,
+        typename T,
+        typename SelfT
+    >
+    struct colour : coord::base<S,T,SelfT> {
+        using coord::base<S,T,SelfT>::base;
 
-        // overloaded cast operator which assumes values are unit normalised
         template <typename U>
-        colour<S,U>
-        cast (void) const;
-
-        /// parse colours specified as "#AABBCCDD".
-        ///
-        /// * the leading hash is optional.
-        /// * all components must be 2 hex digits.
-        static colour parse_html (const char*);
-        static colour parse_html (const std::string&);
-
-        /// look up the name of a colour from those specified in
-        /// html/x11/etc specifications.
-        static colour from_html (const std::string &name);
-        static colour from_x11  (const std::string &name);
-
-        /// look up all the specifications and returns the colour from one
-        /// that matches. the search order is unspecified, so if you want a
-        /// known colour then try them first yourself.
-        static colour from_string (const std::string &name);
+        auto
+        cast (void) const
+        {
+            ::util::revalue_t<SelfT,U> ret;
+            std::transform (std::begin (*this),
+                            std::end   (*this),
+                            std::begin (ret),
+                            renormalise<T,U>);
+            return ret;
+        }
     };
 
-    // Convenience types
-    template <typename T> using colour1 = colour<1,T>;
-    template <typename T> using colour3 = colour<3,T>;
-    template <typename T> using colour4 = colour<4,T>;
-
-    typedef colour1<uint8_t> colour1u;
-    typedef colour3<uint8_t> colour3u;
-    typedef colour4<uint8_t> colour4u;
-
-    typedef colour1<float> colour1f;
-    typedef colour3<float> colour3f;
-    typedef colour4<float> colour4f;
-
-    // RGB/HSV conversions
-    colour3f rgb_to_hsv (colour3f);
-    colour3f hsv_to_rgb (colour3f);
-
-    // ostream/istream operators
-    template <size_t S, typename T>
-    std::ostream&
-    operator<< (std::ostream&, util::colour<S,T>);
-
-    template <size_t S, typename T>
-    std::istream&
-    operator>> (std::istream&, util::colour<S,T>&);
-
-    // type name introspection specialisation
-    template <size_t S, typename T>
-    struct type_name<colour<S,T>> {
-        static constexpr const char value[] = "colour";
+    template <typename T>
+    struct util::coord::store<1,T,srgba<1,T>> {
+        union { struct { T r; }; T data[1]; };
     };
+    template <typename T>
+    struct util::coord::store<2,T,srgba<2,T>> {
+        union { struct { T r, g; }; T data[2]; };
+    };
+    template <typename T>
+    struct util::coord::store<3,T,srgba<3,T>> {
+        union { struct { T r, g, b; }; T data[3]; };
+    };
+
+    template <typename T>
+    struct util::coord::store<4,T,srgba<4,T>> {
+        union { struct { T r, g, b, a; }; T data[4]; };
+    };
+
+    template <size_t S, typename T> struct srgba : colour<S,T,srgba<S,T>> {
+        using colour<S,T,srgba<S,T>>::colour;
+    };
+
+    using srgba3f = srgba<3,float>;
+    using srgba4f = srgba<4,float>;
+
+    template <size_t S, typename T> struct hsva  : colour<S,T,hsva<S,T>> {};
+
+    template <size_t S, typename T>
+    struct redim_type<
+        srgba<S,T>
+    > { template <size_t _S> using type = srgba<_S,T>; };
+
+    template <size_t S, typename T>
+    struct revalue_type<srgba<S,T>> {
+        template <typename _T>
+        using type = srgba<S,_T>;
+    };
+
+
+    template <typename> struct is_colour : public std::false_type {};
+    template <
+        size_t S,
+        typename T,
+        template <
+            size_t,
+            typename
+        > typename ColourT
+    > struct is_colour<ColourT<S,T>>
+    :std::conditional_t<
+        std::is_base_of_v<
+            colour<S,T,ColourT<S,T>>,
+            ColourT<S,T>
+        >,
+        std::true_type,
+        std::false_type
+    > {};
+
+
+    template <typename T>
+    constexpr auto is_colour_v = is_colour<T>::value;
 }
 
 #include "colour.ipp"
