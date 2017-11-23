@@ -60,7 +60,7 @@ namespace util::format::detail {
         //
         // other values are theoretically supportable, but do not form part of
         // the printf specification.
-        unsigned base = 10;
+        int base = 10;
 
         enum class repr {
             FIXED,
@@ -81,7 +81,7 @@ namespace util::format::detail {
             OSTREAM
         } k;
 
-        unsigned width = 0; // field width, ie: how many characters
+        int width = 0; // field width, ie: how many characters
         int precision = -1; // how many digits after the decimal
 
         size_t length = 0; // bytesize of underlying type
@@ -619,7 +619,7 @@ namespace util::format::detail {
 
         const auto len = spec.precision < 0                  ? spec.precision :
                          (size_t)spec.precision < strlen (t) ? spec.precision :
-                                                               strlen (t);
+                                                               (int)strlen (t);
 
         // perform left padding
         if (spec.width > len && !spec.left_adjusted)
@@ -788,7 +788,7 @@ namespace util::format::detail {
                 "0123456789abcdef";
 
             char buffer[numerals];
-            size_t remain = numerals;
+            auto remain = numerals;
 
             for (auto cursor = buffer; remain--; t /= spec.base)
                 *cursor++ = NUMERALS[t % spec.base];

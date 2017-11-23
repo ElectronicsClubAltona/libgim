@@ -16,11 +16,11 @@
 
 #include "stack.hpp"
 
-#include "../debug.hpp"
-#include "../pointer.hpp"
-#include "../cast.hpp"
+#include "../../debug.hpp"
+#include "../../pointer.hpp"
+#include "../../cast.hpp"
 
-using util::alloc::stack;
+using util::alloc::raw::stack;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ stack::deallocate (void *_ptr, size_t bytes, size_t alignment)
 
 //-----------------------------------------------------------------------------
 void*
-stack::base (void)
+stack::begin (void)
 {
     return m_begin;
 }
@@ -121,7 +121,7 @@ stack::base (void)
 
 //-----------------------------------------------------------------------------
 const void*
-stack::base (void) const
+stack::begin (void) const
 {
     return m_begin;
 }

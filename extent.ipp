@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -63,19 +63,6 @@ U
 util::extent<S,T>::aspect (void) const
 {
     return static_cast<U> (this->w) / this->h;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-template <typename U>
-bool
-util::extent<S,T>::includes (point<S,U> p) const
-{
-    for (size_t i = 0; i < S; ++i)
-        if (p[i] < 0 || static_cast<T> (p[i]) >= this->data[i])
-            return false;
-    return true;
 }
 
 

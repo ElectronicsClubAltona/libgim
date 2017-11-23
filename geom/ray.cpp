@@ -25,30 +25,6 @@ using util::geom::ray;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-ray<S,T>::ray (util::point<S,T> _origin,
-               util::vector<S,T> _direction):
-    origin (_origin),
-    direction (_direction)
-{
-    CHECK (is_normalised (direction));
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-ray<S,T>
-ray<S,T>::make (util::point<S,T> origin,
-                util::point<S,T> target)
-{
-    return {
-        origin,
-        normalised (target - origin)
-    };
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 /// returns the distance along the ray in a ray-plane intersection
 ///
 /// returns inf if parallel
@@ -68,7 +44,7 @@ ray<S,T>::intersect (plane<S,T> q) const
 /// returns NaN if behind
 template <size_t S, typename T>
 T
-ray<S,T>::intersect (AABB<S,T> r) const
+ray<S,T>::intersect (aabb<S,T> r) const
 {
     auto t1 = (r.p0 - origin) / direction;
     auto t2 = (r.p1 - origin) / direction;

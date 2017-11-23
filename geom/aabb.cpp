@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -21,11 +21,12 @@
 #include "../coord/iostream.hpp"
 #include "../debug.hpp"
 
-using util::geom::AABB;
+using util::geom::aabb;
 
-//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-AABB<S,T>::AABB (point<S,T> _p0, point<S,T> _p1):
+aabb<S,T>::aabb (const point<S,T> _p0, const point<S,T> _p1):
     p0 (_p0),
     p1 (_p1)
 {
@@ -33,10 +34,10 @@ AABB<S,T>::AABB (point<S,T> _p0, point<S,T> _p1):
 }
 
 
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
 T
-AABB<S,T>::diameter (void) const
+aabb<S,T>::diameter (void) const
 {
     return magnitude ().diameter ();
 }
@@ -45,48 +46,25 @@ AABB<S,T>::diameter (void) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::extent<S,T>
-AABB<S,T>::magnitude (void) const
+aabb<S,T>::magnitude (void) const
 {
-    extent<S,T> out;
-    for (size_t i = 0; i < S; ++i)
-        out[i] = p1[i] - p0[i];
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-AABB<S,T>::overlaps (point<S,T> p) const
-{
-    for (size_t i = 0; i < S; ++i)
-        if (p0[i] > p[i] || p1[i] < p[i])
-            return false;
-
-    return true;
+    return (p1 - p0).template as<util::extent> ();
 }
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::point<S,T>
-AABB<S,T>::closest (point<S,T> q) const
+aabb<S,T>::closest (const point<S,T> q) const
 {
-    point<S,T> res;
-
-    for (size_t i = 0; i < S; ++i)
-        res[i] = q[i] < p0[i] ? p0[i] :
-                 q[i] > p1[i] ? p1[i] :
-                 q[i];
-
-    return res;
+    return limit (q, p0, p1);
 }
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 void
-AABB<S,T>::cover (point<S,T> p)
+aabb<S,T>::cover (const point<S,T> p)
 {
     p0 = min (p, p0);
     p1 = max (p, p1);
@@ -95,8 +73,8 @@ AABB<S,T>::cover (point<S,T> p)
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-AABB<S,T>
-AABB<S,T>::operator+ (vector<S,T> v) const
+aabb<S,T>
+aabb<S,T>::operator+ (const vector<S,T> v) const
 {
     return { p0 + v, p1 + v };
 }
@@ -104,34 +82,20 @@ AABB<S,T>::operator+ (vector<S,T> v) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-AABB<S,T>
-AABB<S,T>::operator- (vector<S,T> v) const
+aabb<S,T>
+aabb<S,T>::operator- (const vector<S,T> v) const
 {
     return { p0 - v, p1 - v };
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-bool
-AABB<S,T>::operator== (const AABB<S,T> rhs) const
-{
-    return rhs.p0 == p0 && rhs.p1 == p1;
-}
-
-
-
-//-----------------------------------------------------------------------------
 namespace util::debug {
     template <size_t S, typename T>
-    struct validator<AABB<S,T>> {
-        static bool is_valid (const AABB<S,T> &b)
+    struct validator<aabb<S,T>> {
+        static bool is_valid (const aabb<S,T> &b)
         {
-            for (size_t i = 0; i < S; ++i)
-                if (b.p1[i] < b.p0[i])
-                    return false;
-
-            return true;
+            return all (b.p0 <= b.p1);
         }
     };
 }
@@ -140,18 +104,17 @@ namespace util::debug {
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 std::ostream&
-util::geom::operator<< (std::ostream &os, util::geom::AABB<S,T> b)
+util::geom::operator<< (std::ostream &os, util::geom::aabb<S,T> b)
 {
-    os << "AABB(" << b.p0 << ", " << b.p1 << ")";
-    return os;
+    return os << "[ " << b.p0 << ", " << b.p1 << " ]";
 }
 
 
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)                             \
-namespace util::geom { template struct AABB<S,T>; }      \
-template bool util::debug::is_valid (const AABB<S,T>&);  \
-template std::ostream& util::geom::operator<< (std::ostream&, AABB<S,T>);
+namespace util::geom { template struct aabb<S,T>; }      \
+template bool util::debug::is_valid (const aabb<S,T>&);  \
+template std::ostream& util::geom::operator<< (std::ostream&, aabb<S,T>);
 
 #define INSTANTIATE(T)  \
 INSTANTIATE_S_T(2,T)    \

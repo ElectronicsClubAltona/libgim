@@ -32,7 +32,7 @@ namespace util {
             R operator() (T first, T last, Args&&... args)
             {
                 while (first != last)
-                    if (!(*first++)(std::forward<Args> (args)...))
+                    if (!(*first++)(args...))
                         return false;
 
                 return true;
@@ -47,7 +47,7 @@ namespace util {
             R operator() (T first, T last, Args&&... args)
             {
                 while (first != last)
-                    if ((*first++)(std::forward<Args> (args)...))
+                    if ((*first++)(args...))
                         return true;
 
                 return false;
@@ -62,7 +62,7 @@ namespace util {
             R operator() (T first, T last, Args&&... args)
             {
                 while (first != last) {
-                    (*first++)(std::forward<Args> (args)...);
+                    (*first++)(args...);
                 }
             }
         };
@@ -81,8 +81,8 @@ namespace util {
             ~signal ();
 
             /// Add a callback to list.
-            cookie connect (callback&&);
-            cookie connect (const callback&);
+            cookie connect [[gnu::warn_unused_result]] (callback&&);
+            cookie connect [[gnu::warn_unused_result]] (const callback&);
 
             void disconnect (cookie&);
 

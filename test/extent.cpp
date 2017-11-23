@@ -8,13 +8,13 @@ main (void)
     util::TAP::logger tap;
 
     {
-        util::extent2u hi { 8, 4 };
-        util::extent2u lo { 6, 2 };
+        constexpr const util::extent2u hi { 8, 4 };
+        constexpr const util::extent2u lo { 6, 2 };
         tap.expect_eq (lo, hi.contracted (2), "extent scalar contraction by value");
     }
 
     {
-        static const util::point2u EXPECTED[] = {
+        static constexpr util::point2u EXPECTED[] = {
             { 0, 0 }, { 1, 0 }, { 2, 0 },
             { 0, 1 }, { 1, 1 }, { 2, 1 },
             { 0, 2 }, { 1, 2 }, { 2, 2 },

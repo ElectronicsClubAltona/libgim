@@ -1,10 +1,10 @@
 #include "tap.hpp"
-#include "alloc/stack.hpp"
+#include "alloc/raw/stack.hpp"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 void
-n_allocations (util::alloc::stack &store,
+n_allocations (util::alloc::raw::stack &store,
                unsigned count,
                size_t bytes,
                size_t alignment = alignof (std::max_align_t))
@@ -32,9 +32,9 @@ main (void)
     alignas (std::max_align_t) char memory[BUFFER_SIZE];
     std::fill (std::begin (memory), std::end (memory), 0);
 
-    util::alloc::stack store (memory, memory + BUFFER_AVAILABLE);
+    util::alloc::raw::stack store (memory, memory + BUFFER_AVAILABLE);
 
-    tap.expect_eq (store.base (), std::begin (memory), "base pointers match");
+    tap.expect_eq (store.begin (), std::begin (memory), "base pointers match");
     tap.expect_eq (store.offset (std::begin (memory)), 0u, "base offset is 0");
     tap.expect_eq (store.capacity (), BUFFER_AVAILABLE, "bytes capacity matches");
 

@@ -165,20 +165,12 @@ namespace util {
         if (m_children.empty ())
             return R();
 
-        //auto i = m_children.cbegin ();
-        //bool looping;
-
         C<F> combiner;
-        return combiner (m_children.begin (), m_children.end (), std::forward<Args> (tail)...);
-
-        //do {
-        //    // Increment before we execute so that the caller is able to
-        //    // deregister themselves during execution.
-        //    auto current = i++;
-        //    looping = m_children.cend () != i;
-
-        //    (*current)(std::forward<Args> (tail)...);
-        //} while (looping);
+        return combiner (
+            m_children.begin (),
+            m_children.end (),
+            std::forward<Args> (tail)...
+        );
     }
 
 

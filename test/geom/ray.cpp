@@ -12,8 +12,8 @@ void
 test_intersect_plane (util::TAP::logger &tap)
 {
     // trivial case: origin ray facing z, plane at unit z facing -z.
-    const util::geom::ray3f  l ({0,0,0}, {0,0, 1});
-    const util::geom::plane3f p ({0,0,1}, {0,0,-1});
+    const util::geom::ray3f l (util::point3f {0,0,0}, util::vector3f {0,0, 1});
+    const util::geom::plane3f p (util::point3f {0,0,1}, util::vector3f {0,0,-1});
 
     tap.expect_eq (l.intersect (p), 1.f, "ray-plane intersect");
 }
@@ -23,24 +23,24 @@ test_intersect_plane (util::TAP::logger &tap)
 void
 test_intersect_aabb (util::TAP::logger &tap)
 {
-    using util::geom::AABB2f;
+    using util::geom::aabb2f;
 
     // trivial case: unit aabb at origin, ray from (0.5,-0.5) upwards
-    const AABB2f box {
+    const aabb2f box {
         { 0.f, 0.f },
         { 1.f, 1.f }
     };
 
     const ray2f forward {
-        { 0.5f, -0.5f },
-        { 0.f,   1.f }
+        util::point2f { 0.5f, -0.5f },
+        util::vector2f { 0.f,   1.f }
     };
 
     tap.expect_eq (forward.intersect (box), 0.5f, "ray-aabb intersect");
 
     const ray2f behind {
-        { 0.5f, 2.f },
-        { 0.f, 1.f }
+        util::point2f { 0.5f, 2.f },
+        util::vector2f { 0.f, 1.f }
     };
 
     tap.expect_nan (behind.intersect (box), "ray-aabb intersect behind");
@@ -55,13 +55,13 @@ test_intersect_sphere (util::TAP::logger &tap)
 
     const sphere3f s = {{0.f, 0.f, 0.f}, 1.f};
 
-    const ray3f r0 {{0.f, 2.f, 0.f}, {0.f, -1.f, 0.f}};
+    const ray3f r0 {util::point3f {0.f, 2.f, 0.f}, util::vector3f {0.f, -1.f, 0.f}};
     tap.expect_eq (r0.intersect (s), 1.f, "ray-sphere simple");
 
-    const ray3f r1 {{0.f, 1.f, 0.f}, {0.f, 1.f, 0.f}};
+    const ray3f r1 {util::point3f {0.f, 1.f, 0.f}, util::vector3f {0.f, 1.f, 0.f}};
     tap.expect_eq (r1.intersect (s), 0.f, "ray-sphere adjacent");
 
-    const ray3f r2 {{0.f, 2.f, 0.f}, {0.f, 1.f, 0.f}};
+    const ray3f r2 {util::point3f {0.f, 2.f, 0.f}, util::vector3f {0.f, 1.f, 0.f}};
     tap.expect_nan (r2.intersect (s), "ray-sphere no-intersect");
 }
 

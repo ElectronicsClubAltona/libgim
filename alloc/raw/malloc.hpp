@@ -14,10 +14,22 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifdef __UTIL_ALLOC_STACK_IPP
-#error
+#ifndef CRUFT_UTIL_ALLOC_RAW_MALLOC_HPP
+#define CRUFT_UTIL_ALLOC_RAW_MALLOC_HPP
+
+#include <cstddef>
+
+
+namespace util::alloc::raw {
+    class malloc {
+    public:
+        void* allocate (size_t bytes);
+        void* allocate (size_t bytes, size_t align);
+
+        void  deallocate (void *ptr, size_t bytes);
+        void  deallocate (void *ptr, size_t bytes, size_t align);
+    };
+}
+
+
 #endif
-
-#define __UTIL_ALLOC_STACK_IPP
-
-

@@ -1,11 +1,13 @@
 #include "tap.hpp"
 #include "alloc/arena.hpp"
-#include "alloc/linear.hpp"
+#include "alloc/raw/linear.hpp"
 
 
+///////////////////////////////////////////////////////////////////////////////
 static char g_backing[1024*1024];
 
 
+//-----------------------------------------------------------------------------
 struct setter {
     setter (const setter&) = delete;
 
@@ -20,11 +22,12 @@ struct setter {
 };
 
 
+//-----------------------------------------------------------------------------
 int
 main (void)
 {
-    util::alloc::linear alloc (std::begin (g_backing), std::end (g_backing));
-    util::alloc::arena<util::alloc::linear>  arena (alloc);
+    util::alloc::raw::linear alloc (std::begin (g_backing), std::end (g_backing));
+    util::alloc::arena<util::alloc::raw::linear>  arena (alloc);
 
     util::TAP::logger tap;
 

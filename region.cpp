@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -22,6 +22,8 @@
 #include "coord/iostream.hpp"
 
 #include <array>
+
+using util::region;
 
 
 //-----------------------------------------------------------------------------
@@ -50,16 +52,12 @@ util::region<S,T>::region (point_t _a,
                            point_t _b):
     region (_a, extent_t { _b - _a })
 {
+    // This check must allow for zero area (but non-zero dimension) regions.
+    // Some code paths need to support this degenerate case. It's ugly but
+    // simplifies generalisation. eg, vertical linear bezier curves.
+    CHECK (all (_a <= _b));
+
     debug::sanity (*this);
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::region<S,T>::region (std::array<T,S*2> args)
-{
-    std::copy (&args[0], &args[S],   p.data);
-    std::copy (&args[S], &args[S*2], e.data);
 }
 
 
@@ -97,17 +95,6 @@ util::region<S,T>::magnitude (extent_t _e)
 {
     e = _e;
     return e;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-void
-util::region<S,T>::scale (T factor)
-{
-    auto o = (e * factor - e) / T(2);
-    p -= o;
-    e *= factor;
 }
 
 
@@ -164,32 +151,6 @@ util::region<S,T>::closest (point_t q) const
 
 
 //-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-util::region<S,T>::includes (point_t q) const
-{
-    for (size_t i = 0; i < S; ++i)
-        if (q[i] < p[i] || q[i] > p[i] + e[i])
-            return false;
-
-    return true;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-bool
-util::region<S,T>::contains (point_t q) const
-{
-    for (size_t i = 0; i < S; ++i)
-        if (q[i] <= p[i] || q[i] >= p[i] + e[i])
-            return false;
-
-    return true;
-}
-
-
-//-----------------------------------------------------------------------------
 // FIXME: This will fail with an actual infinite range (NaNs will be generated
 // in the conditionals).
 template <size_t S, typename T>
@@ -197,7 +158,7 @@ bool
 util::region<S,T>::intersects (region<S,T> rhs) const
 {
     for (size_t i = 0; i < S; ++i)
-        if (p[i]     >= rhs.p[i] + rhs.e[i] ||
+        if (    p[i] >= rhs.p[i] + rhs.e[i] ||
             rhs.p[i] >=     p[i] +     e[i])
         { return false; }
 
@@ -207,20 +168,11 @@ util::region<S,T>::intersects (region<S,T> rhs) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-void
-util::region<S,T>::constrain (point_t &q) const
+typename region<S,T>::point_t
+region<S,T>::constrain (point_t q) const noexcept
 {
     for (size_t i = 0; i < S; ++i)
         q[i] = limit (q[i], p[i], p[i] + e[i]);
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-typename util::region<S,T>::point_t
-util::region<S,T>::constrained (point_t q) const
-{
-    constrain (q);
     return q;
 }
 
@@ -247,53 +199,41 @@ util::region<S,T>::intersection (region<S,T> rhs) const
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::region<S,T>&
-util::region<S,T>::resize (extent<S,T> _e)
+bool
+util::region<S,T>::covers (region<S, T> r) const noexcept
 {
-    e = _e;
-    return *this;
+    return all (p <= r.p) && all (p + e >= r.p + r.e);
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+template <size_t S, typename T>
+util::region<S,T>
+util::region<S,T>::inset (T mag) const
+{
+    return inset (util::vector<S,T> {mag});
+}
+
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::region<S,T>
-util::region<S,T>::inset (T mag)
+util::region<S,T>::inset (vector<S,T> mag) const
 {
-    // ensure we have enough space to inset
-    CHECK (min (e) >= 2 * mag);
+    // ensure we have enough space to trim off our total extent
+    CHECK (all (e >= T{2} * mag));
 
     return {
-        p + mag,
-        e - static_cast<T> (2 * mag)
+        p +        mag,
+        e - T{2} * mag
     };
 }
 
 
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
-util::region<S,T>&
-util::region<S,T>::expand (vector<S,T> v)
-{
-    p -= v;
-    e += v * T{2};
-
-    return *this;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-util::region<S,T>&
-util::region<S,T>::expand (T mag)
-{
-    return expand (vector<S,T> {mag});
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
 util::region<S,T>
-util::region<S,T>::expanded (vector<S,T> v) const
+util::region<S,T>::expand (vector<S,T> v) const
 {
     return {
         p - v,
@@ -305,9 +245,9 @@ util::region<S,T>::expanded (vector<S,T> v) const
 //-----------------------------------------------------------------------------
 template <size_t S, typename T>
 util::region<S,T>
-util::region<S,T>::expanded (T mag) const
+util::region<S,T>::expand (T mag) const
 {
-    return expanded (vector<S,T> {mag});
+    return expand (vector<S,T> {mag});
 }
 
 

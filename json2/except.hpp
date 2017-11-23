@@ -11,28 +11,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_ALLOC_AFFIX_HPP
-#define __UTIL_ALLOC_AFFIX_HPP
+#ifndef CRUFT_UTIL_JSON2_EXCEPT_HPP
+#define CRUFT_UTIL_JSON2_EXCEPT_HPP
 
-#include <cstddef>
+#include <exception>
 
-namespace util::alloc {
-    template <class parent, class prefix, class suffix>
-    class affix {
-        void* allocate   (size_t bytes);
-        void* allocate   (size_t bytes, size_t align);
 
-        void  deallocate (void *ptr, size_t bytes);
-        void  deallocate (void *ptr, size_t bytes, size_t align);
+namespace util::json2 {
+    struct error : public std::exception {};
 
-        void* base (void);
-        const void* base (void) const;
 
-        size_t offset (const void*) const;
+    struct parse_error : public error {
+        parse_error (const char *_position):
+            position (_position)
+        { ; }
+
+        const char *position;
+    };
+
+
+    struct overrun_error : public parse_error {
+        using parse_error::parse_error;
     };
 }
-
 #endif

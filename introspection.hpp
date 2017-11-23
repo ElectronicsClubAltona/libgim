@@ -23,16 +23,17 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <experimental/filesystem>
+#include <ostream>
 #include <string>
 #include <tuple>
 #include <utility>
-#include <experimental/filesystem>
 
 
 namespace util {
-    // XXX: clang-3.9/clang-4.0 will not instantiate static constexpr member
-    // variables from class specialisations, so we have to use detail classes
-    // to hold the variables and instantiate _those_ members instead.
+    // clang#18781: clang-3.9/clang-4.0 will not instantiate static constexpr
+    // member variables from class specialisations, so we have to use detail
+    // classes to hold the variables and instantiate _those_ members instead.
     template <typename T>
     struct type_name;
 
@@ -173,7 +174,7 @@ namespace util {
         const char*,                                            \
         util::enum_traits<::NS::E>::value_count                 \
     > PASTE(util::__enum_traits_,E)::names = {                  \
-      MAP(STRINGIZE_LIST, __VA_ARGS__)                          \
+      MAP0(STRINGIZE_LIST, __VA_ARGS__)                         \
     };
 
 

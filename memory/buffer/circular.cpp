@@ -48,7 +48,7 @@ tmpname (std::string &str, size_t length)
 
     str.resize (length);
     std::generate_n (str.begin (), length, [&] (void) {
-        return util::rand::choose (alphanum);
+        return util::random::choose (alphanum);
     });
 }
 
@@ -57,7 +57,7 @@ tmpname (std::string &str, size_t length)
 circular::circular (size_t bytes)
 {
     bytes = max (bytes, sizeof (value_type));
-    bytes = round_to (bytes, pagesize ());
+    bytes = round_up (bytes, pagesize ());
 
     int fd = -1;
 

@@ -11,15 +11,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_VECTOR_HPP
-#define __UTIL_VECTOR_HPP
+#ifndef CRUFT_UTIL_VECTOR_HPP
+#define CRUFT_UTIL_VECTOR_HPP
 
-#include "coord.hpp"
+#include "./coord/fwd.hpp"
+#include "./coord.hpp"
+
 #include "json/fwd.hpp"
 
+#include <cstddef>
+
+
+///////////////////////////////////////////////////////////////////////////////
 namespace util {
     template <size_t S, typename T>
     struct vector : public coord::base<S,T,vector<S,T>>
@@ -61,7 +67,6 @@ namespace util {
     const json::tree::node&
     operator>> (const json::tree::node&, vector<S,T>&);
 
-    // convenience typedefs
     template <typename T> using vector2 = vector<2,T>;
     template <typename T> using vector3 = vector<3,T>;
     template <typename T> using vector4 = vector<4,T>;
@@ -69,20 +74,27 @@ namespace util {
     template <size_t S> using vectoru = vector<S,unsigned>;
     template <size_t S> using vectori = vector<S,int>;
     template <size_t S> using vectorf = vector<S,float>;
+    template <std::size_t S> using vectorb = vector<S,bool>;
 
-    typedef vector2<unsigned> vector2u;
-    typedef vector3<unsigned> vector3u;
+    using vector2u = vector2<unsigned>;
+    using vector3u = vector3<unsigned>;
+    using vector4u = vector4<unsigned>;
 
-    typedef vector2<int> vector2i;
-    typedef vector3<int> vector3i;
+    using vector2i = vector2<int>;
+    using vector3i = vector3<int>;
+    using vector4i = vector4<int>;
 
-    typedef vector2<float> vector2f;
-    typedef vector3<float> vector3f;
-    typedef vector4<float> vector4f;
+    using vector2f = vector2<float>;
+    using vector3f = vector3<float>;
+    using vector4f = vector4<float>;
 
-    typedef vector2<double> vector2d;
-    typedef vector3<double> vector3d;
-    typedef vector3<double> vector4d;
+    using vector2d = vector2<double>;
+    using vector3d = vector3<double>;
+    using vector4d = vector4<double>;
+
+    using vector2b = vector2<bool>;
+    using vector3b = vector3<bool>;
+    using vector4b = vector4<bool>;
 }
 
 #include "vector.ipp"

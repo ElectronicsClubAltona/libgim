@@ -27,14 +27,6 @@ using util::matrix;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <std::size_t Rows, std::size_t Cols, typename T>
-matrix<Rows,Cols,T>&
-matrix<Rows,Cols,T>::invert (void)
-{
-    return *this = inverse ();
-}
-
-
 //-----------------------------------------------------------------------------
 //template <std::size_t S, typename T>
 //matrix<S,T>&

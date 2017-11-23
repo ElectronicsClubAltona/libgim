@@ -14,8 +14,8 @@
  * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COORD_STORE_HPP
-#define __UTIL_COORD_STORE_HPP
+#ifndef CRUFT_UTIL_COORD_STORE_HPP
+#define CRUFT_UTIL_COORD_STORE_HPP
 
 #include "fwd.hpp"
 
@@ -32,8 +32,8 @@
 namespace util::coord::detail {
     template <typename T>
     constexpr
-    size_t
-    alignment (size_t S)
+    std::size_t
+    alignment (std::size_t S)
     {
         (void)S;
 
@@ -76,9 +76,42 @@ namespace util::coord {                         \
 }
 
 
+#define DEFINE_STORE(KLASS,...)                 \
+template <typename T>                           \
+struct util::coord::store<                      \
+    VA_ARGS_COUNT(__VA_ARGS__),                 \
+    T,                                          \
+    ::util::KLASS<                              \
+        VA_ARGS_COUNT(__VA_ARGS__),             \
+        T                                       \
+    >                                           \
+> {                                             \
+    union {                                     \
+        T data[VA_ARGS_COUNT(__VA_ARGS__)];     \
+        struct { T __VA_ARGS__; };              \
+    };                                          \
+};
+
+DEFINE_STORE(extent,w)
+DEFINE_STORE(extent,w,h)
+DEFINE_STORE(extent,w,h,d)
+
+DEFINE_STORE(point, x)
+DEFINE_STORE(point, x, y)
+DEFINE_STORE(point, x, y, z)
+DEFINE_STORE(point, x, y, z, w)
+
+DEFINE_STORE(vector, x)
+DEFINE_STORE(vector, x, y)
+DEFINE_STORE(vector, x, y, z)
+DEFINE_STORE(vector, x, y, z, w)
+
+#undef DEFINE_STORE
+
+#if 0
 template <typename T>
 struct util::coord::store<1,T,::util::extent<1,T>> {
-    union { struct { T w; }; T data[1]; };
+    union { T data[1]; struct { T w; }; };
 };
 
 template <typename T>
@@ -130,5 +163,5 @@ template <typename T>
 struct util::coord::store<4,T,::util::vector<4,T>> {
     union { struct { T x, y, z, w; }; T data[4]; };
 };
-
+#endif
 #endif

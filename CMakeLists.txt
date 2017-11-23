@@ -13,7 +13,8 @@ include (nc)
 
 include (search_libs)
 
-find_package(RAGEL 6.9 REQUIRED)
+find_package (PythonInterp 3 REQUIRED)
+find_package (RAGEL 6.9 REQUIRED)
 
 
 ###############################################################################
@@ -138,26 +139,26 @@ list (
     algo/sort.hpp
     algo/sort.ipp
     alloc/fwd.hpp
-    alloc/affix.cpp
-    alloc/affix.hpp
-    alloc/aligned.hpp
     alloc/allocator.cpp
     alloc/allocator.hpp
     alloc/allocator.ipp
     alloc/arena.cpp
     alloc/arena.hpp
     alloc/arena.ipp
-    alloc/dynamic.hpp
-    alloc/fallback.cpp
-    alloc/fallback.hpp
-    alloc/linear.cpp
-    alloc/linear.hpp
-    alloc/malloc.cpp
-    alloc/malloc.hpp
-    alloc/null.cpp
-    alloc/null.hpp
-    alloc/stack.cpp
-    alloc/stack.hpp
+    alloc/raw/affix.cpp
+    alloc/raw/affix.hpp
+    alloc/raw/aligned.hpp
+    alloc/raw/dynamic.hpp
+    alloc/raw/fallback.cpp
+    alloc/raw/fallback.hpp
+    alloc/raw/linear.cpp
+    alloc/raw/linear.hpp
+    alloc/raw/malloc.cpp
+    alloc/raw/malloc.hpp
+    alloc/raw/null.cpp
+    alloc/raw/null.hpp
+    alloc/raw/stack.cpp
+    alloc/raw/stack.hpp
     annotation.hpp
     ascii.hpp
     backtrace.hpp
@@ -187,6 +188,8 @@ list (
     crypto/arc4.hpp
     crypto/ice.cpp
     crypto/ice.hpp
+    crypto/salsa.cpp
+    crypto/salsa.hpp
     crypto/tea.cpp
     crypto/tea.hpp
     crypto/xtea.cpp
@@ -216,7 +219,6 @@ list (
     geom/fwd.hpp
     geom/aabb.cpp
     geom/aabb.hpp
-    geom/aabb.ipp
     geom/cylinder.cpp
     geom/cylinder.hpp
     geom/ellipse.cpp
@@ -232,7 +234,6 @@ list (
     geom/rect.cpp
     geom/rect.hpp
     geom/sample.hpp
-    geom/sample.ipp
     geom/sphere.cpp
     geom/sphere.hpp
     geom/tri.cpp
@@ -294,6 +295,8 @@ list (
     io.hpp
     io.ipp
     iterator.hpp
+    job/queue.cpp
+    job/queue.hpp
     json/fwd.hpp
     json/except.cpp
     json/except.hpp
@@ -303,6 +306,18 @@ list (
     json/schema.hpp
     json/tree.cpp
     json/tree.hpp
+    json2/fwd.hpp
+    json2/event.hpp
+    json2/event.cpp
+    json2/except.hpp
+    json2/personality/base.cpp
+    json2/personality/base.hpp
+    json2/personality/jsonish.cpp
+    json2/personality/jsonish.hpp
+    json2/personality/rfc7519.cpp
+    json2/personality/rfc7519.hpp
+    json2/tree.cpp
+    json2/tree.hpp
     library.hpp
     log.cpp
     log.hpp
@@ -318,6 +333,8 @@ list (
     memory/deleter.cpp
     memory/deleter.hpp
     nocopy.hpp
+    parse.cpp
+    parse.hpp
     pascal.cpp
     pascal.hpp
     platform.hpp
@@ -391,6 +408,8 @@ list (
     types/traits.hpp
     uri.cpp
     uri.hpp
+    utf8.cpp
+    utf8.hpp
     variadic.cpp
     variadic.hpp
     vector.cpp
@@ -399,8 +418,25 @@ list (
     version.cpp
     version.hpp
     view.cpp
-    view.ipp
     view.hpp
+)
+
+
+##-----------------------------------------------------------------------------
+## We shouldn't be building into the source directory, but I can't stand trying
+## to coax CMake into behaving here any longer. Feel free to fix it.
+add_custom_command (
+OUTPUT
+    "${CMAKE_CURRENT_SOURCE_DIR}/preprocessor.hpp"
+COMMENT
+    "[preprocessor.py] preprocessor.hpp"
+COMMAND
+    "${PYTHON_EXECUTABLE}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/preprocessor.py"
+    "${CMAKE_CURRENT_SOURCE_DIR}/preprocessor.hpp"
+    320
+DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/preprocessor.py"
 )
 
 
@@ -457,9 +493,11 @@ if (TESTS)
         coord
         crypto/arc4
         crypto/ice
+        crypto/salsa
         crypto/tea
         crypto/xtea
         crypto/xxtea
+        endian
         exe
         extent
         fixed
@@ -484,13 +522,17 @@ if (TESTS)
         hton
         introspection
         iterator
+        job/queue
         json_types
+        json2/event
         maths
         matrix
         memory/deleter
+        parse
         point
         polynomial
         pool
+        preprocessor
         quaternion
         rand/buckets
         range
@@ -504,8 +546,10 @@ if (TESTS)
         stringid
         strongdef
         tuple
+        traits
         typeidx
         uri
+        utf8
         vector
         version
         view

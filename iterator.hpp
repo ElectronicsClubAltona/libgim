@@ -20,6 +20,7 @@
 
 #include "types/traits.hpp"
 #include "variadic.hpp"
+#include "view.hpp"
 
 
 template <typename Base>
@@ -71,6 +72,16 @@ class referencing_iterator {
 
 namespace util {
     ///////////////////////////////////////////////////////////////////////////
+    /// an output iterator that inserts a delimiter between successive
+    /// assignments
+    ///
+    /// very useful for outputting comma seperated lists to an ostream, eg:
+    ///
+    /// std::copy (
+    ///     std::cbegin (container),
+    ///     std::cend   (container),
+    ///     util::infix_iterator<value_type> (os, ", ")
+    /// );
     template <
         typename T,
         class CharT = char,
@@ -108,6 +119,103 @@ namespace util {
         ostream_type &m_output;
         const CharT *m_delimiter;
     };
+
+
+    namespace detail {
+        template <typename ContainerT, typename CharT>
+        struct infix_t {
+            const ContainerT &_container;
+            const CharT *_delimiter;
+        };
+
+        template <typename ContainerT, typename CharT>
+        std::ostream&
+        operator<< (std::ostream &os, const infix_t<ContainerT,CharT> &val)
+        {
+            std::copy (std::cbegin (val._container),
+                       std::cend (val._container),
+                       infix_iterator<typename ContainerT::value_type> (os, val._delimiter));
+            return os;
+        }
+
+    };
+
+
+    /// a helper function that returns an object that will use a
+    /// util::infix_iterator to output a container's values to an ostream with
+    /// the given delimiter.
+    ///
+    /// reduces boilerplate code required to output lists of things
+    template <typename ContainerT, typename CharT = char>
+    auto
+    make_infix (const ContainerT &_container, const CharT *_delimiter = ", ")
+    {
+        return detail::infix_t<ContainerT,CharT> { _container, _delimiter };
+    };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    template <typename IteratorT>
+    struct numeric_iterator : public std::iterator<
+        typename std::iterator_traits<IteratorT>::iterator_category,
+        decltype (+std::declval<typename std::iterator_traits<IteratorT>::value_type> ()),
+        typename std::iterator_traits<IteratorT>::difference_type,
+        typename std::iterator_traits<IteratorT>::pointer,
+        typename std::iterator_traits<IteratorT>::reference
+    > {
+        static_assert (std::is_arithmetic_v<typename std::iterator_traits<numeric_iterator>::value_type>);
+
+        explicit numeric_iterator (IteratorT _inner):
+            m_inner (_inner)
+        { ; }
+
+        auto operator++ (void) { ++m_inner; return *this; }
+
+        auto
+        operator- (const numeric_iterator &rhs) const
+        {
+            return typename std::iterator_traits<IteratorT>::difference_type { m_inner - rhs.m_inner };
+        }
+
+        auto
+        operator* (void) const
+        {
+            return +*m_inner;
+        }
+
+        auto operator== (const numeric_iterator &rhs) const { return m_inner == rhs.m_inner; }
+        auto operator!= (const numeric_iterator &rhs) const { return m_inner != rhs.m_inner; }
+
+    private:
+        IteratorT m_inner;
+    };
+
+
+    //-------------------------------------------------------------------------
+    // convenience function that constructs a view of numeric_iterators for a
+    // provided container
+    template <typename ContainerT>
+    auto
+    numeric_view (ContainerT &data)
+    {
+        return util::view {
+            numeric_iterator (std::begin (data)),
+            numeric_iterator (std::end   (data))
+        };
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename ContainerT>
+    auto
+    numeric_view (const ContainerT &data)
+    {
+        return util::view {
+            numeric_iterator (std::begin (data)),
+            numeric_iterator (std::end   (data))
+        };
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -173,25 +281,31 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     namespace detail::zip {
+        // holds a tuple of iterators for begin and end, and returns an
+        // iterator that transforms these iterators into tuples of value_types.
+        //
+        // this must be expressed in terms of iterators, rather than containers,
+        // because it dramatically simplifies iterating over raw arrays.
         template <
-            typename ContainerT,
             typename IteratorT,
-            typename I = std::make_index_sequence<std::tuple_size<ContainerT>::value>
+            typename I = std::make_index_sequence<std::tuple_size<IteratorT>::value>
         >
-        struct collection;
+        class collection;
 
+
+        //---------------------------------------------------------------------
         template <
-            typename ContainerT,
             typename IteratorT,
             std::size_t ...I
         >
-        struct collection<
-            ContainerT,
+        class collection<
             IteratorT,
             std::index_sequence<I...>
         > {
-            collection (const ContainerT &_containers):
-                m_containers { _containers }
+        public:
+            collection (const IteratorT &_begin, const IteratorT &_end):
+                m_begin { _begin },
+                m_end   { _end   }
             { ; }
 
             struct iterator : std::iterator<
@@ -203,13 +317,14 @@ namespace util {
                 >,
                 std::size_t
             > {
-                IteratorT m_iterators;
-
-                iterator (IteratorT _iterators):
+            public:
+                iterator (const IteratorT &_iterators):
                     m_iterators (_iterators)
                 { ; }
 
-                iterator& operator++ (void)
+
+                iterator&
+                operator++ (void)
                 {
                     // HACK: we don't actually need to create a tuple here,
                     // but it's a zero cost method to expand the parameter
@@ -218,58 +333,86 @@ namespace util {
                     return *this;
                 }
 
+
                 iterator operator++ (int);
 
-                auto operator* (void)
+
+                auto
+                operator* (void)
                 {
                     return std::make_tuple (*std::get<I> (m_iterators)...);
                 }
 
-                bool operator== (const iterator &rhs) const
+
+                bool
+                operator== (const iterator &rhs) const
                 {
                     return m_iterators == rhs.m_iterators;
                 }
 
-                bool operator!= (const iterator &rhs) const
+
+                bool
+                operator!= (const iterator &rhs) const
                 {
                     return !(*this == rhs);
                 }
+
+            private:
+                IteratorT m_iterators;
             };
 
-            iterator begin (void)
+
+            iterator
+            begin (void)
             {
-                return iterator { { std::begin (std::get<I> (m_containers))... } };
+                return iterator { { std::get<I> (m_begin)... } };
             }
 
-            iterator end (void)
+
+            iterator
+            end (void)
             {
-                return iterator { { std::end (std::get<I> (m_containers))... } };
+                return iterator { { std::get<I> (m_end)... } };
             }
 
-            ContainerT m_containers;
+
+        private:
+            IteratorT m_begin;
+            IteratorT m_end;
         };
     }
 
 
-    //-------------------------------------------------------------------------
+    ///------------------------------------------------------------------------
+    /// takes a variable number of container arguments and returns an interable
+    /// object with a value_type of tuple of the argument's value_types.
+    ///
+    /// the returned iterator value_type is suitable for using in range-for
+    /// and structured bindings (and really, that's the entire point here).
+    ///
+    /// eg, util::zip ({1,2,3}, {4,5,6}) ~= {{1,4},{2,5},{3,6}}
     template <typename ...ContainerT>
     auto
     zip (const ContainerT&... data)
     {
-        using container = std::tuple<ContainerT...>;
-        using iterator = std::tuple<decltype(std::begin(data))...>;
+        using IteratorT = std::tuple<decltype(std::begin(data))...>;
 
         return detail::zip::collection<
-            container,
-            iterator,
+            IteratorT,
             std::make_index_sequence<sizeof...(ContainerT)>
-        > (
-            std::make_tuple (data...)
-        );
+        > {
+            std::make_tuple (std::begin (data)...),
+            std::make_tuple (std::end   (data)...)
+        };
     };
 
 
-    //-------------------------------------------------------------------------
+    ///------------------------------------------------------------------------
+    /// takes a variable number of containers and returns a zipped iterable
+    /// object where the first of the iterator's value_types is the index of
+    /// that iterator. ie, it combines container offsets with value_types.
+    ///
+    /// eg, util::izip ("abc") ~= {{0,'a'},{1,'b'},{2,'c'}}
     template <typename ...ContainerT>
     auto
     izip (const ContainerT&... data)
@@ -279,6 +422,22 @@ namespace util {
             data...
         );
     }
-}
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// an output iterator that always discards any parameters on assignment.
+    ///
+    /// sometimes useful to pass to algorithms that generate useful results as
+    /// a return value, while not caring about the implicit OutputIterator
+    /// results.
+    struct discard_iterator : public std::iterator<std::output_iterator_tag, discard_iterator> {
+        template <typename T>
+        void operator= (const T&) { ; }
+
+        discard_iterator& operator++ (   ) { return *this; }
+        discard_iterator  operator++ (int) { return *this; }
+        discard_iterator& operator*  (   ) { return *this; }
+    };
+};
 
 #endif

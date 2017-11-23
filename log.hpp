@@ -45,7 +45,7 @@ namespace util {
         DEBUG                   /** debug-level messages */
     };
 
-    #define MAP_LEVEL_T(F) MAP(F, EMERGENCY, ALERT, CRITICAL, ERROR, WARN, NOTICE, INFO, DEBUG)
+    #define MAP_LEVEL_T(F) MAP0(F, EMERGENCY, ALERT, CRITICAL, ERROR, WARN, NOTICE, INFO, DEBUG)
 
     constexpr auto DEFAULT_LOG_LEVEL = NOTICE;
 

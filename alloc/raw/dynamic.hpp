@@ -14,13 +14,13 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_ALLOC_DYNAMIC_HPP
-#define __UTIL_ALLOC_DYNAMIC_HPP
+#ifndef CRUFT_UTIL_ALLOC_RAW_DYNAMIC_HPP
+#define CRUFT_UTIL_ALLOC_RAW_DYNAMIC_HPP
 
 #include <cstddef>
 #include <memory>
 
-namespace util::alloc {
+namespace util::alloc::raw {
     // wraps an allocator given at construction time, forwarding all calls to
     // the inner object. used to allow virtual dispatch of the non-virtual
     // allocator interface.
@@ -57,8 +57,8 @@ namespace util::alloc {
         auto deallocate (void *ptr, size_t bytes, size_t alignment) { return m_child->deallocate (ptr, bytes, alignment); }
 
         //---------------------------------------------------------------------
-        auto base (void)       { return m_child->base (); }
-        auto base (void) const { return m_child->base (); }
+        auto begin (void)       { return m_child->begin (); }
+        auto begin (void) const { return m_child->begin (); }
 
         auto offset (const void *ptr) const
         { return m_child->offset (ptr); }
@@ -93,8 +93,8 @@ namespace util::alloc {
             virtual void deallocate (void *ptr, size_t bytes) = 0;
             virtual void deallocate (void *ptr, size_t bytes, size_t alignment) = 0;
 
-            virtual void*       base (void) = 0;
-            virtual const void* base (void) const = 0;
+            virtual void*       begin (void) = 0;
+            virtual const void* begin (void) const = 0;
             virtual size_t      offset (const void*) const = 0;
 
             virtual void reset (void) = 0;
@@ -133,12 +133,12 @@ namespace util::alloc {
             { m_target.deallocate (ptr, bytes, alignment); }
 
             const void*
-            base (void) const override
-            { return m_target.base (); }
+            begin (void) const override
+            { return m_target.begin (); }
 
             void*
-            base (void) override
-            { return m_target.base (); }
+            begin (void) override
+            { return m_target.begin (); }
 
             size_t
             offset (const void *ptr) const override

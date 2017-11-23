@@ -11,77 +11,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2016-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_RANDOM_HPP
-#define __UTIL_RANDOM_HPP
+#ifndef CRUFT_UTIL_RANDOM_HPP
+#define CRUFT_UTIL_RANDOM_HPP
 
 #include <algorithm>
 #include <random>
+#include <limits>
 
 
-///////////////////////////////////////////////////////////////////////////////
-namespace util::rand {
-    //-------------------------------------------------------------------------
-    using default_generator = std::minstd_rand;
-
-
-    //-------------------------------------------------------------------------
-    template <typename Generator = default_generator>
-    Generator&
-    thread_engine (void)
+namespace util::random {
+    ///////////////////////////////////////////////////////////////////////////
+    /// return correctly initialised thread-local generator of an unspecified,
+    /// but not entirely useless, type. ie, not LCG.
+    inline auto&
+    generator (void)
     {
-        std::random_device rd;
-        thread_local Generator gen (rd ());
+        static thread_local std::mt19937_64 gen { std::random_device {}() };
         return gen;
     }
 
 
-    //-------------------------------------------------------------------------
-    template <typename Generator = default_generator, typename T, size_t N>
-    T&
-    choose (T (&t)[N], Generator gen = thread_engine<Generator> ())
+    ///////////////////////////////////////////////////////////////////////////
+    /// select a value uniformly from the range [lo, hi)
+    template <typename T>
+    std::enable_if_t<std::is_floating_point_v<T>,T>
+    uniform (T lo, T hi)
     {
-        std::uniform_int_distribution<size_t> dist (0, N-1);
-        return t[dist (gen)];
+        return std::uniform_real_distribution<T> { lo, hi } (generator ());
     }
 
 
     //-------------------------------------------------------------------------
-    template <
-        typename T,
-        typename IteratorT,
-        typename GeneratorT = default_generator
-    >
-    void
-    uniform (T lo, T hi, IteratorT first, IteratorT last)
+    /// select a value uniformly from the range [lo, hi)
+    template <typename T>
+    std::enable_if_t<std::is_integral_v<T>,T>
+    uniform (T lo, T hi)
     {
-        static_assert (std::is_same_v<T, typename std::iterator_traits<IteratorT>::value_type>);
-        auto &gen = thread_engine<GeneratorT> ();
+        return std::uniform_int_distribution<T> { lo, hi } (generator ());
+    }
 
-        static_assert (std::is_integral_v<T> || std::is_floating_point_v<T>);
 
-        if constexpr (std::is_integral_v<T>) {
-            std::generate (
-                first,
-                last,
-                [&gen, d = std::uniform_int_distribution<T> (lo, hi)]
-            {
-                return d (gen);
-            });
-        }
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    std::enable_if_t<std::is_integral_v<T>,T>
+    uniform (void)
+    {
+        return uniform (
+            std::numeric_limits<T>::min (),
+            std::numeric_limits<T>::max ()
+        );
+    }
 
-        if constexpr (std::is_floating_point_v<T>) {
-            auto d = std::uniform_real_distribution<T> (lo, hi);
-            std::generate (
-                first,
-                last,
-                [&]
-            {
-                    return d (gen);
-            });
-        }
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// choose a value at random from an array
+    template <typename T, size_t N>
+    T&
+    choose (T (&t)[N])
+    {
+        std::uniform_int_distribution<size_t> dist (0, N - 1);
+        return t[dist (generator ())];
     }
 };
 

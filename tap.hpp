@@ -73,6 +73,12 @@ namespace util { namespace TAP {
         void expect_throw (T&&, const char (&fmt)[N], Args&&...);
 
         //---------------------------------------------------------------------
+        template <size_t N, typename ...Args>
+        void fail (const char (&fmt)[N], Args &&...args)
+        {
+            expect (false, fmt, std::forward<Args> (args)...);
+        }
+
         void skip (const std::string &msg);
         void todo (const std::string &msg);
         void noop (void);

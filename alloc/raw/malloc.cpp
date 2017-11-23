@@ -16,11 +16,11 @@
 
 #include "malloc.hpp"
 
-#include "../debug.hpp"
+#include "../../debug.hpp"
 
 #include <cstdlib>
 
-using util::alloc::malloc;
+using util::alloc::raw::malloc;
 
 
 ///////////////////////////////////////////////////////////////////////////////

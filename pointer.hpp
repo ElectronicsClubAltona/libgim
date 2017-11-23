@@ -11,11 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __POINTER_HPP
-#define __POINTER_HPP
+#ifndef CRUFT_UTIL_POINTER_HPP
+#define CRUFT_UTIL_POINTER_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -23,10 +23,13 @@
 
 namespace util {
     ///////////////////////////////////////////////////////////////////////////
+    /// round the pointer upwards to satisfy the provided alignment
     template <typename T>
-    T*
+    constexpr T*
     align (T *_ptr, size_t alignment)
     {
+        // we perform this as two steps to avoid unnecessarily incrementing when
+        // remainder is zero.
         auto ptr = reinterpret_cast<uintptr_t> (_ptr);
         if (ptr % alignment)
             ptr += alignment - ptr % alignment;
@@ -34,13 +37,36 @@ namespace util {
     }
 
 
-    //-------------------------------------------------------------------------
-    inline uintptr_t
+    ///------------------------------------------------------------------------
+    /// round the pointer upwards to satisfy the provided alignment
+    constexpr inline uintptr_t
     align (uintptr_t ptr, size_t alignment)
     {
-        return reinterpret_cast<uintptr_t> (
-            align (reinterpret_cast<void*> (ptr), alignment)
-        );
+        // we perform this as two steps to avoid unnecessarily incrementing when
+        // remainder is zero.
+        if (ptr % alignment)
+            ptr += alignment - ptr % alignment;
+        return ptr;
+    }
+
+
+    ///------------------------------------------------------------------------
+    /// round the pointer upwards to the nearest valid alignment for T
+    template <typename T>
+    constexpr auto
+    align (T *t)
+    {
+        return align (t, alignof (T));
+    }
+
+
+    ///------------------------------------------------------------------------
+    /// round the pointer upwards to the nearest valid alignment for T
+    template <typename T>
+    constexpr auto
+    align (uintptr_t ptr)
+    {
+        return align (ptr, alignof (T));
     }
 }
 

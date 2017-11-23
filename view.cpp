@@ -11,18 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2016-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "view.hpp"
 
+#include <algorithm>
 #include <iterator>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 #define EQUALITY(A,B)                   \
 bool                                    \
-util::operator== (A a, B b)             \
+util::equal (A a, B b)                  \
 {                                       \
     return a.size () == b.size () &&    \
            std::equal (a.cbegin (),     \

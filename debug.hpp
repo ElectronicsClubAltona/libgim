@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __DEBUG_HPP
@@ -24,11 +24,20 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
+// it is fractionally easier to define a constexpr variable which can be used
+// in constexpr-if to enable/disable some codepaths rather than deal with
+// macros in some scenarios. eg, templates are complicated enough without
+// (more) macros.
 #if !defined(NDEBUG)
-    #define DEBUG_ONLY(X) do { X } while (0)
+    constexpr bool debug_enabled = true;
 #else
-    #define DEBUG_ONLY(X) do {   } while (0)
+    constexpr bool debug_enabled = false;
 #endif
+
+
+///----------------------------------------------------------------------------
+/// enable some code only if assertions et al are enabled
+#define DEBUG_ONLY(X) do { if constexpr (debug_enabled) { X } } while (0)
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -221,8 +230,9 @@
 #define CHECK_NEZ(A) do {                                   \
     DEBUG_ONLY (                                            \
         const auto &__a = (A);                              \
+                                                            \
         if (::util::exactly_zero (__a))                     \
-            _CHECK_PANIC ("expected zero\n"                 \
+            _CHECK_PANIC ("expected non-zero\n"             \
                           "__a: %s is %!",                  \
                           #A, __a);                         \
     );                                                      \
@@ -234,6 +244,7 @@
     DEBUG_ONLY (                                                    \
         const auto &__check_mod_v = (V);                            \
         const auto &__check_mod_m = (M);                            \
+                                                                    \
         if (!::util::exactly_zero (__check_mod_v % __check_mod_m))  \
             _CHECK_PANIC ("expected zero modulus\n"                 \
                           "__v: %s is %!\n"                         \
@@ -297,6 +308,70 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
+/// make the compiler think a particular variable may now be aliased somewhere.
+///
+/// useful for preventing optimisations eliding a variable.
+///
+/// stolen from Chandler Carruth's 2015 talk: "Tuning C++".
+namespace util::debug {
+    template <class T>
+    inline T*
+    escape (T *t)
+    {
+        asm volatile ("": : "g"(t): "memory");
+        return t;
+    }
+
+
+    template <class T>
+    inline const T*
+    escape (const T *t)
+    {
+        asm volatile ("": : "g"(t): "memory");
+        return t;
+    }
+
+
+    template <class T>
+    inline const T&
+    escape (const T &t)
+    {
+        return *escape (&t);
+    }
+
+
+    template <class T>
+    inline T&
+    escape (T &t)
+    {
+        return *escape (&t);
+    }
+
+
+    template <typename T, typename ...Args>
+    inline void
+    escape (T t, Args ...args)
+    {
+        escape (t);
+        escape (args...);
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// force the compiler to conceptually dirty the global memory space.
+///
+/// stolen from Chandler Carruth's 2015 talk: "Tuning C++".
+namespace util::debug {
+    inline void
+    clobber (void)
+    {
+        asm volatile ("": : : "memory");
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 constexpr void panic [[noreturn]] (const char*);
 
 template <typename ...Args, size_t N>
@@ -315,6 +390,17 @@ constexpr void unimplemented [[noreturn]] (const char *msg) { not_implemented (m
 ///////////////////////////////////////////////////////////////////////////////
 constexpr void unreachable [[noreturn]] (void);
 constexpr void unreachable [[noreturn]] (const char*);
+
+
+///////////////////////////////////////////////////////////////////////////////
+/// report a fatal error induced by an unhandled value, especially in switch
+/// statements. will almost invariably abort the application.
+template <typename T>
+constexpr void
+unhandled [[noreturn]] (T &&t) noexcept
+{
+    panic ("unhandled value %!", std::forward<T> (t));
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////

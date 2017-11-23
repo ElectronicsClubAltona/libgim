@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __UTIL_EXTENT_HPP
@@ -43,8 +43,25 @@ namespace util {
         constexpr
         U aspect (void) const;
 
-        template <typename U>
-        bool includes (::util::point<S,U>) const;
+        /// tests whether a point would lie within:
+        ///     region { origin, *this }, inclusive of borders.
+        ///
+        /// included for parity with util::region.
+        constexpr bool
+        inclusive (util::point<S,T> p) const
+        {
+            return all (p >= T{0} && p <= *this);
+        }
+
+
+        /// tests whether a point would like within:
+        ///     region { origin, *this }, exclusive of the bottom-right border
+        /// included for parity with util::region
+        constexpr bool
+        exclusive (point<S,T> p) const
+        {
+            return all (p >= T{0} && p < *this);
+        }
 
         ::util::extent<S,T> expanded (::util::vector<S,T>) const;
         ::util::extent<S,T> expanded (T) const;
@@ -79,7 +96,7 @@ namespace util {
             extent<S,T> m_target;
         };
 
-        extent_range (extent<S,T> target);
+        explicit extent_range (extent<S,T> target);
 
         iterator begin (void) const;
         iterator end   (void) const;
@@ -88,6 +105,17 @@ namespace util {
         extent<S,T> m_target;
     };
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <size_t S, typename T>
+    extent_range<S,T>
+    make_range (extent<S,T> e)
+    {
+        return extent_range<S,T> {e};
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
     // convenience typedefs
     template <typename T> using extent2 = extent<2,T>;
     template <typename T> using extent3 = extent<3,T>;
@@ -97,20 +125,24 @@ namespace util {
     template <size_t S> using extentf = extent<S,float>;
     template <size_t S> using extentd = extent<S,double>;
 
+
     typedef extent2<int> extent2i;
     typedef extent2<unsigned> extent2u;
     typedef extent2<float> extent2f;
     typedef extent2<double> extent2d;
 
+
     typedef extent3<unsigned> extent3u;
     typedef extent3<float> extent3f;
 
+
+    //-------------------------------------------------------------------------
     template <typename T> using extent_range2 = extent_range<2,T>;
     template <typename T> using extent_range3 = extent_range<3,T>;
 
+
     using extent_range2u = extent_range2<typename extent2u::value_type>;
     using extent_range2i = extent_range2<typename extent2i::value_type>;
-
     using extent_range3u = extent_range2<typename extent3u::value_type>;
 }
 

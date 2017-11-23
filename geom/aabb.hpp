@@ -11,12 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
 
-#ifndef __UTIL_GEOM_AABB_HPP
-#define __UTIL_GEOM_AABB_HPP
+#ifndef CRUFT_UTIL_GEOM_AABB_HPP
+#define CRUFT_UTIL_GEOM_AABB_HPP
 
 #include "../point.hpp"
 #include "../extent.hpp"
@@ -24,38 +24,75 @@
 #include <cstdint>
 
 namespace util::geom {
+    ///////////////////////////////////////////////////////////////////////////
+    /// represents an axis-aligned bounding-box through two opposing corners.
+    ///
+    /// p0 must be less-than-or-equal to p1. equality is allowed so that we
+    /// can represent zero sized bounding-boxes.
     template <size_t S, typename T>
-    struct AABB {
-        AABB () = default;
-        AABB (point<S,T>, point<S,T>);
+    struct aabb {
+        aabb () = default;
+        aabb (point<S,T>, point<S,T>);
 
-        T diameter (void) const;
         extent<S,T> magnitude (void) const;
+        T diameter (void) const;
 
-        bool overlaps (point<S,T>) const;
+        /// tests whether a point lies within the region, inclusive of borders
+        constexpr bool
+        inclusive (point<S,T> p) const noexcept
+        { return all (p0 <= p && p1 >= p); }
 
         point<S,T> closest (point<S,T>) const;
 
         void cover (point<S,T>);
 
-        AABB<S,T> operator+ (vector<S,T>) const;
-        AABB<S,T> operator- (vector<S,T>) const;
-
-        bool operator== (AABB) const;
+        aabb<S,T> operator+ (vector<S,T>) const;
+        aabb<S,T> operator- (vector<S,T>) const;
 
         ::util::point<S,T> p0;
         ::util::point<S,T> p1;
     };
 
-    typedef AABB<2,float> AABB2f;
-    typedef AABB<2,unsigned> AABB2u;
-    typedef AABB<2,int> AABB2i;
 
-    typedef AABB<3,float> AABB3f;
-    typedef AABB<3,unsigned> AABB3u;
-    typedef AABB<3,int> AABB3i;
+    ///////////////////////////////////////////////////////////////////////////
+    template <std::size_t S, typename T>
+    constexpr bool
+    operator== (const aabb<S,T> &a, const aabb<S,T> &b) noexcept
+    {
+        return a.p0 == b.p0 && a.p1 == b.p1;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    typedef aabb<2,float> aabb2f;
+    typedef aabb<2,unsigned> aabb2u;
+    typedef aabb<2,int> aabb2i;
+
+    typedef aabb<3,float> aabb3f;
+    typedef aabb<3,unsigned> aabb3u;
+    typedef aabb<3,int> aabb3i;
 }
 
-#include "aabb.ipp"
+
+///////////////////////////////////////////////////////////////////////////////
+#include "./sample.hpp"
+
+#include <random>
+
+namespace util::geom {
+    template <size_t S, typename T, typename G>
+    struct sampler<S,T,aabb,G> {
+        static point<S,T>
+        fn (aabb<S,T> b, G &g)
+        {
+            std::uniform_real_distribution<T> d;
+
+            point<S,T> p;
+            std::generate (p.begin (), p.end (), [&] (void) { return d (g); });
+
+            return p * (b.p1 - b.p0) + b.p0.template as<util::vector> ();
+        }
+    };
+}
 
 #endif

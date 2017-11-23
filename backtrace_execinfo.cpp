@@ -60,7 +60,7 @@ addr2line (const void *addr)
     );
 
     // inefficient to copy from vector to string, but it's not a high priority path
-    auto data = util::slurp (stream.get ());
+    auto data = util::slurp<char> (stream.get ());
     return std::string (data.cbegin (), data.cend ());
 
 #else

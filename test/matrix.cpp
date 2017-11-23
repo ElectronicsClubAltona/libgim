@@ -203,7 +203,14 @@ main (void)
             euler = mod (euler + 4 * PI2, PI2);
             truth = mod (truth + 4 * PI2, PI2);
 
-            tap.expect_eq (truth, euler, "matrix-to-euler, %s", t.msg);
+            tap.expect (
+                all (compare (
+                    truth, euler,
+                    [] (auto a, auto b) { return util::almost_equal (a, b); }
+                )),
+                "matrix-to-euler, %s",
+                t.msg
+            );
         }
     }
 

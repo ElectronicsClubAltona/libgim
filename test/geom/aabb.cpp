@@ -4,13 +4,12 @@
 
 #include <tuple>
 
-using util::geom::AABB2f;
+using util::geom::aabb2f;
 
 
 int
 main (int, char**)
 {
     util::TAP::logger tap;
-
     return tap.status ();
 }

@@ -11,14 +11,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012-2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_COORD_BASE_HPP
-#define __UTIL_COORD_BASE_HPP
+#ifndef CRUFT_UTIL_COORD_BASE_HPP
+#define CRUFT_UTIL_COORD_BASE_HPP
 
 #include "fwd.hpp"
 
+#include "ops.hpp"
 #include "init.hpp"
 #include "traits.hpp"
 #include "../maths.hpp"
@@ -37,7 +38,7 @@ namespace util::coord {
     // parameters are others (eg, vector2f). ie, it does not make sense to
     // allow redim, or type changing on some types so they just aren't exposed.
     template <
-        size_t S,
+        std::size_t S,
         typename T,
         typename SelfT
     >
@@ -47,17 +48,29 @@ namespace util::coord {
         static_assert (sizeof (init<S,T,SelfT>) == S * sizeof (T));
 
         using value_type = T;
-        static constexpr size_t dimension = S;
-        static constexpr size_t elements = S;
+        static constexpr std::size_t dimension = S;
+        static constexpr std::size_t elements = S;
 
+        /// returns the number of elements we contain
         static constexpr auto size (void) { return S; }
 
         // constructors
         using init<S,T,SelfT>::init;
+
+        /// constructs, but does not initialise, the data.
+        ///
+        /// used to avoid unnecessary initialisation in many situations where
+        /// we have arrays of these types that are about to be overwritten. it
+        /// is a very important performance optimisation.
         base () = default;
 
-        constexpr explicit base (T val)
-        { std::fill (begin (), end (), val); }
+        /// constructs an instance where all elements are initialised to `val'.
+        constexpr explicit
+        base (T fill)
+        {
+            for (decltype(S) i = 0; i < S; ++i)
+                this->data[i] = fill;
+        }
 
         constexpr base (const base<S,T,SelfT> &rhs) = default;
         base& operator= (const base<S,T,SelfT> &rhs) = default;
@@ -85,7 +98,7 @@ namespace util::coord {
 
         ///////////////////////////////////////////////////////////////////////
         // conversions
-        template <template <size_t, typename> class K>
+        template <template <std::size_t, typename> class K>
         K<S,T> as (void) const
         {
             K<S,T> k;
@@ -122,7 +135,11 @@ namespace util::coord {
         }
 
         ///////////////////////////////////////////////////////////////////////
-        // redimension
+        /// returns an instance with the same data, but truncated to `D'
+        /// elements
+        ///
+        /// explicitly does not allow a fill parameter given it can't be used
+        /// when reducing dimensions.
         template <
             size_t D,
             typename _sfinae = SelfT
@@ -143,6 +160,12 @@ namespace util::coord {
 
 
         //---------------------------------------------------------------------
+        /// returns an instance with the same data, but more elements, where
+        /// the new elements are initialised with values with the same index
+        /// in the coordinate `fill'.
+        ///
+        /// explicitly requires a fill parameter so that we avoid undefined
+        /// values.
         template<size_t D,typename _sfinae = SelfT>
         std::enable_if_t<
             has_redim_v<_sfinae>,
@@ -152,20 +175,17 @@ namespace util::coord {
         {
             redim_t<SelfT,D> out;
 
-            static constexpr auto L1 = min (S, D);
-            static constexpr auto L2 = D - L1;
-
-            std::copy_n (std::cbegin (this->data),
-                         L1,
-                         std::begin (out.data));
-
-            std::copy_n (fill.data + L1,
-                         L2,
-                         out.data + L1);
+            auto next = std::copy (cbegin (), cend (), std::begin (out));
+            std::copy (std::cbegin (fill) + S, std::cend (fill), next);
             return out;
         }
 
         //---------------------------------------------------------------------
+        /// returns an instance with the same data, but more elements, where
+        /// all the new elemenst are initialised with the scalar `fill'.
+        ///
+        /// explicitly requires a fill parameter so that we avoid undefined
+        /// values.
         template <
             size_t D,
             typename _sfinae = SelfT
@@ -178,16 +198,32 @@ namespace util::coord {
         {
             redim_t<SelfT,D> out;
 
-            auto cursor = std::copy_n (std::cbegin (this->data),
-                                       min (S, D),
-                                       std::begin (out.data));
-            std::fill (cursor, std::end (out.data), fill);
-
+            auto next = std::copy (cbegin (), cend (), std::begin (out));
+            std::fill (next, std::end (out), fill);
             return out;
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        /// returns an instance with elements specified by the Indices
+        /// parameter. eg, point2f p{}.indices<0,2> would return {p.x, p.z}.
+        ///
+        /// it's ugly as sin, but simplifies some situations where we don't
+        /// want a temporary.
+        template <std::size_t ...Indices>
+        constexpr auto
+        indices (void) const
+        {
+            static_assert (
+                all (make_vector ((Indices < S)...)),
+                "indices must fall within the defined range for the type"
+            );
+
+            return redim_t<SelfT,sizeof...(Indices)> {
+                this->data[Indices]...
+            };
         }
     };
 }
-
-#include "ops.hpp"
 
 #endif

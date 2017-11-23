@@ -16,10 +16,10 @@
 
 #include "linear.hpp"
 
-#include "../pointer.hpp"
-#include "../debug.hpp"
+#include "../../pointer.hpp"
+#include "../../debug.hpp"
 
-using util::alloc::linear;
+using util::alloc::raw::linear;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,7 +30,6 @@ linear::linear (void *begin, void *end):
 {
     CHECK_NEZ (begin);
     CHECK_NEZ (end);
-
     CHECK_LE (begin, end);
 }
 
@@ -78,7 +77,7 @@ linear::deallocate (void *ptr, size_t bytes, size_t alignment)
 
 //-----------------------------------------------------------------------------
 void*
-linear::base (void)
+linear::begin (void)
 {
     return m_begin;
 }
@@ -86,7 +85,7 @@ linear::base (void)
 
 //-----------------------------------------------------------------------------
 const void*
-linear::base (void) const
+linear::begin (void) const
 {
     return m_begin;
 }

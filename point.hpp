@@ -37,8 +37,27 @@ namespace util {
 
         template <size_t D> point<D,T> homog (void) const;
 
-        static constexpr point<S,T> origin (void);
+        ///////////////////////////////////////////////////////////////////////
+        static constexpr
+        auto min (void)
+        {
+            return point { std::numeric_limits<T>::lowest () };
+        }
 
+        //-------------------------------------------------------------------
+        static constexpr
+        auto max (void)
+        {
+            return point { std::numeric_limits<T>::max () };
+        }
+
+
+        //-------------------------------------------------------------------
+        static constexpr
+        point<S,T> origin (void);
+
+
+        ///////////////////////////////////////////////////////////////////////
         void sanity (void) const;
     };
 

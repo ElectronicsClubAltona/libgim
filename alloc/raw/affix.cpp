@@ -14,30 +14,10 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#if defined(__UTIL_GEOM_AABB_IPP)
-#error
-#endif
+#include "affix.hpp"
 
-#define __UTIL_GEOM_AABB_IPP
-
-#include "sample.hpp"
-
-#include <random>
+using util::alloc::raw::affix;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util::geom {
-    template <size_t S, typename T, typename G>
-    struct sampler<S,T,AABB,G> {
-        static point<S,T>
-        fn (AABB<S,T> b, G &g)
-        {
-            std::uniform_real_distribution<T> d;
 
-            point<S,T> p;
-            std::generate (p.begin (), p.end (), [&] (void) { return d (g); });
-
-            return p * (b.p1 - b.p0) + b.p0.template as<util::vector> ();
-        }
-    };
-}

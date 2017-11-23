@@ -14,32 +14,29 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_ALLOC_STACK_HPP
-#define __UTIL_ALLOC_STACK_HPP
+#ifndef CRUFT_UTIL_ALLOC_RAW_NULL_HPP
+#define CRUFT_UTIL_ALLOC_RAW_NULL_HPP
 
 #include <cstddef>
 
 
-namespace util::alloc {
-    // allocate memory from a buffer in a stacklike manner. deallocation that
-    // is not correctly ordered has undefined (read 'bad') results.
-    class stack {
+namespace util::alloc::raw {
+    // allocator that always fails, throwing bad_alloc. deallocate will
+    // succeed with nullptr as with delete, but is undefined with other values
+    // (it is likely to at least assert).
+    class null {
     public:
-        stack (const stack&) = delete;
-        stack (stack&&) = delete;
-        stack& operator= (const stack&) = delete;
-        stack& operator= (stack&&) = delete;
+        null () = default;
+        null (const null&) = delete;
+        null& operator= (const null&) = delete;
 
-        stack (void *begin, void *end);
-
-        void *allocate  (size_t bytes, size_t alignment);
-        void *allocate  (size_t bytes);
-
+        void* allocate (size_t bytes);
+        void* allocate (size_t bytes, size_t align);
         void deallocate (void *ptr, size_t bytes);
-        void deallocate (void *ptr, size_t bytes, size_t alignment);
+        void deallocate (void *ptr, size_t bytes, size_t align);
 
-        void* base (void);
-        const void* base (void) const;
+        void* begin (void);
+        const void* begin (void) const;
         size_t offset (const void*) const;
 
         void reset (void);
@@ -47,9 +44,6 @@ namespace util::alloc {
         size_t capacity (void) const;
         size_t used     (void) const;
         size_t remain   (void) const;
-
-    private:
-        char *m_begin, *m_end, *m_cursor;
     };
 }
 

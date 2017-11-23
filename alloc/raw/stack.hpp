@@ -14,31 +14,32 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_ALLOC_LINEAR_HPP
-#define __UTIL_ALLOC_LINEAR_HPP
+#ifndef CRUFT_UTIL_ALLOC_RAW_STACK_HPP
+#define CRUFT_UTIL_ALLOC_RAW_STACK_HPP
 
 #include <cstddef>
 
-namespace util::alloc {
-    // allocate progressively across a buffer without concern for deallocation.
-    // deallocation is a noop; the only way to free allocations is via reset.
-    class linear {
+
+namespace util::alloc::raw {
+    // allocate memory from a buffer in a stacklike manner. deallocation that
+    // is not correctly ordered has undefined (read 'bad') results.
+    class stack {
     public:
-        linear (const linear&) = delete;
-        linear (linear&&) = delete;
-        linear& operator= (const linear&) = delete;
-        linear& operator= (linear&&) = delete;
+        stack (const stack&) = delete;
+        stack (stack&&) = delete;
+        stack& operator= (const stack&) = delete;
+        stack& operator= (stack&&) = delete;
 
-        linear (void *begin, void *end);
+        stack (void *begin, void *end);
 
-        void* allocate (size_t bytes);
-        void* allocate (size_t bytes, size_t alignment);
+        void *allocate  (size_t bytes, size_t alignment);
+        void *allocate  (size_t bytes);
 
-        void  deallocate (void *ptr, size_t bytes);
-        void  deallocate (void *ptr, size_t bytes, size_t alignment);
+        void deallocate (void *ptr, size_t bytes);
+        void deallocate (void *ptr, size_t bytes, size_t alignment);
 
-        void* base (void);
-        const void* base (void) const;
+        void* begin (void);
+        const void* begin (void) const;
         size_t offset (const void*) const;
 
         void reset (void);
@@ -47,7 +48,7 @@ namespace util::alloc {
         size_t used     (void) const;
         size_t remain   (void) const;
 
-    protected:
+    private:
         char *m_begin, *m_end, *m_cursor;
     };
 }

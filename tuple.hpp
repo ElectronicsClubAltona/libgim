@@ -169,23 +169,46 @@ namespace util::tuple {
     /// do nothing with a set of parameters.
     ///
     /// useful for temporarily silencing unused argument warnings in parameter
-    /// packs.
+    /// packs, or for avoiding assignment of [[gnu::warn_unused_result]] to a
+    /// temporary value we'd just cast to void anyway (GCC#66425).
     ///
     /// it is guaranteed that this function will never be defined out in
     /// debug/release/whatever builds. so it is safe to use to guarantee
     /// parameter evaluation.
-    void
-    ignore (void)
+    inline void
+    ignore (void) noexcept
     { ; }
 
     //-------------------------------------------------------------------------
     template <typename T, typename ...Args>
     void
-    ignore (T, Args ...args)
-    {
-        ignore (std::forward<Args> (args)...);
+    ignore (T, const Args&...) noexcept
+    { ; }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// query the index of the first occurrence of type `T' in the tuple type
+    /// `TupleT'.
+    ///
+    /// if the query type does not occur in the tuple type a compiler error
+    /// should be generated.
+    template <class T, class TupleT>
+    struct index;
+
+
+    //-------------------------------------------------------------------------
+    template <class T, class ...Types>
+    struct index<T, std::tuple<T, Types...>> {
+        static constexpr std::size_t value = 0;
     };
-}
+
+
+    //-------------------------------------------------------------------------
+    template <class T, class U, class ...Types>
+    struct index<T,std::tuple<U, Types...>> {
+        static constexpr std::size_t value = 1 + index<T, std::tuple<Types...>>::value;
+    };
+};
 
 
 #endif

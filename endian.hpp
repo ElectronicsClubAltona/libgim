@@ -33,7 +33,7 @@ namespace util {
     //-------------------------------------------------------------------------
     template <typename T>
     constexpr T
-    bswap (T);
+    bswap (T) noexcept;
 
     // CXX: Update using "if constexpr" when available. It doesn't seem to be
     // worth the dicking about to use enable_if_t to differentiate the
@@ -42,7 +42,7 @@ namespace util {
     template <>                             \
     constexpr                               \
     int##S##_t                              \
-    bswap (int##S##_t v) {                  \
+    bswap (int##S##_t v) noexcept {         \
         const union {                       \
              int##S##_t s;                  \
             uint##S##_t u;                  \
@@ -55,12 +55,31 @@ namespace util {
     SIGNED_BSWAP(32)
     SIGNED_BSWAP(64)
 
-    template <> constexpr  int8_t bswap ( int8_t v) { return v; }
-    template <> constexpr uint8_t bswap (uint8_t v) { return v; }
+    template <> constexpr  int8_t bswap ( int8_t v) noexcept { return v; }
+    template <> constexpr uint8_t bswap (uint8_t v) noexcept { return v; }
 
-    template <> constexpr uint16_t bswap (uint16_t v) { return __builtin_bswap16 (v); }
-    template <> constexpr uint32_t bswap (uint32_t v) { return __builtin_bswap32 (v); }
-    template <> constexpr uint64_t bswap (uint64_t v) { return __builtin_bswap64 (v); }
+    template <> constexpr uint16_t bswap (uint16_t v) noexcept { return __builtin_bswap16 (v); }
+    template <> constexpr uint32_t bswap (uint32_t v) noexcept { return __builtin_bswap32 (v); }
+    template <> constexpr uint64_t bswap (uint64_t v) noexcept { return __builtin_bswap64 (v); }
+
+
+    // use a type-punning union to punt the byte swapping operation to the
+    // unsigned integer code.
+    //
+    // this is debatably safe under production compilers like gcc + clang
+    // despite what the standard may say about unions.
+    template <>
+    constexpr float
+    bswap (float v) noexcept
+    {
+        union {
+            float f;
+            uint32_t u;
+        } temp { .f = v };
+
+        temp.u = bswap (temp.u);
+        return temp.f;
+    }
 
 
     //-------------------------------------------------------------------------

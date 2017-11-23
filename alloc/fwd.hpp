@@ -19,17 +19,20 @@
 
 
 namespace util::alloc {
-    class affix;
-    class fallback;
-    class linear;
-    class malloc;
-    class null;
-    class stack;
+    namespace raw {
+        class affix;
+        class fallback;
+        class linear;
+        class malloc;
+        class null;
+        class stack;
 
-    class dynamic;
+        class dynamic;
 
-    template <typename AllocT>
-    class aligned;
+        template <typename AllocT>
+        class aligned;
+    }
+
 
     template <typename T> class arena;
     template <typename B, typename T> class allocator;

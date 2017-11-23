@@ -253,23 +253,25 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////////
-    // Rounding
+    /// round T up to the nearest multiple of U
     template <typename T, typename U>
     inline
     typename std::common_type<
         std::enable_if_t<std::is_integral<T>::value,T>,
         std::enable_if_t<std::is_integral<U>::value,U>
     >::type
-    round_to (T value, U size)
+    round_up (T value, U size)
     {
-        if (value % size == 0)
-            return value;
-
-        return value + (size - value % size);
+        // we perform this as two steps to avoid unnecessarily incrementing when
+        // remainder is zero.
+        if (value % size)
+            value += size - value % size;
+        return value;
     }
 
 
-    //-----------------------------------------------------------------------------
+    ///----------------------------------------------------------------------------
+    /// round T up to the nearest power-of-2
     template <typename T>
     constexpr
     std::enable_if_t<
@@ -290,7 +292,8 @@ namespace util {
     }
 
 
-    //-----------------------------------------------------------------------------
+    ///----------------------------------------------------------------------------
+    /// round T up to the nearest multiple of U and return the quotient.
     template <typename T, typename U>
     constexpr std::enable_if_t<
         std::is_integral<T>::value &&
@@ -344,15 +347,17 @@ namespace util {
     template <typename ValueT, typename BaseT>
     constexpr
     std::enable_if_t<
-        std::is_integral<ValueT>::value && std::is_unsigned<BaseT>::value,
-        unsigned
+        std::is_integral_v<ValueT> && std::is_integral_v<BaseT>,
+        int
     >
     digits (ValueT value, BaseT base) noexcept
     {
+        assert (base > 0);
+
         if (value < 0)
             value *= -1;
 
-        unsigned tally = 1;
+        int tally = 1;
         while (value /= base)
             ++tally;
 
@@ -582,7 +587,16 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     /// Variadic minimum
-    template <typename T>
+
+    // disable the single parameter version for non-arithmetic types so that
+    // min for coord types is unambiguous. allow pointers too because it
+    // doesn't add ambiguity and it simplifies some memory juggling.
+    template <
+        typename T,
+        typename = std::enable_if_t<
+            std::is_arithmetic_v<T> || std::is_pointer_v<T>, void
+        >
+    >
     constexpr T
     min  (const T a)
         { return a; }
@@ -604,7 +618,7 @@ namespace util {
     //-------------------------------------------------------------------------
     /// Variadic maximum
     template <typename T>
-    constexpr std::enable_if_t<std::is_arithmetic_v<T>, T>
+    constexpr std::enable_if_t<std::is_arithmetic_v<T> || std::is_pointer_v<T>, T>
     max  (const T a)
     { return a; }
 
@@ -628,7 +642,10 @@ namespace util {
     // min/max clamping
     template <typename T, typename U, typename V>
     constexpr
-    T
+    std::enable_if_t<
+        std::is_scalar_v<T> && std::is_scalar_v<U> && std::is_scalar_v<V>,
+        std::common_type_t<T,U,V>
+    >
     limit (const T val, const U lo, const V hi)
     {
         assert (lo <= hi);
@@ -756,32 +773,48 @@ namespace util {
 
     //-------------------------------------------------------------------------
     // lo_uint -> hi_uint
-    template <typename T, typename U>
-    constexpr
-    typename std::enable_if<
-        std::is_unsigned<T>::value &&
-        std::is_unsigned<U>::value &&
-        sizeof (T) < sizeof (U), U
-    >::type
-    renormalise (T t)
+    template <
+        typename SrcT,
+        typename DstT,
+        typename = std::enable_if_t<
+            std::is_unsigned<SrcT>::value &&
+            std::is_unsigned<DstT>::value &&
+            sizeof (SrcT) < sizeof (DstT), DstT
+        >
+    >
+    constexpr DstT
+    renormalise (SrcT src)
     {
-        static_assert (sizeof (T) < sizeof (U),
+        // we can make some simplifying assumptions for the shift distances if
+        // we assume the integers are powers of two. this is probably going to
+        // be the case for every conceivable input type, but we don't want to
+        // get caught out if we extend this routine to more general types
+        // (eg, OpenGL DEPTH24).
+        static_assert (is_pow2 (sizeof (SrcT)));
+        static_assert (is_pow2 (sizeof (DstT)));
+
+        static_assert (sizeof (SrcT) < sizeof (DstT),
                        "assumes bit creation is required to fill space");
 
         // we need to create bits. fill the output integer with copies of ourself.
         // this is approximately correct in the general case (introducing a small
-        // linear positive bias), but allows us to fill the output space in the
-        // case of input maximum.
-
-        static_assert (sizeof (U) % sizeof (T) == 0,
+        // linear positive bias), but it allows us to set all output bits high
+        // when we receive the maximum allowable input value.
+        static_assert (sizeof (DstT) % sizeof (SrcT) == 0,
                        "assumes integer multiple of sizes");
 
-        U out = 0;
 
-        for (size_t i = 0; i < sizeof (U) / sizeof (T); ++i)
-            out |= U (t) << sizeof (T) * 8 * i;
-
-        return out;
+        // clang#xxxx: ideally we wouldn't use a multiplication here, but we
+        // trigger a segfault in clang-5.0 when using ld.gold+lto;
+        // 'X86 DAG->DAG Instruction Selection'
+        //
+        // create a mask of locations we'd like copies of the src bit pattern.
+        //
+        // this replicates repeatedly or'ing and shifting dst with itself.
+        DstT dst { 1 };
+        for (unsigned i = sizeof (SrcT) * 8; i < sizeof (DstT) * 8; i *= 2)
+            dst |= dst << i;
+        return dst * src;
     }
 
 

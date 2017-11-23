@@ -11,12 +11,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "affix.hpp"
+#include "./rfc7519.hpp"
 
-using util::alloc::affix;
+#include "./base.hpp"
 
-
-///////////////////////////////////////////////////////////////////////////////
+using util::json2::personality::rfc7159;

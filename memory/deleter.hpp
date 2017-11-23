@@ -42,20 +42,24 @@ namespace util::memory {
     // XXX: Generates a "sorry, unimplemented" under GCC (which is
     // effectively an ICE). Their bug tracker seems to indicate they don't
     // give a fuck, so we can't use this except under clang.
-    template <typename T, typename U, void (U::*F)(T*)>
+    template <
+        typename ValueT,
+        typename OwnerT,
+        void (OwnerT::*Func)(ValueT*)
+    >
     class owner_deleter {
     public:
-        owner_deleter (U &owner):
+        owner_deleter (OwnerT &owner):
             m_owner (owner)
         { ; }
 
-        inline void operator() (T *t)
+        inline void operator() (ValueT *t)
         {
-            (m_owner.*F) (t);
+            (m_owner.*Func) (t);
         }
 
     private:
-        U& m_owner;
+        OwnerT& m_owner;
     };
 }
 

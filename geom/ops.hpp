@@ -17,7 +17,7 @@
 #ifndef __UTIL_GEOM_OPS_HPP
 #define __UTIL_GEOM_OPS_HPP
 
-#include "aabb.hpp"
+#include "./fwd.hpp"
 #include "../point.hpp"
 
 
@@ -55,7 +55,7 @@ namespace util::geom {
         typename T,
         template <size_t,typename> class K
     >
-    AABB<S,T>
+    aabb<S,T>
     bounds (K<S,T>);
 
     template <

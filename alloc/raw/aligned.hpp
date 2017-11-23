@@ -14,17 +14,22 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __CRUFT_UTIL_ALLOC_ALIGNED_HPP
-#define __CRUFT_UTIL_ALLOC_ALIGNED_HPP
+#ifndef CRUFT_UTIL_ALLOC_RAW_ALIGNED_HPP
+#define CRUFT_UTIL_ALLOC_RAW_ALIGNED_HPP
 
-namespace util::alloc {
+#include <cstddef>
+#include <utility>
+
+#include "../../debug.hpp"
+
+namespace util::alloc::raw {
     /// wraps a child allocator and enforces a fixed alignment
     template <typename ChildT>
     class aligned {
     public:
         ///////////////////////////////////////////////////////////////////////
         template <typename ...Args>
-        aligned (size_t _alignment, Args &&...args):
+        aligned (std::size_t _alignment, Args &&...args):
             m_successor (std::forward<Args> (args)...),
             m_alignment (_alignment)
         { ; }
@@ -32,14 +37,14 @@ namespace util::alloc {
 
         ///////////////////////////////////////////////////////////////////////
         auto
-        allocate (size_t bytes)
+        allocate (std::size_t bytes)
         {
             return m_successor.allocate (bytes, m_alignment);
         }
 
         //---------------------------------------------------------------------
         auto
-        allocate (size_t bytes, size_t alignment)
+        allocate (std::size_t bytes, std::size_t alignment)
         {
             (void)alignment;
             CHECK_EQ (alignment, m_alignment);
@@ -49,7 +54,7 @@ namespace util::alloc {
 
         //---------------------------------------------------------------------
         auto
-        deallocate (void *ptr, size_t bytes)
+        deallocate (void *ptr, std::size_t bytes)
         {
             return m_successor.deallocate (ptr, bytes);
         }
@@ -57,7 +62,7 @@ namespace util::alloc {
 
         //---------------------------------------------------------------------
         auto
-        deallocate (void *ptr, size_t bytes, size_t alignment)
+        deallocate (void *ptr, std::size_t bytes, std::size_t alignment)
         {
             (void)alignment;
             CHECK_EQ (alignment, m_alignment);
@@ -66,8 +71,8 @@ namespace util::alloc {
 
 
         ///////////////////////////////////////////////////////////////////////
-        auto base (void)       { return m_successor.base (); }
-        auto base (void) const { return m_successor.base (); }
+        auto begin (void)       { return m_successor.begin (); }
+        auto begin (void) const { return m_successor.begin (); }
 
 
         //---------------------------------------------------------------------
@@ -90,7 +95,7 @@ namespace util::alloc {
 
     private:
         ChildT m_successor;
-        size_t m_alignment;
+        std::size_t m_alignment;
     };
 }
 

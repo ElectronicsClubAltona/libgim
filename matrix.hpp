@@ -51,28 +51,81 @@ namespace util {
 
         T values[rows][cols];
 
+        ///////////////////////////////////////////////////////////////////////
         // index operators return a pointer into the data array so that
         // multidimensional array syntax can be used transparently on this
         // type.
         constexpr auto& operator[] (std::size_t idx) { return values[idx]; }
         constexpr const auto& operator[] (std::size_t idx) const { return values[idx]; }
 
-        T* data (void);
-        const T* data (void) const;
+        //---------------------------------------------------------------------
+        constexpr auto
+        data (void) noexcept
+        {
+            return begin ();
+        }
 
-        const T* begin (void) const;
-        const T* end   (void) const;
-        T* begin (void);
-        T* end   (void);
-        const T* cbegin (void) const;
-        const T* cend   (void) const;
+        //---------------------------------------------------------------------
+        constexpr auto
+        data (void) const noexcept
+        {
+            return begin ();
+        }
 
+        //---------------------------------------------------------------------
+        constexpr auto
+        begin (void) const noexcept
+        {
+            return &(*this)[0][0];
+        }
+
+        //---------------------------------------------------------------------
+        constexpr auto
+        end (void) const noexcept
+        {
+            return &(*this)[Rows][0];
+        }
+
+        //---------------------------------------------------------------------
+        constexpr auto
+        begin (void) noexcept
+        {
+            return &(*this)[0][0];
+        }
+
+        //---------------------------------------------------------------------
+        constexpr auto
+        end (void) noexcept
+        {
+            return &(*this)[Rows][0];
+        }
+
+        //---------------------------------------------------------------------
+        constexpr auto
+        cbegin (void) const noexcept
+        {
+            return begin ();
+        }
+
+        //---------------------------------------------------------------------
+        constexpr auto
+        cend (void) const noexcept
+        {
+            return end ();
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////
         T determinant (void) const;
 
-        matrix  inverse (void) const;
-        matrix& invert  (void);
-        matrix  inverse_affine (void) const;
-        matrix& invert_affine  (void);
+        matrix inverse (void) const;
+
+        matrix
+        inverse_affine (void) const
+        {
+            // TODO: ensure we have specialisations for typical dimensions
+            return inverse ();
+        }
 
 
         template <typename VectorT>
@@ -91,7 +144,12 @@ namespace util {
 
         template <typename U>
         matrix<Rows,Cols,U>
-        cast (void) const;
+        cast (void) const noexcept
+        {
+            util::matrix<Rows,Cols,T> out;
+            std::copy (cbegin (), cend (), std::begin (out));
+            return out;
+        }
 
         // Constant matrices
         static constexpr matrix identity ();
@@ -206,8 +264,12 @@ namespace util {
     {
         matrix<R1,C2,T> res {};
 
-        // we use a column first iteration approach because otherwise we risk
-        // triggering clang#????
+        // TODO: iterating over r,c rather than c,r will cause an ICE with
+        // clang#xxxx: 'X86 DAG->DAG Instruction Selection'.
+        //
+        // this is likely related to gold and LTO support. for the time being
+        // we switch the orders because it appears to confuse the optimiser
+        // sufficiently. :(
         for (std::size_t c = 0; c < C2; ++c) {
             for (std::size_t r = 0; r < R1; ++r) {
                 T accum {0};
