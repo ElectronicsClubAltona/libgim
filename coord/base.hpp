@@ -73,13 +73,20 @@ namespace util::coord {
         }
 
         constexpr base (const base<S,T,SelfT> &rhs) = default;
-        base& operator= (const base<S,T,SelfT> &rhs) = default;
+        base& operator= (const base<S,T,SelfT> &rhs)& = default;
+        base& operator= (const T t)&
+        {
+            for (auto v: *this)
+                v = t;
+            return *this;
+        }
 
         // element accessors
-        T& operator[] (size_t i) { return this->data[i]; }
-        constexpr const T& operator[] (size_t i) const { return this->data[i]; }
-        T& operator[] (int i) { return this->data[i]; }
-        constexpr const T& operator[] (int i) const { return this->data[i]; }
+        constexpr T& operator[] (size_t i)& noexcept { return this->data[i]; }
+        constexpr T& operator[] (int i)& noexcept { return this->data[i]; }
+
+        constexpr const T& operator[] (size_t i) const& noexcept { return this->data[i]; }
+        constexpr const T& operator[] (int i) const& noexcept { return this->data[i]; }
 
         auto cbegin (void) const { return std::cbegin (this->data); }
         auto cend   (void) const { return std::cend   (this->data); }

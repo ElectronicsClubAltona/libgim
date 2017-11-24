@@ -609,19 +609,16 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class A,
-        template <std::size_t,typename> class B,
+        typename A,
+        typename B,
         typename = std::enable_if_t<
-            is_coord_v<A<S,T>> && is_coord_v<B<S,T>>, void
+            is_coord_v<A> && is_coord_v<B>, void
         >
     >
-    constexpr
-    T
-    dot (A<S,T> a, B<S,T> b)
+    constexpr auto
+    dot (A a, B b)
     {
-        return dot<S,T> (a.data, b.data);
+        return dot (a.data, b.data);
     }
 
 

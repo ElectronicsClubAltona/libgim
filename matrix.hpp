@@ -34,17 +34,25 @@ namespace util {
         static constexpr auto rows = Rows;
         static constexpr auto cols = Cols;
 
+        using row_t = util::vector<Cols,T>;
+
+
+        ///////////////////////////////////////////////////////////////////////
         constexpr matrix () noexcept = default;
 
+
+        //---------------------------------------------------------------------
         constexpr matrix (const T(&_data)[Rows][Cols]) noexcept:
             values {}
         {
+            static_assert (sizeof (*this) == sizeof (T) * Rows * Cols);
             for (std::size_t r = 0; r < Rows; ++r)
                 for (std::size_t c = 0; c < Cols; ++c)
                     values[r][c] = _data[r][c];
         }
 
 
+        //---------------------------------------------------------------------
         template <std::size_t S, typename SelfT>
         constexpr matrix (const util::coord::base<S,T,SelfT> (&_data)[Rows]) noexcept
         {
@@ -53,55 +61,54 @@ namespace util {
                     values[r][c] = _data[r][c];
         }
 
-        T values[Rows][Cols];
 
         ///////////////////////////////////////////////////////////////////////
         // index operators return a pointer into the data array so that
         // multidimensional array syntax can be used transparently on this
         // type.
-        constexpr auto& operator[] (std::size_t idx) { return values[idx]; }
-        constexpr const auto& operator[] (std::size_t idx) const { return values[idx]; }
+        constexpr row_t& operator[] (std::size_t idx)& { return values[idx]; }
+        constexpr const row_t& operator[] (std::size_t idx) const& { return values[idx]; }
 
         //---------------------------------------------------------------------
-        constexpr auto
+        constexpr row_t*
         data (void)& noexcept
         {
-            return begin ();
+            return &values[0];
         }
 
         //---------------------------------------------------------------------
-        constexpr auto
+        constexpr const row_t*
         data (void) const& noexcept
         {
-            return begin ();
+            return &values[0];
         }
 
         //---------------------------------------------------------------------
         constexpr auto
         begin (void) const& noexcept
         {
-            return &(*this)[0][0];
-        }
-
-        //---------------------------------------------------------------------
-        constexpr auto
-        end (void) const& noexcept
-        {
-            return &(*this)[Rows][0];
+            return data ();
         }
 
         //---------------------------------------------------------------------
         constexpr auto
         begin (void)& noexcept
         {
-            return &(*this)[0][0];
+            return data ();
         }
 
         //---------------------------------------------------------------------
-        constexpr auto
+        constexpr row_t*
         end (void)& noexcept
         {
-            return &(*this)[Rows][0];
+            return &values[Rows];
+        }
+
+        //---------------------------------------------------------------------
+        constexpr const row_t*
+        end (void) const& noexcept
+        {
+            return &values[Rows];
         }
 
         //---------------------------------------------------------------------
@@ -138,8 +145,8 @@ namespace util {
         {
             VectorT out;
 
-            for (std::size_t i = 0; i < Rows; ++i)
-                out[i] = dot (rhs, values[i]);
+            for (std::size_t r = 0; r < Rows; ++r)
+                out[r] = dot (rhs, values[r]);
 
             return out;
         }
@@ -169,9 +176,13 @@ namespace util {
         matrix zeroes (void) noexcept
         {
             matrix ret {};
-            std::fill (std::begin (ret), std::end (ret), T{0});
+            std::fill (std::begin (ret), std::end (ret), row_t{0});
             return ret;
         }
+
+
+    private:
+        row_t values[Rows];
     };
 
 
@@ -346,7 +357,8 @@ namespace util {
     abs (const matrix<Rows,Cols,T> &src)
     {
         matrix<Rows,Cols,T> dst;
-        std::transform (std::cbegin (src), std::cend (src), std::begin (dst), util::abs<T>);
+        for (size_t r = 0; r < Rows; ++r)
+            dst[r] = abs (src[r]);
         return dst;
     }
 
@@ -355,7 +367,10 @@ namespace util {
     constexpr T
     sum (const matrix<Rows,Cols,T> &src)
     {
-        return sum (std::cbegin (src), std::cend (src));
+        util::vector<Rows,T> accum {};
+        for (size_t r = 0; r < Rows; ++r)
+            accum[r] = sum (src[r]);
+        return sum (accum);
     }
 
 

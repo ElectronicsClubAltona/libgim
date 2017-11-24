@@ -112,9 +112,9 @@ main (void)
         for (size_t r = 0; r < m.rows; ++r)
             for (size_t c = 0; c < m.cols; ++c)
                 if (r == c)
-                    success = success && util::almost_equal (m.values[r][c], 1.f);
+                    success = success && util::almost_equal (m[r][c], 1.f);
                 else
-                    success = success && util::almost_equal (m.values[r][c], 0.f);
+                    success = success && util::almost_equal (m[r][c], 0.f);
 
         tap.expect (success, "identity inversion");
     }

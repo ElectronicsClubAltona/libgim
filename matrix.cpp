@@ -352,7 +352,7 @@ util::operator<< (std::ostream &os, const matrix<Rows,Cols,T> &m)
 
     for (std::size_t i = 0; i < Rows; ++i) {
         os << "{ ";
-        std::copy_n (m[i], Cols, util::infix_iterator<float> (os, ", "));
+        std::copy (std::cbegin (m[i]), std::cend (m[i]), util::infix_iterator<float> (os, ", "));
         os << ((i == Rows - 1) ? " }" : " }, ");
     }
 

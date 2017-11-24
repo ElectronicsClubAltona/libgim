@@ -104,9 +104,6 @@ test_mq_euler (util::TAP::logger &tap)
             util::quaternionf::angle_axis (t.z, { 0, 0, 1 })
         ).as_matrix ();
 
-        if (abs (m - q)[0])
-            exit (0);
-
         auto diff = util::sum (abs (m - q));
         tap.expect_le (diff, 1e-6f, "matrix-quaternion xyz euler rotations, %s", t.msg);
     }
