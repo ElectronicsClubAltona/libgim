@@ -20,9 +20,10 @@
 #include "point.hpp"
 #include "range.hpp"
 #include "vector.hpp"
+#include "iterator.hpp"
 
-#include <ostream>
 #include <cstdlib>
+#include <ostream>
 
 namespace util {
     template <
@@ -469,9 +470,17 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <std::size_t Rows, std::size_t Cols, typename T>
-    std::ostream& operator<< (std::ostream&, const matrix<Rows,Cols,T>&);
-
-
-}
+    std::ostream&
+    operator<< (std::ostream &os, const matrix<Rows,Cols,T> &m)
+    {
+        os << '[';
+        std::copy (
+            std::cbegin (m),
+            std::cend   (m),
+            util::infix_iterator<decltype(m[0])> (os, ", ")
+        );
+        return os << ']';
+    }
+};
 
 #endif

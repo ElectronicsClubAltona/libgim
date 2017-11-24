@@ -342,24 +342,3 @@ util::to_euler (const matrix<Rows,Cols,T> &m)
 template util::vector<3,float> util::to_euler (const matrix<3,3,float>&);
 template util::vector<3,float> util::to_euler (const matrix<4,4,float>&);
 
-
-///////////////////////////////////////////////////////////////////////////////
-template <std::size_t Rows, std::size_t Cols, typename T>
-std::ostream&
-util::operator<< (std::ostream &os, const matrix<Rows,Cols,T> &m)
-{
-    os << "{ ";
-
-    for (std::size_t i = 0; i < Rows; ++i) {
-        os << "{ ";
-        std::copy (std::cbegin (m[i]), std::cend (m[i]), util::infix_iterator<float> (os, ", "));
-        os << ((i == Rows - 1) ? " }" : " }, ");
-    }
-
-    return os << " }";
-}
-
-
-//-----------------------------------------------------------------------------
-template std::ostream& util::operator<< (std::ostream&, const matrix<4,4,float>&);
-template std::ostream& util::operator<< (std::ostream&, const matrix<4,4,double>&);
