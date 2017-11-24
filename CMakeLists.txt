@@ -329,7 +329,6 @@ list (
     matrix3.cpp
     matrix4.cpp
     matrix.hpp
-    matrix.ipp
     memory/deleter.cpp
     memory/deleter.hpp
     nocopy.hpp

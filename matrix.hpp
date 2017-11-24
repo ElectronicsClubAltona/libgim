@@ -25,7 +25,11 @@
 #include <cstdlib>
 
 namespace util {
-    template <std::size_t Rows, std::size_t Cols, typename T>
+    template <
+        std::size_t Rows,
+        std::size_t Cols,
+        typename T
+    >
     struct matrix {
         static constexpr auto rows = Rows;
         static constexpr auto cols = Cols;
@@ -49,7 +53,7 @@ namespace util {
                     values[r][c] = _data[r][c];
         }
 
-        T values[rows][cols];
+        T values[Rows][Cols];
 
         ///////////////////////////////////////////////////////////////////////
         // index operators return a pointer into the data array so that
@@ -60,56 +64,56 @@ namespace util {
 
         //---------------------------------------------------------------------
         constexpr auto
-        data (void) noexcept
+        data (void)& noexcept
         {
             return begin ();
         }
 
         //---------------------------------------------------------------------
         constexpr auto
-        data (void) const noexcept
+        data (void) const& noexcept
         {
             return begin ();
         }
 
         //---------------------------------------------------------------------
         constexpr auto
-        begin (void) const noexcept
+        begin (void) const& noexcept
         {
             return &(*this)[0][0];
         }
 
         //---------------------------------------------------------------------
         constexpr auto
-        end (void) const noexcept
+        end (void) const& noexcept
         {
             return &(*this)[Rows][0];
         }
 
         //---------------------------------------------------------------------
         constexpr auto
-        begin (void) noexcept
+        begin (void)& noexcept
         {
             return &(*this)[0][0];
         }
 
         //---------------------------------------------------------------------
         constexpr auto
-        end (void) noexcept
+        end (void)& noexcept
         {
             return &(*this)[Rows][0];
         }
 
         //---------------------------------------------------------------------
         constexpr auto
-        cbegin (void) const noexcept
+        cbegin (void) const& noexcept
         {
             return begin ();
         }
 
         //---------------------------------------------------------------------
         constexpr auto
-        cend (void) const noexcept
+        cend (void) const& noexcept
         {
             return end ();
         }
@@ -146,14 +150,28 @@ namespace util {
         matrix<Rows,Cols,U>
         cast (void) const noexcept
         {
-            util::matrix<Rows,Cols,T> out;
+            matrix out;
             std::copy (cbegin (), cend (), std::begin (out));
             return out;
         }
 
         // Constant matrices
-        static constexpr matrix identity ();
-        static constexpr matrix zeroes ();
+        static constexpr
+        matrix identity (void) noexcept
+        {
+            auto m = zeroes ();
+            for (std::size_t i = 0; i < Rows; ++i)
+                m[i][i] = 1;
+            return m;
+        }
+
+        static constexpr
+        matrix zeroes (void) noexcept
+        {
+            matrix ret {};
+            std::fill (std::begin (ret), std::end (ret), T{0});
+            return ret;
+        }
     };
 
 
@@ -164,10 +182,10 @@ namespace util {
     template <typename T> matrix<4,4,T> look_at (point<3,T> eye, point<3,T> target, vector<3,T> up);
 
     // Affine matrices
-    template <typename T> matrix<4,4,T> translation (util::vector<3,T>);
-    template <typename T> matrix<4,4,T> scale       (util::vector<3,T>);
+    template <typename T> matrix<4,4,T> translation (vector<3,T>);
+    template <typename T> matrix<4,4,T> scale       (vector<3,T>);
     template <typename T> matrix<4,4,T> scale       (T);
-    template <typename T> matrix<4,4,T> rotation    (T angle, util::vector<3,T> about);
+    template <typename T> matrix<4,4,T> rotation    (T angle, vector<3,T> about);
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -185,13 +203,20 @@ namespace util {
     template <std::size_t Rows, std::size_t Cols, typename T>
     constexpr
     bool
-    operator== (const matrix<Rows,Cols,T>&, const matrix<Rows,Cols,T>&);
+    operator== (const matrix<Rows,Cols,T> &a, const matrix<Rows,Cols,T> &b)
+    {
+        return std::equal (std::cbegin (a), std::cend (a), std::cbegin (b));
+    }
 
 
+    //-------------------------------------------------------------------------
     template <std::size_t Rows, std::size_t Cols, typename T>
     constexpr
     bool
-    operator!= (const matrix<Rows,Cols,T>&, const matrix<Rows,Cols,T>&);
+    operator!= (const matrix<Rows,Cols,T> &a, const matrix<Rows,Cols,T> &b)
+    {
+        return !(a == b);
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -302,24 +327,112 @@ namespace util {
     T
     determinant (const matrix<Rows,Cols,T>&);
 
+
+    //-------------------------------------------------------------------------
     template <std::size_t Rows, std::size_t Cols, typename T>
     matrix<Rows,Cols,T>
     inverse (const matrix<Rows,Cols,T>&);
 
+
+    //-------------------------------------------------------------------------
     template <std::size_t Rows, std::size_t Cols, typename T>
     matrix<Cols,Rows,T>
     transposed (const matrix<Rows,Cols,T>&);
 
-    ///////////////////////////////////////////////////////////////////////////
 
+    ///////////////////////////////////////////////////////////////////////////
     template <std::size_t Rows, std::size_t Cols, typename T>
     matrix<Rows,Cols,T>
-    abs (const matrix<Rows,Cols,T>&);
+    abs (const matrix<Rows,Cols,T> &src)
+    {
+        matrix<Rows,Cols,T> dst;
+        std::transform (std::cbegin (src), std::cend (src), std::begin (dst), util::abs<T>);
+        return dst;
+    }
+
 
     template <std::size_t Rows, std::size_t Cols, typename T>
-    constexpr
-    T
-    sum (const matrix<Rows,Cols,T>&);
+    constexpr T
+    sum (const matrix<Rows,Cols,T> &src)
+    {
+        return sum (std::cbegin (src), std::cend (src));
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    #define MATRIX_ELEMENT_OP(OP)                                       \
+    template <std::size_t Rows, std::size_t Cols, typename T>           \
+    constexpr                                                           \
+    matrix<Rows,Cols,T>                                                 \
+    operator OP (                                                       \
+        const matrix<Rows,Cols,T> &a,                                   \
+        const matrix<Rows,Cols,T> &b)                                   \
+    {                                                                   \
+        matrix<Rows,Cols,T> res {};                                     \
+                                                                        \
+        for (std::size_t i = 0; i < a.rows; ++i)                        \
+            for (std::size_t j = 0; j < a.cols; ++j)                    \
+                res[i][j] = a[i][j] OP b[i][j];                         \
+                                                                        \
+        return res;                                                     \
+    }
+
+    MATRIX_ELEMENT_OP(-)
+    MATRIX_ELEMENT_OP(+)
+
+    #undef MATRIX_ELEMENT_OP
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    #define MATRIX_SCALAR_OP(OP)                                        \
+    template <std::size_t Rows, std::size_t Cols, typename T>           \
+    constexpr                                                           \
+    matrix<Rows,Cols,T>                                                 \
+    operator OP (const matrix<Rows,Cols,T> &m, const T t)               \
+    {                                                                   \
+        matrix<Rows,Cols,T> res {};                                     \
+                                                                        \
+        std::transform (                                                \
+            std::cbegin (m),                                            \
+            std::cend   (m),                                            \
+            std::begin  (res),                                          \
+            [&t] (auto x) { return x OP t; }                            \
+        );                                                              \
+                                                                        \
+        return res;                                                     \
+    }                                                                   \
+                                                                        \
+                                                                        \
+    template <std::size_t Rows, std::size_t Cols, typename T>           \
+    constexpr                                                           \
+    matrix<Rows,Cols,T>                                                 \
+    operator OP (const T t, const matrix<Rows,Cols,T> &m)               \
+    {                                                                   \
+        return m OP t;                                                  \
+    }                                                                   \
+                                                                        \
+                                                                        \
+    template <std::size_t Rows, std::size_t Cols, typename T>           \
+    constexpr                                                           \
+    matrix<Rows,Cols,T>&                                                \
+    operator OP##= (matrix<Rows,Cols,T> &m, T t)                        \
+    {                                                                   \
+        std::transform (                                                \
+            std::cbegin (m),                                            \
+            std::cend   (m),                                            \
+            std::begin  (m),                                            \
+            [&t] (auto x) { return x OP t; }                            \
+        );                                                              \
+                                                                        \
+        return m;                                                       \
+    }
+
+    MATRIX_SCALAR_OP(*)
+    MATRIX_SCALAR_OP(/)
+    MATRIX_SCALAR_OP(+)
+    MATRIX_SCALAR_OP(-)
+
+    #undef MATRIX_SCALAR_OP
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -342,8 +455,8 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     template <std::size_t Rows, std::size_t Cols, typename T>
     std::ostream& operator<< (std::ostream&, const matrix<Rows,Cols,T>&);
-}
 
-#include "matrix.ipp"
+
+}
 
 #endif
