@@ -20,6 +20,7 @@
 #include "uri.hpp"
 
 #include "debug.hpp"
+#include "iterator.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -32,19 +33,31 @@
     action success {__success = true; }
     action failure {__success = false; }
 
-    action scheme_begin { m_views[SCHEME] = { p, nullptr }; }
+    action scheme_begin { m_views[SCHEME] = { p, p }; }
     action scheme_end   { m_views[SCHEME] = { m_views[SCHEME].begin (), p }; }
 
-    action authority_begin { m_views[AUTHORITY] = { p, nullptr}; }
+    action hier_begin { m_views[HIERARCHICAL] = { p, p }; }
+    action hier_end   { m_views[HIERARCHICAL] = { m_views[HIERARCHICAL].begin (), p }; }
+
+    action user_begin { m_views[USER] = { p, p }; }
+    action user_end   { m_views[USER] = { m_views[USER].begin (), p }; }
+
+    action host_begin { m_views[HOST] = { p, p }; }
+    action host_end   { m_views[HOST] = { m_views[HOST].begin (), p }; }
+
+    action port_begin { m_views[PORT] = { p, p }; }
+    action port_end   { m_views[PORT] = { m_views[PORT].begin (), p }; }
+
+    action authority_begin { m_views[AUTHORITY] = { p, p}; }
     action authority_end   { m_views[AUTHORITY] = { m_views[AUTHORITY].begin (), p }; }
 
-    action path_begin { m_views[PATH] = { p, nullptr}; }
+    action path_begin { m_views[PATH] = { p, p}; }
     action path_end   { m_views[PATH] = { m_views[PATH].begin (), p }; }
 
-    action query_begin { m_views[QUERY] = { p, nullptr}; }
+    action query_begin { m_views[QUERY] = { p, p}; }
     action query_end   { m_views[QUERY] = { m_views[QUERY].begin (), p }; }
 
-    action fragment_begin { m_views[FRAGMENT] = { p, nullptr}; }
+    action fragment_begin { m_views[FRAGMENT] = { p, p}; }
     action fragment_end   { m_views[FRAGMENT] = { m_views[FRAGMENT].begin (), p }; }
 
     ## Characters
@@ -100,9 +113,18 @@
     reserved = gen_delim | sub_delim;
 
     ## Authority
-    port = digit*;
-    host = ip_literal | ipv4address | reg_name;
-    userinfo = (unreserved | pct_encoded | sub_delim | ':')*;
+    port = (
+        digit*
+    ) >port_begin %port_end;
+
+    host = (
+        ip_literal | ipv4address | reg_name
+    ) >host_begin %host_end;
+
+    userinfo = (
+        (unreserved | pct_encoded | sub_delim | ':')*
+    ) >user_begin %user_end;
+
     authority = (
         (userinfo '@')? host (':' port)?
     ) >authority_begin %authority_end;
@@ -122,12 +144,13 @@
     ) >fragment_begin %fragment_end;
 
     ## URI types
-    hier_part =
-          '//' authority path_abempty  >path_begin %path_end
-        | path_absolute  >path_begin %path_end
+    hier_part = (
+          '//' (authority path_abempty  >path_begin %path_end) >hier_begin %hier_end
+    ) | (
+          path_absolute  >path_begin %path_end
         | path_rootless  >path_begin %path_end
         | path_empty     >path_begin %path_end
-    ;
+    ) >hier_begin %hier_end;
 
     uri = scheme ':' hier_part ('?' query)? ('#' fragment);
 
@@ -175,7 +198,17 @@ static const util::view<const char*> NULL_VIEW { nullptr, nullptr };
 
 //-----------------------------------------------------------------------------
 util::uri::uri (std::string &&_value):
-    m_views {NULL_VIEW, NULL_VIEW, NULL_VIEW, NULL_VIEW, NULL_VIEW},
+    m_views {
+        NULL_VIEW,
+        NULL_VIEW,
+        NULL_VIEW,
+        NULL_VIEW,
+        NULL_VIEW,
+        NULL_VIEW,
+        NULL_VIEW,
+        NULL_VIEW,
+        NULL_VIEW
+    },
     m_value (std::move (_value))
 {
     const char *p   = m_value.data ();
@@ -196,7 +229,7 @@ util::uri::uri (std::string &&_value):
 
 //-----------------------------------------------------------------------------
 util::view<const char*>
-util::uri::get (util::uri::component c)
+util::uri::get (util::uri::component c) const
 {
     CHECK_NEQ (c, NUM_COMPONENTS);
     return m_views[c];
@@ -264,20 +297,33 @@ util::uri::percent_decode (view<const char*> s)
 }
 
 
+
 //-----------------------------------------------------------------------------
 std::ostream&
 util::operator<< (std::ostream &os, util::uri::component c)
 {
     switch (c) {
-        case util::uri::SCHEME:     return os << "SCHEME";
-        case util::uri::AUTHORITY:  return os << "AUTHORITY";
-        case util::uri::PATH:       return os << "PATH";
-        case util::uri::QUERY:      return os << "QUERY";
-        case util::uri::FRAGMENT:   return os << "FRAGMENT";
+        case util::uri::SCHEME:         return os << "SCHEME";
+        case util::uri::HIERARCHICAL:   return os << "HIERARCHICAL";
+        case util::uri::AUTHORITY:      return os << "AUTHORITY";
+        case util::uri::USER:           return os << "USER";
+        case util::uri::HOST:           return os << "HOST";
+        case util::uri::PORT:           return os << "PORT";
+        case util::uri::PATH:           return os << "PATH";
+        case util::uri::QUERY:          return os << "QUERY";
+        case util::uri::FRAGMENT:       return os << "FRAGMENT";
 
         case util::uri::NUM_COMPONENTS:
             unreachable ();
     }
 
     unreachable ();
+}
+
+
+//-----------------------------------------------------------------------------
+std::ostream&
+util::operator<< (std::ostream &os, const util::uri &val)
+{
+    return os << '[' << util::make_infix (val.components ()) << ']';
 }

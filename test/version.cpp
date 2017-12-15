@@ -43,23 +43,26 @@ static const struct {
 };
 
 
-///////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------
 int
 main () {
 
     util::TAP::logger tap;
 
-    for (const auto &i: PARSE_TESTS) {
-        util::version v (i.str);
+    for (const auto &t: PARSE_TESTS) {
+        util::version v (t.str);
 
-        tap.expect (std::equal (v.begin (), v.end (), i.parts) && v.release == i.release, "%s", i.msg);
+        bool parts = std::equal (v.begin (), v.end (), t.parts);
+        bool release = v.release == t.release;
+
+        tap.expect (parts && release, "%s", t.msg);
     }
 
 
     for (const auto &t: CMP_TESTS) {
-        bool eq = t.a == t.b,
-             lt = t.a <  t.b,
-             gt = t.a >  t.b;
+        const bool eq = t.a == t.b;
+        const bool lt = t.a <  t.b;
+        const bool gt = t.a >  t.b;
 
         tap.expect (t.eq == eq, "%s: equality", t.msg);
         tap.expect (t.lt == lt, "%s: less-than", t.msg);
