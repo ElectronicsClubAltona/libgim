@@ -49,8 +49,7 @@ namespace util {
         //---------------------------------------------------------------------
         constexpr
         view (const view &rhs) noexcept:
-            m_begin (rhs.m_begin),
-            m_end   (rhs.m_end)
+            view (rhs.m_begin, rhs.m_end)
         { ; }
 
 
@@ -60,19 +59,15 @@ namespace util {
         // class as a base for unique owning pointers without exposing
         // begin/end to them directly.
         constexpr view (view &&rhs) noexcept:
-            view (IteratorT{}, IteratorT{})
-        {
-            std::swap (m_begin, rhs.m_begin);
-            std::swap (m_end,   rhs.m_end);
-        }
+            view (std::move (rhs.m_begin), std::move (rhs.m_end))
+        { ; }
 
 
         //---------------------------------------------------------------------
         template <typename ContainerT>
         constexpr explicit
         view (ContainerT &klass):
-            m_begin (std::begin (klass)),
-            m_end   (std::end   (klass))
+            view (std::begin (klass), std::end (klass))
         { ; }
 
 
@@ -80,8 +75,7 @@ namespace util {
         template <typename ContainerT>
         constexpr explicit
         view (const ContainerT &klass):
-            m_begin (std::begin (klass)),
-            m_end   (std::end   (klass))
+            view (std::begin (klass), std::end (klass))
         { ; }
 
 
