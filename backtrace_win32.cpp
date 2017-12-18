@@ -17,6 +17,7 @@
 
 #include "backtrace.hpp"
 
+#include "win32/error.hpp"
 #include "win32/handle.hpp"
 #include "debug.hpp"
 #include "except.hpp"
@@ -33,7 +34,7 @@ debug::backtrace::backtrace (void)
 
     auto process = GetCurrentProcess();
     if (!SymInitialize (process, NULL, TRUE))
-        util::win32_error::throw_code ();
+        util::win32::error::throw_code ();
 
     while (true) {
         auto res = CaptureStackBackTrace (1, m_frames.size (), m_frames.data (), NULL);

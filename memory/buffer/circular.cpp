@@ -16,12 +16,12 @@
 
 #include "circular.hpp"
 
-#include "../system.hpp"
 #include "../../debug.hpp"
-#include "../../except.hpp"
 #include "../../maths.hpp"
+#include "../../posix/except.hpp"
 #include "../../raii.hpp"
 #include "../../random.hpp"
+#include "../system.hpp"
 
 #include <unistd.h>
 #include <sys/mman.h>
@@ -84,14 +84,14 @@ circular::circular (size_t bytes)
 
     // embiggen to the desired size
     if (ftruncate (fd, bytes))
-        errno_error::throw_code ();
+        posix::error::throw_code ();
 
     // pre-allocate a sufficiently large virtual memory block. it doesn't
     // matter much what flags we use because we'll just be overwriting it
     // shortly.
     m_begin = reinterpret_cast<char*> (mmap (nullptr, bytes * 2, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
     if (MAP_FAILED == m_begin)
-        errno_error::throw_code ();
+        posix::error::throw_code ();
 
     // preemptively setup an unmapping object in case the remapping fails
     util::scoped_function unmapper ([this, bytes] (void) { munmap (m_begin, bytes); });
@@ -105,7 +105,7 @@ circular::circular (size_t bytes)
     m_end   = reinterpret_cast<char*> (mmap (m_begin + bytes, bytes, prot, flag, fd, 0));
 
     if (m_begin == MAP_FAILED || m_end == MAP_FAILED)
-        errno_error::throw_code ();
+        posix::error::throw_code ();
 
     // all went well, disarm the failsafe
     unmapper.clear ();

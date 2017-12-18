@@ -16,7 +16,7 @@
 
 #include "dir.hpp"
 
-#include "../except.hpp"
+#include "except.hpp"
 
 using util::posix::dir;
 
@@ -26,14 +26,14 @@ dir::dir (const std::experimental::filesystem::path &p):
     m_handle (::opendir (p.c_str ()))
 {
     if (!m_handle)
-        errno_error::throw_code ();
+        error::throw_code ();
 }
 
 
 //-----------------------------------------------------------------------------
 dir::~dir ()
 {
-    errno_error::try_code (closedir (m_handle));
+    error::try_code (closedir (m_handle));
 }
 
 

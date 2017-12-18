@@ -16,11 +16,11 @@
 
 #include "paged.hpp"
 
-#include "../system.hpp"
-#include "../../except.hpp"
+#include "../../cast.hpp"
 #include "../../maths.hpp"
 #include "../../pointer.hpp"
-#include "../../cast.hpp"
+#include "../../posix/except.hpp"
+#include "../system.hpp"
 
 #include <sys/mman.h>
 
@@ -37,7 +37,7 @@ paged::paged (size_t bytes, size_t _window):
     );
 
     if (m_begin == MAP_FAILED)
-        errno_error::throw_code ();
+        posix::error::throw_code ();
 
     // remap the initial window with read/write permissions
     m_cursor = m_begin + round_up (min (m_window, bytes), pagesize ());
@@ -45,7 +45,7 @@ paged::paged (size_t bytes, size_t _window):
                             m_cursor - m_begin,
                             PROT_READ | PROT_WRITE,
                             MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0))
-        errno_error::throw_code ();
+        posix::error::throw_code ();
 
     // record the nominal end address
     m_end = m_begin + round_up (bytes, pagesize ());
@@ -110,7 +110,7 @@ paged::commit (char *cursor)
                             PROT_READ | PROT_WRITE,
                             MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS,
                             -1, 0))
-        errno_error::throw_code ();
+        posix::error::throw_code ();
 
     m_cursor = cursor;
 }
@@ -137,7 +137,7 @@ paged::release (char *desired)
                             PROT_NONE,
                             MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS,
                             -1, 0))
-        errno_error::throw_code ();
+        posix::error::throw_code ();
 
     m_cursor = desired;
 }

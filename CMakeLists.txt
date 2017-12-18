@@ -80,6 +80,8 @@ list (
     posix/dir.cpp
     posix/dir.hpp
     posix/dir.ipp
+    posix/except.cpp
+    posix/except.hpp
     posix/fd.cpp
     posix/fd.hpp
 )
@@ -120,6 +122,8 @@ if (WINDOWS)
         library_win32.hpp
         library_win32.cpp
         time_win32.cpp
+        win32/except.cpp
+        win32/except.hpp
         win32/handle.cpp
         win32/handle.hpp
         win32/registry.hpp
@@ -201,8 +205,6 @@ list (
     debug.ipp
     endian.cpp
     endian.hpp
-    except.cpp
-    except.hpp
     exe.hpp
     extent.cpp
     extent.hpp

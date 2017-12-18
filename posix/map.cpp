@@ -16,7 +16,7 @@
 
 #include "map.hpp"
 
-#include "../except.hpp"
+#include "posix/except.hpp"
 
 using util::posix::map;
 
@@ -27,7 +27,7 @@ map::map (size_t size, int prot, int flags):
     m_size (size)
 {
     if (MAP_FAILED == m_addr)
-        ::util::errno_error::throw_code ();
+        ::util::posix::error::throw_code ();
 }
 
 
@@ -37,7 +37,7 @@ map::map (size_t size, int prot, int flags, const fd &src, off_t offset):
     m_size (size)
 {
     if (MAP_FAILED == m_addr)
-        ::util::errno_error::throw_code ();
+        ::util::posix::error::throw_code ();
 }
 
 
@@ -57,7 +57,7 @@ map::~map ()
         return;
 
     if (munmap (m_addr, m_size))
-        ::util::errno_error::throw_code ();
+        ::util::posix::error::throw_code ();
 }
 
 
@@ -136,5 +136,5 @@ map::resize (size_t newsize, resize_t op)
 
     auto res = mremap (m_addr, m_size, newsize, flags);
     if (res == MAP_FAILED)
-        ::util::errno_error::throw_code ();
+        ::util::posix::error::throw_code ();
 }

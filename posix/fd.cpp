@@ -16,7 +16,7 @@
 
 #include "fd.hpp"
 
-#include "../except.hpp"
+#include "except.hpp"
 
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -36,7 +36,7 @@ fd::fd (const std::experimental::filesystem::path &path, int flags, mode_t mode)
     m_fd (::open (path.c_str (), flags, mode))
 {
     if (m_fd < 0)
-        errno_error::throw_code ();
+        error::throw_code ();
 }
 
 
@@ -68,7 +68,7 @@ fd::dup (int _fd)
 {
     auto res = ::dup (_fd);
     if (res < 0)
-        errno_error::throw_code ();
+        error::throw_code ();
 
     return fd (res);
 }
@@ -81,7 +81,7 @@ fd::~fd ()
         return;
 
     if (close (m_fd))
-        errno_error::throw_code ();
+        error::throw_code ();
 }
 
 
@@ -91,7 +91,7 @@ fd::stat (void) const
 {
     struct stat buf;
     if (fstat (m_fd, &buf))
-        errno_error::throw_code ();
+        error::throw_code ();
     return buf;
 }
 
@@ -102,7 +102,7 @@ fd::read (void *buffer, size_t count)
 {
     auto res = ::read (m_fd, buffer, count);
     if (res == -1)
-        errno_error::throw_code ();
+        error::throw_code ();
     return res;
 }
 
@@ -112,7 +112,7 @@ fd::write (const void *buffer, size_t count)
 {
     auto res = ::write (m_fd, buffer, count);
     if (res == -1)
-        errno_error::throw_code ();
+        error::throw_code ();
     return res;
 }
 
@@ -123,7 +123,7 @@ fd::lseek (off_t offset, int whence)
 {
     auto res = ::lseek (m_fd, offset, whence);
     if (res == -1)
-        errno_error::throw_code ();
+        error::throw_code ();
     return res;
 }
 

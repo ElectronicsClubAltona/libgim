@@ -18,6 +18,7 @@
 
 #include "debug.hpp"
 #include "except.hpp"
+#include "win32/error.hpp"
 
 #include <windows.h>
 
@@ -94,11 +95,11 @@ mapped_file::mapped_file (::util::win32::handle &&src,
     // hell. Try not to collapse, but instead bail with a null mapping and
     // pray the user doesn't do something stupid with the result.
     if (!m_mapping) {
-        auto err = win32_error::last_code ();
+        auto err = win32::error::last_code ();
         if (err == ERROR_FILE_INVALID && m_size == 0)
             return;
 
-        win32_error::throw_code (err);
+        win32::error::throw_code (err);
     }
 
     auto view = MapViewOfFile (
@@ -109,7 +110,7 @@ mapped_file::mapped_file (::util::win32::handle &&src,
     );
 
     if (!view)
-        win32_error::throw_code ();
+        win32::error::throw_code ();
 
     m_data.reset (
         static_cast<unsigned char*> (view)

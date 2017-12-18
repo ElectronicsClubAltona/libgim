@@ -14,7 +14,7 @@
  * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "../except.hpp"
+#include "except.hpp"
 
 #include <cerrno>
 
@@ -29,7 +29,7 @@ util::posix::dir::scan(std::function<void(const std::experimental::filesystem::p
     for (dirent *cursor; errno = 0, cursor = readdir (m_handle); )
         cb (cursor->d_name, args...);
 
-    errno_error::try_code ();
+    error::try_code ();
 }
 
 
@@ -43,5 +43,5 @@ util::posix::dir::scan (void (*cb) (const std::experimental::filesystem::path&, 
     for (dirent *cursor; errno = 0, cursor = readdir (m_handle); )
         cb (cursor->d_name, args...);
 
-    errno_error::try_code ();
+    error::try_code ();
 }

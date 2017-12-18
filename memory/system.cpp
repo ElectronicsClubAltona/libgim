@@ -16,8 +16,8 @@
 
 #include "system.hpp"
 
-#include "../except.hpp"
 #include "../cast.hpp"
+#include "../posix/except.hpp"
 
 #include <unistd.h>
 
@@ -28,11 +28,7 @@ util::memory::pagesize (void)
     static size_t val;
 
     if (!val) {
-        auto res = sysconf (_SC_PAGE_SIZE);
-        if (res == -1)
-            errno_error::throw_code ();
-
-        val = sign_cast<unsigned long> (res);
+        val = sign_cast<unsigned long> (posix::error::try_value (sysconf (_SC_PAGE_SIZE)));
     }
 
     return val;

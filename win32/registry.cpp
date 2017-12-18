@@ -16,6 +16,7 @@
 
 #include "registry.hpp"
 
+#include "error.hpp"
 #include "../debug.hpp"
 #include "../except.hpp"
 
@@ -50,7 +51,7 @@ template <> constexpr DWORD restrict_to_id<std::string> (void) { return RRF_RT_R
 key::key (HKEY root, const char *child, REGSAM rights)
 {
     auto err = RegOpenKeyEx (root, child, 0, rights, &m_handle);
-    win32_error::try_code (err);
+    win32::error::try_code (err);
 }
 
 
@@ -58,7 +59,7 @@ key::key (HKEY root, const char *child, REGSAM rights)
 key::~key ()
 {
     auto err = RegCloseKey (m_handle);
-    win32_error::try_code (err);
+    win32::error::try_code (err);
 }
 
 
@@ -72,7 +73,7 @@ key::data (const char *name) const
     DWORD size = sizeof (value);
 
     auto err = RegGetValue (m_handle, name, &value, restrict_to_id<T> (), nullptr, &value, &size);
-    win32_error::try_code (err);
+    win32::error::try_code (err);
 
     return value;
 }
@@ -92,7 +93,7 @@ key::values (void) const
         if (ERROR_NO_MORE_ITEMS == err)
             return all;
         if (ERROR_SUCCESS != err)
-            win32_error::throw_code (err);
+            win32::error::throw_code (err);
 
         CHECK_GT (size, 0u);
         name.resize (size - 1);
