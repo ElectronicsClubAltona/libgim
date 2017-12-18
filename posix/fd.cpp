@@ -33,11 +33,8 @@ fd::fd (const std::experimental::filesystem::path &path, int flags):
 
 //-----------------------------------------------------------------------------
 fd::fd (const std::experimental::filesystem::path &path, int flags, mode_t mode):
-    m_fd (::open (path.c_str (), flags, mode))
-{
-    if (m_fd < 0)
-        error::throw_code ();
-}
+    m_fd (error::try_value (::open (path.c_str (), flags, mode)))
+{ ; }
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,11 +63,9 @@ fd::dup (void) const
 fd
 fd::dup (int _fd)
 {
-    auto res = ::dup (_fd);
-    if (res < 0)
-        error::throw_code ();
-
-    return fd (res);
+    return fd {
+        error::try_value (::dup (_fd))
+    };
 }
 
 
@@ -80,8 +75,7 @@ fd::~fd ()
     if (m_fd < 0)
         return;
 
-    if (close (m_fd))
-        error::throw_code ();
+    error::try_code (close (m_fd));
 }
 
 
@@ -100,20 +94,18 @@ fd::stat (void) const
 ssize_t
 fd::read (void *buffer, size_t count)
 {
-    auto res = ::read (m_fd, buffer, count);
-    if (res == -1)
-        error::throw_code ();
-    return res;
+    return error::try_value (
+        ::read (m_fd, buffer, count)
+    );
 }
 
 //-----------------------------------------------------------------------------
 ssize_t
 fd::write (const void *buffer, size_t count)
 {
-    auto res = ::write (m_fd, buffer, count);
-    if (res == -1)
-        error::throw_code ();
-    return res;
+    return error::try_value (
+        ::write (m_fd, buffer, count)
+    );
 }
 
 
@@ -121,10 +113,9 @@ fd::write (const void *buffer, size_t count)
 off_t
 fd::lseek (off_t offset, int whence)
 {
-    auto res = ::lseek (m_fd, offset, whence);
-    if (res == -1)
-        error::throw_code ();
-    return res;
+    return error::try_value (
+        ::lseek (m_fd, offset, whence)
+    );
 }
 
 
