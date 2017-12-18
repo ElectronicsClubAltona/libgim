@@ -17,6 +17,8 @@
 #ifndef CRUFT_UTIL_PARSE_HPP
 #define CRUFT_UTIL_PARSE_HPP
 
+#include "view.hpp"
+
 #include <cstring>
 #include <string>
 #include <iterator>
@@ -28,16 +30,14 @@ namespace util {
     ///
     /// throws std::invalid_argument when the type cannot be parsed.
     template <typename T>
-    T
-    parse (const char *first, const char *last);
+    T parse (util::view<const char *>);
 
 
     //-------------------------------------------------------------------------
     template <typename T>
-    T
-    parse (const char *str)
+    T parse (const char *str)
     {
-        return parse<T> (str, str + strlen (str));
+        return parse<T> (make_view (str));
     }
 
 
@@ -46,7 +46,7 @@ namespace util {
     T
     parse (const std::string &str)
     {
-        return parse<T> (std::cbegin (str), std::cend (str));
+        return parse<T> (make_view (str));
     }
 }
 

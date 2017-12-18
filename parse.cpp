@@ -69,9 +69,9 @@ c_fparse (const char *first, const char *last)
 #define C_PARSE(T, KLASS) \
 template <> \
 T \
-util::parse<T> (const char *first, const char *last) \
+util::parse<T> (util::view<const char *> str) \
 { \
-    return c_ ## KLASS ## parse<T> (first, last); \
+    return c_ ## KLASS ## parse<T> (std::cbegin (str), std::cend (str)); \
 }
 
 
