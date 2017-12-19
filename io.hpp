@@ -46,11 +46,19 @@ namespace util {
     //-------------------------------------------------------------------------
     void write (const posix::fd&, const void *restrict data, size_t bytes);
 
-    template <typename T>
-    void write (const posix::fd&, const T &data);
+    inline void
+    write (const posix::fd &dst, util::view<const char*> data)
+    {
+        write (dst, std::data (data), std::size (data));
+    }
+
 
     template <typename T>
-    void write (const posix::fd&, const T *restrict first, const T *restrict last);
+    void write (const posix::fd &_fd, const T &data)
+    {
+        return write (_fd, make_view (data));
+    }
+
 
     //-------------------------------------------------------------------------
     class indenter : public std::streambuf {
