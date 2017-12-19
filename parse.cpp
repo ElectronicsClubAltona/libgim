@@ -84,3 +84,12 @@ C_PARSE(unsigned long long, i)
 C_PARSE(float, f)
 C_PARSE(double, f)
 C_PARSE(long double, f)
+
+
+template <>
+int
+util::parse<int> (util::view<const char*> str)
+{
+    auto intermediate = util::parse<long> (str);
+    return trunc_cast<int> (intermediate);
+}
