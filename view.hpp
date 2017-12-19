@@ -345,6 +345,28 @@ namespace util {
     }
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    /// a basic stringlike comparison operator that behaves as
+    /// std::string::compare would.
+    ///
+    /// provided so that the common case of stringlike views can be used in a
+    /// std::map and similar without a great deal of work.
+    inline bool
+    operator< (util::view<const char*> a, util::view<const char*> b)
+    {
+        const auto la = std::size (a);
+        const auto lb = std::size (b);
+
+        const auto res = strncmp (
+            std::data (a),
+            std::data (b),
+            util::min (la, lb)
+        );
+
+        return res < 0 || la < lb;
+    }
+
+
     //-------------------------------------------------------------------------
     // equality operations for string-like views against std::strings
     bool equal (const std::string&, view<const char*>);
