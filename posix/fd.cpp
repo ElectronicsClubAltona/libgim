@@ -99,7 +99,16 @@ fd::read (void *buffer, size_t count)
     );
 }
 
+
 //-----------------------------------------------------------------------------
+ssize_t
+fd::read (util::view<char *> dst)
+{
+    return read (std::data (dst), std::size (dst));
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 ssize_t
 fd::write (const void *buffer, size_t count)
 {

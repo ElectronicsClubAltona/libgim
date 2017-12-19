@@ -11,11 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __CRUFT_UTIL_POSIX_FD_HPP
 #define __CRUFT_UTIL_POSIX_FD_HPP
+
+#include "../view.hpp"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -52,8 +54,13 @@ namespace util::posix {
         struct ::stat stat (void) const;
 
         //---------------------------------------------------------------------
-        [[gnu::warn_unused_result]] ssize_t read  (      void *buf, size_t count);
+        [[gnu::warn_unused_result]] ssize_t read (void *buf, size_t count);
+        [[gnu::warn_unused_result]] ssize_t read (util::view<char*>);
+        [[gnu::warn_unused_result]] ssize_t read (util::view<std::byte*>);
+
         [[gnu::warn_unused_result]] ssize_t write (const void *buf, size_t count);
+        [[gnu::warn_unused_result]] ssize_t write (util::view<const char*>);
+        [[gnu::warn_unused_result]] ssize_t write (util::view<const std::byte*>);
 
         //---------------------------------------------------------------------
         [[gnu::warn_unused_result]] off_t lseek (off_t offset, int whence);
