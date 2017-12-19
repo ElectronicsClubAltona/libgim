@@ -56,10 +56,22 @@ namespace util {
         //---------------------------------------------------------------------
         // technically we could get away without explicitly defining a move
         // constructor here, but by nulling rhs we can more easily use this
-        // class as a base for unique owning pointers without exposing
-        // begin/end to them directly.
+        // class as a base for unique owning pointers without exposing the
+        // begin/end data members to them directly.
         constexpr view (view &&rhs) noexcept:
             view (std::move (rhs.m_begin), std::move (rhs.m_end))
+        { ; }
+
+
+        //---------------------------------------------------------------------
+        // allow null construction of views where IteratorT is constructible
+        // from nullptr_t
+        //
+        // ideally we would avoid exposing this as it promotes use of nulls but
+        // it simplifies construction of views that are data members of classes
+        // when we may not immediately know the values we should contain.
+        constexpr view (std::nullptr_t) noexcept:
+            view {nullptr,nullptr}
         { ; }
 
 
