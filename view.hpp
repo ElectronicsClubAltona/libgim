@@ -310,6 +310,42 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
+    template <typename IteratorT, typename ContainerT>
+    constexpr bool
+    operator== (const ContainerT &a, const view<IteratorT> &b)
+    {
+        return make_view (a) == b;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename IteratorT, typename ContainerT>
+    constexpr bool
+    operator!= (const ContainerT &b, const view<IteratorT> &a)
+    {
+        return !(a == b);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename IteratorT, typename ContainerT>
+    constexpr bool
+    operator== (const view<IteratorT> &a, const ContainerT &b)
+    {
+        return a == make_view (b);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename IteratorT, typename ContainerT>
+    constexpr bool
+    operator!= (const view<IteratorT> &a, const ContainerT &b)
+    {
+        return !(a == b);
+    }
+
+
+    //-------------------------------------------------------------------------
     // equality operations for string-like views against std::strings
     bool equal (const std::string&, view<const char*>);
     bool equal (const std::string&, view<char*>);
