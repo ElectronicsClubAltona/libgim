@@ -21,32 +21,6 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-#define EQUALITY(A,B)                   \
-bool                                    \
-util::equal (A a, B b)                  \
-{                                       \
-    return a.size () == b.size () &&    \
-           std::equal (a.cbegin (),     \
-                       a.cend (),       \
-                       b.cbegin ());    \
-}
-
-
-//-----------------------------------------------------------------------------
-EQUALITY(const std::string&, view<const char*>)
-EQUALITY(const std::string&, view<char*>)
-EQUALITY(const std::string&, view<std::string::const_iterator>)
-EQUALITY(const std::string&, view<std::string::iterator>)
-
-EQUALITY(view<const char*>,  const std::string&)
-EQUALITY(view<char*>,        const std::string&)
-EQUALITY(view<std::string::const_iterator>, const std::string&)
-EQUALITY(view<std::string::iterator>, const std::string&)
-
-#undef EQUALITY
-
-
-///////////////////////////////////////////////////////////////////////////////
 namespace util {
 #define OSTREAM(A)                                                          \
     template <>                                                             \

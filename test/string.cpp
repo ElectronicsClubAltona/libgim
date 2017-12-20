@@ -30,7 +30,7 @@ main (int, char**)
     };
 
     for (const auto &[tok, expected]: util::zip (util::make_tokeniser (csv, ','), TESTS))
-        tap.expect (equal (tok, expected.value), "%s", expected.message);
+        tap.expect_eq (tok, expected.value, "%s", expected.message);
 
     return tap.status ();
 }

@@ -144,15 +144,15 @@ main (void)
         tap.expect_nothrow ([t] (void) { util::uri foo (t.src); }, "nothrow parsing '%s'", t.src);
         util::uri u (t.src);
 
-        tap.expect (equal (u.scheme (), t.scheme), "scheme for '%s'", t.src);
-        tap.expect (equal (u.heirarchical (), t.hierarchical), "hierarchical for '%s'", t.src);
-        tap.expect (equal (u.authority (), t.authority), "authority for '%s'", t.src);
-        tap.expect (equal (u.host (), t.host), "host for '%s'", t.src);
-        tap.expect (equal (u.user (), t.user), "user for '%s'", t.src);
-        tap.expect (equal (u.port (), t.port), "port for '%s'", t.src);
-        tap.expect (equal (u.path (), t.path), "path for '%s'", t.src);
-        tap.expect (equal (u.query (), t.query), "query for '%s'", t.src);
-        tap.expect (equal (u.fragment (), t.fragment), "fragment for '%s'", t.src);
+        tap.expect_eq (u.scheme (), t.scheme, "scheme for '%s'", t.src);
+        tap.expect_eq (u.heirarchical (), t.hierarchical, "hierarchical for '%s'", t.src);
+        tap.expect_eq (u.authority (), t.authority, "authority for '%s'", t.src);
+        tap.expect_eq (u.host (), t.host, "host for '%s'", t.src);
+        tap.expect_eq (u.user (), t.user, "user for '%s'", t.src);
+        tap.expect_eq (u.port (), t.port, "port for '%s'", t.src);
+        tap.expect_eq (u.path (), t.path, "path for '%s'", t.src);
+        tap.expect_eq (u.query (), t.query, "query for '%s'", t.src);
+        tap.expect_eq (u.fragment (), t.fragment, "fragment for '%s'", t.src);
     }
 
     static const char* BAD[] = {

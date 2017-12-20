@@ -47,6 +47,12 @@ namespace util {
 
 
         //---------------------------------------------------------------------
+        template <std::size_t N, typename ValueT>
+        view (const ValueT(&value)[N]):
+            view (std::begin (value), std::end (value))
+        { ; }
+
+        //---------------------------------------------------------------------
         constexpr
         view (const view &rhs) noexcept:
             view (rhs.m_begin, rhs.m_end)
@@ -291,55 +297,50 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename IteratorT>
+    template <typename IteratorA, typename IteratorB>
     constexpr bool
-    operator== (const view<IteratorT> &a, const view<IteratorT> &b)
+    operator== (const view<IteratorA> &a, const view<IteratorB> &b)
     {
-        return std::cbegin (a) == std::cbegin (b) &&
-               std::cend   (a) == std::cend   (b);
+        return a.size () == b.size () &&
+               std::equal (std::begin (a), std::end (a), std::begin (b));
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename IteratorT>
+    // defer equality to the view/view operator by way of make_view
+    template <typename IteratorT, typename ValueT>
     constexpr bool
-    operator!= (const view<IteratorT> &a, const view<IteratorT> &b)
-    {
-        return !(a == b);
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <typename IteratorT, typename ContainerT>
-    constexpr bool
-    operator== (const ContainerT &a, const view<IteratorT> &b)
-    {
-        return make_view (a) == b;
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <typename IteratorT, typename ContainerT>
-    constexpr bool
-    operator!= (const ContainerT &b, const view<IteratorT> &a)
-    {
-        return !(a == b);
-    }
-
-
-    //-------------------------------------------------------------------------
-    template <typename IteratorT, typename ContainerT>
-    constexpr bool
-    operator== (const view<IteratorT> &a, const ContainerT &b)
+    operator== (const view<IteratorT> &a, const ValueT &b)
     {
         return a == make_view (b);
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename IteratorT, typename ContainerT>
+    // reverse the arguments and forward to the above operator. we formumlate
+    // equality this way to avoid implementing the operator twice for each
+    // weird case.
+    template <typename IteratorT, typename ValueT>
     constexpr bool
-    operator!= (const view<IteratorT> &a, const ContainerT &b)
+    operator== (const ValueT &a, const view<IteratorT> &b)
+    {
+        return b == a;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename IteratorT, typename ValueT>
+    constexpr bool
+    operator!= (const util::view<IteratorT> &a, const ValueT &b)
+    {
+        return !(a == b);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename IteratorT, typename ValueT>
+    constexpr bool
+    operator!= (const ValueT &a, const util::view<IteratorT> &b)
     {
         return !(a == b);
     }
@@ -363,22 +364,8 @@ namespace util {
             util::min (la, lb)
         );
 
-        return res < 0 || la < lb;
+        return res < 0 || (res == 0 && la < lb);
     }
-
-
-    //-------------------------------------------------------------------------
-    // equality operations for string-like views against std::strings
-    bool equal (const std::string&, view<const char*>);
-    bool equal (const std::string&, view<char*>);
-    bool equal (const std::string&, view<std::string::const_iterator>);
-    bool equal (const std::string&, view<std::string::iterator>);
-
-
-    bool equal (view<const char*>,                 const std::string&);
-    bool equal (view<char*>,                       const std::string&);
-    bool equal (view<std::string::const_iterator>, const std::string&);
-    bool equal (view<std::string::iterator>,       const std::string&);
 
 
     ///////////////////////////////////////////////////////////////////////////
