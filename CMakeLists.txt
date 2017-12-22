@@ -84,6 +84,8 @@ list (
     posix/except.hpp
     posix/fd.cpp
     posix/fd.hpp
+    posix/socket.cpp
+    posix/socket.hpp
 )
 
 
