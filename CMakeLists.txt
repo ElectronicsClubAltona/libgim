@@ -203,6 +203,8 @@ list (
     debug.cpp
     debug.hpp
     debug.ipp
+    encode/base.cpp
+    encode/base.hpp
     endian.cpp
     endian.hpp
     exe.hpp
@@ -498,6 +500,7 @@ if (TESTS)
         crypto/tea
         crypto/xtea
         crypto/xxtea
+        encode/base
         endian
         exe
         extent
