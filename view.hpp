@@ -29,18 +29,18 @@
 #include <stdexcept>
 
 namespace util {
-    template <typename IteratorT>
+    template <typename IteratorA, typename IteratorB = IteratorA>
     struct view {
     public:
         //---------------------------------------------------------------------
         using value_type = typename std::iterator_traits<
-            remove_restrict_t<IteratorT>
+            remove_restrict_t<IteratorA>
         >::value_type;
 
 
         //---------------------------------------------------------------------
         constexpr
-        view (const IteratorT &first, const IteratorT &last) noexcept:
+        view (const IteratorA &first, const IteratorB &last) noexcept:
             m_begin (first),
             m_end   (last)
         { ; }
@@ -114,24 +114,24 @@ namespace util {
             m_begin = rhs.m_begin;
             m_end = rhs.m_end;
 
-            rhs.m_begin = IteratorT{};
-            rhs.m_end = IteratorT{};
+            rhs.m_begin = IteratorA{};
+            rhs.m_end = IteratorB{};
 
             return *this;
         };
 
 
         ///////////////////////////////////////////////////////////////////////
-        constexpr IteratorT begin (void) noexcept { return m_begin; }
-        constexpr IteratorT end   (void) noexcept { return m_end;   }
+        constexpr IteratorA begin (void) noexcept { return m_begin; }
+        constexpr IteratorB end   (void) noexcept { return m_end;   }
 
         //---------------------------------------------------------------------
-        constexpr const IteratorT begin (void) const noexcept { return cbegin (); }
-        constexpr const IteratorT end   (void) const noexcept { return cend   (); }
+        constexpr const IteratorA begin (void) const noexcept { return cbegin (); }
+        constexpr const IteratorB end   (void) const noexcept { return cend   (); }
 
         //---------------------------------------------------------------------
-        constexpr const IteratorT cbegin (void) const noexcept { return m_begin; }
-        constexpr const IteratorT cend   (void) const noexcept { return m_end;   }
+        constexpr const IteratorA cbegin (void) const noexcept { return m_begin; }
+        constexpr const IteratorB cend   (void) const noexcept { return m_end;   }
 
         //---------------------------------------------------------------------
         auto data (void)       { return begin (); }
@@ -181,8 +181,8 @@ namespace util {
 
     private:
         ///////////////////////////////////////////////////////////////////////
-        IteratorT m_begin;
-        IteratorT m_end;
+        IteratorA m_begin;
+        IteratorB m_end;
     };
 
 
@@ -230,11 +230,11 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-    template <typename IteratorT>
+    template <typename IteratorA, typename IteratorB>
     auto
-    make_view (IteratorT first, IteratorT last)
+    make_view (IteratorA first, IteratorB last)
     {
-        return view<IteratorT> {first, last};
+        return view<IteratorA, IteratorB> {first, last};
     }
 
     //-------------------------------------------------------------------------
