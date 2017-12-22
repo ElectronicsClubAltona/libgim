@@ -75,15 +75,17 @@ namespace util {
 
         view<const char*> get (component) const;
 
-        view<const char*> scheme (void) const { return get (SCHEME); }
-        view<const char*> heirarchical (void) const { return get (HIERARCHICAL); }
-        view<const char*> authority (void) const { return get (AUTHORITY); }
-        view<const char*> user (void) const { return get (USER); }
-        view<const char*> host (void) const { return get (HOST); }
-        view<const char*> port (void) const { return get (PORT); }
-        view<const char*> path (void) const { return get (PATH); }
-        view<const char*> query (void) const { return get (QUERY); }
-        view<const char*> fragment (void) const { return get (FRAGMENT); }
+        auto all (void) const { return util::make_view (m_value); }
+
+        auto scheme (void) const { return get (SCHEME); }
+        auto heirarchical (void) const { return get (HIERARCHICAL); }
+        auto authority (void) const { return get (AUTHORITY); }
+        auto user (void) const { return get (USER); }
+        auto host (void) const { return get (HOST); }
+        auto port (void) const { return get (PORT); }
+        auto path (void) const { return get (PATH); }
+        auto query (void) const { return get (QUERY); }
+        auto fragment (void) const { return get (FRAGMENT); }
 
         auto components (void) const noexcept { return m_views; }
 
