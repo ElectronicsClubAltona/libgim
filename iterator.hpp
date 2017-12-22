@@ -438,6 +438,84 @@ namespace util {
         discard_iterator  operator++ (int) { return *this; }
         discard_iterator& operator*  (   ) { return *this; }
     };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// an iterator that can be infinitely incremented but never assigned.
+    ///
+    /// useful for iterator ranges where the begin iterator is an output
+    /// iterator and hence never reaches an end point (and where we don't want
+    /// to engineer the client code to account for this).
+    template <
+        typename ValueT,
+        typename CategoryT,
+        typename DistanceT,
+        typename PointerT,
+        typename ReferenceT
+    >
+    struct unequal_iterator {
+        using value_type = ValueT;
+        using iterator_category = CategoryT;
+        using difference_type = DistanceT;
+        using pointer = PointerT;
+        using reference = ReferenceT;
+
+        unequal_iterator& operator++ (   ) { return *this; }
+        unequal_iterator  operator++ (int) { return *this; }
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <typename ContainerT>
+    auto
+    make_unequal_iterator (const ContainerT&)
+    {
+        using t = typename std::iterator_traits<typename ContainerT::iterator>;
+
+        return unequal_iterator<
+            typename t::value_type,
+            typename t::iterator_category,
+            typename t::difference_type,
+            typename t::pointer,
+            typename t::reference
+        > {};
+    };
+
+
+    //-------------------------------------------------------------------------
+    template <
+        typename OtherT,
+
+        typename ValueT,
+        typename CategoryT,
+        typename DistanceT,
+        typename PointerT,
+        typename ReferenceT>
+    constexpr bool
+    operator== (
+        const unequal_iterator<ValueT,CategoryT,DistanceT,PointerT,ReferenceT>&,
+        const OtherT&
+    ) {
+        return false;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        typename OtherT,
+
+        typename ValueT,
+        typename CategoryT,
+        typename DistanceT,
+        typename PointerT,
+        typename ReferenceT>
+    constexpr bool
+    operator== (
+        const OtherT&,
+        const unequal_iterator<ValueT,CategoryT,DistanceT,PointerT,ReferenceT>&
+    ) {
+        return false;
+    }
 };
 
 #endif
