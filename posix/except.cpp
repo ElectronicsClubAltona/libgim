@@ -97,3 +97,41 @@ error::throw_code (int code)
     CHECK_NEQ (code, 0);
     throw error (code);
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+using util::posix::eai;
+
+#include <netdb.h>
+
+
+//-----------------------------------------------------------------------------
+eai::eai (int code):
+    runtime_error (gai_strerror (code)),
+    m_code (code)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+int
+eai::code (void) const
+{
+    return m_code;
+}
+
+
+//-----------------------------------------------------------------------------
+void
+eai::try_code (int code)
+{
+    if (code)
+        throw_code (code);
+}
+
+
+//-----------------------------------------------------------------------------
+void
+eai::throw_code (int code)
+{
+    throw eai { code };
+}

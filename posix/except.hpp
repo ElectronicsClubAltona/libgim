@@ -50,6 +50,19 @@ namespace util::posix {
     private:
         int m_code;
     };
-}
+
+
+    class eai : public std::runtime_error {
+    public:
+        explicit eai (int code);
+        int code (void) const;
+
+        static void try_code (int);
+        static void throw_code [[gnu::noreturn]] (int);
+
+    private:
+        int m_code;
+    };
+};
 
 #endif
