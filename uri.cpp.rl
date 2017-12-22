@@ -215,11 +215,3 @@ util::operator<< (std::ostream &os, util::uri::component c)
 
     unreachable ();
 }
-
-
-//-----------------------------------------------------------------------------
-std::ostream&
-util::operator<< (std::ostream &os, const util::uri &val)
-{
-    return os << '[' << util::make_infix (val.components ()) << ']';
-}

@@ -94,7 +94,6 @@ namespace util {
         std::string m_value;
     };
 
-    std::ostream& operator<< (std::ostream&, const uri&);
     std::ostream& operator<< (std::ostream&, uri::component);
 }
 
