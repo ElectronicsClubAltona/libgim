@@ -242,8 +242,15 @@ namespace util {
     //-----------------------------------------------------------------------------
     // Logarithms
     template <typename T>
-    T
-    log2  (T val);
+    constexpr
+    std::enable_if_t<std::is_integral_v<T>, T>
+    log2 (T val)
+    {
+        T tally = 0;
+        while (val >>= 1)
+            ++tally;
+        return tally;
+    }
 
 
     //-------------------------------------------------------------------------
