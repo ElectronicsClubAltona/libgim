@@ -67,6 +67,7 @@ namespace util::posix {
 
         ///////////////////////////////////////////////////////////////////////
         operator int (void) const;
+        int native (void) { return m_fd; }
 
     private:
         int m_fd;
