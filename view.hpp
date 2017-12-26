@@ -172,6 +172,43 @@ namespace util {
             return view { m_begin, m_begin + count };
         };
 
+
+        //---------------------------------------------------------------------
+        // returns a view that has the same end iterator, but the provided
+        // begin iterator.
+        //
+        // the new begin iterator must be reachable by incrementing the current
+        // begin iterator but lie before reaching the end iterator. ie, in the
+        // middle.
+        //
+        // useful for resizing views after options which incrementally consume
+        // the referenced data.
+        [[gnu::warn_unused_result]] constexpr auto
+        increment (IteratorA _begin) const
+        {
+            return view { _begin, m_end };
+        }
+
+
+        //---------------------------------------------------------------------
+        [[gnu::warn_unused_result]] constexpr auto
+        increment (int count) const
+        {
+            IteratorA next;
+            std::advance (next, count);
+            return increment (next);
+        }
+
+
+        //---------------------------------------------------------------------
+        template <typename IteratorC>
+        [[gnu::warn_unused_result]] constexpr auto
+        decrement (IteratorC _end)
+        {
+            return view { m_begin, _end };
+        };
+
+
         ///////////////////////////////////////////////////////////////////////
         constexpr value_type&
         operator[] (size_t idx)& noexcept
