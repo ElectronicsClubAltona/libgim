@@ -43,9 +43,11 @@ namespace util {
     std::vector<T> slurp (FILE *);
 
 
-    //-------------------------------------------------------------------------
+    ///////////////////////////////////////////////////////////////////////////
     void write (const posix::fd&, const void *restrict data, size_t bytes);
 
+
+    //-------------------------------------------------------------------------
     inline void
     write (const posix::fd &dst, util::view<const char*> data)
     {
@@ -53,6 +55,7 @@ namespace util {
     }
 
 
+    //-------------------------------------------------------------------------
     template <typename T>
     void write (const posix::fd &_fd, const T &data)
     {
@@ -60,7 +63,27 @@ namespace util {
     }
 
 
-    //-------------------------------------------------------------------------
+    ///------------------------------------------------------------------------
+    /// writes all data from the provided view into the file-like-object
+    ///
+    /// writing will continually iterate until the entire buffer has been
+    /// dispatched so as to avoid issues with partial writes. will block until
+    /// such time as the entire buffer has written.
+    ///
+    /// an exception may be thrown in the event forward progress is impossible.
+    /// in this event the progress may not be reported to the caller. in the
+    /// future an exception member variable may expose the information.
+    template <typename DstT, typename IteratorA, typename IteratorB>
+    void
+    write (DstT &dst, util::view<IteratorA, IteratorB> src)
+    {
+        for (auto cursor = src.begin (); cursor != src.end (); ) {
+            cursor = dst.write (view{cursor, src.end ()});
+        }
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
     class indenter : public std::streambuf {
     protected:
         std::streambuf* m_dest;
