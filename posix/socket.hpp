@@ -28,24 +28,31 @@
 namespace util::posix {
      class socket : public fd {
      public:
+         explicit socket (int _fd);
+
          socket (int domain, int type);
          socket (int domain, int type, int protocol);
 
          socket (util::view<const char*> host, int port);
 
-         void connect (util::view<const char*> host, int port);
+         socket (const socket&) = delete;
+         socket& operator= (const socket&) = delete;
+
+         socket (socket &&rhs);
+         socket& operator= (socket &&);
 
          // the destructor is provided so that we can operate more cleanly on
          // win32 where we must call closesocket instead of the normal close.
          // because windows...
          ~socket ();
 
+         void connect (util::view<const char*> host, int port);
          void shutdown ();
 
          template <typename ValueT>
          void setoption (int _level, int _name, const ValueT &_value)
          {
-            error::try_code (
+            error::try_value (
                 setsockopt (
                     native (),
                     _level,

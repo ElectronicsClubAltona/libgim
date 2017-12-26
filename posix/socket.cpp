@@ -62,7 +62,7 @@ public:
     auto end   (void) const { return nullptr; }
 
 private:
-    std::unique_ptr<addrinfo[],void(*)(addrinfo*)> m_addresses;
+    std::unique_ptr<addrinfo,void(*)(addrinfo*)> m_addresses;
 };
 
 
@@ -88,6 +88,12 @@ connect_host (const util::view<const char*> host, int port)
 
 
 ///////////////////////////////////////////////////////////////////////////////
+socket::socket (int _fd):
+    fd (_fd)
+{ ; }
+
+
+//-----------------------------------------------------------------------------
 socket::socket (int domain, int type):
     socket (domain, type, 0)
 { ; }
@@ -110,12 +116,28 @@ socket::~socket ()
 { ; }
 
 
+//-----------------------------------------------------------------------------
+socket::socket (socket &&rhs):
+    fd (std::move (rhs))
+{ ; }
+
+
+//-----------------------------------------------------------------------------
+class socket&
+socket::operator= (socket &&rhs)
+{
+    fd::operator= (std::move (rhs));
+    return *this;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 void
 socket::connect (util::view<const char*> host, int port)
 {
-    for (const auto &info: lookup { host, port }) {
-        if (!::connect (*this, info.ai_addr, info.ai_addrlen))
+    const lookup l { host, port };
+    for (auto cursor = l.begin (); cursor != l.end (); cursor = cursor->ai_next) {
+        if (!::connect (*this, cursor->ai_addr, cursor->ai_addrlen))
             return;
     }
 
