@@ -25,7 +25,10 @@
 #include <algorithm>
 #include <iostream>
 
+using util::uri;
 
+
+///////////////////////////////////////////////////////////////////////////////
 %%{
     machine impl;
 
@@ -83,12 +86,18 @@ util::uri::uri (const char *str):
 
 
 //-----------------------------------------------------------------------------
-util::uri::uri (const char *first, const char *last):
-    uri (std::string (first, last))
+uri::uri (util::view<const char *> _value):
+    uri (std::string (_value.begin (), _value.end ()))
 { ; }
 
 
-///////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------
+uri::uri (const std::string &_value):
+    uri (std::string (_value))
+{ ; }
+
+
+//-----------------------------------------------------------------------------
 static const util::view<const char*> NULL_VIEW { nullptr, nullptr };
 
 

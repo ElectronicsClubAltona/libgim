@@ -41,8 +41,9 @@ namespace util {
     class uri {
     public:
         explicit uri (std::string &&);
+        explicit uri (const std::string&);
         explicit uri (const char *str);
-        uri (const char *first, const char *last);
+        explicit uri (util::view<const char *>);
 
         class parse_error : public std::runtime_error
         { using runtime_error::runtime_error; };
