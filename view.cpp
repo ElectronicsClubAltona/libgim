@@ -11,37 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2016-2017 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "view.hpp"
-
-#include <algorithm>
-#include <iterator>
-
-
-///////////////////////////////////////////////////////////////////////////////
-namespace util {
-#define OSTREAM(A)                                                          \
-    template <>                                                             \
-    std::ostream&                                                           \
-    operator<< (std::ostream &os, view<A> a) {                              \
-        std::copy (a.cbegin (),                                             \
-                   std::find (a.cbegin (), a.cend (), '\0'),                \
-                   std::ostream_iterator<decltype(a)::value_type> (os));    \
-                                                                            \
-        return os;                                                          \
-    }
-
-    OSTREAM(const char*)
-    OSTREAM(char*)
-    OSTREAM(  signed char*)
-    OSTREAM(unsigned char*)
-    OSTREAM(const   signed char*)
-    OSTREAM(const unsigned char*)
-    OSTREAM(std::string::const_iterator)
-    OSTREAM(std::string::iterator)
-
-#undef OSTREAM
-}
-

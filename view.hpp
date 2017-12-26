@@ -27,6 +27,7 @@
 #include <string>
 #include <cstring>
 #include <stdexcept>
+#include <iterator>
 
 namespace util {
     template <typename IteratorA, typename IteratorB = IteratorA>
@@ -357,6 +358,21 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
+    template <typename IteratorT>
+    std::ostream&
+    operator<< (std::ostream &os, view<IteratorT> val)
+    {
+        std::copy (
+            std::cbegin (val),
+            std::cend (val),
+            std::ostream_iterator<typename decltype(val)::value_type> (os)
+        );
+
+        return os;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
     /// a basic stringlike comparison operator that behaves as
     /// std::string::compare would.
     ///
@@ -378,10 +394,6 @@ namespace util {
     }
 
 
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename IteratorT>
-    std::ostream&
-    operator<< (std::ostream&, view<IteratorT>);
 }
 
 
