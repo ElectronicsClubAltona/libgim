@@ -163,7 +163,7 @@ namespace util {
         }
 
         //---------------------------------------------------------------------
-        constexpr auto
+        [[gnu::warn_unused_result]] constexpr auto
         redim (int count) const
         {
             CHECK_GT (count, 0);
