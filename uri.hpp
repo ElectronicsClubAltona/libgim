@@ -74,21 +74,26 @@ namespace util {
             NUM_COMPONENTS
         };
 
-        view<const char*> get (component) const;
+        view<const char*>
+        get (component c) const&
+        {
+            CHECK_LIMIT (c, 0, NUM_COMPONENTS);
+            return m_views[c];
+        }
 
-        auto all (void) const { return util::make_view (m_value); }
+        util::view<const char*> all (void) const& { return util::make_view (m_value); }
 
-        auto scheme (void) const { return get (SCHEME); }
-        auto heirarchical (void) const { return get (HIERARCHICAL); }
-        auto authority (void) const { return get (AUTHORITY); }
-        auto user (void) const { return get (USER); }
-        auto host (void) const { return get (HOST); }
-        auto port (void) const { return get (PORT); }
-        auto path (void) const { return get (PATH); }
-        auto query (void) const { return get (QUERY); }
-        auto fragment (void) const { return get (FRAGMENT); }
+        util::view<const char*> scheme (void) const& { return get (SCHEME); }
+        util::view<const char*> heirarchical (void) const& { return get (HIERARCHICAL); }
+        util::view<const char*> authority (void) const& { return get (AUTHORITY); }
+        util::view<const char*> user (void) const& { return get (USER); }
+        util::view<const char*> host (void) const& { return get (HOST); }
+        util::view<const char*> port (void) const& { return get (PORT); }
+        util::view<const char*> path (void) const& { return get (PATH); }
+        util::view<const char*> query (void) const& { return get (QUERY); }
+        util::view<const char*> fragment (void) const& { return get (FRAGMENT); }
 
-        auto components (void) const noexcept { return m_views; }
+        auto components (void) const& noexcept { return m_views; }
 
         static std::string percent_decode (view<const char*>);
 

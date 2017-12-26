@@ -133,15 +133,6 @@ util::uri::uri (std::string &&_value):
 
 
 //-----------------------------------------------------------------------------
-util::view<const char*>
-util::uri::get (util::uri::component c) const
-{
-    CHECK_NEQ (c, NUM_COMPONENTS);
-    return m_views[c];
-}
-
-
-//-----------------------------------------------------------------------------
 static uint8_t
 hex_to_uint (char c)
 {
