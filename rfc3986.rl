@@ -136,5 +136,5 @@
 
     URI = (
         absolute_uri | uri_reference
-    ) >uri_begin %uri_end;
+    );
 }%%

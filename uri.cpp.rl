@@ -65,7 +65,7 @@
 
     include rfc3986 'rfc3986.rl';
 
-    impl := URI
+    impl := URI >uri_begin %uri_end
     %success
     $!failure
     $trace;
