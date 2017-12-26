@@ -210,7 +210,7 @@ namespace util {
 
 
         ///////////////////////////////////////////////////////////////////////
-        constexpr value_type&
+        constexpr auto&
         operator[] (size_t idx)& noexcept
         {
             auto it = begin ();
@@ -219,7 +219,7 @@ namespace util {
         }
 
         //---------------------------------------------------------------------
-        constexpr const value_type&
+        constexpr auto&
         operator[] (size_t idx) const& noexcept
         {
             auto it = begin ();
@@ -342,7 +342,6 @@ namespace util {
     template <typename CharT, typename TraitsT, typename AllocT>
     view<CharT*>
     make_view (std::basic_string<CharT,TraitsT,AllocT>&&) = delete;
-
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename IteratorA, typename IteratorB>
