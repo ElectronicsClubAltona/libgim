@@ -34,6 +34,8 @@ namespace util::posix {
         fd (const std::experimental::filesystem::path &path, int flags, mode_t);
 
         fd (fd &&);
+        fd& operator= (fd &&);
+        fd& operator= (int);
 
         // The int constructor steals the fd. So don't pass in something that
         // you don't want closed at destruct time. This should really only be
@@ -62,15 +64,38 @@ namespace util::posix {
 
         //---------------------------------------------------------------------
         [[gnu::warn_unused_result]] ssize_t read (void *buf, size_t count);
-        [[gnu::warn_unused_result]] ssize_t read (util::view<char*>);
-        [[gnu::warn_unused_result]] ssize_t read (util::view<std::byte*>);
-
         [[gnu::warn_unused_result]] ssize_t write (const void *buf, size_t count);
-        [[gnu::warn_unused_result]] ssize_t write (util::view<const char*>);
-        [[gnu::warn_unused_result]] ssize_t write (util::view<const std::byte*>);
+
+
+        //---------------------------------------------------------------------
+        template <typename IteratorA, typename IteratorB>
+        [[gnu::warn_unused_result]]
+        std::enable_if_t<
+            sizeof (typename std::iterator_traits<IteratorA>::value_type) == 1,
+            IteratorA
+        >
+        read (util::view<IteratorA, IteratorB> dst)
+        {
+            return dst.begin () + read (&*std::data (dst), std::size (dst));
+        }
+
+
+        //---------------------------------------------------------------------
+        template <typename IteratorA, typename IteratorB>
+        [[gnu::warn_unused_result]]
+        std::enable_if_t<
+            sizeof (typename std::iterator_traits<IteratorA>::value_type) == 1,
+            IteratorA
+        >
+        write (util::view<IteratorA, IteratorB> src)
+        {
+            return src.begin () + write (&*std::data (src), std::size (src));
+        }
+
 
         //---------------------------------------------------------------------
         [[gnu::warn_unused_result]] off_t lseek (off_t offset, int whence);
+
 
         ///////////////////////////////////////////////////////////////////////
         operator int (void) const;

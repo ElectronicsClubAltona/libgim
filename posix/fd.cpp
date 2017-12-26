@@ -45,6 +45,25 @@ fd::fd (fd &&rhs):
 }
 
 
+//-----------------------------------------------------------------------------
+fd&
+fd::operator= (fd &&rhs)
+{
+    close ();
+    std::swap (m_fd, rhs.m_fd);
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+fd&
+fd::operator= (int rhs)
+{
+    reset (rhs);
+    return *this;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 fd::fd (int _fd):
     m_fd (_fd)
@@ -74,8 +93,7 @@ fd::~fd ()
 {
     if (m_fd < 0)
         return;
-
-    error::try_code (close (m_fd));
+    close ();
 }
 
 
@@ -84,15 +102,14 @@ struct ::stat
 fd::stat (void) const
 {
     struct stat buf;
-    if (fstat (m_fd, &buf))
-        error::throw_code ();
+    error::try_value (fstat (m_fd, &buf));
     return buf;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-ssize_t
-fd::read (void *buffer, size_t count)
+void
+fd::close (void)
 {
     error::try_value (::close (m_fd));
     m_fd = -1;
@@ -132,9 +149,11 @@ fd::release (void)
 
 ///////////////////////////////////////////////////////////////////////////////
 ssize_t
-fd::read (util::view<char *> dst)
+fd::read (void *buffer, size_t count)
 {
-    return read (std::data (dst), std::size (dst));
+    return error::try_value (
+        ::read (m_fd, buffer, count)
+    );
 }
 
 
