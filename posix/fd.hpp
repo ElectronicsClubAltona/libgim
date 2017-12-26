@@ -53,6 +53,13 @@ namespace util::posix {
         ///////////////////////////////////////////////////////////////////////
         struct ::stat stat (void) const;
 
+
+        ///////////////////////////////////////////////////////////////////////
+        void close (void);
+        void reset (int);
+        void reset (void);
+        int release (void);
+
         //---------------------------------------------------------------------
         [[gnu::warn_unused_result]] ssize_t read (void *buf, size_t count);
         [[gnu::warn_unused_result]] ssize_t read (util::view<char*>);

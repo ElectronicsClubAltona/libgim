@@ -94,13 +94,43 @@ fd::stat (void) const
 ssize_t
 fd::read (void *buffer, size_t count)
 {
-    return error::try_value (
-        ::read (m_fd, buffer, count)
-    );
+    error::try_value (::close (m_fd));
+    m_fd = -1;
 }
 
 
 //-----------------------------------------------------------------------------
+void
+fd::reset (void)
+{
+    if (m_fd >= 0) {
+        close ();
+        m_fd = -1;
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+void
+fd::reset (int rhs)
+{
+    if (m_fd >= 0)
+        close ();
+    m_fd = rhs;
+}
+
+
+//-----------------------------------------------------------------------------
+int
+fd::release (void)
+{
+    int tmp = m_fd;
+    m_fd = -1;
+    return tmp;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 ssize_t
 fd::read (util::view<char *> dst)
 {
