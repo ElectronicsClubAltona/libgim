@@ -47,6 +47,16 @@ namespace util {
 
 
         //---------------------------------------------------------------------
+        // explicitly cater for the char array case so that we don't
+        // accidentally include the trailing null in the data.
+        template <std::size_t N>
+        view (const char (&value)[N]):
+            view (std::begin (value), std::begin (value) + N - 1)
+        {
+            static_assert (N > 0);
+        }
+
+        //---------------------------------------------------------------------
         template <std::size_t N, typename ValueT>
         view (const ValueT(&value)[N]):
             view (std::begin (value), std::end (value))

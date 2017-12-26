@@ -10,6 +10,11 @@ main (int, char**)
 {
     util::TAP::logger tap;
 
+    tap.expect_eq (
+        std::size (util::make_view ("foo")), 3u,
+        "character array view does not include trailing null"
+    );
+
     const std::string s = "this is a test string";
     const std::string t = "not the same string";
 
