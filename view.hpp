@@ -30,20 +30,44 @@
 #include <iterator>
 
 namespace util {
-    template <typename IteratorA, typename IteratorB = IteratorA>
+    template <typename BeginT, typename EndT = BeginT>
     struct view {
     public:
         //---------------------------------------------------------------------
         using value_type = typename std::iterator_traits<
-            remove_restrict_t<IteratorA>
+            remove_restrict_t<BeginT>
         >::value_type;
 
 
         //---------------------------------------------------------------------
         constexpr
-        view (const IteratorA &first, const IteratorB &last) noexcept:
+        view (const BeginT &first, const EndT &last) noexcept:
             m_begin (first),
             m_end   (last)
+        { ; }
+
+
+        //---------------------------------------------------------------------
+        template <typename CountT, typename = std::enable_if_t<std::is_integral_v<CountT>,void>>
+        view (
+            const BeginT &_begin,
+            CountT _size
+        ):
+            view (_begin, _begin + _size)
+        { ; }
+
+
+        //---------------------------------------------------------------------
+        template <
+            typename ValueT,
+            typename = std::enable_if_t<
+                std::is_same_v<BeginT, const ValueT*> &&
+                std::is_same_v<EndT, const ValueT*>
+            >
+        >
+        view (const view<ValueT*,ValueT*> &rhs):
+            m_begin (rhs.begin ()),
+            m_end   (rhs.end   ())
         { ; }
 
 
@@ -93,18 +117,40 @@ namespace util {
 
 
         //---------------------------------------------------------------------
-        template <typename ContainerT>
+        template <typename CharT, typename Traits, typename Allocator>
+        view (std::basic_string<CharT,Traits,Allocator> &val):
+            view (std::data (val), std::data (val) + std::size (val))
+        { ; }
+
+
+        //---------------------------------------------------------------------
+        // non-contigous containers should use their begin/end iterators
+        // directly
+        template <
+            typename ContainerT,
+            typename std::enable_if_t<!is_contiguous_v<ContainerT>,ContainerT*> = nullptr
+        >
         constexpr explicit
-        view (ContainerT &klass):
+        view (
+            ContainerT &klass
+        ):
             view (std::begin (klass), std::end (klass))
         { ; }
 
 
         //---------------------------------------------------------------------
-        template <typename ContainerT>
+        // contiguous containers are often used with pointers to their contents
+        // for other operations so we directly construct them using pointers to
+        // their data for user convenience.
+        template <
+            typename ContainerT,
+            typename std::enable_if_t<is_contiguous_v<ContainerT>,ContainerT*> = nullptr
+        >
         constexpr explicit
-        view (const ContainerT &klass):
-            view (std::begin (klass), std::end (klass))
+        view (
+            ContainerT &klass
+        ):
+            view (std::data (klass), std::data (klass) + std::size (klass))
         { ; }
 
 
@@ -125,28 +171,29 @@ namespace util {
             m_begin = rhs.m_begin;
             m_end = rhs.m_end;
 
-            rhs.m_begin = IteratorA{};
-            rhs.m_end = IteratorB{};
+            rhs.m_begin = BeginT{};
+            rhs.m_end = EndT{};
 
             return *this;
         };
 
 
         ///////////////////////////////////////////////////////////////////////
-        constexpr IteratorA begin (void) noexcept { return m_begin; }
-        constexpr IteratorB end   (void) noexcept { return m_end;   }
+        constexpr BeginT begin (void) noexcept { return m_begin; }
+        constexpr EndT end   (void) noexcept { return m_end;   }
 
         //---------------------------------------------------------------------
-        constexpr const IteratorA begin (void) const noexcept { return cbegin (); }
-        constexpr const IteratorB end   (void) const noexcept { return cend   (); }
+        constexpr const BeginT begin (void) const noexcept { return cbegin (); }
+        constexpr const EndT end   (void) const noexcept { return cend   (); }
 
         //---------------------------------------------------------------------
-        constexpr const IteratorA cbegin (void) const noexcept { return m_begin; }
-        constexpr const IteratorB cend   (void) const noexcept { return m_end;   }
+        constexpr const BeginT cbegin (void) const noexcept { return m_begin; }
+        constexpr const EndT cend   (void) const noexcept { return m_end;   }
 
         //---------------------------------------------------------------------
         auto data (void)       { return begin (); }
         auto data (void) const { return begin (); }
+
 
         ///////////////////////////////////////////////////////////////////////
         constexpr bool
@@ -174,39 +221,33 @@ namespace util {
 
 
         //---------------------------------------------------------------------
-        // returns a view that has the same end iterator, but the provided
-        // begin iterator.
-        //
-        // the new begin iterator must be reachable by incrementing the current
-        // begin iterator but lie before reaching the end iterator. ie, in the
-        // middle.
-        //
-        // useful for resizing views after options which incrementally consume
-        // the referenced data.
-        [[gnu::warn_unused_result]] constexpr auto
-        increment (IteratorA _begin) const
+        util::view<BeginT,EndT>
+        operator- (util::view<BeginT,BeginT> prefix) const
         {
-            return view { _begin, m_end };
+            CHECK_EQ (prefix.begin (), begin ());
+            return { prefix.end (), end () };
         }
 
 
-        //---------------------------------------------------------------------
-        [[gnu::warn_unused_result]] constexpr auto
-        increment (int count) const
+        ///////////////////////////////////////////////////////////////////////
+        template <
+            typename ValueT,
+            typename = std::enable_if_t<
+                std::is_pointer_v<BeginT> &&
+                    sizeof (*std::declval<BeginT> ()) == sizeof (ValueT)
+                ,
+                void
+            >
+        >
+        view<ValueT*>
+        cast (void) const
         {
-            IteratorA next;
-            std::advance (next, count);
-            return increment (next);
+            return {
+                reinterpret_cast<ValueT*> (m_begin),
+                reinterpret_cast<ValueT*> (m_end)
+            };
         }
 
-
-        //---------------------------------------------------------------------
-        template <typename IteratorC>
-        [[gnu::warn_unused_result]] constexpr auto
-        decrement (IteratorC _end)
-        {
-            return view { m_begin, _end };
-        };
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -229,9 +270,49 @@ namespace util {
 
     private:
         ///////////////////////////////////////////////////////////////////////
-        IteratorA m_begin;
-        IteratorB m_end;
+        BeginT m_begin;
+        EndT m_end;
     };
+
+
+    //-------------------------------------------------------------------------
+    template <typename ValueT, std::size_t N>
+    view (const ValueT(&)[N]) -> view<const ValueT*,const ValueT*>;
+
+
+    //-------------------------------------------------------------------------
+    template <
+        typename IteratorT,
+        typename SizeT,
+        typename = std::enable_if_t<
+            std::is_integral_v<SizeT>,void
+        >
+    >
+    view (IteratorT, SizeT) -> view<IteratorT,IteratorT>;
+
+
+    //-------------------------------------------------------------------------
+    template <
+        typename ContainerT,
+        typename = std::enable_if_t<is_contiguous_v<ContainerT>, void>
+    >
+    view (ContainerT&) -> view<
+        typename ContainerT::value_type*,
+        typename ContainerT::value_type*
+    >;
+
+
+    //-------------------------------------------------------------------------
+    template <
+        typename ContainerT,
+        typename = std::enable_if_t<!is_contiguous_v<ContainerT>, void>
+    >
+    view (ContainerT&) -> view<
+        decltype (std::begin (std::declval<ContainerT> ())),
+        decltype (std::end   (std::declval<ContainerT> ()))
+    >;
+
+
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -273,16 +354,17 @@ namespace util {
     auto
     make_cview (const ContainerT &t)
     {
-        return util::view<decltype(std::cbegin (t))> { std::cbegin (t), std::cend (t) };
+        return make_view (t);
+        //return util::view<decltype(std::cbegin (t))> { std::cbegin (t), std::cend (t) };
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename IteratorA, typename IteratorB>
+    template <typename BeginT, typename EndT>
     auto
-    make_view (IteratorA first, IteratorB last)
+    make_view (BeginT first, EndT last)
     {
-        return view<IteratorA, IteratorB> {first, last};
+        return view<BeginT, EndT> {first, last};
     }
 
     //-------------------------------------------------------------------------
@@ -299,6 +381,7 @@ namespace util {
     {
         return { str, str + strlen (str) };
     }
+
 
     //-------------------------------------------------------------------------
     inline
@@ -343,10 +426,11 @@ namespace util {
     view<CharT*>
     make_view (std::basic_string<CharT,TraitsT,AllocT>&&) = delete;
 
+
     ///////////////////////////////////////////////////////////////////////////
-    template <typename IteratorA, typename IteratorB>
+    template <typename BeginT, typename EndT>
     constexpr bool
-    operator== (const view<IteratorA> &a, const view<IteratorB> &b)
+    operator== (const view<BeginT> &a, const view<EndT> &b)
     {
         return a.size () == b.size () &&
                std::equal (std::begin (a), std::end (a), std::begin (b));
