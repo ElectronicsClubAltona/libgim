@@ -1,6 +1,8 @@
 #include <cruft/util/tap.hpp>
 #include <cruft/util/types/traits.hpp>
 
+#include <list>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename FuncT>
@@ -56,4 +58,10 @@ main (void)
                 "complex function type");
 
     tap.expect (!has_return_type<int>::value, "integer is not applicable to func_traits");
+
+
+    tap.expect (is_contiguous_v<std::vector<char>>, "vector is contiguous");
+    tap.expect (is_contiguous_v<std::array<char,4>>, "array is contiguous");
+    tap.expect (!is_contiguous_v<std::list<char>>, "list is not contiguous");
+    return tap.status ();
 }
