@@ -49,7 +49,7 @@ namespace util {
 
     //-------------------------------------------------------------------------
     inline void
-    write (const posix::fd &dst, util::view<const char*> data)
+    write (const posix::fd &dst, util::view<const uint8_t*> data)
     {
         write (dst, std::data (data), std::size (data));
     }
@@ -74,12 +74,13 @@ namespace util {
     /// in this event the progress may not be reported to the caller. in the
     /// future an exception member variable may expose the information.
     template <typename DstT, typename IteratorA, typename IteratorB>
-    void
-    write (DstT &dst, util::view<IteratorA, IteratorB> src)
+    util::view<IteratorA,IteratorB>
+    write (DstT &dst, const util::view<IteratorA, IteratorB> src)
     {
-        for (auto cursor = src.begin (); cursor != src.end (); ) {
-            cursor = dst.write (view{cursor, src.end ()});
-        }
+        auto remain = src;
+        while (!remain.empty ())
+            remain = src - dst.write (remain);
+        return src;
     }
 
 
