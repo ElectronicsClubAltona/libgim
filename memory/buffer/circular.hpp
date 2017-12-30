@@ -17,6 +17,8 @@
 #ifndef __UTIL_MEMORY_BUFFER_CIRCULAR_HPP
 #define __UTIL_MEMORY_BUFFER_CIRCULAR_HPP
 
+#include "../../view.hpp"
+
 #include <cstddef>
 
 namespace util::memory::buffer {
@@ -48,6 +50,13 @@ namespace util::memory::buffer {
         const_iterator end   (void) const&;
 
         size_t size (void) const;
+
+        /// rebases the pointer so that it points to within the first
+        /// repetition of the data buffer.
+        iterator constrain (iterator);
+        /// rebases a pair of pointers so they fall within a contiguous span of
+        /// the data buffer.
+        util::view<iterator> constrain (util::view<iterator>);
 
     private:
         value_type *m_begin, *m_end;

@@ -152,6 +152,35 @@ circular<ValueT>::size (void) const
 }
 
 
+//-----------------------------------------------------------------------------
+template <typename ValueT>
+typename circular<ValueT>::iterator
+circular<ValueT>::constrain (iterator cursor)
+{
+    CHECK_LIMIT (cursor, m_begin, m_begin + 2 * size ());
+
+    return m_begin + (cursor - m_begin) % size ();
+}
+
+
+//-----------------------------------------------------------------------------
+template <typename ValueT>
+util::view<typename circular<ValueT>::iterator>
+circular<ValueT>::constrain (util::view<iterator> window)
+{
+    CHECK_LIMIT (window.begin (), m_begin, m_begin + 2 * size ());
+    CHECK_LIMIT (window.end   (), m_begin, m_begin + 2 * size ());
+
+    auto first = window.begin ();
+    auto last  = first + window.size ();
+    util::view res { first, last };
+
+    CHECK_EQ (res.size (), window.size ());
+    CHECK_LE (res.begin (), res.end ());
+    return res;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 template class util::memory::buffer::circular<char>;
 template class util::memory::buffer::circular<uint8_t>;
