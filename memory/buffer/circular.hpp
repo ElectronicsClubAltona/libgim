@@ -23,9 +23,12 @@ namespace util::memory::buffer {
     // buffer size is advisory and will likely depend on page size. the user
     // must check the size after creation if this field is important for
     // their usage.
+    template <typename ValueT>
     class circular {
     public:
-        using value_type = char;
+        using value_type = ValueT;
+        using iterator = value_type*;
+        using const_iterator = const value_type*;
 
         explicit circular (size_t bytes);
         ~circular ();
@@ -35,19 +38,19 @@ namespace util::memory::buffer {
         circular& operator= (const circular&) = delete;
         circular& operator= (circular&&) = delete;
 
-        char& operator[] (size_t)&;
-        const char& operator[] (size_t) const&;
+        value_type& operator[] (size_t)&;
+        const value_type& operator[] (size_t) const&;
 
-        char* begin (void)&;
-        char* end   (void)&;
+        iterator begin (void)&;
+        iterator end   (void)&;
 
-        const char* begin (void) const&;
-        const char* end   (void) const&;
+        const_iterator begin (void) const&;
+        const_iterator end   (void) const&;
 
         size_t size (void) const;
 
     private:
-        char *m_begin, *m_end;
+        value_type *m_begin, *m_end;
 
     };
 }

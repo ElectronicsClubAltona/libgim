@@ -54,7 +54,8 @@ tmpname (std::string &str, size_t length)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-circular::circular (size_t bytes)
+template <typename ValueT>
+circular<ValueT>::circular (size_t bytes)
 {
     bytes = max (bytes, sizeof (value_type));
     bytes = round_up (bytes, pagesize ());
@@ -89,7 +90,9 @@ circular::circular (size_t bytes)
     // pre-allocate a sufficiently large virtual memory block. it doesn't
     // matter much what flags we use because we'll just be overwriting it
     // shortly.
-    m_begin = reinterpret_cast<char*> (mmap (nullptr, bytes * 2, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0));
+    m_begin = reinterpret_cast<ValueT*> (
+        mmap (nullptr, bytes * 2, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)
+    );
     if (MAP_FAILED == m_begin)
         posix::error::throw_code ();
 
@@ -101,8 +104,8 @@ circular::circular (size_t bytes)
     auto prot = PROT_READ | PROT_WRITE;
     auto flag = MAP_FIXED | MAP_SHARED;
 
-    m_begin = reinterpret_cast<char*> (mmap (m_begin,         bytes, prot, flag, fd, 0));
-    m_end   = reinterpret_cast<char*> (mmap (m_begin + bytes, bytes, prot, flag, fd, 0));
+    m_begin = reinterpret_cast<ValueT*> (mmap (m_begin,         bytes, prot, flag, fd, 0));
+    m_end   = reinterpret_cast<ValueT*> (mmap (m_begin + bytes, bytes, prot, flag, fd, 0));
 
     if (m_begin == MAP_FAILED || m_end == MAP_FAILED)
         posix::error::throw_code ();
@@ -113,7 +116,8 @@ circular::circular (size_t bytes)
 
 
 //-----------------------------------------------------------------------------
-circular::~circular ()
+template <typename ValueT>
+circular<ValueT>::~circular ()
 {
     auto res = munmap (m_begin, 2 * (m_end - m_begin));
     (void)res;
@@ -122,24 +126,32 @@ circular::~circular ()
 
 
 ///////////////////////////////////////////////////////////////////////////////
-char*
-circular::begin (void)&
+template <typename ValueT>
+ValueT*
+circular<ValueT>::begin (void)&
 {
     return m_begin;
 }
 
 
 //-----------------------------------------------------------------------------
-char*
-circular::end (void)&
+template <typename ValueT>
+ValueT*
+circular<ValueT>::end (void)&
 {
     return m_end;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
+template <typename ValueT>
 size_t
-circular::size (void) const
+circular<ValueT>::size (void) const
 {
     return m_end - m_begin;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+template class util::memory::buffer::circular<char>;
+template class util::memory::buffer::circular<uint8_t>;
