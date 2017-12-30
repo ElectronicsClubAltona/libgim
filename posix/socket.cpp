@@ -58,6 +58,7 @@ public:
         m_addresses.reset (_addresses);
     };
 
+    // TODO: use a wrapper that supports the increment operator
     auto begin (void) const { return m_addresses.get (); }
     auto end   (void) const { return nullptr; }
 
@@ -70,7 +71,9 @@ private:
 static util::posix::fd
 connect_host (const util::view<const char*> host, int port)
 {
-    for (const auto &info: lookup { host, port }) {
+    lookup l {host,port};
+    for (auto _info = l.begin (); _info; _info = _info->ai_next) {
+        auto &info = *_info;
         util::posix::fd sock {
             socket (info.ai_family, info.ai_socktype, info.ai_protocol)
         };
