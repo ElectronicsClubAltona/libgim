@@ -48,7 +48,12 @@ namespace util {
 
 
         //---------------------------------------------------------------------
-        template <typename CountT, typename = std::enable_if_t<std::is_integral_v<CountT>,void>>
+        // cosntruction from pointer/size represenations for ease of use with
+        // legacy C code.
+        template <
+            typename CountT,
+            typename = std::enable_if_t<std::is_integral_v<CountT>,void>
+        >
         view (
             const BeginT &_begin,
             CountT _size
@@ -58,11 +63,12 @@ namespace util {
 
 
         //---------------------------------------------------------------------
+        // implicit conversion from pointer views to const pointer views
         template <
             typename ValueT,
             typename = std::enable_if_t<
                 std::is_same_v<BeginT, const ValueT*> &&
-                std::is_same_v<EndT, const ValueT*>
+                std::is_same_v<EndT,   const ValueT*>
             >
         >
         view (const view<ValueT*,ValueT*> &rhs):
@@ -76,21 +82,51 @@ namespace util {
         // accidentally include the trailing null in the data.
         template <std::size_t N>
         view (const char (&value)[N]):
-            view (std::begin (value), std::begin (value) + N - 1)
+            view {std::begin (value), std::begin (value) + N - 1}
         {
             static_assert (N > 0);
         }
 
+
+        //---------------------------------------------------------------------
+        view (const char *str):
+            view { str, str + strlen (str) }
+        { ; }
+
+
+        //---------------------------------------------------------------------
+        view (char *str):
+            view (str, str + strlen (str))
+        { ; }
+
+
+        //---------------------------------------------------------------------
+        template <std::size_t N>
+        view (char (&value)[N]):
+            view {std::begin (value), std::begin (value) + N - 1}
+        {
+            static_assert (N > 0);
+        }
+
+
         //---------------------------------------------------------------------
         template <std::size_t N, typename ValueT>
         view (const ValueT(&value)[N]):
-            view (std::begin (value), std::end (value))
+            view {std::begin (value), std::end (value)}
         { ; }
+
+
+        //---------------------------------------------------------------------
+        template <std::size_t N, typename ValueT>
+        view (ValueT(&value)[N]):
+            view {std::begin (value), std::end (value)}
+        { ; }
+
 
         //---------------------------------------------------------------------
         constexpr
         view (const view &rhs) noexcept:
-            view (rhs.m_begin, rhs.m_end)
+            view {rhs.m_begin, rhs.m_end}
         { ; }
 
 
@@ -100,7 +136,7 @@ namespace util {
         // class as a base for unique owning pointers without exposing the
         // begin/end data members to them directly.
         constexpr view (view &&rhs) noexcept:
-            view (std::move (rhs.m_begin), std::move (rhs.m_end))
+            view {std::move (rhs.m_begin), std::move (rhs.m_end)}
         { ; }
 
 
@@ -124,33 +160,23 @@ namespace util {
 
 
         //---------------------------------------------------------------------
-        // non-contigous containers should use their begin/end iterators
-        // directly
-        template <
-            typename ContainerT,
-            typename std::enable_if_t<!is_contiguous_v<ContainerT>,ContainerT*> = nullptr
-        >
-        constexpr explicit
-        view (
-            ContainerT &klass
-        ):
-            view (std::begin (klass), std::end (klass))
+        template <typename CharT, typename Traits, typename Allocator>
+        view (const std::basic_string<CharT,Traits,Allocator> &val):
+            view (std::data (val), std::data (val) + std::size (val))
         { ; }
 
 
         //---------------------------------------------------------------------
-        // contiguous containers are often used with pointers to their contents
-        // for other operations so we directly construct them using pointers to
-        // their data for user convenience.
-        template <
-            typename ContainerT,
-            typename std::enable_if_t<is_contiguous_v<ContainerT>,ContainerT*> = nullptr
-        >
-        constexpr explicit
-        view (
-            ContainerT &klass
-        ):
-            view (std::data (klass), std::data (klass) + std::size (klass))
+        template <typename ValueT, typename AllocatorT>
+        view (const std::vector<ValueT,AllocatorT> &rhs):
+            view (std::data (rhs), std::data (rhs) + std::size (rhs))
+        { ; }
+
+
+        //---------------------------------------------------------------------
+        template <typename ValueT, typename AllocatorT>
+        view (std::vector<ValueT,AllocatorT> &rhs):
+            view (std::data (rhs), std::data (rhs) + std::size (rhs))
         { ; }
 
 
@@ -281,6 +307,12 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
+    view (const char*) -> view<const char*>;
+
+    view (char*) -> view<char*>;
+
+
+    //-------------------------------------------------------------------------
     template <
         typename IteratorT,
         typename SizeT,
@@ -291,28 +323,19 @@ namespace util {
     view (IteratorT, SizeT) -> view<IteratorT,IteratorT>;
 
 
-    //-------------------------------------------------------------------------
-    template <
-        typename ContainerT,
-        typename = std::enable_if_t<is_contiguous_v<ContainerT>, void>
-    >
-    view (ContainerT&) -> view<
-        typename ContainerT::value_type*,
-        typename ContainerT::value_type*
-    >;
+    template <typename CharT, typename Traits, typename Allocator>
+    view (std::basic_string<CharT,Traits,Allocator> &) -> view<typename Allocator::pointer>;
 
 
-    //-------------------------------------------------------------------------
-    template <
-        typename ContainerT,
-        typename = std::enable_if_t<!is_contiguous_v<ContainerT>, void>
-    >
-    view (ContainerT&) -> view<
-        decltype (std::begin (std::declval<ContainerT> ())),
-        decltype (std::end   (std::declval<ContainerT> ()))
-    >;
+    template <typename CharT, typename Traits, typename Allocator>
+    view (const std::basic_string<CharT,Traits,Allocator> &) -> view<typename Allocator::const_pointer>;
+
+    template <typename ValueT, typename AllocatorT>
+    view (std::vector<ValueT,AllocatorT>&) -> view<typename AllocatorT::pointer>;
 
 
+    template <typename ValueT, typename AllocatorT>
+    view (const std::vector<ValueT,AllocatorT>&) -> view<typename AllocatorT::const_pointer>;
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -478,13 +501,13 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename IteratorT>
+    template <typename BeginT, typename EndT>
     std::ostream&
-    operator<< (std::ostream &os, view<IteratorT> val)
+    operator<< (std::ostream &os, view<BeginT, EndT> val)
     {
         std::copy (
             std::cbegin (val),
-            std::cend (val),
+            std::cend   (val),
             std::ostream_iterator<typename decltype(val)::value_type> (os)
         );
 
