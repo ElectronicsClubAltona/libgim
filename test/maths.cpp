@@ -159,6 +159,10 @@ main (void)
     tap.expect_eq (util::min (-2, 0, 2), -2, "variadic min");
     tap.expect_eq (util::max (-2, 0, 2),  2, "variadic max");
 
+    tap.expect_eq (util::digits10( 0), 1, "digits10, 0");
+    tap.expect_eq (util::digits10( 1), 1, "digits10, 1");
+    tap.expect_eq (util::digits10(10), 2, "digits10, 10");
+
     tap.expect_eq (util::pow2 (4u), 16u, "pow2");
 
     static const float POS_ZERO =  1.f / numeric_limits<float>::infinity ();

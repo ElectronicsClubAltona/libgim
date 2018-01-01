@@ -341,11 +341,29 @@ namespace util {
     }
 
 
-    //-----------------------------------------------------------------------------
-    constexpr
-    unsigned
-    digits10 (uint32_t v) noexcept
+    //-------------------------------------------------------------------------
+    template <
+        typename NumericT,
+        typename = std::enable_if_t<
+            std::is_integral_v<NumericT>,
+            void
+        >
+    >
+    constexpr auto
+    digits10 (NumericT v) noexcept
     {
+        // cascading conditionals are faster, but it's super annoying to write
+        // out for arbitrarily sized types so we use this base case unti
+        // there's actually a performance reason to use another algorithm.
+        int tally = 0;
+        do {
+            v /= 10;
+            ++tally;
+        } while (v);
+
+        return tally;
+
+        /*
         return (v >= 1000000000) ? 10 :
                (v >=  100000000) ?  9 :
                (v >=   10000000) ?  8 :
@@ -356,6 +374,7 @@ namespace util {
                (v >=        100) ?  3 :
                (v >=         10) ?  2 :
                                     1;
+        */
     }
 
 
