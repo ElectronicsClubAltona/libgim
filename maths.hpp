@@ -221,11 +221,19 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    constexpr T
-    pow [[gnu::const]] (T x, unsigned y)
+    template <
+        typename BaseT,
+        typename ExponentT,
+        typename = std::enable_if_t<
+            std::is_unsigned_v<ExponentT>,
+            void
+        >
+    >
+    constexpr BaseT
+    pow [[gnu::const]] (BaseT base, ExponentT exponent)
     {
-        return y == 0 ? T{1} : x * pow (x, y - 1);
+        assert (exponent >= 0);
+        return exponent == 0 ? BaseT{1} : base * pow (base, exponent - 1);
     }
 
 
