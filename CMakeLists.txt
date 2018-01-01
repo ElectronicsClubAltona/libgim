@@ -29,6 +29,7 @@ endif()
 RAGEL_TARGET(json-flat json/flat.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/json/flat.cpp COMPILE_FLAGS -G2)
 RAGEL_TARGET(uri uri.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/uri.cpp COMPILE_FLAGS -G2)
 RAGEL_TARGET(version version.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
+RAGEL_TARGET(parse8601 time/parse8601.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/time/parse8601.cpp)
 
 
 ###############################################################################
@@ -400,6 +401,8 @@ list (
     term.hpp
     time.cpp
     time.hpp
+    time/parse.hpp
+    time/parse8601.cpp
     tuple.cpp
     tuple.hpp
     typeidx.cpp
@@ -550,8 +553,9 @@ if (TESTS)
         string
         stringid
         strongdef
-        tuple
+        time/8601
         traits
+        tuple
         typeidx
         uri
         utf8
