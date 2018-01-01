@@ -427,36 +427,72 @@ namespace util::debug {
     void init (void);
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    // returns true if an instance of type `T' appears to be in a valid state.
+    //
+    // written as a struct rather than a function so that behaviour may be
+    // arbitrarily specialised. all users are free to specialise this struct
+    // with an user types.
+    //
+    // all specialisations must be safe to call on arbitrary data without
+    // exceptions or faults as this mechanism is used to control some
+    // debugging paths which themselves are the configuration points for
+    // throwing/logging/etc behaviour.
     template <typename T>
     struct validator {
-        static bool is_valid (const T&);
+        static bool is_valid (const T&) noexcept;
     };
 
 
+    //-------------------------------------------------------------------------
     template <typename T>
-    bool is_valid (const T &t)
-    { return validator<T>::is_valid (t); }
+    bool is_valid (const T &t) noexcept
+    {
+        return validator<T>::is_valid (t);
+    }
 
 
+    //-------------------------------------------------------------------------
     template <
         template<size_t, typename...> class T,
         size_t S,
         typename ...Args
     >
     struct validator<T<S,Args...>> {
-        static bool is_valid (const T<S,Args...>&);
+        static bool is_valid (const T<S,Args...>&) noexcept;
     };
 
 
+    //-------------------------------------------------------------------------
     template <
         template<size_t,typename...> class T,
         size_t S,
         typename ...Args
     >
-    bool is_valid (const T<S,Args...> &v)
-    { return validator<T<S,Args...>>::is_valid (v); }
+    bool is_valid (const T<S,Args...> &v) noexcept
+    {
+        return validator<T<S,Args...>>::is_valid (v);
+    }
 
 
+    //-------------------------------------------------------------------------
+    // forwarding validator from a pointer type to a reference type.
+    //
+    // null pointers are assumed to be invalid
+    template <typename T>
+    struct validator<T*> {
+        static bool is_valid (const T *val) noexcept
+        {
+            return val && ::util::debug::is_valid (*val);
+        }
+    };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // asserts that an instance of type `T' is in a valid state.
+    //
+    // behaviour will be controlled by NDEBUG and other assertion machinery and
+    // so may be optimised out entirely in optimised builds.
     template <typename T>
     void sanity (const T &t)
     {
@@ -465,6 +501,7 @@ namespace util::debug {
     }
 
 
+    //-------------------------------------------------------------------------
     template <
         template<typename...> class T,
         typename ...Args
@@ -475,6 +512,8 @@ namespace util::debug {
         CHECK (is_valid (t));
     }
 }
+
+
 
 
 #include "debug.ipp"
