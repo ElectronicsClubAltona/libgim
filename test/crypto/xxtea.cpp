@@ -1,5 +1,6 @@
 #include "crypto/xxtea.hpp"
 
+#include "debug.hpp"
 #include "tap.hpp"
 #include "types.hpp"
 

@@ -1,6 +1,8 @@
 #include "tap.hpp"
+
 #include "alloc/arena.hpp"
 #include "alloc/raw/linear.hpp"
+#include "debug.hpp"
 
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,6 @@
 #include "crypto/arc4.hpp"
+
+#include "debug.hpp"
 #include "tap.hpp"
 #include "types.hpp"
 

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2018, Danny Robson <danny@nerdcruft.net>
  */
 
 #ifdef __UTIL_DEBUG_IPP
@@ -20,20 +20,23 @@
 
 #define __UTIL_DEBUG_IPP
 
-#include "./format.hpp"
+#include "backtrace.hpp"
+#include "format.hpp"
 
 #include <limits>
+#include <iostream>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util::debug::detail {
     void panic [[noreturn]] (const char *msg);
 
     template <typename ...Args, size_t N>
-    constexpr
     void panic [[noreturn]] (const char (&fmt)[N], const Args& ...args)
     {
-        auto msg = util::format::render (fmt, args...);
-        panic (msg.c_str ());
+        std::cerr << format::printf (fmt, args...) << ::debug::backtrace () << std::endl;
+        breakpoint ();
+        abort ();
     }
 
     void not_implemented [[noreturn]] (const char *msg);

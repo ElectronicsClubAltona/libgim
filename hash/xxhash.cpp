@@ -20,6 +20,8 @@
 #include "./bitwise.hpp"
 #include "./endian.hpp"
 
+#include <cstring>
+
 using util::hash::xxhash;
 
 

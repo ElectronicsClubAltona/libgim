@@ -47,7 +47,7 @@ namespace util::TAP {
         {
             m_output << (test ? "ok " : "not ok ") << ++m_size
                      << " - "
-                     << util::format::render (fmt, std::forward<Args> (args)...) << '\n';
+                     << format::printf (fmt) (std::forward<Args> (args)...) << '\n';
 
             if (!test)
                 m_status = EXIT_FAILURE;

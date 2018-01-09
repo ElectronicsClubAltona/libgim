@@ -18,9 +18,9 @@
 #ifndef CRUFT_UTIL_VIEW_HPP
 #define CRUFT_UTIL_VIEW_HPP
 
-#include "./debug.hpp"
 #include "./types/traits.hpp"
 
+#include <cassert>
 #include <cstdlib>
 #include <ostream>
 #include <string>
@@ -46,11 +46,8 @@ namespace util {
 
 
         //---------------------------------------------------------------------
-        constexpr
-        view (const view &rhs) noexcept:
-            m_begin (rhs.m_begin),
-            m_end   (rhs.m_end)
-        { ; }
+        constexpr view (const view &rhs) noexcept = default;
+        view& operator= (const view &rhs) noexcept = default;
 
 
         //---------------------------------------------------------------------
@@ -64,6 +61,18 @@ namespace util {
             std::swap (m_begin, rhs.m_begin);
             std::swap (m_end,   rhs.m_end);
         }
+
+        template <std::size_t N>
+        constexpr view (const char (&str)[N]):
+            m_begin (std::begin (str)),
+            m_end   (std::begin (str) + N - 1)
+        { ; }
+
+
+        explicit constexpr view (std::nullptr_t):
+            m_begin (nullptr),
+            m_end   (nullptr)
+        { ; }
 
 
         //---------------------------------------------------------------------
@@ -82,16 +91,6 @@ namespace util {
             m_begin (std::begin (klass)),
             m_end   (std::end   (klass))
         { ; }
-
-
-        //---------------------------------------------------------------------
-        view&
-        operator= (const view &rhs) noexcept
-        {
-            m_begin = rhs.m_begin;
-            m_end   = rhs.m_end;
-            return *this;
-        }
 
 
         //---------------------------------------------------------------------
@@ -142,7 +141,7 @@ namespace util {
         constexpr auto
         redim (int count) const
         {
-            CHECK_GT (count, 0);
+            assert (count > 0);
             if (count > size ())
                 throw std::invalid_argument ("redim to higher size not allowed");
             return view { m_begin, m_begin + count };

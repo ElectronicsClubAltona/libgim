@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010-2017 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2018 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "io.hpp"
@@ -19,6 +19,7 @@
 #include "debug.hpp"
 #include "except.hpp"
 #include "cast.hpp"
+#include "format.hpp"
 
 #include <cstdio>
 #include <fcntl.h>
@@ -212,7 +213,7 @@ scoped_cwd::~scoped_cwd ()
 
 ///////////////////////////////////////////////////////////////////////////////
 path_error::path_error (const std::experimental::filesystem::path &_path):
-    runtime_error (format::render ("Unknown path: %!", m_path)),
+    runtime_error (to_string (format::printf ("Unknown path: %!", m_path))),
     m_path (_path)
 { ; }
 

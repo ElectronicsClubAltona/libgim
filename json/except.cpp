@@ -37,6 +37,6 @@ json::parse_error::what (void) const noexcept
 
 ///////////////////////////////////////////////////////////////////////////////
 json::key_error::key_error (std::string _key):
-    error (util::format::render ("missing key '%s'", _key)),
+    error (to_string (util::format::printf ("missing key '%s'", _key))),
     key (_key)
 { ; }

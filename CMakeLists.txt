@@ -29,6 +29,7 @@ endif()
 RAGEL_TARGET(json-flat json/flat.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/json/flat.cpp)
 RAGEL_TARGET(uri uri.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/uri.cpp)
 RAGEL_TARGET(version version.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
+RAGEL_TARGET(format.cpp format.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/format.cpp)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -223,9 +224,8 @@ list (
     fixed.hpp
     float.cpp
     float.hpp
-    format.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/format.cpp
     format.hpp
-    format.ipp
     fourcc.cpp
     fourcc.hpp
     geom/fwd.hpp

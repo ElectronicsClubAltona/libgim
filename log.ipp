@@ -13,22 +13,3 @@
  *
  * Copyright 2012-2016 Danny Robson <danny@nerdcruft.net>
  */
-
-#ifdef __UTIL_LOG_IPP
-#error
-#endif
-
-#define __UTIL_LOG_IPP
-
-#include "format.hpp"
-
-//-----------------------------------------------------------------------------
-namespace util {
-    template <typename ...Args, size_t N>
-    void
-    log (level_t l, const char (&fmt)[N], const Args& ...args)
-    {
-        log (l, format::render (fmt, args...));
-    }
-}
-

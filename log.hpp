@@ -11,15 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2012 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2012-2018 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_LOG_HPP
-#define __UTIL_LOG_HPP
+#ifndef CRUFT_UTIL_LOG_HPP
+#define CRUFT_UTIL_LOG_HPP
 
-#include "./nocopy.hpp"
+#include "nocopy.hpp"
 
-#include "./preprocessor.hpp"
+#include "preprocessor.hpp"
+#include "format.hpp"
 
 #include <ostream>
 #include <string>
@@ -81,7 +82,10 @@ namespace util {
 
     template <typename ...Args, size_t N>
     void
-    log (level_t, const char (&fmt)[N], const Args&...);
+    log (level_t l, const char (&fmt)[N], const Args&...args)
+    {
+        log (l, to_string (format::printf (fmt) (args...)));
+    }
 
 
     //-------------------------------------------------------------------------

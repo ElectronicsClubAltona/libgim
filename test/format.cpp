@@ -2,6 +2,7 @@
 
 #include "tap.hpp"
 
+#include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////
 struct userobj { };
@@ -19,9 +20,13 @@ main (void)
 {
     util::TAP::logger tap;
 
-    #define CHECK_RENDER(fmt,res,...) do {                      \
-        auto val = util::format::render (fmt, ##__VA_ARGS__);   \
-        tap.expect_eq (val, res, "render '%s'", fmt);           \
+    #define CHECK_RENDER(fmt,res,...) do {                              \
+        auto val = to_string (util::format::printf (fmt)(__VA_ARGS__)); \
+        if (val != res) {                                               \
+            std::clog << "got: '" << val << "'\n";                      \
+            std::clog << "expected: '" << res << "'\n";                 \
+        }                                                               \
+        tap.expect_eq (val, res, "render '%s'", fmt);                   \
     } while (0)
 
     CHECK_RENDER ("foo", "foo");
@@ -170,12 +175,12 @@ main (void)
     CHECK_RENDER ("%#o %o %#o", "010 10 010", 8u, 8u, 8u);
     CHECK_RENDER ("%X%x%X", "FfF", 0xfu, 0xfu, 0xfu);
 
-    tap.expect_eq (util::format::render ("%u\n", 1u), "1\n", "newline");
+    tap.expect_eq (to_string (util::format::printf ("%u\n")(1u)), "1\n", "newline");
 
-    #define CHECK_THROW(fmt,except,...) do {                \
-        tap.expect_throw<util::format::except> ([&] {       \
-            util::format::render (fmt, ##__VA_ARGS__);      \
-        }, "exception '%s' for format '%s'", #except, fmt); \
+    #define CHECK_THROW(fmt,except,...) do {                        \
+        tap.expect_throw<std::exception> ([&] {                     \
+            to_string (util::format::printf (fmt)(__VA_ARGS__));    \
+        }, "exception '%s' for format '%s'", #except, fmt);         \
     } while (0)
 
     CHECK_THROW("%",  syntax_error);
@@ -190,7 +195,7 @@ main (void)
     CHECK_THROW("%i", conversion_error, nullptr);
 
     CHECK_THROW("%hhi", length_error, (long long)1);
-    //CHECK_THROW("%lli", length_error, (signed char)1);
+    CHECK_THROW("%lli", length_error, (signed char)1);
 
     CHECK_THROW("%u", conversion_error, 1.);
     CHECK_THROW("%u", conversion_error, "foo");
@@ -199,7 +204,7 @@ main (void)
     CHECK_THROW("%u", conversion_error, nullptr);
 
     CHECK_THROW("%hhu", length_error, (unsigned long long)1);
-    //CHECK_THROW("%llu", length_error, (unsigned char)1);
+    CHECK_THROW("%llu", length_error, (unsigned char)1);
 
     CHECK_THROW("%f", conversion_error, 1u);
     CHECK_THROW("%f", conversion_error, "foo");
