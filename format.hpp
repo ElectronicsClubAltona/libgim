@@ -360,7 +360,7 @@ namespace util::format {
                 if (spec.precision >= 0) {
                     std::copy_n (
                         std::begin (val),
-                        util::min (spec.precision, val.size ()),
+                        util::min (spec.precision, static_cast<int> (val.size ())),
                         std::ostream_iterator<char> (os)
                     );
                     return os;

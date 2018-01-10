@@ -11,7 +11,7 @@ main (int, char**)
     util::TAP::logger tap;
 
     tap.expect_eq (
-        std::size (util::make_view ("foo")), 3,
+        std::size (util::make_view ("foo")), 3u,
         "character array view does not include trailing null"
     );
 

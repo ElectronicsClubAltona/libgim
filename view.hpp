@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2018 Danny Robson <danny@nerdcruft.net>
  */
 
 
@@ -228,10 +228,17 @@ namespace util {
         }
 
         //---------------------------------------------------------------------
+        // the return type of size _should_ be whatever std::distance returns,
+        // or something else that makes sense for the iterators we've been
+        // handed.
+        //
+        // but it's a pain in the arse to use sizes that aren't unsigned given
+        // that other libraries need to compare sizes pretty often and
+        // everything else in the world tends to be unsigned.
         constexpr auto
         size (void) const noexcept
         {
-            return std::distance (m_begin, m_end);
+            return static_cast<std::size_t> (std::distance (m_begin, m_end));
         }
 
         //---------------------------------------------------------------------
