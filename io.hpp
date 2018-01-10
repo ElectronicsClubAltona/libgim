@@ -73,7 +73,15 @@ namespace util {
     /// an exception may be thrown in the event forward progress is impossible.
     /// in this event the progress may not be reported to the caller. in the
     /// future an exception member variable may expose the information.
-    template <typename DstT, typename IteratorA, typename IteratorB>
+    template <
+        typename DstT,
+        typename IteratorA,
+        typename IteratorB,
+        typename = std::enable_if_t<
+            sizeof (util::view<IteratorA,IteratorB>::value_type) == 1,
+            void
+        >
+    >
     util::view<IteratorA,IteratorB>
     write (DstT &dst, const util::view<IteratorA, IteratorB> src)
     {
