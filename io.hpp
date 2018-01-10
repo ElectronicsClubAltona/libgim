@@ -48,8 +48,15 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-    inline void
-    write (const posix::fd &dst, util::view<const uint8_t*> data)
+    template <
+        typename ValueT,
+        typename = std::enable_if_t<
+            sizeof (util::view<const ValueT*>) == 1,
+            void
+        >
+    >
+    void
+    write (const posix::fd &dst, util::view<const ValueT*> data)
     {
         write (dst, std::data (data), std::size (data));
     }
@@ -76,11 +83,7 @@ namespace util {
     template <
         typename DstT,
         typename IteratorA,
-        typename IteratorB,
-        typename = std::enable_if_t<
-            sizeof (util::view<IteratorA,IteratorB>::value_type) == 1,
-            void
-        >
+        typename IteratorB
     >
     util::view<IteratorA,IteratorB>
     write (DstT &dst, const util::view<IteratorA, IteratorB> src)
