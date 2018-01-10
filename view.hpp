@@ -261,6 +261,14 @@ namespace util {
         }
 
 
+        //---------------------------------------------------------------------
+        util::view<BeginT,EndT>
+        operator- (BeginT newbegin) const noexcept
+        {
+            return { newbegin, end () };
+        }
+
+
         ///////////////////////////////////////////////////////////////////////
         template <
             typename ValueT,
