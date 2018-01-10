@@ -465,9 +465,12 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename BeginT, typename EndT>
+    template <
+        typename BeginA, typename EndA,
+        typename BeginB, typename EndB
+    >
     constexpr bool
-    operator== (const view<BeginT> &a, const view<EndT> &b)
+    operator== (const view<BeginA,EndA> &a, const view<BeginB,EndB> &b)
     {
         return a.size () == b.size () &&
                std::equal (std::begin (a), std::end (a), std::begin (b));
@@ -476,9 +479,17 @@ namespace util {
 
     //-------------------------------------------------------------------------
     // defer equality to the view/view operator by way of make_view
-    template <typename IteratorT, typename ValueT>
+    template <
+        typename IteratorA,
+        typename IteratorB,
+        typename ValueT,
+        typename = std::enable_if_t<
+            !std::is_same_v<ValueT, view<IteratorA,IteratorB>>,
+            void
+        >
+    >
     constexpr bool
-    operator== (const view<IteratorT> &a, const ValueT &b)
+    operator== (const view<IteratorA,IteratorB> &a, const ValueT &b)
     {
         return a == make_view (b);
     }
@@ -488,27 +499,60 @@ namespace util {
     // reverse the arguments and forward to the above operator. we formumlate
     // equality this way to avoid implementing the operator twice for each
     // weird case.
-    template <typename IteratorT, typename ValueT>
+    template <
+        typename IteratorA,
+        typename IteratorB,
+        typename ValueT,
+        typename = std::enable_if_t<
+            !std::is_same_v<ValueT, view<IteratorA,IteratorB>>,
+            void
+        >
+    >
     constexpr bool
-    operator== (const ValueT &a, const view<IteratorT> &b)
+    operator== (const ValueT &a, const view<IteratorA,IteratorB> &b)
     {
         return b == a;
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename IteratorT, typename ValueT>
+    template <typename IteratorA, typename IteratorB>
     constexpr bool
-    operator!= (const util::view<IteratorT> &a, const ValueT &b)
+    operator!= (const view<IteratorA,IteratorB> &a, const view<IteratorA,IteratorB> &b)
     {
         return !(a == b);
     }
 
 
     //-------------------------------------------------------------------------
-    template <typename IteratorT, typename ValueT>
+    template <
+        typename IteratorA,
+        typename IteratorB,
+        typename ValueT,
+        typename = std::enable_if_t<
+            !std::is_same_v<ValueT, view<IteratorA,IteratorB>>,
+            void
+        >
+    >
     constexpr bool
-    operator!= (const ValueT &a, const util::view<IteratorT> &b)
+    operator!= (const view<IteratorA,IteratorB> &a, const ValueT &b)
+    {
+        return !(a == b);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        typename IteratorA,
+        typename IteratorB,
+        typename ValueT,
+        typename = std::enable_if_t<
+            !std::is_same_v<ValueT, view<IteratorA,IteratorB>>,
+            void
+        >
+    >
+    constexpr bool
+    operator!= (const ValueT &a, const view<IteratorA,IteratorB> &b)
     {
         return !(a == b);
     }
