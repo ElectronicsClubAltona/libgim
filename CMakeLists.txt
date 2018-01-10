@@ -1,15 +1,8 @@
 cmake_minimum_required(VERSION 3.7.0)
 project(util-cruft)
 
-set(CMAKE_MODULE_PATH
-    ${CMAKE_MODULE_PATH}
-    ${CMAKE_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}/cmake)
-
 include(CheckFunctionExists)
 include(CheckCXXCompilerFlag)
-
-include (nc)
 
 include (search_libs)
 
