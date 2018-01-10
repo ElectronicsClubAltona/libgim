@@ -21,8 +21,8 @@
 // it triggers a circular dependency; debug -> format -> maths -> debug
 // instead, just use cassert
 
-#include "./types/traits.hpp"
-#include "./float.hpp"
+#include "types/traits.hpp"
+#include "float.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -81,8 +81,8 @@ namespace util {
     template <typename A, typename B>
     inline
     typename std::enable_if_t<
-        std::is_integral<A>::value &&
-        std::is_integral<B>::value &&
+        std::is_integral_v<A> &&
+        std::is_integral_v<B> &&
         std::is_signed<A>::value == std::is_signed<B>::value,
         bool
     >
@@ -203,7 +203,7 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    T
+    std::enable_if_t<std::is_arithmetic_v<T>, T>
     abs [[gnu::const]] (T t)
     {
         return t > 0 ? t : -t;
@@ -221,11 +221,19 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    constexpr T
-    pow [[gnu::const]] (T x, unsigned y)
+    template <
+        typename BaseT,
+        typename ExponentT,
+        typename = std::enable_if_t<
+            std::is_unsigned_v<ExponentT>,
+            void
+        >
+    >
+    constexpr BaseT
+    pow [[gnu::const]] (BaseT base, ExponentT exponent)
     {
-        return y == 0 ? T{1} : x * pow (x, y - 1);
+        assert (exponent >= 0);
+        return exponent == 0 ? BaseT{1} : base * pow (base, exponent - 1);
     }
 
 
@@ -242,8 +250,15 @@ namespace util {
     //-----------------------------------------------------------------------------
     // Logarithms
     template <typename T>
-    T
-    log2  (T val);
+    constexpr
+    std::enable_if_t<std::is_integral_v<T>, T>
+    log2 (T val)
+    {
+        T tally = 0;
+        while (val >>= 1)
+            ++tally;
+        return tally;
+    }
 
 
     //-------------------------------------------------------------------------
@@ -326,11 +341,29 @@ namespace util {
     }
 
 
-    //-----------------------------------------------------------------------------
-    constexpr
-    unsigned
-    digits10 (uint32_t v) noexcept
+    //-------------------------------------------------------------------------
+    template <
+        typename NumericT,
+        typename = std::enable_if_t<
+            std::is_integral_v<NumericT>,
+            void
+        >
+    >
+    constexpr auto
+    digits10 (NumericT v) noexcept
     {
+        // cascading conditionals are faster, but it's super annoying to write
+        // out for arbitrarily sized types so we use this base case unti
+        // there's actually a performance reason to use another algorithm.
+        int tally = 0;
+        do {
+            v /= 10;
+            ++tally;
+        } while (v);
+
+        return tally;
+
+        /*
         return (v >= 1000000000) ? 10 :
                (v >=  100000000) ?  9 :
                (v >=   10000000) ?  8 :
@@ -341,6 +374,7 @@ namespace util {
                (v >=        100) ?  3 :
                (v >=         10) ?  2 :
                                     1;
+        */
     }
 
 
@@ -587,7 +621,16 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     /// Variadic minimum
-    template <typename T>
+
+    // disable the single parameter version for non-arithmetic types so that
+    // min for coord types is unambiguous. allow pointers too because it
+    // doesn't add ambiguity and it simplifies some memory juggling.
+    template <
+        typename T,
+        typename = std::enable_if_t<
+            std::is_arithmetic_v<T> || std::is_pointer_v<T>, void
+        >
+    >
     constexpr T
     min  (const T a)
         { return a; }
@@ -609,9 +652,9 @@ namespace util {
     //-------------------------------------------------------------------------
     /// Variadic maximum
     template <typename T>
-    constexpr T
+    constexpr std::enable_if_t<std::is_arithmetic_v<T> || std::is_pointer_v<T>, T>
     max  (const T a)
-        { return a; }
+    { return a; }
 
 
     //-------------------------------------------------------------------------

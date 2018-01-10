@@ -17,7 +17,7 @@
 #ifndef __UTIL_QUATERNION_HPP
 #define __UTIL_QUATERNION_HPP
 
-#include "coord.hpp"
+#include "coord/traits.hpp"
 
 #include "vector.hpp"
 #include "matrix.hpp"
@@ -38,6 +38,8 @@ namespace util {
     struct quaternion {
         T w, x, y, z;
 
+        static constexpr std::size_t size (void) { return 4; }
+
         static quaternion angle_axis (T radians, vector<3,T> axis);
         static quaternion from_euler (vector<3,T>);
 
@@ -48,6 +50,12 @@ namespace util {
 
         static constexpr quaternion<T> identity (void);
     };
+
+
+    template <typename T>
+    struct arity<quaternion<T>,void>
+    :std::integral_constant<std::size_t, 4>
+    { };
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -126,6 +134,6 @@ namespace util {
     operator<< (std::ostream&, quaternion<T>);
 }
 
-#include "./quaternion.ipp"
+#include "quaternion.ipp"
 
 #endif

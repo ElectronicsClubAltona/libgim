@@ -17,6 +17,7 @@
 #ifndef CRUFT_UTIL_RANDOM_HPP
 #define CRUFT_UTIL_RANDOM_HPP
 
+#include <algorithm>
 #include <random>
 #include <limits>
 
@@ -74,6 +75,6 @@ namespace util::random {
         std::uniform_int_distribution<size_t> dist (0, N - 1);
         return t[dist (generator ())];
     }
-}
+};
 
 #endif

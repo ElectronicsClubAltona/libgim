@@ -44,19 +44,13 @@ namespace util::geom {
 
         point<S,T> closest (point<S,T>) const;
 
-        aabb<S,T> expand (util::vector<S,T>) const noexcept;
-        aabb<S,T> expand (T) const noexcept;
-
-        aabb<S,T> contract (util::vector<S,T>) const noexcept;
-        aabb<S,T> contract (T) const noexcept;
-
         void cover (point<S,T>);
 
         aabb<S,T> operator+ (vector<S,T>) const;
         aabb<S,T> operator- (vector<S,T>) const;
 
-        point<S,T> p0;
-        point<S,T> p1;
+        ::util::point<S,T> p0;
+        ::util::point<S,T> p1;
     };
 
 

@@ -14,7 +14,7 @@
  * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./xorshift.hpp"
+#include "xorshift.hpp"
 
 #include "../debug.hpp"
 

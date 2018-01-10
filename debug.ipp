@@ -34,7 +34,7 @@ namespace util::debug::detail {
     template <typename ...Args, size_t N>
     void panic [[noreturn]] (const char (&fmt)[N], const Args& ...args)
     {
-        std::cerr << format::printf (fmt, args...) << ::debug::backtrace () << std::endl;
+        std::cerr << ::util::format::printf (fmt, args...) << ::debug::backtrace () << std::endl;
         breakpoint ();
         abort ();
     }

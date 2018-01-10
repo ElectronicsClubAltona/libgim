@@ -14,10 +14,10 @@
  * Copyright 2013-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./cmdopt.hpp"
+#include "cmdopt.hpp"
 
-#include "./cast.hpp"
-#include "./debug.hpp"
+#include "cast.hpp"
+#include "debug.hpp"
 
 #include <cstring>
 #include <iostream>
@@ -192,27 +192,27 @@ suffix_to_multiplier (char c)
     switch (c) {
     case 'e':
     case 'E':
-        return util::pow (1024UL, 6);
+        return util::pow (1024UL, 6u);
 
     case 'p':
     case 'P':
-        return util::pow (1024UL, 5);
+        return util::pow (1024UL, 5u);
 
     case 't':
     case 'T':
-        return util::pow (1024UL, 4);
+        return util::pow (1024UL, 4u);
 
     case 'g':
     case 'G':
-        return util::pow (1024UL, 3);
+        return util::pow (1024UL, 3u);
 
     case 'm':
     case 'M':
-        return util::pow (1024UL, 2);
+        return util::pow (1024UL, 2u);
 
     case 'k':
     case 'K':
-        return util::pow (1024UL, 1);
+        return util::pow (1024UL, 1u);
 
     default:
         const char str[2] = { c, '\0' };

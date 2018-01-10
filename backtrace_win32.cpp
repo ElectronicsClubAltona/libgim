@@ -15,11 +15,12 @@
  *      2012-2016, Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./backtrace.hpp"
+#include "backtrace.hpp"
 
-#include "./win32/handle.hpp"
-#include "./debug.hpp"
-#include "./except.hpp"
+#include "win32/error.hpp"
+#include "win32/handle.hpp"
+#include "debug.hpp"
+#include "except.hpp"
 
 #include <cstdlib>
 #include <windows.h>
@@ -33,7 +34,7 @@ debug::backtrace::backtrace (void)
 
     auto process = GetCurrentProcess();
     if (!SymInitialize (process, NULL, TRUE))
-        util::win32_error::throw_code ();
+        util::win32::error::throw_code ();
 
     while (true) {
         auto res = CaptureStackBackTrace (1, m_frames.size (), m_frames.data (), NULL);

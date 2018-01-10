@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./affix.hpp"
+#include "affix.hpp"
 
 using util::alloc::raw::affix;
 

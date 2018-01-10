@@ -7,6 +7,8 @@
 int
 main (void)
 {
+    static_assert (util::has_result_v<util::point3f, util::vector3f>);
+
     static_assert (sizeof (util::point1u) == 1 * sizeof (util::point1u::value_type), "point1u is not packed");
     static_assert (sizeof (util::point2u) == 2 * sizeof (util::point2u::value_type), "point2u is not packed");
     static_assert (sizeof (util::point3u) == 3 * sizeof (util::point3u::value_type), "point3u is not packed");

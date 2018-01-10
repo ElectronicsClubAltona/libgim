@@ -14,9 +14,9 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./fd.hpp"
+#include "fd.hpp"
 
-#include "../except.hpp"
+#include "except.hpp"
 
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -33,11 +33,8 @@ fd::fd (const std::experimental::filesystem::path &path, int flags):
 
 //-----------------------------------------------------------------------------
 fd::fd (const std::experimental::filesystem::path &path, int flags, mode_t mode):
-    m_fd (::open (path.c_str (), flags, mode))
-{
-    if (m_fd < 0)
-        errno_error::throw_code ();
-}
+    m_fd (error::try_value (::open (path.c_str (), flags, mode)))
+{ ; }
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,6 +42,25 @@ fd::fd (fd &&rhs):
     m_fd (-1)
 {
     std::swap (m_fd, rhs.m_fd);
+}
+
+
+//-----------------------------------------------------------------------------
+fd&
+fd::operator= (fd &&rhs)
+{
+    close ();
+    std::swap (m_fd, rhs.m_fd);
+    return *this;
+}
+
+
+//-----------------------------------------------------------------------------
+fd&
+fd::operator= (int rhs)
+{
+    reset (rhs);
+    return *this;
 }
 
 
@@ -66,11 +82,9 @@ fd::dup (void) const
 fd
 fd::dup (int _fd)
 {
-    auto res = ::dup (_fd);
-    if (res < 0)
-        errno_error::throw_code ();
-
-    return fd (res);
+    return fd {
+        error::try_value (::dup (_fd))
+    };
 }
 
 
@@ -79,9 +93,7 @@ fd::~fd ()
 {
     if (m_fd < 0)
         return;
-
-    if (close (m_fd))
-        errno_error::throw_code ();
+    close ();
 }
 
 
@@ -90,9 +102,48 @@ struct ::stat
 fd::stat (void) const
 {
     struct stat buf;
-    if (fstat (m_fd, &buf))
-        errno_error::throw_code ();
+    error::try_value (fstat (m_fd, &buf));
     return buf;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+void
+fd::close (void)
+{
+    error::try_value (::close (m_fd));
+    m_fd = -1;
+}
+
+
+//-----------------------------------------------------------------------------
+void
+fd::reset (void)
+{
+    if (m_fd >= 0) {
+        close ();
+        m_fd = -1;
+    }
+}
+
+
+//-----------------------------------------------------------------------------
+void
+fd::reset (int rhs)
+{
+    if (m_fd >= 0)
+        close ();
+    m_fd = rhs;
+}
+
+
+//-----------------------------------------------------------------------------
+int
+fd::release (void)
+{
+    int tmp = m_fd;
+    m_fd = -1;
+    return tmp;
 }
 
 
@@ -100,20 +151,19 @@ fd::stat (void) const
 ssize_t
 fd::read (void *buffer, size_t count)
 {
-    auto res = ::read (m_fd, buffer, count);
-    if (res == -1)
-        errno_error::throw_code ();
-    return res;
+    return error::try_value (
+        ::read (m_fd, buffer, count)
+    );
 }
 
-//-----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
 ssize_t
 fd::write (const void *buffer, size_t count)
 {
-    auto res = ::write (m_fd, buffer, count);
-    if (res == -1)
-        errno_error::throw_code ();
-    return res;
+    return error::try_value (
+        ::write (m_fd, buffer, count)
+    );
 }
 
 
@@ -121,10 +171,9 @@ fd::write (const void *buffer, size_t count)
 off_t
 fd::lseek (off_t offset, int whence)
 {
-    auto res = ::lseek (m_fd, offset, whence);
-    if (res == -1)
-        errno_error::throw_code ();
-    return res;
+    return error::try_value (
+        ::lseek (m_fd, offset, whence)
+    );
 }
 
 

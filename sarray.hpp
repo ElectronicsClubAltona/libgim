@@ -17,7 +17,7 @@
 #ifndef CRUFT_UTIL_SARRAY_HPP
 #define CRUFT_UTIL_SARRAY_HPP
 
-#include "./iterator.hpp"
+#include "iterator.hpp"
 
 #include <cstdlib>
 #include <stdexcept>

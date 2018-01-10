@@ -17,11 +17,12 @@
 #ifndef CRUFT_UTIL_COORD_STORE_HPP
 #define CRUFT_UTIL_COORD_STORE_HPP
 
-#include "names.hpp"
+#include "fwd.hpp"
 
+#include "../preprocessor.hpp"
 #include "../platform.hpp"
 
-#include <cstdlib>
+#include <cstddef>
 #include <type_traits>
 
 
@@ -55,156 +56,112 @@ namespace util::coord::detail {
 #define SIMD_ALIGN(S,T) alignas (util::coord::detail::alignment<T> (S))
 
 
-namespace util::coord {
-    ///////////////////////////////////////////////////////////////////////////
-    // Coordinate storage class.
-    //
-    // Types with trivially suitable arity are aligned appropriately to take
-    // advantage of native platform SIMD. eg, 4f types are aligned to 16 bytes
-    // on SSE platforms.
-    template <
-        std::size_t S,
-        typename T,
-        typename...
-    >
-    struct
-    SIMD_ALIGN(S,T)
-    store {
-        T data[S];
-    };
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct store<3,T,rgba,hsv> {
-        union {
-            T data[3];
-            struct { T r,g,b; };
-            struct { T h,s,v; };
-        };
-    };
-
-
-    // Align on 16 bytes if the data is at least 16 bytes long. Prevents tiny
-    // types like colour4u requiring massive alignments, reduces internal
-    // fragmentation.
-    //
-    // TODO: expand this for other instruction sets. maybe switch on type.
-    template <typename T>
-    struct
-    SIMD_ALIGN(4,T)
-    store<4,T,rgba,hsv> {
-        union {
-            T data[4];
-            struct { T r,g,b,a; };
-            struct { T h,s,v;   };
-        };
-    };
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct store<2,T,xyzw> {
-        union {
-            T data[2];
-            struct { T x,y; };
-        };
-    };
-
-
-    template <typename T>
-    struct store<3,T,xyzw> {
-        union {
-            T data[3];
-            struct { T x,y,z; };
-        };
-    };
-
-
-    // Align on 16 bytes if the data is at least 16 bytes long. Prevents tiny
-    // types like colour4u requiring massive alignments, reduces internal
-    // fragmentation.
-    //
-    // TODO: expand this for other instruction sets. maybe switch on type.
-    template <typename T>
-    struct
-    SIMD_ALIGN(4,T)
-    store<4,T,xyzw> {
-        union {
-            T data[4];
-            struct { T x,y,z,w; };
-        };
-    };
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct store<2,T,xyzw,stpq> {
-        union {
-            T data[2];
-            struct { T x,y; };
-            struct { T s,t; };
-        };
-    };
-
-
-    template <typename T>
-    struct store<3,T,xyzw,stpq> {
-        union {
-            T data[3];
-            struct { T x,y,z; };
-            struct { T s,t,p; };
-        };
-    };
-
-
-    // Align on 16 bytes if the data is at least 16 bytes long. Prevents tiny
-    // types like colour4u requiring massive alignments, reduces internal
-    // fragmentation.
-    //
-    // TODO: expand this for other instruction sets. maybe switch on type.
-    template <typename T>
-    struct
-    SIMD_ALIGN(4,T)
-    store<4,T,xyzw,stpq> {
-        union {
-            T data[4];
-            struct { T x,y,z,w; };
-            struct { T s,t,p,q; };
-        };
-    };
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct store<2,T,whd> {
-        union {
-            T data[2];
-            struct { T w,h; };
-        };
-    };
-
-
-    template <typename T>
-    struct store<3,T,whd> {
-        union {
-            T data[3];
-            struct { T w,h,d; };
-        };
-    };
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    struct
-    SIMD_ALIGN(4,T)
-    store<4,T,wxyz,abcd> {
-        union {
-            T data[4];
-            struct { T w,x,y,z; };
-            struct { T a,b,c,d; };
-        };
-    };
+///////////////////////////////////////////////////////////////////////////////
+// defines the named member variables that a coordinate type is composed of
+#define DEFINE_COORD_STORE(TAG,...)             \
+namespace util::coord {                         \
+    template <typename T>                       \
+    struct store<                               \
+        VA_ARGS_COUNT(__VA_ARGS__),             \
+        T,                                      \
+        TAG                                     \
+    > {                                         \
+        union {                                 \
+            struct {                            \
+                T __VA_ARGS__;                  \
+            };                                  \
+            T data[VA_ARGS_COUNT(__VA_ARGS__)]; \
+        };                                      \
+    };                                          \
 }
 
+
+#define DEFINE_STORE(KLASS,...)                 \
+template <typename T>                           \
+struct util::coord::store<                      \
+    VA_ARGS_COUNT(__VA_ARGS__),                 \
+    T,                                          \
+    ::util::KLASS<                              \
+        VA_ARGS_COUNT(__VA_ARGS__),             \
+        T                                       \
+    >                                           \
+> {                                             \
+    union {                                     \
+        T data[VA_ARGS_COUNT(__VA_ARGS__)];     \
+        struct { T __VA_ARGS__; };              \
+    };                                          \
+};
+
+DEFINE_STORE(extent,w)
+DEFINE_STORE(extent,w,h)
+DEFINE_STORE(extent,w,h,d)
+
+DEFINE_STORE(point, x)
+DEFINE_STORE(point, x, y)
+DEFINE_STORE(point, x, y, z)
+DEFINE_STORE(point, x, y, z, w)
+
+DEFINE_STORE(vector, x)
+DEFINE_STORE(vector, x, y)
+DEFINE_STORE(vector, x, y, z)
+DEFINE_STORE(vector, x, y, z, w)
+
+#undef DEFINE_STORE
+
+#if 0
+template <typename T>
+struct util::coord::store<1,T,::util::extent<1,T>> {
+    union { T data[1]; struct { T w; }; };
+};
+
+template <typename T>
+struct util::coord::store<2,T,::util::extent<2,T>> {
+    union { struct { T w, h; }; T data[2]; };
+};
+
+template <typename T>
+struct util::coord::store<3,T,::util::extent<3,T>> {
+    union { struct { T w, h, d; }; T data[3]; };
+};
+
+template <typename T>
+struct util::coord::store<1,T,::util::point<1,T>> {
+    union { struct { T x; }; T data[1]; };
+};
+
+template <typename T>
+struct util::coord::store<2,T,::util::point<2,T>> {
+    union { struct { T x, y; }; T data[2]; };
+};
+
+template <typename T>
+struct util::coord::store<3,T,::util::point<3,T>> {
+    union { struct { T x, y, z; }; T data[3]; };
+};
+
+template <typename T>
+struct util::coord::store<4,T,::util::point<4,T>> {
+    union { struct { T x, y, z, w; }; T data[4]; };
+};
+
+template <typename T>
+struct util::coord::store<1,T,::util::vector<1,T>> {
+    union { struct { T x; }; T data[1]; };
+};
+
+template <typename T>
+struct util::coord::store<2,T,::util::vector<2,T>> {
+    union { struct { T x, y; }; T data[2]; };
+};
+
+template <typename T>
+struct util::coord::store<3,T,::util::vector<3,T>> {
+    union { struct { T x, y, z; }; T data[3]; };
+};
+
+template <typename T>
+struct util::coord::store<4,T,::util::vector<4,T>> {
+    union { struct { T x, y, z, w; }; T data[4]; };
+};
+#endif
 #endif

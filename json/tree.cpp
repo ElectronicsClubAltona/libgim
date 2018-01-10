@@ -15,10 +15,10 @@
  */
 
 
-#include "./tree.hpp"
+#include "tree.hpp"
 
-#include "./except.hpp"
-#include "./flat.hpp"
+#include "except.hpp"
+#include "flat.hpp"
 
 #include "../debug.hpp"
 #include "../io.hpp"

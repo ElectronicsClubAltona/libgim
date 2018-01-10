@@ -14,9 +14,9 @@
  * Copyright 2010-2014 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./adler.hpp"
+#include "adler.hpp"
 
-#include "./fletcher.hpp"
+#include "fletcher.hpp"
 #include "../debug.hpp"
 
 static constexpr unsigned MODULUS = 65521;

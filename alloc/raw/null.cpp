@@ -15,7 +15,7 @@
  */
 
 
-#include "./null.hpp"
+#include "null.hpp"
 
 #include "../../debug.hpp"
 

@@ -48,6 +48,6 @@ namespace util::posix {
     };
 }
 
-#include "./dir.ipp"
+#include "dir.ipp"
 
 #endif

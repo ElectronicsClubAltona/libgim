@@ -16,7 +16,7 @@
 
 #include "library_win32.hpp"
 
-#include "except.hpp"
+#include "win32/except.hpp"
 
 using util::detail::win32::library;
 
@@ -26,7 +26,7 @@ library::library (const std::experimental::filesystem::path &path):
     m_handle (LoadLibraryA (path.c_str ()))
 {
     if (!m_handle)
-        win32_error::throw_code ();
+        win32::error::throw_code ();
 }
 
 

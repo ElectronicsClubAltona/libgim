@@ -14,9 +14,9 @@
  * Copyright 2011-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./point.hpp"
+#include "point.hpp"
 
-#include "./debug.hpp"
+#include "debug.hpp"
 
 #include <cstdlib>
 

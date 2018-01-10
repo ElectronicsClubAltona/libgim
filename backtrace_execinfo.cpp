@@ -17,10 +17,10 @@
 
 #include "backtrace.hpp"
 
-#include "./debug.hpp"
-#include "./exe.hpp"
-#include "./io.hpp"
-#include "./cast.hpp"
+#include "debug.hpp"
+#include "exe.hpp"
+#include "io.hpp"
+#include "cast.hpp"
 
 #include <sstream>
 #include <cstdio>

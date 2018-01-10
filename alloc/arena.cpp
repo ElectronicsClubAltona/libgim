@@ -1,1 +1,1 @@
-#include "./arena.hpp"
+#include "arena.hpp"

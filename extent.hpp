@@ -17,22 +17,24 @@
 #ifndef __UTIL_EXTENT_HPP
 #define __UTIL_EXTENT_HPP
 
+#include "coord/fwd.hpp"
 #include "coord/base.hpp"
 #include "vector.hpp"
 #include "point.hpp"
 
+#include <cstddef>
 
 namespace util {
     /**
-     * A pure two-dimensional size, without positioning
+     * A pure n-dimensional size, without positioning
      */
     template <size_t S, typename T>
-    struct extent : public coord::base<S,T,extent,coord::whd>
+    struct extent : public ::util::coord::base<S,T,::util::extent<S,T>>
     {
-        using coord::base<S,T,util::extent,coord::whd>::base;
+        using ::util::coord::base<S,T,::util::extent<S,T>>::base;
 
         extent () = default;
-        explicit extent (vector<S,T>);
+        explicit extent (::util::vector<S,T>);
 
         constexpr T    area  (void) const;
         constexpr T diameter (void) const;
@@ -40,7 +42,6 @@ namespace util {
         template <typename U = float>
         constexpr
         U aspect (void) const;
-
 
         /// tests whether a point would lie within:
         ///     region { origin, *this }, inclusive of borders.
@@ -62,24 +63,27 @@ namespace util {
             return all (p >= T{0} && p < *this);
         }
 
-
-        extent expanded (vector<S,T>) const;
-        extent expanded (T) const;
-        extent contracted (vector<S,T>) const;
-        extent contracted (T) const;
+        ::util::extent<S,T> expanded (::util::vector<S,T>) const;
+        ::util::extent<S,T> expanded (T) const;
+        ::util::extent<S,T> contracted (::util::vector<S,T>) const;
+        ::util::extent<S,T> contracted (T) const;
 
         bool empty (void) const;
 
-        static constexpr extent max (void);
-        static constexpr extent min (void);
+        static constexpr ::util::extent<S,T> max (void);
+        static constexpr ::util::extent<S,T> min (void);
     };
 
     template <size_t S, typename T>
     struct extent_range {
     public:
-        struct iterator : public std::iterator<std::forward_iterator_tag, point<S,T>, size_t> {
+        struct iterator : public std::iterator<
+            std::forward_iterator_tag,
+            ::util::point<S,T>,
+            size_t
+        > {
         public:
-            iterator (extent<S,T>, util::point<S,T>);
+            iterator (::util::extent<S,T>, ::util::point<S,T>);
 
             point<S,T> operator* () const;
             iterator& operator++ (void);

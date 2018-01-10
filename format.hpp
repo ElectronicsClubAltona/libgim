@@ -17,7 +17,6 @@
 #ifndef CRUFT_UTIL_FORMAT_HPP
 #define CRUFT_UTIL_FORMAT_HPP
 
-#include "maths.hpp"
 #include "view.hpp"
 
 #include <algorithm>
@@ -413,7 +412,7 @@ namespace util::format {
         static std::ostream&
         write (std::ostream &os, specifier s, const std::nullptr_t &val)
         {
-            if (s.type != type_t::POINTER)
+            if (s.type != type_t::POINTER || s.type == type_t::USER)
                 throw std::runtime_error ("expected pointer specifier");
             return value<const void*>::write (os, s, val);
         }
@@ -424,8 +423,9 @@ namespace util::format {
     struct value<const char[N]> {
         static std::ostream&
         write (std::ostream &os, specifier spec, const char (&val)[N]) {
-            if (spec.type == type_t::STRING)
+            if (spec.type == type_t::STRING || spec.type == type_t::USER)
                 return value<util::view<const char*>>::write (os, spec, util::view<const char*> (val));
+            throw std::runtime_error ("invalid data type");
         }
     };
 
@@ -445,7 +445,7 @@ namespace util::format {
         write (std::ostream &os, specifier spec, char *val) {
             if (!val)
                 return os << "(nil)";
-            if (spec.type == type_t::STRING)
+            if (spec.type == type_t::STRING || spec.type == type_t::USER)
                 return value<util::view<const char*>>::write (os, spec, util::view<const char*> { val, val + strlen (val) });
             if (spec.type == type_t::POINTER)
                 return value<const void*>::write (os, spec, val);
@@ -460,7 +460,7 @@ namespace util::format {
         write (std::ostream &os, specifier spec, const char *val) {
             if (!val)
                 return os << "(nil)";
-            if (spec.type == type_t::STRING)
+            if (spec.type == type_t::STRING || spec.type == type_t::USER)
                 return value<util::view<const char*>>::write (os, spec, util::view<const char*> { val, val + strlen (val) });
             if (spec.type == type_t::POINTER)
                 return value<const void*>::write (os, spec, val);

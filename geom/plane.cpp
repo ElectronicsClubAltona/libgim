@@ -24,8 +24,7 @@ using util::geom::plane;
 
 ///////////////////////////////////////////////////////////////////////////////
 template <size_t S, typename T>
-plane<S,T>::plane (point<S,T>  _p,
-                   vector<S,T> _n):
+plane<S,T>::plane (point<S,T>  _p, vector<S,T> _n):
     p (_p),
     n (_n)
 {

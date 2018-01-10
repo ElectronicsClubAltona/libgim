@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./deleter.hpp"
+#include "deleter.hpp"
 
 using util::memory::owner_deleter;
 

@@ -20,7 +20,7 @@ using util::matrix;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t Rows, size_t Cols, typename T>
+template <std::size_t Rows, std::size_t Cols, typename T>
 T
 util::determinant (const matrix<Rows,Cols,T> &m)
 {
@@ -34,16 +34,16 @@ template double util::determinant (const matrix<2,2,double>&);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t Rows, size_t Cols, typename T>
+template <std::size_t Rows, std::size_t Cols, typename T>
 matrix<Rows,Cols,T>
 util::inverse (const matrix<Rows,Cols,T> &m)
 {
     static_assert (Rows == 2 && Cols == 2);
 
-    return matrix<2,2,T> {
-         m[1][1], -m[0][1],
-        -m[1][0],  m[0][0]
-    } / determinant (m);
+    return matrix<2,2,T> {{
+        {  m[1][1], -m[0][1], },
+        { -m[1][0],  m[0][0], },
+    }} / determinant (m);
 }
 
 

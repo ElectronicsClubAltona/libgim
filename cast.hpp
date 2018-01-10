@@ -17,7 +17,7 @@
 #ifndef __UTIL_CAST_HPP
 #define __UTIL_CAST_HPP
 
-#include "./debug.hpp"
+#include "debug.hpp"
 
 #include <type_traits>
 #include <limits>

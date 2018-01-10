@@ -21,9 +21,9 @@
 // directly, and are unlikely to change given their inherent
 // lightweight nature.
 
-#include "./fasthash.hpp"
-#include "./fnv1a.hpp"
-#include "./murmur.hpp"
+#include "fasthash.hpp"
+#include "fnv1a.hpp"
+#include "murmur.hpp"
 
 
 // Forward declerations of class based hashes

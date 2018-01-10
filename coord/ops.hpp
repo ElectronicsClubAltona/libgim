@@ -14,16 +14,19 @@
  * Copyright 2012-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef CRUFT_UTIL_COORDS_OPS
-#define CRUFT_UTIL_COORDS_OPS
+#ifndef __UTIL_COORDS_OPS
+#define __UTIL_COORDS_OPS
 
-#include "./fwd.hpp"
+#include "fwd.hpp"
+#include "traits.hpp"
+
+// we specifically rely on vector<bool> to compute a few logical operations
+#include "../vector.hpp"
 
 #include "../debug.hpp"
 #include "../maths.hpp"
-#include "../types/bits.hpp"
-
 #include "../preprocessor.hpp"
+#include "../types/bits.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -32,84 +35,46 @@
 #include <functional>
 
 namespace util {
-    ///////////////////////////////////////////////////////////////////////
-    // operation traits
-    namespace coord {
-        template <
-            template <std::size_t,typename> class A,
-            template <std::size_t,typename> class B
-        >
-        struct result { };
-
-        //-------------------------------------------------------------------------
-        template <> struct result<colour,colour> { template <std::size_t S, typename T> using type = colour<S,T>; };
-        template <> struct result<extent,extent> { template <std::size_t S, typename T> using type = extent<S,T>; };
-        template <> struct result<extent,vector> { template <std::size_t S, typename T> using type = extent<S,T>; };
-        template <> struct result<point,extent>  { template <std::size_t S, typename T> using type = point <S,T>; };
-        template <> struct result<point,vector>  { template <std::size_t S, typename T> using type = point <S,T>; };
-        template <> struct result<vector,point>  { template <std::size_t S, typename T> using type = point <S,T>; };
-        template <> struct result<vector,vector> { template <std::size_t S, typename T> using type = vector<S,T>; };
-
-        template <
-            template <std::size_t,typename> class A,
-            template <std::size_t,typename> class B
-        >
-        using result_t = typename result<A,B>::type;
-
-
-        //---------------------------------------------------------------------
-        template <template <std::size_t,typename> class K>
-        struct has_norm : public std::false_type { };
-
-        template <> struct has_norm<vector>     : public std::true_type { };
-
-        template <template <std::size_t,typename> class K>
-        constexpr auto has_norm_v = has_norm<K>::value;
-
-
-        //---------------------------------------------------------------------
-        template <template <std::size_t,typename> class K>
-        struct has_scalar_op : public std::false_type { };
-
-        template <> struct has_scalar_op<colour>     : public std::true_type { };
-        template <> struct has_scalar_op<extent>     : public std::true_type { };
-        template <> struct has_scalar_op<point>      : public std::true_type { };
-        template <> struct has_scalar_op<vector>     : public std::true_type { };
-
-        template <template <std::size_t,typename> class K>
-        constexpr auto has_scalar_op_v = has_scalar_op<K>::value;
-    }
-
-    template <class> struct is_coord : std::false_type { };
-
-    template <std::size_t S, typename T> struct is_coord<point<S,T>>      : std::true_type { };
-    template <std::size_t S, typename T> struct is_coord<extent<S,T>>     : std::true_type { };
-    template <std::size_t S, typename T> struct is_coord<vector<S,T>>     : std::true_type { };
-    template <std::size_t S, typename T> struct is_coord<colour<S,T>>     : std::true_type { };
-
-    template <class K>
-    constexpr bool
-    is_coord_v = is_coord<K>::value;
-
-
     ///////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    constexpr
-    std::enable_if_t<is_coord_v<T>, std::size_t>
-    arity (void)
-    {
-        return T::dimension;
-    }
+    // a templated functor that exposes arithmetic and assignment maths
+    // functions for vector-vector or vector-scalar operations.
+    //
+    // we implement the operations this way because it (somewhat) simplifies
+    // ambiguity resolution in the various operators we need to provide.
+    // eg, operator+(vec,vec) vs operator+(vec,int).
+    //
+    // it used to be directly implemented with a series of templated free
+    // functions when we could restrict the arguments more easily with quite
+    // specific template template parameters. but the introduction of
+    // coordinate types that do not expose size or type information as template
+    // parameters we can't rely on this mechanism anymore.
+    template <typename, typename,typename=void>
+    struct ops {};
 
 
     //-------------------------------------------------------------------------
-    template <typename T>
-    constexpr
-    std::enable_if_t<std::is_arithmetic<T>::value, std::size_t>
-    arity (void)
-    {
-        return 1;
-    }
+    // vector operators
+    template <typename ValueA, typename ValueB>
+    struct ops<
+        ValueA,
+        ValueB,
+        std::enable_if_t<
+            is_coord_v<ValueA> &&
+            is_coord_v<ValueB> &&
+            arity<ValueA>::value == arity<ValueB>::value
+            ,
+            void
+        >
+    > {
+        template <typename OpT>
+        static constexpr ValueA&
+        assignment (OpT op, ValueA &a, ValueB b)
+        {
+            for (std::size_t i = 0; i < ValueA::elements; ++i)
+                a[i] = op (a[i], b[i]);
+            return a;
+        }
+    };
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -139,7 +104,6 @@ namespace util {
 
     MAKE_COORD(extent)
     MAKE_COORD(point)
-    MAKE_COORD(colour)
     MAKE_COORD(vector)
 
 #undef MAKE_COORD
@@ -149,7 +113,7 @@ namespace util {
         typename ...Args
     >
     constexpr auto
-        make_coord (Args &&...args)
+    make_coord (Args &&...args)
     {
         using T = std::common_type_t<Args...>;
         return K<sizeof...(Args),T> { std::forward<Args> (args)... };
@@ -157,176 +121,293 @@ namespace util {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    // vector operators
-#define ELEMENT_OP(OP)                                  \
-    template <                                          \
-        std::size_t S,                                  \
-        typename T,                                     \
-        typename U,                                     \
-        template <std::size_t,typename> class A,        \
-        template <std::size_t,typename> class B,        \
-        typename = std::enable_if_t<                    \
-            is_coord_v<A<S,T>> && is_coord_v<B<S,U>>,   \
-            void                                        \
-        >                                               \
-    >                                                   \
-    constexpr                                           \
-    auto                                                \
-    operator OP (A<S,T> a, B<S,U> b)                    \
-    {                                                   \
-        typename coord::result<A,B>::template type<     \
-            S,std::common_type_t<T,U>                   \
-        > out {};                                       \
-        for (std::size_t i = 0; i < S; ++i)             \
-            out[i] = a[i] OP b[i];                      \
-        return out;                                     \
-    }                                                   \
-                                                        \
-    template <                                          \
-        std::size_t S,                                  \
-        typename T,                                     \
-        typename U,                                     \
-        template <std::size_t,typename> class A,        \
-        template <std::size_t,typename> class B,        \
-        typename = std::enable_if_t<                    \
-            is_coord_v<A<S,T>> &&                       \
-            is_coord_v<B<S,U>> &&                       \
-            std::is_same<                               \
-                std::common_type_t<T,U>, T              \
-            >::value,                                   \
-            void                                        \
-        >                                               \
-    >                                                   \
-    auto&                                               \
-    operator PASTE(OP,=) (A<S,T>& a, B<S,U> b)          \
-    {                                                   \
-        for (std::size_t i = 0; i < S; ++i)             \
-            a[i] PASTE(OP,=) b[i];                      \
-        return a;                                       \
-    }
+    template <typename ValueA, typename ValueB, typename=void>
+    struct arithmetic {};
 
-    ELEMENT_OP(+)
-    ELEMENT_OP(-)
-    ELEMENT_OP(*)
-    ELEMENT_OP(/)
-    ELEMENT_OP(%)
-#undef ELEMENT_OP
 
-    ///////////////////////////////////////////////////////////////////////////
-    // scalar operators
-#define SCALAR_OP(OP)                                   \
-    template <                                          \
-        std::size_t S,                                  \
-        typename T,                                     \
-        typename U,                                     \
-        template <std::size_t,typename> class K,        \
-        typename = std::enable_if_t<                    \
-            coord::has_scalar_op_v<K>, void             \
-        >                                               \
-    >                                                   \
-    constexpr                                           \
-    auto                                                \
-    operator OP (U u, K<S,T> k)                         \
-    {                                                   \
-        K<S,std::common_type_t<T,U>> out{};             \
-                                                        \
-        for (std::size_t i = 0; i < S; ++i)             \
-            out[i] = u OP k[i];                         \
-        return out;                                     \
-    }                                                   \
-                                                        \
-    template <                                          \
-        std::size_t S,                                  \
-        typename T,                                     \
-        typename U,                                     \
-        template <std::size_t,typename> class K,        \
-        typename = std::enable_if_t<                    \
-            coord::has_scalar_op_v<K>,void              \
-        >                                               \
-    >                                                   \
-    constexpr                                           \
-    auto                                                \
-    operator OP (K<S,T> k, U u)                         \
-    {                                                   \
-        K<S,std::common_type_t<T,U>> out {};            \
-                                                        \
-        for (std::size_t i = 0; i < S; ++i)             \
-            out[i] = k[i] OP u;                         \
-        return out;                                     \
-    }
+    template <typename CoordA, typename CoordB>
+    struct arithmetic<
+        CoordA,
+        CoordB,
+        std::enable_if_t<
+            is_coord_v<CoordA> &&
+            is_coord_v<CoordB> &&
+            arity_v<CoordA> == arity_v<CoordB> &&
+            has_result_v<CoordA,CoordB>
+            ,
+            void
+        >
+    > {
+        template <typename OperationT>
+        static constexpr auto
+        eval (OperationT &&op, const CoordA &a, const CoordB &b)
+        {
+            using common_t = std::common_type_t<
+                typename CoordA::value_type,
+                typename CoordB::value_type
+            >;
 
-    SCALAR_OP(+)
-    SCALAR_OP(-)
-    SCALAR_OP(*)
-    SCALAR_OP(/)
-    SCALAR_OP(%)
+            revalue_t<result_t<CoordA,CoordB>,common_t> out {};
+            for (size_t i = 0; i < CoordA::elements; ++i)
+                out[i] = op (a[i], b[i]);
+            return out;
+        }
+    };
 
-#undef SCALAR_OP
+
+    template <typename CoordT, typename ScalarT>
+    struct arithmetic<
+        CoordT,
+        ScalarT,
+        std::enable_if_t<
+            is_coord_v<CoordT> && std::is_arithmetic_v<ScalarT> && has_scalar_op_v<CoordT>,
+            void
+        >
+    > {
+        template <typename OperationT>
+        static constexpr auto
+        eval (OperationT &&op, const CoordT &coord, const ScalarT &scalar)
+        {
+            using common_t = std::common_type_t<typename CoordT::value_type, ScalarT>;
+            revalue_t<CoordT,common_t> out {};
+            for (size_t i = 0; i < CoordT::elements; ++i)
+                out[i] = op (coord[i], scalar);
+            return out;
+        }
+    };
+
+
+    template <typename ScalarT, typename CoordT>
+    struct arithmetic<
+        ScalarT,
+        CoordT,
+        std::enable_if_t<
+            is_coord_v<CoordT> && std::is_arithmetic_v<ScalarT> && has_scalar_op_v<CoordT>,
+            void
+        >
+    > {
+        template <typename OperationT>
+        static constexpr auto
+        eval (OperationT &&op, const ScalarT &scalar, const CoordT &coord)
+        {
+            using common_t = std::common_type_t<typename CoordT::value_type, ScalarT>;
+            revalue_t<CoordT,common_t> out {};
+            for (size_t i = 0; i < CoordT::elements; ++i)
+                out[i] = op (scalar, coord[i]);
+            return out;
+        }
+    };
+
 
 
     //-------------------------------------------------------------------------
-    // scalar assignment operators.
-    //
-    // we must check the operands/results do not need casting to store in the
-    // destination type to avoid silent errors accumulating.
-#define SCALAR_OP(OP)                                       \
-    template <                                              \
-        std::size_t S,                                      \
-        typename T,                                         \
-        typename U,                                         \
-        template <std::size_t,typename> class K,            \
-        typename = std::enable_if_t<                        \
-            is_coord<K<S,T>>::value &&                      \
-            std::is_arithmetic<T>::value &&                 \
-            std::is_arithmetic<U>::value,                   \
-            void                                            \
-        >                                                   \
-    >                                                       \
-    std::enable_if_t<                                       \
-        std::is_same<                                       \
-            T,                                              \
-            std::common_type_t<T,U>                         \
-        >::value,                                           \
-        K<S,T>                                              \
-    >&                                                      \
-    operator OP (K<S,T> &k, U u)                            \
-    {                                                       \
-        for (std::size_t i = 0; i < S; ++i)                 \
-            k[i] OP u;                                      \
-                                                            \
-        return k;                                           \
+    // vector-scalar operations
+    template <
+        typename CoordT,
+        typename ScalarT
+    >
+    struct ops<
+        CoordT,
+        ScalarT,
+        std::enable_if_t<
+            is_coord_v<CoordT> &&
+            !is_coord_v<ScalarT> &&
+            has_scalar_op_v<CoordT>
+        >
+    > {
+        // we allow scalar types which can be naturally promoted to the vector's
+        // value_type
+        template <
+            typename OpT,
+            typename = std::enable_if_t<
+                std::is_same_v<
+                    typename CoordT::value_type,
+                    std::common_type_t<
+                        typename CoordT::value_type,
+                        ScalarT
+                    >
+                >,
+                void
+            >
+        >
+        static constexpr CoordT&
+        assignment (OpT &&op, CoordT &c, const ScalarT s)
+        {
+            for (size_t i = 0; i < CoordT::elements; ++i)
+                c[i] = op (c[i], s);
+            return c;
+        }
+    };
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <
+        typename A,
+        typename B,
+        typename = std::enable_if_t<
+            (is_coord_v<std::decay_t<A>> || is_coord_v<std::decay_t<B>>) &&
+            (is_coord_v<std::decay_t<A>> || std::is_arithmetic_v<std::decay_t<A>>) &&
+            (is_coord_v<std::decay_t<B>> || std::is_arithmetic_v<std::decay_t<B>>)
+        >
+    >
+    constexpr auto
+    operator+ (A &&a, B &&b)
+    {
+        return arithmetic<std::decay_t<A>, std::decay_t<B>>::template eval (std::plus{}, a, b);
     }
 
-    SCALAR_OP(+=)
-    SCALAR_OP(-=)
-    SCALAR_OP(*=)
-    SCALAR_OP(/=)
-    SCALAR_OP(%=)
-#undef SCALAR_OP
+
+    template <
+        typename A,
+        typename B,
+        typename = std::enable_if_t<
+            (is_coord_v<std::decay_t<A>> || is_coord_v<std::decay_t<B>>) &&
+            (is_coord_v<std::decay_t<A>> || std::is_arithmetic_v<std::decay_t<A>>) &&
+            (is_coord_v<std::decay_t<B>> || std::is_arithmetic_v<std::decay_t<B>>)
+        >
+    >
+    constexpr auto
+    operator- (A &&a, B &&b)
+    {
+        return arithmetic<std::decay_t<A>, std::decay_t<B>>::template eval (std::minus{}, a, b);
+    }
+
+
+    template <
+        typename A,
+        typename B,
+        typename = std::enable_if_t<
+            (is_coord_v<std::decay_t<A>> || is_coord_v<std::decay_t<B>>) &&
+            (is_coord_v<std::decay_t<A>> || std::is_arithmetic_v<std::decay_t<A>>) &&
+            (is_coord_v<std::decay_t<B>> || std::is_arithmetic_v<std::decay_t<B>>)
+        >
+    >
+    constexpr auto
+    operator* (A &&a, B &&b)
+    {
+        return arithmetic<
+            std::decay_t<A>,
+            std::decay_t<B>
+        >::template eval (std::multiplies{}, a, b);
+    }
+
+
+    template <
+        typename A,
+        typename B,
+        typename = std::enable_if_t<
+            (is_coord_v<std::decay_t<A>> || is_coord_v<std::decay_t<B>>) &&
+            (is_coord_v<std::decay_t<A>> || std::is_arithmetic_v<std::decay_t<A>>) &&
+            (is_coord_v<std::decay_t<B>> || std::is_arithmetic_v<std::decay_t<B>>)
+        >
+    >
+    constexpr auto
+    operator/ (A &&a, B &&b)
+    {
+        return arithmetic<std::decay_t<A>, std::decay_t<B>>::template eval (std::divides{}, a, b);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        typename A,
+        typename B,
+        typename = std::enable_if_t<
+            (is_coord_v<std::decay_t<A>> || is_coord_v<std::decay_t<B>>) &&
+            (is_coord_v<std::decay_t<A>> || std::is_arithmetic_v<std::decay_t<A>>) &&
+            (is_coord_v<std::decay_t<B>> || std::is_arithmetic_v<std::decay_t<B>>)
+        >
+    >
+    constexpr auto
+    operator += (A &&a, B &&b)
+    {
+        return ops<
+            std::decay_t<A>,
+            std::decay_t<B>
+        >::template assignment (std::plus{}, a, b);
+    }
+
+
+    template <
+        typename A,
+        typename B,
+        typename = std::enable_if_t<
+            (is_coord_v<std::decay_t<A>> || is_coord_v<std::decay_t<B>>) &&
+            (is_coord_v<std::decay_t<A>> || std::is_arithmetic_v<std::decay_t<A>>) &&
+            (is_coord_v<std::decay_t<B>> || std::is_arithmetic_v<std::decay_t<B>>)
+        >
+    >
+    constexpr auto
+    operator -= (A &&a, B &&b)
+    {
+        return ops<
+            std::decay_t<A>,
+            std::decay_t<B>
+        >::template assignment (std::minus{}, a, b);
+    }
+
+
+    template <
+        typename A,
+        typename B,
+        typename = std::enable_if_t<
+            (is_coord_v<std::decay_t<A>> || is_coord_v<std::decay_t<B>>) &&
+            (is_coord_v<std::decay_t<A>> || std::is_arithmetic_v<std::decay_t<A>>) &&
+            (is_coord_v<std::decay_t<B>> || std::is_arithmetic_v<std::decay_t<B>>)
+        >
+    >
+    constexpr auto
+    operator *= (A &&a, B &&b)
+    {
+        return ops<
+            std::decay_t<A>,
+            std::decay_t<B>
+        >::template assignment (std::multiplies{}, a, b);
+    }
+
+
+    template <
+        typename A,
+        typename B,
+        typename = std::enable_if_t<
+            (is_coord_v<std::decay_t<A>> || is_coord_v<std::decay_t<B>>) &&
+            (is_coord_v<std::decay_t<A>> || std::is_arithmetic_v<std::decay_t<A>>) &&
+            (is_coord_v<std::decay_t<B>> || std::is_arithmetic_v<std::decay_t<B>>)
+        >
+    >
+    constexpr auto
+    operator /= (A &&a, B &&b)
+    {
+        return ops<
+            std::decay_t<A>,
+            std::decay_t<B>
+        >::template assignment (std::divides{}, a, b);
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////
     // unary operators
-
-#define UNARY_OP(OP)                                \
-    template <                                      \
-        std::size_t S,                              \
-        typename T,                                 \
-        template <std::size_t,typename> class K,    \
-        typename = std::enable_if_t<                \
-            is_coord_v<K<S,T>>, void                \
-        >                                           \
-    >                                               \
-    constexpr                                       \
-    auto                                            \
-    operator OP (K<S,T> k)                          \
-    {                                               \
-        K<S,decltype(OP std::declval<T> ())> out{}; \
-                                                    \
-        for (std::size_t i = 0; i < S; ++i)         \
-            out[i] = OP k[i];                       \
-                                                    \
-        return out;                                 \
+#define UNARY_OP(OP)                                    \
+    template <                                          \
+        typename K,                                     \
+        typename = std::enable_if_t<                    \
+            is_coord_v<K>, void                         \
+        >                                               \
+    >                                                   \
+    constexpr                                           \
+    auto                                                \
+    operator OP (K k)                                   \
+    {                                                   \
+        using value_type = decltype(                    \
+            OP std::declval<typename K::value_type> ()  \
+        );                                              \
+                                                        \
+        revalue_t<K,value_type> out {};                 \
+                                                        \
+        for (std::size_t i = 0; i < K::elements; ++i)   \
+            out[i] = OP k[i];                           \
+                                                        \
+        return out;                                     \
     }
 
     UNARY_OP(!)
@@ -336,7 +417,9 @@ namespace util {
 
 #undef UNARY_OP
 
+
     ///////////////////////////////////////////////////////////////////////////
+    // logic operators
     namespace detail {
         template <
             typename RetT,
@@ -382,20 +465,17 @@ namespace util {
     // logic operators
     namespace detail {
         template <
-            std::size_t S,
-            typename T,
-            template <std::size_t,typename> class K,
+            typename K,
             typename FuncT,
             typename = std::enable_if_t<
-                is_coord_v<K<S,T>>,
-                void
+                is_coord_v<K>, void
             >,
             std::size_t ...Indices
         >
         constexpr auto
-        compare (FuncT &&func, std::index_sequence<Indices...>, const K<S,T> a, const K<S,T> b)
+        compare (FuncT &&func, std::index_sequence<Indices...>, const K a, const K b)
         {
-            return vector<S,bool> {
+            return vector<K::elements,bool> {
                 std::invoke (func, a[Indices], b[Indices])...
             };
         }
@@ -404,18 +484,15 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename FuncT,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>,
-            void
+            is_coord_v<K>, void
         >,
-        typename Indices = std::make_index_sequence<S>
+        typename Indices = std::make_index_sequence<K::elements>
     >
     constexpr auto
-    compare (const K<S,T> a, const K<S,T> b, FuncT &&func)
+    compare (const K a, const K b, FuncT &&func)
     {
         return detail::compare (std::forward<FuncT> (func), Indices{}, a, b);
     }
@@ -423,70 +500,61 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>,
-            void
+            is_coord_v<K>, void
         >
     >
     constexpr auto
-    compare (const K<S,T> a, const K<S,T> b)
+    compare (const K a, const K b)
     {
-        return compare (a, b, std::equal_to<T> {});
+        return compare (a, b, std::equal_to<typename K::value_type> {});
     }
 
 
     /// elementwise equality operator
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
     constexpr bool
-    operator== (const K<S,T> a, const K<S,T> b)
+    operator== (const K a, const K b)
     {
-        return all (compare (a, b, std::equal_to<T> {}));
+        return all (compare (a, b, std::equal_to<typename K::value_type> {}));
     }
 
     ///------------------------------------------------------------------------
     /// elementwise inquality operator
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
     constexpr bool
-    operator!= (const K<S,T> a, const K<S,T> b)
+    operator!= (const K a, const K b)
     {
-        return any (compare (a, b, std::not_equal_to<T> {}));
+        return any (compare (a, b, std::not_equal_to<typename K::value_type> {}));
     }
 
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
     constexpr
     bool
-    almost_zero (const K<S,T> &k)
+    almost_zero (const K &k)
     {
         return std::all_of (
             std::cbegin (k),
             std::cend (k),
-            [] (T t) { return almost_equal (t); }
+            [] (auto t) { return almost_zero (t); }
         );
     }
 
@@ -504,7 +572,10 @@ namespace util {
     vector<S,std::common_type_t<T,U>>
     operator- (point<S,T> a, point<S,U> b)
     {
-        return a.template as<vector> () - b.template as<vector> ();
+        vector<S,std::common_type_t<T,U>> out {};
+        for (std::size_t i = 0; i < S; ++i)
+            out[i] = a[i] - b[i];
+        return out;
     }
 
 
@@ -542,68 +613,75 @@ namespace util {
     }
 
 
-    //-------------------------------------------------------------------------
     template <
         std::size_t S,
         typename T,
-        template <std::size_t,typename> class A,
-        template <std::size_t,typename> class B,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<A<S,T>> && is_coord_v<B<S,T>>, void
+            is_coord_v<K> && std::is_same_v<typename K::value_type, T> && K::elements == S,
+            void
         >
     >
     constexpr
     T
-    dot (A<S,T> a, B<S,T> b)
+    dot (const T (&a)[S], K k)
     {
-        return dot<S,T> (a.data, b.data);
+        return dot (a, k.data);
     }
 
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename A,
+        typename B,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<A> && is_coord_v<B>, void
         >
     >
-    constexpr
-    T
-    dot (K<S,T> a, const T (&b)[S])
+    constexpr auto
+    dot (A a, B b)
     {
-        return dot<S,T> (a.data, b);
+        return dot (a.data, b.data);
     }
 
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
+        typename K,
         typename T,
-        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K> && std::is_same_v<T,typename K::value_type>, void
         >
     >
-    constexpr
-    T
-    dot (const T (&a)[S], K<S,T> b)
+    constexpr auto
+    dot (K a, const T (&b)[K::elements])
     {
-        return dot<S,T> (a, b.data);
+        return dot (a.data, b);
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <
+        typename K,
+        typename = std::enable_if_t<
+            is_coord_v<K>, void
+        >
+    >
+    constexpr auto
+    dot (const typename K::value_type (&a)[K::elements], K b)
+    {
+        return dot (a, b.data);
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
-        typename = std::enable_if_t<coord::has_norm_v<K>,void>
+        typename K,
+        typename = std::enable_if_t<has_norm_v<K>,void>
     >
     constexpr
-    T
-    norm2 (const K<S,T> &k)
+    auto
+    norm2 (const K &k)
     {
         return dot (k, k);
     }
@@ -611,17 +689,15 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            coord::has_norm_v<K>,
+            has_norm_v<K>,
             void
         >
     >
     constexpr
-    T
-    norm (const K<S,T> &k)
+    auto
+    norm (const K &k)
     {
         return std::sqrt (norm2 (k));
     }
@@ -629,55 +705,47 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            coord::has_norm_v<K>,
+            has_norm_v<K>,
             void
         >
     >
     constexpr
-    K<S,T>
-    normalised (const K<S,T> &k)
+    auto
+    normalised (const K &k)
     {
-        auto n = norm (k);
-        CHECK_NEZ (n);
-
-        return k / n;
+        CHECK_NEZ (norm (k));
+        return k / norm (k);
     }
 
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            coord::has_norm_v<K>,
+            has_norm_v<K>,
             void
         >
     >
     constexpr
     bool
-    is_normalised (const K<S,T> &k)
+    is_normalised (const K &k)
     {
-        return almost_equal (norm2 (k), T{1});
+        return almost_equal (norm2 (k), 1);
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
     constexpr
-    K<S,T>
-    abs (K<S,T> k)
+    K
+    abs (K k)
     {
         for (auto &v: k)
             v = std::abs (v);
@@ -686,16 +754,14 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
     constexpr
-    K<S,T>
-    pow (K<S,T> k)
+    K
+    pow (K k)
     {
         for (auto &v: k)
             v = pow (v);
@@ -705,16 +771,13 @@ namespace util {
     ///////////////////////////////////////////////////////////////////////////
     // root of sum of squares
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
-    constexpr
-    T
-    hypot (K<S,T> k)
+    constexpr typename K::value_type
+    hypot (K k)
     {
         return std::sqrt (sum (k * k));
     }
@@ -722,16 +785,14 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        std::size_t S,
+        typename K,
         typename T,
-        template <std::size_t,typename> class K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K> && std::is_same_v<T, typename K::value_type>, void
         >
     >
-    constexpr
-    K<S,T>
-    mod (K<S,T> k, T t)
+    constexpr auto
+    mod (K k, T t)
     {
         std::transform (
             std::cbegin (k),
@@ -739,20 +800,18 @@ namespace util {
             std::begin  (k),
             [t] (auto v) { return mod (v, t);
         });
+
         return k;
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // trigonometric functions
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
-        typename = std::enable_if_t<is_coord_v<K<S,T>>,void>
+        typename K,
+        typename = std::enable_if_t<is_coord_v<K>,void>
     >
-    constexpr
-    K<S,T>
-    sin (K<S,T> k)
+    constexpr auto
+    sin (K k)
     {
         std::transform (
             std::cbegin (k),
@@ -767,14 +826,11 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
-        typename = std::enable_if_t<is_coord_v<K<S,T>>,void>
+        typename K,
+        typename = std::enable_if_t<is_coord_v<K>,void>
     >
-    constexpr
-    K<S,T>
-    cos (K<S,T> k)
+    constexpr auto
+    cos (K k)
     {
         std::transform (
             std::cbegin (k),
@@ -792,22 +848,25 @@ namespace util {
 
     /// return a coord type containing the max element at each offset
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >,
         typename ...Args
     >
-    constexpr
-    K<S,T>
-    min (K<S,T> a, K<S,T> b, Args &&...args)
+    constexpr auto
+    min (K a, K b, Args &&...args)
     {
-        static_assert ((... && std::is_same<K<S,T>, std::decay_t<Args>>::value));
+        // the varargs must be the same types as the first two arguments
+        static_assert ((
+            ... && std::is_same_v<
+                K,
+                std::decay_t<Args>
+            >
+        ));
 
-        K<S,T> out {};
-        for (std::size_t i = 0; i < S; ++i)
+        K out {};
+        for (std::size_t i = 0; i < K::elements; ++i)
             out[i] = min (a[i], b[i], args[i]...);
         return out;
     }
@@ -816,22 +875,24 @@ namespace util {
     ///------------------------------------------------------------------------
     // /return a coord type containing the max element at each offset
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >,
         typename ...Args
     >
-    constexpr
-    K<S,T>
-    max (K<S,T> a, K<S,T> b, Args &&...args)
+    constexpr auto
+    max (K a, K b, Args &&...args)
     {
-        static_assert ((... && std::is_same<K<S,T>, std::decay_t<Args>>::value));
+        static_assert ((
+            ... && std::is_same_v<
+                K,
+                std::decay_t<Args>
+            >
+        ));
 
-        K<S,T> out {};
-        for (std::size_t i = 0; i < S; ++i)
+        K out {};
+        for (std::size_t i = 0; i < K::elements; ++i)
             out[i] = max (a[i], b[i], args[i]...);
         return out;
     }
@@ -845,16 +906,13 @@ namespace util {
     /// and hi because the min and max calls are ill definied for varying
     /// types (not because varying types would not be useful).
     template <
-        std::size_t S,
-        typename T,
-        template<std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
-    constexpr
-    K<S,T>
-    limit (K<S,T> k, K<S,T> lo, K<S,T> hi)
+    constexpr auto
+    limit (K k, K lo, K hi)
     {
         assert (all (lo <= hi));
         return max (min (k, hi), lo);
@@ -863,82 +921,68 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
-    constexpr
-    K<S,T>
-    limit (K<S,T> k, T lo, K<S,T> hi)
+    constexpr auto
+    limit (K k, typename K::value_type lo, K hi)
     {
-        return limit (k, K<S,T> {lo}, hi);
+        return limit (k, K {lo}, hi);
     }
 
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
-    constexpr
-    K<S,T>
-    limit (K<S,T> k, K<S,T> lo, T hi)
+    constexpr auto
+    limit (K k, K lo, typename K::value_type hi)
     {
-        return limit (k, lo, K<S,T> {hi});
+        return limit (k, lo, K {hi});
     }
 
 
     //-------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
-    constexpr K<S,T>
-    limit (K<S,T> k, T lo, T hi)
+    constexpr auto
+    limit (K k, typename K::value_type lo, typename K::value_type hi)
     {
-        return limit (k, K<S,T> {lo}, K<S,T> {hi});
+        return limit (k, K {lo}, K {hi});
     }
 
 
     ///------------------------------------------------------------------------
     template <
-        std::size_t S,
-        typename T,
-        template<std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
-    constexpr
-    T
-    min (const K<S,T> k)
+    constexpr auto
+    min (const K &k)
     {
         return *std::min_element (std::cbegin (k), std::cend (k));
     }
 
 
     template <
-        std::size_t S,
-        typename T,
-        template<std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
-    constexpr
-    T
-    max (const K<S,T> k)
+    constexpr auto
+    max (const K &k)
     {
         return *std::max_element (std::cbegin (k), std::cend (k));
     }
@@ -946,16 +990,13 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
-    constexpr
-    T
-    sum (const K<S,T> k)
+    constexpr auto
+    sum (const K &k)
     {
         // DO NOT USE util::sum(begin, end) from maths.hpp
         //
@@ -967,30 +1008,33 @@ namespace util {
         // So, if the user wants kahan summation they can request it
         // explicitly.
 
-        return std::accumulate (std::cbegin (k), std::cend (k), T{0});
+        return std::accumulate (std::cbegin (k), std::cend (k), typename K::value_type{0});
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
-#define VECTOR_OP(OP)                                       \
-    template <                                              \
-        std::size_t S,                                      \
-        typename T,                                         \
-        typename U,                                         \
-        template <std::size_t,typename> class A,            \
-        template <std::size_t,typename> class B,            \
-        typename = std::enable_if_t<                        \
-            is_coord_v<A<S,T>> && is_coord_v<B<S,U>>, void  \
-        >                                                   \
-    >                                                       \
-    constexpr                                               \
-    vector<S,bool>                                          \
-    operator OP (const A<S,T> a, const B<S,U> b)            \
-    {                                                       \
-        vector<S,bool> out {};                              \
-        for (std::size_t i = 0; i < S; ++i)                 \
-            out[i] = a[i] OP b[i];                          \
-        return out;                                         \
+#define VECTOR_OP(OP)                                   \
+    template <                                          \
+        typename A,                                     \
+        typename B,                                     \
+        typename = std::enable_if_t<                    \
+            is_coord_v<A> &&                            \
+            is_coord_v<B> &&                            \
+            A::elements == B::elements &&               \
+            std::is_same_v<                             \
+                typename A::value_type,                 \
+                typename B::value_type                  \
+            >,                                          \
+            void                                        \
+        >                                               \
+    >                                                   \
+    constexpr auto                                      \
+    operator OP (const A a, const B b)                  \
+    {                                                   \
+        vector<A::elements,bool> out {};                \
+        for (std::size_t i = 0; i < A::elements; ++i)   \
+            out[i] = a[i] OP b[i];                      \
+        return out;                                     \
     }
 
     VECTOR_OP(<)
@@ -1003,43 +1047,41 @@ namespace util {
 #undef VECTOR_OP
 
 
-#define SCALAR_OP(OP)                               \
-    template <                                      \
-        std::size_t S,                              \
-        typename T,                                 \
-        typename U,                                 \
-        template <std::size_t,typename> class K,    \
-        typename = std::enable_if_t<                \
-            is_coord_v<K<S,T>>, void                \
-        >                                           \
-    >                                               \
-    constexpr                                       \
-    vector<S,bool>                                  \
-    operator OP (const K<S,T> k, const U u)         \
-    {                                               \
-        vector<S,bool> out {};                      \
-        for (std::size_t i = 0; i < S; ++i)         \
-            out[i] = k[i] OP u;                     \
-        return out;                                 \
-    }                                               \
-                                                    \
-    template <                                      \
-        std::size_t S,                              \
-        typename T,                                 \
-        typename U,                                 \
-        template <std::size_t,typename> class K,    \
-        typename = std::enable_if_t<                \
-            is_coord_v<K<S,T>>, void                \
-        >                                           \
-    >                                               \
-    constexpr                                       \
-    vector<S,bool>                                  \
-    operator OP (const U u, const K<S,T> k)         \
-    {                                               \
-        vector<S,bool> out {};                      \
-        for (std::size_t i = 0; i < S; ++i)         \
-            out[i] = u OP k[i];                     \
-        return out;                                 \
+#define SCALAR_OP(OP)                                   \
+    template <                                          \
+        typename K,                                     \
+        typename U,                                     \
+        typename = std::enable_if_t<                    \
+            is_coord_v<K> &&                            \
+            std::is_arithmetic_v<U>,                    \
+            void                                        \
+        >                                               \
+    >                                                   \
+    constexpr auto                                      \
+    operator OP (const K &k, const U u)                 \
+    {                                                   \
+        vector<K::elements,bool> out {};                \
+        for (std::size_t i = 0; i < K::elements; ++i)   \
+            out[i] = k[i] OP u;                         \
+        return out;                                     \
+    }                                                   \
+                                                        \
+    template <                                          \
+        typename K,                                     \
+        typename U,                                     \
+        typename = std::enable_if_t<                    \
+            is_coord_v<K> &&                            \
+            std::is_arithmetic_v<U>,                    \
+            void                                        \
+        >                                               \
+    >                                                   \
+    constexpr auto                                      \
+    operator OP (const U u, const K &k)                 \
+    {                                                   \
+        vector<K::elements,bool> out {};                \
+        for (std::size_t i = 0; i < K::elements; ++i)   \
+            out[i] = u OP k[i];                         \
+        return out;                                     \
     }
 
     SCALAR_OP(<)
@@ -1146,20 +1188,16 @@ namespace util {
     ///
     /// corresponds to the function `select' from OpenCL.
     template <
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>,
-            void
+            is_coord_v<K>, void
         >
     >
-    constexpr
-    K<S,T>
-    select (vector<S,bool> s, K<S,T> a, K<S,T> b)
+    constexpr auto
+    select (vector<K::elements,bool> s, K a, K b)
     {
-        K<S,T> k {};
-        for (std::size_t i = 0; i < S; ++i)
+        K k {};
+        for (std::size_t i = 0; i < K::elements; ++i)
             k[i] = s[i] ? a[i] : b[i];
         return k;
     }
@@ -1167,20 +1205,18 @@ namespace util {
 
     ///////////////////////////////////////////////////////////////////////////
     template <
-        std::size_t S,
-        typename T,
-        template<std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>> && std::is_floating_point<T>::value, void
+            is_coord_v<K> && std::is_floating_point<typename K::value_type>::value, void
         >
     >
-    constexpr
-    K<S,T>
-    floor (const K<S,T> k)
+    constexpr auto
+    floor (const K &k)
     {
-        T (*floor_func)(T) = std::floor;
+        using value_type = typename K::value_type;
+        value_type (*floor_func)(value_type) = std::floor;
 
-        K<S,T> out {};
+        K out {};
         std::transform (std::cbegin (k),
                         std::cend   (k),
                         std::begin  (out),
@@ -1196,22 +1232,19 @@ namespace util {
     /// num must be between 0 and S. when 0 it is equivalent to an ordinary
     /// fill, when S it is equivalent to a noop.
     template<
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
-    constexpr
-    K<S,T>
-    rshift (const K<S,T> k, const int num, const K<S,T> fill)
+    constexpr auto
+    rshift (const K k, const int num, const K fill)
     {
-        CHECK_LIMIT (num, 0, int (S));
+        CHECK_LIMIT (num, 0, int (K::elements));
 
-        K<S,T> res {};
+        K res {};
 
-        std::copy_n (std::cbegin (k), S - num, std::begin (res) + num);
+        std::copy_n (std::cbegin (k), K::elements - num, std::begin (res) + num);
         std::copy_n (std::cbegin (fill), num, std::begin (res));
 
         return res;
@@ -1220,18 +1253,15 @@ namespace util {
 
     //-------------------------------------------------------------------------
     template<
-        std::size_t S,
-        typename T,
-        template <std::size_t,typename> class K,
+        typename K,
         typename = std::enable_if_t<
-            is_coord_v<K<S,T>>, void
+            is_coord_v<K>, void
         >
     >
-    constexpr
-    K<S,T>
-    rshift (const K<S,T> k, const int num, T fill)
+    constexpr auto
+    rshift (const K k, const int num, typename K::value_type fill)
     {
-        return rshift (k, num, K<S,T> {fill});
+        return rshift (k, num, K {fill});
     }
 
 
@@ -1245,20 +1275,15 @@ namespace util {
     /// \tparam K coordinate data type to operate on
     template <
         std::size_t I,
-        std::size_t S,
-        typename T,
-        template<
-        std::size_t,
-        typename
-    > class K
+        typename K,
+        std::enable_if_t<
+            is_coord_v<K> && I < K::elements, void
+        >
     >
-    const std::enable_if_t<
-        is_coord_v<K<S,T>>,
-        T
-    >&
-    get (const K<S,T> &k)
+    const auto&
+    get (const K &k)
     {
-        static_assert (I < S);
+        static_assert (I < K::elements);
         return k[I];
     };
 
@@ -1273,20 +1298,15 @@ namespace util {
     /// \tparam K coordinate data type to operate on
     template <
         std::size_t I,
-        std::size_t S,
-        typename T,
-        template<
-            std::size_t,
-            typename
-        > class K
+        typename K,
+        typename = std::enable_if_t<
+            is_coord_v<K> && I < K::elements, void
+        >
     >
-    std::enable_if_t<
-        is_coord_v<K<S,T>>,
-        T
-    >&
-    get (K<S,T> &k)
+    auto &
+    get (K &k)
     {
-        static_assert (I < S);
+        static_assert (I < K::elements);
         return k[I];
     };
 }
@@ -1306,14 +1326,11 @@ namespace std {
     template <
         std::size_t S,
         typename T,
-        template<
-            std::size_t,
-            typename
-        > class K
+        template <std::size_t,typename> typename K
     >
     class tuple_size<K<S,T>> : public std::enable_if_t<
         ::util::is_coord_v<K<S,T>>,
-        std::integral_constant<decltype(S), S>
+        std::integral_constant<std::size_t, S>
     > { };
 
 
@@ -1329,17 +1346,12 @@ namespace std {
         std::size_t I,
         std::size_t S,
         typename T,
-        template<
-            std::size_t,
-            typename
-        > class K
+        template <std::size_t,typename> typename K
     >
-    class tuple_element<
-        I, K<S,T>
-    > : public enable_if<
+    class tuple_element<I,K<S,T>> : public std::enable_if<
         ::util::is_coord_v<K<S,T>>,
         T
-    > { };
+    > {};
 }
 
 
@@ -1352,20 +1364,15 @@ namespace std {
     template <
         std::size_t S,
         typename T,
-        template <
-            std::size_t,typename
-        > class K
+        template <std::size_t,typename> typename K
     >
-    struct hash<
-        K<S,T>
-    > : public ::std::enable_if<
+    struct hash<K<S,T>> : enable_if<
         ::util::is_coord_v<K<S,T>>
     > {
-        std::size_t
-        operator() (K<S,T> k) const {
-            std::size_t v = 0xdeadbeef;
+        uint32_t operator() (K<S,T> k) const {
+            uint32_t v = 0xdeadbeef;
 
-            for (auto t: k)
+            for (T t: k)
                 v = ::util::hash::mix (t, v);
 
             return v;

@@ -26,11 +26,11 @@ endif()
 
 
 ###############################################################################
-RAGEL_TARGET(json-flat json/flat.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/json/flat.cpp)
-RAGEL_TARGET(uri uri.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/uri.cpp)
+RAGEL_TARGET(json-flat json/flat.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/json/flat.cpp COMPILE_FLAGS -G2)
+RAGEL_TARGET(uri uri.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/uri.cpp COMPILE_FLAGS -G2)
 RAGEL_TARGET(version version.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
 RAGEL_TARGET(format.cpp format.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/format.cpp)
-
+RAGEL_TARGET(parse8601 time/parse8601.cpp.rl ${CMAKE_CURRENT_BINARY_DIR}/time/parse8601.cpp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
@@ -77,24 +77,18 @@ endif ()
 
 
 ###############################################################################
-# platform libraries
-search_libs (SHM_LIBS shm_open rt)
-search_libs (DL_LIBS dlopen dl)
-search_libs (CLOCK_LIB clock_gettime rt c)
-search_libs (MATH_LIB cos m)
-
-list (APPEND LIBS ${SHM_LIBS} ${DL_LIBS} ${CLOCK_LIB} ${MATH_LIB})
-
-
-###############################################################################
 # platform wrappers
 list (
     APPEND UTIL_FILES
     posix/dir.cpp
     posix/dir.hpp
     posix/dir.ipp
+    posix/except.cpp
+    posix/except.hpp
     posix/fd.cpp
     posix/fd.hpp
+    posix/socket.cpp
+    posix/socket.hpp
 )
 
 
@@ -133,6 +127,8 @@ if (WINDOWS)
         library_win32.hpp
         library_win32.cpp
         time_win32.cpp
+        win32/except.cpp
+        win32/except.hpp
         win32/handle.cpp
         win32/handle.hpp
         win32/registry.hpp
@@ -194,9 +190,9 @@ list (
     coord.hpp
     coord/init.hpp
     coord/iostream.hpp
-    coord/names.hpp
     coord/ops.hpp
     coord/store.hpp
+    coord/traits.hpp
     crypto/arc4.cpp
     crypto/arc4.hpp
     crypto/ice.cpp
@@ -212,10 +208,10 @@ list (
     debug.cpp
     debug.hpp
     debug.ipp
+    encode/base.cpp
+    encode/base.hpp
     endian.cpp
     endian.hpp
-    except.cpp
-    except.hpp
     exe.hpp
     extent.cpp
     extent.hpp
@@ -341,7 +337,6 @@ list (
     matrix3.cpp
     matrix4.cpp
     matrix.hpp
-    matrix.ipp
     memory/deleter.cpp
     memory/deleter.hpp
     nocopy.hpp
@@ -406,7 +401,8 @@ list (
     term.hpp
     time.cpp
     time.hpp
-    time.ipp
+    time/parse.hpp
+    time/parse8601.cpp
     tuple.cpp
     tuple.hpp
     typeidx.cpp
@@ -453,7 +449,20 @@ DEPENDS
 
 ###############################################################################
 add_library(cruft-util ${UTIL_FILES})
-target_link_libraries (cruft-util ${LIBS})
+target_link_libraries (cruft-util PUBLIC ${LIBS})
+target_include_directories(cruft-util PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+
+###############################################################################
+# platform libraries
+search_libs (SHM_LIBS shm_open rt)
+search_libs (DL_LIBS dlopen dl)
+search_libs (CLOCK_LIBS clock_gettime rt c)
+search_libs (MATH_LIBS cos m)
+
+target_link_libraries(cruft-util PUBLIC ${SHM_LIBS})
+target_link_libraries(cruft-util PUBLIC ${DL_LIBS})
+target_link_libraries(cruft-util PUBLIC ${CLOCK_LIBS})
+target_link_libraries(cruft-util PUBLIC ${MATH_LIBS})
 
 
 ###############################################################################
@@ -461,6 +470,7 @@ foreach (tool hash json-clean json-schema json-validate scratch)
     add_executable (util_${tool} tools/${tool}.cpp)
     set_target_properties (util_${tool} PROPERTIES OUTPUT_NAME ${tool})
     target_link_libraries (util_${tool} cruft-util)
+    target_include_directories(util_${tool} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 endforeach ()
 
 
@@ -494,6 +504,7 @@ if (TESTS)
         crypto/tea
         crypto/xtea
         crypto/xxtea
+        encode/base
         endian
         exe
         extent
@@ -542,8 +553,9 @@ if (TESTS)
         string
         stringid
         strongdef
-        tuple
+        time/8601
         traits
+        tuple
         typeidx
         uri
         utf8
@@ -556,6 +568,7 @@ if (TESTS)
         string(REPLACE "/" "_" name "test/${t}")
         add_executable(util_${name} test/${t}.cpp)
         target_link_libraries(util_${name} PRIVATE cruft-util)
+        target_include_directories(util_${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
         add_test(NAME util_${name} COMMAND util_${name})
     endforeach(t)
 endif ()

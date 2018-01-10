@@ -22,53 +22,53 @@
 #include <cstddef>
 
 namespace util::coord {
-    template <std::size_t S, typename T, typename...>
+    template <size_t S, typename T, typename SelfT>
     struct init;
 
     //-------------------------------------------------------------------------
-    template <typename T, typename ...tags>
-    struct init<1,T,tags...> : public store<1,T,tags...>
+    template <typename T, typename SelfT>
+    struct init<1,T,SelfT> : public store<1,T,SelfT>
     {
-        using store<1,T,tags...>::store;
+        using store<1,T,SelfT>::store;
         constexpr init () = default;
-        constexpr explicit init (T v0):
-            store<1,T,tags...> ({v0})
+        constexpr init (T v0):
+            store<1,T,SelfT> ({v0})
         { ; }
     };
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename ...tags>
-    struct init<2,T,tags...> : public store<2,T,tags...>
+    template <typename T, typename SelfT>
+    struct init<2,T,SelfT> : public store<2,T,SelfT>
     {
-        using store<2,T,tags...>::store;
+        using store<2,T,SelfT>::store;
         constexpr init () = default;
         constexpr init (T v0, T v1):
-            store<2,T,tags...> ({ v0, v1 })
+            store<2,T,SelfT> ({ v0, v1 })
         { ; }
     };
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename ...tags>
-    struct init<3,T,tags...> : public store<3,T,tags...>
+    template <typename T, typename SelfT>
+    struct init<3,T,SelfT> : public store<3,T,SelfT>
     {
-        using store<3,T,tags...>::store;
+        using store<3,T,SelfT>::store;
         constexpr init () = default;
         constexpr init (T v0, T v1, T v2):
-            store<3,T,tags...> ({v0, v1, v2})
+            store<3,T,SelfT> ({v0, v1, v2})
         { ; }
     };
 
 
     //-------------------------------------------------------------------------
-    template <typename T, typename ...tags>
-    struct init<4,T,tags...> : public store<4,T,tags...>
+    template <typename T, typename SelfT>
+    struct init<4,T,SelfT> : public store<4,T,SelfT>
     {
-        using store<4,T,tags...>::store;
+        using store<4,T,SelfT>::store;
         constexpr init () = default;
         constexpr init (T v0, T v1, T v2, T v3):
-            store<4,T,tags...> ({ v0, v1, v2, v3 })
+            store<4,T,SelfT> ({ v0, v1, v2, v3 })
         { ; }
     };
 }

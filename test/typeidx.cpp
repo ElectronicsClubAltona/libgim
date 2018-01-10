@@ -1,6 +1,6 @@
-#include "tap.hpp"
+#include "../tap.hpp"
 
-#include "./typeidx.hpp"
+#include "../typeidx.hpp"
 
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -14,10 +14,10 @@
  * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./exe.hpp"
+#include "exe.hpp"
 
-#include "./except.hpp"
-#include "./cast.hpp"
+#include "cast.hpp"
+#include "posix/except.hpp"
 
 #include <vector>
 #include <experimental/filesystem>
@@ -39,7 +39,7 @@ util::image_path (void)
 retry:
     const auto written = readlink (PROC_SELF, resolved.data (), resolved.size ());
     if (written < 0)
-        errno_error::throw_code ();
+        posix::error::throw_code ();
 
     if (sign_cast<size_t> (written) == resolved.size ()) {
         resolved.resize (resolved.size () * 2);

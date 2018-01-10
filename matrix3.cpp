@@ -14,13 +14,13 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./matrix.hpp"
+#include "matrix.hpp"
 
 using util::matrix;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t Rows, size_t Cols, typename T>
+template <std::size_t Rows, std::size_t Cols, typename T>
 T
 util::determinant (const matrix<Rows,Cols,T>& m)
 {
@@ -36,25 +36,25 @@ template double util::determinant (const matrix<3,3,double>&);
 
 
 //-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <std::size_t Rows, std::size_t Cols, typename T>
 matrix<Rows,Cols,T>
 util::inverse (const matrix<Rows,Cols,T> &m)
 {
     static_assert (Rows == 3 && Cols == 3);
 
-    return matrix<3,3,T> {
-        m[1][1] * m[2][2] - m[2][1] * m[1][2],
-        m[0][2] * m[2][1] - m[0][1] * m[2][2],
-        m[0][1] * m[1][2] - m[0][2] * m[1][1],
+    return matrix<3,3,T> {{
+        { m[1][1] * m[2][2] - m[2][1] * m[1][2],
+          m[0][2] * m[2][1] - m[0][1] * m[2][2],
+          m[0][1] * m[1][2] - m[0][2] * m[1][1], },
 
-        m[1][2] * m[2][0] - m[1][0] * m[2][2],
-        m[0][0] * m[2][2] - m[0][2] * m[2][0],
-        m[1][0] * m[0][2] - m[0][0] * m[1][2],
+        { m[1][2] * m[2][0] - m[1][0] * m[2][2],
+          m[0][0] * m[2][2] - m[0][2] * m[2][0],
+          m[1][0] * m[0][2] - m[0][0] * m[1][2], },
 
-        m[1][0] * m[2][1] - m[2][0] * m[1][1],
-        m[2][0] * m[0][1] - m[0][0] * m[2][1],
-        m[0][0] * m[1][1] - m[1][0] * m[0][1],
-    } / determinant (m);
+        { m[1][0] * m[2][1] - m[2][0] * m[1][1],
+          m[2][0] * m[0][1] - m[0][0] * m[2][1],
+          m[0][0] * m[1][1] - m[1][0] * m[0][1], },
+    }} / determinant (m);
 }
 
 template util::matrix<3,3,float>  util::inverse (const matrix<3,3,float>&);

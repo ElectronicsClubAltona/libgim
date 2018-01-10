@@ -20,11 +20,11 @@
 
 #define __UTIL_POOL_IPP
 
+#include "debug.hpp"
+
 #include <cstdint>
 #include <new>
 #include <string>
-
-#include "./debug.hpp"
 
 
 namespace util {

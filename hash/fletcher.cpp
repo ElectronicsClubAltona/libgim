@@ -15,7 +15,7 @@
  */
 
 
-#include "./fletcher.hpp"
+#include "fletcher.hpp"
 
 #include "../debug.hpp"
 

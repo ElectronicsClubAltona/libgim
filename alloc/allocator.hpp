@@ -38,6 +38,6 @@ namespace util::alloc {
     };
 }
 
-#include "./allocator.ipp"
+#include "allocator.ipp"
 
 #endif

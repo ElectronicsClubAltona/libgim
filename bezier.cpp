@@ -14,12 +14,12 @@
  * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./bezier.hpp"
+#include "bezier.hpp"
 
-#include "./debug.hpp"
-#include "./polynomial.hpp"
-#include "./stream.hpp"
-#include "./coord/iostream.hpp"
+#include "debug.hpp"
+#include "polynomial.hpp"
+#include "stream.hpp"
+#include "coord/iostream.hpp"
 
 #include <algorithm>
 #include <iterator>

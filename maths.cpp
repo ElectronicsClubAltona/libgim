@@ -32,27 +32,6 @@ template uint64_t util::log2up (uint64_t);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-T
-util::log2 (T v)
-{
-    static_assert (std::is_integral<T>::value,
-                   "log2 is only implemented for integers");
-
-    T l = 0;
-    while (v >>= 1)
-        ++l;
-
-    return l;
-}
-
-template uint8_t  util::log2 (uint8_t);
-template uint16_t util::log2 (uint16_t);
-template uint32_t util::log2 (uint32_t);
-template uint64_t util::log2 (uint64_t);
-
-
-///////////////////////////////////////////////////////////////////////////////
 template const float  util::PI<float>;
 template const double util::PI<double>;
 

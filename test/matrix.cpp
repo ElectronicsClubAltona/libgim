@@ -15,6 +15,13 @@ main (void)
 {
     util::TAP::logger tap;
 
+    // a quick check to make sure this function is actually provided
+    tap.expect_eq (sum (util::matrix4f::zeroes ()), 0.f, "zero matrix sums to zero");
+
+
+    // trivial check for matrix summation. useful to sanity test some
+    // alignment constraints if run under a tool like memorysanitizer or
+    // valgrind.
     static constexpr util::matrix4f SEQ { {
         {  1,  2,  3,  4 },
         {  5,  6,  7,  8 },
@@ -105,9 +112,9 @@ main (void)
         for (size_t r = 0; r < m.rows; ++r)
             for (size_t c = 0; c < m.cols; ++c)
                 if (r == c)
-                    success = success && util::almost_equal (m.values[r][c], 1.f);
+                    success = success && util::almost_equal (m[r][c], 1.f);
                 else
-                    success = success && util::almost_equal (m.values[r][c], 0.f);
+                    success = success && util::almost_equal (m[r][c], 0.f);
 
         tap.expect (success, "identity inversion");
     }

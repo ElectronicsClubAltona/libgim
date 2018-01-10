@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./strongdef.hpp"
+#include "strongdef.hpp"
 
 using util::strongdef;
 

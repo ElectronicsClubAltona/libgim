@@ -15,11 +15,11 @@
  */
 
 
-#include "./region.hpp"
+#include "region.hpp"
 
-#include "./debug.hpp"
+#include "debug.hpp"
 
-#include "./coord/iostream.hpp"
+#include "coord/iostream.hpp"
 
 #include <array>
 
@@ -221,7 +221,7 @@ util::region<S,T>
 util::region<S,T>::inset (vector<S,T> mag) const
 {
     // ensure we have enough space to trim off our total extent
-    CHECK (all (e >= 2 * mag));
+    CHECK (all (e >= T{2} * mag));
 
     return {
         p +        mag,

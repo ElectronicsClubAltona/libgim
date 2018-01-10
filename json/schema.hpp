@@ -17,7 +17,7 @@
 #ifndef __UTIL_JSON_SCHEMA_HPP
 #define __UTIL_JSON_SCHEMA_HPP
 
-#include "./fwd.hpp"
+#include "fwd.hpp"
 
 #include <experimental/filesystem>
 

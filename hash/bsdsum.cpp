@@ -48,9 +48,8 @@ bsdsum::update (const void *restrict data, size_t size) noexcept
 
 ///////////////////////////////////////////////////////////////////////////////
 void
-bsdsum::update (
-    const uint8_t *const restrict first,
-    const uint8_t *const restrict last) noexcept
+bsdsum::update (const uint8_t *const restrict first,
+                const uint8_t *const restrict last) noexcept
 {
     CHECK (first);
     CHECK (last);

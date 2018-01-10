@@ -14,10 +14,10 @@
  * Copyright 2015-2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./schema.hpp"
+#include "schema.hpp"
 
-#include "./tree.hpp"
-#include "./except.hpp"
+#include "tree.hpp"
+#include "except.hpp"
 
 #include "../debug.hpp"
 #include "../io.hpp"

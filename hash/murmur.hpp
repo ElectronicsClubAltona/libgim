@@ -17,8 +17,8 @@
 #ifndef __UTIL_HASH_MURMUR_HPP
 #define __UTIL_HASH_MURMUR_HPP
 
-#include "./murmur/murmur1.hpp"
-#include "./murmur/murmur2.hpp"
-#include "./murmur/murmur3.hpp"
+#include "murmur/murmur1.hpp"
+#include "murmur/murmur2.hpp"
+#include "murmur/murmur3.hpp"
 
 #endif

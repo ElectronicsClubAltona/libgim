@@ -15,7 +15,7 @@
  */
 
 
-#include "./mwc64x.hpp"
+#include "mwc64x.hpp"
 
 #include "../debug.hpp"
 

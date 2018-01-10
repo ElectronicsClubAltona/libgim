@@ -14,10 +14,10 @@
  * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./extent.hpp"
+#include "extent.hpp"
 
-#include "./debug.hpp"
-#include "./maths.hpp"
+#include "debug.hpp"
+#include "maths.hpp"
 
 #include <algorithm>
 #include <numeric>
@@ -187,9 +187,9 @@ namespace util::debug  {
 
 //-----------------------------------------------------------------------------
 #define INSTANTIATE_S_T(S,T)        \
-template struct util::extent<S,T>;  \
-template bool util::debug::is_valid (const extent<S,T>&); \
-template struct util::debug::validator<extent<S,T>>;
+template struct ::util::extent<S,T>;  \
+template bool ::util::debug::is_valid (const ::util::extent<S,T>&); \
+template struct ::util::debug::validator<::util::extent<S,T>>;
 
 #define INSTANTIATE(T)      \
 INSTANTIATE_S_T(1,T)        \

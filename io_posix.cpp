@@ -16,10 +16,10 @@
 
 #include "io.hpp"
 
+#include "cast.hpp"
 #include "debug.hpp"
-#include "except.hpp"
 #include "posix/fd.hpp"
-#include "./cast.hpp"
+#include "posix/except.hpp"
 
 #include <sys/stat.h>
 
@@ -38,13 +38,12 @@ mapped_file::mapped_file (const std::experimental::filesystem::path &path,
 mapped_file::mapped_file (const ::util::posix::fd &src, int mflags)
 {
     struct stat meta;
-    if (fstat (src, &meta) < 0)
-        throw errno_error ();
+    ::util::posix::error::try_value (fstat (src, &meta));
 
     m_size = sign_cast<size_t> (meta.st_size);
     m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, src, 0);
     if (m_data == MAP_FAILED)
-        throw errno_error ();
+        ::util::posix::error::throw_code ();
 }
 
 

@@ -14,9 +14,9 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./iostream.hpp"
+#include "iostream.hpp"
 
-#include "./sphere.hpp"
+#include "sphere.hpp"
 #include "../coord/iostream.hpp"
 
 

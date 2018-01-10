@@ -17,9 +17,9 @@
 #include "io.hpp"
 
 #include "debug.hpp"
-#include "except.hpp"
 #include "cast.hpp"
 #include "format.hpp"
+#include "posix/except.hpp"
 
 #include <cstdio>
 #include <fcntl.h>
@@ -45,12 +45,9 @@ util::slurp (const std::experimental::filesystem::path &path)
     posix::fd out (path, O_RDONLY | O_BINARY);
 
     // Calculate the total file size
-    off_t size = lseek (out, 0, SEEK_END);
-    if (size == (off_t)-1)
-        throw errno_error();
+    off_t size = posix::error::try_value (lseek (out, 0, SEEK_END));
 
-    if (lseek (out, 0, SEEK_SET) == (off_t)-1)
-        throw errno_error ();
+    posix::error::try_value (lseek (out, 0, SEEK_SET));
 
     // Allocate a buffer, and keep reading until it's full.
     std::vector<T> buffer (size);
@@ -60,9 +57,10 @@ util::slurp (const std::experimental::filesystem::path &path)
     T *cursor = buffer.data ();
 
     while (remaining) {
-        ssize_t consumed = ::read (out, cursor, remaining);
-        if (consumed == -1)
-            throw errno_error();
+        ssize_t consumed = posix::error::try_value(
+            ::read (out, cursor, remaining)
+        );
+
         CHECK_GT (        consumed, 0);
         CHECK_LE ((size_t)consumed, remaining);
 
@@ -90,13 +88,10 @@ util::slurp (FILE *stream)
     );
 
     // find how much data is in this file
-    const int desc = fileno (stream);
-    if (desc < 0)
-        errno_error::throw_code ();
+    const int desc = util::posix::error::try_value (fileno (stream));
 
     struct stat meta;
-    if (fstat (desc, &meta) < 0)
-        errno_error::throw_code ();
+    posix::error::try_value (fstat (desc, &meta));
 
     std::vector<T> buf;
 
@@ -145,9 +140,7 @@ util::write (const posix::fd &out,
     size_t remaining = bytes;
 
     while (remaining) {
-        ssize_t consumed = ::write (out, cursor, remaining);
-        if (consumed < 0)
-            errno_error::throw_code ();
+        ssize_t consumed = posix::error::try_value (::write (out, cursor, remaining));
 
         remaining -= sign_cast<size_t> (consumed);
         cursor    += sign_cast<size_t> (consumed);
@@ -199,7 +192,7 @@ scoped_cwd::scoped_cwd ()
     m_original.resize (16);
     while (getcwd (&m_original[0], m_original.size ()) == nullptr && errno == ERANGE)
         m_original.resize (m_original.size () * 2);
-    errno_error::try_code ();
+    posix::error::try_code ();
 }
 
 
@@ -207,7 +200,7 @@ scoped_cwd::scoped_cwd ()
 scoped_cwd::~scoped_cwd ()
 {
     if (!chdir (m_original.c_str ()))
-        errno_error::throw_code ();
+        posix::error::throw_code ();
 }
 
 

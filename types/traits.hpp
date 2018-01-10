@@ -270,4 +270,24 @@ template <std::size_t N, typename FuncT>
 using nth_argument_t = typename nth_argument<N, FuncT>::type;
 
 
+///////////////////////////////////////////////////////////////////////////////
+#include <string>
+#include <array>
+#include <vector>
+
+template <typename T>
+struct is_contiguous : public std::false_type {};
+
+template <typename CharT, typename Traits, typename Allocator>
+struct is_contiguous<std::basic_string<CharT, Traits, Allocator>> : public std::true_type {};
+
+template <typename T, std::size_t N>
+struct is_contiguous<std::array<T,N>>: public std::true_type {};
+
+template <typename T, typename Allocator>
+struct is_contiguous<std::vector<T,Allocator>>: public std::true_type {};
+
+template <typename T>
+constexpr auto is_contiguous_v = is_contiguous<T>::value;
+
 #endif

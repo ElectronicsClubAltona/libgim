@@ -17,7 +17,7 @@
 #ifndef __UTIL_GEOM_IOSTREAM_HPP
 #define __UTIL_GEOM_IOSTREAM_HPP
 
-#include "./fwd.hpp"
+#include "fwd.hpp"
 
 #include <ostream>
 

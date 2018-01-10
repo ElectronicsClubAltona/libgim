@@ -14,7 +14,7 @@
  * Copyright 2011 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./crc.hpp"
+#include "crc.hpp"
 
 #include "../bitwise.hpp"
 #include "../debug.hpp"

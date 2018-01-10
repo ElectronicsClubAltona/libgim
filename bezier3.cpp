@@ -14,7 +14,7 @@
  * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./bezier.hpp"
+#include "bezier.hpp"
 
 #include "coord/iostream.hpp"
 
@@ -30,10 +30,10 @@ namespace util {
         CHECK_GE (t, 0);
         CHECK_LE (t, 1);
 
-        auto v0 =     pow  (1 - t, 3)  * m_points[0];
+        auto v0 =     pow  (1 - t, 3u) * m_points[0];
         auto v1 = 3 * pow2 (1 - t) * t * m_points[1];
         auto v2 = 3 * pow2 (1 - t) * t * m_points[2];
-        auto v3 =     pow  (t, 3)      * m_points[3];
+        auto v3 =     pow  (t,     3u) * m_points[3];
 
         return {
             v0.x + v1.x + v2.x + v3.x,

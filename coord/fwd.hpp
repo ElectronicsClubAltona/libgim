@@ -20,10 +20,17 @@
 #include <cstddef>
 
 namespace util {
-    template <std::size_t,typename> struct colour;
-    template <std::size_t,typename> struct extent;
-    template <std::size_t,typename> struct point;
-    template <std::size_t,typename> struct vector;
+    namespace coord {
+        template <size_t S,typename T,typename ParentT> struct store;
+        template <size_t,typename,typename> struct init;
+        template <size_t,typename,typename> struct base;
+    }
+
+    template <size_t,typename> struct srgba;
+    template <size_t,typename> struct hsva;
+    template <size_t,typename> struct extent;
+    template <size_t,typename> struct point;
+    template <size_t,typename> struct vector;
 }
 
 #endif

@@ -9,8 +9,11 @@ int
 main (int, char**)
 {
     util::TAP::logger tap;
-    
-    const char csv[] = "\0,a,123,,this is a test,";
+
+    // the string_literal prefix is required to (easily) construct a string
+    // with an internal null character.
+    using namespace std::literals::string_literals;
+    const std::string csv = "\0,a,123,,this is a test,"s;
 
     // expected test data must be a std::string so we can check embedded
     // nulls (which are ambiguous when using a cstr).
@@ -18,7 +21,7 @@ main (int, char**)
         const std::string value;
         const char *message;
     } TESTS[] = {
-        { "\0",             "null" },
+        { "\0"s,            "null" },
         { "a",              "single letter" },
         { "123",            "three digits" },
         { "",               "empty string" },
@@ -27,7 +30,7 @@ main (int, char**)
     };
 
     for (const auto &[tok, expected]: util::zip (util::make_tokeniser (csv, ','), TESTS))
-        tap.expect (equal (tok, expected.value), "%s", expected.message);
+        tap.expect_eq (tok, expected.value, "%s", expected.message);
 
     return tap.status ();
 }

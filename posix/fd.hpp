@@ -11,11 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2016 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2017 Danny Robson <danny@nerdcruft.net>
  */
 
 #ifndef __CRUFT_UTIL_POSIX_FD_HPP
 #define __CRUFT_UTIL_POSIX_FD_HPP
+
+#include "../view.hpp"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -32,6 +34,8 @@ namespace util::posix {
         fd (const std::experimental::filesystem::path &path, int flags, mode_t);
 
         fd (fd &&);
+        fd& operator= (fd &&);
+        fd& operator= (int);
 
         // The int constructor steals the fd. So don't pass in something that
         // you don't want closed at destruct time. This should really only be
@@ -51,15 +55,51 @@ namespace util::posix {
         ///////////////////////////////////////////////////////////////////////
         struct ::stat stat (void) const;
 
+
+        ///////////////////////////////////////////////////////////////////////
+        void close (void);
+        void reset (int);
+        void reset (void);
+        int release (void);
+
         //---------------------------------------------------------------------
-        [[gnu::warn_unused_result]] ssize_t read  (      void *buf, size_t count);
+        [[gnu::warn_unused_result]] ssize_t read (void *buf, size_t count);
         [[gnu::warn_unused_result]] ssize_t write (const void *buf, size_t count);
+
+
+        //---------------------------------------------------------------------
+        template <typename IteratorA, typename IteratorB>
+        [[gnu::warn_unused_result]]
+        std::enable_if_t<
+            sizeof (typename std::iterator_traits<IteratorA>::value_type) == 1,
+            IteratorA
+        >
+        read (util::view<IteratorA, IteratorB> dst)
+        {
+            return dst.begin () + read (&*std::data (dst), std::size (dst));
+        }
+
+
+        //---------------------------------------------------------------------
+        template <typename IteratorA, typename IteratorB>
+        [[gnu::warn_unused_result]]
+        std::enable_if_t<
+            sizeof (typename std::iterator_traits<IteratorA>::value_type) == 1,
+            IteratorA
+        >
+        write (util::view<IteratorA, IteratorB> src)
+        {
+            return src.begin () + write (&*std::data (src), std::size (src));
+        }
+
 
         //---------------------------------------------------------------------
         [[gnu::warn_unused_result]] off_t lseek (off_t offset, int whence);
 
+
         ///////////////////////////////////////////////////////////////////////
         operator int (void) const;
+        int native (void) { return m_fd; }
 
     private:
         int m_fd;

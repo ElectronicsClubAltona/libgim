@@ -17,22 +17,32 @@
 #ifndef __UTIL_TIME_HPP
 #define __UTIL_TIME_HPP
 
+#include "stats.hpp"
+
 #include <chrono>
 #include <cstdint>
 #include <string>
 
-#include "./stats.hpp"
 
 namespace util {
-    // ------------------------------------------------------------------------
+    ///////////////////////////////////////////////////////////////////////////
     uintmax_t nanoseconds (void);
 
-    template <typename T>
-    void sleep (std::chrono::duration<T,std::nano>);
 
+    //-------------------------------------------------------------------------
+    template <typename T>
+    void sleep (std::chrono::duration<T,std::nano> dt)
+    {
+        auto nano = std::chrono::duration_cast<std::chrono::nanoseconds> (dt);
+        sleep (nano.count ());
+    }
+
+
+    //-------------------------------------------------------------------------
     void sleep (uint64_t ns);
 
-    // ------------------------------------------------------------------------
+
+    ///////////////////////////////////////////////////////////////////////////
     class delta_clock {
         public:
             delta_clock ();
@@ -45,7 +55,8 @@ namespace util {
             } time;
     };
 
-    // ------------------------------------------------------------------------
+
+    ///////////////////////////////////////////////////////////////////////////
     class period_query {
         public:
             explicit period_query (float seconds);
@@ -59,7 +70,8 @@ namespace util {
             } m_time;
     };
 
-    // ------------------------------------------------------------------------
+
+    ///////////////////////////////////////////////////////////////////////////
     class rate_limiter {
         public:
             explicit rate_limiter (unsigned rate);
@@ -71,7 +83,8 @@ namespace util {
             unsigned m_target;
     };
 
-    // ------------------------------------------------------------------------
+
+    ///////////////////////////////////////////////////////////////////////////
     class polled_duration {
         public:
             polled_duration (std::string name, uint64_t interval);
@@ -89,6 +102,4 @@ namespace util {
     };
 }
 
-#include "./time.ipp"
-
-#endif // __UTIL_TIME_HPP
+#endif

@@ -14,9 +14,10 @@
  * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./exe.hpp"
+#include "exe.hpp"
 
 #include "except.hpp"
+#incldue "win32/except.hpp"
 
 #include <experimental/filesystem>
 #include <vector>
@@ -32,7 +33,7 @@ util::image_path (void)
 retry:
         const auto written = GetModuleFileName (nullptr, resolved.data (), resolved.size ());
         if (written == 0)
-            win32_error::throw_code ();
+            win32::error::throw_code ();
 
         if (written == resolved.size ()) {
             resolved.resize (resolved.size () * 2);

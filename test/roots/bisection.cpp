@@ -8,9 +8,9 @@ using util::pow;
 
 
 constexpr float order2 (float x) { return x * x + 3 * x - 7.f; }
-constexpr float order4 (float x) { return   10 * pow (x, 4u)
-                                          -270 * pow (x, 2u)
-                                          -140 * pow (x, 1u)
+constexpr float order4 (float x) { return   10 * util::pow (x, 4u)
+                                          -270 * util::pow (x, 2u)
+                                          -140 * util::pow (x, 1u)
                                           +1200; }
 
 struct {

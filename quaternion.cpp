@@ -15,10 +15,10 @@
  */
 
 
-#include "./quaternion.hpp"
+#include "quaternion.hpp"
 
-#include "./debug.hpp"
-#include "./vector.hpp"
+#include "debug.hpp"
+#include "vector.hpp"
 
 #include <cmath>
 

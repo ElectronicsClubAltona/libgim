@@ -14,7 +14,7 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./malloc.hpp"
+#include "malloc.hpp"
 
 #include "../../debug.hpp"
 

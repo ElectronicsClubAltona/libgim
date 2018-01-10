@@ -23,11 +23,10 @@
 namespace util::geom {
     template <size_t S, typename T>
     struct plane {
-        plane (util::point<S,T> p,
-               util::vector<S,T> n);
+        plane (util::point<S,T>, util::vector<S,T>);
 
-        util::point<S,T> p;
-        util::vector<S,T> n;
+        ::util::point<S,T> p;
+        ::util::vector<S,T> n;
     };
 
 

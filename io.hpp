@@ -43,16 +43,48 @@ namespace util {
     std::vector<T> slurp (FILE *);
 
 
-    //-------------------------------------------------------------------------
+    ///////////////////////////////////////////////////////////////////////////
     void write (const posix::fd&, const void *restrict data, size_t bytes);
 
-    template <typename T>
-    void write (const posix::fd&, const T &data);
-
-    template <typename T>
-    void write (const posix::fd&, const T *restrict first, const T *restrict last);
 
     //-------------------------------------------------------------------------
+    inline void
+    write (const posix::fd &dst, util::view<const uint8_t*> data)
+    {
+        write (dst, std::data (data), std::size (data));
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename T>
+    void write (const posix::fd &_fd, const T &data)
+    {
+        return write (_fd, make_view (data));
+    }
+
+
+    ///------------------------------------------------------------------------
+    /// writes all data from the provided view into the file-like-object
+    ///
+    /// writing will continually iterate until the entire buffer has been
+    /// dispatched so as to avoid issues with partial writes. will block until
+    /// such time as the entire buffer has written.
+    ///
+    /// an exception may be thrown in the event forward progress is impossible.
+    /// in this event the progress may not be reported to the caller. in the
+    /// future an exception member variable may expose the information.
+    template <typename DstT, typename IteratorA, typename IteratorB>
+    util::view<IteratorA,IteratorB>
+    write (DstT &dst, const util::view<IteratorA, IteratorB> src)
+    {
+        auto remain = src;
+        while (!remain.empty ())
+            remain = src - dst.write (remain);
+        return src;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////
     class indenter : public std::streambuf {
     protected:
         std::streambuf* m_dest;
@@ -120,11 +152,11 @@ namespace util {
 }
 
 #ifdef PLATFORM_WIN32
-#include "./io_win32.hpp"
+#include "io_win32.hpp"
 #else
-#include "./io_posix.hpp"
+#include "io_posix.hpp"
 #endif
 
-#include "./io.ipp"
+#include "io.ipp"
 
 #endif

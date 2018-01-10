@@ -6,6 +6,9 @@
 
 #include "coord/iostream.hpp"
 
+#include <array>
+
+
 ///////////////////////////////////////////////////////////////////////////////
 void
 test_matrix_identities (util::TAP::logger &tap)
@@ -15,16 +18,16 @@ test_matrix_identities (util::TAP::logger &tap)
     {
         util::point3f p { 1, 2, 3 };
 
-        auto m = util::matrix4f::translation (0-p);
+        auto m = util::translation (0-p);
         auto x = m * p.homog<4> ();
         tap.expect_eq (x, util::point4f {0,0,0,1}, "trivial translation to origin");
     }
 
     {
         util::point3f p {0};
-        auto m = util::matrix4f::rotation (1, { 1, 0, 0 }) *
-                 util::matrix4f::rotation (1, { 0, 1, 0 }) *
-                 util::matrix4f::rotation (1, { 0, 0, 1 });
+        auto m = util::rotation<float> (1, { 1, 0, 0 }) *
+                 util::rotation<float> (1, { 0, 1, 0 }) *
+                 util::rotation<float> (1, { 0, 0, 1 });
         auto x = m * p.homog<4> ();
 
         tap.expect_eq (x, util::point4f {0,0,0,1}, "trivial rotation at origin");
@@ -34,7 +37,7 @@ test_matrix_identities (util::TAP::logger &tap)
         util::point3f eye { 1, 2, 3 };
         util::point3f tgt { 0, 0, 0 };
 
-        auto m = util::matrix4f::look_at (eye, tgt, UP);
+        auto m = util::look_at (eye, tgt, UP);
         auto x = m * eye.homog<4> ();
         tap.expect_eq (x, util::point4f {0,0,0,1}, "look_at eye translation");
     }
@@ -43,7 +46,7 @@ test_matrix_identities (util::TAP::logger &tap)
         util::point3f eye { 1, 2, 3 };
         util::point3f tgt { 4, 5, 6 };
 
-        auto m = util::matrix4f::look_at (eye, tgt, UP);
+        auto m = util::look_at (eye, tgt, UP);
         auto x = m * eye.homog<4> ();
         tap.expect_eq (x, util::point4f {0,0,0,1}, "look_at eye translation with target");
     }
@@ -64,7 +67,7 @@ test_mq_axis (util::TAP::logger &tap)
     };
 
     for (auto t: TESTS) {
-        auto m = util::matrix4f::rotation (1, t.euler);
+        auto m = util::rotation<float> (1, t.euler);
         auto q = util::quaternionf::angle_axis (1, t.euler);
 
         auto diff = sum (abs (m - q.as_matrix ()));
@@ -78,25 +81,27 @@ void
 test_mq_euler (util::TAP::logger &tap)
 {
     static const struct {
-        util::vector3f euler;
+        float x, y, z;
         const char *msg;
     } TESTS[] = {
-        { { 0, 0, 0 }, "zeroes" },
-        { { 1, 0, 0 }, "x-axis" },
-        { { 0, 1, 0 }, "y-axis" },
-        { { 0, 0, 1 }, "z-axis" },
-        { { 1, 1, 1 }, "ones"   },
-        { { 9, 9, 9 }, "nines"  }
+        { 0, 0, 0, "zeroes" },
+        { 1, 0, 0, "x-axis" },
+        { 0, 1, 0, "y-axis" },
+        { 0, 0, 1, "z-axis" },
+        { 1, 1, 1, "ones"   },
+        { 9, 9, 9, "nines"  }
     };
 
     for (auto t: TESTS) {
-        auto m = util::matrix4f::rotation (t.euler[0], { 1, 0, 0 }) *
-                 util::matrix4f::rotation (t.euler[1], { 0, 1, 0 }) *
-                 util::matrix4f::rotation (t.euler[2], { 0, 0, 1 });
+        const auto mx = util::rotation<float> (t.x, {1,0,0});
+        const auto my = util::rotation<float> (t.y, {0,1,0});
+        const auto mz = util::rotation<float> (t.z, {0,0,1});
+        const auto  m = mx * my * mz;
+
         auto q = (
-            util::quaternionf::angle_axis (t.euler[0], { 1, 0, 0 }) *
-            util::quaternionf::angle_axis (t.euler[1], { 0, 1, 0 }) *
-            util::quaternionf::angle_axis (t.euler[2], { 0, 0, 1 })
+            util::quaternionf::angle_axis (t.x, { 1, 0, 0 }) *
+            util::quaternionf::angle_axis (t.y, { 0, 1, 0 }) *
+            util::quaternionf::angle_axis (t.z, { 0, 0, 1 })
         ).as_matrix ();
 
         auto diff = util::sum (abs (m - q));

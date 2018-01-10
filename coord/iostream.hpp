@@ -17,6 +17,7 @@
 #ifndef CRUFT_UTIL_IOSTREAM
 #define CRUFT_UTIL_IOSTREAM
 
+#include "./traits.hpp"
 #include "../iterator.hpp"
 
 #include <cstddef>
@@ -25,17 +26,16 @@
 
 namespace util {
     template <
-        template <std::size_t,typename> class K,
-        std::size_t S,
-        typename T
+        typename K,
+        typename = std::enable_if_t<is_coord_v<K>,void>
     >
     std::ostream&
-    operator<< (std::ostream &os, const K<S,T> &k)
+    operator<< (std::ostream &os, const K &k)
     {
         os << "[";
         std::transform (std::cbegin (k),
                         std::cend   (k),
-                        infix_iterator<T> (os, ", "),
+                        infix_iterator<typename K::value_type> (os, ", "),
                         [] (auto i) { return +i; });
         os << "]";
 

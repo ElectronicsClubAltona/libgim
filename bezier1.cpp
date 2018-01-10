@@ -14,7 +14,7 @@
  * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./bezier.hpp"
+#include "bezier.hpp"
 
 #include <array>
 #include <iostream>

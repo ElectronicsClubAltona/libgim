@@ -86,7 +86,7 @@ main (void)
             const auto &r = ROTATIONS[i];
 
             auto q = quaternionf::angle_axis  (r.mag, r.axis).as_matrix ();
-            auto m = util::matrix4f::rotation (r.mag, r.axis);
+            auto m = util::rotation<float> (r.mag, r.axis);
             auto diff = util::abs (q - m);
 
             tap.expect_lt (util::sum (diff), 1e-6f, "single basis rotation %zu", i);
@@ -97,7 +97,7 @@ main (void)
 
         for (auto r: ROTATIONS) {
             q = q.angle_axis (r.mag, r.axis) * q;
-            m = m.rotation (r.mag, r.axis) * m;
+            m = util::rotation<float> (r.mag, r.axis) * m;
         }
 
         auto diff = util::abs (q.as_matrix () - m);

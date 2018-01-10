@@ -15,9 +15,9 @@
  */
 
 
-#include "./aabb.hpp"
+#include "aabb.hpp"
 
-#include "./iostream.hpp"
+#include "iostream.hpp"
 #include "../coord/iostream.hpp"
 #include "../debug.hpp"
 
@@ -58,52 +58,6 @@ util::point<S,T>
 aabb<S,T>::closest (const point<S,T> q) const
 {
     return limit (q, p0, p1);
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t S, typename T>
-aabb<S,T>
-aabb<S,T>::expand (const vector<S,T> mag) const noexcept
-{
-    CHECK (all (mag >= T{0}));
-
-    return { p0 - mag, p1 + mag };
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-aabb<S,T>
-aabb<S,T>::expand (const T mag) const noexcept
-{
-    CHECK_GE (mag, T{0});
-
-    return { p0 - mag, p1 + mag };
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-aabb<S,T>
-aabb<S,T>::contract (const util::vector<S,T> mag) const noexcept
-{
-    CHECK (all (mag >= T{0}));
-    CHECK (all (2 * mag <= p1 - p0));
-
-    return { p0 + mag, p1 - mag };
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t S, typename T>
-aabb<S,T>
-aabb<S,T>::contract (const T mag) const noexcept
-{
-    CHECK_GE (mag, T{0});
-    CHECK (all (2 * mag <=  p1 - p0));
-
-    return { p0 + mag, p1 - mag };
 }
 
 

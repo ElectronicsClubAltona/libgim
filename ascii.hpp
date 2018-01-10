@@ -17,7 +17,7 @@
 #ifndef __CRUFT_UTIL_ASCII_HPP
 #define __CRUFT_UTIL_ASCII_HPP
 
-#include "./annotation.hpp"
+#include "annotation.hpp"
 
 #include <cstdint>
 #include <stdexcept>
@@ -77,7 +77,7 @@ namespace util::ascii {
 
     //-------------------------------------------------------------------------
     constexpr inline
-    unsigned
+    uint8_t
     from_hex (char c)
     {
         return c >= '0' && c <= '9' ? (c - '0'     ) :

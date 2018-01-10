@@ -14,11 +14,12 @@
  * Copyright 2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./backtrace.hpp"
+#include "backtrace.hpp"
 
-#include "./debug.hpp"
-#include "./except.hpp"
-#include "./types.hpp"
+#include "debug.hpp"
+#include "except.hpp"
+#include "types.hpp"
+#include "win32/error.hpp"
 
 #include <windows.h>
 #include <dbghelp.h>
@@ -66,7 +67,7 @@ backtrace::backtrace ()
                           SymGetModuleBase64,
                           nullptr))
         {
-            util::win32_error::throw_code ();
+            util::win32::error::throw_code ();
         }
 
         // we've read the bottom of the stack

@@ -27,7 +27,8 @@ using util::matrix;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//template <size_t S, typename T>
+//-----------------------------------------------------------------------------
+//template <std::size_t S, typename T>
 //matrix<S,T>&
 //matrix<S,T>::invert_affine (void)
 //{
@@ -76,7 +77,7 @@ using util::matrix;
 
 
 //-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <std::size_t Rows, std::size_t Cols, typename T>
 T
 util::matrix<Rows,Cols,T>::determinant (void) const
 {
@@ -85,7 +86,7 @@ util::matrix<Rows,Cols,T>::determinant (void) const
 
 
 //-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <std::size_t Rows, std::size_t Cols, typename T>
 util::matrix<Rows,Cols,T>
 util::matrix<Rows,Cols,T>::inverse (void) const
 {
@@ -94,14 +95,14 @@ util::matrix<Rows,Cols,T>::inverse (void) const
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t Rows, size_t Cols, typename T>
+template <std::size_t Rows, std::size_t Cols, typename T>
 matrix<Cols,Rows,T>
 util::transposed (const matrix<Rows,Cols,T> &m)
 {
     util::matrix<Cols,Rows,T> res;
 
-    for (size_t y = 0; y < Rows; ++y)
-        for (size_t x = 0; x < Cols; ++x)
+    for (std::size_t y = 0; y < Rows; ++y)
+        for (std::size_t x = 0; x < Cols; ++x)
             res[y][x] = m[x][y];
 
     return res;
@@ -114,42 +115,14 @@ template util::matrix4f util::transposed (const matrix4f&);
 
 
 ///////////////////////////////////////////////////////////////////////////////
-template <size_t Rows, size_t Cols, typename T>
-util::vector<Rows,T>
-matrix<Rows,Cols,T>::operator* (const vector<Rows,T> &rhs) const
-{
-    vector<Rows,T> out;
-
-    for (size_t i = 0; i < Rows; ++i)
-        out[i] = dot (rhs, values[i]);
-
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
-util::point<Rows,T>
-matrix<Rows,Cols,T>::operator* (const point<Rows,T> &rhs) const
-{
-    point<Rows,T> out;
-
-    for (size_t i = 0; i < Rows; ++i)
-        out[i] = dot (rhs, values[i]);
-
-    return out;
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <std::size_t Rows, std::size_t Cols, typename T>
 bool
 matrix<Rows,Cols,T>::is_affine (void) const
 {
     if (Rows != Cols)
         return false;
 
-    for (size_t i = 0; i < Rows - 1; ++i)
+    for (std::size_t i = 0; i < Rows - 1; ++i)
         if (!exactly_zero (values[Rows-1][i]))
             return false;
 
@@ -158,11 +131,11 @@ matrix<Rows,Cols,T>::is_affine (void) const
 
 
 //-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <typename T>
 util::matrix4<T>
-matrix<Rows,Cols,T>::ortho (T left,   T right,
-                            T bottom, T top,
-                            T near,   T far)
+util::ortho (T left,   T right,
+             T bottom, T top,
+             T near,   T far)
 {
     CHECK_GT (far, near);
 
@@ -174,29 +147,31 @@ matrix<Rows,Cols,T>::ortho (T left,   T right,
     T tb = 2 / (top - bottom);
     T fn = 2 / (far - near);
 
-    return { {
+    return {{
         { rl,  0,  0, tx },
         {  0, tb,  0, ty },
         {  0,  0, fn, tz },
         {  0,  0,  0,  1 },
-    } };
+    }};
 }
 
 
 //-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <typename T>
 util::matrix4<T>
-matrix<Rows, Cols,T>::ortho2D (T left  , T right,
-                               T bottom, T top)
+util::ortho2D (T left, T right,
+               T bottom, T top)
 {
-    return ortho (left, right, bottom, top, -1, 1);
+    return ortho (left, right, bottom, top, T{-1}, T{1});
 }
+
+template util::matrix4f util::ortho2D (float, float, float, float);
 
 
 //-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <typename T>
 util::matrix4<T>
-matrix<Rows,Cols,T>::perspective (T fov, T aspect, range<T> Z)
+util::perspective (T fov, T aspect, range<T> Z)
 {
     CHECK_GE (Z.lo, 0);
     CHECK_GE (Z.hi, 0);
@@ -216,6 +191,8 @@ matrix<Rows,Cols,T>::perspective (T fov, T aspect, range<T> Z)
     } };
 }
 
+template util::matrix4f util::perspective<float> (float, float, range<float>);
+
 
 //-----------------------------------------------------------------------------
 // Emulates gluLookAt
@@ -225,11 +202,11 @@ matrix<Rows,Cols,T>::perspective (T fov, T aspect, range<T> Z)
 // Implemented for right handed world coordinates.
 //
 // Assumes 'up' is normalised.
-template <size_t Rows, size_t Cols, typename T>
+template <typename T>
 util::matrix4<T>
-matrix<Rows,Cols,T>::look_at (const util::point<3,T> eye,
-                              const util::point<3,T> centre,
-                              const util::vector<3,T> up)
+util::look_at (const util::point<3,T> eye,
+               const util::point<3,T> centre,
+               const util::vector<3,T> up)
 {
     CHECK (is_normalised (up));
 
@@ -244,23 +221,16 @@ matrix<Rows,Cols,T>::look_at (const util::point<3,T> eye,
         {   0,   0,   0, 1 },
     }};
 
-    return rot * util::matrix4<T>::translation (0-eye);
+    return rot * util::translation<T> (0-eye);
 }
+
+template util::matrix4f util::look_at (util::point3f, util::point3f, util::vector3f);
 
 
 //-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <typename T>
 util::matrix4<T>
-matrix<Rows,Cols,T>::translation (util::vector<2,T> v)
-{
-    return translation ({v.x, v.y, 0});
-}
-
-
-//-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
-util::matrix4<T>
-matrix<Rows,Cols,T>::translation (util::vector<3,T> v)
+util::translation (util::vector<3,T> v)
 {
     return { {
         { 1.f, 0.f, 0.f, v.x },
@@ -271,18 +241,24 @@ matrix<Rows,Cols,T>::translation (util::vector<3,T> v)
 }
 
 
+template util::matrix4f util::translation (util::vector3f);
+
+
 //-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <typename T>
 util::matrix4<T>
-matrix<Rows,Cols,T>::scale (T mag)
+util::scale (T mag)
 {
     return scale (vector<3,T> (mag));
 }
 
+template util::matrix4f util::scale(float);
+
+
 //-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <typename T>
 util::matrix4<T>
-matrix<Rows,Cols,T>::scale (util::vector<3,T> v)
+util::scale (util::vector<3,T> v)
 {
     return { {
         { v.x, 0.f, 0.f, 0.f },
@@ -292,11 +268,13 @@ matrix<Rows,Cols,T>::scale (util::vector<3,T> v)
     } };
 }
 
+template util::matrix4f util::scale(util::vector3f);
+
 
 //-----------------------------------------------------------------------------
-template <size_t Rows, size_t Cols, typename T>
+template <typename T>
 util::matrix4<T>
-matrix<Rows,Cols,T>::rotation (T angle, util::vector<3,T> about)
+util::rotation (T angle, util::vector<3,T> about)
 {
     CHECK (is_normalised (about));
 
@@ -329,6 +307,7 @@ matrix<Rows,Cols,T>::rotation (T angle, util::vector<3,T> about)
     } };
 }
 
+template util::matrix4f util::rotation (float, util::vector3f);
 
 //-----------------------------------------------------------------------------
 template struct util::matrix<2,2,float>;
@@ -345,7 +324,7 @@ template struct util::matrix<4,4,double>;
 // Uses the algorithm from:
 //    "Extracting Euler Angles from a Rotation Matrix" by
 //    Mike Day, Insomniac Games.
-template <size_t Rows, size_t Cols, typename T>
+template <std::size_t Rows, std::size_t Cols, typename T>
 util::vector<3,T>
 util::to_euler (const matrix<Rows,Cols,T> &m)
 {
@@ -372,24 +351,3 @@ util::to_euler (const matrix<Rows,Cols,T> &m)
 template util::vector<3,float> util::to_euler (const matrix<3,3,float>&);
 template util::vector<3,float> util::to_euler (const matrix<4,4,float>&);
 
-
-///////////////////////////////////////////////////////////////////////////////
-template <size_t Rows, size_t Cols, typename T>
-std::ostream&
-util::operator<< (std::ostream &os, const matrix<Rows,Cols,T> &m)
-{
-    os << "{ ";
-
-    for (size_t i = 0; i < Rows; ++i) {
-        os << "{ ";
-        std::copy_n (m[i], Cols, util::infix_iterator<float> (os, ", "));
-        os << ((i == Rows - 1) ? " }" : " }, ");
-    }
-
-    return os << " }";
-}
-
-
-//-----------------------------------------------------------------------------
-template std::ostream& util::operator<< (std::ostream&, const matrix<4,4,float>&);
-template std::ostream& util::operator<< (std::ostream&, const matrix<4,4,double>&);

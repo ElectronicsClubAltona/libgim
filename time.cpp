@@ -14,9 +14,9 @@
  * Copyright 2010-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./time.hpp"
+#include "time.hpp"
 
-#include "./log.hpp"
+#include "log.hpp"
 
 #include <chrono>
 

@@ -14,7 +14,7 @@
  * Copyright 2015-2016 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./stack.hpp"
+#include "stack.hpp"
 
 #include "../../debug.hpp"
 #include "../../pointer.hpp"

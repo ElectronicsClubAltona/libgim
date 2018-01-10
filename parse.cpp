@@ -14,7 +14,9 @@
  * Copyright 2017 Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./parse.hpp"
+#include "parse.hpp"
+
+#include "cast.hpp"
 
 #include <cstdlib>
 #include <stdexcept>
@@ -69,9 +71,9 @@ c_fparse (const char *first, const char *last)
 #define C_PARSE(T, KLASS) \
 template <> \
 T \
-util::parse<T> (const char *first, const char *last) \
+util::parse<T> (util::view<const char *> str) \
 { \
-    return c_ ## KLASS ## parse<T> (first, last); \
+    return c_ ## KLASS ## parse<T> (std::cbegin (str), std::cend (str)); \
 }
 
 
@@ -84,3 +86,12 @@ C_PARSE(unsigned long long, i)
 C_PARSE(float, f)
 C_PARSE(double, f)
 C_PARSE(long double, f)
+
+
+template <>
+int
+util::parse<int> (util::view<const char*> str)
+{
+    auto intermediate = util::parse<long> (str);
+    return trunc_cast<int> (intermediate);
+}

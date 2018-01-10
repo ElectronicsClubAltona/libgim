@@ -29,9 +29,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 namespace util {
     template <size_t S, typename T>
-    struct vector : public coord::base<S,T,vector,coord::xyzw,coord::stpq>
+    struct vector : public coord::base<S,T,vector<S,T>>
     {
-        using coord::base<S,T,util::vector,coord::xyzw,coord::stpq>::base;
+        using coord::base<S,T,vector<S,T>>::base;
 
         // representations
         template <size_t D> vector<D,T> homog (void) const;
@@ -92,6 +92,7 @@ namespace util {
     const json::tree::node&
     operator>> (const json::tree::node&, vector<S,T>&);
 
+    template <typename T> using vector1 = vector<1,T>;
     template <typename T> using vector2 = vector<2,T>;
     template <typename T> using vector3 = vector<3,T>;
     template <typename T> using vector4 = vector<4,T>;
@@ -109,6 +110,7 @@ namespace util {
     using vector3i = vector3<int>;
     using vector4i = vector4<int>;
 
+    using vector1f = vector1<float>;
     using vector2f = vector2<float>;
     using vector3f = vector3<float>;
     using vector4f = vector4<float>;

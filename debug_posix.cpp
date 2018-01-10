@@ -15,16 +15,16 @@
  *      2011-2016, Danny Robson <danny@nerdcruft.net>
  */
 
-#include "./debug.hpp"
+#include "debug.hpp"
 
-#include "./log.hpp"
+#include "log.hpp"
+#include "platform.hpp"
 
 #include <unistd.h>
 #include <sys/ptrace.h>
 #include <sys/wait.h>
 #include <signal.h>
 
-#include "./platform.hpp"
 
 #if defined(PLATFORM_FREEBSD)
 #define PTRACE_ATTACH PT_ATTACH
