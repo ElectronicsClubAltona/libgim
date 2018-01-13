@@ -22,8 +22,6 @@
 #include "io.hpp"
 #include "stream.hpp"
 
-#include "hash/simple.hpp"
-
 #include "hash/adler.hpp"
 #include "hash/bsdsum.cpp"
 #include "hash/crc.hpp"
@@ -74,34 +72,30 @@ print_digest (std::ostream &os, std::array<uint8_t,S> digest)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-static
-void
-compute (const std::string &name,
-         const unsigned char *restrict first,
-         const unsigned char *restrict last)
+static void
+compute (const std::string &name, const util::view<const uint8_t*> data)
 {
-    #define stream(TYPE, ...) do {                                  \
-        if (name != #TYPE)                                          \
-            break;                                                  \
-                                                                    \
-        auto sum = util::hash::simple<util::hash::TYPE> (           \
-            first, last, ##__VA_ARGS__                              \
-        );                                                          \
-                                                                    \
-        print_digest (std::cout, sum) << '\n';                      \
-        return;                                                     \
+    #define stream(TYPE, ...) do {                          \
+        if (name != #TYPE)                                  \
+            break;                                          \
+                                                            \
+        print_digest (                                      \
+            std::cout,                                      \
+            util::hash::TYPE{} (data)                       \
+        ) << '\n';                                          \
+        return;                                             \
     } while (0);
 
         stream (adler32);
-        stream (bsdsum);
-        stream (crc32);
+        //stream (bsdsum);
+        //stream (crc32);
 
-        stream (MD2);
-        stream (MD4);
-        stream (MD5);
-        stream (RIPEMD);
-        stream (SHA1);
-        stream (SHA256);
+        //stream (MD2);
+        //stream (MD4);
+        //stream (MD5);
+        //stream (RIPEMD);
+        //stream (SHA1);
+        //stream (SHA256);
 
     #undef stream
 }
@@ -140,8 +134,8 @@ main (int argc, char **argv)
     }
 
     if (strcmp (argv[ARG_INPUT], "-")) {
-        util::mapped_file src (argv[ARG_INPUT]);
-        compute (argv[ARG_HASH], src.cbegin (), src.cend ());
+        const util::mapped_file src (argv[ARG_INPUT]);
+        compute (argv[ARG_HASH], util::view{src});
 
         return EXIT_SUCCESS;
     } else {

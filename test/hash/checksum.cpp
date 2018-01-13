@@ -1,7 +1,6 @@
 
 #include "hash/adler.hpp"
 #include "hash/bsdsum.hpp"
-#include "hash/simple.hpp"
 
 #include "types.hpp"
 #include "tap.hpp"
@@ -35,19 +34,19 @@ int
 main (int, char**) {
     util::TAP::logger tap;
 
+    util::hash::adler32 a;
+    util::hash::bsdsum b;
+
     for (const auto &t: TESTS) {
         tap.expect_eq (
             t.adler,
-            util::hash::simple<util::hash::adler32> (
-                (const void*)t.data,
-                (const void*)(t.data + strlen (t.data))
-            ),
+            a (util::view {t.data}.template cast<const uint8_t> ()),
             "adler checksum: %s", t.msg
         );
 
         tap.expect_eq (
             t.bsd,
-            util::hash::simple<util::hash::bsdsum> (t.data, t.data + strlen (t.data)),
+            b (util::view {t.data}.template cast<const uint8_t> ()),
             "bsdsum checksum: %s", t.msg);
     }
 

@@ -45,6 +45,23 @@ namespace util {
             m_end   (last)
         { ; }
 
+        template <
+            typename ContainerT,
+            typename = std::enable_if_t<is_container_v<std::decay_t<ContainerT>>,void>
+        >
+        view (ContainerT &rhs):
+            view (rhs.begin (), rhs.end ())
+        { ; }
+
+
+        template <
+            typename ContainerT,
+            typename = std::enable_if_t<is_container_v<std::decay_t<ContainerT>>,void>
+        >
+        view (const ContainerT &rhs):
+            view (rhs.begin (), rhs.end ())
+        { ; }
+
 
         //---------------------------------------------------------------------
         // cosntruction from pointer/size represenations for ease of use with
@@ -180,6 +197,20 @@ namespace util {
 
 
         //---------------------------------------------------------------------
+        template <typename ValueT, std::size_t N>
+        view (std::array<ValueT,N> &rhs):
+            view (std::data (rhs), std::data (rhs) + std::size (rhs))
+        { ; }
+
+
+        //---------------------------------------------------------------------
+        template <typename ValueT, std::size_t N>
+        view (const std::array<ValueT,N> &rhs):
+            view (std::data (rhs), std::data (rhs) + std::size (rhs))
+        { ; }
+
+
+        //---------------------------------------------------------------------
         view&
         operator= (const view &rhs) noexcept
         {
@@ -253,11 +284,44 @@ namespace util {
 
 
         //---------------------------------------------------------------------
-        util::view<BeginT,EndT>
-        operator- (util::view<BeginT,BeginT> prefix) const
+        constexpr std::tuple<
+            util::view<BeginT,BeginT>,
+            util::view<BeginT,EndT>
+        >
+        split (BeginT pos)
         {
-            assert (prefix.begin () == begin ());
-            return { prefix.end (), end () };
+            return {
+                { m_begin, pos },
+                { pos, m_end }
+            };
+        }
+
+
+        //---------------------------------------------------------------------
+        constexpr auto
+        split (int pos)
+        {
+            auto last = m_begin;
+            std::advance (last, pos);
+            return split (last);
+        }
+
+
+        //---------------------------------------------------------------------
+        constexpr auto
+        consume (int count)
+        {
+            auto [a,b] = split (count);
+            return b;
+        }
+
+
+        //---------------------------------------------------------------------
+        constexpr util::view<BeginT,EndT>
+        consume (util::view<BeginT,BeginT> val)
+        {
+            assert (val.begin () == begin ());
+            return { val.end (), end () };
         }
 
 
@@ -321,7 +385,7 @@ namespace util {
 
 
     //-------------------------------------------------------------------------
-    view (const char*) -> view<const char*>;
+    view (const char*) -> view<const char*, const char*>;
 
     view (char*) -> view<char*>;
 
@@ -350,6 +414,20 @@ namespace util {
 
     template <typename ValueT, typename AllocatorT>
     view (const std::vector<ValueT,AllocatorT>&) -> view<typename AllocatorT::const_pointer>;
+
+    template <typename ValueT, std::size_t N>
+    view (std::array<ValueT,N>) -> view<ValueT*>;
+
+    template <typename ContainerT>
+    view (ContainerT&) -> view<
+        typename ContainerT::iterator
+    >;
+
+    template <typename ContainerT>
+    view (const ContainerT&) -> view<
+        typename ContainerT::const_iterator
+    >;
+
 
 
     ///////////////////////////////////////////////////////////////////////////

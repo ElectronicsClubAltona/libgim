@@ -9,6 +9,7 @@ static const struct {
     const char *input;
     util::hash::SHA256::digest_t output;
 } TESTS[] = {
+
     {
         "empty",
         "",
@@ -52,10 +53,7 @@ main (int, char **) {
 
     for (const auto &i: TESTS) {
         util::hash::SHA256 obj;
-        obj.update (reinterpret_cast<const uint8_t*> (i.input), strlen (i.input));
-        obj.finish ();
-
-        tap.expect_eq (obj.digest (), i.output, "%s", i.msg);
+        tap.expect_eq (obj (util::view{i.input}.cast<const uint8_t> ()), i.output, "%s", i.msg);
     }
 
     return tap.status ();

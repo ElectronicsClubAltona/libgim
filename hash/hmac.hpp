@@ -14,33 +14,75 @@
  * Copyright 2015 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_HASH_HMAC_HPP
-#define __UTIL_HASH_HMAC_HPP
+#ifndef CRUFT_UTIL_HASH_HMAC_HPP
+#define CRUFT_UTIL_HASH_HMAC_HPP
 
-#include <array>
-#include <cstdint>
-#include <cstdlib>
+#include "../debug.hpp"
+#include "../view.hpp"
+
+#include <algorithm>
+#include <utility>
+
 
 namespace util::hash {
-    template <class T>
+    template <class HashT>
     /// RFC 2104 key-hashing for message authentication
     class HMAC {
     public:
-        using digest_t = typename T::digest_t;
+        using digest_t = typename HashT::digest_t;
 
-        HMAC (const uint8_t *key, size_t);
 
-        void update (const void *restrict, size_t);
-        void finish (void);
-        void reset (void);
+        //---------------------------------------------------------------------
+        HMAC (util::view<const std::uint8_t*> key)
+        {
+            CHECK (!key.empty ());
 
-        digest_t digest (void);
+            static_assert (sizeof (m_ikey) == sizeof (m_okey), "key padding must match");
+
+            // If the key is larger than the blocklength, use the hash of the key
+            if (key.size () > HashT::BLOCK_SIZE) {
+                auto d = HashT{} (key);
+                auto tail = std::copy (d.begin (), d.end (), m_ikey.begin ());
+                std::fill (tail, std::end (m_ikey), 0);
+                // Use the key directly
+            } else {
+                auto tail = std::copy (key.begin (), key.end (), m_ikey.begin ());
+                std::fill (tail, m_ikey.end (), 0);
+            }
+
+            // copy and xor the key data to the okey
+            std::transform (
+                std::begin (m_ikey),
+                std::end   (m_ikey),
+                std::begin (m_okey),
+                [] (auto v) { return v ^ OFILL; });
+
+            // just xor the ikey in place
+            std::transform (
+                m_ikey.begin (),
+                m_ikey.end (),
+                m_ikey.begin (),
+                [] (auto v) { return v ^ IFILL; });
+        }
+
+
+        //---------------------------------------------------------------------
+        template <typename ...DataT>
+        digest_t
+        operator() (DataT&&...data) const noexcept
+        {
+            HashT h;
+            return h (m_okey, h (m_ikey, std::forward<DataT> (data)...));
+        };
+
 
     private:
-        std::array<uint8_t,T::BLOCK_SIZE> m_ikey;
-        std::array<uint8_t,T::BLOCK_SIZE> m_okey;
+        //---------------------------------------------------------------------
+        static constexpr uint8_t IFILL = 0x36;
+        static constexpr uint8_t OFILL = 0x5C;
 
-        T m_hash;
+        std::array<uint8_t,HashT::BLOCK_SIZE> m_ikey;
+        std::array<uint8_t,HashT::BLOCK_SIZE> m_okey;
     };
 }
 

@@ -11,67 +11,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2010 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2010-2018 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "bsdsum.hpp"
 
-#include "../debug.hpp"
+#include "../bitwise.hpp"
 
 using util::hash::bsdsum;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-bsdsum::bsdsum ()
-{
-    reset ();
-}
-
-
-//-----------------------------------------------------------------------------
-void
-bsdsum::reset (void)
-{
-    m_accum = 0;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-bsdsum::update (const void *restrict data, size_t size) noexcept
-{
-    auto first = static_cast<const uint8_t *restrict> (data);
-
-    update (first, first + size);
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-bsdsum::update (const uint8_t *const restrict first,
-                const uint8_t *const restrict last) noexcept
-{
-    CHECK (first);
-    CHECK (last);
-    CHECK_LE (first, last);
-
-    for (auto cursor = first; cursor != last; ++cursor) {
-        m_accum  = (m_accum >> 1u) | ((m_accum & 0x01u) << 15u);
-        m_accum += *cursor;
-    }
-}
-
-
-//-----------------------------------------------------------------------------
-void
-bsdsum::finish (void)
-{ ; }
-
-
-
-//-----------------------------------------------------------------------------
 typename bsdsum::digest_t
-bsdsum::digest (void) const
+bsdsum::operator() (util::view<const uint8_t*> data) const noexcept
 {
-    return m_accum;
+    digest_t accum = 0;
+
+    for (const auto i: data)
+        accum = util::rotater (accum, 1) + i;
+
+    return accum;
 }

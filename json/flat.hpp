@@ -52,7 +52,8 @@ namespace json::flat {
     };
 
     template <typename T>
-    std::vector<item<T>> parse (util::view<T> data);
+    std::vector<item<T>>
+    parse (util::view<T> data);
 
     std::ostream& operator<< (std::ostream&, type);
 }

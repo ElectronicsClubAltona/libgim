@@ -46,7 +46,7 @@ namespace json::tree {
     /// Parse an encoded form of JSON into a tree structure
     template <typename T>
     std::unique_ptr<node>
-    parse (util::view<T> data);
+    parse (const util::view<T> &data);
 
     std::unique_ptr<node>
     parse (const std::experimental::filesystem::path &);

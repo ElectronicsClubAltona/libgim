@@ -17,13 +17,38 @@
 #ifndef __UTIL_HASH_MURMUR_MURMUR1_HPP
 #define __UTIL_HASH_MURMUR_MURMUR1_HPP
 
+#include "../../view.hpp"
+
 #include <cstdint>
 #include <cstddef>
 
 // Austin Appleby's MumurHash1
-namespace util::hash::murmur1 {
-    uint32_t mix (uint32_t, uint32_t);
-    uint32_t hash_32 (const void *restrict data, size_t len, uint32_t seed);
+namespace util::hash {
+    class murmur1 {
+    public:
+        using digest_t = uint32_t;
+        using seed_t = uint32_t;
+
+        murmur1 (seed_t _seed):
+            m_seed (_seed)
+        { ; }
+
+        static constexpr uint32_t mix (uint32_t h, uint32_t k)
+        {
+            constexpr uint32_t m = 0xc6a4a793;
+
+            h += k;
+            h *= m;
+            h ^= h >> 16;
+
+            return h;
+        }
+
+        digest_t operator() (util::view<const uint8_t*> data) const noexcept;
+
+    private:
+        seed_t m_seed;
+    };
 }
 
 #endif

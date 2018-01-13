@@ -27,14 +27,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 using util::hash::MD2;
 
-using std::array;
-using std::begin;
-using std::end;
-using std::fill;
-
 
 ///////////////////////////////////////////////////////////////////////////////
-static array<uint8_t,256> S = { {
+static constexpr std::array<uint8_t,256> S = { {
      41,  46,  67, 201, 162, 216, 124,   1,  61,  54,  84, 161, 236, 240,   6,  19,
      98, 167,   5, 243, 192, 199, 115, 140, 152, 147,  43, 217, 188,  76, 130, 202,
      30, 155,  87,  60, 253, 212, 224,  22, 103,  66, 111,  24, 138,  23, 229,  18,
@@ -54,88 +49,16 @@ static array<uint8_t,256> S = { {
 } };
 
 
-///////////////////////////////////////////////////////////////////////////////
-MD2::MD2 ()
-{
-    reset ();
-}
-
-
-//-----------------------------------------------------------------------------
-void
-MD2::reset (void)
-{
-    m_total = 0;
-    fill (begin (C), end (C), 0);
-    fill (begin (X), end (X), 0);
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-MD2::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
-{
-    CHECK_LE (first, last);
-
-    update (first, last - first);
-}
-
-
 //-----------------------------------------------------------------------------
 static const size_t M_OFFSET = 16;
 static const size_t M_LENGTH = 16;
 
 
-//-----------------------------------------------------------------------------
-void
-MD2::update (const void *restrict _data, size_t size) noexcept
-{
-    auto data = static_cast<const uint8_t *restrict> (_data);
-
-    uint8_t *M = X + M_OFFSET;
-    size_t offset = m_total % M_LENGTH;
-    size_t remain = M_LENGTH - offset;
-
-    if (size > remain) {
-        memcpy (M + offset, data, remain);
-        transform ();
-
-        m_total += remain;
-        size    -= remain;
-        data    += remain;
-
-        while (size >= M_LENGTH) {
-            memcpy (M, data, M_LENGTH);
-            transform ();
-
-            m_total += M_LENGTH;
-            size    -= M_LENGTH;
-            data    += M_LENGTH;
-        }
-
-        offset = 0;
-    }
-
-    memcpy (M + offset, data, size);
-    m_total += size;
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////
-MD2::digest_t
-MD2::digest (void) const
+static void
+transform (std::array<uint8_t,16> &C, std::array<uint8_t,48> &X) noexcept
 {
-    digest_t d;
-    memcpy (d.data (), X, sizeof (d));
-    return d;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-MD2::transform (void)
-{
-    uint8_t *M = X + M_OFFSET;
+    util::view M { X.data () + M_OFFSET, M_LENGTH };
 
     // Update the checksum.
     // XXX: I can't see why we need the xor-assign from the spec, but it's the
@@ -145,16 +68,15 @@ MD2::transform (void)
     for (size_t i = 0; i < std::size (C); ++i)
         L = C[i] ^= S[M[i] ^ L];
 
-    uint8_t t = 0;
 
     // Setup the blocks
     for (size_t i = 0; i < 16; ++i)
-       X[32 + i] = X[16 + i] ^ X[i];
+        X[32 + i] = X[16 + i] ^ X[i];
 
     // Perform the processing rounds
-    for (size_t i = 0; i < 18; ++i) {
+    for (size_t i = 0, t = 0; i < 18; ++i) {
         for (size_t j = 0; j < 48; ++j)
-            t = X[j] = X[j] ^ S[t];
+            t = X[j] ^= S[t];
 
         t = (t + i) % 256;
     }
@@ -162,21 +84,40 @@ MD2::transform (void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void
-MD2::finish (void)
+MD2::digest_t
+MD2::operator() (const util::view<const uint8_t*> data) const noexcept
 {
-    uint8_t *M = X + M_OFFSET;
+    // zero initialise the state vectors, and create a simple window `M' into
+    // the middle of the `X' state vector.
+    std::array<uint8_t,16> C {};
+    std::array<uint8_t,48> X {};
+    const util::view M { std::begin (X) + M_OFFSET, M_LENGTH };
 
-    // Append the padding bytes
-    size_t offset = m_total % M_LENGTH;
-    size_t remain = M_LENGTH - offset;
+    // process each complete block by copying to the window `M' and
+    // transforming X and C.
+    //
+    // leave the remainder of the data in `M' for subsequent padding.
+    auto remain = data;
+    while (remain.size () >= M_LENGTH) {
+        std::copy_n (std::begin (remain), M_LENGTH, std::begin (M));
+        transform (C, X);
 
-    for (size_t i = 0; i < remain; ++i)
-        M[offset + i] = remain;
-    transform ();
+        remain = { remain.begin () + M_LENGTH, remain.end () };
+    };
 
-    // Append the checksum
-    memcpy (M, C, sizeof (C));
-    transform ();
+    // Copying the remaining data then append the padding bytes. Padding
+    // _must_ be performed even if we have an evenly divisible input buffer.
+    auto tail = std::copy (remain.begin (), remain.end (), std::begin (M));
+    auto unused = std::distance (tail, std::end (M));
+    std::fill (tail, std::end (M), unused);
+    transform (C, X);
+
+    // Append the checksum and transform once more.
+    std::copy (std::begin (C), std::end (C), std::begin (M));
+    transform (C, X);
+
+    // The final digest is the first `n' bytes of the state vector.
+    digest_t d;
+    std::copy_n (std::begin (X), d.size (), std::begin (d));
+    return d;
 }
-

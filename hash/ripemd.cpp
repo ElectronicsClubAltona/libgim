@@ -12,7 +12,7 @@
  * limitations under the License.
  *
  * Copyright:
- *      2014, Danny Robson <danny@nerdcruft.net>
+ *      2014-2018, Danny Robson <danny@nerdcruft.net>
  */
 
 #include "ripemd.hpp"
@@ -23,70 +23,6 @@
 #include <cstring>
 
 using util::hash::RIPEMD;
-
-
-///////////////////////////////////////////////////////////////////////////////
-RIPEMD::RIPEMD()
-{
-    reset ();
-}
-
-
-//-----------------------------------------------------------------------------
-void
-RIPEMD::reset (void)
-{
-    m_state[0] = 0x67452301u;
-    m_state[1] = 0xEFCDAB89u;
-    m_state[2] = 0x98BADCFEu;
-    m_state[3] = 0x10325476u;
-    m_state[4] = 0xC3D2E1F0u;
-
-    m_length = 0;
-
-    m_buffer.size = 0;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-RIPEMD::update (
-    const uint8_t *restrict first,
-    const uint8_t *restrict last) noexcept
-{
-    CHECK_LE (first, last);
-
-    update (first, last - first);
-}
-
-
-//-----------------------------------------------------------------------------
-void
-RIPEMD::update (const void *restrict _data, size_t len) noexcept
-{
-    CHECK (_data);
-
-    auto data = static_cast<const uint8_t *restrict> (_data);
-
-    size_t cursor = 0;
-
-    while (cursor < len) {
-        size_t width = sizeof (m_buffer.d08) - m_buffer.size;
-        size_t chunk = min (width, len - cursor);
-
-        memcpy (m_buffer.d08 + m_buffer.size, data + cursor, chunk);
-        m_length      += chunk;
-        m_buffer.size += chunk;
-
-        if (m_buffer.size == sizeof (m_buffer.d08))
-            transform ();
-
-        cursor += chunk;
-    }
-
-    if (m_length >> sizeof (m_length) * 8 - 3 != 0)
-        panic ("exceeded maximum message length");
-}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -135,11 +71,9 @@ f5 (uint32_t x, uint32_t y, uint32_t z)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void
-RIPEMD::transform (void)
+static void
+transform (uint32_t state[5], const uint32_t d32[16])
 {
-    CHECK_EQ (m_buffer.size, sizeof (m_buffer.d32));
-
     // Use: boolean function f
     //      state parameters a, b, c, d, e
     //      offset value     o
@@ -148,10 +82,10 @@ RIPEMD::transform (void)
 
     #define ROUND(f,a,b,c,d,e,o,x,s) {  \
         a += f(b, c, d);                \
-        a += m_buffer.d32[x] + o;       \
-        a  = rotatel (a, s);            \
+        a += d32[x] + o;                \
+        a  = util::rotatel (a, s);      \
         a += e;                         \
-        c  = rotatel (c, 10);           \
+        c  = util::rotatel (c, 10);     \
     }
 
     #define R1a(a,b,c,d,e,x,s) ROUND(f1,a,b,c,d,e,0x00000000u,x,s)
@@ -169,11 +103,11 @@ RIPEMD::transform (void)
     uint32_t a1, b1, c1, d1, e1;
     uint32_t a2, b2, c2, d2, e2;
 
-    a1 = a2 = m_state[0];
-    b1 = b2 = m_state[1];
-    c1 = c2 = m_state[2];
-    d1 = d2 = m_state[3];
-    e1 = e2 = m_state[4];
+    a1 = a2 = state[0];
+    b1 = b2 = state[1];
+    c1 = c2 = state[2];
+    d1 = d2 = state[3];
+    e1 = e2 = state[4];
 
     // Left round 1
     R1a(a1, b1, c1, d1, e1,  0, 11);
@@ -356,61 +290,119 @@ RIPEMD::transform (void)
     R5b(b2, c2, d2, e2, a2, 11 , 11);
 
     // Finalise state
-    d2         = m_state[1] + c1 + d2;
-    m_state[1] = m_state[2] + d1 + e2;
-    m_state[2] = m_state[3] + e1 + a2;
-    m_state[3] = m_state[4] + a1 + b2;
-    m_state[4] = m_state[0] + b1 + c2;
-    m_state[0] = d2;
-
-    m_buffer.size = 0;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-RIPEMD::finish (void)
-{
-    // Ensure the length wouldn't overflow if converted to bits. We need to
-    // grab this before there's a chance it gets overwritten.
-    CHECK_EQ (m_length >> sizeof(m_length) * 8 - 3, 0u);
-    uint64_t length = m_length * 8;
-
-    // Push a padding byte into the buffer
-    uint8_t padding = 0x80;
-    update (&padding, 1);
-
-    // Pad out the line if we couldn't fit a length at the end
-    size_t remaining = sizeof (m_buffer.d32) - m_buffer.size;
-    if (remaining < 8) {
-        static const uint8_t ZEROES[8] = { 0 };
-
-        update (ZEROES, remaining);
-
-        CHECK_EQ (m_buffer.size, 0u);
-        remaining = sizeof (m_buffer.d08);
-    }
-
-    // Write the length to the end of the buffer
-    union {
-        uint32_t d32[16];
-        uint8_t  d08[64];
-    };
-
-    memset (d32, 0, sizeof (d32));
-    d32[14] = length & 0xFFFFFFFF;
-    d32[15] = length >> 32u;
-
-    // Do the final update
-    size_t offset = sizeof(d08) - remaining;
-    update (d08 + offset, remaining);
+    d2         = state[1] + c1 + d2;
+    state[1] = state[2] + d1 + e2;
+    state[2] = state[3] + e1 + a2;
+    state[3] = state[4] + a1 + b2;
+    state[4] = state[0] + b1 + c2;
+    state[0] = d2;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 RIPEMD::digest_t
-RIPEMD::digest (void) const
+RIPEMD::operator() (const util::view<const uint8_t*> data)
 {
+    struct {
+        union {
+            uint32_t d32[16];
+            uint8_t  d08[64];
+        };
+        size_t size;
+    } m_buffer;
+
+    /* INIT */
+    uint32_t m_state[5] {
+        0x67452301u,
+        0xEFCDAB89u,
+        0x98BADCFEu,
+        0x10325476u,
+        0xC3D2E1F0u,
+    };
+
+    uint64_t m_length = 0;
+
+    m_buffer.size = 0;
+
+    /* UPDATE */
+    {
+        auto len = data.size ();
+        auto base = data.begin ();
+        size_t cursor = 0;
+
+        while (cursor < len) {
+            size_t width = sizeof (m_buffer.d08) - m_buffer.size;
+            size_t chunk = min (width, len - cursor);
+
+            memcpy (m_buffer.d08 + m_buffer.size, base + cursor, chunk);
+            m_length      += chunk;
+            m_buffer.size += chunk;
+
+            if (m_buffer.size == sizeof (m_buffer.d08)) {
+                transform (m_state, m_buffer.d32);
+                m_buffer.size = 0;
+            }
+
+            cursor += chunk;
+        }
+
+        if (m_length >> sizeof (m_length) * 8 - 3 != 0)
+            panic ("exceeded maximum message length");
+    }
+
+
+    /* FINISH */
+    {
+        // Ensure the length wouldn't overflow if converted to bits. We need to
+        // grab this before there's a chance it gets overwritten.
+        CHECK_EQ (m_length >> sizeof(m_length) * 8 - 3, 0u);
+        uint64_t length = m_length * 8;
+
+        // Push a padding byte into the buffer
+        uint8_t padding = 0x80;
+        assert (m_buffer.size != sizeof (m_buffer.d08));
+        m_buffer.d08[m_buffer.size] = padding;
+        m_buffer.size++;
+        m_length++;
+        if (m_buffer.size == sizeof (m_buffer.d08)) {
+            transform (m_state, m_buffer.d32);
+            m_buffer.size = 0;
+        }
+
+        // Pad out the line if we couldn't fit a length at the end
+        size_t remaining = sizeof (m_buffer.d32) - m_buffer.size;
+        if (remaining < 8) {
+            std::fill_n (m_buffer.d08 + m_buffer.size, remaining, 0);
+            m_buffer.size += remaining;
+            transform (m_state, m_buffer.d32);
+            m_buffer.size = 0;
+            m_length += remaining;
+
+            CHECK_EQ (m_buffer.size, 0u);
+            remaining = sizeof (m_buffer.d08);
+        }
+
+        // Write the length to the end of the buffer
+        union {
+            uint32_t d32[16];
+            uint8_t  d08[64];
+        };
+
+        std::fill (std::begin (d32), std::end (d32), 0);
+        d32[14] = length & 0xFFFFFFFF;
+        d32[15] = length >> 32u;
+
+        // Do the final update
+        size_t offset = sizeof(d08) - remaining;
+
+        std::copy_n (d08 + offset, remaining, m_buffer.d08 + offset);
+        m_length += remaining;
+        m_buffer.size += remaining;
+        transform (m_state, m_buffer.d32);
+        m_buffer.size = 0;
+    }
+
+    /* DIGEST */
     digest_t d;
     memcpy (d.data (), m_state, sizeof (m_state));
     return d;

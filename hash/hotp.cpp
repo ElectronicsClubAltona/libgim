@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2018 Danny Robson <danny@nerdcruft.net>
  */
 
 #include "hotp.hpp"
@@ -23,35 +23,28 @@
 using util::hash::HOTP;
 
 
-//-----------------------------------------------------------------------------
-HOTP::HOTP (const char *_key, uint64_t _counter):
-    HOTP (_key, strlen (_key), _counter)
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-HOTP::HOTP (const void *_key, size_t _len, uint64_t _counter):
+///////////////////////////////////////////////////////////////////////////////
+HOTP::HOTP (util::view<const char*> _key, uint64_t _counter):
     m_counter (_counter),
-    m_hash ((const uint8_t*)_key, _len)
+    m_hash (_key.template cast<const uint8_t> ())
 { ; }
+
 
 
 //-----------------------------------------------------------------------------
 unsigned
 HOTP::value (void)
 {
-    auto c = htob (m_counter);
+    union {
+        uint64_t number;
+        uint8_t  bytes[8];
+    };
 
-    m_hash.update (&c, sizeof (c));
-    m_hash.finish ();
+    number = htob (m_counter);
 
-    auto h = m_hash.digest ();
-    auto t = truncate (h);
-
-    m_hash.reset ();
+    auto res = truncate (m_hash (util::make_cview (bytes)));
     ++m_counter;
-
-    return t % 1000000;
+    return res % 1'000'000;
 }
 
 

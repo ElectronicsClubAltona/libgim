@@ -27,7 +27,7 @@ using util::hash::MD4;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Auxiliary functions for each set of rounds
-static constexpr
+static inline constexpr
 uint32_t
 F (uint32_t X, uint32_t Y, uint32_t Z)
 {
@@ -36,7 +36,7 @@ F (uint32_t X, uint32_t Y, uint32_t Z)
 
 
 //-----------------------------------------------------------------------------
-static constexpr
+static inline constexpr
 uint32_t
 G (uint32_t X, uint32_t Y, uint32_t Z)
 {
@@ -45,7 +45,7 @@ G (uint32_t X, uint32_t Y, uint32_t Z)
 
 
 //-----------------------------------------------------------------------------
-static constexpr
+static inline constexpr
 uint32_t
 H (uint32_t X, uint32_t Y, uint32_t Z)
 {
@@ -54,105 +54,24 @@ H (uint32_t X, uint32_t Y, uint32_t Z)
 
 
 //-----------------------------------------------------------------------------
-static constexpr uint32_t DEFAULT_A = 0x67452301;
-static constexpr uint32_t DEFAULT_B = 0xefcdab89;
-static constexpr uint32_t DEFAULT_C = 0x98badcfe;
-static constexpr uint32_t DEFAULT_D = 0x10325476;
+static constexpr uint32_t INITIAL_A = 0x67452301;
+static constexpr uint32_t INITIAL_B = 0xefcdab89;
+static constexpr uint32_t INITIAL_C = 0x98badcfe;
+static constexpr uint32_t INITIAL_D = 0x10325476;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-MD4::MD4 ()
-{
-    reset ();
-    static_assert (sizeof (MD4::X) == sizeof (MD4::Xb),
-                   "Byte and word buffer size must match exactly");
-    static_assert (sizeof (MD4::ABCD) == sizeof (MD4::digest_t),
-                   "Internal state must match the size of the digest");
-}
-
-
-//-----------------------------------------------------------------------------
-void
-MD4::reset (void)
-{
-    m_total = 0;
-
-    ABCD[0] = DEFAULT_A;
-    ABCD[1] = DEFAULT_B;
-    ABCD[2] = DEFAULT_C;
-    ABCD[3] = DEFAULT_D;
-
-    memset (Xb, 0, sizeof (Xb));
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-MD4::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
-{
-    CHECK_LE (first, last);
-
-    update (first, last - first);
-}
-
-
-//-----------------------------------------------------------------------------
-void
-MD4::update (const void *restrict _data, size_t size) noexcept
-{
-    CHECK (_data);
-    auto data = static_cast<const uint8_t *restrict> (_data);
-
-    size_t offset = m_total % sizeof (Xb);
-    size_t remain = sizeof (Xb) - offset;
-
-    if (size > remain) {
-        memcpy (Xb + offset, data, remain);
-        transform ();
-
-        m_total += remain;
-        size    -= remain;
-        data    += remain;
-
-        while (size >= sizeof (Xb)) {
-            memcpy (Xb, data, sizeof (Xb));
-            transform ();
-
-            m_total += sizeof (Xb);
-            size    -= sizeof (Xb);
-            data    += sizeof (Xb);
-        }
-
-        offset = 0;
-    }
-
-    memcpy (Xb + offset, data, size);
-    m_total += size;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-MD4::digest_t
-MD4::digest (void) const
-{
-    digest_t d;
-    memcpy (d.data (), ABCD.data(), sizeof (ABCD));
-    return d;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-MD4::transform (void)
+static void
+transform (std::array<uint32_t,4> &ABCD, const std::array<uint32_t,16> &X) noexcept
 {
     uint32_t A = ABCD[0],
-             B = ABCD[1],
-             C = ABCD[2],
-             D = ABCD[3];
+        B = ABCD[1],
+        C = ABCD[2],
+        D = ABCD[3];
 
-    #define ROUND1(a,b,c,d,k,s) do {                \
+#define ROUND1(a,b,c,d,k,s) do {                \
         (a) += F((b), (c), (d)) + X[k];             \
-        (a)  = rotatel ((a), (s));                  \
+        (a)  = util::rotatel ((a), (s));                  \
     } while (0)
 
     ROUND1(A,B,C,D,  0,  3);
@@ -175,9 +94,9 @@ MD4::transform (void)
     ROUND1(C,D,A,B, 14, 11);
     ROUND1(B,C,D,A, 15, 19);
 
-    #define ROUND2(a,b,c,d,k,s) do {                \
+#define ROUND2(a,b,c,d,k,s) do {                \
         (a) += G((b),(c),(d)) + X[k] + 0x5A827999u; \
-        (a)  = rotatel ((a), (s));                  \
+        (a)  = util::rotatel ((a), (s));                  \
     } while (0)
 
     ROUND2(A,B,C,D,  0,  3);
@@ -200,9 +119,9 @@ MD4::transform (void)
     ROUND2(C,D,A,B, 11,  9);
     ROUND2(B,C,D,A, 15, 13);
 
-    #define ROUND3(a,b,c,d,k,s) do {                \
+#define ROUND3(a,b,c,d,k,s) do {                \
         (a) += H((b),(c),(d)) + X[k] + 0x6ED9EBA1u; \
-        (a)  = rotatel ((a), (s));                  \
+        (a)  = util::rotatel ((a), (s));                  \
     } while (0)
 
     ROUND3(A,B,C,D,  0,  3);
@@ -233,30 +152,64 @@ MD4::transform (void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void
-MD4::finish (void)
+MD4::digest_t
+MD4::operator() (util::view<const uint8_t*> data) noexcept
 {
-    uint64_t bits = m_total * 8;
+    /* RESET */
+    uint64_t total = 0;
 
+    std::array<uint32_t,4> ABCD {
+        INITIAL_A,
+        INITIAL_B,
+        INITIAL_C,
+        INITIAL_D,
+    };
+
+    union {
+        std::array<uint32_t,16> X;
+        std::array<uint8_t, 64> Xb;
+    };
+    static_assert (sizeof (X) == sizeof (Xb));
+    static_assert (sizeof (ABCD) == sizeof (digest_t));
+
+    std::fill (std::begin (X), std::end (X), 0);
+
+    /* UPDATE */
+    {
+        auto remain = data;
+        while (remain.size () >= sizeof (Xb)) {
+            std::copy_n (std::begin (remain), sizeof (Xb), std::begin (Xb));
+            transform (ABCD, X);
+            remain = { remain.begin () + sizeof (Xb), remain.end () };
+            total += sizeof (Xb);
+        }
+
+        std::copy (std::begin (remain), std::end (remain), std::begin (Xb));
+        total += remain.size ();
+    }
+
+    uint64_t bits = total * 8;
+
+    /* FINISH */
     {
         // Pad with the mandatory 1 bit
-        size_t offset = m_total % sizeof (Xb);
+        size_t offset = total % sizeof (Xb);
         Xb[offset] = 0x80;
     }
 
     {
         // Pad the remainder with 0's, until 56 bytes
-        size_t offset = (m_total + 1) % sizeof (Xb);
+        size_t offset = (total + 1) % sizeof (Xb);
         size_t remain = (56 - offset % sizeof (Xb)) % sizeof (Xb);
 
         if (offset > 56) {
-            memset (Xb + offset, 0, sizeof (Xb) - offset);
-            transform ();
+            std::fill_n (std::begin (Xb) + offset, sizeof (Xb) - offset, 0);
+            transform (ABCD, X);
             remain -= sizeof (Xb) - offset;
             offset  = 0;
         }
 
-        memset (Xb + offset, 0, remain);
+        std::fill (std::begin (Xb) + offset, std::end (Xb), 0);
 
         // Put in the length (in bits) least significant first
         for (size_t i = 0; i < sizeof (bits); ++i) {
@@ -264,6 +217,11 @@ MD4::finish (void)
             bits >>= 8;
         }
 
-        transform ();
+        transform (ABCD, X);
     }
+
+    /* DIGEEST */
+    digest_t d;
+    memcpy (d.data (), ABCD.data(), sizeof (ABCD));
+    return d;
 }

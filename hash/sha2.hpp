@@ -18,6 +18,8 @@
 #ifndef __UTIL_HASH_SHA2_HPP
 #define __UTIL_HASH_SHA2_HPP
 
+#include "view.hpp"
+
 #include <array>
 #include <cstdint>
 
@@ -29,15 +31,7 @@ namespace util::hash {
         typedef std::array<uint8_t,32> digest_t;
 
     public:
-        SHA256();
-
-        void update (const void *restrict, size_t) noexcept;
-        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
-
-        void finish (void);
-        digest_t digest (void) const;
-
-        void reset (void);
+        digest_t operator() (util::view<const uint8_t*>) noexcept;
 
     private:
         void process (void);

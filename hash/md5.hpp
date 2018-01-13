@@ -17,6 +17,8 @@
 #ifndef __UTIL_HASH_MD5_HPP
 #define __UTIL_HASH_MD5_HPP
 
+#include "../view.hpp"
+
 #include <array>
 #include <cstdint>
 #include <cstdlib>
@@ -26,30 +28,21 @@
 namespace util::hash {
     class MD5 {
     public:
-        typedef std::array<uint8_t,16> digest_t;
+        using digest_t = std::array<uint8_t,16>;
         static const size_t BLOCK_SIZE  = 64;
         static const size_t DIGEST_SIZE = 16;
 
     public:
-        MD5();
-
-        void update (const void    *restrict data, size_t len) noexcept;
-        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
-
-        void finish (void);
-        digest_t digest (void) const;
-        void reset (void);
+        digest_t operator() (util::view<const uint8_t*>) const noexcept;
+        digest_t operator() (util::view<const uint8_t*>,util::view<const uint8_t*>) const noexcept;
+        digest_t operator() (util::view<const uint8_t*>,util::view<const uint8_t*>,util::view<const uint8_t*>) const noexcept;
 
     private:
-        void transform (void);
-
-        uint64_t m_total;
-        std::array<uint32_t, 4> ABCD;
-
-        union {
-            uint32_t X [16];
-            uint8_t  Xb[64];
-        };
+        std::array<uint32_t,4>
+        transform (
+            const std::array<uint32_t,4> &ABCD,
+            const std::array<uint32_t,16> &X
+        ) const noexcept;
     };
 }
 

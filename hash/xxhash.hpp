@@ -17,6 +17,8 @@
 #ifndef CRUFT_UTIL_HASH_XXHASH_HPP
 #define CRUFT_UTIL_HASH_XXHASH_HPP
 
+#include "../view.hpp"
+
 #include <cstdint>
 #include <type_traits>
 
@@ -27,33 +29,14 @@ namespace util::hash {
         static_assert (std::is_same<T,uint32_t>::value || std::is_same<T,uint64_t>::value);
         using digest_t = T;
 
-        xxhash (void);
-        xxhash (uint32_t seed);
+        static constexpr uint32_t DEFAULT_SEED = 0;
 
-        void update (const uint8_t *restrict first, const uint8_t *restrict last);
-        void finish (void);
-        
-        digest_t digest (void) const;
+        xxhash (uint32_t seed = DEFAULT_SEED);
 
-        void reset (void);
+        digest_t operator() (const util::view<const uint8_t*> data);
 
     private:
         uint32_t m_seed;
-
-        struct {
-            uint32_t total_len_32;
-            uint32_t large_len;
-
-            T v1, v2, v3, v4;
-            uint32_t mem32[4];
-            uint32_t memsize;
-            uint32_t reserved;
-
-            //uint64_t length;
-            //T v[4];
-            //T mem[4];
-            //unsigned memsize;
-        } m_state;
     };
 
     using xxhash32 = xxhash<uint32_t>;

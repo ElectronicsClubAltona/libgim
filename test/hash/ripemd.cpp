@@ -5,15 +5,28 @@
 
 #include <cstring>
 
+
+///////////////////////////////////////////////////////////////////////////////
+std::vector<uint8_t>
+operator"" _u8s (const char *str, size_t len)
+{
+    std::vector<uint8_t> res;
+    res.resize (len);
+    std::copy_n (str, len, std::begin (res));
+    return res;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 static const
 struct {
     const char *msg;
-    const char *data;
+    std::vector<uint8_t> data;
     util::hash::RIPEMD::digest_t output;
 } TESTS[] = {
     {
         "empty",
-        "",
+        ""_u8s,
         { 0x9c, 0x11, 0x85, 0xa5, 0xc5, 0xe9, 0xfc, 0x54, 0x61, 0x28,
           0x08, 0x97, 0x7e, 0xe8, 0xf5, 0x48, 0xb2, 0x25, 0x8d, 0x31 },
         // 128: cdf26213a150dc3ecb610f18f6b38b46
@@ -24,7 +37,7 @@ struct {
 
     {
         "a",
-        "a",
+        "a"_u8s,
         { 0x0b, 0xdc, 0x9d, 0x2d, 0x25, 0x6b, 0x3e, 0xe9, 0xda, 0xae,
           0x34, 0x7b, 0xe6, 0xf4, 0xdc, 0x83, 0x5a, 0x46, 0x7f, 0xfe },
         // 128: 86be7afa339d0fc7cfc785e72f578d33
@@ -35,7 +48,7 @@ struct {
 
     {
         "abc",
-        "abc",
+        "abc"_u8s,
         { 0x8e, 0xb2, 0x08, 0xf7, 0xe0, 0x5d, 0x98, 0x7a, 0x9b, 0x04,
           0x4a, 0x8e, 0x98, 0xc6, 0xb0, 0x87, 0xf1, 0x5a, 0x0b, 0xfc },
         // 128: c14a12199c66e4ba84636b0f69144c77
@@ -46,7 +59,7 @@ struct {
 
     {
         "message digest",
-        "message digest",
+        "message digest"_u8s,
         { 0x5d, 0x06, 0x89, 0xef, 0x49, 0xd2, 0xfa, 0xe5, 0x72, 0xb8,
           0x81, 0xb1, 0x23, 0xa8, 0x5f, 0xfa, 0x21, 0x59, 0x5f, 0x36 },
         // 128: 9e327b3d6e523062afc1132d7df9d1b8
@@ -57,7 +70,7 @@ struct {
 
     {
         "26 characters",
-        "abcdefghijklmnopqrstuvwxyz",
+        "abcdefghijklmnopqrstuvwxyz"_u8s,
         { 0xf7, 0x1c, 0x27, 0x10, 0x9c, 0x69, 0x2c, 0x1b, 0x56, 0xbb,
           0xdc, 0xeb, 0x5b, 0x9d, 0x28, 0x65, 0xb3, 0x70, 0x8d, 0xbc },
         // 128: fd2aa607f71dc8f510714922b371834e
@@ -68,7 +81,7 @@ struct {
 
     {
         "57 characters",
-        "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+        "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"_u8s,
         { 0x12, 0xa0, 0x53, 0x38, 0x4a, 0x9c, 0x0c, 0x88, 0xe4, 0x05,
           0xa0, 0x6c, 0x27, 0xdc, 0xf4, 0x9a, 0xda, 0x62, 0xeb, 0x2b },
         // 128: a1aa0689d0fafa2ddc22e88b49133a06
@@ -79,7 +92,7 @@ struct {
 
     {
         "63 characters",
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"_u8s,
         { 0xb0, 0xe2, 0x0b, 0x6e, 0x31, 0x16, 0x64, 0x02, 0x86, 0xed,
           0x3a, 0x87, 0xa5, 0x71, 0x30, 0x79, 0xb2, 0x1f, 0x51, 0x89 },
         // 128: d1e959eb179c911faea4624c60c5c702
@@ -90,7 +103,7 @@ struct {
 
     {
         "81 digits",
-        "12345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        "12345678901234567890123456789012345678901234567890123456789012345678901234567890"_u8s,
         { 0x9b, 0x75, 0x2e, 0x45, 0x57, 0x3d, 0x4b, 0x39, 0xf4, 0xdb,
           0xd3, 0x32, 0x3c, 0xab, 0x82, 0xbf, 0x63, 0x32, 0x6b, 0xfb }
         // 128: 3f45ef194732c2dbb2c4a2c769795fa3
@@ -100,43 +113,33 @@ struct {
     }
 };
 
-// 1 million times "a"
-// 128: 4a7f5723f954eba1216c9d8f6320431f
-// 160: 52783243c1697bdbe16d37f97f68f08325dc1528
-// 256: ac953744e10e31514c150d4d8d7b677342e33399788296e43ae4850ce4f97978
-// 320: bdee37f4371e20646b8b0d862dda16292ae36f40965e8c8509e63d1dbddecc503e2b63eb9245bb66
 
 int
 main(int, char**) {
     util::TAP::logger tap;
 
     // Check against simple test vectors
-    for (const auto &i: TESTS) {
+    for (const auto &t: TESTS) {
         util::hash::RIPEMD obj;
-        obj.update (reinterpret_cast<const uint8_t*> (i.data), strlen (i.data));
-        obj.finish ();
-
-        tap.expect_eq (obj.digest (), i.output, "%s", i.msg);
+        tap.expect_eq (obj (t.data), t.output, "%s", t.msg);
     }
 
     // Perform 'million-a' check
-    static const size_t CHUNK_WIDTH = 1'000;
     util::hash::RIPEMD obj;
 
-    for (size_t i = 0; i < 1'000'000; i += CHUNK_WIDTH) {
-        uint8_t data[CHUNK_WIDTH];
-        memset (data, 'a', sizeof (data));
+    // 1 million times "a"
+    // 128: 4a7f5723f954eba1216c9d8f6320431f
+    // 160: 52783243c1697bdbe16d37f97f68f08325dc1528
+    // 256: ac953744e10e31514c150d4d8d7b677342e33399788296e43ae4850ce4f97978
+    // 320: bdee37f4371e20646b8b0d862dda16292ae36f40965e8c8509e63d1dbddecc503e2b63eb9245bb66
 
-        obj.update (data, sizeof (data));
-    }
-
-    obj.finish ();
+    std::vector<uint8_t> data (1'000'000, 'a');
     static const util::hash::RIPEMD::digest_t MILLION {
         0x52, 0x78, 0x32, 0x43, 0xc1, 0x69, 0x7b, 0xdb, 0xe1, 0x6d,
         0x37, 0xf9, 0x7f, 0x68, 0xf0, 0x83, 0x25, 0xdc, 0x15, 0x28
     };
 
-    tap.expect_eq (obj.digest (), MILLION, "million 'a'");
+    tap.expect_eq (obj (data), MILLION, "million 'a'");
     
     return tap.status ();
 }

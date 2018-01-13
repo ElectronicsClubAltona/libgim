@@ -535,6 +535,6 @@ json::schema::validate (json::tree::node &data,
                         const std::experimental::filesystem::path &schema_path)
 {
     const util::mapped_file schema_data (schema_path);
-    auto schema_object = json::tree::parse (schema_data.as_view<char> ());
+    auto schema_object = json::tree::parse (util::view{schema_data}.cast<const char> ());
     validate (data, schema_object->as_object ());
 }

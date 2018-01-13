@@ -21,27 +21,3 @@
 #define __UTIL_IO_POSIX_IPP
 
 #include "pointer.hpp"
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-util::view<std::add_const_t<T>*>
-util::detail::posix::mapped_file::as_view (void) const&
-{
-    return {
-        reinterpret_cast<const T*> (cbegin ()),
-        reinterpret_cast<const T*> (align (cend (), alignof (T)))
-    };
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-util::view<T*>
-util::detail::posix::mapped_file::as_view (void) &
-{
-    return {
-        reinterpret_cast<T *> (begin ()),
-        reinterpret_cast<T *> (align (end (), alignof(T)))
-    };
-}

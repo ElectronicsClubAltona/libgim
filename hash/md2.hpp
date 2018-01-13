@@ -17,6 +17,8 @@
 #ifndef __UTIL_HASH_MD2_HPP
 #define __UTIL_HASH_MD2_HPP
 
+#include "../view.hpp"
+
 #include <array>
 #include <cstdint>
 
@@ -24,26 +26,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 namespace util::hash {
     class MD2 {
-        public:
-            typedef std::array<uint8_t,16> digest_t;
+    public:
+        typedef std::array<uint8_t,16> digest_t;
 
-        public:
-            MD2 ();
-
-            void update (const void *restrict data,  size_t len) noexcept;
-            void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
-
-            void finish (void);
-            digest_t digest (void) const;
-            void reset (void);
-
-        private:
-            void transform (void);
-
-            uint64_t m_total;
-
-            uint8_t C[16];
-            uint8_t X[48];
+    public:
+        digest_t operator() (util::view<const uint8_t*>) const noexcept;
     };
 }
 

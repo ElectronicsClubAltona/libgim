@@ -11,53 +11,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2013 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2013-2018 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_HASH_SHA1_HPP
-#define __UTIL_HASH_SHA1_HPP
+#ifndef CRUFT_UTIL_HASH_SHA1_HPP
+#define CRUFT_UTIL_HASH_SHA1_HPP
 
-#include <cstdint>
-#include <cstdlib>
+#include "../view.hpp"
 
 #include <array>
-
+#include <cstdint>
+#include <cstdlib>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util::hash {
     class SHA1 {
     public:
-        typedef std::array<uint8_t,20> digest_t;
+        using digest_t = std::array<uint8_t,20>;
         static const size_t BLOCK_SIZE  = 64;
         static const size_t DIGEST_SIZE = 20;
 
-    public:
-        SHA1();
 
-        void update (const void *restrict, size_t) noexcept;
-        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
+        //template <typename ...DataT>
+        //digest_t
+        //operator() (DataT&&...);
 
-        void finish (void);
-        digest_t digest (void) const;
-        void reset  (void);
-
-        enum state_t {
-            READY,
-            FINISHED
-        };
-
-    protected:
-        void process (void);
-
-        state_t state;
-
-        uint64_t total;
-        uint32_t H[5];
-
-        union {
-            uint8_t  c[16*4+64*4];
-            uint32_t W[16  +64  ];
-        };
+        digest_t operator() (util::view<const uint8_t*>, util::view<const uint8_t*>) noexcept;
+        digest_t operator() (util::view<const uint8_t*>) noexcept;
     };
 }
 

@@ -28,11 +28,8 @@ test_hmac (const std::vector<uint8_t> &key,
            const std::vector<uint8_t> &dat,
            const std::vector<uint8_t> &res)
 {
-    util::hash::HMAC<T> h (key.data (), key.size ());
-    h.update (dat.data (), dat.size ());
-    h.finish ();
-
-    auto ours = h.digest ();
+    util::hash::HMAC<T> h (key);
+    const auto ours = h (dat);
 
     return std::equal (ours.begin (), ours.end (), res.begin ());
 }
@@ -49,7 +46,7 @@ static const struct {
     std::vector<uint8_t> res;
     test_func            fun;
 } TESTS[] = {
-    // RFC 2104 test data, MD5
+    // 1: RFC 2104 test data, MD5
     {
         { 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,
           0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b  },
@@ -59,6 +56,7 @@ static const struct {
         &test_hmac<util::hash::MD5>
     },
 
+    // 2:
     {
         to_vector ("Jefe"),
         to_vector ("what do ya want for nothing?"),
@@ -67,6 +65,7 @@ static const struct {
         &test_hmac<util::hash::MD5>
     },
 
+    // 3:
     {
         { 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
           0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA  },
@@ -82,7 +81,7 @@ static const struct {
         &test_hmac<util::hash::MD5>
     },
 
-    // RFC 2202 test data, MD5
+    // 4: RFC 2202 test data, MD5
     {
         { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
           0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10,
@@ -100,6 +99,7 @@ static const struct {
         &test_hmac<util::hash::MD5>
     },
 
+    // 5:
     {
         { 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c,
           0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c },
@@ -110,6 +110,7 @@ static const struct {
         // digest-96: 0x56461ef2342edc00f9bab995
     },
 
+    // 6:
     {
         { 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
           0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
@@ -127,6 +128,7 @@ static const struct {
         &test_hmac<util::hash::MD5>
     },
 
+    // 7:
     {
         { 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
           0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa,
@@ -144,7 +146,7 @@ static const struct {
         &test_hmac<util::hash::MD5>
     },
 
-    // RFC 2202 test data, SHA1
+    // 8: RFC 2202 test data, SHA1
     {
         { 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,
           0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b,

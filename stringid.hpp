@@ -11,27 +11,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2014 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2014-2018 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_STRINGID_HPP
-#define __UTIL_STRINGID_HPP
+#ifndef CRUFT_UTIL_STRINGID_HPP
+#define CRUFT_UTIL_STRINGID_HPP
+
+#include "view.hpp"
 
 #include <map>
 #include <string>
 
 namespace util {
     class stringid {
-        public:
-            typedef size_t id_t;
+    public:
+        typedef size_t id_t;
 
-            id_t add  (std::string);
-            id_t find (const std::string&) const;
 
-            void clear (void);
+        ///////////////////////////////////////////////////////////////////////
+        id_t add  (std::string);
 
-        private:
-            std::map<const std::string, id_t> m_map;
+
+        //---------------------------------------------------------------------
+        template <typename T>
+        id_t add (util::view<T> key)
+        {
+            return add (
+                std::string{
+                    std::cbegin (key),
+                    std::cend (key)
+                }
+            );
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        id_t find (const std::string&) const;
+
+
+        //---------------------------------------------------------------------
+        template <typename T>
+        id_t find (util::view<T> key) const
+        {
+            return find (
+                std::string {
+                    std::cbegin (key),
+                    std::cend (key)
+                }
+            );
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        void clear (void);
+
+
+    private:
+        std::map<const std::string, id_t> m_map;
     };
 }
 

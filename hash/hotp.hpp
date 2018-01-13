@@ -11,11 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2015 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2015-2018 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_HASH_HOTP_HPP
-#define __UTIL_HASH_HOTP_HPP
+#ifndef CRUFT_UTIL_HASH_HOTP_HPP
+#define CRUFT_UTIL_HASH_HOTP_HPP
+
+#include "../view.hpp"
 
 #include "hmac.hpp"
 #include "sha1.hpp"
@@ -26,8 +28,7 @@ namespace util::hash {
     /// HMAC one-time password (RFC 4226)
     class HOTP {
     public:
-        HOTP (const char *key, uint64_t counter);
-        HOTP (const void *key, size_t len, uint64_t counter);
+        HOTP (util::view<const char*> key, uint64_t counter);
 
         unsigned value (void);
         uint64_t counter (void) const;

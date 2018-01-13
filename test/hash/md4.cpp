@@ -54,13 +54,9 @@ main (int, char**) {
 
     bool success = true;
 
+    MD4 h;
     for (auto i: TESTS) {
-        MD4 h;
-        h.update (i.input, strlen (i.input));
-        h.finish ();
-        auto out = h.digest ();
-
-        if (out != i.output) {
+        if (h (util::view{i.input}.cast <const uint8_t> ()) != i.output) {
             std::cerr << "Failed on '" << i.input << "'\n";
             success = false;
         }

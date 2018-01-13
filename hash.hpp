@@ -23,8 +23,18 @@
 #include <cstdlib>
 
 namespace util::hash {
-    constexpr std::uint32_t mix (std::uint32_t a, std::uint32_t b) { return murmur2::mix (a, b); }
-    constexpr std::uint64_t mix (std::uint64_t a, std::uint64_t b) { return murmur2::mix (a, b); }
+    constexpr std::uint32_t
+    mix (std::uint32_t a, std::uint32_t b)
+    {
+        return murmur2<std::uint32_t>::mix (a, b);
+    }
+
+
+    constexpr std::uint64_t
+    mix (std::uint64_t a, std::uint64_t b)
+    {
+        return murmur2<std::uint64_t>::mix (a, b);
+    }
 }
 
 #endif

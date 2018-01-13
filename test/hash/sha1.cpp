@@ -10,6 +10,18 @@
 #include <iostream>
 
 
+///////////////////////////////////////////////////////////////////////////////
+std::vector<uint8_t>
+operator"" _u8s (const char *str, size_t len)
+{
+    std::vector<uint8_t> res;
+    res.resize (len);
+    std::copy_n (str, len, std::begin (res));
+    return res;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
 int
 main (int, char**)
 {
@@ -17,42 +29,57 @@ main (int, char**)
 
     static const struct {
         const char *msg;
-        const char *input;
+        std::vector<uint8_t> input;
         util::hash::SHA1::digest_t output;
     } TESTS[] = {
         {
           "empty string",
-          "",
+          ""_u8s,
           { { 0xda, 0x39, 0xa3, 0xee, 0x5e, 0x6b, 0x4b, 0x0d, 0x32, 0x55,
               0xbf, 0xef, 0x95, 0x60, 0x18, 0x90, 0xaf, 0xd8, 0x07, 0x09  } }
         },
 
         {
           "single a",
-          "a",
+          "a"_u8s,
           { { 0x86, 0xf7, 0xe4, 0x37, 0xfa, 0xa5, 0xa7, 0xfc, 0xe1, 0x5d,
               0x1d, 0xdc, 0xb9, 0xea, 0xea, 0xea, 0x37, 0x76, 0x67, 0xb8  } }
         },
 
         {
           "abc",
-          "abc",
+          "abc"_u8s,
           { { 0xA9, 0x99, 0x3E, 0x36, 0x47, 0x06, 0x81, 0x6A, 0xBA, 0x3E,
               0x25, 0x71, 0x78, 0x50, 0xC2, 0x6C, 0x9C, 0xD0, 0xD8, 0x9D  } }
         },
 
         {
           "abc...opq",
-          "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+          "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"_u8s,
           { { 0x84, 0x98, 0x3E, 0x44, 0x1C, 0x3B, 0xD2, 0x6E, 0xBA, 0xAE,
               0x4A, 0xA1, 0xF9, 0x51, 0x29, 0xE5, 0xE5, 0x46, 0x70, 0xF1  } }
         },
+
+        {
+            "896 bit alphabet",
+            "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmn"
+            "hijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu"_u8s,
+            { 0xa4, 0x9b, 0x24, 0x46,
+              0xa0, 0x2c, 0x64, 0x5b,
+              0xf4, 0x19, 0xf9, 0x95,
+              0xb6, 0x70, 0x91, 0x25,
+              0x3a, 0x04, 0xa2, 0x59, }
+        }
 
         // 1'000'000 * 'a'
         //{ "a",
         //  { { 0x34, 0xAA, 0x97, 0x3C, 0xD4, 0xC4, 0xDA, 0xA4, 0xF6, 0x1E,
         //      0xEB, 0x2B, 0xDB, 0xAD, 0x27, 0x31, 0x65, 0x34, 0x01, 0x6F  } }
         //},
+
+        // 16'777'216 x "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmno"
+        // about 1GiB of text
+        // 7789f0c9 ef7bfc40 d9331114 3dfbe69e 2017f592
 
         // 80 repetitions of 01234567
         //{ "0123456701234567012345670123456701234567012345670123456701234567",
@@ -61,12 +88,21 @@ main (int, char**)
         //}
     };
 
-    for (const auto &i: TESTS) {
-        util::hash::SHA1 obj;
-        obj.update (reinterpret_cast<const uint8_t*> (i.input), strlen (i.input));
-        obj.finish ();
+    util::hash::SHA1 obj;
 
-        tap.expect_eq (obj.digest (), i.output, "%s", i.msg);
+    for (const auto &t: TESTS)
+        tap.expect_eq (obj (t.input), t.output, "%s", t.msg);
+
+    {
+        std::vector<uint8_t> data (1'000'000, 0x61);
+        util::hash::SHA1::digest_t result {
+           0x34, 0xaa, 0x97, 0x3c,
+           0xd4, 0xc4, 0xda, 0xa4,
+           0xf6, 0x1e, 0xeb, 0x2b,
+           0xdb, 0xad, 0x27, 0x31,
+           0x65, 0x34, 0x01, 0x6f,
+        };
+        tap.expect_eq (obj (data), result, "1'000'000 a's");
     }
 
     return tap.status ();

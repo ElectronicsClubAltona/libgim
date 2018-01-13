@@ -21,6 +21,8 @@
 
 #include <algorithm>
 
+using util::hash::murmur3;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 static
@@ -36,8 +38,9 @@ read_u32 (const uint8_t *bytes)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Finalization mix - force all bits of a hash block to avalanche
+template <size_t DigestBits, size_t ArchBits>
 uint32_t
-util::hash::murmur3::mix (uint32_t h)
+murmur3<DigestBits,ArchBits>::mix (uint32_t h)
 {
     h ^= h >> 16;
     h *= 0x85ebca6b;
@@ -50,8 +53,9 @@ util::hash::murmur3::mix (uint32_t h)
 
 
 //-----------------------------------------------------------------------------
+template <size_t DigestBits, size_t ArchBits>
 uint64_t
-util::hash::murmur3::mix (uint64_t k)
+murmur3<DigestBits,ArchBits>::mix (uint64_t k)
 {
     k ^= k >> 33;
     k *= 0xff51afd7ed558ccd;
@@ -63,56 +67,60 @@ util::hash::murmur3::mix (uint64_t k)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+template <size_t DigestBits, size_t ArchBits>
+struct hash { };
+
+
 //-----------------------------------------------------------------------------
-uint32_t
-util::hash::murmur3::hash_32(const void *restrict key,
-                             size_t len,
-                             uint32_t seed)
-{
-    auto data = reinterpret_cast<const uint8_t*> (key);
-    auto nblocks = len / sizeof (uint32_t);
+template <size_t ArchBits>
+struct hash<32,ArchBits> {
+    static auto eval (util::view<const uint8_t*> data, uint32_t seed)
+    {
+        auto nblocks = data.size () / sizeof (uint32_t);
 
-    uint32_t h1 = seed;
+        uint32_t h1 = seed;
 
-    static const uint32_t c1 = 0xcc9e2d51;
-    static const uint32_t c2 = 0x1b873593;
+        static const uint32_t c1 = 0xcc9e2d51;
+        static const uint32_t c2 = 0x1b873593;
 
-    //----------
-    // body
-    auto cursor = data;
-    auto last   = cursor + nblocks * sizeof (uint32_t);
-    for (; cursor < last; cursor += sizeof (uint32_t)) {
-        uint32_t k1 = read_u32 (cursor);
+        //----------
+        // body
+        auto cursor = data.begin ();
+        auto last   = cursor + nblocks * sizeof (uint32_t);
+        for (; cursor < last; cursor += sizeof (uint32_t)) {
+            uint32_t k1 = read_u32 (cursor);
 
-        k1 *= c1;
-        k1 = util::rotatel (k1, 15);
-        k1 *= c2;
-        h1 ^= k1;
+            k1 *= c1;
+            k1 = util::rotatel (k1, 15);
+            k1 *= c2;
+            h1 ^= k1;
 
-        h1 = util::rotatel (h1, 13);
-        h1 += 0;
-        h1 = h1 * 5 + 0xe6546b64;
+            h1 = util::rotatel (h1, 13);
+            h1 += 0;
+            h1 = h1 * 5 + 0xe6546b64;
+        }
+
+        //----------
+        // tail
+        if (data.size () % sizeof (uint32_t)) {
+            uint32_t k1 = 0 ^ util::hash::murmur::tail<uint32_t> (cursor, data.size ());
+
+            k1 *= c1;
+            k1  = util::rotatel (k1, 15);
+            k1 *= c2;
+            h1 ^= k1;
+        }
+
+        //----------
+        // finalization
+
+        h1 ^= data.size ();
+        h1  = util::hash::murmur3<32,ArchBits>::mix (h1);
+
+        return h1;
     }
-
-    //----------
-    // tail
-    if (len % sizeof (uint32_t)) {
-        uint32_t k1 = 0 ^ murmur::tail<uint32_t> (cursor, len);
-
-        k1 *= c1;
-        k1  = util::rotatel (k1, 15);
-        k1 *= c2;
-        h1 ^= k1;
-    }
-
-    //----------
-    // finalization
-
-    h1 ^= len;
-    h1  = mix (h1);
-
-    return h1;
-}
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -237,7 +245,7 @@ hash_128 (const void *restrict key,
     for (size_t i = 1; i < traits<T>::COMPONENTS; ++i) h[i] += h[0];
 
     for (auto &v: h)
-        v = util::hash::murmur3::mix (v);
+        v = util::hash::murmur3<128,sizeof(T)*8>::mix (v);
 
     for (size_t i = 1; i < traits<T>::COMPONENTS; ++i) h[0] += h[i];
     for (size_t i = 1; i < traits<T>::COMPONENTS; ++i) h[i] += h[0];
@@ -246,21 +254,33 @@ hash_128 (const void *restrict key,
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
-std::array<uint32_t,4>
-util::hash::murmur3::hash_128_x86 (const void *restrict key,
-                             const size_t len,
-                             const uint32_t seed)
-{
-    return ::hash_128<uint32_t> (key, len, seed);
-}
+template <>
+struct hash<128,32> {
+    static auto eval (util::view<const uint8_t*> data, uint32_t seed)
+    {
+        return ::hash_128<uint32_t> (data.data (), data.size (), seed);
+    }
+};
+
+
+template <>
+struct hash<128,64> {
+    static auto eval (util::view<const uint8_t*> data, uint32_t seed)
+    {
+        return ::hash_128<uint64_t> (data.data (), data.size (), seed);
+    }
+};
 
 
 //-----------------------------------------------------------------------------
-std::array<uint64_t,2>
-util::hash::murmur3::hash_128_x64 (const void *restrict key,
-                                  size_t len,
-                                  const uint32_t seed)
+template <size_t DigestBits, size_t ArchBits>
+typename murmur3<DigestBits,ArchBits>::digest_t
+murmur3<DigestBits,ArchBits>::operator() (util::view<const uint8_t*> data) const noexcept
 {
-    return ::hash_128<uint64_t> (key, len, seed);
+    return ::hash<DigestBits,ArchBits>::eval (data, m_seed);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+template class util::hash::murmur3<32, 32>;
+template class util::hash::murmur3<128,32>;
+template class util::hash::murmur3<128,64>;

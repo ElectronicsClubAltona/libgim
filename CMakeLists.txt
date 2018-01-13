@@ -241,8 +241,6 @@ list (
     geom/tri.hpp
     hash.hpp
     hash/fwd.hpp
-    hash/simple.hpp
-    hash/simple.cpp
     hash/adler.cpp
     hash/adler.hpp
     hash/bsdsum.cpp
@@ -259,8 +257,6 @@ list (
     hash/hmac.hpp
     hash/hotp.cpp
     hash/hotp.hpp
-    hash/keccak.cpp
-    hash/keccak.hpp
     hash/md2.cpp
     hash/md2.hpp
     hash/md4.cpp
@@ -276,10 +272,6 @@ list (
     hash/murmur/murmur2.hpp
     hash/murmur/murmur3.cpp
     hash/murmur/murmur3.hpp
-    hash/pbkdf1.cpp
-    hash/pbkdf1.hpp
-    hash/pbkdf2.cpp
-    hash/pbkdf2.hpp
     hash/ripemd.cpp
     hash/ripemd.hpp
     hash/sha1.cpp
@@ -287,7 +279,6 @@ list (
     hash/sha2.cpp
     hash/sha2.hpp
     hash/wang.hpp
-    hash/wang.ipp
     hash/xxhash.cpp
     hash/xxhash.hpp
     introspection.cpp
@@ -509,9 +500,9 @@ if (TESTS)
         hash/checksum
         hash/crc
         hash/fasthash
+        hash/fnv1a
         hash/hmac
         hash/hotp
-        hash/keccak
         hash/md2
         hash/md4
         hash/md5

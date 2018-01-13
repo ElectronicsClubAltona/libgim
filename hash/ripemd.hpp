@@ -12,11 +12,13 @@
  * limitations under the License.
  *
  * Copyright:
- *      2014, Danny Robson <danny@nerdcruft.net>
+ *      2014-2018, Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_HASH_RIPEMD_HPP
-#define __UTIL_HASH_RIPEMD_HPP
+#ifndef CRUFT_UTIL_HASH_RIPEMD_HPP
+#define CRUFT_UTIL_HASH_RIPEMD_HPP
+
+#include "../view.hpp"
 
 #include <array>
 
@@ -24,34 +26,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 namespace util::hash {
     class RIPEMD {
-        public:
-            typedef std::array<uint8_t,20> digest_t;
+    public:
+        typedef std::array<uint8_t,20> digest_t;
 
-        public:
-            RIPEMD();
-
-            void update (const void *restrict, size_t) noexcept;
-            void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
-
-            digest_t digest (void) const;
-            void finish (void);
-            void reset (void);
-
-        protected:
-            void transform ();
-
-            bool m_finished;
-
-            uint32_t m_state[5];
-            uint64_t m_length;
-
-            struct {
-                union {
-                    uint32_t d32[16];
-                    uint8_t  d08[64];
-                };
-                size_t size;
-            } m_buffer;
+        digest_t operator() (util::view<const uint8_t*>);
     };
 }
 

@@ -19,40 +19,25 @@
 #include "common.hpp"
 #include "../../debug.hpp"
 
-//-----------------------------------------------------------------------------
+using util::hash::murmur1;
+
+
+///////////////////////////////////////////////////////////////////////////////
 uint32_t
-util::hash::murmur1::mix (uint32_t h, uint32_t k)
+murmur1::operator() (util::view<const uint8_t*> data) const noexcept
 {
     static const uint32_t m = 0xc6a4a793;
-
-    h += k;
-    h *= m;
-    h ^= h >> 16;
-
-    return h;
-}
-
-
-//-----------------------------------------------------------------------------
-uint32_t
-util::hash::murmur1::hash_32 (const void *restrict data,
-                              size_t len,
-                              uint32_t seed)
-{
-    CHECK (data);
-
-    static const uint32_t m = 0xc6a4a793;
-    uint32_t h = seed ^ ((len & 0xffffffff) * m);
+    uint32_t h = m_seed ^ ((data.size () & 0xffffffff) * m);
 
     // mix the body
-    auto cursor = reinterpret_cast<const uint32_t*> (data);
-    auto last   = cursor + len / sizeof (uint32_t);
+    auto cursor = reinterpret_cast<const uint32_t*> (data.data ());
+    auto last   = cursor + data.size () / sizeof (uint32_t);
     for (; cursor < last; ++cursor)
         h = mix (h, *cursor);
 
     // mix the tail
-    if (len % sizeof (uint32_t))
-        h = mix (h, murmur::tail<uint32_t> (reinterpret_cast<const uint8_t*> (cursor), len));
+    if (data.size () % sizeof (uint32_t))
+        h = mix (h, murmur::tail<uint32_t> (reinterpret_cast<const uint8_t*> (cursor), data.size ()));
 
     // finalise
     h *= m; h ^= h >> 10;

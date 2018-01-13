@@ -11,11 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2018 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_HASH_CRC_HPP
-#define __UTIL_HASH_CRC_HPP
+#ifndef CRUFT_UTIL_HASH_CRC_HPP
+#define CRUFT_UTIL_HASH_CRC_HPP
+
+#include "../view.hpp"
 
 #include <array>
 #include <cstdint>
@@ -24,7 +26,7 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-namespace util { namespace hash {
+namespace util::hash {
     // Implements the crc checksum (from ethernet, png, etc).
     //
     // Adapted from the PNG specification (ISO/IEC 15948:2003), appendix D and
@@ -37,8 +39,8 @@ namespace util { namespace hash {
     // ReflectOut: whether to reverse the bits of the digest at finish time
     //
     // Note that reflection isn't necessarily explicitly performed at update
-    // time. Instead we construct the lookup table appropriately to directly
-    // use the data values directly.
+    // time. Instead we construct the lookup table appropriately to use the
+    // data values directly.
     template <
         typename DigestT,
         DigestT Generator,
@@ -53,26 +55,16 @@ namespace util { namespace hash {
 
         static constexpr auto generator = Generator;
 
-        crc () noexcept;
-
-        void reset (void) noexcept;
-
-        void update (const void *restrict data, size_t bytes) noexcept;
-        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
-
-        void finish (void);
-
-        digest_t digest (void) const;
+        digest_t operator() (util::view<const uint8_t*>) const noexcept;
 
         static constexpr
         std::array<DigestT,256>
         table (void);
 
     private:
-        digest_t m_digest;
-
         static const std::array<DigestT,256> s_table;
     };
+
 
     using crc32  = crc<uint32_t, 0x04c11db7, 0xffffffff, 0xffffffff, true,  true>;
     using crc32b = crc<uint32_t, 0x04c11db7, 0xffffffff, 0xffffffff, false, false>;
@@ -80,6 +72,6 @@ namespace util { namespace hash {
     using crc32d = crc<uint32_t, 0xa833982b, 0xffffffff, 0xffffffff, true,  true>;
 
     using crc64 = crc<uint64_t, 0x42f0e1eba9ea3693, 0, 0, false, false>;
-} }
+}
 
 #endif

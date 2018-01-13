@@ -516,6 +516,75 @@ namespace util {
     ) {
         return false;
     }
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename OutputIt, typename FunctionT>
+    OutputIt
+    _transform_by_block (
+        const util::view<OutputIt> &,
+        OutputIt cursor,
+        FunctionT &&
+    ) {
+        return cursor;
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename OutputIt, typename FunctionT, typename InputT, typename ...TailT>
+    OutputIt
+    _transform_by_block (
+        const util::view<OutputIt> &dst,
+        OutputIt cursor,
+        FunctionT &&func,
+        const InputT &_src,
+        TailT &&...tail
+    ) {
+        auto remain = _src;
+        if (cursor != dst.begin ()) {
+            auto infill = std::distance (cursor, dst.end ());
+            if (remain.size () < static_cast<size_t> (infill)) {
+                return _transform_by_block (
+                    dst,
+                    std::copy_n (remain.begin (), remain.size (), cursor),
+                    std::forward<FunctionT> (func),
+                    std::forward<TailT> (tail)...
+                );
+            }
+
+            std::copy_n (remain.begin (), infill, cursor);
+            func (dst);
+            cursor = dst.begin ();
+            remain = { remain.begin () + infill, remain.end () };
+        }
+
+        while (remain.size () >= dst.size ()) {
+            std::copy_n (remain.begin (), dst.size (), dst.begin ());
+            func (dst);
+            remain = { remain.begin () + dst.size (), remain.end () };
+        }
+
+        return _transform_by_block (
+            dst,
+            std::copy (remain.begin (), remain.end (), cursor),
+            std::forward<FunctionT> (func),
+            std::forward<TailT> (tail)...
+        );
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <typename OutputIt, typename FunctionT, typename ...Args>
+    OutputIt
+    transform_by_block (const util::view<OutputIt> &dst, FunctionT &&func, Args &&...src)
+    {
+        return _transform_by_block (
+            dst,
+            dst.begin (),
+            std::forward<FunctionT> (func),
+            std::forward<Args> (src)...
+        );
+    }
 };
 
 #endif

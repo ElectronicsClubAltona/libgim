@@ -16,6 +16,7 @@
 
 #include "md5.hpp"
 
+#include "../iterator.hpp"
 #include "../bitwise.hpp"
 #include "../debug.hpp"
 
@@ -95,131 +96,107 @@ const std::array<uint32_t, 65> T = { {
 
 
 //-----------------------------------------------------------------------------
-static const uint32_t DEFAULT_A = 0x67452301;
-static const uint32_t DEFAULT_B = 0xefcdab89;
-static const uint32_t DEFAULT_C = 0x98badcfe;
-static const uint32_t DEFAULT_D = 0x10325476;
+static constexpr uint32_t INITIAL_A = 0x67452301;
+static constexpr uint32_t INITIAL_B = 0xefcdab89;
+static constexpr uint32_t INITIAL_C = 0x98badcfe;
+static constexpr uint32_t INITIAL_D = 0x10325476;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-MD5::MD5()
+typename MD5::digest_t
+MD5::operator() (util::view<const uint8_t*> a) const noexcept
 {
-    reset ();
+    return (*this)(a, nullptr);
 }
 
 
 //-----------------------------------------------------------------------------
-void
-MD5::reset (void)
+typename MD5::digest_t
+MD5::operator() (util::view<const uint8_t*> a, util::view<const uint8_t*> b) const noexcept
 {
-    m_total = 0;
-
-    ABCD[0] = DEFAULT_A;
-    ABCD[1] = DEFAULT_B;
-    ABCD[2] = DEFAULT_C;
-    ABCD[3] = DEFAULT_D;
+    return (*this)(a, b, nullptr);
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void
-MD5::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
-{
-    CHECK_LE (first, last);
+typename MD5::digest_t
+MD5::operator() (
+    const util::view<const uint8_t*> data_a,
+    const util::view<const uint8_t*> data_b,
+    const util::view<const uint8_t*> data_c
+) const noexcept {
+    union {
+        std::array<uint32_t,16> w;
+        std::array<uint8_t, 64> b;
+    } X;
 
-    update (first, last - first);
-}
+    static_assert (sizeof (X.w) == BLOCK_SIZE);
+    static_assert (X.w.size () == DIGEST_SIZE);
 
+    static_assert (sizeof (X.b) == BLOCK_SIZE);
+    static_assert (X.b.size () == BLOCK_SIZE);
 
-//-----------------------------------------------------------------------------
-void
-MD5::update (const void *restrict _data, size_t size) noexcept
-{
-    CHECK (_data);
-    auto data = static_cast<const uint8_t *restrict> (_data);
+    static_assert ((void*)&X.w == (void*)&X.b);
 
-    size_t offset = m_total % sizeof (Xb);
-    size_t remain = sizeof (Xb) - offset;
+    uint64_t m_total = 0;
+    std::array<uint32_t,4> ABCD = {
+        INITIAL_A,
+        INITIAL_B,
+        INITIAL_C,
+        INITIAL_D
+    };
 
-    if (size >= remain) {
-        memcpy (Xb + offset, data, remain);
-        transform ();
+    // note we pass in a windowed view of the state block, not the whole
+    // thing.
+    util::transform_by_block (
+        util::view {X.b},
+        [&,this] (auto) { ABCD = transform (ABCD, X.w); },
+        data_a, data_b, data_c
+    );
+    m_total = data_a.size () + data_b.size () + data_c.size ();
 
-        m_total += remain;
-        size    -= remain;
-        data    += remain;
+    uint64_t bits = m_total * 8;
 
-        while (size >= sizeof (Xb)) {
-            memcpy (Xb, data, sizeof (Xb));
-            transform ();
+    // Pad with the mandatory 1 bit
+    X.b[m_total % BLOCK_SIZE] = 0x80;
 
-            m_total += sizeof (Xb);
-            size    -= sizeof (Xb);
-            data    += sizeof (Xb);
+    {
+        // Pad the remainder with 0's, until 56 bytes
+        size_t offset = (m_total + 1) % BLOCK_SIZE;
+        size_t remain = (56 - offset % BLOCK_SIZE) % BLOCK_SIZE;
+
+        if (offset > 56) {
+            std::fill (&X.b[offset], X.b.end (), 0);
+            ABCD = transform (ABCD, X.w);
+            remain -= sizeof (X.b) - offset;
+            offset  = 0;
         }
 
-        offset = 0;
+        memset (&X.b[offset], 0, remain);
+
+        // Put in the length (in bits) least significant first
+        for (size_t i = 0; i < sizeof (bits); ++i) {
+            X.b[56 + i] = bits & 0xFF;
+            bits >>= 8;
+        }
+
+        ABCD = transform (ABCD, X.w);
     }
 
-    memcpy (Xb + offset, data, size);
-    m_total += size;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-MD5::digest_t
-MD5::digest (void) const
-{
-    static_assert (sizeof (ABCD) == sizeof (digest_t),
-                   "Hash state must be the same size as the final digest");
 
     digest_t d;
     memcpy (d.data (), ABCD.data (), sizeof (ABCD));
     return d;
-}
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////
-void
-MD5::finish (void)
+std::array<uint32_t,4>
+MD5::transform (
+    const std::array<uint32_t,4> &ABCD,
+    const std::array<uint32_t,16> &X) const noexcept
 {
-    uint64_t bits = m_total * 8;
 
-    {
-        // Pad with the mandatory 1 bit
-        size_t offset = m_total % sizeof (Xb);
-        Xb[offset] = 0x80;
-    }
-
-    {
-        // Pad the remainder with 0's, until 56 bytes
-        size_t offset = (m_total + 1) % sizeof (Xb);
-        size_t remain = (56 - offset % sizeof (Xb)) % sizeof (Xb);
-
-        if (offset > 56) {
-            memset (Xb + offset, 0, sizeof (Xb) - offset);
-            transform ();
-            remain -= sizeof (Xb) - offset;
-            offset  = 0;
-        }
-
-        memset (Xb + offset, 0, remain);
-
-        // Put in the length (in bits) least significant first
-        for (size_t i = 0; i < sizeof (bits); ++i) {
-            Xb[56 + i] = bits & 0xFF;
-            bits >>= 8;
-        }
-
-        transform ();
-    }
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void
-MD5::transform (void)
-{
     uint32_t A = ABCD[0],
              B = ABCD[1],
              C = ABCD[2],
@@ -315,8 +292,10 @@ MD5::transform (void)
     ROUNDx(C,D,A,B,  2, 15, 63, I);
     ROUNDx(B,C,D,A,  9, 21, 64, I);
 
-    ABCD[0] += A;
-    ABCD[1] += B;
-    ABCD[2] += C;
-    ABCD[3] += D;
+    return {
+        ABCD[0] + A,
+        ABCD[1] + B,
+        ABCD[2] + C,
+        ABCD[3] + D,
+    };
 }

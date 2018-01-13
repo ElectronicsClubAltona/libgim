@@ -11,11 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Copyright 2011 Danny Robson <danny@nerdcruft.net>
+ * Copyright 2011-2018 Danny Robson <danny@nerdcruft.net>
  */
 
-#ifndef __UTIL_HASH_BSDSUM_HPP
-#define __UTIL_HASH_BSDSUM_HPP
+#ifndef CRUFT_UTIL_HASH_BSDSUM_HPP
+#define CRUFT_UTIL_HASH_BSDSUM_HPP
+
+#include "../view.hpp"
 
 #include <cstdint>
 #include <cstdlib>
@@ -27,18 +29,7 @@ namespace util::hash {
     public:
         using digest_t = uint16_t;
 
-        bsdsum (void);
-        void reset (void);
-
-        void update (const void *restrict data, size_t bytes) noexcept;
-        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
-
-        void finish (void);
-
-        digest_t digest (void) const;
-
-    private:
-        digest_t m_accum;
+        digest_t operator() (util::view<const uint8_t*>) const noexcept;
     };
 }
 

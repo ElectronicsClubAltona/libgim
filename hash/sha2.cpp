@@ -182,87 +182,86 @@ H_512[] = {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-SHA256::SHA256 ():
-    m_total (0)
+SHA256::digest_t
+SHA256::operator() (util::view<const uint8_t*> data) noexcept
 {
     (void)K_80;
     (void)H_224;
     (void)H_384;
     (void)H_512;
 
+    /* INIT */
+    m_total = 0;
     std::copy (std::begin (H_256), std::end (H_256), std::begin (H));
-}
 
+    /* UPDATE */
+    {
+        auto cursor = data.begin ();
+        auto length = data.size ();
 
-//-----------------------------------------------------------------------------
-void
-SHA256::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
-{
-    CHECK_LE (first, last);
+        while (length) {
+            size_t buffered = m_total % sizeof (M);
+            size_t chunk = std::min (sizeof (M) - buffered, length);
+            std::copy (cursor, cursor + chunk, C.begin () + buffered);
 
-    update (first, last - first);
-}
+            length -= chunk;
+            m_total  += chunk;
 
-
-//-----------------------------------------------------------------------------
-void
-SHA256::update (const void *restrict _data, size_t length) noexcept
-{
-    CHECK (_data);
-    auto data = static_cast<const uint8_t *restrict> (_data);
-
-    while (length) {
-        size_t buffered = m_total % sizeof (M);
-        size_t chunk = std::min (sizeof (M) - buffered, length);
-        std::copy (data, data + chunk, C.begin () + buffered);
-
-        length -= chunk;
-        m_total  += chunk;
-
-        if (m_total % sizeof (M) == 0)
-            process ();
+            if (m_total % sizeof (M) == 0)
+                process ();
+        }
     }
-}
 
+    /* FINISH */
+    {
+        // Append a single 1 bit followed by 0s.
+        auto buffered = m_total % sizeof (M);
+        auto used     = m_total * 8u;
 
-///////////////////////////////////////////////////////////////////////////////
-void
-SHA256::finish (void)
-{
-    // Append a single 1 bit followed by 0s.
-    auto buffered = m_total % sizeof (M);
-    auto used     = m_total * 8u;
+        C[buffered++] = 0x80;
+        ++m_total;
 
-    C[buffered++] = 0x80;
-    ++m_total;
+        // Pad out to 56 byte length
+        if (buffered > 56) {
+            size_t chunk = sizeof (M) - buffered;
+            std::fill_n (C.begin () + buffered, chunk, 0);
+            m_total += chunk;
+            process ();
 
-    // Pad out to 56 byte length
-    if (buffered > 56) {
-        size_t chunk = sizeof (M) - buffered;
+            buffered = 0;
+        }
+
+        size_t chunk = sizeof (M) - sizeof (uint64_t) - buffered;
         std::fill_n (C.begin () + buffered, chunk, 0);
         m_total += chunk;
-        process ();
 
-        buffered = 0;
+        // Finish with the m_total size
+        C[56] = (used >> 56) & 0xFF;
+        C[57] = (used >> 48) & 0xFF;
+        C[58] = (used >> 40) & 0xFF;
+        C[59] = (used >> 32) & 0xFF;
+        C[60] = (used >> 24) & 0xFF;
+        C[61] = (used >> 16) & 0xFF;
+        C[62] = (used >>  8) & 0xFF;
+        C[63] = (used >>  0) & 0xFF;
+        m_total += 8;
+
+        // Reprocess
+        process ();
     }
 
-    size_t chunk = sizeof (M) - sizeof (uint64_t) - buffered;
-    std::fill_n (C.begin () + buffered, chunk, 0);
-    m_total += chunk;
+    /* DIGEST */
+    digest_t out;
 
-    // Finish with the m_total size
-    C[56] = (used >> 56) & 0xFF;
-    C[57] = (used >> 48) & 0xFF;
-    C[58] = (used >> 40) & 0xFF;
-    C[59] = (used >> 32) & 0xFF;
-    C[60] = (used >> 24) & 0xFF;
-    C[61] = (used >> 16) & 0xFF;
-    C[62] = (used >>  8) & 0xFF;
-    C[63] = (used >>  0) & 0xFF;
-    m_total += 8;
+    auto cursor = out.begin ();
+    for (auto i: H) {
+        *cursor++ = (i >> 24) & 0xFF;
+        *cursor++ = (i >> 16) & 0xFF;
+        *cursor++ = (i >>  8) & 0xFF;
+        *cursor++ = (i >>  0) & 0xFF;
+    }
 
-    // Reprocess
-    process ();
+    return out;
 }
 
 
@@ -311,22 +310,4 @@ SHA256::process (void)
     H[5] += f;
     H[6] += g;
     H[7] += h;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-SHA256::digest_t
-SHA256::digest (void) const
-{
-    digest_t out;
-
-    auto cursor = out.begin ();
-    for (auto i: H) {
-        *cursor++ = (i >> 24) & 0xFF;
-        *cursor++ = (i >> 16) & 0xFF;
-        *cursor++ = (i >>  8) & 0xFF;
-        *cursor++ = (i >>  0) & 0xFF;
-    }
-
-    return out;
 }

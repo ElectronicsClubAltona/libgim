@@ -17,6 +17,8 @@
 #ifndef __UTIL_HASH_MD4_HPP
 #define __UTIL_HASH_MD4_HPP
 
+#include "view.hpp"
+
 #include <array>
 #include <cstdint>
 
@@ -25,28 +27,9 @@
 namespace util::hash {
     class MD4 {
     public:
-        typedef std::array<uint8_t,16> digest_t;
+        using digest_t = std::array<uint8_t,16>;
 
-    public:
-        MD4();
-
-        void update (const void    *restrict data, size_t len) noexcept;
-        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
-
-        void finish (void);
-        digest_t digest (void) const;
-        void reset (void);
-
-    private:
-        void transform (void);
-
-        uint64_t m_total;
-
-        std::array<uint32_t,4> ABCD;
-        union {
-            uint32_t X [16];
-            uint8_t  Xb[64];
-        };
+        digest_t operator() (util::view<const uint8_t*>) noexcept;
     };
 }
 
