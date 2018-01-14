@@ -23,7 +23,8 @@ namespace util::hash {
     // Thomas Wang's integer mixing functions, ca 2007
     //-------------------------------------------------------------------------
     constexpr uint32_t
-    util::hash::wang (uint32_t key) {
+    wang (uint32_t key)
+    {
         // a prime or an odd constant
         constexpr uint32_t c2 = 0x27d4eb2d;
 
@@ -39,7 +40,8 @@ namespace util::hash {
 
     //-------------------------------------------------------------------------
     constexpr uint64_t
-    util::hash::wang (uint64_t key) {
+    wang (uint64_t key)
+    {
         key = ~key + (key << 21); // key = (key << 21) - key - 1;
         key =  key ^ (key >> 24);
         key = (key + (key <<  3)) + (key << 8); // key * 265

@@ -288,7 +288,7 @@ namespace util {
             util::view<BeginT,BeginT>,
             util::view<BeginT,EndT>
         >
-        split (BeginT pos)
+        split (BeginT pos) const
         {
             return {
                 { m_begin, pos },
@@ -299,7 +299,7 @@ namespace util {
 
         //---------------------------------------------------------------------
         constexpr auto
-        split (int pos)
+        split (int pos) const
         {
             auto last = m_begin;
             std::advance (last, pos);
@@ -309,19 +309,27 @@ namespace util {
 
         //---------------------------------------------------------------------
         constexpr auto
-        consume (int count)
+        consume (int count) const
         {
             auto [a,b] = split (count);
+            (void)a;
             return b;
         }
 
 
         //---------------------------------------------------------------------
         constexpr util::view<BeginT,EndT>
-        consume (util::view<BeginT,BeginT> val)
+        consume (util::view<BeginT,BeginT> prefix) const
         {
-            assert (val.begin () == begin ());
-            return { val.end (), end () };
+            assert (prefix.begin () == begin ());
+            return { prefix.end (), end () };
+        }
+
+
+        constexpr util::view<BeginT,EndT>
+        consume (const BeginT pos) const
+        {
+            return { pos, end () };
         }
 
 
