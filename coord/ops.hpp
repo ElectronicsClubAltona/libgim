@@ -48,34 +48,77 @@ namespace util {
     // specific template template parameters. but the introduction of
     // coordinate types that do not expose size or type information as template
     // parameters we can't rely on this mechanism anymore.
-    template <typename, typename,typename=void>
-    struct ops {};
+
+    template <typename, typename, typename=void>
+    struct assignment {};
 
 
     //-------------------------------------------------------------------------
-    // vector operators
-    template <typename ValueA, typename ValueB>
-    struct ops<
-        ValueA,
-        ValueB,
+    template <typename CoordA, typename CoordB>
+    struct assignment<
+        CoordA,
+        CoordB,
         std::enable_if_t<
-            is_coord_v<ValueA> &&
-            is_coord_v<ValueB> &&
-            arity<ValueA>::value == arity<ValueB>::value
+            is_coord_v<CoordA> &&
+            is_coord_v<CoordB> &&
+            arity_v<CoordA> == arity_v<CoordB> &&
+            std::is_same_v<
+                typename CoordA::value_type,
+                std::common_type_t<
+                    typename CoordA::value_type,
+                    typename CoordB::value_type
+                >
+            >
             ,
             void
         >
     > {
-        template <typename OpT>
-        static constexpr ValueA&
-        assignment (OpT op, ValueA &a, ValueB b)
+        template <typename OperationT>
+        static constexpr CoordA&
+        eval (OperationT &&op, CoordA &a, const CoordB &b)
         {
-            for (std::size_t i = 0; i < ValueA::elements; ++i)
+            for (std::size_t i = 0; i < CoordA::elements; ++i)
                 a[i] = op (a[i], b[i]);
             return a;
         }
     };
 
+
+    //-------------------------------------------------------------------------
+    // vector-scalar operations
+    template <
+        typename CoordT,
+        typename ScalarT
+    >
+    struct assignment<
+        CoordT,
+        ScalarT,
+        std::enable_if_t<
+             is_coord_v<CoordT> &&
+            !is_coord_v<ScalarT> &&
+            has_scalar_op_v<CoordT> &&
+            std::is_same_v<
+                typename CoordT::value_type,
+                std::common_type_t<
+                    typename CoordT::value_type,
+                        ScalarT
+                >
+            >
+            ,
+            void
+        >
+    > {
+        // we allow scalar types which can be naturally promoted to the vector's
+        // value_type
+        template <typename OperationT>
+        static constexpr CoordT&
+        eval (OperationT &&op, CoordT &coord, const ScalarT scalar)
+        {
+            for (size_t i = 0; i < CoordT::elements; ++i)
+                coord[i] = op (coord[i], scalar);
+            return coord;
+        }
+    };
 
     ///////////////////////////////////////////////////////////////////////////
     /// create a coord from supplied arguments, optionally specifying the
@@ -125,6 +168,7 @@ namespace util {
     struct arithmetic {};
 
 
+    //-------------------------------------------------------------------------
     template <typename CoordA, typename CoordB>
     struct arithmetic<
         CoordA,
@@ -155,6 +199,7 @@ namespace util {
     };
 
 
+    //-------------------------------------------------------------------------
     template <typename CoordT, typename ScalarT>
     struct arithmetic<
         CoordT,
@@ -177,6 +222,7 @@ namespace util {
     };
 
 
+    //-------------------------------------------------------------------------
     template <typename ScalarT, typename CoordT>
     struct arithmetic<
         ScalarT,
@@ -198,46 +244,6 @@ namespace util {
         }
     };
 
-
-
-    //-------------------------------------------------------------------------
-    // vector-scalar operations
-    template <
-        typename CoordT,
-        typename ScalarT
-    >
-    struct ops<
-        CoordT,
-        ScalarT,
-        std::enable_if_t<
-            is_coord_v<CoordT> &&
-            !is_coord_v<ScalarT> &&
-            has_scalar_op_v<CoordT>
-        >
-    > {
-        // we allow scalar types which can be naturally promoted to the vector's
-        // value_type
-        template <
-            typename OpT,
-            typename = std::enable_if_t<
-                std::is_same_v<
-                    typename CoordT::value_type,
-                    std::common_type_t<
-                        typename CoordT::value_type,
-                        ScalarT
-                    >
-                >,
-                void
-            >
-        >
-        static constexpr CoordT&
-        assignment (OpT &&op, CoordT &c, const ScalarT s)
-        {
-            for (size_t i = 0; i < CoordT::elements; ++i)
-                c[i] = op (c[i], s);
-            return c;
-        }
-    };
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -321,10 +327,10 @@ namespace util {
     constexpr auto
     operator += (A &&a, B &&b)
     {
-        return ops<
+        return assignment<
             std::decay_t<A>,
             std::decay_t<B>
-        >::template assignment (std::plus{}, a, b);
+        >::eval (std::plus{}, a, b);
     }
 
 
@@ -340,10 +346,10 @@ namespace util {
     constexpr auto
     operator -= (A &&a, B &&b)
     {
-        return ops<
+        return assignment<
             std::decay_t<A>,
             std::decay_t<B>
-        >::template assignment (std::minus{}, a, b);
+        >::eval (std::minus{}, a, b);
     }
 
 
@@ -359,10 +365,10 @@ namespace util {
     constexpr auto
     operator *= (A &&a, B &&b)
     {
-        return ops<
+        return assignment<
             std::decay_t<A>,
             std::decay_t<B>
-        >::template assignment (std::multiplies{}, a, b);
+        >::eval (std::multiplies{}, a, b);
     }
 
 
@@ -378,10 +384,10 @@ namespace util {
     constexpr auto
     operator /= (A &&a, B &&b)
     {
-        return ops<
+        return assignment<
             std::decay_t<A>,
             std::decay_t<B>
-        >::template assignment (std::divides{}, a, b);
+        >::eval (std::divides{}, a, b);
     }
 
 
