@@ -37,6 +37,7 @@ namespace util {
             remove_restrict_t<BeginT>
         >::value_type;
 
+        using size_type = size_t;
 
         //---------------------------------------------------------------------
         constexpr
@@ -238,12 +239,12 @@ namespace util {
         constexpr auto
         size (void) const noexcept
         {
-            return static_cast<std::size_t> (std::distance (m_begin, m_end));
+            return static_cast<size_type> (std::distance (m_begin, m_end));
         }
 
         //---------------------------------------------------------------------
         [[gnu::warn_unused_result]] constexpr auto
-        redim (int count) const
+        redim (size_type count) const
         {
             assert (count > 0);
             if (count > size ())
