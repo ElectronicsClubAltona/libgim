@@ -16,35 +16,26 @@
 
 #include "fasthash.hpp"
 
-
-///////////////////////////////////////////////////////////////////////////////
-uint64_t
-util::hash::fasthash::mix (uint64_t v)
-{
-    v ^= v >> 23;
-    v *= 0x2127599bf4325c37;
-    v ^= v >> 47;
-
-    return v;
-}
+using util::hash::fasthash;
 
 
 ///////////////////////////////////////////////////////////////////////////////
+template <>
 uint64_t
-util::hash::fasthash::hash64 (const void *restrict data, size_t len, uint64_t seed)
+fasthash<uint64_t>::operator() (uint64_t seed, const util::view<const uint8_t*> data) const
 {
     static const uint64_t m = 0x880355f21e6d1965;
 
-    uint64_t result = seed ^ (len * m);
+    uint64_t result = seed ^ (data.size () * m);
 
-    auto cursor = reinterpret_cast<const uint64_t*> (data);
-    auto last   = cursor + len / sizeof (*cursor);
+    auto cursor = reinterpret_cast<const uint64_t*> (data.begin ());
+    auto last   = cursor + data.size () / sizeof (*cursor);
     for (; cursor < last; ++cursor) {
         result ^= mix (*cursor);
         result *= m;
     }
 
-    size_t remain = len % sizeof (*cursor);
+    size_t remain = data.size () % sizeof (*cursor);
     if (remain) {
         auto tail = reinterpret_cast<const uint8_t*> (cursor);
         
@@ -61,10 +52,11 @@ util::hash::fasthash::hash64 (const void *restrict data, size_t len, uint64_t se
 
 
 //-----------------------------------------------------------------------------
+template <>
 uint32_t
-util::hash::fasthash::hash32 (const void *restrict data, size_t len, uint32_t seed)
+fasthash<uint32_t>::operator() (uint64_t seed, const util::view<const uint8_t*> data) const
 {
-    uint64_t h = hash64 (data, len, seed);
+    auto h = fasthash<uint64_t> {} (seed, data);
     return (h & 0xffffffff) - (h >> 32);
 }
 

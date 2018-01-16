@@ -51,7 +51,7 @@ main (int argc, char **argv)
 
     try {
         const util::mapped_file src (argv[ARG_INPUT]);
-        std::cout << *json::tree::parse (src.as_view<const char> ()) << '\n';
+        std::cout << *json::tree::parse (util::view{src}.cast<const char> ()) << '\n';
     } catch (const json::error& err) {
         std::cerr << err.what () << "\n";
         return EXIT_FAILURE;

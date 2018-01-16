@@ -210,7 +210,7 @@ parse (typename std::vector<json::flat::item<T>>::const_iterator first,
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 std::unique_ptr<json::tree::node>
-json::tree::parse (const util::view<T> src)
+json::tree::parse (const util::view<T> &src)
 {
     std::unique_ptr<json::tree::node> output;
     auto data = json::flat::parse (src);
@@ -225,7 +225,7 @@ json::tree::parse (const util::view<T> src)
 #define INSTANTIATE(KLASS)          \
 template                            \
 std::unique_ptr<json::tree::node>   \
-json::tree::parse (util::view<KLASS>);
+json::tree::parse (const util::view<KLASS>&);
 
 MAP0(INSTANTIATE,
     std::string::iterator,
@@ -244,7 +244,7 @@ std::unique_ptr<json::tree::node>
 json::tree::parse (const std::experimental::filesystem::path &src)
 {
     const util::mapped_file data (src);
-    return parse (data.as_view<char> ());
+    return parse (util::view{data}.cast<const char> ());
 }
 
 
@@ -442,6 +442,15 @@ namespace json::tree {
     json::tree::node::as (void) const
     {
         return static_cast<int64_t> (as_sint ());
+    }
+
+
+    //-------------------------------------------------------------------------
+    template <>
+    const std::string&
+    json::tree::node::as (void) const
+    {
+        return as_string ().native ();
     }
 #if defined(__clang__)
 #elif defined(__GNUC__)

@@ -42,7 +42,7 @@ main (int argc, char ** argv) {
 
     try {
         const util::mapped_file data (argv[ARG_PATH]);
-        json::flat::parse (data.as_view<const char> ());
+        json::flat::parse (util::view{data}.cast<const char> ());
     } catch (const json::error &x) {
         std::cerr << "error: " << x.what () << '\n';
         return EXIT_FAILURE;

@@ -37,18 +37,6 @@ namespace util::hash {
     class crc;
 
     class xxhash;
-
-    // hash adapters
-    class PBKDF1;
-    class PBKDF2;
-
-    // cryptographic hashes
-    class MD2;
-    class MD4;
-    class MD5;
-    class RIPEMD;
-    class SHA1;
-    class SHA256;
 }
 
 #endif

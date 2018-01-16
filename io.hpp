@@ -90,7 +90,7 @@ namespace util {
     {
         auto remain = src;
         while (!remain.empty ())
-            remain = src - dst.write (remain);
+            remain = remain.consume (dst.write (remain));
         return src;
     }
 

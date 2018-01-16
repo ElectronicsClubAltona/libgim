@@ -17,17 +17,31 @@
 #ifndef __UTIL_HASH_FASTHASH_HPP
 #define __UTIL_HASH_FASTHASH_HPP
 
+#include "../view.hpp"
+
 #include <cstddef>
 #include <cstdint>
 
-// Zilong Tan's FastHash, via George Marsaglia's "Xorshift RNGs"
-namespace util::hash::fasthash {
-    uint64_t mix (uint64_t);
 
-    uint32_t hash32 (const void *restrict data, size_t len, uint32_t seed);
-    uint64_t hash64 (const void *restrict data, size_t len, uint64_t seed);
+// Zilong Tan's FastHash, via George Marsaglia's "Xorshift RNGs"
+namespace util::hash {
+    template <typename ValueT>
+    struct fasthash {
+        using digest_t = ValueT;
+
+        static constexpr
+        uint64_t mix (uint64_t v)
+        {
+            v ^= v >> 23;
+            v *= 0x2127599bf4325c37;
+            v ^= v >> 47;
+
+            return v;
+        }
+
+
+        digest_t operator() (uint64_t seed, util::view<const uint8_t*>) const;
+    };
 }
 
 #endif
-
-

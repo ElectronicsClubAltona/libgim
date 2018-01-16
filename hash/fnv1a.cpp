@@ -16,6 +16,8 @@
 
 #include "fnv1a.hpp"
 
+using util::hash::fnv1a;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Prime is,
@@ -28,48 +30,41 @@
 //
 // Bias is the FNV-0 hash of "chongo <Landon Curt Noll> /\\../\\"
 
-template <size_t B>
+template <typename DigestT>
 struct constants { };
 
-template <> struct constants<32> {
-    static constexpr uint32_t PRIME =   16777619u;
-    static constexpr uint32_t BIAS  = 2166136261u;
-};
 
-template <> struct constants<64> {
-    static constexpr uint64_t PRIME = 1099511628211u;
-    static constexpr uint64_t BIAS = 14695981039346656037u;
+//-----------------------------------------------------------------------------
+template <>
+struct constants<uint32_t> {
+    static constexpr uint32_t prime =   16777619u;
+    static constexpr uint32_t bias  = 2166136261u;
 };
 
 
 //-----------------------------------------------------------------------------
-template <typename T>
-T
-fnv1a (const void *restrict _data, size_t len)
-{
-    auto *data = static_cast<const uint8_t *restrict> (_data);
-    T result = constants<sizeof(T)*8>::BIAS;
+template <>
+struct constants<uint64_t> {
+    static constexpr uint64_t prime = 1099511628211u;
+    static constexpr uint64_t bias  = 14695981039346656037u;
+};
 
-    for (size_t i = 0; i < len; ++i) {
-        result ^= data[i];
-        result *= constants<sizeof(T)*8>::PRIME;
+
+///////////////////////////////////////////////////////////////////////////////
+template <typename DigestT>
+typename fnv1a<DigestT>::digest_t
+fnv1a<DigestT>::operator() (const util::view<const uint8_t*> data) const noexcept
+{
+    auto result = constants<DigestT>::bias;
+
+    for (auto i: data) {
+        result ^= i;
+        result *= constants<DigestT>::prime;
     }
 
     return result;
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
-uint32_t
-util::hash::fnv1a32 (const void *data, size_t len)
-{
-    return fnv1a<uint32_t> (data, len);
-}
-
-
-//-----------------------------------------------------------------------------
-uint64_t
-util::hash::fnv1a64 (const void *data, size_t len)
-{
-    return fnv1a<uint64_t> (data, len);
-}
+template struct util::hash::fnv1a<uint32_t>;
+template struct util::hash::fnv1a<uint64_t>;

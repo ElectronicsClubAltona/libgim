@@ -18,6 +18,7 @@
 #define __UTIL_HASH_FLETCHER_HPP
 
 #include "../types/bits.hpp"
+#include "../view.hpp"
 
 #include <cstdint>
 #include <cstdlib>
@@ -25,31 +26,24 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace util::hash {
-    template <typename DIGEST>
+    template <typename DigestT>
     class fletcher {
     public:
-        using digest_t = DIGEST;
+        using digest_t = DigestT;
         using part_t = typename bytes_type<sizeof (digest_t) / 2>::uint;
 
         fletcher (part_t modulus, part_t a, part_t b);
 
-        void update (const void *restrict, size_t) noexcept;
-        void update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept;
-
-        void finish (void);
-        digest_t digest (void) const;
-
-        void reset (void);
+        digest_t
+        operator() (util::view<const std::uint8_t*>) const noexcept;
 
     private:
-        const digest_t m_modulus;
-
         struct state_t {
             part_t a, b;
         };
 
+        const digest_t m_modulus;
         const state_t m_initial;
-        state_t m_state;
     };
 }
 

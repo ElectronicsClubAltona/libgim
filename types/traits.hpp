@@ -271,6 +271,29 @@ using nth_argument_t = typename nth_argument<N, FuncT>::type;
 
 
 ///////////////////////////////////////////////////////////////////////////////
+template <typename T, typename = std::void_t<>>
+struct is_container : public std::false_type {};
+
+template <typename T>
+struct is_container<
+    T,
+    std::void_t<
+        typename T::value_type,
+        typename T::reference,
+        typename T::const_reference,
+        typename T::iterator,
+        typename T::const_iterator,
+        typename T::difference_type,
+        typename T::size_type
+    >
+> : public std::true_type {};
+
+
+template <typename T>
+constexpr auto is_container_v = is_container<T>::value;
+
+
+///////////////////////////////////////////////////////////////////////////////
 #include <string>
 #include <array>
 #include <vector>

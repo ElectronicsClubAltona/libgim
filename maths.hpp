@@ -225,7 +225,7 @@ namespace util {
         typename BaseT,
         typename ExponentT,
         typename = std::enable_if_t<
-            std::is_unsigned_v<ExponentT>,
+            std::is_integral_v<ExponentT>,
             void
         >
     >

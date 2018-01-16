@@ -50,8 +50,8 @@ main (int argc, char **argv) {
         const util::mapped_file schema_src (argv[ARG_SCHEMA]);
         const util::mapped_file input_src  (argv[ARG_INPUT]);
 
-        auto schema = json::tree::parse (schema_src.as_view<const char> ());
-        auto input  = json::tree::parse (input_src.as_view<const char> ());
+        auto schema = json::tree::parse (util::view{schema_src}.cast<const char>());
+        auto input  = json::tree::parse (util::view{input_src} .cast<const char>());
 
         json::schema::validate (*input, schema->as_object ());
     } catch (const json::error &e) {

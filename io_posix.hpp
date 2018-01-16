@@ -31,6 +31,14 @@ namespace util {
     namespace detail::posix {
         class mapped_file {
         public:
+            using value_type = uint8_t;
+            using reference = value_type&;
+            using const_reference = const value_type&;
+            using iterator = value_type*;
+            using const_iterator = const value_type*;
+            using difference_type = std::iterator_traits<iterator>::difference_type;
+            using size_type = size_t;
+
             mapped_file (const std::experimental::filesystem::path&,
                          int fflags = O_RDONLY | O_BINARY,
                          int mflags = PROT_READ);
@@ -50,27 +58,19 @@ namespace util {
             /// often use this in conjunction with sizeof and packed structure.
             /// it is greatly simpler to cast to signed where it's actually
             /// required rather than the other way around.
-            size_t size (void) const;
+            size_type size (void) const;
 
-            const uint8_t* data (void) const &;
-            uint8_t*       data (void) &;
+            const_iterator data (void) const &;
+            iterator       data (void) &;
 
-            uint8_t* begin (void) &;
-            uint8_t* end   (void) &;
+            iterator begin (void) &;
+            iterator end   (void) &;
 
-            const uint8_t* begin (void) const &;
-            const uint8_t* end   (void) const &;
+            const_iterator begin (void) const &;
+            const_iterator end   (void) const &;
 
-            const uint8_t* cbegin (void) const &;
-            const uint8_t* cend   (void) const &;
-
-            template <typename T>
-            util::view<std::add_const_t<T>*>
-            as_view () const &;
-
-            template <typename T>
-            util::view<T*>
-            as_view () &;
+            const_iterator cbegin (void) const &;
+            const_iterator cend   (void) const &;
 
         private:
             uint8_t *m_data;

@@ -27,61 +27,24 @@ using util::hash::fletcher;
 template <typename T>
 fletcher<T>::fletcher (part_t _modulus, part_t _a, part_t _b):
     m_modulus { _modulus },
-    m_initial { _a, _b },
-    m_state   { m_initial }
+    m_initial { _a, _b }
 { ; }
 
 
-//-----------------------------------------------------------------------------
-template <typename T>
-void
-fletcher<T>::reset (void)
-{
-    m_state = m_initial;
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-void
-fletcher<T>::update (const void *restrict data, size_t size) noexcept
+template <typename DigestT>
+typename fletcher<DigestT>::digest_t
+fletcher<DigestT>::operator() (util::view<const std::uint8_t*> data) const noexcept
 {
-    CHECK (data);
+    state_t accum = m_initial;
 
-    auto first = static_cast<const uint8_t *restrict> (data);
-    update (first, first + size);
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-void
-fletcher<T>::update (const uint8_t *restrict first, const uint8_t *restrict last) noexcept
-{
-    CHECK (first);
-    CHECK (last);
-    CHECK_LE (first, last);
-
-    for (auto cursor = first; cursor < last; ++cursor) {
-        m_state.a = (m_state.a + *cursor  ) % m_modulus;
-        m_state.b = (m_state.a + m_state.b) % m_modulus;
+    for (const auto i: data) {
+        accum.a = (accum.a +       i) % m_modulus;
+        accum.b = (accum.a + accum.b) % m_modulus;
     }
-}
 
-
-//-----------------------------------------------------------------------------
-template <typename T>
-void
-fletcher<T>::finish (void)
-{ ; }
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-typename fletcher<T>::digest_t
-fletcher<T>::digest (void) const
-{
-    return (m_state.b << (sizeof (part_t) * 8)) + m_state.a;
+    return accum.b << (sizeof(part_t) * 8u) | accum.a;
 }
 
 

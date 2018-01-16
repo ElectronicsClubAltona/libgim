@@ -48,112 +48,23 @@ template <
     bool ReflectIn,
     bool ReflectOut
 >
+typename crc<DigestT,Generator,Initial,Final,ReflectIn,ReflectOut>::digest_t
 crc<
     DigestT,Generator,Initial,Final,ReflectIn,ReflectOut
->::crc () noexcept
+>::operator() (const util::view<const uint8_t*> data) const noexcept
 {
-    reset ();
-}
+    auto accum = Initial;
 
-
-//-----------------------------------------------------------------------------
-template <
-    typename DigestT,
-    DigestT Generator,
-    DigestT Initial,
-    DigestT Final,
-    bool ReflectIn,
-    bool ReflectOut
->
-void
-crc<
-    DigestT,Generator,Initial,Final,ReflectIn,ReflectOut
->::reset (void) noexcept
-{
-    m_digest = Initial;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <
-    typename DigestT,
-    DigestT Generator,
-    DigestT Initial,
-    DigestT Final,
-    bool ReflectIn,
-    bool ReflectOut
->
-void
-crc<
-    DigestT,Generator,Initial,Final,ReflectIn,ReflectOut
->::update (const uint8_t *restrict first,
-           const uint8_t *restrict last) noexcept
-{
-    CHECK_LE (first, last);
-
-    for (auto cursor = first; cursor != last; ++cursor) {
+    for (auto i: data) {
         if (ReflectIn)
-            m_digest = s_table[*cursor ^ (m_digest & 0xFFu)] ^ (m_digest >> 8u);
+            accum = s_table[i ^ (accum & 0xFFu)] ^ (accum >> 8u);
         else {
             constexpr auto shift = sizeof (DigestT) * 8u - 8u;
-            m_digest = (m_digest << 8u) ^ s_table[(m_digest >> shift) ^ *cursor];
+            accum = (accum << 8u) ^ s_table[(accum >> shift) ^ i];
         }
     }
-}
 
-
-//-----------------------------------------------------------------------------
-template <
-    typename DigestT,
-    DigestT Generator,
-    DigestT Initial,
-    DigestT Final,
-    bool ReflectIn,
-    bool ReflectOut
->
-void
-crc<
-    DigestT,Generator,Initial,Final,ReflectIn,ReflectOut
->::update (const void *restrict _data, size_t len) noexcept
-{
-    auto data = reinterpret_cast<const uint8_t *restrict> (_data);
-    return update(data, data + len);
-}
-
-
-//-----------------------------------------------------------------------------
-template <
-    typename DigestT,
-    DigestT Generator,
-    DigestT Initial,
-    DigestT Final,
-    bool ReflectIn,
-    bool ReflectOut
->
-void
-crc<
-    DigestT,Generator,Initial,Final,ReflectIn,ReflectOut
->::finish (void)
-{
-    ;
-}
-
-
-//-----------------------------------------------------------------------------
-template <
-    typename DigestT,
-    DigestT Generator,
-    DigestT Initial,
-    DigestT Final,
-    bool ReflectIn,
-    bool ReflectOut
->
-DigestT
-crc<
-    DigestT,Generator,Initial,Final,ReflectIn,ReflectOut
->::digest (void) const
-{
-    return (ReflectIn != ReflectOut ? util::reverse (m_digest) : m_digest) ^ Final;
+    return (ReflectIn != ReflectOut ? util::reverse (accum) : accum) ^ Final;
 }
 
 

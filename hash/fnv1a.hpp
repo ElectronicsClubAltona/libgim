@@ -17,13 +17,19 @@
 #ifndef __UTIL_HASH_FNV1A_HPP
 #define __UTIL_HASH_FNV1A_HPP
 
+#include "view.hpp"
+
 #include <cstdint>
 #include <cstddef>
 
 namespace util::hash {
     // Fast and general hashing using FNV-1a
-    uint32_t fnv1a32 (const void *restrict, size_t);
-    uint64_t fnv1a64 (const void *restrict, size_t);
+    template <typename DigestT>
+    struct fnv1a {
+        using digest_t = DigestT;
+
+        digest_t operator() (util::view<const uint8_t*>) const noexcept;
+    };
 }
 
 #endif

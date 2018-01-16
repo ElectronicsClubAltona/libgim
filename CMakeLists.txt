@@ -134,7 +134,6 @@ endif ()
 # Common files
 list (
     APPEND UTIL_FILES
-    hash/md2.cpp
     adapter.hpp
     adapter.cpp
     algo/sort.cpp
@@ -186,18 +185,6 @@ list (
     coord/ops.hpp
     coord/store.hpp
     coord/traits.hpp
-    crypto/arc4.cpp
-    crypto/arc4.hpp
-    crypto/ice.cpp
-    crypto/ice.hpp
-    crypto/salsa.cpp
-    crypto/salsa.hpp
-    crypto/tea.cpp
-    crypto/tea.hpp
-    crypto/xtea.cpp
-    crypto/xtea.hpp
-    crypto/xxtea.cpp
-    crypto/xxtea.hpp
     debug.cpp
     debug.hpp
     debug.ipp
@@ -241,8 +228,6 @@ list (
     geom/tri.hpp
     hash.hpp
     hash/fwd.hpp
-    hash/simple.hpp
-    hash/simple.cpp
     hash/adler.cpp
     hash/adler.hpp
     hash/bsdsum.cpp
@@ -255,18 +240,6 @@ list (
     hash/fletcher.hpp
     hash/fnv1a.cpp
     hash/fnv1a.hpp
-    hash/hmac.cpp
-    hash/hmac.hpp
-    hash/hotp.cpp
-    hash/hotp.hpp
-    hash/keccak.cpp
-    hash/keccak.hpp
-    hash/md2.cpp
-    hash/md2.hpp
-    hash/md4.cpp
-    hash/md4.hpp
-    hash/md5.cpp
-    hash/md5.hpp
     hash/murmur/common.cpp
     hash/murmur/common.hpp
     hash/murmur.hpp
@@ -276,18 +249,7 @@ list (
     hash/murmur/murmur2.hpp
     hash/murmur/murmur3.cpp
     hash/murmur/murmur3.hpp
-    hash/pbkdf1.cpp
-    hash/pbkdf1.hpp
-    hash/pbkdf2.cpp
-    hash/pbkdf2.hpp
-    hash/ripemd.cpp
-    hash/ripemd.hpp
-    hash/sha1.cpp
-    hash/sha1.hpp
-    hash/sha2.cpp
-    hash/sha2.hpp
     hash/wang.hpp
-    hash/wang.ipp
     hash/xxhash.cpp
     hash/xxhash.hpp
     introspection.cpp
@@ -459,7 +421,7 @@ target_link_libraries(cruft-util PUBLIC ${MATH_LIBS})
 
 
 ###############################################################################
-foreach (tool hash json-clean json-schema json-validate scratch)
+foreach (tool json-clean json-schema json-validate scratch)
     add_executable (util_${tool} tools/${tool}.cpp)
     set_target_properties (util_${tool} PROPERTIES OUTPUT_NAME ${tool})
     target_link_libraries (util_${tool} cruft-util)
@@ -491,12 +453,6 @@ if (TESTS)
         colour
         comparator
         coord
-        crypto/arc4
-        crypto/ice
-        crypto/salsa
-        crypto/tea
-        crypto/xtea
-        crypto/xxtea
         encode/base
         endian
         exe
@@ -509,16 +465,8 @@ if (TESTS)
         hash/checksum
         hash/crc
         hash/fasthash
-        hash/hmac
-        hash/hotp
-        hash/keccak
-        hash/md2
-        hash/md4
-        hash/md5
+        hash/fnv1a
         hash/murmur
-        hash/ripemd
-        hash/sha1
-        hash/sha2
         hash/xxhash
         hton
         introspection

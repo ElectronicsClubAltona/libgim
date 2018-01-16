@@ -1,6 +1,5 @@
 #include "tap.hpp"
 #include "hash/crc.hpp"
-#include "hash/simple.hpp"
 
 #include <cstdint>
 #include <utility>
@@ -34,15 +33,8 @@ main (int, char**)
     util::TAP::logger tap;
 
     for (const auto &t: TESTS) {
-        auto first = t.dat;
-        auto last  = first + strlen (t.dat);
-
-        #define TEST(KLASS) do {        \
-            auto computed =             \
-            util::hash::simple<         \
-                util::hash::KLASS       \
-            > (first, last);            \
-                                        \
+        #define TEST(KLASS) do { \
+            auto computed = util::hash::KLASS{}(util::view {t.dat}.template cast<const uint8_t> ()); \
             tap.expect_eq (t.result.KLASS, computed, "%s: %s", #KLASS, t.msg); \
         } while (0)
 

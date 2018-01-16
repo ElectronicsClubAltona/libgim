@@ -79,40 +79,6 @@ constants<uint64_t>::round_rotl = 31;
 
 
 ///////////////////////////////////////////////////////////////////////////////
-constexpr uint32_t DEFAULT_SEED = 0;
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-xxhash<T>::xxhash (void):
-    xxhash (DEFAULT_SEED)
-{ ; }
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-xxhash<T>::xxhash (uint32_t _seed):
-    m_seed  (_seed)
-{
-    reset ();
-}
-
-
-//-----------------------------------------------------------------------------
-template <typename T>
-void
-xxhash<T>::reset (void)
-{
-    memset (&m_state, 0, sizeof (m_state));
-
-    m_state.v1 = m_seed + constants<T>::prime[0] + constants<T>::prime[1];
-    m_state.v2 = m_seed + constants<T>::prime[1];
-    m_state.v3 = m_seed;
-    m_state.v4 = m_seed - constants<T>::prime[0];
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 static
 T
@@ -128,117 +94,142 @@ round (T seed, T input)
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-void
-xxhash<T>::update (const uint8_t *restrict first, const uint8_t *restrict last)
-{
-    CHECK (first);
-    CHECK (last);
-    CHECK_LE (first, last);
-
-    //auto endian = XXH_littleEndian;
-    size_t len = last - first;
-    auto input = (const void*)first;
-
-    auto          p = reinterpret_cast<const uint8_t*> (input);
-    auto const bEnd = p + len;
-
-    constexpr auto CHUNK = 4 * sizeof (T);
-
-    m_state.total_len_32 += (unsigned)len;
-    m_state.large_len |= (len >= CHUNK) | (m_state.total_len_32 >= CHUNK);
-
-    if (m_state.memsize + len < CHUNK)  {   /* fill in tmp buffer */
-        memcpy ((uint8_t*)(m_state.mem32) + m_state.memsize, input, len);
-        m_state.memsize += (unsigned)len;
-        return;
-    }
-
-    if (m_state.memsize) {   /* some data left from previous update */
-        memcpy ((uint8_t*)(m_state.mem32) + m_state.memsize, input, CHUNK - m_state.memsize);
-        {   const uint32_t* p32 = m_state.mem32;
-            m_state.v1 = round<T> (m_state.v1, ltoh (*p32)); p32++;
-            m_state.v2 = round<T> (m_state.v2, ltoh (*p32)); p32++;
-            m_state.v3 = round<T> (m_state.v3, ltoh (*p32)); p32++;
-            m_state.v4 = round<T> (m_state.v4, ltoh (*p32)); p32++;
-        }
-        p += CHUNK - m_state.memsize;
-        m_state.memsize = 0;
-    }
-
-    if (p <= bEnd - CHUNK * sizeof (T)) {
-        const uint8_t* const limit = bEnd - 4 * sizeof (T);
-        T v1 = m_state.v1;
-        T v2 = m_state.v2;
-        T v3 = m_state.v3;
-        T v4 = m_state.v4;
-
-        do {
-            v1 = round<T> (v1, read_le<T> (p)); p += sizeof (T);
-            v2 = round<T> (v2, read_le<T> (p)); p += sizeof (T);
-            v3 = round<T> (v3, read_le<T> (p)); p += sizeof (T);
-            v4 = round<T> (v4, read_le<T> (p)); p += sizeof (T);
-        } while (p <= limit);
-
-        m_state.v1 = v1;
-        m_state.v2 = v2;
-        m_state.v3 = v3;
-        m_state.v4 = v4;
-    }
-
-    if (p < bEnd) {
-        memcpy (m_state.mem32, p, (size_t)(bEnd-p));
-        m_state.memsize = (unsigned)(bEnd-p);
-    }
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-template <typename T>
-void
-xxhash<T>::finish (void)
-{
-    ;
-}
+xxhash<T>::xxhash (uint32_t _seed):
+    m_seed  (_seed)
+{ ; }
 
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
 typename xxhash<T>::digest_t
-xxhash<T>::digest (void) const
+xxhash<T>::operator() (const util::view<const uint8_t*> data)
 {
-    auto p = reinterpret_cast<const uint8_t*> (m_state.mem32);
-    auto last = p + m_state.memsize;
+    struct {
+        uint32_t total_len_32;
+        uint32_t large_len;
 
-    T h;
+        T v1, v2, v3, v4;
+        uint32_t mem32[4];
+        uint32_t memsize;
+        uint32_t reserved;
 
-    if (m_state.large_len) {
-        h = rotatel (m_state.v1, T{ 1}) +
-            rotatel (m_state.v2, T{ 7}) +
-            rotatel (m_state.v3, T{12}) +
-            rotatel (m_state.v4, T{18});
-    } else {
-        h = m_state.v3 /* == seed */ + constants<T>::prime[4];
+        //uint64_t length;
+        //T v[4];
+        //T mem[4];
+        //unsigned memsize;
+    } m_state;
+
+    /* RESET */
+    memset (&m_state, 0, sizeof (m_state));
+
+    m_state.v1 = m_seed + constants<T>::prime[0] + constants<T>::prime[1];
+    m_state.v2 = m_seed + constants<T>::prime[1];
+    m_state.v3 = m_seed;
+    m_state.v4 = m_seed - constants<T>::prime[0];
+
+    /* UPDATE */
+    do {
+        auto first = data.begin ();
+        auto last  = data.end ();
+        if (first == last)
+            break;
+
+        CHECK (first);
+        CHECK (last);
+        CHECK_LE (first, last);
+
+        //auto endian = XXH_littleEndian;
+        size_t len = last - first;
+        auto input = (const void*)first;
+
+        auto          p = reinterpret_cast<const uint8_t*> (input);
+        auto const bEnd = p + len;
+
+        constexpr auto CHUNK = 4 * sizeof (T);
+
+        m_state.total_len_32 += (unsigned)len;
+        m_state.large_len |= (len >= CHUNK) | (m_state.total_len_32 >= CHUNK);
+
+        if (m_state.memsize + len < CHUNK)  {   /* fill in tmp buffer */
+            memcpy ((uint8_t*)(m_state.mem32) + m_state.memsize, input, len);
+            m_state.memsize += (unsigned)len;
+            break;
+        }
+
+        if (m_state.memsize) {   /* some data left from previous update */
+            memcpy ((uint8_t*)(m_state.mem32) + m_state.memsize, input, CHUNK - m_state.memsize);
+            {   const uint32_t* p32 = m_state.mem32;
+                m_state.v1 = round<T> (m_state.v1, ltoh (*p32)); p32++;
+                m_state.v2 = round<T> (m_state.v2, ltoh (*p32)); p32++;
+                m_state.v3 = round<T> (m_state.v3, ltoh (*p32)); p32++;
+                m_state.v4 = round<T> (m_state.v4, ltoh (*p32)); p32++;
+            }
+            p += CHUNK - m_state.memsize;
+            m_state.memsize = 0;
+        }
+
+        if (p <= bEnd - CHUNK * sizeof (T)) {
+            const uint8_t* const limit = bEnd - 4 * sizeof (T);
+            T v1 = m_state.v1;
+            T v2 = m_state.v2;
+            T v3 = m_state.v3;
+            T v4 = m_state.v4;
+
+            do {
+                v1 = round<T> (v1, read_le<T> (p)); p += sizeof (T);
+                v2 = round<T> (v2, read_le<T> (p)); p += sizeof (T);
+                v3 = round<T> (v3, read_le<T> (p)); p += sizeof (T);
+                v4 = round<T> (v4, read_le<T> (p)); p += sizeof (T);
+            } while (p <= limit);
+
+            m_state.v1 = v1;
+            m_state.v2 = v2;
+            m_state.v3 = v3;
+            m_state.v4 = v4;
+        }
+
+        if (p < bEnd) {
+            memcpy (m_state.mem32, p, (size_t)(bEnd-p));
+            m_state.memsize = (unsigned)(bEnd-p);
+        }
+    } while (0);
+
+    /* DIGEST */
+    {
+        auto p = reinterpret_cast<const uint8_t*> (m_state.mem32);
+        auto last = p + m_state.memsize;
+
+        T h;
+
+        if (m_state.large_len) {
+            h = rotatel (m_state.v1, T{ 1}) +
+                rotatel (m_state.v2, T{ 7}) +
+                rotatel (m_state.v3, T{12}) +
+                rotatel (m_state.v4, T{18});
+        } else {
+            h = m_state.v3 /* == seed */ + constants<T>::prime[4];
+        }
+
+        h += m_state.total_len_32;
+
+        while (p + sizeof (T) <= last) {
+            h += read_le<T> (p)  * constants<T>::prime[2];
+            h  = rotatel (h, 17) * constants<T>::prime[3];
+            p += 4;
+        }
+
+        while (p < last) {
+            h += (*p) * constants<T>::prime[4];
+            h  = rotatel (h, 11) * constants<T>::prime[0];
+            p++;
+        }
+
+        h ^= h >> 15; h *= constants<T>::prime[1];
+        h ^= h >> 13; h *= constants<T>::prime[2];
+        h ^= h >> 16;
+
+        return h;
     }
-
-    h += m_state.total_len_32;
-
-    while (p + sizeof (T) <= last) {
-        h += read_le<T> (p)  * constants<T>::prime[2];
-        h  = rotatel (h, 17) * constants<T>::prime[3];
-        p += 4;
-    }
-
-    while (p < last) {
-        h += (*p) * constants<T>::prime[4];
-        h  = rotatel (h, 11) * constants<T>::prime[0];
-        p++;
-    }
-
-    h ^= h >> 15; h *= constants<T>::prime[1];
-    h ^= h >> 13; h *= constants<T>::prime[2];
-    h ^= h >> 16;
-
-    return h;
 }
 
 
