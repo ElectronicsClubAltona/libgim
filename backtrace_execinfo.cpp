@@ -36,7 +36,7 @@ debug::backtrace::backtrace (void):
     size_t last;
     size_t size = m_frames.size ();
 
-    while ((last = ::backtrace (&m_frames[0], trunc_cast<int> (m_frames.size ()))) == size)
+    while ((last = ::backtrace (&m_frames[0], util::cast::lossless <int> (m_frames.size ()))) == size)
         m_frames.resize (size = m_frames.size () * 2);
 
     CHECK_GT (last, 0u);
@@ -76,7 +76,7 @@ debug::operator <<(std::ostream &os, const debug::backtrace &rhs) {
 
     // We don't use the array form of unique_ptr as clang fails on ambigious constructors
     typedef std::unique_ptr<char *, decltype(&std::free)> str_t;
-    str_t names (backtrace_symbols (frames.data (), trunc_cast<int> (frames.size ())), ::free);
+    str_t names (backtrace_symbols (frames.data (), util::cast::lossless <int> (frames.size ())), ::free);
 
     for (unsigned int i = 0; i < frames.size (); ++i)
         os << frames[i] << '\t' << names.get()[i] << '\t' << addr2line (frames[i]);

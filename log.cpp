@@ -247,7 +247,7 @@ util::log (util::level_t level, const std::string &msg)
 
         std::clog << time_string << " ["
             << level_colour (level)
-            << std::setw (trunc_cast<int> (level_width ()))
+            << std::setw (util::cast::lossless<int> (level_width ()))
             << std::left
             << level
             << std::setw (0)

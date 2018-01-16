@@ -75,7 +75,7 @@ stack::allocate (size_t bytes, size_t alignment)
     // (from the record struct). allows us to account for alignment.
     record record;
      record.as_bytes  = ptr - sizeof (record::offset_t);
-    *record.as_offset = trunc_cast<uint32_t> (ptr - m_cursor);
+    *record.as_offset = util::cast::lossless <uint32_t> (ptr - m_cursor);
 
     m_cursor = ptr + bytes;
     return ptr;

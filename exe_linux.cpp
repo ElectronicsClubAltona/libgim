@@ -41,7 +41,7 @@ retry:
     if (written < 0)
         posix::error::throw_code ();
 
-    if (sign_cast<size_t> (written) == resolved.size ()) {
+    if (util::cast::sign <size_t> (written) == resolved.size ()) {
         resolved.resize (resolved.size () * 2);
         goto retry;
     }

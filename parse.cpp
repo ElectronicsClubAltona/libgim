@@ -93,5 +93,5 @@ int
 util::parse<int> (util::view<const char*> str)
 {
     auto intermediate = util::parse<long> (str);
-    return trunc_cast<int> (intermediate);
+    return util::cast::lossless<int> (intermediate);
 }

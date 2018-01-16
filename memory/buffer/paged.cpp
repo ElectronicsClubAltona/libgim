@@ -127,7 +127,7 @@ paged::release (char *desired)
 
     // bail if the region is alread unmapped, or if it's not sufficiently
     // behind the current cursor.
-    if (desired >= m_cursor || sign_cast<size_t> (m_cursor - desired) < m_window)
+    if (desired >= m_cursor || util::cast::sign<size_t> (m_cursor - desired) < m_window)
         return;
 
     desired += m_window;

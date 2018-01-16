@@ -142,8 +142,8 @@ util::write (const posix::fd &out,
     while (remaining) {
         ssize_t consumed = posix::error::try_value (::write (out, cursor, remaining));
 
-        remaining -= sign_cast<size_t> (consumed);
-        cursor    += sign_cast<size_t> (consumed);
+        remaining -= util::cast::sign<size_t> (consumed);
+        cursor    += util::cast::sign<size_t> (consumed);
     }
 }
 
@@ -151,7 +151,7 @@ util::write (const posix::fd &out,
 int
 indenter::overflow (int ch) {
     if (m_line_start && ch != '\n')
-        m_dest->sputn (m_indent.data (), sign_cast<std::streamsize> (m_indent.size ()));
+        m_dest->sputn (m_indent.data (), util::cast::sign<std::streamsize> (m_indent.size ()));
 
     m_line_start = ch == '\n';
     return m_dest->sputc (ch);

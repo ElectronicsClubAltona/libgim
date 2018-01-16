@@ -40,7 +40,7 @@ mapped_file::mapped_file (const ::util::posix::fd &src, int mflags)
     struct stat meta;
     ::util::posix::error::try_value (fstat (src, &meta));
 
-    m_size = sign_cast<size_t> (meta.st_size);
+    m_size = util::cast::sign<size_t> (meta.st_size);
     m_data = (uint8_t *)mmap (NULL, m_size, mflags, MAP_SHARED, src, 0);
     if (m_data == MAP_FAILED)
         ::util::posix::error::throw_code ();

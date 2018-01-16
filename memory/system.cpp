@@ -28,7 +28,7 @@ util::memory::pagesize (void)
     static size_t val;
 
     if (!val) {
-        val = sign_cast<unsigned long> (posix::error::try_value (sysconf (_SC_PAGE_SIZE)));
+        val = util::cast::sign<unsigned long> (posix::error::try_value (sysconf (_SC_PAGE_SIZE)));
     }
 
     return val;

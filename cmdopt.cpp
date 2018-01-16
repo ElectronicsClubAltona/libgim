@@ -456,13 +456,13 @@ parser::print_help (const int argc,
         else
             std::cout << '\t';
 
-        std::cout << std::setw (trunc_cast<int> (longwidth));
+        std::cout << std::setw (util::cast::lossless<int> (longwidth));
         if (l != std::cend (m_long))
             std::cout << std::get<std::string> (*l) << '\t';
         else
             std::cout << ' ' << '\t';
 
-        std::cout << std::setw (trunc_cast<int> (longexample)) << ptr->example () << '\t'
+        std::cout << std::setw (util::cast::lossless<int> (longexample)) << ptr->example () << '\t'
                   << std::setw (0) << std::get<std::string> (o)
                   << '\n';
     }
